@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>thebest2dan · 个人学习基地</title>
+<style>
+  :root{
+    --paper:#EBE4D2; --card:#F4EFE2; --ink:#16120A;
+    --red:#E0382A; --blue:#1450C8; --yellow:#F3C00E; --green:#1E9E86; --violet:#7A3FF2; --orange:#E86A17;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);
+    font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+  /* ---------- NAV ---------- */
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);
+    border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;border-right:5px solid var(--ink)}
+  .logomark{width:46px;height:46px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:30px;height:30px}
+  .brand b{font-size:25px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}
+  .links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;
+    font-size:15px;font-weight:800;cursor:pointer;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  .links a.active{background:var(--ink);color:var(--paper)}
+  @media(max-width:640px){
+    .topnav{flex-direction:column;align-items:stretch}
+    .brand{border-right:0;border-bottom:4px solid var(--ink);justify-content:flex-start}
+    .brand b{font-size:22px}.logomark{width:40px;height:40px}.logomark svg{width:26px;height:26px}
+    .links{width:100%}
+    .links a{flex:1;justify-content:center;padding:12px 6px;font-size:14px}
+    .links a:first-child{border-left:0}
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:26px 20px 100px}
+  .page{display:none}.page.show{display:block;animation:fade .25s}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+  /* ---------- HEADERS ---------- */
+  h1{font-size:46px;font-weight:900;letter-spacing:-1.5px;margin:6px 0 10px;line-height:1.02}
+  @media(max-width:640px){h1{font-size:34px}}
+  h2{font-size:24px;font-weight:900;letter-spacing:-.5px;margin:40px 0 14px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:26px;height:26px;background:var(--red);flex:none;border:3px solid var(--ink)}
+  h2.b::before{background:var(--blue)} h2.y::before{background:var(--yellow)} h2.g::before{background:var(--green)}
+  .lead{font-size:16px;font-weight:600;max-width:680px}
+  .kicker{display:inline-block;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;
+    letter-spacing:2px;padding:6px 12px;text-transform:uppercase}
+  .back{display:inline-block;font-weight:800;font-size:14px;cursor:pointer;background:var(--yellow);
+    border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);margin-bottom:14px}
+  /* ---------- HOME MONDRIAN GRID ---------- */
+  .motto{margin:20px 0;background:var(--ink);color:var(--paper);border:5px solid var(--ink);
+    padding:22px 26px;font-size:19px;font-weight:800;line-height:1.5}
+  .motto em{color:var(--yellow);font-style:normal}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--ink);
+    border:6px solid var(--ink);grid-template-areas:
+      "title title title mark"
+      "plan plan scores packs"
+      "plan plan map target";}
+  @media(max-width:720px){.grid{grid-template-columns:1fr 1fr;grid-template-areas:
+      "title title" "mark mark" "plan plan" "scores packs" "map target";}}
+  .cell{padding:22px;border:0;text-align:left;cursor:pointer;font:inherit;color:var(--ink);
+    min-height:120px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .12s}
+  .cell:hover{transform:scale(.985)}
+  .cell .ico{font-size:34px;line-height:1;margin-bottom:auto}
+  .cell .tag{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+  .cell h3{margin:6px 0 4px;font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .cell p{margin:0;font-size:13px;font-weight:600;line-height:1.45}
+  .c-title{grid-area:title;background:var(--card);cursor:default;justify-content:center}
+  .c-title:hover{transform:none}
+  .c-title .big{font-size:40px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+  .c-title .sub{font-size:13px;font-weight:700;margin-top:8px;max-width:520px}
+  .c-mark{grid-area:mark;background:var(--yellow);align-items:center;justify-content:center;text-align:center}
+  .c-mark .m{font-size:54px;font-weight:900;line-height:.9}
+  .c-mark .n{font-size:13px;font-weight:800;letter-spacing:1px;margin-top:6px}
+  .c-plan{grid-area:plan;background:var(--red);color:var(--paper)}
+  .c-plan h3{font-size:30px} .c-plan .ico{font-size:46px}
+  .c-scores{grid-area:scores;background:var(--blue);color:var(--paper)}
+  .c-packs{grid-area:packs;background:var(--yellow)}
+  .c-map{grid-area:map;background:var(--card)}
+  .c-target{grid-area:target;background:var(--green);color:var(--paper)}
+  .c-map.soon, .c-target.soon{cursor:default}.c-map.soon:hover,.c-target.soon:hover{transform:none}
+  .statband{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--ink);
+    border:6px solid var(--ink);margin-top:6px}
+  .statband div{background:var(--card);padding:16px;text-align:center}
+  .statband b{display:block;font-size:34px;font-weight:900;line-height:1}
+  .statband .s1 b{color:var(--red)}.statband .s2 b{color:var(--blue)}.statband .s3 b{color:var(--green)}
+  .statband span{font-size:12px;font-weight:800;letter-spacing:.5px}
+  /* ---------- CONTENT CARDS ---------- */
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:20px 22px;margin:16px 0}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}
+  .keybox b{font-weight:900}
+  .iron{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+  .iron li{background:var(--card);border:4px solid var(--ink);border-left:16px solid var(--red);padding:14px 18px;font-weight:600}
+  .iron li b{font-weight:900;color:var(--red)}
+  .calc{border:4px solid var(--ink);box-shadow:var(--shadow);margin:14px 0;background:var(--card)}
+  .calc .row{display:flex;justify-content:space-between;padding:11px 18px;font-weight:700;border-bottom:3px solid var(--ink)}
+  .calc .row:last-child{border:0;background:var(--ink);color:var(--yellow);font-weight:900;font-size:18px}
+  .four{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--ink);border:5px solid var(--ink);margin:14px 0}
+  @media(max-width:560px){.four{grid-template-columns:1fr}}
+  .four div{background:var(--card);padding:16px 18px;font-size:14px;font-weight:600}
+  .four h4{margin:0 0 6px;font-size:16px;font-weight:900}
+  .four .f1{border-top:8px solid var(--red)}.four .f2{border-top:8px solid var(--blue)}
+  .four .f3{border-top:8px solid var(--yellow)}.four .f4{border-top:8px solid var(--green)}
+  em.hl{font-style:normal;font-weight:900;background:var(--yellow);padding:0 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .btn{background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:10px 18px;font-weight:900;
+    font-size:14px;cursor:pointer;box-shadow:3px 3px 0 var(--red)}
+  .btn.y{background:var(--yellow);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn.ghost{background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  /* ---------- SCORES ---------- */
+  .toggle{display:inline-flex;border:4px solid var(--ink);margin:8px 0;flex-wrap:wrap}
+  .toggle button{border:0;background:var(--card);color:var(--ink);padding:10px 16px;font-size:14px;font-weight:800;cursor:pointer;border-right:3px solid var(--ink)}
+  .toggle button:last-child{border-right:0}
+  .toggle button.on{background:var(--ink);color:var(--yellow)}
+  .chartbox{background:var(--card);border:5px solid var(--ink);box-shadow:var(--shadow);padding:14px;margin:12px 0}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:0 4px}
+  .legend span{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:800}
+  .legend i{width:20px;height:8px;border:2px solid var(--ink);display:inline-block}
+  .timeline{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .exam{background:var(--card);border:4px solid var(--ink);padding:10px 14px;cursor:pointer;font-size:14px;font-weight:800;box-shadow:3px 3px 0 var(--ink)}
+  .exam .d{font-size:11px;font-weight:700;opacity:.7}
+  .exam.on{background:var(--ink);color:var(--yellow)}.exam.on .d{color:var(--paper);opacity:.8}
+  .exam.todo{opacity:.5;cursor:default;box-shadow:none;border-style:dashed}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:var(--ink);border:5px solid var(--ink);margin:12px 0}
+  @media(max-width:560px){.stats{grid-template-columns:1fr 1fr}}
+  .stats div{background:var(--card);padding:14px;text-align:center}
+  .stats b{display:block;font-size:28px;font-weight:900;line-height:1}
+  .stats span{font-size:11px;font-weight:800}
+  .bars{background:var(--card);border:5px solid var(--ink);box-shadow:var(--shadow);padding:18px;margin:12px 0}
+  .bar{margin:14px 0}
+  .bar .top{display:flex;justify-content:space-between;font-size:15px;font-weight:800;margin-bottom:6px}
+  .bar .track{height:26px;background:var(--paper);border:3px solid var(--ink)}
+  .bar .fill{height:100%;border-right:3px solid var(--ink)}
+  .hole{font-size:11px;font-weight:900;color:#fff;background:var(--red);padding:1px 7px;margin-left:8px;border:2px solid var(--ink)}
+  .note{background:var(--blue);color:var(--paper);border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 20px;font-size:15px;font-weight:600;margin:14px 0}
+  .note b{font-weight:900;color:var(--yellow)}
+  .note.amber{background:var(--yellow);color:var(--ink)}.note.amber b{color:var(--red)}
+  /* ---------- ECHEM ---------- */
+  .rxn{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);
+    padding:11px 14px;margin:7px 0;font-size:14.5px;font-weight:600;overflow-x:auto;white-space:nowrap;box-shadow:3px 3px 0 var(--red)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 14px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:var(--paper)}
+  .step{display:flex;gap:14px;margin:11px 0;opacity:.3;transition:.3s}.step.show{opacity:1}
+  .step .n{flex:none;width:30px;height:30px;background:var(--yellow);border:3px solid var(--ink);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .step b{font-weight:900}
+  .trap{color:var(--red);font-weight:800;font-size:14px;margin-top:6px}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  svg{width:100%;height:auto;display:block}
+  .foot{margin-top:54px;border-top:5px solid var(--ink);padding-top:18px;font-size:13px;font-weight:700;line-height:1.8}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="brand" data-go="home"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></div>
+    <div class="links">
+      <a data-go="home">首页</a>
+      <a data-go="plan">诊断与方案</a>
+      <a data-go="scores">成绩追踪</a>
+      <a data-go="packs">攻坚包</a>
+    </div>
+  </nav>
+  <div class="wrap">
+
+  <!-- ===== HOME ===== -->
+  <section class="page" id="home">
+    <div class="motto">差距不是"哪儿都差一点",是 <em>一份能列清单的硬仗</em>。把它一项项打掉,你会发现尖子生看到的不是题海,是 <em>一副有限的牌</em>。</div>
+    <div class="grid">
+      <div class="cell c-title">
+        <div class="kicker" style="align-self:flex-start;margin-bottom:14px">最好的二蛋 · 高二尖子生养成计划</div>
+        <div class="big">个人学习基地</div>
+        <div class="sub">不囤资料,不加作业。一套有主线的系统:先看清差距,再把你真正卡住的难题一道道讲透、收成你自己的"牌"。</div>
+      </div>
+      <div class="cell c-mark"><div><svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px"><g stroke="#16120A" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg><div class="n">ZEGG</div></div></div>
+      <button class="cell c-plan" data-go="plan"><div class="ico">🧭</div><div class="tag">核心载体</div><h3>诊断与方案</h3><p>这套计划的大脑:六科失分诊断、三条铁律、AI 的价值落脚点、周末循环。所有板块从这里长出来。</p></button>
+      <button class="cell c-scores" data-go="scores"><div class="ico">📈</div><div class="tag">追踪</div><h3>成绩追踪</h3><p>看一条曲线,不看一次排名。</p></button>
+      <button class="cell c-packs" data-go="packs"><div class="ico">🔧</div><div class="tag">攻坚</div><h3>攻坚包</h3><p>把难点讲透 + 可交互演示。</p></button>
+      <div class="cell c-map soon"><div class="ico">🗺️</div><div class="tag">每周生长</div><h3>题型地图</h3><p>触发信号 + 标准动作。筹备中。</p></div>
+      <div class="cell c-target soon"><div class="ico">🎯</div><div class="tag">每周更新</div><h3>本周靶子</h3><p>一周只打 1–2 个。筹备中。</p></div>
+    </div>
+    <div class="statband">
+      <div class="s1"><b>577</b><span>最近总分 / 750</span></div>
+      <div class="s2"><b>7</b><span>班级排名</span></div>
+      <div class="s3"><b>640</b><span>够得着的目标</span></div>
+    </div>
+    <div class="foot">thebest2dan.com · 周末读、暑假重度用 · 平时的引擎仍是随身卡<br>动机跟在进步后面 —— 每填掉一个洞,就喂大一点那股劲。</div>
+  </section>
+
+  <!-- ===== PLAN ===== -->
+  <section class="page" id="plan">
+    <span class="back" data-go="home">← 回首页</span>
+    <div class="kicker">核心载体</div>
+    <h1>诊断与方案</h1>
+    <p class="lead">做任何一份攻坚包之前,先把"差距到底是什么、该怎么打"想清楚。这是整套系统的主线。</p>
+
+    <h2>一、先校准起点</h2>
+    <div class="card"><em class="hl">他那份六科复盘,本身就是反驳"他没那么聪明"的证据。</em> 能把失分点拆到"楞次定律来拒去留套用不熟""双极值用比值换元""遗传题逆向推导能力不足"这种颗粒度,不是"勉强跟上"的中等生写得出来的。很多年级前几名都做不到这种自我诊断。起点要重定:他够得着的,比"570、考不上985"高得多。</div>
+
+    <h2 class="b">二、失分高度集中,是有限的硬仗</h2>
+    <p class="lead">六科复盘并排看,几乎一模一样的句式在每科重复——<em class="hl">"基础题稳,大题前一两问没问题,最后一问/压轴没时间、思路不清、完全不会"</em>。差距不是"哪儿都差一点",是一份能列清单的硬仗:</p>
+    <div class="calc">
+      <div class="row"><span>化学 64 → 85</span><span>+21</span></div>
+      <div class="row"><span>生物 66 → 85</span><span>+19</span></div>
+      <div class="row"><span>物理压轴</span><span>+10</span></div>
+      <div class="row"><span>数学压轴 + 排列组合</span><span>+13</span></div>
+      <div class="row"><span>合计(语数英还没动)</span><span>≈ 640</span></div>
+    </div>
+    <p class="lead"><b>对意志力一般的人,这反而是好消息:目标越具体、越有限,越不依赖意志力。</b></p>
+
+    <h2 class="y">三、真正卡住他的那个系数</h2>
+    <div class="card">"聪明 × 勤奋 × 效率"里,真正卡住他的系数没被列出来:<em class="hl">是"针对性/方法"</em>。两个聪明、勤奋、效率一样的孩子,可以仅因为练的东西有没有打在自己的洞上,差出 50 分。输入没问题、基础处理没问题,卡的是<b>处理"陌生的、一眼看不出思路的难题"那一层</b>。</div>
+
+    <h2>四、三条铁律(违反就否决)</h2>
+    <ul class="iron">
+      <li><b>① 不增加工作量。</b>六天在校被卷子作业错题塞满,回家只有一天。所有东西必须"寄生"在他已有的任务上,绝不另起赛道。</li>
+      <li><b>② 不把休息日榨成第七个学习日。</b>那一天是战略资源,被掏空的脑子学不进东西。</li>
+      <li><b>③ 动机跟在进步后面。</b>不押注他没有的意志力,靠看得见的小胜反过来喂大那股劲。做教练+后勤,不做考官。</li>
+    </ul>
+
+    <h2 class="b">五、AI 的价值落脚点</h2>
+    <div class="card">
+      <p style="margin:0 0 12px"><b>1 · 针对单个错误的个性化</b><br>盯着他这一道题、卡住的那一步,用他已会的语言讲透。"每个学生 × 每道题"这个颗粒度,老师没时间。</p>
+      <p style="margin:0 0 12px"><b>2 · 同一个概念的"第二扇门"</b><br>课上那套没让他懂,他就卡死了——他只有一个版本。一个概念可换五种讲法:打比方、画出来、从答案倒推、接到熟悉的东西上。</p>
+      <p style="margin:0"><b>3 · 题型地图(母题思维)</b><br>把看似无限的题塌缩成一副能一眼认出来的牌,每类题一个触发信号、一个标准动作。</p>
+    </div>
+    <div class="keybox"><b>一条边界:</b>真正提分的是他自己动手、卡住、再做的反复,AI 替不了。AI 的价值全在<b>讲解/诊断/框架/点拨</b>,不在"刷题量"。</div>
+
+    <h2 class="g">六、让训练更科学的四原则</h2>
+    <div class="four">
+      <div class="f1"><h4>混着练</h4>别一类刷到底。连做20道同型题,永远练不到"认题型"。</div>
+      <div class="f2"><h4>检索 &gt; 重看</h4>自己默/做一遍,远胜把讲解再读一遍。</div>
+      <div class="f3"><h4>间隔复习</h4>第 2、7、16 天各重做一遍,胜过临考扎堆。</div>
+      <div class="f4"><h4>审题显性化</h4>把隐性动作写成固定清单(电磁感应前先圈:匀速/变速?)。</div>
+    </div>
+    <div style="margin-top:24px"><button class="btn" data-go="scores">看成绩追踪 →</button> <button class="btn y" data-go="packs">进攻坚包 →</button></div>
+  </section>
+
+  <!-- ===== SCORES ===== -->
+  <section class="page" id="scores">
+    <span class="back" data-go="home">← 回首页</span>
+    <div class="kicker">追踪</div>
+    <h1>成绩追踪</h1>
+    <p class="lead">不是看一次排名,是看一条曲线。把整个学期每一批次考试摆在一起,趋势和真正的窟窿才看得清。</p>
+
+    <h2 class="b">学期趋势 · 各科得分率</h2>
+    <div class="toggle" id="trendToggle">
+      <button data-v="holes" class="on">理科 + 窟窿</button>
+      <button data-v="all">全部六科</button>
+      <button data-v="total">总分</button>
+    </div>
+    <div class="chartbox"><div id="trendChart"></div><div class="legend" id="trendLegend"></div></div>
+    <div class="note amber" id="trendInsight"></div>
+
+    <h2 class="y">各批次明细</h2>
+    <div class="timeline" id="timeline"></div>
+    <div id="detail"></div>
+  </section>
+
+  <!-- ===== PACKS ===== -->
+  <section class="page" id="packs">
+    <span class="back" data-go="home">← 回首页</span>
+    <div class="kicker">攻坚</div>
+    <h1>攻坚包</h1>
+    <p class="lead">每个包只攻一个难点:换一扇门讲透 + 可交互演示 + 收成一张能复用的"题型卡"。按性价比逐个补,化学先行。</p>
+    <h2>化学</h2>
+    <div class="four" style="grid-template-columns:1fr 1fr">
+      <button class="cell" style="background:var(--green);color:var(--paper);min-height:130px" data-go="echem"><div class="ico">🔋</div><div class="tag">● 已上线</div><h3>电化学</h3><p>一把钥匙开两把锁 · 四步算法 · 7 个电池实例库 · 自测</p></button>
+      <div class="cell" style="background:var(--card);min-height:130px;cursor:default"><div class="ico">💧</div><div class="tag">筹备中</div><h3>水溶液离子平衡</h3><p>离子浓度比较、守恒三件套、平衡图像。</p></div>
+    </div>
+    <h2 class="b">物理 · 生物 · 数学</h2>
+    <div class="four" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="cell" style="background:var(--card);min-height:120px;cursor:default"><div class="ico">🧲</div><div class="tag">筹备中</div><h3 style="font-size:19px">电磁感应</h3><p>楞次定律、多过程拆解、临界技巧。</p></div>
+      <div class="cell" style="background:var(--card);min-height:120px;cursor:default"><div class="ico">🧬</div><div class="tag">筹备中</div><h3 style="font-size:19px">遗传逆向推导</h3><p>多对基因、伴性、致死题拆解。</p></div>
+      <div class="cell" style="background:var(--card);min-height:120px;cursor:default"><div class="ico">📐</div><div class="tag">筹备中</div><h3 style="font-size:19px">导数压轴+排列组合</h3><p>双极值比值换元、逆向拆分。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== ECHEM ===== -->
+  <section class="page" id="echem">
+    <span class="back" data-go="packs">← 回攻坚包</span>
+    <div class="kicker">攻坚包 · 化学</div>
+    <h1>电化学</h1>
+    <p class="lead">原电池和电解池看起来是两种东西,其实是同一件事。从"完全看不出方向"走到"陌生电池题也有固定走法"。</p>
+
+    <h2 class="g">① 统一本质:盯住氧化极</h2>
+    <div class="card">
+      <div class="toggle"><button id="bGalv" class="on">原电池(自己发电)</button><button id="bElec">电解池(外接电源)</button></div>
+      <svg viewBox="0 0 680 360" id="svg" style="margin-top:10px">
+        <line x1="170" y1="60" x2="510" y2="60" stroke="var(--ink)" stroke-width="4"/>
+        <line x1="170" y1="60" x2="170" y2="140" stroke="var(--ink)" stroke-width="4"/>
+        <line x1="510" y1="60" x2="510" y2="140" stroke="var(--ink)" stroke-width="4"/>
+        <g id="device"></g>
+        <path d="M120 140 L560 140 L545 320 L135 320 Z" fill="#d8e8ee" stroke="var(--ink)" stroke-width="3"/>
+        <text x="340" y="312" text-anchor="middle" fill="#4a7585" font-size="13" font-weight="700" id="elyte">电解质溶液</text>
+        <rect x="160" y="110" width="20" height="170" fill="#8a98a3" stroke="var(--ink)" stroke-width="3"/>
+        <rect x="500" y="110" width="20" height="170" fill="#8a98a3" stroke="var(--ink)" stroke-width="3"/>
+        <g id="electrons"></g><g id="ions"></g><g id="labelLeft"></g><g id="labelRight"></g>
+        <text x="340" y="46" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">电子流向 →</text>
+      </svg>
+      <div class="rxn" id="halfL"></div><div class="rxn" id="halfR"></div>
+    </div>
+    <div class="keybox"><b>总钥匙:</b>别管它叫正极还是阳极,<b>先问这极是氧化还是还原</b>。判断只有一句:电子从哪一极流出,哪一极就是氧化极。失电子那极,原电池叫"负极"、电解池叫"阳极"——名字不同,本质同一件事。</div>
+
+    <h2>② 写陌生电极反应式:四步算法</h2>
+    <p class="lead">用<b>碱性甲烷燃料电池负极</b>演示,点一下出一步。</p>
+    <div class="card">
+      <div class="step" id="s1"><div class="n">1</div><div><b>定方向</b> —— 负极=氧化极,CH₄ 失电子。</div></div>
+      <div class="step" id="s2"><div class="n">2</div><div><b>找主角+看环境</b> —— 碳 −4→+4 价。<span class="trap">碱性!产物是 CO₃²⁻ 不是 CO₂。环境决定产物。</span></div></div>
+      <div class="step" id="s3"><div class="n">3</div><div><b>三步配平</b> —— 主元素→OH⁻/H₂O配O和H→加e⁻配电荷:<div class="rxn">CH₄ + 10OH⁻ − 8e⁻ → CO₃²⁻ + 7H₂O</div></div></div>
+      <div class="step" id="s4"><div class="n">4</div><div><b>三守恒检查</b> —— C 1=1,H 14=14,O 10=10;电荷左−10+8e=右−2;碳升8价=8e⁻。✓</div></div>
+      <div style="margin-top:14px;display:flex;gap:10px"><button class="btn y" id="stepNext">出下一步 ▶</button><button class="btn ghost" id="stepReset">重来</button></div>
+    </div>
+
+    <h2 class="b">③ 电池实例库</h2>
+    <div class="card">
+      <div class="chips" id="cellChips"></div>
+      <div id="cellMeta" style="font-size:13px;font-weight:800;margin:4px 0"></div>
+      <div class="rxn" id="cellNeg"></div><div class="rxn" id="cellPos"></div><div class="rxn" id="cellTotal"></div>
+      <div class="trap" id="cellTrap"></div>
+    </div>
+
+    <h2 class="y">④ 环境决定产物</h2>
+    <div class="card"><div class="chips" id="envChips"></div><div class="rxn" id="envOut"></div></div>
+
+    <h2>⑤ 放电顺序</h2>
+    <div class="card">
+      <p style="margin-top:0;font-weight:800"><span style="color:var(--red)">阳极</span>(失电子)惰性电极时:</p>
+      <div class="rxn">活性电极本身 &gt; S²⁻ &gt; I⁻ &gt; Br⁻ &gt; Cl⁻ &gt; OH⁻ &gt; 含氧酸根 &gt; F⁻</div>
+      <p style="font-weight:800"><span style="color:var(--blue)">阴极</span>(得电子)金属越不活泼越先得:</p>
+      <div class="rxn">Ag⁺ &gt; Cu²⁺ &gt; H⁺(酸) &gt; Pb²⁺ &gt; Fe²⁺ &gt; Zn²⁺ &gt; H⁺(水) &gt; Al³⁺↑不放电</div>
+      <p class="trap">Al³⁺、Mg²⁺、Na⁺ 在水溶液里轮不到,水先放 H₂。</p>
+    </div>
+
+    <h2 class="g">⑥ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+  </section>
+
+  </div>
+
+<script>
+(function(){
+const pages=['home','plan','scores','packs','echem'];
+function go(id){if(!pages.includes(id))id='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.id===id));
+  document.querySelectorAll('.links a').forEach(a=>a.classList.toggle('active',a.dataset.go===id));
+  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t){e.preventDefault();go(t.dataset.go);}});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+go(location.hash.slice(1)||'home');
+
+/* ===== SCORES ===== */
+const FULL={语文:150,数学:150,英语:150,物理:100,化学:100,生物:100};
+const SUBS=["语文","数学","英语","物理","化学","生物"];
+const SCOL={语文:"#E0382A",数学:"#1450C8",英语:"#1E9E86",物理:"#F3C00E",化学:"#E86A17",生物:"#7A3FF2"};
+const INK="#16120A";
+const exams=[
+  {name:"高二下 · 月考一",short:"月考一",scores:{语文:121,数学:127,英语:119.5,物理:83,化学:81,生物:67.5},total:599,rankClass:3,rankWide:4,rankWideLabel:"年级",mark:"火箭班(40人)单独卷,数学更难,排名口径与其他场次不同,趋势仅供参考。"},
+  {name:"高二下 · 期中考试",short:"期中",scores:{语文:96,数学:133,英语:129.5,物理:67,化学:76.5,生物:67},total:569,rankClass:6,rankWide:24,rankWideLabel:"校",mark:"化学/生物赋分后为90/87;此处用原始分统一口径。语文96明显失常。"},
+  {name:"高二下 · 月考三",short:"月考三",scores:{语文:121,数学:127,英语:120,物理:79,化学:64,生物:66},total:577,rankClass:7,rankWide:29,rankWideLabel:"校",mark:"化学跌到64,继续下滑;生物长期低位。"}
+];
+const placeholders=["高二上 · 期末(待录入)"];
+function rate(ex,k){return ex.scores[k]/FULL[k];}
+function color(r){return r<0.70?'#E0382A':r<0.82?'#F3C00E':'#1E9E86';}
+let trendView='holes';
+function drawTrend(){
+  const W=760,H=440,padL=58,padR=24,padT=30,padB=64;
+  const n=exams.length,x=i=>padL+(W-padL-padR)*(n<2?0.5:i/(n-1));
+  let series;
+  if(trendView==='total')series=[{k:'总分得分率',col:INK,vals:exams.map(e=>e.total/750)}];
+  else if(trendView==='all')series=SUBS.map(k=>({k,col:SCOL[k],vals:exams.map(e=>rate(e,k))}));
+  else series=["物理","化学","生物"].map(k=>({k,col:SCOL[k],vals:exams.map(e=>rate(e,k))}));
+  const lo=0.5,hi=1.0,y=v=>padT+(H-padT-padB)*(1-(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo));
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  s+=`<rect x="${padL}" y="${padT}" width="${W-padL-padR}" height="${H-padT-padB}" fill="none" stroke="${INK}" stroke-width="3"/>`;
+  [0.6,0.7,0.8,0.9].forEach(g=>{s+=`<line x1="${padL}" y1="${y(g)}" x2="${W-padR}" y2="${y(g)}" stroke="${INK}" stroke-width="1" stroke-dasharray="4 5" opacity=".4"/>`;});
+  [0.5,0.6,0.7,0.8,0.9,1.0].forEach(g=>{s+=`<text x="${padL-10}" y="${y(g)+5}" text-anchor="end" fill="${INK}" font-size="13" font-weight="800">${(g*100)|0}%</text>`;});
+  exams.forEach((e,i)=>{s+=`<text x="${x(i)}" y="${H-padB+26}" text-anchor="middle" fill="${INK}" font-size="14" font-weight="800">${e.short}</text>`;});
+  series.forEach(se=>{let d='';se.vals.forEach((v,i)=>{d+=(i?'L':'M')+x(i)+' '+y(v)+' ';});
+    s+=`<path d="${d}" fill="none" stroke="${se.col}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    se.vals.forEach((v,i)=>{s+=`<rect x="${x(i)-7}" y="${y(v)-7}" width="14" height="14" fill="${se.col}" stroke="${INK}" stroke-width="3"/>`;});});
+  // value labels with anti-overlap spreading
+  for(let i=0;i<n;i++){
+    let items=series.map(se=>({v:se.vals[i],col:se.col,py:y(se.vals[i])}));
+    items.sort((a,b)=>b.py-a.py);
+    let prev=1e9;
+    items.forEach(it=>{let ly=it.py-13;if(ly>prev-18)ly=prev-18;it.ly=ly;prev=ly;});
+    const dx=i===0?12:(i===n-1?-12:0), anc=i===0?'start':(i===n-1?'end':'middle');
+    items.forEach(it=>{s+=`<text x="${x(i)+dx}" y="${it.ly}" text-anchor="${anc}" fill="${it.col}" font-size="13" font-weight="900" stroke="#F4EFE2" stroke-width="4" paint-order="stroke" stroke-linejoin="round">${(it.v*100).toFixed(0)}</text>`;});
+  }
+  s+=`</svg>`;
+  document.getElementById('trendChart').innerHTML=s;
+  document.getElementById('trendLegend').innerHTML=series.map(se=>`<span><i style="background:${se.col}"></i>${se.k}</span>`).join('');
+}
+document.getElementById('trendInsight').innerHTML="📉 <b>看趋势,不看单次:</b>化学 81→76.5→<b>64</b> 一路下滑,是最该止血的科目(电化学攻坚包已上线);生物 67.5→67→66 长期低位,需要专门攻坚;数学稳在 85% 上下是定海神针;语文期中那次 96 分明显失常,值得查是偶发还是题型。<br><span style='font-weight:700;font-size:13px'>注:月考一为火箭班单独卷(数学更难),与后两次口径不同。</span>";
+document.querySelectorAll('#trendToggle button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#trendToggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');trendView=b.dataset.v;drawTrend();});
+function renderDetail(ex){
+  let s=`<div class="stats">
+    <div><b>${ex.total}</b><span>原始总分 / 750</span></div>
+    <div><b>${(ex.total/750*100).toFixed(1)}%</b><span>总得分率</span></div>
+    <div><b>${ex.rankClass}</b><span>班级排名</span></div>
+    <div><b>${ex.rankWide}</b><span>${ex.rankWideLabel}排名</span></div></div><div class="bars">`;
+  SUBS.forEach(k=>{const sc=ex.scores[k],full=FULL[k],r=sc/full;const hole=r<0.70?'<span class="hole">窟窿</span>':'';
+    s+=`<div class="bar"><div class="top"><span>${k}${hole}</span><span>${sc} / ${full} · ${(r*100).toFixed(0)}%</span></div><div class="track"><div class="fill" style="width:${r*100}%;background:${color(r)}"></div></div></div>`;});
+  s+=`</div><div class="note amber">${ex.mark}</div>`;
+  document.getElementById('detail').innerHTML=s;
+}
+function renderTimeline(idx){
+  let t='';exams.forEach((e,i)=>{t+=`<div class="exam${i===idx?' on':''}" data-i="${i}">${e.name}<div class="d">总分 ${e.total}</div></div>`;});
+  placeholders.forEach(p=>{t+=`<div class="exam todo">${p}</div>`;});
+  document.getElementById('timeline').innerHTML=t;
+  document.querySelectorAll('.exam[data-i]').forEach(el=>el.onclick=()=>{const i=+el.dataset.i;renderTimeline(i);renderDetail(exams[i]);});
+}
+drawTrend();renderTimeline(exams.length-1);renderDetail(exams[exams.length-1]);
+
+/* ===== ECHEM ===== */
+const modes={
+  galv:{device:`<circle cx="340" cy="60" r="22" fill="#F3C00E" stroke="${INK}" stroke-width="3"/><line x1="326" y1="48" x2="354" y2="72" stroke="${INK}" stroke-width="3"/><line x1="326" y1="72" x2="354" y2="48" stroke="${INK}" stroke-width="3"/><text x="340" y="100" text-anchor="middle" fill="${INK}" font-size="12" font-weight="700">用电器</text>`,
+    left:{n:"负极 · 氧化",c:"#E0382A"},right:{n:"正极 · 还原",c:"#1450C8"},
+    hL:'负极(氧化): Zn − 2e⁻ → Zn²⁺',hR:'正极(还原): Cu²⁺ + 2e⁻ → Cu',ely:"以铜锌原电池为例"},
+  elec:{device:`<rect x="310" y="42" width="60" height="36" fill="#F3C00E" stroke="${INK}" stroke-width="3"/><line x1="326" y1="50" x2="326" y2="70" stroke="${INK}" stroke-width="5"/><line x1="354" y1="54" x2="354" y2="66" stroke="${INK}" stroke-width="3"/><text x="324" y="36" text-anchor="middle" fill="#E0382A" font-size="13" font-weight="900">＋</text><text x="356" y="36" text-anchor="middle" fill="#1450C8" font-size="13" font-weight="900">－</text><text x="340" y="100" text-anchor="middle" fill="${INK}" font-size="12" font-weight="700">直流电源</text>`,
+    left:{n:"阳极 · 氧化",c:"#E0382A"},right:{n:"阴极 · 还原",c:"#1450C8"},
+    hL:'阳极(氧化): 2Cl⁻ − 2e⁻ → Cl₂↑',hR:'阴极(还原): 2H₂O + 2e⁻ → H₂↑ + 2OH⁻',ely:"以电解饱和食盐水为例"}
+};
+let mode='galv';
+function badge(x,info){return `<rect x="${x-58}" y="150" width="116" height="42" fill="${info.c}" stroke="${INK}" stroke-width="3"/><text x="${x}" y="177" text-anchor="middle" fill="#fff" font-size="15" font-weight="900">${info.n}</text>`;}
+function renderEchem(){const m=modes[mode];
+  document.getElementById('device').innerHTML=m.device;
+  document.getElementById('labelLeft').innerHTML=badge(170,m.left);
+  document.getElementById('labelRight').innerHTML=badge(510,m.right);
+  document.getElementById('halfL').textContent=m.hL;document.getElementById('halfR').textContent=m.hR;
+  document.getElementById('elyte').textContent=m.ely;
+  document.getElementById('bGalv').classList.toggle('on',mode==='galv');
+  document.getElementById('bElec').classList.toggle('on',mode==='elec');}
+const ePath=[[170,140],[170,60],[510,60],[510,140]];
+function pp(t){let segs=[],tot=0;for(let i=0;i<ePath.length-1;i++){const l=Math.hypot(ePath[i+1][0]-ePath[i][0],ePath[i+1][1]-ePath[i][1]);segs.push(l);tot+=l;}let d=t*tot;for(let i=0;i<segs.length;i++){if(d<=segs[i]){const r=d/segs[i];return[ePath[i][0]+(ePath[i+1][0]-ePath[i][0])*r,ePath[i][1]+(ePath[i+1][1]-ePath[i][1])*r];}d-=segs[i];}return ePath[3];}
+const els=Array.from({length:7},(_,i)=>({t:i/7}));
+const ions=[];for(let i=0;i<5;i++)ions.push({x:230+Math.random()*220,y:190+Math.random()*90,vx:0.5,t:'c'});
+for(let i=0;i<5;i++)ions.push({x:230+Math.random()*220,y:190+Math.random()*90,vx:-0.5,t:'a'});
+function frame(){const eo=document.getElementById('electrons');if(eo){let eg='';els.forEach(e=>{e.t+=0.0045;if(e.t>1)e.t-=1;const p=pp(e.t);eg+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="7" fill="#E0382A" stroke="${INK}" stroke-width="2"/><text x="${p[0].toFixed(1)}" y="${(p[1]+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="9" font-weight="900">e</text>`;});eo.innerHTML=eg;
+  let ig='';ions.forEach(o=>{o.x+=o.vx;if(o.x>470)o.x=230;if(o.x<210)o.x=470;const c=o.t==='c'?'#E86A17':'#1450C8',sg=o.t==='c'?'+':'–';ig+=`<circle cx="${o.x.toFixed(1)}" cy="${o.y.toFixed(1)}" r="9" fill="${c}" stroke="${INK}" stroke-width="2"/><text x="${o.x.toFixed(1)}" y="${(o.y+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">${sg}</text>`;});document.getElementById('ions').innerHTML=ig;}
+  requestAnimationFrame(frame);}
+document.getElementById('bGalv').onclick=()=>{mode='galv';renderEchem();};
+document.getElementById('bElec').onclick=()=>{mode='elec';renderEchem();};
+let cur=0;const steps=['s1','s2','s3','s4'];
+document.getElementById('stepNext').onclick=()=>{if(cur<steps.length){document.getElementById(steps[cur]).classList.add('show');cur++;}};
+document.getElementById('stepReset').onclick=()=>{steps.forEach(s=>document.getElementById(s).classList.remove('show'));cur=0;};
+const cells=[
+  {k:'氢氧燃料电池(酸)',meta:'原电池 · 酸性',neg:'负极(氧化):2H₂ − 4e⁻ → 4H⁺',pos:'正极(还原):O₂ + 4H⁺ + 4e⁻ → 2H₂O',tot:'总:2H₂ + O₂ → 2H₂O',trap:'正极通 O₂,酸性用 H⁺。'},
+  {k:'氢氧燃料电池(碱)',meta:'原电池 · 碱性',neg:'负极(氧化):2H₂ + 4OH⁻ − 4e⁻ → 4H₂O',pos:'正极(还原):O₂ + 2H₂O + 4e⁻ → 4OH⁻',tot:'总:2H₂ + O₂ → 2H₂O',trap:'同电池碱性下两极都带 OH⁻/H₂O,写法不同。'},
+  {k:'甲烷燃料电池(碱)',meta:'原电池 · 碱性',neg:'负极(氧化):CH₄ + 10OH⁻ − 8e⁻ → CO₃²⁻ + 7H₂O',pos:'正极(还原):2O₂ + 4H₂O + 8e⁻ → 8OH⁻',tot:'总:CH₄ + 2O₂ + 2OH⁻ → CO₃²⁻ + 3H₂O',trap:'碳产物是 CO₃²⁻ 不是 CO₂。'},
+  {k:'甲醇燃料电池(酸)',meta:'原电池 · 酸性',neg:'负极(氧化):CH₃OH + H₂O − 6e⁻ → CO₂↑ + 6H⁺',pos:'正极(还原):O₂ + 4H⁺ + 4e⁻ → 2H₂O',tot:'总:2CH₃OH + 3O₂ → 2CO₂ + 4H₂O',trap:'酸性碳产物 CO₂;甲醇碳为 −2 价,失 6e⁻。'},
+  {k:'铅蓄电池(放电)',meta:'原电池 · 稀H₂SO₄',neg:'负极(氧化):Pb + SO₄²⁻ − 2e⁻ → PbSO₄',pos:'正极(还原):PbO₂ + 4H⁺ + SO₄²⁻ + 2e⁻ → PbSO₄ + 2H₂O',tot:'总:Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O',trap:'两极都生成 PbSO₄;充电时整个倒过来。'},
+  {k:'电解饱和食盐水',meta:'电解池 · 惰性电极',neg:'阴极(还原):2H₂O + 2e⁻ → H₂↑ + 2OH⁻',pos:'阳极(氧化):2Cl⁻ − 2e⁻ → Cl₂↑',tot:'总:2Cl⁻ + 2H₂O —电解→ Cl₂↑ + H₂↑ + 2OH⁻',trap:'阴极是水放 H₂(Na⁺不放电),阴极区变碱。'},
+  {k:'电解精炼铜',meta:'电解池 · 粗铜作阳极',neg:'阴极(还原,纯铜):Cu²⁺ + 2e⁻ → Cu',pos:'阳极(氧化,粗铜):Cu − 2e⁻ → Cu²⁺',tot:'净效果:粗铜→纯铜',trap:'活性电极(粗铜)自身先溶解。'}
+];
+const chips=document.getElementById('cellChips');
+cells.forEach((c,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=c.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');showCell(i);};chips.appendChild(b);});
+function showCell(i){const c=cells[i];document.getElementById('cellMeta').textContent=c.meta;
+  document.getElementById('cellNeg').textContent=c.neg;document.getElementById('cellPos').textContent=c.pos;
+  document.getElementById('cellTotal').textContent=c.tot;document.getElementById('cellTrap').textContent='⚠ '+c.trap;}
+showCell(0);
+const envs=[{k:'碳·酸性',out:'产物 CO₂↑ · 用 H⁺、H₂O 配平'},{k:'碳·碱性',out:'产物 CO₃²⁻ · 用 OH⁻、H₂O(CO₂被OH⁻吸收)'},{k:'硫 S²⁻·酸性',out:'常到 SO₄²⁻ + H⁺;注意是否生成 SO₂'},{k:'氨 NH₃·碱性',out:'2NH₃ − 6e⁻ → N₂ + 6H⁺,碱性再结合 OH⁻'}];
+const envChips=document.getElementById('envChips');
+envs.forEach((e,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=e.k;b.onclick=()=>{[...envChips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('envOut').textContent=e.out;};envChips.appendChild(b);});
+document.getElementById('envOut').textContent=envs[0].out;
+const qs=[{q:'1. 电解CuSO₄(惰性电极),阴极发生什么?',a:'阴极 Cu²⁺+2e⁻→Cu(Cu²⁺比H⁺先放电);阳极 2H₂O−4e⁻→O₂↑+4H⁺。'},{q:'2. 氢氧燃料电池碱性下正极反应式?',a:'O₂+2H₂O+4e⁻→4OH⁻(O₂得电子,还原)。'},{q:'3. 没见过的电池,问哪是负极——第一步做什么?',a:'先判氧化还原:电子流出那极=氧化=负极。别先纠结正负名字。'}];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML=`<b>${o.q}</b> <button class="btn ghost" style="padding:4px 12px;font-size:12px">看答案</button><div class="qa">${o.a}</div>`;d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+renderEchem();frame();
+})();
+</script>
+</body>
+</html>
