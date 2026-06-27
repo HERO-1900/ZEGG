@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电磁感应 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}
+  .brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:38px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.05}
+  h2{font-size:23px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--orange);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.y::before{background:var(--yellow)}h2.g::before{background:var(--green)}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--orange);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}
+  .say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}
+  .keybox b{font-weight:900}
+  .sim{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:12px;margin:14px 0}
+  .simbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:10px 18px;font-weight:900;font-size:14px;cursor:pointer;box-shadow:3px 3px 0 var(--orange)}
+  .btn.r{box-shadow:3px 3px 0 var(--red)}.btn.b{box-shadow:3px 3px 0 var(--blue)}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}
+  .readout b{display:block;font-size:12px;font-weight:800;color:#6b5d3a}
+  .readout span{font-size:17px;font-weight:900}
+  .step{display:flex;gap:12px;margin:9px 0}
+  .step .n{flex:none;width:28px;height:28px;background:var(--orange);border:3px solid var(--ink);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .tag{font-weight:900;font-size:13px}
+  .trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--orange)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电磁感应</h1>
+    <p class="lead">这块最容易在"感应电流往哪流""线圈对磁铁是吸还是推"上栽跟头。其实只要记住一句话,所有方向题都能秒判。先动手玩下面这个模拟。</p>
+
+    <div class="say">🗣️ <b>一句话讲透楞次定律:</b><br>线圈是个死硬的"<b>守旧派</b>"——你怎么改变穿过它的磁通量,它就拼命反抗、想维持原样。<br>👉 你把磁铁<b>插进去</b>(磁通量要增大),它就翻脸<b>顶你</b>(同名极相对,排斥)——<b>来拒</b>。<br>👉 你把磁铁<b>抽出来</b>(磁通量要减小),它就反手<b>拉你</b>(异名极相对,吸引)——<b>去留</b>。<br>感应电流的方向,就是为了制造出这个"顶你/拉你"的磁极。</div>
+
+    <h2>① 动手模拟:插拔磁铁,看线圈怎么反抗</h2>
+    <p class="lead">下面磁铁的 N 极对着线圈。点"插入"或"拔出",看线圈靠近磁铁那一面变成什么极、电流计往哪偏、磁通量怎么变:</p>
+    <div class="sim">
+      <svg viewBox="0 0 480 220" style="width:100%;height:auto">
+        <!-- coil (solenoid side view) -->
+        <g>
+          <rect x="300" y="70" width="70" height="80" fill="#cdb88a" stroke="#16120A" stroke-width="3"/>
+          <line x1="312" y1="70" x2="312" y2="150" stroke="#16120A" stroke-width="3"/>
+          <line x1="326" y1="70" x2="326" y2="150" stroke="#16120A" stroke-width="3"/>
+          <line x1="340" y1="70" x2="340" y2="150" stroke="#16120A" stroke-width="3"/>
+          <line x1="354" y1="70" x2="354" y2="150" stroke="#16120A" stroke-width="3"/>
+        </g>
+        <!-- near-face pole label -->
+        <circle cx="300" cy="110" r="20" fill="#fff" stroke="#16120A" stroke-width="3"/>
+        <text id="poleLbl" x="300" y="117" text-anchor="middle" font-size="20" font-weight="900" fill="#E0382A">N</text>
+        <!-- wires to galvanometer -->
+        <line x1="335" y1="150" x2="335" y2="178" stroke="#16120A" stroke-width="3"/>
+        <line x1="335" y1="178" x2="410" y2="178" stroke="#16120A" stroke-width="3"/>
+        <circle cx="430" cy="178" r="22" fill="#fff" stroke="#16120A" stroke-width="3"/>
+        <text x="430" y="210" text-anchor="middle" font-size="11" font-weight="800">电流计</text>
+        <line id="needle" x1="430" y1="178" x2="430" y2="160" stroke="#1450C8" stroke-width="3" style="transform-origin:430px 178px;transition:transform .5s"/>
+        <!-- magnet (moves) -->
+        <g id="magnet" style="transition:transform .8s cubic-bezier(.3,.7,.3,1)">
+          <rect x="90" y="92" width="70" height="36" fill="#1450C8" stroke="#16120A" stroke-width="3"/>
+          <rect x="160" y="92" width="60" height="36" fill="#E0382A" stroke="#16120A" stroke-width="3"/>
+          <text x="120" y="116" text-anchor="middle" fill="#fff" font-size="16" font-weight="900">S</text>
+          <text x="190" y="116" text-anchor="middle" fill="#fff" font-size="16" font-weight="900">N</text>
+        </g>
+        <text id="motionLbl" x="240" y="40" text-anchor="middle" font-size="14" font-weight="900" fill="#6b5d3a">点下面按钮开始</text>
+      </svg>
+      <div class="simbtns">
+        <button class="btn r" id="btnIn">磁铁插入 →</button>
+        <button class="btn b" id="btnOut">← 磁铁拔出</button>
+      </div>
+      <div class="readout">
+        <div><b>磁通量 Φ</b><span id="roFlux">—</span></div>
+        <div><b>线圈靠近面</b><span id="roPole" style="color:var(--red)">N 极</span></div>
+        <div><b>对磁铁的力</b><span id="roForce">—</span></div>
+      </div>
+    </div>
+    <div class="keybox"><b>来拒去留</b>:插入→磁通量增大→线圈近面 N 极→<b>推开</b>磁铁;拔出→磁通量减小→线圈近面 S 极→<b>拉住</b>磁铁。感应电流方向就是为了造出这个极。</div>
+
+    <h2 class="b">② 方向题四步法(任何题都按这个走)</h2>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div><b>定回路、定原磁场</b>:谁是闭合回路?穿过它的原磁场朝哪、由谁产生?</div></div>
+      <div class="step"><div class="n">2</div><div><b>判磁通量增还是减</b>:面积变?磁场强度变?距离变?→ Φ 在增大还是减小。<span class="trap">这一步最容易看错题——审题先圈"匀速/变速、闭合/断开"。</span></div></div>
+      <div class="step"><div class="n">3</div><div><b>楞次定律定感应电流方向</b>:感应电流要"反抗"这个变化(增就抵消、减就补充)→ 用右手定则定出电流绕向。</div></div>
+      <div class="step"><div class="n">4</div><div><b>再判安培力/受力</b>:感应电流在磁场中受安培力,方向永远"阻碍相对运动"(这是楞次定律的力学版,可直接当结论用)。</div></div>
+    </div>
+
+    <h2 class="g">③ 楞次定律的两个"万能结论"(直接背,省时间)</h2>
+    <div class="card">
+      <div class="mono">结论一(磁极版):增反抗 → 近面同名极排斥;减反抗 → 近面异名极吸引。</div>
+      <div class="mono">结论二(力学版):感应电流受的安培力,总是"阻碍产生它的相对运动"。</div>
+      <p class="trap">⚠ 高频陷阱:① "增反"不是"反向",是反抗变化;② 导体棒切割磁感线,用右手定则(不是左手);判断棒受的安培力才用左手/或直接用"阻碍相对运动";③ 双杆/导轨题,先判哪根在变。</p>
+    </div>
+
+    <h2>④ 题型卡(收进题型地图)</h2>
+    <div class="card">
+      <div class="tag">触发信号</div>
+      <p style="margin:4px 0 10px">磁铁插拔、线框进出磁场、导体棒在导轨上滑、变化的磁场穿过线圈——问感应电流方向 / 受力 / 谁吸谁推。</p>
+      <div class="tag">标准动作</div>
+      <p style="margin:4px 0 10px">回路→原磁场→Φ增减→楞次定律定电流→(需要时)安培力。方向题优先用两个"万能结论"秒杀。</p>
+      <div class="tag" style="color:var(--red)">易错 / 创新点</div>
+      <p class="trap" style="margin-top:4px">审题漏"闭合/断开"(断开就无感应电流、无安培力);"匀速"意味着合力为零,常用来反求外力;近年爱考"图像题"(Φ-t、i-t、E-t 图的斜率/正负)和能量(感应放热=克服安培力做的功)。</p>
+    </div>
+
+    <h2 class="y">⑤ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 下一块:多过程拆解 / 实验误差</p>
+  </div>
+
+<script>
+const magnet=document.getElementById('magnet'),needle=document.getElementById('needle'),poleLbl=document.getElementById('poleLbl');
+const roFlux=document.getElementById('roFlux'),roPole=document.getElementById('roPole'),roForce=document.getElementById('roForce'),motion=document.getElementById('motionLbl');
+function setState(mode){
+  if(mode==='in'){
+    magnet.style.transform='translateX(80px)';
+    poleLbl.textContent='N';poleLbl.setAttribute('fill','#E0382A');
+    needle.style.transform='rotate(38deg)';
+    roFlux.textContent='↑ 增大';roFlux.style.color='#E0382A';
+    roPole.textContent='N 极';roPole.style.color='#E0382A';
+    roForce.textContent='排斥(推开)';roForce.style.color='#E0382A';
+    motion.textContent='插入中:磁通量增大 →「来拒」';
+  }else{
+    magnet.style.transform='translateX(0px)';
+    poleLbl.textContent='S';poleLbl.setAttribute('fill','#1450C8');
+    needle.style.transform='rotate(-38deg)';
+    roFlux.textContent='↓ 减小';roFlux.style.color='#1450C8';
+    roPole.textContent='S 极';roPole.style.color='#1450C8';
+    roForce.textContent='吸引(拉住)';roForce.style.color='#1450C8';
+    motion.textContent='拔出中:磁通量减小 →「去留」';
+  }
+}
+document.getElementById('btnIn').onclick=()=>setState('in');
+document.getElementById('btnOut').onclick=()=>setState('out');
+const qs=[
+ {q:"1. 磁铁 N 极快速插入闭合线圈,线圈对磁铁是吸还是推?",a:"推(排斥)。磁通量增大,线圈近面变 N 极顶住磁铁——「来拒」。"},
+ {q:"2. 同一磁铁从线圈里往外抽,线圈近面是什么极?",a:"S 极。磁通量减小,线圈想留住它,近面变 S 极吸引磁铁——「去留」。"},
+ {q:"3. 磁铁插入但线圈回路是断开的,有感应电流和安培力吗?",a:"没有。回路断开 → 无感应电流 → 无安培力。审题必圈『闭合/断开』。"},
+ {q:"4. 导体棒在导轨上匀速滑动,判断感应电流方向用左手还是右手?",a:"右手定则(判感应电流/电动势)。要判这电流受的安培力方向才用左手,或直接用『阻碍相对运动』。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn" style="padding:4px 12px;font-size:12px;box-shadow:2px 2px 0 var(--ink)">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
