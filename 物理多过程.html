@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多过程拆解 / 实验误差 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}.logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}.links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--orange);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--orange);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--orange);color:#fff}
+  .stagebox{background:#fff;border:3px solid var(--ink);padding:14px;margin:8px 0}
+  .stagebox .tool{font-size:18px;font-weight:900;margin-bottom:4px}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;overflow-x:auto;box-shadow:3px 3px 0 var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>多过程拆解 / 能量动量</h1>
+    <p class="lead">压轴大题之所以难,是因为一道题里塞了好几段运动。其实只要会"拆",再难也是几道简单题拼起来的。</p>
+
+    <div class="say">🗣️ <b>多过程的核心心法:</b> 把一锅"乱炖"拆成几道独立的菜,<b>每道菜用对的那口锅</b>(运动学 / 牛二 / 动量 / 能量)。最关键的一句:<b>上一段的"出口速度" = 下一段的"入口速度"</b>(速度在衔接点连续)。把这条抓住,几段就能串起来。</div>
+
+    <h2>① 拆给你看:子弹打木块(动量+能量经典题)</h2>
+    <p class="lead">子弹水平射入木块、嵌在一起,再带着木块在粗糙地面滑行直到停下。点每个阶段,看该用什么规律:</p>
+    <div class="card">
+      <div class="chips" id="stChips"></div>
+      <div class="stagebox" id="stBox"></div>
+      <div class="mono" id="stEq"></div>
+      <div id="stLink" style="font-weight:800;color:var(--orange);margin-top:6px"></div>
+    </div>
+    <div class="keybox"><b>为什么阶段1用动量、阶段2用能量?</b> 碰撞(射入)那一瞬间时间极短,摩擦力的冲量可以忽略 → <b>动量守恒</b>;而碰撞过程有动能损失(变内能),不能用机械能守恒。滑行阶段是慢慢被摩擦力减速 → 用<b>动能定理/能量守恒</b>算距离。</div>
+
+    <h2 class="b">② 选锅指南:到底用动量还是能量?</h2>
+    <div class="card">
+      <table>
+        <tr><th>用哪个</th><th>什么时候用</th></tr>
+        <tr><td><b>动量守恒</b></td><td>系统不受外力,或内力≫外力(碰撞、爆炸、反冲的<b>瞬间</b>)。p前=p后。</td></tr>
+        <tr><td><b>机械能守恒</b></td><td>只有重力/弹力做功(<b>无摩擦、无阻力</b>)。</td></tr>
+        <tr><td><b>动能定理</b></td><td>万能!任何情况 W合=ΔEk。有摩擦、变力时首选。</td></tr>
+        <tr><td><b>能量守恒</b></td><td>有摩擦生热:Q=f·s相对(相对滑动路程,不是位移!)。</td></tr>
+      </table>
+      <p class="trap">⚠ 三个最致命的坑:① 碰撞瞬间别用机械能守恒(有动能损失);② 摩擦生热用<b>相对路程</b>不是对地位移;③ 子弹打木块里子弹位移 ≠ 木块位移,二者之差才是相对滑动距离。</p>
+    </div>
+
+    <h2 class="r">③ 拆题四步(任何多过程通用)</h2>
+    <div class="card">
+      <div class="mono">1) 分段:按"受力/接触/碰撞"变化的节点切成几段。</div>
+      <div class="mono">2) 选锅:每段判断守恒条件 → 选动量/能量/动能定理/牛二。</div>
+      <div class="mono">3) 接力:上一段末速度 = 下一段初速度,把段串起来。</div>
+      <div class="mono">4) 查隐含:摩擦生热、电热、形变弹性势能——别漏掉"偷偷"的能量。</div>
+    </div>
+
+    <h2>④ 题型卡(收进题型地图)</h2>
+    <div class="card">
+      <div class="tag">触发信号</div><p style="margin:4px 0 10px">一道题里有"碰撞/嵌入/爆炸 + 之后的运动";滑块-木板、子弹-木块、弹簧-小球、电磁多阶段。</p>
+      <div class="tag">标准动作</div><p style="margin:4px 0 10px">分段→每段选锅(碰撞瞬间动量、滑行用能量/动能定理)→速度衔接→查隐含能量(摩擦热=f·s相对)。</p>
+      <div class="tag" style="color:var(--red)">易错 / 创新点</div><p class="trap" style="margin-top:4px">①碰撞瞬间用机械能守恒(错);②摩擦热用对地位移(错,应相对路程);③漏掉弹簧弹性势能;④电磁多过程里"匀速"=安培力与外力平衡,常用来求感应电流/速度。</p>
+    </div>
+
+    <h2 class="y">⑤ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 下一块:英语小作文框架</p>
+  </div>
+
+<script>
+const stages=[
+ {k:"阶段1:子弹射入木块(瞬间)",tool:"用 动量守恒",eq:"m·v₀ = (m+M)·v共   → 求出共同速度 v共",link:"⚠ 这一步有动能损失(变内能),不能用机械能守恒!出口速度 v共 交给阶段2。",c:"#E0382A"},
+ {k:"阶段2:一起在粗糙面滑行到停",tool:"用 动能定理 / 能量守恒",eq:"−f·s = 0 − ½(m+M)v共²   → 求滑行距离 s",link:"⚠ 入口速度就是阶段1的 v共;f=μ(m+M)g。",c:"#1450C8"},
+ {k:"附加:碰撞损失了多少能量?",tool:"用 能量守恒(算热量)",eq:"ΔE = ½m·v₀² − ½(m+M)v共²   (这部分变成内能/声等)",link:"⚠ 子弹相对木块的位移 d 满足 Q摩=f·d(子弹在木块里钻的深度)。",c:"#1E9E86"}
+];
+let cs=0;const sc=document.getElementById('stChips');
+stages.forEach((s,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=s.k.split(':')[0];b.onclick=()=>{[...sc.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cs=i;render();};sc.appendChild(b);});
+function render(){const s=stages[cs];const box=document.getElementById('stBox');
+ box.innerHTML='<div class="tool" style="color:'+s.c+'">'+s.k+' → '+s.tool+'</div>';
+ document.getElementById('stEq').textContent=s.eq;
+ document.getElementById('stLink').textContent=s.link;}
+render();
+const qs=[
+ {q:"1. 子弹打木块并嵌入,求嵌入后共同速度,用什么守恒?能用机械能守恒吗?",a:"用动量守恒(m·v₀=(m+M)v共)。不能用机械能守恒——碰撞有动能损失变成内能。"},
+ {q:"2. 嵌入后一起在粗糙地面滑行,求滑行距离用什么?",a:"动能定理:−μ(m+M)g·s = 0−½(m+M)v共²,解出 s。"},
+ {q:"3. 摩擦生热 Q 用『对地位移』还是『相对路程』?",a:"相对路程!Q=f×相对滑动距离。子弹打木块中是子弹相对木块钻入的深度。"},
+ {q:"4. 多过程题最关键的衔接条件是什么?",a:"上一段的末速度 = 下一段的初速度(速度在衔接点连续)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
