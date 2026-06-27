@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电化学 · 迷你课攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1E9E86;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz svg,.viz canvas{width:100%;height:auto;display:block;background:#fff;border:3px solid var(--ink)}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;display:flex;flex-direction:column;gap:3px;min-width:130px;flex:1}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .vbtn{background:#fff;border:3px solid var(--ink);padding:6px 12px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.on{background:var(--accent);color:#fff}
+  .vbtn:active{transform:translate(2px,2px);box-shadow:none}
+  .steplbl{font-weight:800;font-size:13.5px;margin:8px 0;min-height:42px;background:#fff;border:3px solid var(--ink);padding:8px 10px}
+  .pill{display:inline-block;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);background:#fff}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:12px;height:12px;margin-right:5px;vertical-align:middle;border:2px solid var(--ink)}
+  .lg-e::before{background:var(--blue)}.lg-cat::before{background:var(--red)}.lg-an::before{background:var(--green)}
+  .seq{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .seq .tok{background:#fff;border:3px solid var(--ink);padding:8px 12px;font-weight:900;font-size:14px;cursor:grab;box-shadow:2px 2px 0 var(--ink);user-select:none}
+  .seq .tok.dragover{background:var(--yellow)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 迷你课攻坚包</div>
+    <h1>电化学 · 一节课吃透</h1>
+    <p class="lead">原电池 vs 电解池、电极判断、电极反应式书写、放电顺序、各类电池、电解应用、得失电子守恒计算——一条主线串起来,再动手拨一拨。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 电化学的全部秘密只有一句——<b>电子在导线里跑、离子在溶液里跑,首尾相接成一个圈</b>。原电池是"反应自己想发生,顺便发电"(化学能→电能,像下坡的水自己推水轮);电解池是"反应本不想发生,硬用电逼它发生"(电能→化学能,像用水泵把水抽上坡)。<b>谁失电子(氧化)谁就是『发生氧化的极』,谁得电子(还原)谁就是『发生还原的极』</b>——抓住电子流向,所有电极判断、产物判断、配平、计算都迎刃而解。</div>
+
+    <h2>① 统一本质:电子流向决定一切</h2>
+    <p class="lead">下面这张图把原电池和电解池放在一起。点切换:看电子在外电路怎么走、离子在内电路怎么走、电极各叫什么。</p>
+    <div class="viz">
+      <div class="ctrlrow"><button class="vbtn on" id="cellGalv">原电池(自发放电)</button><button class="vbtn" id="cellElec">电解池(通电强制)</button></div>
+      <svg id="svgCell" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend"><span class="lg-e">电子 e⁻(外电路)</span><span class="lg-an">阳离子(向阴/正极)</span><span class="lg-cat">阴离子(向阳/负极)</span></div>
+      <div class="verdict" id="cellVerdict"></div>
+    </div>
+    <div class="keybox"><b>两句口诀通吃电极:</b><br>原电池:<b>负氧正还</b>——负极发生氧化(失电子)、正极发生还原(得电子)。<br>电解池:<b>阳氧阴还</b>——阳极发生氧化(接电源正极)、阴极发生还原(接电源负极)。<br><b>口诀对照:无论哪种池,"发生氧化的极"电子都从这里流出;"发生还原的极"电子都流入。</b></div>
+    <div class="card">
+      <h3>电极名称与电子/离子方向 对照表</h3>
+      <table>
+        <tr><th></th><th>原电池</th><th>电解池</th></tr>
+        <tr><td>能量转化</td><td>化学能→电能</td><td>电能→化学能</td></tr>
+        <tr><td>发生氧化的极</td><td><b>负极</b>(电子流出)</td><td><b>阳极</b>(接电源正极)</td></tr>
+        <tr><td>发生还原的极</td><td><b>正极</b>(电子流入)</td><td><b>阴极</b>(接电源负极)</td></tr>
+        <tr><td>电子方向(外电路)</td><td>负极→正极</td><td>电源负极→阴极…阳极→电源正极</td></tr>
+        <tr><td>阳离子移向</td><td>正极</td><td>阴极</td></tr>
+        <tr><td>阴离子移向</td><td>负极</td><td>阳极</td></tr>
+      </table>
+      <p class="trap">⚠ 电子<b>只在导线/电极</b>里跑,绝不进溶液!溶液里靠<b>离子定向移动</b>导电。两者方向要分开说。</p>
+    </div>
+
+    <h2 class="b">② 离子定向移动 & 电子流向 动画</h2>
+    <p class="lead">把上面的对照"动"起来:绿点是电子在外电路流动,溶液中阳/阴离子分别奔向各自电极,形成闭合回路。</p>
+    <div class="viz">
+      <canvas id="cFlow" width="600" height="300"></canvas>
+      <div class="ctrlrow"><button class="vbtn on" id="flowGalv">原电池</button><button class="vbtn" id="flowElec">电解池</button><button class="vbtn" id="flowPlay">⏸ 暂停</button></div>
+      <div class="steplbl" id="flowLbl">电子从『发生氧化的极』经导线流向『发生还原的极』;离子在溶液里补齐回路。</div>
+    </div>
+
+    <h2 class="g">③ 电极反应式书写 · 四步法(步进演示)</h2>
+    <p class="lead">书写电极反应式有固定四步。下面以"惰性电极电解 CuSO₄ 溶液的阴极"为例,点"下一步"逐步生成:</p>
+    <div class="viz">
+      <div class="eq">阴极(还原):Cu²⁺ 在阴极得电子</div>
+      <div class="mono" id="stepEq" style="min-height:46px">点 ▶ 开始第一步</div>
+      <div class="ctrlrow"><button class="vbtn" id="stepPrev">◀ 上一步</button><button class="vbtn on" id="stepNext">下一步 ▶</button><span class="pill" id="stepIdx">0 / 4</span></div>
+      <div class="steplbl" id="stepNote">四步:①定反应物/产物 ②写得失电子数 ③配原子(注意介质补 H⁺/OH⁻/H₂O) ④两边电荷守恒。</div>
+    </div>
+    <div class="keybox"><b>书写四步法:</b> ①<b>判</b>谁在该极反应(放电顺序)→ ②<b>写</b>主体半反应、标 e⁻ 数 → ③<b>配</b>原子(酸性补 H⁺/H₂O,碱性补 OH⁻/H₂O)→ ④<b>查</b>两边电荷与原子都守恒。最后:正负(或阴阳)两极相加应得总反应。</div>
+
+    <h2 class="o">④ 放电顺序:阳离子在阴极、阴离子在阳极</h2>
+    <p class="lead">电解时谁先放电有固定顺序。下面是一个排序练习——把离子按"越靠左越先放电"拖成正确顺序(或点"自动归位"看答案)。</p>
+    <div class="card">
+      <h3>阴极:阳离子得电子顺序(氧化性越强越先)</h3>
+      <div class="mono">Ag⁺ &gt; Hg²⁺ &gt; Fe³⁺ &gt; Cu²⁺ &gt; (H⁺) &gt; Pb²⁺ &gt; Fe²⁺ &gt; Zn²⁺ &gt; (H₂O/H⁺) &gt; Al³⁺ &gt; Mg²⁺ &gt; Na⁺ &gt; Ca²⁺ &gt; K⁺</div>
+      <p style="font-size:13px;font-weight:700;margin:4px 0">活泼金属阳离子(Al³⁺ 及更左如 Mg²⁺/Na⁺/K⁺)在水溶液中<b>不放电</b>,改由水放电生成 H₂。</p>
+    </div>
+    <div class="viz">
+      <h3 style="margin-top:0">阳极:阴离子失电子顺序(还原性越强越先)— 拖动排序</h3>
+      <div class="seq" id="seqBox"></div>
+      <div class="ctrlrow"><button class="vbtn" id="seqCheck">检查</button><button class="vbtn" id="seqAuto">自动归位</button></div>
+      <div class="verdict" id="seqVerdict">正确顺序(从先到后):活泼电极金属本身 &gt; S²⁻ &gt; I⁻ &gt; Br⁻ &gt; Cl⁻ &gt; OH⁻ &gt; 含氧酸根(SO₄²⁻/NO₃⁻等不放电)。</div>
+    </div>
+    <div class="keybox"><b>阳极看电极:</b> 若是<b>活泼电极</b>(Cu、Fe、Ag 等,Pt/C/Au 除外),则<b>电极本身溶解失电子</b>,轮不到溶液中阴离子!若是<b>惰性电极</b>(Pt、Au、C/石墨),才按上面阴离子顺序放电。</div>
+
+    <h2 class="v">⑤ 电解产物判断(惰性 / 活性电极)</h2>
+    <div class="card">
+      <table>
+        <tr><th>电解对象(惰性电极)</th><th>阴极产物</th><th>阳极产物</th><th>溶液变化</th></tr>
+        <tr><td>CuCl₂ 溶液</td><td>Cu</td><td>Cl₂</td><td>电解质本身被消耗</td></tr>
+        <tr><td>CuSO₄ 溶液</td><td>Cu</td><td>O₂(+H⁺)</td><td>变酸,相当于"电解水+析铜"</td></tr>
+        <tr><td>NaCl 溶液(氯碱)</td><td>H₂</td><td>Cl₂</td><td>阴极区变碱(生成 NaOH)</td></tr>
+        <tr><td>Na₂SO₄ / NaOH / 稀硫酸</td><td>H₂</td><td>O₂</td><td>实质=电解水</td></tr>
+      </table>
+      <p class="trap">⚠ "放氢生碱、放氧生酸":阴极放 H₂(消耗 H⁺/H₂O)→ 阴极区变碱;阳极放 O₂(生成 H⁺)→ 阳极区变酸。</p>
+    </div>
+    <div class="viz">
+      <h3 style="margin-top:0">电解槽气泡动画:选电解对象,看两极冒什么</h3>
+      <div class="chips" id="elecChips"></div>
+      <canvas id="cBubble" width="600" height="280"></canvas>
+      <div class="verdict" id="bubbleVerdict"></div>
+    </div>
+
+    <h2 class="r">⑥ 酸碱介质下电极反应配平</h2>
+    <div class="card">
+      <h3>同一物质,介质不同,配平不同(以 O₂ 在正极得电子为例)</h3>
+      <div class="mono">酸性: O₂ + 4H⁺ + 4e⁻ = 2H₂O</div>
+      <div class="mono">碱性/中性: O₂ + 2H₂O + 4e⁻ = 4OH⁻</div>
+      <h3>燃料电池负极 H₂ 失电子</h3>
+      <div class="mono">酸性: H₂ - 2e⁻ = 2H⁺</div>
+      <div class="mono">碱性: H₂ + 2OH⁻ - 2e⁻ = 2H₂O</div>
+      <p class="trap">⚠ 配平口诀:<b>酸缺氧补 H₂O、缺氢补 H⁺;碱缺氧补 OH⁻、缺氢补 H₂O。</b>最后查两边电荷守恒(得失电子数 = 电荷差)。</p>
+    </div>
+
+    <h2 class="b">⑦ 各类电池(原电池家族)</h2>
+    <div class="card">
+      <h3>① 普通锌锰干电池</h3>
+      <div class="mono">负极:Zn - 2e⁻ = Zn²⁺　　正极:2MnO₂ + 2NH₄⁺ + 2e⁻ = Mn₂O₃ + 2NH₃ + H₂O</div>
+      <h3>② 铅蓄电池(可充电,放电/充电方向相反)</h3>
+      <div class="mono">放电 负极:Pb + SO₄²⁻ - 2e⁻ = PbSO₄</div>
+      <div class="mono">放电 正极:PbO₂ + 4H⁺ + SO₄²⁻ + 2e⁻ = PbSO₄ + 2H₂O</div>
+      <div class="mono">充电(阴极=原负极):PbSO₄ + 2e⁻ = Pb + SO₄²⁻ ; 阳极:PbSO₄ + 2H₂O - 2e⁻ = PbO₂ + 4H⁺ + SO₄²⁻</div>
+      <p style="font-size:13px;font-weight:700">充电时:原负极接电源负极当阴极、原正极接电源正极当阳极。"放电的负极"在充电时变"阴极"。</p>
+      <h3>③ 氢氧燃料电池(三种介质)</h3>
+      <div class="mono">酸性: 负 H₂-2e⁻=2H⁺ ; 正 O₂+4H⁺+4e⁻=2H₂O</div>
+      <div class="mono">碱性: 负 H₂+2OH⁻-2e⁻=2H₂O ; 正 O₂+2H₂O+4e⁻=4OH⁻</div>
+      <div class="mono">熔融碳酸盐: 负 H₂+CO₃²⁻-2e⁻=H₂O+CO₂ ; 正 O₂+2CO₂+4e⁻=2CO₃²⁻</div>
+      <h3>④ 锂离子电池(嵌入/脱出)</h3>
+      <div class="mono">放电 负极:LiC₆ - e⁻ = C₆ + Li⁺(脱锂)　正极:Li₁₋ₓCoO₂ + xLi⁺ + xe⁻ = LiCoO₂(嵌锂)</div>
+      <p class="trap">⚠ 写电池电极式先看<b>介质</b>(产物里能不能出现 H⁺/OH⁻/CO₃²⁻);熔融介质里没有水,别乱补 H₂O。</p>
+    </div>
+
+    <h2 class="o">⑧ 电解的应用</h2>
+    <div class="card">
+      <h3>① 电镀(镀铜为例)</h3>
+      <div class="mono">阳极=镀层金属(纯 Cu):Cu - 2e⁻ = Cu²⁺　阴极=待镀件:Cu²⁺ + 2e⁻ = Cu　电镀液 Cu²⁺ 浓度基本不变。</div>
+      <h3>② 铜的电解精炼</h3>
+      <div class="mono">阳极=粗铜(含 Zn/Fe/Ag/Au 等):Cu 及比 Cu 活泼的杂质溶解;Ag/Au 等不溶,沉为"阳极泥"。阴极=纯铜:Cu²⁺ + 2e⁻ = Cu(析出精铜)。</div>
+      <p style="font-size:13px;font-weight:700">精炼时电解液 Cu²⁺ 浓度会<b>略降</b>(活泼杂质也溶解占电子)。</p>
+      <h3>③ 氯碱工业(电解饱和食盐水)</h3>
+      <div class="mono">阴极:2H₂O + 2e⁻ = H₂↑ + 2OH⁻　阳极:2Cl⁻ - 2e⁻ = Cl₂↑　总:2NaCl+2H₂O =电解= 2NaOH+H₂↑+Cl₂↑</div>
+      <p class="trap">⚠ 电镀/精炼/氯碱都要分清阳极是"活泼电极溶解"还是"溶液阴离子放电";氯碱阳极用惰性电极,放电的是 Cl⁻。</p>
+    </div>
+
+    <h2 class="v">⑨ 电量与得失电子守恒计算(法拉第 + 串联)</h2>
+    <p class="lead">核心一句:<b>整个电路里转移的电子数处处相等</b>(串联时各电解池得失电子相同)。输入电流和时间,算出转移电子与各产物质量:</p>
+    <div class="viz">
+      <div class="ctrlrow">
+        <label>电流 I / A<input type="number" id="calI" value="2" step="0.1" style="border:2px solid var(--ink);padding:4px;font-weight:800"></label>
+        <label>时间 t / 分钟<input type="number" id="calT" value="32.17" step="1" style="border:2px solid var(--ink);padding:4px;font-weight:800"></label>
+        <label>电解对象<select id="calSel" style="border:2px solid var(--ink);padding:5px;font-weight:800"></select></label>
+      </div>
+      <div id="calOut"></div>
+      <div class="steplbl" id="calNote">Q=I·t(库仑)→ n(e⁻)=Q/F(F=96500 C/mol)→ 各产物 = n(e⁻)÷得失电子数 × 摩尔质量。</div>
+    </div>
+    <div class="keybox"><b>守恒计算三步:</b> ① 电量 Q = I × t(t 用秒!);② 电子 n(e⁻) = Q ÷ 96500;③ 按电极反应"几个电子对应几个产物"换算质量/体积。<b>串联电路各池转移电子数相等</b>,是连接不同池的桥梁。</div>
+
+    <h2>⑩ 全题型地图(每型:触发信号 → 标准动作 → 例题带解 → 陷阱)</h2>
+
+    <div class="card">
+      <div class="tag" style="color:var(--green)">题型 1 · 判断原电池/电解池 & 电极名称</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>给装置图,问"是原电池还是电解池""X 极是什么极"。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>有外接电源→电解池(阳氧阴还);无电源、能自发→原电池(负氧正还)。再由电子流向/电源正负极定名。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>装置无电源,Zn、Cu 插稀硫酸,Zn 上溶解、Cu 上冒气。<br><b>解:</b>无电源=原电池;Zn 失电子=负极(氧化),Cu=正极(2H⁺+2e⁻=H₂)。</p>
+      <p class="trap">⚠ 看到"电源/电池/直流"就是电解池;别被"也有金属电极"迷惑。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--blue)">题型 2 · 写电极反应式</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>"写出 X 极的电极反应式"。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>四步法——定反应物→标 e⁻→按介质配原子→查电荷守恒;最后两极相加=总反应验证。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>碱性氢氧燃料电池正极。<br><b>解:</b>O₂ 得电子、碱性补 H₂O/OH⁻:O₂ + 2H₂O + 4e⁻ = 4OH⁻。</p>
+      <p class="trap">⚠ 介质决定补 H⁺ 还是 OH⁻;熔融盐里别补水。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--orange)">题型 3 · 放电顺序 & 电解产物</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>"惰性电极电解 XXX 溶液,两极产物是什么"。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>阴极按阳离子放电顺序、阳极先判电极活性(活泼则电极溶解,惰性才看阴离子顺序)。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>石墨电极电解 CuSO₄ 溶液。<br><b>解:</b>阴极 Cu²⁺ 先于 H₂O → 析 Cu;阳极惰性、SO₄²⁻ 不放电 → OH⁻(水)放电出 O₂,溶液变酸。</p>
+      <p class="trap">⚠ 含氧酸根(SO₄²⁻、NO₃⁻)在水溶液阳极<b>不放电</b>,是水放电。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--violet)">题型 4 · 电解后溶液复原 / pH 变化</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>"电解一段时间后,加入什么可使溶液复原""pH 如何变"。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>看两极"实际消耗了什么":电解 CuSO₄=出去了 Cu 和 O₂=损失 CuO,复原加 CuO(或 Cu(OH)₂/CuCO₃)。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>惰性电极电解 CuSO₄ 一段时间。<br><b>解:</b>阴极析 Cu、阳极放 O₂,净失"CuO",故加适量 CuO 即复原;溶液变酸 pH 下降。</p>
+      <p class="trap">⚠ "复原=补回净失出的元素组合",不是简单加水或加电解质。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--red)">题型 5 · 可充电电池放电/充电方程</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>"铅蓄电池/锂电池充电时阳极反应式"。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>充电是放电逆过程;原负极→充电阴极、原正极→充电阳极。把放电式左右颠倒、e⁻ 改方向。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>铅蓄电池充电时阳极。<br><b>解:</b>放电正极是 PbO₂+4H⁺+SO₄²⁻+2e⁻=PbSO₄+2H₂O,逆写即充电阳极:PbSO₄+2H₂O-2e⁻=PbO₂+4H⁺+SO₄²⁻。</p>
+      <p class="trap">⚠ 充电接线:正接正、负接负;"放电负极"在充电时是"阴极",别叫错。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--green)">题型 6 · 电镀 / 精炼 / 氯碱 应用辨析</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>电镀件该接哪极、精炼粗铜放哪极、氯碱产物。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>电镀:镀件作阴极、镀层金属作阳极、镀液含镀层金属盐;精炼:粗铜作阳极、纯铜作阴极;氯碱:惰性阳极放 Cl₂、阴极放 H₂ 生 NaOH。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>在铁件上镀银。<br><b>解:</b>铁件作阴极、纯 Ag 作阳极、电镀液用 AgNO₃ 类。阳极 Ag-e⁻=Ag⁺,阴极 Ag⁺+e⁻=Ag。</p>
+      <p class="trap">⚠ 电镀阳极=镀层金属(会溶解补充离子),不是惰性电极。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--blue)">题型 7 · 得失电子守恒 & 串联计算</div>
+      <p style="margin:4px 0 6px"><b>触发信号:</b>给电流·时间或某产物量,求另一产物/串联另一池产物。</p>
+      <p style="margin:4px 0 6px"><b>标准动作:</b>Q=It→n(e⁻)=Q/96500→按电极反应换算;串联各池 n(e⁻) 相等做桥梁。</p>
+      <p style="margin:4px 0 6px"><b>例:</b>2 A 电流通 CuSO₄ 溶液 32.17 min。<br><b>解:</b>Q=2×1930≈3860 C,n(e⁻)≈0.04 mol;阴极 Cu²⁺+2e⁻=Cu → n(Cu)=0.02 mol=1.28 g;阳极 O₂=0.01 mol=224 mL(标况)。</p>
+      <p class="trap">⚠ 时间务必换成秒;每极"几电子对应几产物"别看错系数。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 电子不进溶液!外电路电子走、内电路离子走,方向分开记。</p>
+      <p class="trap">② 阳极先判电极:活泼电极(Cu/Fe/Ag)自身溶解,惰性电极(Pt/Au/C)才轮到溶液阴离子。</p>
+      <p class="trap">③ 含氧酸根(SO₄²⁻、NO₃⁻、PO₄³⁻)在水溶液阳极不放电,是 OH⁻(水)放电出 O₂。</p>
+      <p class="trap">④ 活泼金属阳离子(K⁺/Ca²⁺/Na⁺/Mg²⁺/Al³⁺)在水溶液阴极不放电,是 H₂O 放电出 H₂。</p>
+      <p class="trap">⑤ 配平先看介质:酸补 H⁺/H₂O,碱补 OH⁻/H₂O,熔融盐不补水。</p>
+      <p class="trap">⑥ 充电是放电逆反应;"放电负极"在充电时叫"阴极",接线正接正负接负。</p>
+      <p class="trap">⑦ 计算时间换成秒,F=96500 C/mol;串联各池转移电子数相等。</p>
+      <p class="trap">⑧ "放氢生碱、放氧生酸":阴极区常变碱、阳极区常变酸。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>① 一切归于电子守恒。</b>任何电化学题,先问"转移了几个电子",再问"这些电子在两极各干了什么"。守恒是连接两极、连接串联多池、连接气体体积与金属质量的总枢纽。</p>
+      <p style="margin:6px 0"><b>② "氧化/还原"比"正负/阴阳"更本质。</b>名称会因池型而变,但"失电子=氧化、得电子=还原"永不变。先判氧化还原,再贴名称标签,绝不会错。</p>
+      <p style="margin:6px 0"><b>③ 放电顺序=氧化性/还原性强弱的应用。</b>阴极阳离子谁氧化性强谁先得电子;阳极阴离子谁还原性强谁先失电子。把它和金属活动性、卤素活泼性串起来记,不必死背长串。</p>
+      <p style="margin:6px 0"><b>④ 介质思维。</b>看到电极式先定介质:酸/碱/中性/熔融,决定能否出现 H⁺、OH⁻、H₂O、CO₃²⁻。流程/新能源电池新情境题,介质判断是拿分关键。</p>
+      <p style="margin:6px 0"><b>⑤ 区域 pH 变化 → 溶液复原。</b>把"两极净消耗了哪种元素组合"想清楚,复原(加什么)、pH 升降、离子浓度变化全都串成一条逻辑线。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 上一块:化学平衡</p>
+  </div>
+
+<script>
+/* ===== ① 原电池/电解池 统一示意 ===== */
+const svgCell=document.getElementById('svgCell');let cellMode='G';
+function drawCell(){
+ const isG=cellMode==='G';
+ // labels differ
+ const leftName=isG?'负极(氧化)':'阴极(还原)';
+ const rightName=isG?'正极(还原)':'阳极(氧化)';
+ // electron direction in external wire: from oxidation electrode to reduction electrode
+ // Galvanic: oxidation=left(负), so e- left->right.  Electrolytic: oxidation=right(阳), e- right->left
+ const eLeftToRight=isG;
+ const src=isG?'<text x="300" y="40" text-anchor="middle" font-weight="900" font-size="13">(无电源 · 自发放电)</text>'
+              :'<rect x="262" y="18" width="76" height="34" fill="#F3C00E" stroke="#16120A" stroke-width="3"/><text x="300" y="40" text-anchor="middle" font-weight="900" font-size="14">— ‖ +电源</text>';
+ // arrow on wire
+ const arrow=eLeftToRight
+   ?'<polygon points="290,60 308,60 299,50" fill="#1450C8"/>'
+   :'<polygon points="310,60 292,60 301,50" fill="#1450C8"/>';
+ svgCell.innerHTML=`
+  ${src}
+  <line x1="120" y1="60" x2="480" y2="60" stroke="#16120A" stroke-width="4"/>
+  <line x1="120" y1="60" x2="120" y2="130" stroke="#16120A" stroke-width="4"/>
+  <line x1="480" y1="60" x2="480" y2="130" stroke="#16120A" stroke-width="4"/>
+  ${arrow}
+  <text x="300" y="78" text-anchor="middle" fill="#1450C8" font-weight="900" font-size="12">电子 e⁻ ${eLeftToRight?'→':'←'}</text>
+  <rect x="60" y="130" width="480" height="150" fill="#DCEFFB" stroke="#16120A" stroke-width="4"/>
+  <text x="300" y="270" text-anchor="middle" font-weight="800" font-size="12" fill="#16120A">电解质溶液(离子定向移动)</text>
+  <rect x="100" y="110" width="40" height="140" fill="#bbb" stroke="#16120A" stroke-width="3"/>
+  <rect x="460" y="110" width="40" height="140" fill="#bbb" stroke="#16120A" stroke-width="3"/>
+  <text x="120" y="104" text-anchor="middle" font-weight="900" font-size="13">${leftName}</text>
+  <text x="480" y="104" text-anchor="middle" font-weight="900" font-size="13">${rightName}</text>
+  <!-- ion arrows: 阳离子→还原极, 阴离子→氧化极 -->
+  ${ionArrows(isG)}`;
+ const v=document.getElementById('cellVerdict');
+ v.textContent=isG
+   ?'原电池:负极失电子(氧化)、电子经导线流向正极、正极得电子(还原)。阳离子在溶液中奔向正极、阴离子奔向负极。'
+   :'电解池:阳极接电源正极、失电子(氧化);阴极接电源负极、得电子(还原)。阳离子奔向阴极、阴离子奔向阳极。';
+ v.style.borderColor=isG?'#1E9E86':'#1450C8';
+}
+function ionArrows(isG){
+ // reduction electrode side gets cations(阳离子) ; oxidation electrode side gets anions(阴离子)
+ // Galvanic: reduction=right(正); Electrolytic: reduction=left(阴)
+ const redRight=isG; // is reduction electrode on the right?
+ const cationTo=redRight?470:130; // x of reduction electrode
+ const anionTo=redRight?130:470;
+ return `
+   <g font-weight="900" font-size="12">
+     <text x="300" y="170" text-anchor="middle" fill="#1E9E86">阳离子(+) →向还原极</text>
+     <polygon points="${redRight?'355,182 375,182 365,192':'245,182 225,182 235,192'}" fill="#1E9E86"/>
+     <text x="300" y="225" text-anchor="middle" fill="#E0382A">阴离子(−) →向氧化极</text>
+     <polygon points="${redRight?'245,237 225,237 235,247':'355,237 375,237 365,247'}" fill="#E0382A"/>
+   </g>`;
+}
+document.getElementById('cellGalv').onclick=function(){cellMode='G';this.classList.add('on');document.getElementById('cellElec').classList.remove('on');drawCell();};
+document.getElementById('cellElec').onclick=function(){cellMode='E';this.classList.add('on');document.getElementById('cellGalv').classList.remove('on');drawCell();};
+drawCell();
+
+/* ===== ② 流动动画 ===== */
+const cFlow=document.getElementById('cFlow'),xf=cFlow.getContext('2d');cFlow.width=600;cFlow.height=300;
+let flowMode='G',flowPlay=true,fph=0;
+function drawFlow(){const W=cFlow.width,H=cFlow.height;xf.clearRect(0,0,W,H);
+ const isG=flowMode==='G';
+ // wire top + electrodes + solution
+ xf.strokeStyle='#16120A';xf.lineWidth=4;
+ xf.strokeRect(60,120,480,150); // solution box
+ xf.fillStyle='#DCEFFB';xf.fillRect(62,122,476,146);
+ xf.fillStyle='#bbb';xf.fillRect(100,100,40,150);xf.fillRect(460,100,40,150);
+ xf.strokeStyle='#16120A';xf.strokeRect(100,100,40,150);xf.strokeRect(460,100,40,150);
+ // wire
+ xf.beginPath();xf.moveTo(120,100);xf.lineTo(120,55);xf.lineTo(480,55);xf.lineTo(480,100);xf.stroke();
+ // labels
+ xf.fillStyle='#16120A';xf.font='bold 13px sans-serif';xf.textAlign='center';
+ xf.fillText(isG?'负极(氧化)':'阴极(还原)',120,94);
+ xf.fillText(isG?'正极(还原)':'阳极(氧化)',480,94);
+ if(!isG){xf.fillStyle='#F3C00E';xf.fillRect(262,40,76,30);xf.strokeRect(262,40,76,30);xf.fillStyle='#16120A';xf.fillText('—‖+ 电源',300,60);}
+ // electron motion along wire: oxidation -> reduction electrode
+ const eLR=isG; // e- left to right
+ const nE=6;
+ for(let i=0;i<nE;i++){let t=((fph+i/nE)%1);
+   // path: up left electrode (120,100->120,55), across (120,55->480,55), down right(480,55->480,100) if eLR
+   let x,y;const seg1=0.18,seg2=0.64;
+   let tt=eLR?t:1-t;
+   if(tt<seg1){const p=tt/seg1;x=120;y=100-(45)*p;}
+   else if(tt<seg2){const p=(tt-seg1)/(seg2-seg1);x=120+360*p;y=55;}
+   else{const p=(tt-seg2)/(1-seg2);x=480;y=55+45*p;}
+   xf.fillStyle='#1450C8';xf.beginPath();xf.arc(x,y,6,0,7);xf.fill();
+ }
+ // ions in solution
+ const redRight=isG; // reduction electrode side
+ // 阳离子 (green) move toward reduction electrode
+ for(let i=0;i<5;i++){let t=((fph*0.8+i/5)%1);
+   let x=redRight?(300+ (480-300)*t):(300-(300-120)*t);
+   xf.fillStyle='#1E9E86';xf.beginPath();xf.arc(x,175,8,0,7);xf.fill();
+   xf.fillStyle='#fff';xf.font='bold 10px sans-serif';xf.fillText('+',x,179);}
+ // 阴离子 (red) move toward oxidation electrode
+ for(let i=0;i<5;i++){let t=((fph*0.8+i/5)%1);
+   let x=redRight?(300-(300-120)*t):(300+(480-300)*t);
+   xf.fillStyle='#E0382A';xf.beginPath();xf.arc(x,225,8,0,7);xf.fill();
+   xf.fillStyle='#fff';xf.font='bold 10px sans-serif';xf.fillText('–',x,229);}
+ xf.font='bold 13px sans-serif';
+ document.getElementById('flowLbl').textContent=isG
+   ?'原电池:电子从负极(左)经导线到正极(右);阳离子(+)奔正极、阴离子(−)奔负极,回路闭合。'
+   :'电解池:电源把电子压入阴极(左)、从阳极(右)抽走;阳离子(+)奔阴极、阴离子(−)奔阳极。';
+}
+function loopFlow(){if(flowPlay)fph=(fph+0.006)%1;drawFlow();requestAnimationFrame(loopFlow);}
+document.getElementById('flowGalv').onclick=function(){flowMode='G';this.classList.add('on');document.getElementById('flowElec').classList.remove('on');};
+document.getElementById('flowElec').onclick=function(){flowMode='E';this.classList.add('on');document.getElementById('flowGalv').classList.remove('on');};
+document.getElementById('flowPlay').onclick=function(){flowPlay=!flowPlay;this.textContent=flowPlay?'⏸ 暂停':'▶ 播放';};
+loopFlow();
+
+/* ===== ③ 电极反应式四步 ===== */
+const stepEqs=[
+ {eq:'点 ▶ 开始第一步',note:'四步:①定反应物/产物 ②写得失电子数 ③配原子(按介质) ④查电荷守恒。'},
+ {eq:'① 反应物 Cu²⁺ → 产物 Cu',note:'第一步:阴极是还原,Cu²⁺ 在此得电子变成单质 Cu。'},
+ {eq:'② Cu²⁺ + 2e⁻ → Cu',note:'第二步:Cu 由 +2 变 0,得 2 个电子,标上 2e⁻。'},
+ {eq:'③ Cu²⁺ + 2e⁻ = Cu(原子已配平)',note:'第三步:两边 Cu 各 1 个,中性溶液无需补 H⁺/OH⁻。'},
+ {eq:'④ 电荷:左 +2−2=0,右 0 ✓ 守恒',note:'第四步:左右电荷都为 0,守恒成立。最终式:Cu²⁺ + 2e⁻ = Cu。'}
+];
+let stepI=0;
+function showStep(){const s=stepEqs[stepI];document.getElementById('stepEq').textContent=s.eq;document.getElementById('stepNote').textContent=s.note;document.getElementById('stepIdx').textContent=stepI+' / 4';}
+document.getElementById('stepNext').onclick=()=>{if(stepI<4)stepI++;showStep();};
+document.getElementById('stepPrev').onclick=()=>{if(stepI>0)stepI--;showStep();};
+showStep();
+
+/* ===== ④ 阳极阴离子排序拖拽 ===== */
+const correct=['活泼金属(电极)','S²⁻','I⁻','Br⁻','Cl⁻','OH⁻','含氧酸根(不放电)'];
+let seqArr=['Cl⁻','OH⁻','S²⁻','含氧酸根(不放电)','I⁻','活泼金属(电极)','Br⁻'];
+const seqBox=document.getElementById('seqBox');let dragIdx=null;
+function renderSeq(){seqBox.innerHTML='';seqArr.forEach((t,i)=>{const d=document.createElement('div');d.className='tok';d.textContent=t;d.draggable=true;
+  d.ondragstart=()=>dragIdx=i;
+  d.ondragover=e=>{e.preventDefault();d.classList.add('dragover');};
+  d.ondragleave=()=>d.classList.remove('dragover');
+  d.ondrop=e=>{e.preventDefault();d.classList.remove('dragover');const m=seqArr.splice(dragIdx,1)[0];seqArr.splice(i,0,m);renderSeq();};
+  seqBox.appendChild(d);});}
+renderSeq();
+document.getElementById('seqCheck').onclick=()=>{const ok=seqArr.every((t,i)=>t===correct[i]);const v=document.getElementById('seqVerdict');
+  v.textContent=ok?'✓ 正确!阳极放电(从先到后):活泼金属电极本身 > S²⁻ > I⁻ > Br⁻ > Cl⁻ > OH⁻ > 含氧酸根(不放电)。':'✗ 还没对。提示:还原性越强越先失电子,含氧酸根排最后(不放电)。';
+  v.style.borderColor=ok?'#1E9E86':'#E0382A';};
+document.getElementById('seqAuto').onclick=()=>{seqArr=correct.slice();renderSeq();const v=document.getElementById('seqVerdict');v.textContent='已归位:活泼金属电极 > S²⁻ > I⁻ > Br⁻ > Cl⁻ > OH⁻ > 含氧酸根(不放电)。';v.style.borderColor='#1E9E86';};
+
+/* ===== ⑤ 电解槽气泡动画 ===== */
+const elecData=[
+ {k:'电解 CuCl₂ 溶液',cat:'Cu(红色固体附极)',an:'Cl₂↑(黄绿气泡)',catGas:false,anGas:true,catColor:'#b5651d',anColor:'#9acd32',say:'阴极 Cu²⁺+2e⁻=Cu(无气泡,析铜);阳极 2Cl⁻-2e⁻=Cl₂↑。'},
+ {k:'电解 CuSO₄ 溶液',cat:'Cu(析铜)',an:'O₂↑',catGas:false,anGas:true,catColor:'#b5651d',anColor:'#cfd8dc',say:'阴极 Cu²⁺+2e⁻=Cu;阳极 SO₄²⁻不放电→2H₂O-4e⁻=O₂↑+4H⁺(变酸)。'},
+ {k:'电解饱和 NaCl(氯碱)',cat:'H₂↑',an:'Cl₂↑',catGas:true,anGas:true,catColor:'#dbe9ff',anColor:'#9acd32',say:'阴极 2H₂O+2e⁻=H₂↑+2OH⁻(生 NaOH);阳极 2Cl⁻-2e⁻=Cl₂↑。'},
+ {k:'电解 Na₂SO₄(=电解水)',cat:'H₂↑',an:'O₂↑',catGas:true,anGas:true,catColor:'#dbe9ff',anColor:'#cfd8dc',say:'阴极 H₂、阳极 O₂,实质是电解水;V(H₂):V(O₂)=2:1。'}
+];
+let elecI=0;const ec=document.getElementById('elecChips');
+elecData.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...ec.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');elecI=i;};ec.appendChild(b);});
+const cBub=document.getElementById('cBubble'),xbu=cBub.getContext('2d');cBub.width=600;cBub.height=280;
+let bubbles=[];let bphase=0;
+function spawnBubbles(){const d=elecData[elecI];
+ if(d.catGas&&Math.random()<0.25)bubbles.push({x:140+Math.random()*30,y:230,r:3+Math.random()*4,c:d.catColor,v:0.6+Math.random()*0.6});
+ if(d.anGas&&Math.random()<0.25)bubbles.push({x:430+Math.random()*30,y:230,r:3+Math.random()*4,c:d.anColor,v:0.6+Math.random()*0.6});
+}
+function drawBub(){const W=cBub.width,H=cBub.height,d=elecData[elecI];xbu.clearRect(0,0,W,H);
+ // tank
+ xbu.fillStyle='#DCEFFB';xbu.fillRect(60,70,480,180);xbu.strokeStyle='#16120A';xbu.lineWidth=4;xbu.strokeRect(60,70,480,180);
+ // electrodes
+ xbu.fillStyle='#777';xbu.fillRect(135,40,30,200);xbu.fillRect(435,40,30,200);xbu.strokeRect(135,40,30,200);xbu.strokeRect(435,40,30,200);
+ // power
+ xbu.fillStyle='#F3C00E';xbu.fillRect(265,8,70,26);xbu.strokeRect(265,8,70,26);xbu.fillStyle='#16120A';xbu.font='bold 12px sans-serif';xbu.textAlign='center';xbu.fillText('—‖+ 电源',300,26);
+ xbu.beginPath();xbu.moveTo(150,40);xbu.lineTo(150,21);xbu.lineTo(265,21);xbu.moveTo(335,21);xbu.lineTo(450,21);xbu.lineTo(450,40);xbu.stroke();
+ xbu.fillText('阴极(−)',150,255);xbu.fillText('阳极(+)',450,255);
+ // deposit on cathode if析金属
+ if(!d.catGas){xbu.fillStyle=d.catColor;xbu.fillRect(135,40,30,200);xbu.strokeRect(135,40,30,200);xbu.fillStyle='#fff';xbu.fillText(d.cat.slice(0,2),150,150);}
+ spawnBubbles();
+ bubbles.forEach(b=>{b.y-=b.v;});bubbles=bubbles.filter(b=>b.y>75);
+ bubbles.forEach(b=>{xbu.fillStyle=b.c;xbu.globalAlpha=.85;xbu.beginPath();xbu.arc(b.x,b.y,b.r,0,7);xbu.fill();xbu.globalAlpha=1;xbu.strokeStyle='#16120A';xbu.lineWidth=1;xbu.stroke();});
+ xbu.lineWidth=4;xbu.strokeStyle='#16120A';
+ xbu.fillStyle='#16120A';xbu.font='bold 13px sans-serif';
+ xbu.fillText('阴极:'+d.cat,150,62);xbu.fillText('阳极:'+d.an,450,62);
+ document.getElementById('bubbleVerdict').textContent=d.say;
+ requestAnimationFrame(drawBub);
+}
+drawBub();
+
+/* ===== ⑨ 电量计算器 ===== */
+const calData=[
+ {k:'电解 CuSO₄(阴极析Cu)',ez:2,prod:'Cu',M:64,gas:false},
+ {k:'氯碱:阴极 H₂',ez:2,prod:'H₂',M:2,gas:true},
+ {k:'氯碱:阳极 Cl₂',ez:2,prod:'Cl₂',M:71,gas:true},
+ {k:'电解水:阳极 O₂',ez:4,prod:'O₂',M:32,gas:true},
+ {k:'精炼银:阴极 Ag',ez:1,prod:'Ag',M:108,gas:false}
+];
+const calSel=document.getElementById('calSel');
+calData.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.k;calSel.appendChild(o);});
+const calI=document.getElementById('calI'),calT=document.getElementById('calT');
+function calc(){const I=+calI.value,tmin=+calT.value,d=calData[+calSel.value];
+ const t=tmin*60,Q=I*t,F=96500,ne=Q/F;
+ const nProd=ne/d.ez,mass=nProd*d.M,vol=nProd*22.4;
+ document.getElementById('calOut').innerHTML=`
+  <table style="text-align:center">
+   <tr><th>电量 Q=I·t</th><th>转移电子 n(e⁻)</th><th>产物 ${d.prod}</th><th>${d.gas?'标况体积':'质量'}</th></tr>
+   <tr><td>${Q.toFixed(0)} C</td><td>${ne.toFixed(4)} mol</td><td>${nProd.toFixed(4)} mol</td><td>${d.gas?(vol*1000).toFixed(1)+' mL':mass.toFixed(3)+' g'}</td></tr>
+  </table>`;
+ document.getElementById('calNote').textContent='Q='+I+'×'+t+'='+Q.toFixed(0)+' C → n(e⁻)='+ne.toFixed(4)+' mol → '+d.prod+'每 '+d.ez+'e⁻ 得 1 个 → '+nProd.toFixed(4)+' mol。';
+}
+[calI,calT,calSel].forEach(s=>s.oninput=calc);calc();
+
+/* ===== ⑬ 自测 ===== */
+const qs=[
+ {q:"1. 原电池中,电子从哪极流向哪极?阳离子向哪极移?",a:"电子从负极(氧化)经导线流向正极(还原);阳离子在溶液中移向正极、阴离子移向负极。"},
+ {q:"2. 电解池『阳氧阴还』是什么意思?",a:"阳极发生氧化(接电源正极、失电子)、阴极发生还原(接电源负极、得电子)。"},
+ {q:"3. 惰性电极电解 CuSO₄ 溶液,两极产物?溶液 pH 怎么变?",a:"阴极析 Cu,阳极放 O₂(2H₂O-4e⁻=O₂↑+4H⁺),溶液变酸 pH 下降。"},
+ {q:"4. 用粗铜精炼时,粗铜接哪极?Ag、Au 去哪了?",a:"粗铜作阳极溶解;Ag、Au 等不活泼杂质不溶,沉积为『阳极泥』。纯铜作阴极析出。"},
+ {q:"5. 碱性氢氧燃料电池正极反应式?",a:"O₂ + 2H₂O + 4e⁻ = 4OH⁻。"},
+ {q:"6. 铅蓄电池充电时阳极反应式?",a:"PbSO₄ + 2H₂O - 2e⁻ = PbO₂ + 4H⁺ + SO₄²⁻(即放电正极反应的逆过程)。"},
+ {q:"7. 阳极是活泼电极(如 Cu)时,放电的是电极还是溶液阴离子?",a:"是电极本身溶解失电子(Cu-2e⁻=Cu²⁺),轮不到溶液阴离子。只有惰性电极才看阴离子顺序。"},
+ {q:"8. 2 A 电流电解 CuSO₄ 溶液 32.17 min,阴极析出多少铜?",a:"Q=2×1930≈3860 C,n(e⁻)≈0.04 mol,Cu²⁺+2e⁻=Cu → n(Cu)=0.02 mol=1.28 g。"},
+ {q:"9. 电解饱和食盐水(氯碱)总反应方程式?",a:"2NaCl + 2H₂O =电解= 2NaOH + H₂↑ + Cl₂↑;阴极区生成 NaOH。"},
+ {q:"10. 配平电极反应,酸性介质缺氧、缺氢分别补什么?",a:"酸性:缺氧补 H₂O、缺氢补 H⁺;碱性:缺氧补 OH⁻、缺氢补 H₂O。最后查电荷守恒。"},
+ {q:"11. 在铁件上镀银,铁件作哪极?电镀液用什么?",a:"铁件作阴极(Ag⁺+e⁻=Ag);纯银作阳极(Ag-e⁻=Ag⁺);电镀液含 AgNO₃ 类银盐。"},
+ {q:"12. 串联两个电解池,如何联系它们的产物?",a:"串联电路中各池转移的电子数相等,以此作桥梁换算两池产物的量。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

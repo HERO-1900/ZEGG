@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学:新定义题 / 状态转移与概率递推 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--teal:#0E9E8E;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--teal);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--teal);border:3px solid var(--ink);flex:none}
+  h2.t::before{background:var(--teal)}h2.v::before{background:var(--violet)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--teal);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--teal);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--violet)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas, .viz svg{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--teal);width:160px}
+  .pill{display:inline-block;background:var(--teal);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.v{background:var(--violet)}.pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .ex{background:#fff;border-left:10px solid var(--violet);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+  .step-box{border:3px solid var(--ink);padding:10px 14px;margin:8px 0;background:#fff;font-weight:700;font-size:14.5px}
+  .step-box.on{background:#e7faf6;border-left:10px solid var(--teal)}
+  .barwrap{display:flex;gap:4px;align-items:flex-end;height:120px;border:3px solid var(--ink);background:#fffdf6;padding:8px;margin:8px 0}
+  .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:11px;font-weight:800}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 新定义 / 状态转移攻坚包</div>
+    <h1>新定义题 / 状态转移与概率递推</h1>
+    <p class="lead">压轴里最「劝退」的两类:看不懂的新定义,和绕来绕去的概率递推。其实都有固定套路——新定义就是「翻译 + 套用」,概率递推就是「找出 pₙ₊₁ 和 pₙ 的关系,再构造等比」。</p>
+
+    <div class="say">🗣️ <b>新定义题(人话):</b> 出题人现编一个规则,考你「<b>会不会照着规则做</b>」。别慌,把定义当「游戏说明书」:逐句翻译成你熟悉的语言,再用小例子试一遍,套路立刻显形。<br>🗣️ <b>状态转移(人话):</b> 系统在几个「状态」之间跳来跳去,每步跳的概率固定。把「下一步的概率 pₙ₊₁」用「这一步的 pₙ」表示出来,就得到递推式 pₙ₊₁ = a·pₙ + b——再构造等比数列就能求通项。</p>
+
+    <!-- ========== 新定义 ========== -->
+    <h2 class="t">一、新定义题:四步拆解法</h2>
+    <div class="say">🗣️ <b>四步:</b> ① <b>读</b>定义(圈出新符号、新名词);② <b>翻译</b>(用熟悉的数学语言把定义重写一遍);③ <b>试</b>(代一个最简单的具体值,验证自己理解对没);④ <b>套用</b>(把题目要求一步步对照定义执行)。</div>
+    <p class="lead">下面这个「拆解步进器」给你一个真实的新定义,点「下一步」逐步翻译并套用。亲手走一遍,你会发现新定义题其实不难。</p>
+    <div class="viz" style="background:var(--card)">
+      <div id="defSteps"></div>
+      <div class="stepbtns">
+        <button class="btn" id="defPrev">← 上一步</button>
+        <button class="btn" id="defNext">下一步 →</button>
+        <button class="btn" id="defReset">重置</button>
+      </div>
+      <span class="info" id="defInfo"></span>
+    </div>
+
+    <h3>审题策略(带解)</h3>
+    <div class="ex"><b>定义:</b> 对数列 {aₙ},若存在常数 d 使 aₙ₊₁ − aₙ ≤ d 对一切 n 成立,称 {aₙ} 为「<b>缓增数列</b>」。问 aₙ = n²/2ⁿ 是否为缓增数列?<br><b>翻译:</b> 就是问相邻两项之差 aₙ₊₁−aₙ 是否「有上界」。<br><b>套用:</b> 算 aₙ₊₁−aₙ =（(n+1)²/2ⁿ⁺¹）−（n²/2ⁿ）=(−n²+2n+1)/2ⁿ⁺¹。分子是开口向下的抛物线、分母正且增大 → 该差有最大值(在 n=1 附近),故存在上界 d → <b>是缓增数列</b>。</div>
+
+    <!-- ========== 状态转移图 ========== -->
+    <h2 class="t">二、两状态转移图:看概率分布收敛到稳态</h2>
+    <p class="lead">系统在状态 A、B 之间跳。每步:在 A 时有概率 α 跳到 B(留在 A 概率 1−α);在 B 时有概率 β 跳回 A。点「走一步」,看「现在在 A 的概率」如何一步步逼近一个固定值——这个固定值就是<b>稳态</b>。</p>
+    <div class="viz">
+      <svg id="svgMarkov" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="barwrap" id="markovBars"></div>
+      <div class="ctrls">
+        <label>α (A→B) = <input id="sAlpha" type="range" min="5" max="90" value="40"> <span id="aL" class="pill">α</span></label>
+        <label>β (B→A) = <input id="sBeta" type="range" min="5" max="90" value="30"> <span id="bL" class="pill v">β</span></label>
+      </div>
+      <div class="stepbtns">
+        <button class="btn" id="mkStep">▶ 走一步</button>
+        <button class="btn" id="mkAuto">⏩ 自动播放</button>
+        <button class="btn" id="mkReset">重置(全在A)</button>
+      </div>
+      <span class="info" id="mkInfo"></span>
+    </div>
+    <div class="ex"><b>稳态推导:</b> 设稳态时在 A 的概率为 π。平衡条件「流出 = 流入」:π·α = (1−π)·β → <b>π = β/(α+β)</b>。无论一开始在哪,分布最终都收敛到这里。这就是马尔科夫链的核心思想。</div>
+
+    <!-- ========== 递推与不动点 ========== -->
+    <h2 class="v">三、概率递推 pₙ₊₁ = a·pₙ + b:构造等比数列</h2>
+    <div class="say">🗣️ <b>万能套路:</b> 见到 pₙ₊₁ = a·pₙ + b(a≠1),先找「<b>不动点</b>」x:令 x = a·x + b → x = b/(1−a)。然后两边减 x:pₙ₊₁ − x = a(pₙ − x) → 数列 {pₙ − x} 是公比 a 的<b>等比数列</b>!通项立刻出来。</div>
+    <div class="viz">
+      <canvas id="cConv" width="760" height="360"></canvas>
+      <div class="ctrls">
+        <label>a = <input id="sA" type="range" min="-90" max="90" value="50"> <span id="caL" class="pill v">a</span></label>
+        <label>b = <input id="sB" type="range" min="0" max="80" value="30"> <span id="cbL" class="pill o">b</span></label>
+      </div>
+      <span class="info" id="convInfo"></span>
+      <p class="sub">每个点是 pₙ,虚线是不动点 x=b/(1−a)。|a|&lt;1 时 pₙ 单调或摆动着收敛到不动点;这正是「构造等比 → 求通项」背后的几何画面。</p>
+    </div>
+    <div class="ex"><b>例:</b> p₁=1,pₙ₊₁ = ½pₙ + 1,求 pₙ。<br>① 不动点:x = ½x + 1 → x = 2。<br>② 两边减 2:pₙ₊₁ − 2 = ½(pₙ − 2) → {pₙ−2} 是首项 p₁−2 = −1、公比 ½ 的等比数列。<br>③ pₙ − 2 = −1·(½)ⁿ⁻¹ → <b>pₙ = 2 − (½)ⁿ⁻¹</b>。验证:p₁=2−1=1 ✓,且 pₙ→2 与图一致。</div>
+
+    <h2 class="v">四、不动点法图解:y=x 与 y=ap+b 的交点</h2>
+    <p class="lead">把递推画成两条线:y = p(那条45°斜线)和 y = a·p + b。它俩的交点就是<b>不动点</b>。从 p₁ 出发「画楼梯」(蜘蛛网图),你能直接看出数列收不收敛、怎么逼近。</p>
+    <div class="viz">
+      <canvas id="cCobweb" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <label>a = <input id="sCa" type="range" min="-90" max="90" value="50"> <span id="cobA" class="pill v">a</span></label>
+        <label>p₁ = <input id="sCp" type="range" min="0" max="80" value="10"> <span id="cobP" class="pill">p₁</span></label>
+      </div>
+      <span class="info" id="cobInfo"></span>
+      <p class="sub">蓝线 y=p,紫线 y=ap+b。交点 = 不动点。楼梯(蜘蛛网)向交点收拢 ⇔ |a|&lt;1 ⇔ 数列收敛。</p>
+    </div>
+
+    <!-- ========== 逆向思维 ========== -->
+    <h2 class="o">五、逆向思维:正难则反 / 补集法 / 对立事件</h2>
+    <div class="say">🗣️ <b>口诀:</b> 当「至少」「至多」「不全是」这类词出现、正面情况多到数不过来时 → 算它的<b>反面</b>,再用 <b>1 − 反面概率</b>。P(至少一个) = 1 − P(一个都没有)。</div>
+    <p class="lead">下面对比「正算」与「反算」的工作量。点切换,直观感受为什么补集法常常省一大半功夫。</p>
+    <div class="viz">
+      <canvas id="cComp" width="760" height="300"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="compToggle">切换:正算 ⇄ 反算</button>
+      </div>
+      <span class="info" id="compInfo"></span>
+    </div>
+    <div class="ex"><b>例:</b> 掷 3 次骰子,求「至少出现一次 6 点」的概率。<br><b>正算</b>(麻烦):恰好1次+恰好2次+恰好3次,要算3项。<br><b>反算</b>(省事):一次都没出现 6 的概率 = (5/6)³ = 125/216 → P(至少一次) = 1 − 125/216 = <b>91/216</b>。</div>
+
+    <!-- ========== 题型地图 ========== -->
+    <h2 class="g">六、全题型地图</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型 / 变式</th><th>触发信号</th><th>标准动作</th><th>陷阱</th></tr>
+        <tr><td><b>新定义</b></td><td>现编符号/名词「定义…为…」</td><td>读→翻译→试→套用</td><td>没用足定义条件;漏验特例</td></tr>
+        <tr><td><b>概率递推</b></td><td>「第n次…求pₙ」「与前一次有关」</td><td>列 pₙ₊₁=a·pₙ+b,构造等比</td><td>初值 p₁ 弄错;系数算错</td></tr>
+        <tr><td><b>不动点法</b></td><td>pₙ₊₁=a·pₙ+b 型递推</td><td>解 x=ax+b,两边减 x 得等比</td><td>a=1 时不能用,需直接累加</td></tr>
+        <tr><td><b>两状态马氏链</b></td><td>「A/B两种状态来回转」</td><td>列转移、求稳态 π=β/(α+β)</td><td>转移概率方向搞反</td></tr>
+        <tr><td><b>数列+概率</b></td><td>「期望/方差随n变化」</td><td>对 E(Xₙ) 或 pₙ 建递推</td><td>混淆「这一次」与「累计」</td></tr>
+        <tr><td><b>正难则反</b></td><td>「至少」「至多」「不全」</td><td>算补集,用 1−P(反)</td><td>反面事件界定不清</td></tr>
+        <tr><td><b>对立事件</b></td><td>「恰好成立 vs 不成立」</td><td>P(A)+P(Ā)=1</td><td>把「互斥」当「对立」</td></tr>
+        <tr><td><b>构造法</b></td><td>递推不直接是等差/等比</td><td>构造 {pₙ−x}、{pₙ/cⁿ} 等新数列</td><td>构造目标找错</td></tr>
+      </table>
+    </div>
+
+    <h3>典型例题(带解)</h3>
+    <div class="ex"><b>状态转移例:</b> 一只青蛙在 A、B 两块石头上。每分钟:在 A 时 0.6 跳到 B、0.4 留 A;在 B 时 0.5 跳到 A、0.5 留 B。设第 n 分钟在 A 的概率为 pₙ,p₁=1,求 pₙ 与稳态。<br>① 递推:pₙ₊₁ = 0.4·pₙ + 0.5·(1−pₙ) = −0.1·pₙ + 0.5。<br>② 不动点:x = −0.1x + 0.5 → x = 0.5/1.1 = 5/11。<br>③ pₙ − 5/11 = (−0.1)·(pₙ₋₁ − 5/11) → {pₙ−5/11} 公比 −0.1。p₁−5/11 = 6/11。<br>④ <b>pₙ = 5/11 + (6/11)(−0.1)ⁿ⁻¹</b>,稳态 π = 5/11(与 β/(α+β)=0.5/(0.6+0.5) 一致)。</div>
+
+    <h2 class="r">七、易错集</h2>
+    <div class="card">
+      <p class="trap">⚠ ① 转移概率方向搞反:「在 A 跳到 B」与「在 B 跳到 A」是两个不同的概率,列式前先画图标清楚。</p>
+      <p class="trap">⚠ ② a=1 时不动点法失效(x=b/(1−a) 分母为0):此时 pₙ₊₁=pₙ+b 是等差数列,直接累加。</p>
+      <p class="trap">⚠ ③ 求出 {pₙ−x} 的通项后,别忘了「加回 x」还原成 pₙ。</p>
+      <p class="trap">⚠ ④ 「互斥」≠「对立」:对立一定互斥且概率和为1;互斥不一定对立。</p>
+      <p class="trap">⚠ ⑤ 新定义题:把定义里每个条件都用上,漏一个条件常常就漏一类情况。</p>
+      <p class="trap">⚠ ⑥ 初值 p₁ 要按题意确定(题目说「第1次」还是「第0次」),代错初值整题崩。</p>
+    </div>
+
+    <h2 class="v">八、尖子生拔高视角</h2>
+    <div class="card">
+      <p><b>① 不动点法是「线性递推」的统一钥匙:</b> 凡是 pₙ₊₁=a·pₙ+b 都先求不动点构造等比。看到分式递推 pₙ₊₁=(a·pₙ+b)/(c·pₙ+d) 还能用「双不动点」化简。</p>
+      <p><b>② 稳态先用「流量平衡」秒算:</b> π·(流出率) = (1−π)·(流入率),不必求通项也能直接给出极限分布,验算神器。</p>
+      <p><b>③ 收敛速度看 |a|:</b> |a| 越小,收敛越快;a&lt;0 时是「摆动收敛」,图像上点会左右横跳着逼近——这能帮你判断答案合理性。</p>
+      <p><b>④ 新定义题的本质是「迁移」:</b> 出题人考的是你把已学知识迁移到新规则的能力。读完定义先问「这像我学过的什么?」(等差?函数?集合?)。</p>
+      <p><b>⑤ 正难则反要会「补集嵌套」:</b> 复杂事件可多次取补,把「至少…且至多…」拆成几个补集的组合,大幅降难度。</p>
+    </div>
+
+    <h2 class="o">九、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 状态转移与新定义</p>
+  </div>
+
+<script>
+/* ========== 新定义步进器 ========== */
+(function(){
+  const steps=[
+    {t:"① 读定义",d:"定义:对数列 {aₙ},若存在常数 d 使 aₙ₊₁ − aₙ ≤ d 对一切 n 成立,称 {aₙ} 为『缓增数列』。先圈出新名词:『缓增数列』,以及关键式 aₙ₊₁ − aₙ ≤ d。"},
+    {t:"② 翻译",d:"翻译成人话:相邻两项的差 aₙ₊₁ − aₙ 不会无限变大,它有一个『上界』d。也就是说,这个差的最大值是有限的。"},
+    {t:"③ 试(代具体)",d:"拿一个简单数列试:aₙ = 2n。则 aₙ₊₁ − aₙ = 2(n+1) − 2n = 2,差恒为 2 ≤ 2 → 取 d=2 成立,它是缓增数列。理解无误。"},
+    {t:"④ 套用",d:"现在判断 aₙ = n²/2ⁿ:算 aₙ₊₁ − aₙ =(−n²+2n+1)/2ⁿ⁺¹。分子是开口向下的抛物线(有最大值),分母随 n 增大 → 整个差有上界。"},
+    {t:"⑤ 结论",d:"存在常数 d(取差的最大值即可)使 aₙ₊₁ − aₙ ≤ d 恒成立 → aₙ = n²/2ⁿ 是缓增数列。✓ 四步走完,新定义题被拆解。"}
+  ];
+  let i=0;const box=document.getElementById('defSteps');
+  function render(){
+    box.innerHTML='';
+    steps.forEach((s,k)=>{
+      const d=document.createElement('div');
+      d.className='step-box'+(k===i?' on':'');
+      d.style.opacity=k<=i?'1':'0.4';
+      d.innerHTML='<b>'+s.t+'</b><br>'+(k<=i?s.d:'…');
+      box.appendChild(d);
+    });
+    document.getElementById('defInfo').textContent='第 '+(i+1)+' / '+steps.length+' 步';
+  }
+  document.getElementById('defNext').onclick=()=>{if(i<steps.length-1)i++;render();};
+  document.getElementById('defPrev').onclick=()=>{if(i>0)i--;render();};
+  document.getElementById('defReset').onclick=()=>{i=0;render();};
+  render();
+})();
+/* ========== 两状态马尔科夫链 ========== */
+(function(){
+  const svg=document.getElementById('svgMarkov');
+  const sA=document.getElementById('sAlpha'),sB=document.getElementById('sBeta');
+  let pA=1; // prob in A
+  const bars=document.getElementById('markovBars');let hist=[1];
+  function drawSvg(){
+    const a=sA.value/100,b=sB.value/100;
+    document.getElementById('aL').textContent='α = '+a.toFixed(2);
+    document.getElementById('bL').textContent='β = '+b.toFixed(2);
+    svg.innerHTML=`
+      <circle cx="200" cy="140" r="58" fill="#0E9E8E" stroke="#16120A" stroke-width="4"/>
+      <circle cx="560" cy="140" r="58" fill="#7A3FF2" stroke="#16120A" stroke-width="4"/>
+      <text x="200" y="135" text-anchor="middle" font-size="34" font-weight="900" fill="#fff">A</text>
+      <text x="200" y="165" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">${pA.toFixed(3)}</text>
+      <text x="560" y="135" text-anchor="middle" font-size="34" font-weight="900" fill="#fff">B</text>
+      <text x="560" y="165" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">${(1-pA).toFixed(3)}</text>
+      <defs><marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#16120A"/></marker></defs>
+      <path d="M255,115 Q380,60 505,115" fill="none" stroke="#16120A" stroke-width="3.5" marker-end="url(#ah)"/>
+      <text x="380" y="62" text-anchor="middle" font-size="15" font-weight="900" fill="#0E9E8E">α=${a.toFixed(2)}</text>
+      <path d="M505,170 Q380,225 255,170" fill="none" stroke="#16120A" stroke-width="3.5" marker-end="url(#ah)"/>
+      <text x="380" y="222" text-anchor="middle" font-size="15" font-weight="900" fill="#7A3FF2">β=${b.toFixed(2)}</text>
+      <path d="M150,105 A40 40 0 1 1 165,90" fill="none" stroke="#16120A" stroke-width="3" marker-end="url(#ah)"/>
+      <text x="120" y="70" text-anchor="middle" font-size="13" font-weight="800">1−α</text>
+      <path d="M610,105 A40 40 0 1 0 595,90" fill="none" stroke="#16120A" stroke-width="3" marker-end="url(#ah)"/>
+      <text x="640" y="70" text-anchor="middle" font-size="13" font-weight="800">1−β</text>`;
+  }
+  function drawBars(){
+    bars.innerHTML='';
+    const a=sA.value/100,b=sB.value/100;const pi=b/(a+b);
+    const show=hist.slice(-22);
+    show.forEach((v,k)=>{
+      const col=document.createElement('div');col.className='col';
+      const h=Math.max(2,v*100);
+      col.innerHTML='<div style="width:80%;height:'+h+'px;background:#0E9E8E;border:2px solid #16120A"></div><span>'+(k===show.length-1?v.toFixed(2):'')+'</span>';
+      bars.appendChild(col);
+    });
+    document.getElementById('mkInfo').innerHTML='第 '+(hist.length)+' 步:P(在A) = <b>'+pA.toFixed(4)+'</b> → 稳态 π = β/(α+β) = <b>'+pi.toFixed(4)+'</b>';
+  }
+  function step(){
+    const a=sA.value/100,b=sB.value/100;
+    pA = (1-a)*pA + b*(1-pA);
+    hist.push(pA);if(hist.length>200)hist.shift();
+    drawSvg();drawBars();
+  }
+  function reset(){pA=1;hist=[1];drawSvg();drawBars();}
+  document.getElementById('mkStep').onclick=step;
+  let auto=null;
+  document.getElementById('mkAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;return;}auto=setInterval(step,500);};
+  document.getElementById('mkReset').onclick=()=>{if(auto){clearInterval(auto);auto=null;}reset();};
+  sA.oninput=()=>{drawSvg();drawBars();};sB.oninput=()=>{drawSvg();drawBars();};
+  reset();
+})();
+/* ========== 递推收敛动画 ========== */
+(function(){
+  const c=document.getElementById('cConv'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sA=document.getElementById('sA'),sB=document.getElementById('sB');
+  function draw(){
+    const a=sA.value/100,b=sB.value/100;
+    document.getElementById('caL').textContent='a = '+a.toFixed(2);
+    document.getElementById('cbL').textContent='b = '+b.toFixed(0);
+    ctx.clearRect(0,0,W,H);
+    const fixed=(Math.abs(1-a)<0.001)?null:b/(1-a);
+    // compute sequence
+    let p=10,seq=[p];for(let n=0;n<24;n++){p=a*p+b;seq.push(p);}
+    const pad=50;const plotW=W-2*pad,plotH=H-2*pad;
+    let mn=Math.min(...seq),mx=Math.max(...seq);if(fixed!==null){mn=Math.min(mn,fixed);mx=Math.max(mx,fixed);}
+    const rng=(mx-mn)||1;mn-=rng*0.15;mx+=rng*0.15;
+    const X=i=>pad+plotW*i/(seq.length-1);
+    const Y=v=>pad+plotH*(1-(v-mn)/(mx-mn));
+    // axes
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.stroke();
+    // fixed point dashed
+    if(fixed!==null && fixed>mn && fixed<mx){
+      ctx.strokeStyle='#E86A17';ctx.lineWidth=2.5;ctx.setLineDash([8,6]);
+      ctx.beginPath();ctx.moveTo(pad,Y(fixed));ctx.lineTo(W-pad,Y(fixed));ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='#E86A17';ctx.font='bold 13px sans-serif';ctx.fillText('不动点 x='+fixed.toFixed(2),W-pad-150,Y(fixed)-8);
+    }
+    // sequence points/line
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.beginPath();
+    seq.forEach((v,i)=>{i===0?ctx.moveTo(X(i),Y(v)):ctx.lineTo(X(i),Y(v));});ctx.stroke();
+    seq.forEach((v,i)=>{ctx.fillStyle='#0E9E8E';ctx.beginPath();ctx.arc(X(i),Y(v),3.5,0,7);ctx.fill();});
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('pₙ',pad-6,pad-12);ctx.fillText('n →',W-pad-20,H-pad+24);
+    let msg;
+    if(fixed===null)msg='a=1 → 不能用不动点(分母为0),此时是等差数列,直接累加。';
+    else if(Math.abs(a)<1)msg='|a|='+Math.abs(a).toFixed(2)+'<1 → pₙ 收敛到不动点 x='+fixed.toFixed(2)+(a<0?'(摆动收敛)':'(单调收敛)');
+    else msg='|a|='+Math.abs(a).toFixed(2)+'≥1 → 发散,不收敛。';
+    document.getElementById('convInfo').textContent=msg;
+  }
+  sA.oninput=draw;sB.oninput=draw;draw();
+})();
+/* ========== 蜘蛛网/不动点图 ========== */
+(function(){
+  const c=document.getElementById('cCobweb'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;const b=30;
+  const sA=document.getElementById('sCa'),sP=document.getElementById('sCp');
+  function draw(){
+    const a=sA.value/100,p1=parseFloat(sP.value);
+    document.getElementById('cobA').textContent='a = '+a.toFixed(2);
+    document.getElementById('cobP').textContent='p₁ = '+p1.toFixed(0);
+    ctx.clearRect(0,0,W,H);
+    const pad=46;const sz=Math.min(W,H)-2*pad;const lo=0,hi=80;
+    const X=v=>pad+sz*(v-lo)/(hi-lo);
+    const Y=v=>H-pad-sz*(v-lo)/(hi-lo);
+    // axes
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(pad,H-pad);ctx.lineTo(pad+sz,H-pad);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pad,H-pad);ctx.lineTo(pad,H-pad-sz);ctx.stroke();
+    // y=p (blue)
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X(lo),Y(lo));ctx.lineTo(X(hi),Y(hi));ctx.stroke();
+    // y=ap+b (violet)
+    const g=v=>a*v+b;
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X(lo),Y(g(lo)));ctx.lineTo(X(hi),Y(g(hi)));ctx.stroke();
+    // fixed point
+    const fx=(Math.abs(1-a)<0.001)?null:b/(1-a);
+    if(fx!==null && fx>=lo && fx<=hi){ctx.fillStyle='#E86A17';ctx.beginPath();ctx.arc(X(fx),Y(fx),6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle='#E86A17';ctx.font='bold 13px sans-serif';ctx.fillText('不动点',X(fx)+8,Y(fx)-8);}
+    // cobweb
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=2;
+    let p=p1;ctx.beginPath();ctx.moveTo(X(p),Y(0));
+    for(let k=0;k<20;k++){const np=g(p);ctx.lineTo(X(p),Y(np));ctx.lineTo(X(np),Y(np));p=np;if(p<lo-50||p>hi+200)break;}
+    ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('y=p',X(hi)-34,Y(hi)+18);ctx.fillText('y=ap+b',X(hi)-78,Y(g(hi))-8);
+    let msg=(fx===null)?'a=1 → 两线平行无交点(等差数列)。':((Math.abs(a)<1)?'|a|<1 → 楼梯收拢到不动点 '+fx.toFixed(2)+',数列收敛。':'|a|≥1 → 楼梯发散,数列不收敛。');
+    document.getElementById('cobInfo').textContent=msg;
+  }
+  sA.oninput=draw;sP.oninput=draw;draw();
+})();
+/* ========== 补集法对比 ========== */
+(function(){
+  const c=document.getElementById('cComp'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;let mode=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#16120A';ctx.font='bold 16px sans-serif';
+    ctx.fillText('问题:掷3次骰子,至少出现一次6点的概率',30,36);
+    if(mode===0){
+      ctx.fillStyle='#E0382A';ctx.font='bold 15px sans-serif';ctx.fillText('【正算】要分别算 恰好1次 / 2次 / 3次,共3项:',30,78);
+      const items=['恰好1次6:C(3,1)(1/6)(5/6)² = 75/216','恰好2次6:C(3,2)(1/6)²(5/6) = 15/216','恰好3次6:C(3,3)(1/6)³ = 1/216','相加 = 91/216'];
+      items.forEach((s,i)=>{ctx.fillStyle=i<3?'#E0382A':'#16120A';ctx.fillRect(30,100+i*40,18,18);ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';ctx.fillText(s,58,114+i*40);});
+      document.getElementById('compInfo').innerHTML='<span style="color:#E0382A;font-weight:900">正算要算 3 项再相加,容易算错、漏项。</span>';
+    }else{
+      ctx.fillStyle='#1E9E86';ctx.font='bold 15px sans-serif';ctx.fillText('【反算/补集】只算反面「一次6都没有」,1步搞定:',30,78);
+      ctx.fillStyle='#1E9E86';ctx.fillRect(30,100,18,18);ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+      ctx.fillText('P(一次6都没有) = (5/6)³ = 125/216',58,114);
+      ctx.fillStyle='#0E9E8E';ctx.fillRect(30,150,18,18);ctx.fillStyle='#16120A';
+      ctx.fillText('P(至少一次) = 1 − 125/216 = 91/216',58,164);
+      ctx.fillStyle='#1E9E86';ctx.font='bold 26px sans-serif';ctx.fillText('= 91/216 ✓ 一步到位',30,230);
+      document.getElementById('compInfo').innerHTML='<span style="color:#1E9E86;font-weight:900">反算只需 1 步:1 − P(反面)。省一大半功夫。</span>';
+    }
+  }
+  document.getElementById('compToggle').onclick=()=>{mode=1-mode;draw();};
+  draw();
+})();
+/* ========== 自测 ========== */
+const qs=[
+ {q:"1. 递推 pₙ₊₁ = a·pₙ + b(a≠1)的不动点是多少?",a:"令 x=ax+b → x = b/(1−a)。两边减 x 得 {pₙ−x} 是公比 a 的等比数列。"},
+ {q:"2. p₁=1,pₙ₊₁=½pₙ+1,求 pₙ。",a:"不动点 x=2,{pₙ−2} 首项 −1、公比 ½,故 pₙ = 2 − (½)ⁿ⁻¹。"},
+ {q:"3. 两状态链 α(A→B)、β(B→A),稳态在A的概率?",a:"流量平衡 π·α=(1−π)·β → π = β/(α+β)。"},
+ {q:"4. 掷3次骰子至少一次6的概率(用补集)?",a:"1 − (5/6)³ = 1 − 125/216 = 91/216。"},
+ {q:"5. 青蛙题:在A时0.6跳B,在B时0.5跳A,p₁=1,稳态?",a:"pₙ₊₁=−0.1pₙ+0.5,不动点 5/11,故稳态 π=5/11。"},
+ {q:"6. 「互斥」和「对立」有何区别?",a:"对立=互斥且概率和为1;互斥不一定对立(可能都不发生)。"},
+ {q:"7. 新定义题的标准四步是什么?",a:"读定义→翻译成熟悉语言→代具体值试→对照定义套用执行。"},
+ {q:"8. a=1 时为何不能用不动点法?",a:"x=b/(1−a) 分母为0。此时 pₙ₊₁=pₙ+b 是等差数列,直接累加求通项。"},
+ {q:"9. 递推中 a<0 时收敛有何特征?",a:"摆动收敛——pₙ 在不动点两侧左右横跳着逼近,而非单调。"},
+ {q:"10. 「至少一个」用什么思路最省事?",a:"正难则反:P(至少一个)=1−P(一个都没有)。"},
+ {q:"11. 求出 {pₙ−x} 通项后还要做什么?",a:"加回不动点 x,还原成 pₙ 本身;别忘了这一步。"},
+ {q:"12. 蜘蛛网图里数列收敛的几何条件?",a:"y=ap+b 与 y=p 相交且 |a|<1,楼梯向交点(不动点)收拢。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

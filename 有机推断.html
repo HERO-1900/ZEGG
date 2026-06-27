@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有机推断 / 官能团转化网络 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--pink:#C81E6E;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--pink);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--pink);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--pink);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--pink);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--pink)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left;vertical-align:top}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* ---- viz additions ---- */
+  svg{width:100%;height:auto;display:block;font-family:-apple-system,"PingFang SC",sans-serif}
+  .vizwrap{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px;margin:14px 0}
+  .vizhint{font-size:13px;font-weight:700;color:#6b5d3a;margin:6px 2px}
+  input.fin{font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;border:3px solid var(--ink);padding:8px 12px;width:200px;background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--pink)}
+  .pill{display:inline-block;border:3px solid var(--ink);background:#fff;font-weight:900;font-size:13px;padding:5px 10px;margin:3px;box-shadow:2px 2px 0 var(--ink)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .resbox{border:3px solid var(--ink);background:var(--yellow);font-weight:900;padding:12px 14px;font-size:15px;margin-top:8px}
+  .fglist{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .fgnode{border:3px solid var(--ink);font-weight:800;font-size:13px;padding:7px 11px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);background:#fff;transition:transform .15s}
+  .fgnode:hover{transform:translate(-1px,-1px)}
+  .fgnode.sel{background:var(--pink);color:#fff}
+  .step{border:3px solid var(--ink);background:#fff;padding:10px 12px;margin:8px 0;font-weight:700}
+  .step.done{background:#e7f7f2;border-left:12px solid var(--green)}
+  .step.cur{border-left:12px solid var(--pink)}
+  .canvasbox{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:8px;margin:14px 0}
+  canvas{width:100%;height:auto;display:block}
+  .toc{columns:2;font-weight:800;font-size:13.5px;margin:6px 0}@media(max-width:560px){.toc{columns:1}}
+  .toc a{color:var(--ink);text-decoration:none;display:block;padding:2px 0;border-bottom:1px dashed #b9ad8c}
+  .glowtxt{font-weight:900;color:var(--pink)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包 · 有机</div>
+    <h1>有机推断 / 官能团转化网络</h1>
+    <p class="lead">有机推断不是背反应,是“认接口、连网络、抓现象”。把官能团当乐高接口,你就能在分子式和现象之间架起桥,一步步锁定结构。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 把每个分子想成一坨乐高积木,<b>官能团就是乐高上的“接口”</b>。烷基那一堆碳氢是“塑料底座”,基本不反应;真正能拼能拆的,是底座上插着的接口——<b>双键、羟基、醛基、羧基…</b>。<br>有机推断 = 看题目给的<b>现象</b>判断“是哪种接口”,再用<b>转化网络</b>把接口一个个换掉,拼出题目要的目标分子。会认接口 + 会连线,这类题就稳了。</div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--pink)">本攻坚包目录</div>
+      <div class="toc">
+        <a href="#fg">① 官能团图鉴:每个接口的脾气</a>
+        <a href="#net">② 转化网络:接口怎么换(交互图)</a>
+        <a href="#omega">③ 不饱和度 Ω:一秒看穿骨架(计算器)</a>
+        <a href="#test">④ 特征反应判别器:选试剂看现象</a>
+        <a href="#ester">⑤ 酯化 / 水解动画:谁脱谁</a>
+        <a href="#iso">⑥ 同分异构体:数清不漏不重(计数器)</a>
+        <a href="#map">⑦ 全题型地图(触发→动作→例→坑)</a>
+        <a href="#quest">⑧ 推断闯关:逐步锁结构</a>
+        <a href="#trap">⑨ 易错集</a>
+        <a href="#top">⑩ 尖子生拔高视角</a>
+        <a href="#self">⑪ 自测 12 题</a>
+      </div>
+    </div>
+
+    <!-- ===================== 1 官能团图鉴 ===================== -->
+    <h2 id="fg">① 官能团图鉴:每个“接口”的脾气</h2>
+    <p class="lead">先把接口认全。点一个接口,看它长什么样、有什么典型性质、怎么用现象认出它:</p>
+    <div class="vizwrap">
+      <div class="fglist" id="fgList"></div>
+      <div id="fgPanel" style="border-top:3px solid var(--ink);padding-top:10px;margin-top:6px"></div>
+    </div>
+    <div class="keybox"><b>记忆主线:</b> 把碳骨架想成“地基”,官能团想成“地基上的插座”。<b>烃(烷/烯/炔/苯)= 没插座或只插了 C=C / C≡C</b>;<b>含氧/含卤 = 插上了功能插座</b>(—X、—OH、—CHO、—COOH、—COO—)。<b>氧化变“更氧”、还原变“更氢”</b>:醇 →[氧化] 醛 →[氧化] 羧酸,反过来加氢就是还原。</div>
+
+    <!-- ===================== 2 转化网络 ===================== -->
+    <h2 id="net" class="g">② 官能团转化网络(点接口,看它能变成谁)</h2>
+    <p class="lead">这是有机推断的“地铁线路图”。点亮一个官能团,会高亮它<b>能直接转成的下家</b>,manim 式箭头会沿线流动,旁边给出<b>反应条件</b>:</p>
+    <div class="vizwrap">
+      <div class="chips" id="netChips"></div>
+      <svg id="netSvg" viewBox="0 0 720 440" aria-label="官能团转化网络图"></svg>
+      <div class="vizhint">点节点 = 选起点；高亮粉色箭头 = 它能直接转成的官能团。下方列出每条转化的条件。</div>
+      <div id="netInfo" class="verdict" style="border-color:var(--pink)">点上面任一官能团,看它能变成谁。</div>
+    </div>
+    <div class="card">
+      <h3>转化网络“六字诀”——记反应类型</h3>
+      <table>
+        <tr><th>类型</th><th>箭头</th><th>条件 / 试剂</th></tr>
+        <tr><td><b>氧化</b></td><td>醇→醛→羧酸；醛→羧酸</td><td>催化氧化 O₂/Cu/Δ;或 醛被 O₂/银氨/新制Cu(OH)₂ 氧化</td></tr>
+        <tr><td><b>还原(加氢)</b></td><td>醛→醇;烯→烷;C=C/C≡C 加H₂</td><td>H₂ / 催化剂 Ni、Δ</td></tr>
+        <tr><td><b>消去</b></td><td>醇→烯;卤代烃→烯</td><td>醇:浓H₂SO₄、170℃;卤代烃:NaOH 醇溶液、Δ</td></tr>
+        <tr><td><b>加成</b></td><td>烯→卤代烃 / 醇;烯+H₂→烷</td><td>+HX、+H₂O(催化)、+X₂、+H₂</td></tr>
+        <tr><td><b>取代</b></td><td>烷+X₂(光照);苯环上取代;醇→卤代烃</td><td>光照 / 卤化氢 / 催化</td></tr>
+        <tr><td><b>水解</b></td><td>卤代烃→醇;酯→醇+羧酸</td><td>卤代烃:NaOH 水溶液、Δ;酯:酸或碱催化、Δ</td></tr>
+        <tr><td><b>酯化</b></td><td>羧酸+醇→酯</td><td>浓H₂SO₄ 催化、Δ(可逆,“酸脱羟基醇脱氢”)</td></tr>
+      </table>
+      <p class="trap">⚠ 卤代烃遇 NaOH:用<b>水溶液</b>→取代(水解成醇);用<b>醇溶液</b>→消去(成烯)。一字之差,产物全变。这是高频陷阱。</p>
+    </div>
+
+    <!-- ===================== 3 不饱和度 ===================== -->
+    <h2 id="omega" class="b">③ 不饱和度 Ω:一秒看穿骨架</h2>
+    <div class="say">🗣️ <b>不饱和度(Ω)= 这分子比“全饱和链状”少了几对氢</b>。每<b>少一对 H</b>(即出现 1 个环或 1 个双键)Ω 加 1;<b>三键</b>算 2;<b>苯环</b>= 1环+3双键 = <b>Ω=4</b>。算出 Ω,就知道分子里大概藏着几个环/几个双键。</div>
+    <div class="card">
+      <h3>公式(C_c H_h O_o N_n X_x)</h3>
+      <div class="mono">Ω = (2×c + 2 + n − h − x) / 2　　(O 不影响,直接忽略!)</div>
+      <p style="margin:8px 0 0;font-weight:700">输入分子式(如 <span class="pill">C7H8O</span>、<span class="pill">C6H6</span>、<span class="pill">C2H4O2</span>),自动算 Ω 并猜骨架:</p>
+      <div style="margin:10px 0"><input class="fin" id="omIn" value="C7H8O" autocomplete="off"></div>
+      <div id="omRes" class="resbox"></div>
+      <div class="vizwrap" style="margin-top:10px;box-shadow:none;border-width:3px">
+        <div class="vizhint">骨架直觉:Ω 个“缺口”可拼成 环 / 双键 / 三键(苯环=4)</div>
+        <svg id="omSvg" viewBox="0 0 700 120"></svg>
+      </div>
+      <p class="trap">⚠ 含 O 不进公式!很多人把 O 算进去导致 Ω 全错。还有:Ω=4 不一定是苯,也可能 1 环+3双键 等组合,要结合现象再定。</p>
+    </div>
+
+    <!-- ===================== 4 特征反应判别器 ===================== -->
+    <h2 id="test" class="o">④ 特征反应判别器:选试剂,看谁有现象</h2>
+    <p class="lead">推断题的“破案钥匙”就是现象。选一个试剂,下方亮起<b>哪些官能团会有现象、是什么现象</b>:</p>
+    <div class="vizwrap">
+      <div class="chips" id="reagChips"></div>
+      <div class="grid2" id="reagGrid"></div>
+      <div id="reagSay" class="verdict" style="border-color:var(--orange);margin-top:10px">选一个试剂试试。</div>
+    </div>
+    <div class="card">
+      <h3>区分“醇 / 酚 / 羧酸”三兄弟的经典三连</h3>
+      <table>
+        <tr><th>试剂</th><th>醇(—OH)</th><th>酚(苯环—OH)</th><th>羧酸(—COOH)</th></tr>
+        <tr><td>Na 金属</td><td>放H₂✔</td><td>放H₂✔</td><td>放H₂✔(都放氢,不能区分)</td></tr>
+        <tr><td>NaOH</td><td>不反应✘</td><td>反应✔(酚显弱酸)</td><td>反应✔(中和)</td></tr>
+        <tr><td>NaHCO₃ / Na₂CO₃</td><td>不反应✘</td><td>酚不与NaHCO₃放气✘</td><td>放CO₂气泡✔(酸性最强)</td></tr>
+        <tr><td>FeCl₃ 溶液</td><td>不变色✘</td><td>显紫色✔(特征!)</td><td>不显紫✘</td></tr>
+      </table>
+      <p class="trap">⚠ 酸性强弱:羧酸 &gt; 碳酸 &gt; 苯酚。所以只有羧酸能把 CO₂ 从 NaHCO₃ 里“顶”出来——<b>放气泡=羧酸</b>是铁律。酚遇 FeCl₃ 显紫是它的“身份证”。</p>
+    </div>
+
+    <!-- ===================== 5 酯化/水解动画 ===================== -->
+    <h2 id="ester" class="v">⑤ 酯化 / 水解动画:到底谁脱谁?</h2>
+    <div class="say">🗣️ <b>酯化口诀:酸脱 —OH,醇脱 —H</b>,两块拼成酯,挤出来一滴水。水解就是把这步<b>倒放</b>:水进去,把酯重新拆回酸和醇。下面用同位素 ¹⁸O 标记给你看清“水里的 O 来自酸”。</div>
+    <div class="canvasbox">
+      <canvas id="estC" width="700" height="260"></canvas>
+      <div style="text-align:center;margin-top:6px">
+        <button class="btn" id="estBtn">▶ 播放酯化</button>
+        <button class="btn" id="estBtn2" style="box-shadow:2px 2px 0 var(--pink)">◀ 播放水解</button>
+      </div>
+      <div class="vizhint" style="text-align:center">乙酸 + 乙醇 ⇌ 乙酸乙酯 + 水(浓硫酸催化、Δ)。同位素实验证明:水中的 O 来自<b>羧酸的羟基</b>。</div>
+    </div>
+
+    <!-- ===================== 6 同分异构体 ===================== -->
+    <h2 id="iso" class="r">⑥ 同分异构体:数清、不漏、不重</h2>
+    <div class="say">🗣️ <b>三种异构方式:</b> ① <b>碳链异构</b>(主链长短/支链位置不同);② <b>位置异构</b>(官能团插在不同碳上);③ <b>官能团异构</b>(组成相同但官能团种类不同,如 醇⇄醚、醛⇄酮、羧酸⇄酯)。数异构体 = 系统地把这三种排列组合,别凭感觉。</div>
+    <div class="vizwrap">
+      <div class="chips" id="isoChips"></div>
+      <div id="isoRes" class="resbox"></div>
+      <div id="isoList" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <h3>数同分异构体“四步法”(限定条件计数)</h3>
+      <div class="mono">1) 先定官能团种类(题目限定:如“含苯环 + 能水解的酯”)</div>
+      <div class="mono">2) 画碳骨架的所有异构(主链 + 支链)</div>
+      <div class="mono">3) 在骨架上挪官能团位置(注意对称等价位置不重复)</div>
+      <div class="mono">4) 检查“等价氢”法验算一遍(看苯环上有几种取代位)</div>
+      <p class="trap">⚠ 最易错:对称位置算重了(如对二甲苯的两个甲基等价);或漏了官能团异构(只数了醇没想到醚)。苯环二取代只有<b>邻、间、对</b>三种,这是必背的“3”。</p>
+    </div>
+
+    <!-- ===================== 7 题型地图 ===================== -->
+    <h2 id="map" class="g">⑦ 全题型地图(触发信号 → 标准动作 → 例 → 坑)</h2>
+
+    <div class="card">
+      <div class="tag" style="color:var(--pink)">题型 A · 由分子式 + 现象“正向”推结构</div>
+      <p style="margin:4px 0"><b>触发信号:</b>给分子式,给若干现象/反应,问结构简式或名称。</p>
+      <p style="margin:4px 0"><b>标准动作:</b>① 算 Ω → 估环/双键;② 逐条现象认官能团;③ 凑碳数 + 不饱和度,拼出结构;④ 回代验所有条件。</p>
+      <p style="margin:4px 0"><b>示例(带解):</b>分子式 C₂H₄O₂,能使紫色石蕊变红、与 NaHCO₃ 放 CO₂。<br>解:Ω=(2×2+2−4)/2=1 → 1 个双键(或环)。能放 CO₂ → 含 —COOH(占 CO₂H,即 CHO₂)。剩 CH → 接上即 CH₃—COOH,乙酸。✔</p>
+      <p class="trap">坑:Ω 算进 O;把“石蕊变红”当成酚(酚酸性弱,不能使石蕊明显变红,且酚不放CO₂)。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--pink)">题型 B · 转化框图(A→B→C…)填官能团/条件</div>
+      <p style="margin:4px 0"><b>触发信号:</b>给一串箭头 A→B→C,标了部分条件,问中间产物或反应类型。</p>
+      <p style="margin:4px 0"><b>标准动作:</b>看条件认类型(浓硫酸170℃=消去;NaOH水溶液=水解;O₂/Cu=催化氧化…),用<b>转化网络</b>把上下游接口连起来。</p>
+      <p style="margin:4px 0"><b>示例(带解):</b>乙醇 →[浓H₂SO₄,170℃] A →[Br₂] B →[NaOH水溶液,Δ] C →[O₂,Cu] D。<br>解:A=乙烯(消去);B=1,2-二溴乙烷(加成);C=乙二醇(水解);D=乙二醛(催化氧化,两个—OH都被氧化)。</p>
+      <p class="trap">坑:NaOH 水溶液 vs 醇溶液混了;乙烯+Br₂ 是加成不是取代;一元醇被氧化看 α-H 个数定醛还是酮。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--pink)">题型 C · 限定条件数同分异构体</div>
+      <p style="margin:4px 0"><b>触发信号:</b>“符合下列条件的同分异构体有几种 / 写出结构简式”。</p>
+      <p style="margin:4px 0"><b>标准动作:</b>四步法。先锁官能团种类,再排碳骨架,再挪位置,最后用等价氢/对称检验。</p>
+      <p style="margin:4px 0"><b>示例(带解):</b>C₈H₁₀ 苯的同系物有几种?<br>解:苯环 + C₂H₅ 共 4 个氢位 → 乙苯(1) + 二甲苯邻/间/对(3) = <b>4 种</b>。</p>
+      <p class="trap">坑:对二甲苯两甲基等价别重数;别漏乙苯(把两个碳连成乙基的情形)。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--pink)">题型 D · 信息迁移(给新反应,照葫芦画瓢)</div>
+      <p style="margin:4px 0"><b>触发信号:</b>题干先给一个你没学过的“信息反应”(带通式),再让你用它推产物。</p>
+      <p style="margin:4px 0"><b>标准动作:</b>把信息反应当“模板”,严格对应官能团位置照搬;不要用直觉,只信题给规则 + 已学网络。</p>
+      <p style="margin:4px 0"><b>示例(带解):</b>信息:R—CHO + HCN → R—CH(OH)—CN(醛羰基加成)。问 乙醛 + HCN → ?<br>解:照搬 R=CH₃ → CH₃—CH(OH)—CN。✔</p>
+      <p class="trap">坑:把信息反应外推到它没说的官能团;忽略立体/位置对应。信息题<b>只信题给</b>。</p>
+    </div>
+
+    <div class="card">
+      <div class="tag" style="color:var(--pink)">题型 E · 综合大题(燃烧/相对分子质量定式 + 现象定结构)</div>
+      <p style="margin:4px 0"><b>触发信号:</b>给燃烧产物 CO₂/H₂O 物质的量、或相对分子质量 M、密度等,先求分子式再推结构。</p>
+      <p style="margin:4px 0"><b>标准动作:</b>① 由 CO₂→n(C),H₂O→n(H),差量或质量守恒→n(O);② 定最简式→由 M 定分子式;③ 算 Ω;④ 现象定官能团→结构。</p>
+      <p style="margin:4px 0"><b>示例(带解):</b>某有机物 4.6 g 完全燃烧得 8.8 g CO₂、5.4 g H₂O,M=46。<br>解:n(C)=8.8/44=0.2,n(H)=5.4/18×2=0.6;C、H 质量=0.2×12+0.6=3.0 g &lt; 4.6 → 含O,m(O)=1.6 g→n(O)=0.1。C:H:O=2:6:1→C₂H₆O,M=46✔。Ω=0 → 乙醇或甲醚(再用能否与Na放氢区分:能=乙醇)。</p>
+      <p class="trap">坑:忘了验是否含 O(必须用质量守恒查);最简式≠分子式(要用 M 翻倍);Ω=0 仍有官能团异构(醇/醚)。</p>
+    </div>
+
+    <!-- ===================== 8 推断闯关 ===================== -->
+    <h2 id="quest" class="o">⑧ 推断闯关:逐步锁定结构</h2>
+    <p class="lead">给你一个未知物 X,逐条解锁现象,看每一步如何把可能结构“筛掉一批”,直到唯一锁定:</p>
+    <div class="vizwrap">
+      <div id="questBoard"></div>
+      <div style="text-align:center;margin-top:8px">
+        <button class="btn" id="qNext">解锁下一条线索 ▶</button>
+        <button class="btn" id="qReset" style="box-shadow:2px 2px 0 var(--pink)">↺ 重来</button>
+      </div>
+      <div id="questPool" style="margin-top:10px"></div>
+      <div id="questDone" class="resbox" style="display:none"></div>
+    </div>
+
+    <!-- ===================== 9 易错集 ===================== -->
+    <h2 id="trap" class="r">⑨ 易错集(踩一次记一辈子)</h2>
+    <div class="card">
+      <p class="trap">1. 卤代烃 + NaOH:<b>水溶液→水解(取代)成醇</b>;<b>醇溶液→消去成烯</b>。</p>
+      <p class="trap">2. 不饱和度公式里 <b>O 不参与</b>;N 是 +n,X(卤素)是 −x。</p>
+      <p class="trap">3. 银镜反应 / 与新制 Cu(OH)₂ 砖红色沉淀:测的是 <b>—CHO(醛基)</b>,葡萄糖、甲酸及甲酸酯也含醛基会反应。</p>
+      <p class="trap">4. 溴水褪色:可能是 <b>加成(C=C、C≡C)</b> 也可能是 <b>萃取</b>(苯、CCl₄ 把溴“拿走”但不反应),还可能是被还原(酚、醛)。别一律说“有双键”。</p>
+      <p class="trap">5. 区分醇/酚/羧酸:Na 都放氢(无效);<b>NaHCO₃ 放气泡=羧酸</b>;<b>FeCl₃ 显紫=酚</b>。</p>
+      <p class="trap">6. 一元醇催化氧化:看连羟基碳上的 H —— 有 2个H→醛,1个H→酮,0个H(如叔醇)→不被催化氧化。</p>
+      <p class="trap">7. 酯化是<b>可逆</b>反应,且“<b>酸脱羟基、醇脱氢</b>”;同位素 ¹⁸O 证明水中 O 来自酸。</p>
+      <p class="trap">8. 苯不能使溴水/酸性KMnO₄褪色(萃取除外);苯的同系物(甲苯等)能使酸性KMnO₄褪色(侧链被氧化)。</p>
+    </div>
+
+    <!-- ===================== 10 拔高 ===================== -->
+    <h2 id="top" class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <h3>把“点反应”升级成“网络思维”</h3>
+      <p style="margin:4px 0">普通生记“醇能氧化成醛”;尖子生看到 —OH 就同时想到它的<b>四条出路</b>:氧化(→醛/酮)、消去(→烯)、取代(→卤代/酯)、与Na放氢。<b>每个官能团都背一张“出路清单”</b>,推断时直接调用。</p>
+      <h3>用“原子守恒”反锁结构</h3>
+      <p style="margin:4px 0">推断到后期卡住时,回到 <b>C、H、O 原子守恒</b>:目标比起点多了/少了哪些原子,就反推中间引入了什么(加了 H₂O?脱了 H₂?接了 —COOH?)。守恒是推断的“底牌”。</p>
+      <h3>“先粗后精”定不饱和度归属</h3>
+      <p style="margin:4px 0">Ω=5 的含苯环化合物:先扣掉苯环(Ω4),剩 Ω1 一定还藏 1 个双键或环(常是 —CHO/—COOH 里的 C=O,或一个 C=C)。<b>把 Ω 拆成“苯环 + 其余”</b>能瞬间缩小范围。</p>
+      <h3>信息题的“顶层心法”</h3>
+      <p style="margin:4px 0">高考压轴信息题考的不是知识,是<b>“严格照模板迁移”的纪律</b>。读到陌生反应别慌,圈出它“变了哪个官能团、位置在哪”,然后机械照搬到目标分子的同位置。<b>克制‘我觉得’,只用‘题目说’。</b></p>
+      <h3>糖类 / 氨基酸的“接口速记”</h3>
+      <p style="margin:4px 0">葡萄糖 C₆H₁₂O₆ = <b>多羟基醛</b>(有—CHO→银镜/Cu(OH)₂,有多个—OH);蔗糖/麦芽糖能水解;氨基酸同时含 <b>—NH₂(碱性)+—COOH(酸性)</b>→两性,能成肽键(—CO—NH—)。这些只考“认接口”,不必深算。</p>
+    </div>
+
+    <!-- ===================== 11 自测 ===================== -->
+    <h2 id="self" class="b">⑪ 自测 12 题(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 有机推断 / 官能团转化网络</p>
+  </div>
+
+<script>
+/* =================================================================
+   全部中文字符串内部标点一律用 『』「」 ,绝不在中文串里用 ASCII 引号
+   ================================================================= */
+
+/* ---------- 1 官能团图鉴 ---------- */
+const FG=[
+ {n:"烯烃 C=C",c:"#1E9E86",ex:"CH₂=CH₂ 乙烯",prop:"含碳碳双键,易加成(+H₂/+X₂/+HX/+H₂O)、易被氧化、能加聚",sign:"使溴水褪色(加成)、使酸性KMnO₄褪色"},
+ {n:"炔烃 C≡C",c:"#1E9E86",ex:"CH≡CH 乙炔",prop:"含三键,加成能力更强(可连加两次)、可加聚",sign:"使溴水、酸性KMnO₄褪色"},
+ {n:"苯环",c:"#7A3FF2",ex:"C₆H₆ 苯",prop:"特殊稳定结构,以取代为主(卤代、硝化),难加成;苯本身不使KMnO₄褪色",sign:"不与溴水加成(可萃取);同系物侧链被KMnO₄氧化"},
+ {n:"卤代烃 —X",c:"#E86A17",ex:"CH₃CH₂Br 溴乙烷",prop:"可水解(NaOH水溶液→醇)、可消去(NaOH醇溶液→烯)",sign:"水解后加AgNO₃生成卤化银沉淀(需先酸化)"},
+ {n:"醇 —OH(脂)",c:"#1450C8",ex:"CH₃CH₂OH 乙醇",prop:"与Na放氢;催化氧化→醛/酮;消去→烯;与羧酸酯化",sign:"与Na放H₂(但不与NaOH反应,不显紫)"},
+ {n:"酚 苯环—OH",c:"#7A3FF2",ex:"C₆H₅OH 苯酚",prop:"弱酸性(能与NaOH反应);易被氧化;苯环活化易取代",sign:"遇FeCl₃显紫色;与浓溴水生成白色沉淀"},
+ {n:"醛 —CHO",c:"#E0382A",ex:"CH₃CHO 乙醛",prop:"既可被氧化(→羧酸)又可被还原(→醇);醛基是『万能信号』",sign:"银镜反应;与新制Cu(OH)₂加热生成砖红色沉淀"},
+ {n:"羧酸 —COOH",c:"#E0382A",ex:"CH₃COOH 乙酸",prop:"酸性(强于碳酸):使石蕊变红、与NaHCO₃放CO₂;与醇酯化",sign:"与NaHCO₃/Na₂CO₃放CO₂气泡(酸性最强)"},
+ {n:"酯 —COO—",c:"#C81E6E",ex:"CH₃COOC₂H₅ 乙酸乙酯",prop:"中性,可水解(酸或碱催化)→羧酸+醇;有香味",sign:"难溶于水、有果香;水解后可检出酸和醇"},
+ {n:"葡萄糖/氨基酸",c:"#F3C00E",ex:"C₆H₁₂O₆ / 甘氨酸",prop:"葡萄糖=多羟基醛(有银镜);氨基酸含—NH₂+—COOH 两性、能成肽键",sign:"葡萄糖有银镜反应;氨基酸两性、可显茚三酮等"}
+];
+const fgList=document.getElementById('fgList'),fgPanel=document.getElementById('fgPanel');
+FG.forEach((g,i)=>{const b=document.createElement('div');b.className='fgnode'+(i===0?' sel':'');b.textContent=g.n;b.style.borderLeft='10px solid '+g.c;
+ b.onclick=()=>{[...fgList.children].forEach(x=>x.classList.remove('sel'));b.classList.add('sel');showFG(i);};fgList.appendChild(b);});
+function showFG(i){const g=FG[i];fgPanel.innerHTML='<div style=\"font-weight:900;font-size:16px;color:'+g.c+'\">'+g.n+'　<span style=\"color:#6b5d3a;font-size:13px\">例:'+g.ex+'</span></div>'
+ +'<div style=\"margin:6px 0;font-weight:700\"><b>典型性质:</b>'+g.prop+'</div>'
+ +'<div style=\"font-weight:800;color:var(--orange)\"><b>怎么认出它:</b>'+g.sign+'</div>';}
+showFG(0);
+
+/* ---------- 2 转化网络 SVG ---------- */
+const NODES={
+ alkene:{x:120,y:60,t:"烯烃",c:"#1E9E86"},
+ alkane:{x:120,y:200,t:"烷烃",c:"#16120A"},
+ halo:{x:330,y:60,t:"卤代烃",c:"#E86A17"},
+ alcohol:{x:330,y:200,t:"醇",c:"#1450C8"},
+ aldehyde:{x:540,y:200,t:"醛",c:"#E0382A"},
+ acid:{x:540,y:340,t:"羧酸",c:"#E0382A"},
+ ester:{x:330,y:340,t:"酯",c:"#C81E6E"},
+ benzene:{x:540,y:60,t:"苯/酚",c:"#7A3FF2"}
+};
+const EDGES=[
+ {a:"alkene",b:"halo",t:"加成 +HX/+X₂",ty:"加成"},
+ {a:"alkene",b:"alcohol",t:"加成 +H₂O(催化)",ty:"加成"},
+ {a:"alkene",b:"alkane",t:"加成 +H₂/Ni",ty:"还原"},
+ {a:"halo",b:"alkene",t:"消去 NaOH醇溶液Δ",ty:"消去"},
+ {a:"halo",b:"alcohol",t:"水解 NaOH水溶液Δ",ty:"水解"},
+ {a:"alcohol",b:"alkene",t:"消去 浓硫酸170℃",ty:"消去"},
+ {a:"alcohol",b:"halo",t:"取代 +HX",ty:"取代"},
+ {a:"alcohol",b:"aldehyde",t:"催化氧化 O₂/Cu/Δ",ty:"氧化"},
+ {a:"alcohol",b:"ester",t:"酯化 +羧酸/浓硫酸Δ",ty:"酯化"},
+ {a:"aldehyde",b:"alcohol",t:"还原 +H₂/Ni",ty:"还原"},
+ {a:"aldehyde",b:"acid",t:"氧化 O₂/银氨/Cu(OH)₂",ty:"氧化"},
+ {a:"acid",b:"ester",t:"酯化 +醇/浓硫酸Δ",ty:"酯化"},
+ {a:"ester",b:"acid",t:"水解→羧酸+醇",ty:"水解"},
+ {a:"ester",b:"alcohol",t:"水解→羧酸+醇",ty:"水解"},
+ {a:"alkane",b:"halo",t:"取代 +X₂/光照",ty:"取代"},
+ {a:"benzene",b:"halo",t:"取代(卤代/催化)",ty:"取代"}
+];
+const TYCOLOR={"加成":"#1E9E86","还原":"#1450C8","消去":"#E86A17","水解":"#7A3FF2","取代":"#16120A","氧化":"#E0382A","酯化":"#C81E6E"};
+const svgN=document.getElementById('netSvg');
+const SVGNS="http://www.w3.org/2000/svg";
+function mk(tag,attr){const e=document.createElementNS(SVGNS,tag);for(const k in attr)e.setAttribute(k,attr[k]);return e;}
+let netSel=null;
+function drawNet(){
+ svgN.innerHTML='';
+ // defs marker
+ const defs=mk('defs',{});
+ const m=mk('marker',{id:'ah',markerWidth:'9',markerHeight:'9',refX:'7',refY:'4.5',orient:'auto'});
+ m.appendChild(mk('path',{d:'M0,0 L9,4.5 L0,9 z',fill:'#bcae8c'}));defs.appendChild(m);
+ const m2=mk('marker',{id:'ahp',markerWidth:'9',markerHeight:'9',refX:'7',refY:'4.5',orient:'auto'});
+ m2.appendChild(mk('path',{d:'M0,0 L9,4.5 L0,9 z',fill:'#C81E6E'}));defs.appendChild(m2);
+ svgN.appendChild(defs);
+ EDGES.forEach((e,idx)=>{
+  const A=NODES[e.a],B=NODES[e.b];
+  const dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy);const ux=dx/len,uy=dy/len;
+  const r=34;const x1=A.x+ux*r,y1=A.y+uy*r,x2=B.x-ux*r,y2=B.y-uy*r;
+  // curve slight offset to separate two-way edges
+  const mxx=(x1+x2)/2 - uy*14, myy=(y1+y2)/2 + ux*14;
+  const active=netSel===e.a;
+  const path=mk('path',{d:'M'+x1+','+y1+' Q'+mxx+','+myy+' '+x2+','+y2,
+    fill:'none',stroke:active?'#C81E6E':'#cfc2a0','stroke-width':active?'4':'2',
+    'marker-end':active?'url(#ahp)':'url(#ah)','data-edge':idx,opacity:active?'1':(netSel?'.25':'.75')});
+  if(active)path.setAttribute('class','flowedge');
+  svgN.appendChild(path);
+ });
+ for(const k in NODES){const N=NODES[k];const on=netSel===k;
+  const g=mk('g',{cursor:'pointer'});g.addEventListener('click',()=>{netSel=k;updNetInfo(k);drawNet();});
+  g.appendChild(mk('circle',{cx:N.x,cy:N.y,r:'33',fill:on?N.c:'#fff',stroke:'#16120A','stroke-width':'4'}));
+  const t=mk('text',{x:N.x,y:N.y+5,'text-anchor':'middle','font-size':'15','font-weight':'900',fill:on?'#fff':'#16120A'});
+  t.textContent=N.t;g.appendChild(t);svgN.appendChild(g);}
+ animateFlow();
+}
+let flowT=0,flowReq=null;
+function animateFlow(){
+ if(flowReq)cancelAnimationFrame(flowReq);
+ const flows=svgN.querySelectorAll('.flowedge');
+ if(!flows.length)return;
+ flows.forEach(p=>{const L=p.getTotalLength();p.style.strokeDasharray='10 8';});
+ function tick(){flowT-=0.8;flows.forEach(p=>{p.style.strokeDashoffset=flowT;});flowReq=requestAnimationFrame(tick);}
+ tick();
+}
+function updNetInfo(k){
+ const outs=EDGES.filter(e=>e.a===k);
+ let h='<b style=\"color:var(--pink)\">'+NODES[k].t+'</b> 能直接转成:';
+ if(!outs.length){h+=' (末端,无直接下家)';}
+ const box=document.getElementById('netInfo');box.innerHTML=h;
+ const ul=document.createElement('div');ul.style.cssText='margin-top:6px;font-size:13.5px';
+ outs.forEach(e=>{const span=document.createElement('div');span.style.cssText='margin:3px 0;font-weight:800';
+  span.innerHTML='<span style=\"display:inline-block;width:10px;height:10px;background:'+TYCOLOR[e.ty]+';border:1px solid #16120A;margin-right:6px\"></span>→ '+NODES[e.b].t+'　【'+e.ty+'】 '+e.t;
+  ul.appendChild(span);});
+ box.appendChild(ul);
+}
+const netChips=document.getElementById('netChips');
+[["alkene","烯烃"],["alkane","烷烃"],["halo","卤代烃"],["alcohol","醇"],["aldehyde","醛"],["acid","羧酸"],["ester","酯"],["benzene","苯/酚"]].forEach(p=>{
+ const b=document.createElement('div');b.className='chip';b.textContent=p[1];b.onclick=()=>{netSel=p[0];
+  [...netChips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');updNetInfo(p[0]);drawNet();};netChips.appendChild(b);});
+drawNet();
+
+/* ---------- 3 不饱和度计算器 ---------- */
+function parseFormula(s){
+ const o={};const re=/([A-Z][a-z]?)(\d*)/g;let m;
+ s=s.replace(/\s/g,'').replace(/[₀-₉]/g,d=>'0123456789'['₀₁₂₃₄₅₆₇₈₉'.indexOf(d)]);
+ while((m=re.exec(s))){if(!m[1])continue;o[m[1]]=(o[m[1]]||0)+(m[2]===''?1:parseInt(m[2]));}
+ return o;
+}
+function omega(o){
+ const c=o.C||0,h=o.H||0,n=o.N||0;
+ const x=(o.F||0)+(o.Cl||0)+(o.Br||0)+(o.I||0);
+ return (2*c+2+n-h-x)/2;
+}
+const omIn=document.getElementById('omIn'),omRes=document.getElementById('omRes'),omSvg=document.getElementById('omSvg');
+function runOmega(){
+ const o=parseFormula(omIn.value);
+ if(!o.C){omRes.textContent='请输入含碳的有机分子式,如 C7H8O';omSvg.innerHTML='';return;}
+ const W=omega(o);
+ let guess='';
+ if(W<0||!Number.isFinite(W)){guess='⚠ 结果异常,检查氢原子个数';}
+ else if(W===0)guess='Ω=0 → 链状饱和(烷/醇/醚/卤代烃等,无环无双键)';
+ else if(W===1)guess='Ω=1 → 1 个双键 或 1 个环(如 烯、环烷、醛/酮/羧酸中的 C=O)';
+ else if(W===2)guess='Ω=2 → 2 个双键 / 1环+1双键 / 1 个三键';
+ else if(W===3)guess='Ω=3 → 多键多环组合';
+ else if(W===4)guess='Ω=4 → 很可能含 1 个苯环(也可能其它组合,需结合现象)';
+ else guess='Ω='+W+' → 多半含苯环(Ω4)+ 其余'+(W-4)+'个环/双键';
+ omRes.innerHTML='分子式解析:'+Object.keys(o).map(k=>k+(o[k]>1?o[k]:'')).join(' ')+'　▶　<span class=glowtxt style=\"font-size:20px\">Ω = '+W+'</span><br><span style=\"font-weight:800\">'+guess+'</span>';
+ drawOmega(W);
+}
+function drawOmega(W){
+ omSvg.innerHTML='';const n=Math.max(0,Math.min(W,8));
+ let x=40;
+ for(let i=0;i<n;i++){
+  const g=mk('g',{});
+  // each unit drawn as a hexagon if part of benzene group, else a double-bond
+  const benzeneUnits=W>=4?4:0;
+  if(i<benzeneUnits){
+   // draw 1/4 of a benzene as a small hexagon only once
+   if(i===0){const cx=70,cy=60,rr=34;let pts='';for(let a=0;a<6;a++){const ang=Math.PI/3*a-Math.PI/2;pts+=(cx+rr*Math.cos(ang))+','+(cy+rr*Math.sin(ang))+' ';}
+    g.appendChild(mk('polygon',{points:pts,fill:'none',stroke:'#7A3FF2','stroke-width':'4'}));
+    g.appendChild(mk('circle',{cx:cx,cy:cy,r:'16',fill:'none',stroke:'#7A3FF2','stroke-width':'3'}));
+    const tt=mk('text',{x:cx,y:cy+5,'text-anchor':'middle','font-size':'12','font-weight':'900',fill:'#7A3FF2'});tt.textContent='苯环 Ω4';g.appendChild(tt);
+    omSvg.appendChild(g);x=150;}
+   continue;
+  }
+  // double bond unit
+  const bx=x+ (W>=4?0:0);
+  g.appendChild(mk('line',{x1:bx,y1:46,x2:bx+44,y2:46,stroke:'#1E9E86','stroke-width':'4'}));
+  g.appendChild(mk('line',{x1:bx,y1:56,x2:bx+44,y2:56,stroke:'#1E9E86','stroke-width':'4'}));
+  const tt=mk('text',{x:bx+22,y:84,'text-anchor':'middle','font-size':'11','font-weight':'800',fill:'#1E9E86'});tt.textContent='C=C';g.appendChild(tt);
+  omSvg.appendChild(g);x=bx+80;
+ }
+ if(n===0){const tt=mk('text',{x:350,y:64,'text-anchor':'middle','font-size':'16','font-weight':'900',fill:'#16120A'});tt.textContent='—— 全饱和链状,无环无双键 ——';omSvg.appendChild(tt);}
+}
+omIn.addEventListener('input',runOmega);runOmega();
+
+/* ---------- 4 特征反应判别器 ---------- */
+const TARGETS=["烯/炔 C=C·C≡C","苯环","醇 —OH","酚 苯环—OH","醛 —CHO","羧酸 —COOH","酯 —COO—","葡萄糖"];
+const REAGENTS=[
+ {n:"溴水",res:{"烯/炔 C=C·C≡C":["褪色","加成,真化学反应"],"苯环":["分层不褪(萃取)","苯把溴萃取,溶液分层,非反应"],"酚 苯环—OH":["白色沉淀","三溴苯酚沉淀"],"葡萄糖":["可褪色","醛基被氧化"]},say:"溴水褪色别一律当双键:苯是『萃取分层』,酚是『生成白色沉淀』,真加成才是烯/炔。"},
+ {n:"酸性KMnO₄",res:{"烯/炔 C=C·C≡C":["褪色","被氧化"],"醇 —OH":["可褪色","可被氧化"],"醛 —CHO":["褪色","被氧化成羧酸"],"葡萄糖":["褪色","含醛基被氧化"],"苯环":["苯不褪;同系物侧链褪","苯本身不褪,甲苯等侧链被氧化褪色"]},say:"酸性KMnO₄:苯本身不褪色,但甲苯等同系物侧链会被氧化使其褪色——这是区分苯与甲苯的关键。"},
+ {n:"金属钠 Na",res:{"醇 —OH":["放H₂气泡","—O—H 上的H被置换"],"酚 苯环—OH":["放H₂","酚羟基也放氢"],"羧酸 —COOH":["放H₂","羧基放氢"]},say:"含活泼—O—H的都和Na放氢(醇/酚/羧酸)——所以Na『不能』区分这三个,只能证明有羟基类。"},
+ {n:"NaOH 溶液",res:{"酚 苯环—OH":["反应(溶解)","酚显弱酸性,生成酚钠"],"羧酸 —COOH":["反应(中和)","成盐"],"酯 —COO—":["水解","碱性水解"]},say:"NaOH能反应的:酚(弱酸)、羧酸(中和)、酯(水解)。醇不反应——用来把醇从酚/羧酸里区分出来。"},
+ {n:"NaHCO₃",res:{"羧酸 —COOH":["放CO₂气泡","酸性>碳酸,顶出CO₂"]},say:"只有羧酸能与NaHCO₃放出CO₂气泡!酚酸性太弱不放气。『放气泡=羧酸』是铁律。"},
+ {n:"FeCl₃ 溶液",res:{"酚 苯环—OH":["显紫色","酚的特征显色"]},say:"遇FeCl₃显紫色 = 酚的『身份证』。其它官能团都不显紫。"},
+ {n:"银氨溶液(银镜)",res:{"醛 —CHO":["生成银镜","—CHO被氧化"],"葡萄糖":["银镜","含醛基"]},say:"银镜反应测的是醛基—CHO(含醛基的葡萄糖、甲酸及甲酸酯也会有)。"},
+ {n:"新制Cu(OH)₂ 加热",res:{"醛 —CHO":["砖红色沉淀","—CHO被氧化,生成Cu₂O"],"葡萄糖":["砖红色沉淀","含醛基"],"羧酸 —COOH":["不加热时溶解蓝色","羧酸常温溶解Cu(OH)₂显示酸性"]},say:"新制Cu(OH)₂加热出砖红色沉淀=醛基;不加热被羧酸溶解则显示酸性,两种现象别混。"}
+];
+const reagChips=document.getElementById('reagChips'),reagGrid=document.getElementById('reagGrid'),reagSay=document.getElementById('reagSay');
+REAGENTS.forEach((r,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=r.n;
+ b.onclick=()=>{[...reagChips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');showReag(i);};reagChips.appendChild(b);});
+function showReag(i){const r=REAGENTS[i];reagGrid.innerHTML='';
+ TARGETS.forEach(t=>{const hit=r.res[t];const d=document.createElement('div');
+  d.style.cssText='border:3px solid var(--ink);padding:9px 11px;font-weight:800;font-size:13px;background:'+(hit?'#e7f7f2':'#f3efe2');
+  d.innerHTML='<b>'+t+'</b><br>'+(hit?'<span style=\"color:var(--green)\">✔ '+hit[0]+'</span><br><span style=\"font-weight:700;color:#6b5d3a\">'+hit[1]+'</span>':'<span style=\"color:#b5462f\">✘ 无明显现象</span>');
+  reagGrid.appendChild(d);});
+ reagSay.innerHTML='<b>'+r.n+':</b> '+r.say;}
+showReag(0);
+
+/* ---------- 5 酯化/水解 canvas 动画 ---------- */
+const estC=document.getElementById('estC'),ex=estC.getContext('2d');
+let estPhase=0,estDir=1,estReq=null; // 0..1 progress
+function drawEst(p,dir){
+ const W=estC.width,H=estC.height;ex.clearRect(0,0,W,H);
+ ex.font='900 16px -apple-system,PingFang SC,sans-serif';ex.textAlign='center';
+ // positions: acid left, alcohol right; product center; water drop
+ const acidX=150,alcX=550,cY=120;
+ const t=dir>0?p:1-p; // forward t:0->1 forms ester
+ // acid block
+ ex.fillStyle='#E0382A';ex.fillRect(acidX-95,cY-34,120,68);ex.strokeStyle='#16120A';ex.lineWidth=4;ex.strokeRect(acidX-95,cY-34,120,68);
+ ex.fillStyle='#fff';ex.fillText('CH₃CO—',acidX-35,cY+6);
+ ex.fillStyle='#16120A';ex.font='800 13px sans-serif';ex.fillText('羧酸',acidX-35,cY-44);
+ // the leaving OH (with 18O) on acid
+ ex.font='900 15px sans-serif';
+ const ohX=acidX+25+(t*180), ohY=cY-(Math.sin(t*Math.PI)*60);
+ ex.fillStyle='#7A3FF2';ex.beginPath();ex.arc(ohX,ohY,20,0,7);ex.fill();ex.strokeStyle='#16120A';ex.lineWidth=3;ex.stroke();
+ ex.fillStyle='#fff';ex.font='900 12px sans-serif';ex.fillText('¹⁸OH',ohX,ohY+4);
+ // alcohol block
+ ex.fillStyle='#1450C8';ex.fillRect(alcX-25,cY-34,120,68);ex.strokeStyle='#16120A';ex.lineWidth=4;ex.strokeRect(alcX-25,cY-34,120,68);
+ ex.fillStyle='#fff';ex.font='900 16px sans-serif';ex.fillText('—OC₂H₅',alcX+35,cY+6);
+ ex.fillStyle='#16120A';ex.font='800 13px sans-serif';ex.fillText('醇',alcX+35,cY-44);
+ // leaving H from alcohol
+ const hX=alcX-25-(t*150), hY=cY+(Math.sin(t*Math.PI)*55);
+ ex.fillStyle='#F3C00E';ex.beginPath();ex.arc(hX,hY,15,0,7);ex.fill();ex.strokeStyle='#16120A';ex.lineWidth=3;ex.stroke();
+ ex.fillStyle='#16120A';ex.font='900 12px sans-serif';ex.fillText('H',hX,hY+4);
+ // bond forming line between acid-CO and alcohol-O when t high
+ if(t>0.5){ex.strokeStyle='rgba(200,30,110,'+((t-0.5)*2)+')';ex.lineWidth=5;ex.beginPath();ex.moveTo(acidX+25,cY);ex.lineTo(alcX-25,cY);ex.stroke();}
+ // water droplet forms when OH meets H (center bottom)
+ if(t>0.8){const wp=(t-0.8)/0.2;ex.fillStyle='#1E9E86';ex.beginPath();ex.arc(350,200+wp*20,18+wp*4,0,7);ex.fill();ex.strokeStyle='#16120A';ex.lineWidth=3;ex.stroke();
+  ex.fillStyle='#fff';ex.font='900 13px sans-serif';ex.fillText('H₂¹⁸O',350,205+wp*20);}
+ // caption
+ ex.fillStyle='#16120A';ex.font='900 15px sans-serif';
+ ex.fillText(dir>0?'酯化:酸脱 —OH,醇脱 —H → 酯 + 水':'水解:水进去,把酯拆回酸 + 醇',350,40);
+ ex.font='800 12px sans-serif';ex.fillStyle='#7A3FF2';
+ ex.fillText('注意:水里的 ¹⁸O 来自羧酸的羟基(同位素实验证据)',350,238);
+}
+function playEst(dir){
+ if(estReq)cancelAnimationFrame(estReq);estPhase=0;estDir=dir;
+ function step(){estPhase+=0.012;if(estPhase>1)estPhase=1;drawEst(estPhase,dir);if(estPhase<1)estReq=requestAnimationFrame(step);}
+ step();
+}
+document.getElementById('estBtn').onclick=()=>playEst(1);
+document.getElementById('estBtn2').onclick=()=>playEst(-1);
+drawEst(0,1);
+
+/* ---------- 6 同分异构体计数器 ---------- */
+const ISO=[
+ {k:"C₄H₁₀ 烷烃",n:2,list:["正丁烷 CH₃CH₂CH₂CH₃","异丁烷 (CH₃)₃CH"],note:"只有碳链异构:直链 + 一个支链。"},
+ {k:"C₅H₁₂ 烷烃",n:3,list:["正戊烷","异戊烷(2-甲基丁烷)","新戊烷(2,2-二甲基丙烷)"],note:"碳链异构经典『2、3、5』中的 3。"},
+ {k:"C₃H₈O(醇+醚)",n:3,list:["1-丙醇 CH₃CH₂CH₂OH","2-丙醇 (CH₃)₂CHOH","甲乙醚 CH₃OCH₂CH₃"],note:"两个醇(位置异构)+ 一个醚(官能团异构)。"},
+ {k:"C₂H₄O₂",n:2,list:["乙酸 CH₃COOH","甲酸甲酯 HCOOCH₃"],note:"羧酸 ⇄ 酯 的官能团异构(都是 Ω=1)。"},
+ {k:"C₄H₈ 烯烃",n:3,list:["1-丁烯","2-丁烯","2-甲基丙烯"],note:"位置异构(双键位置)+ 碳链异构;先不计顺反。"},
+ {k:"C₈H₁₀ 苯同系物",n:4,list:["乙苯","邻二甲苯","间二甲苯","对二甲苯"],note:"苯环二取代『邻间对』=3,加乙苯=4。"},
+ {k:"C₇H₈O 含苯环",n:5,list:["邻甲苯酚","间甲苯酚","对甲苯酚","苯甲醇 C₆H₅CH₂OH","苯甲醚 C₆H₅OCH₃"],note:"甲基酚(邻间对)+ 苯甲醇 + 苯甲醚:醇/酚/醚三类官能团异构齐了。"}
+];
+const isoChips=document.getElementById('isoChips'),isoRes=document.getElementById('isoRes'),isoListEl=document.getElementById('isoList');
+ISO.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;
+ b.onclick=()=>{[...isoChips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');showIso(i);};isoChips.appendChild(b);});
+function showIso(i){const d=ISO[i];isoRes.innerHTML='<span class=glowtxt style=\"font-size:20px\">'+d.n+' 种</span>　'+d.k+'　— '+d.note;
+ isoListEl.innerHTML=d.list.map((s,j)=>'<div class=\"step\" style=\"animation:none\"><b>'+(j+1)+'.</b> '+s+'</div>').join('');}
+showIso(0);
+
+/* ---------- 8 推断闯关 ---------- */
+// Unknown X is 乙醛 CH3CHO. Pool of candidates narrowed by clues.
+const QPOOL=[
+ {n:"乙醇 CH₃CH₂OH",keep:c=>!c.includes('ag')&&!c.includes('o2only')},
+ {n:"乙酸 CH₃COOH",keep:c=>!c.includes('ag')},
+ {n:"乙醛 CH₃CHO",keep:c=>true},
+ {n:"乙烯 CH₂=CH₂",keep:c=>!c.includes('omega1ox')},
+ {n:"乙酸乙酯 酯",keep:c=>!c.includes('ag')},
+ {n:"苯酚 C₆H₅OH",keep:c=>!c.includes('c2')}
+];
+const CLUES=[
+ {id:"c2",t:"线索①:分子只含 2 个碳(C₂)。",explain:"先排除苯酚(6个碳)。"},
+ {id:"omega1ox",t:"线索②:Ω=1,且能发生银镜反应。",explain:"Ω=1 说明有一个不饱和(此处是 C=O);银镜=含醛基。乙烯无醛基被排除。"},
+ {id:"ag",t:"线索③:与新制Cu(OH)₂加热生成砖红色沉淀,但不与NaHCO₃放气。",explain:"砖红色=醛基;不放CO₂=不是羧酸。乙酸/酯被排除,锁定醛。"}
+];
+let qIdx=0;
+const QPoolDom=document.getElementById('questPool'),QBoard=document.getElementById('questBoard'),QDone=document.getElementById('questDone');
+function renderQuest(){
+ // clues board
+ QBoard.innerHTML=CLUES.map((c,i)=>'<div class=\"step '+(i<qIdx?'done':(i===qIdx?'cur':''))+'\">'+(i<qIdx?'✔ ':'')+c.t+(i<qIdx?'<br><span style=\"font-weight:700;color:#6b5d3a\">'+c.explain+'</span>':'')+'</div>').join('');
+ // apply clues to pool
+ const applied=CLUES.slice(0,qIdx).map(c=>c.id);
+ const remain=QPOOL.filter(p=>p.keep(applied));
+ QPoolDom.innerHTML='<div style=\"font-weight:900;margin-bottom:6px\">剩余可能(' +remain.length+ '):</div>'+remain.map(p=>'<span class=\"pill\">'+p.n+'</span>').join('');
+ if(qIdx>=CLUES.length&&remain.length===1){QDone.style.display='block';QDone.innerHTML='🎯 唯一锁定:<span class=glowtxt style=\"font-size:18px\">'+remain[0].n+'</span> —— 这就是未知物 X!推断闭环:Ω定不饱和 → 现象定官能团 → 排除法收敛到唯一解。';}
+ else{QDone.style.display='none';}
+}
+document.getElementById('qNext').onclick=()=>{if(qIdx<CLUES.length){qIdx++;renderQuest();}};
+document.getElementById('qReset').onclick=()=>{qIdx=0;renderQuest();};
+renderQuest();
+
+/* ---------- 11 自测 ---------- */
+const qs=[
+ {q:"1. 算 C₉H₁₀O₂ 的不饱和度 Ω。",a:"Ω=(2×9+2−10)/2=5。常见结构:苯环(Ω4)+ 1 个 C=O,如 苯甲酸乙酯类。"},
+ {q:"2. 某物使溴水褪色,但不使酸性KMnO₄褪色——可能是什么?",a:"很可能是『萃取』而非反应:如苯、CCl₄把溴萃取走(分层、褪色),但不被KMnO₄氧化。也提示不一定含C=C。"},
+ {q:"3. 如何用一种试剂区分乙醇、苯酚、乙酸三者?",a:"用 NaHCO₃(或Na₂CO₃)溶液:只有乙酸放CO₂气泡。或先用FeCl₃显紫认出苯酚,再用NaHCO₃认出乙酸,剩下乙醇。"},
+ {q:"4. 卤代烃 CH₃CH₂Br 用 NaOH 处理:写出『水溶液』和『醇溶液』两种产物。",a:"水溶液、Δ→水解(取代)得乙醇 CH₃CH₂OH;醇溶液、Δ→消去得乙烯 CH₂=CH₂。"},
+ {q:"5. 乙醇催化氧化的方程式与现象?",a:"2CH₃CH₂OH+O₂ —Cu/Δ→ 2CH₃CHO+2H₂O。现象:铜丝先黑(CuO)后亮红(被还原回Cu),生成有刺激性的乙醛。"},
+ {q:"6. 银镜反应说明含什么官能团?哪些常见物质也会有?",a:"含醛基—CHO。葡萄糖(多羟基醛)、甲酸HCOOH及甲酸某酯(含—CHO结构)也能发生银镜反应。"},
+ {q:"7. 酯化反应中,水中的氧原子来自酸还是醇?如何证明?",a:"来自羧酸的羟基。用 ¹⁸O 标记醇羟基的同位素实验:产物水里检不到¹⁸O,说明水的O来自酸的—OH(『酸脱羟基、醇脱氢』)。"},
+ {q:"8. C₄H₁₀ 有几种同分异构体?分别是什么?",a:"2 种:正丁烷 CH₃CH₂CH₂CH₃ 和 异丁烷 (CH₃)₃CH。"},
+ {q:"9. 苯环上二元取代(两个相同基团)有几种位置异构?",a:"3 种:邻位(1,2)、间位(1,3)、对位(1,4)。这是必背的『3』。"},
+ {q:"10. 某有机物 Ω=4 且遇 FeCl₃ 显紫色,推测含什么结构?",a:"Ω=4 提示含苯环;FeCl₃显紫=酚羟基。故含『苯环 + 直接连在苯环上的—OH(酚)』。"},
+ {q:"11. 把 乙烯 转化为 乙酸,设计一条合理路线(写反应类型)。",a:"乙烯 —[+H₂O 加成]→ 乙醇 —[O₂/Cu 催化氧化]→ 乙醛 —[O₂/催化 氧化]→ 乙酸。三步:加成→氧化→氧化。"},
+ {q:"12. 4.4 g 某有机物完全燃烧得 8.8 g CO₂ 和 3.6 g H₂O,M=88,推分子式与可能结构。",a:"n(C)=0.2,n(H)=0.4;m(C+H)=2.4+0.4=2.8<4.4→含O,m(O)=1.6→n(O)=0.1。C:H:O=2:4:1→最简C₂H₄O(44),M=88→翻倍=C₄H₈O₂。Ω=1。可能为乙酸乙酯/丁酸等酯或羧酸。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';
+ d.innerHTML='<b>'+o.q+'</b> <button class=\"btn\">看答案</button><div class=\"qa\">'+o.a+'</div>';
+ d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
