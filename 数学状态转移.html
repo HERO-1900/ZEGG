@@ -144,8 +144,19 @@
     </div>
     <div class="ex"><b>例:</b> 掷 3 次骰子,求「至少出现一次 6 点」的概率。<br><b>正算</b>(麻烦):恰好1次+恰好2次+恰好3次,要算3项。<br><b>反算</b>(省事):一次都没出现 6 的概率 = (5/6)³ = 125/216 → P(至少一次) = 1 − 125/216 = <b>91/216</b>。</div>
 
+    <h2 class="g">六、补集法可视化:P(至少一次)随投掷次数飙升</h2>
+    <p class="lead">补集法不只省事,还揭示一个反直觉的事实:只要多投几次,「至少出现一次 6」几乎必然发生。拖动投掷次数 n,看绿色「至少一次」的概率如何随 n 一路逼近 1——它正等于 1 减掉那条飞速缩小的红色「一次都没有」。</p>
+    <div class="viz">
+      <canvas id="cAtLeast" width="760" height="360"></canvas>
+      <div class="ctrls">
+        <label>投掷次数 n = <input id="sN" type="range" min="1" max="25" value="3"> <span id="nL" class="pill">n</span></label>
+        <span class="info" id="atLeastInfo"></span>
+      </div>
+      <p class="sub">红柱 = P(一次都没出 6) = (5/6)ⁿ,随 n 指数衰减;绿柱 = P(至少一次) = 1−(5/6)ⁿ,随 n 逼近 1。两者高度永远互补、合为整条。这就是补集法的几何画面。</p>
+    </div>
+
     <!-- ========== 题型地图 ========== -->
-    <h2 class="g">六、全题型地图</h2>
+    <h2 class="g">七、全题型地图</h2>
     <div class="card">
       <table>
         <tr><th>题型 / 变式</th><th>触发信号</th><th>标准动作</th><th>陷阱</th></tr>
@@ -163,7 +174,7 @@
     <h3>典型例题(带解)</h3>
     <div class="ex"><b>状态转移例:</b> 一只青蛙在 A、B 两块石头上。每分钟:在 A 时 0.6 跳到 B、0.4 留 A;在 B 时 0.5 跳到 A、0.5 留 B。设第 n 分钟在 A 的概率为 pₙ,p₁=1,求 pₙ 与稳态。<br>① 递推:pₙ₊₁ = 0.4·pₙ + 0.5·(1−pₙ) = −0.1·pₙ + 0.5。<br>② 不动点:x = −0.1x + 0.5 → x = 0.5/1.1 = 5/11。<br>③ pₙ − 5/11 = (−0.1)·(pₙ₋₁ − 5/11) → {pₙ−5/11} 公比 −0.1。p₁−5/11 = 6/11。<br>④ <b>pₙ = 5/11 + (6/11)(−0.1)ⁿ⁻¹</b>,稳态 π = 5/11(与 β/(α+β)=0.5/(0.6+0.5) 一致)。</div>
 
-    <h2 class="r">七、易错集</h2>
+    <h2 class="r">八、易错集</h2>
     <div class="card">
       <p class="trap">⚠ ① 转移概率方向搞反:「在 A 跳到 B」与「在 B 跳到 A」是两个不同的概率,列式前先画图标清楚。</p>
       <p class="trap">⚠ ② a=1 时不动点法失效(x=b/(1−a) 分母为0):此时 pₙ₊₁=pₙ+b 是等差数列,直接累加。</p>
@@ -173,7 +184,7 @@
       <p class="trap">⚠ ⑥ 初值 p₁ 要按题意确定(题目说「第1次」还是「第0次」),代错初值整题崩。</p>
     </div>
 
-    <h2 class="v">八、尖子生拔高视角</h2>
+    <h2 class="v">九、尖子生拔高视角</h2>
     <div class="card">
       <p><b>① 不动点法是「线性递推」的统一钥匙:</b> 凡是 pₙ₊₁=a·pₙ+b 都先求不动点构造等比。看到分式递推 pₙ₊₁=(a·pₙ+b)/(c·pₙ+d) 还能用「双不动点」化简。</p>
       <p><b>② 稳态先用「流量平衡」秒算:</b> π·(流出率) = (1−π)·(流入率),不必求通项也能直接给出极限分布,验算神器。</p>
@@ -182,7 +193,7 @@
       <p><b>⑤ 正难则反要会「补集嵌套」:</b> 复杂事件可多次取补,把「至少…且至多…」拆成几个补集的组合,大幅降难度。</p>
     </div>
 
-    <h2 class="o">九、自测(先想,再点开)</h2>
+    <h2 class="o">十、自测(先想,再点开)</h2>
     <div class="card" id="quiz"></div>
     <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 状态转移与新定义</p>
   </div>
@@ -369,6 +380,60 @@
   }
   document.getElementById('compToggle').onclick=()=>{mode=1-mode;draw();};
   draw();
+})();
+/* ========== 补集法:P(至少一次) 随 n 增长 ========== */
+(function(){
+  const c=document.getElementById('cAtLeast'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('sN');
+  const padL=60,padR=30,padT=30,padB=46;
+  const plotW=W-padL-padR,plotH=H-padT-padB;
+  function draw(){
+    const n=parseInt(sl.value,10);
+    const pNone=Math.pow(5/6,n);
+    const pAtLeast=1-pNone;
+    ctx.clearRect(0,0,W,H);
+    // grid + y axis labels (0 ~ 1)
+    ctx.strokeStyle='#e0d8c2';ctx.lineWidth=1;ctx.fillStyle='#6b5d3a';ctx.font='bold 11px sans-serif';
+    for(let g=0;g<=10;g++){
+      const y=padT+plotH*(1-g/10);
+      ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+      ctx.fillText((g/10).toFixed(1),padL-34,y+4);
+    }
+    // axes
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    // two stacked bars: 红 (一次都没有) on top of 绿 (至少一次) -> total = 1
+    const bw=150;const bx=padL+plotW*0.30-bw/2;
+    const yBase=H-padB;
+    const hGreen=plotH*pAtLeast, hRed=plotH*pNone;
+    // 绿 at bottom
+    ctx.fillStyle='#1E9E86';ctx.fillRect(bx,yBase-hGreen,bw,hGreen);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(bx,yBase-hGreen,bw,hGreen);
+    // 红 stacked on top
+    ctx.fillStyle='#E0382A';ctx.fillRect(bx,yBase-hGreen-hRed,bw,hRed);
+    ctx.strokeRect(bx,yBase-hGreen-hRed,bw,hRed);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+    ctx.fillText('堆叠柱(合=1)',bx-4,padT-10);
+    // curve of pAtLeast vs n
+    const x0=padL+plotW*0.52, cw=W-padR-x0-6;
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=3;ctx.beginPath();
+    for(let k=1;k<=25;k++){const x=x0+cw*(k-1)/24;const y=yBase-plotH*(1-Math.pow(5/6,k));k===1?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.stroke();
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();
+    for(let k=1;k<=25;k++){const x=x0+cw*(k-1)/24;const y=yBase-plotH*Math.pow(5/6,k);k===1?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.stroke();ctx.setLineDash([]);
+    // marker at current n on green curve
+    const mx=x0+cw*(n-1)/24, my=yBase-plotH*pAtLeast;
+    ctx.fillStyle='#E86A17';ctx.beginPath();ctx.arc(mx,my,6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+    ctx.fillText('绿:至少一次',x0,padT+4);
+    ctx.fillText('红:一次都没有',x0,padT+20);
+    ctx.fillText('n →',W-padR-26,H-padB+22);
+    document.getElementById('nL').textContent='n = '+n;
+    document.getElementById('atLeastInfo').innerHTML='掷 '+n+' 次:P(一次都没有)=(5/6)^'+n+' = <b style="color:#E0382A">'+pNone.toFixed(4)+'</b> → P(至少一次) = 1 − 它 = <b style="color:#1E9E86">'+pAtLeast.toFixed(4)+'</b>';
+  }
+  sl.addEventListener('input',draw);draw();
 })();
 /* ========== 自测 ========== */
 const qs=[

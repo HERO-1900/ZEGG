@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学 · 知识图谱 / 题型地图 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--pink:#C81E6E;--shadow:6px 6px 0 var(--ink);--accent:#E86A17;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  .topnav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:12px 18px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:38px;height:38px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}.logomark svg{width:24px;height:24px}.brand b{font-size:21px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 16px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:800;border-left:3px solid var(--ink)}.links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:11px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .hd{max-width:1100px;margin:0 auto;padding:16px 18px 6px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:5px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:27px;font-weight:900;letter-spacing:-1px;margin:8px 0 4px}
+  .sub{font-size:14.5px;font-weight:600;max-width:760px;margin:0}
+  .toolbar{max-width:1100px;margin:10px auto 0;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toolbar input{border:3px solid var(--ink);padding:7px 11px;font-size:14px;font-weight:700;font-family:inherit;box-shadow:3px 3px 0 var(--ink);min-width:180px}
+  .tbtn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:3px 3px 0 var(--accent)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;font-weight:800;margin-left:auto}
+  .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:14px;height:14px;border:2px solid var(--ink);border-radius:50%}
+  .stage{position:relative;max-width:1100px;margin:12px auto;padding:0 18px}
+  .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
+  svg#graph{display:block;width:100%;height:68vh;min-height:460px;touch-action:none;cursor:grab}
+  svg#graph.grabbing{cursor:grabbing}
+  .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
+  .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+  .zoombtns button{width:34px;height:34px;border:3px solid var(--ink);background:#fff;font-weight:900;font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  /* side panel */
+  .panel{position:absolute;top:12px;right:12px;width:300px;max-width:78%;background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;display:none;z-index:5}
+  .panel.show{display:block}
+  .panel .pcat{display:inline-block;font-size:11px;font-weight:900;letter-spacing:1px;padding:2px 8px;border:2px solid var(--ink);color:#fff;text-transform:uppercase}
+  .panel h3{font-size:19px;font-weight:900;margin:8px 0 6px}
+  .panel .row{font-size:13.5px;font-weight:600;margin:7px 0}.panel .row b{font-weight:900}
+  .panel .trig{border-left:8px solid var(--blue);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0}
+  .panel .act{border-left:8px solid var(--green);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0}
+  .panel .trp{border-left:8px solid var(--red);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;color:#9a2018}
+  .panel a.go{display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+  .panel .x{position:absolute;top:8px;right:10px;font-weight:900;cursor:pointer;font-size:18px;border:none;background:none}
+  .node-label{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3px;stroke-linejoin:round}
+  .foot{max-width:1100px;margin:0 auto;padding:8px 18px 60px;font-size:12.5px;font-weight:700;color:#6b5d3a}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="题型地图.html">题型地图</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="hd">
+    <div class="kicker">数学 · 知识图谱</div>
+    <h1>数学 · 题型地图</h1>
+    <p class="sub">整张数学知识网:拖动节点、滚轮缩放、点节点看「触发信号 + 标准动作」。带 ★ 的节点可直接进入对应攻坚包。先看全局,再钻细节。</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" placeholder="🔍 搜知识点 / 题型…" autocomplete="off">
+    <button class="tbtn" id="resetBtn">复位视图</button>
+    <button class="tbtn" id="freezeBtn">暂停布局</button>
+    <div class="legend">
+      <span><i class="sw" style="background:#16120A"></i>学科</span>
+      <span><i class="sw" style="background:#1450C8"></i>板块</span>
+      <span><i class="sw" style="background:#F4EFE2"></i>知识点</span>
+      <span><i class="sw" style="background:#F3C00E"></i>题型★可进攻坚包</span>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="canvaswrap">
+      <svg id="graph" viewBox="0 0 1000 700"></svg>
+      <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
+      <div class="hint">拖背景平移 · 滚轮缩放 · 拖节点 · 点节点看详情</div>
+      <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
+    </div>
+  </div>
+  <div class="foot">thebest2dan · 数学知识图谱 · ★ 标记处已配可交互攻坚包</div>
+
+<script>
+/* ====== GRAPH DATA (数学) ====== */
+const ACCENT="#E86A17";
+const CAT={root:"#16120A",area:"#1450C8",topic:"#F4EFE2",type:"#F3C00E"};
+const TXT={root:"#fff",area:"#fff",topic:"#16120A",type:"#16120A"};
+const GRAPH={
+ nodes:[
+  {id:"math",label:"数学",cat:"root"},
+  // 板块
+  {id:"a1",label:"函数与导数",cat:"area"},
+  {id:"a2",label:"三角函数与解三角形",cat:"area"},
+  {id:"a3",label:"数列",cat:"area"},
+  {id:"a4",label:"立体几何",cat:"area"},
+  {id:"a5",label:"解析几何",cat:"area"},
+  {id:"a6",label:"概率统计",cat:"area"},
+  {id:"a7",label:"集合逻辑与不等式",cat:"area"},
+  // 函数与导数
+  {id:"t11",label:"函数性质",cat:"topic",note:"单调性、奇偶性、周期性、对称性;f(x+T)=f(x)、f(-x)=±f(x)、对称轴与对称中心联动周期。"},
+  {id:"t12",label:"基本初等函数",cat:"topic",note:"指数/对数/幂函数;图像、定义域值域、单调性比较大小、对数运算。"},
+  {id:"t13",label:"函数零点",cat:"topic",note:"零点存在定理 f(a)·f(b)<0;转化为两图像交点、参数分离 a=g(x) 求范围。"},
+  {id:"t14",label:"导数的几何意义",cat:"topic",note:"f′(x₀) 为切线斜率;切线方程 y-f(x₀)=f′(x₀)(x-x₀);切点是钥匙。"},
+  {id:"t15",label:"导数与单调极值最值",cat:"topic",note:"f′>0 增、f′<0 减;极值点处 f′=0 且变号;闭区间最值比端点与极值。"},
+  {id:"t16",label:"导数压轴 ★",cat:"type",pack:"数学压轴.html",trigger:"含参讨论单调/极值/零点、不等式恒成立或证明、双极值、排列组合计数综合。",action:"求导后分类讨论(对参数定根的位置);双极值用比值换元 t=x₂/x₁;不等式构造函数或放缩;计数用捆绑/插空/隔板。",trap:"定义域优先(对数真数、分母);分类讨论不重不漏。"},
+  // 三角
+  {id:"t21",label:"三角恒等变换",cat:"topic",note:"和差倍半、辅助角 a·sinx+b·cosx=√(a²+b²)·sin(x+φ);化为一个角一个名一次方。"},
+  {id:"t22",label:"三角函数图像与性质",cat:"topic",note:"y=A·sin(ωx+φ);振幅周期 T=2π/ω 相位;单调区间、对称轴、平移伸缩。"},
+  {id:"t23",label:"正余弦定理解三角形",cat:"topic",note:"a/sinA=2R;a²=b²+c²-2bc·cosA;边角互化、面积 S=½ab·sinC、范围最值。"},
+  // 数列
+  {id:"t31",label:"等差等比数列",cat:"topic",note:"通项与前n项和公式;等差中项、等比中项;Sₙ 的最值。"},
+  {id:"t32",label:"求通项",cat:"topic",note:"累加法(aₙ₊₁-aₙ=f(n))、累乘法(aₙ₊₁/aₙ=f(n))、构造法(aₙ₊₁=p·aₙ+q 配等比)。"},
+  {id:"t33",label:"错位相减裂项求和",cat:"topic",note:"等差×等比用错位相减;1/[n(n+1)]=1/n-1/(n+1) 裂项;分组求和。"},
+  {id:"t34",label:"数列与不等式",cat:"topic",note:"放缩证 Sₙ<M;裂项放缩、等比放缩;与导数/恒成立结合。"},
+  // 立体几何
+  {id:"t41",label:"空间线面位置关系",cat:"topic",note:"线线/线面/面面平行与垂直的判定与性质;三垂线、反证。"},
+  {id:"t42",label:"空间向量",cat:"topic",note:"建系设坐标;法向量;用向量证平行垂直、算夹角与距离。"},
+  {id:"t43",label:"二面角与距离",cat:"topic",note:"二面角用两法向量夹角(注意正负与图形判断锐钝);点到面距离投影公式。"},
+  // 解析几何
+  {id:"t51",label:"直线与圆",cat:"topic",note:"斜率、直线方程五式;点到直线距离;圆的方程、弦长、相切相交。"},
+  {id:"t52",label:"椭圆双曲线抛物线",cat:"topic",note:"标准方程与几何性质;a/b/c、离心率 e;渐近线、准线、焦点弦。"},
+  {id:"t53",label:"圆锥曲线综合",cat:"topic",trigger:"直线与曲线相交求弦长、定点定值、面积最值、向量条件、轨迹方程。",action:"设而不求联立得韦达定理 x₁+x₂、x₁x₂;弦长 √(1+k²)·|x₁-x₂|;定点定值把目标用韦达表示化简。",trap:"判别式Δ>0要写;斜率不存在的情况单独验。"},
+  // 概率统计
+  {id:"t61",label:"计数原理与排列组合",cat:"topic",note:"分类加法、分步乘法;排列 Aₙᵐ、组合 Cₙᵐ;捆绑、插空、隔板、分组分配。"},
+  {id:"t62",label:"二项分布与分布列期望",cat:"topic",note:"超几何与二项分布 B(n,p);分布列、期望 E(X)、方差 D(X);二项式定理通项。"},
+  {id:"t63",label:"统计与正态分布",cat:"topic",note:"抽样、频率分布直方图、平均数方差;正态分布 3σ 原则与对称性。"},
+  {id:"t64",label:"条件概率",cat:"topic",note:"P(B|A)=P(AB)/P(A);全概率公式、贝叶斯;独立事件相乘。"},
+  {id:"t65",label:"状态转移新定义 ★",cat:"type",pack:"数学状态转移.html",trigger:"新定义题、概率递推、马尔科夫两状态、正难则反(补集)。",action:"读定义→翻译成式子→套用;概率递推构造等比数列、不动点法求极限;补集法算复杂事件。",trap:"递推别算错首项;补集事件要互斥且完备。"},
+  // 集合逻辑与不等式
+  {id:"t71",label:"集合与简易逻辑",cat:"topic",note:"交并补、子集;充分必要条件;全称特称命题与否定。"},
+  {id:"t72",label:"不等式",cat:"topic",note:"一元二次不等式、基本不等式 a+b≥2√(ab)(一正二定三相等);线性规划。"}
+ ],
+ links:[
+  ["math","a1"],["math","a2"],["math","a3"],["math","a4"],["math","a5"],["math","a6"],["math","a7"],
+  ["a1","t11"],["a1","t12"],["a1","t13"],["a1","t14"],["a1","t15"],["a1","t16"],
+  ["a2","t21"],["a2","t22"],["a2","t23"],
+  ["a3","t31"],["a3","t32"],["a3","t33"],["a3","t34"],
+  ["a4","t41"],["a4","t42"],["a4","t43"],
+  ["a5","t51"],["a5","t52"],["a5","t53"],
+  ["a6","t61"],["a6","t62"],["a6","t63"],["a6","t64"],["a6","t65"],
+  ["a7","t71"],["a7","t72"],
+  // cross links
+  ["t11","t13"],["t14","t15"],["t15","t16"],["t12","t11"],["t21","t22"],["t22","t23"],
+  ["t31","t32"],["t32","t33"],["t41","t42"],["t42","t43"],["t51","t52"],["t52","t53"],
+  ["t61","t62"],["t62","t63"],
+  ["t16","t72"],["t34","t16"],
+  ["t61","t16"],
+  ["t34","t65"],["t61","t65"],["t64","t65"]
+ ]
+};
+/* ====== FORCE-GRAPH ENGINE (reusable, vanilla) ====== */
+(function(){
+ const svg=document.getElementById('graph');
+ const NS="http://www.w3.org/2000/svg";
+ const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
+ const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
+ const W=1000,H=700,cx=W/2,cy=H/2;
+ const R={root:34,area:24,topic:15,type:19};
+ const idx={};GRAPH.nodes.forEach(n=>idx[n.id]=n);
+ // init positions
+ GRAPH.nodes.forEach((n,i)=>{const ang=i/GRAPH.nodes.length*6.283;const rr=n.cat==="root"?0:(n.cat==="area"?160:300);n.x=cx+Math.cos(ang)*rr+(Math.random()*40-20);n.y=cy+Math.sin(ang)*rr+(Math.random()*40-20);n.vx=0;n.vy=0;});
+ const links=GRAPH.links.map(l=>({s:idx[l[0]],t:idx[l[1]]}));
+ // build SVG elements
+ const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width','2');e.setAttribute('stroke-opacity','.35');linkG.appendChild(e);return e;});
+ const nodeEls=GRAPH.nodes.map(n=>{
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const c=document.createElementNS(NS,'circle');const r=R[n.cat]||14;
+   c.setAttribute('r',r);c.setAttribute('fill',CAT[n.cat]);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width', n.cat==="type"?4:3);
+   g.appendChild(c);
+   if(n.cat==="type"){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5);st.setAttribute('font-size','15');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');t.setAttribute('text-anchor','middle');t.setAttribute('y',(R[n.cat]||14)+15);
+   t.setAttribute('font-size', n.cat==="root"?17:(n.cat==="area"?14:12));t.setAttribute('fill','#16120A');t.textContent=n.label;g.appendChild(t);
+   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;return g;
+ });
+ // view transform
+ let view={k:1,tx:0,ty:0};
+ function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ applyView();
+ // simulation
+ let alpha=1,frozen=false;
+ function tick(){
+   if(frozen)return;
+   const n=GRAPH.nodes;
+   for(let i=0;i<n.length;i++){
+     const a=n[i];if(a._fix)continue;
+     // gravity to center
+     a.vx+=(cx-a.x)*0.002*alpha; a.vy+=(cy-a.y)*0.002*alpha;
+     for(let j=0;j<n.length;j++){if(i===j)continue;const b=n[j];let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random();dy=Math.random();}const d=Math.sqrt(d2);const rep=2600*alpha/d2;a.vx+=dx/d*rep;a.vy+=dy/d*rep;}
+   }
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?150:(a.cat==="area"||b.cat==="area")?110:90;const f=(d-rest)*0.02*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix){a.vx+=fx;a.vy+=fy;}if(!b._fix){b.vx-=fx;b.vy-=fy;}});
+   n.forEach(a=>{if(a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
+   alpha*=0.992;if(alpha<0.02)alpha=0.02;
+   render();
+ }
+ function render(){
+   links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});
+   GRAPH.nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});
+ }
+ function loop(){tick();requestAnimationFrame(loop);}
+ loop();
+ // screen->world
+ function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
+ // node drag + click
+ let drag=null,moved=false;
+ nodeEls.forEach((g,i)=>{
+   const nd=GRAPH.nodes[i];
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=nd;moved=false;nd._fix=true;alpha=0.6;g.setPointerCapture(ev.pointerId);});
+   g.addEventListener('pointermove',ev=>{if(drag!==nd)return;moved=true;const w=toWorld(ev.clientX,ev.clientY);nd.x=w.x;nd.y=w.y;nd.vx=0;nd.vy=0;render();});
+   g.addEventListener('pointerup',ev=>{if(drag===nd){nd._fix=false;drag=null;if(!moved)openPanel(nd);}});
+ });
+ // background pan + zoom
+ let pan=null;
+ svg.addEventListener('pointerdown',ev=>{pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
+ svg.addEventListener('pointermove',ev=>{if(!pan)return;view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();});
+ window.addEventListener('pointerup',()=>{pan=null;svg.classList.remove('grabbing');});
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.12:0.89;const nk=Math.max(0.4,Math.min(3,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zoomBtn(1.2);
+ document.getElementById('zout').onclick=()=>zoomBtn(1/1.2);
+ function zoomBtn(f){const nk=Math.max(0.4,Math.min(3,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{view={k:1,tx:0,ty:0};applyView();alpha=0.8;};
+ const fb=document.getElementById('freezeBtn');fb.onclick=()=>{frozen=!frozen;fb.textContent=frozen?'继续布局':'暂停布局';};
+ // panel
+ const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
+ document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
+ function openPanel(nd){
+   const catName={root:'学科',area:'板块',topic:'知识点',type:'题型 ★'}[nd.cat];
+   let h='<span class="pcat" style="background:'+(nd.cat==="type"?ACCENT:CAT[nd.cat]==="#F4EFE2"?"#9a8f74":CAT[nd.cat])+'">'+catName+'</span>';
+   h+='<h3>'+nd.label.replace(' ★','')+'</h3>';
+   if(nd.note)h+='<div class="row">'+nd.note+'</div>';
+   if(nd.trigger)h+='<div class="trig"><b>触发信号:</b>'+nd.trigger+'</div>';
+   if(nd.action)h+='<div class="act"><b>标准动作:</b>'+nd.action+'</div>';
+   if(nd.trap)h+='<div class="trp"><b>易错:</b>'+nd.trap+'</div>';
+   if(nd.pack)h+='<a class="go" href="'+nd.pack+'">打开攻坚包 →</a>';
+   if(!nd.note&&!nd.trigger&&!nd.pack)h+='<div class="row" style="color:#7a6f54">这是一个'+catName+'节点,点击周围的题型 ★ 看具体打法。</div>';
+   pbody.innerHTML=h;panel.classList.add('show');
+ }
+ // search
+ const search=document.getElementById('search');
+ search.addEventListener('input',()=>{const q=search.value.trim();GRAPH.nodes.forEach(nd=>{const hit=q===''||nd.label.indexOf(q)>=0;nd._c.setAttribute('opacity',hit?1:0.18);nd._t.setAttribute('opacity',hit?1:0.18);if(q&&hit){nd._c.setAttribute('stroke','#E0382A');nd._c.setAttribute('stroke-width','5');}else{nd._c.setAttribute('stroke','#16120A');nd._c.setAttribute('stroke-width',nd.cat==="type"?4:3);}});});
+})();
+</script>
+</body>
+</html>

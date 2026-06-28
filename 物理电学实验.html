@@ -152,6 +152,20 @@
       <p class="trap">⚠ 选大阻值变阻器做限流不是"更安全",而常导致"电流调不上来、读数太小误差大";选阻值过大做分压会"电压调节不均匀"。要的是<b>灵敏、可控、不烧毁</b>。</p>
     </div>
 
+    <h3>🔬 动手:选不同阻值变阻器,看"灵敏 / 均匀"差多少</h3>
+    <p class="note">固定电源 6 V、负载 R<sub>L</sub>=20 Ω。拖动"变阻器最大阻值 R<sub>0</sub>",看两条曲线:左=限流时电流随滑片的变化(越接近直线越灵敏),右=分压时负载电压随滑片的变化(越接近直线越均匀)。体会"阻值过大→限流调不动、分压只在一小段突变"。</p>
+    <div class="vizbox">
+      <svg id="rheoSVG" viewBox="0 0 600 250"></svg>
+      <div class="slab"><span>变阻器最大 R<sub>0</sub></span><input type="range" id="rheoR0" min="2" max="200" value="20" step="1"><span id="rheoR0lab" style="min-width:70px;text-align:right">20 Ω</span></div>
+      <div class="rd">
+        <div><b>R<sub>0</sub> / R<sub>L</sub></b><span id="rheoRatio">—</span></div>
+        <div><b>限流电流范围</b><span id="rheoIrange">—</span></div>
+        <div><b>限流调节灵敏度</b><span id="rheoSens">—</span></div>
+        <div><b>分压均匀度</b><span id="rheoUnif">—</span></div>
+      </div>
+      <p class="note" id="rheoMsg"></p>
+    </div>
+
     <!-- ===================== 4 伏安法测电阻 ===================== -->
     <h2 class="b">④ 伏安法测电阻:完整流程</h2>
     <div class="card">
@@ -501,6 +515,61 @@ function fmt(x,n){return Number(x).toFixed(n);}
   sl.oninput=calc;calc();
 })();
 
+/* ============ 3 变阻器选择对比 ============ */
+(function(){
+  const EMF=6,RL=20;
+  const svg=$('rheoSVG'),r0R=$('rheoR0'),msg=$('rheoMsg');
+  // 限流:接入电阻 = R0*(1-p),p 为滑片位置(p=1 接入0、电流最大)
+  function Ilim(p,R0){return EMF/(RL+R0*(1-p));}
+  // 分压:下段 Rd=R0*p 与 RL 并联,上段 Ru=R0*(1-p)
+  function Udiv(p,R0){const Rd=R0*p,Ru=R0*(1-p);const Rpar=(Rd*RL)/(Rd+RL||1);return p<=0?0:EMF*Rpar/(Rpar+Ru);}
+  function draw(){
+    const R0=+r0R.value;
+    $('rheoR0lab').textContent=R0+' Ω';
+    const ox1=50,ox2=330,oyB=200,W=210,H=150;
+    let s='<rect x="0" y="0" width="600" height="250" fill="#fbf8ef"/>';
+    // titles
+    s+='<text x="'+(ox1+W/2)+'" y="24" text-anchor="middle" font-size="13" font-weight="900" fill="#1E9E86">限流:电流 I ~ 滑片</text>';
+    s+='<text x="'+(ox2+W/2)+'" y="24" text-anchor="middle" font-size="13" font-weight="900" fill="#E86A17">分压:负载 U ~ 滑片</text>';
+    function frame(ox){
+      let g='';
+      g+='<line x1="'+ox+'" y1="'+(oyB-H)+'" x2="'+ox+'" y2="'+oyB+'" stroke="#16120A" stroke-width="3"/>';
+      g+='<line x1="'+ox+'" y1="'+oyB+'" x2="'+(ox+W)+'" y2="'+oyB+'" stroke="#16120A" stroke-width="3"/>';
+      g+='<text x="'+(ox+W)+'" y="'+(oyB+18)+'" text-anchor="end" font-size="10" font-weight="800">滑片→</text>';
+      // ideal straight reference (diagonal)
+      g+='<line x1="'+ox+'" y1="'+oyB+'" x2="'+(ox+W)+'" y2="'+(oyB-H)+'" stroke="#bbb" stroke-width="1.5" stroke-dasharray="4 4"/>';
+      return g;
+    }
+    s+=frame(ox1)+frame(ox2);
+    // 限流 curve, normalize by its own max (I at p=1)
+    const Imax=Ilim(1,R0),Imin=Ilim(0,R0);
+    let d1='';
+    for(let k=0;k<=60;k++){const p=k/60;const px=ox1+p*W;const py=oyB-(Ilim(p,R0)/Imax)*H*0.92;d1+=(k===0?'M':'L')+px+' '+py+' ';}
+    s+='<path d="'+d1+'" fill="none" stroke="#1E9E86" stroke-width="4"/>';
+    // 分压 curve, normalize by EMF
+    let d2='';
+    for(let k=0;k<=60;k++){const p=k/60;const px=ox2+p*W;const py=oyB-(Udiv(p,R0)/EMF)*H*0.92;d2+=(k===0?'M':'L')+px+' '+py+' ';}
+    s+='<path d="'+d2+'" fill="none" stroke="#E86A17" stroke-width="4"/>';
+    svg.innerHTML=s;
+    // readouts
+    const ratio=R0/RL;
+    $('rheoRatio').textContent=ratio.toFixed(2);
+    $('rheoIrange').textContent=Imin.toFixed(2)+' ~ '+Imax.toFixed(2)+' A';
+    // 灵敏度:限流电流相对变化幅度(范围/最大),越大越好调
+    const sens=(Imax-Imin)/Imax;
+    $('rheoSens').textContent=sens<0.15?'差(几乎不变)':sens<0.45?'中等':'好(可大幅调)';
+    // 均匀度:分压曲线越接近对角线越均匀;R0 越小越均匀
+    const unif=ratio<=1?'好(近线性)':ratio<=3?'中等':'差(末段突变)';
+    $('rheoUnif').textContent=unif;
+    let m;
+    if(ratio>5)m='<b style="color:#E0382A">R₀ 远大于 R_L:</b>限流时电流几乎调不动(灵敏度差);分压时电压只在滑片接近一端的极小范围里突变(很不均匀)。<b>阻值选太大了。</b>';
+    else if(ratio<0.3)m='<b style="color:#E0382A">R₀ 远小于 R_L:</b>限流时几乎不起限流作用(电流总是接近最大)。限流要 R₀ 与 R_L 同数量级才好用。';
+    else m='<b style="color:#1E9E86">R₀ 与 R_L 数量级相当:</b>限流灵敏、分压均匀,是较理想的选择(口诀:限流取同数量级、分压取 ≤ 负载)。';
+    msg.innerHTML=m;
+  }
+  r0R.oninput=draw;draw();
+})();
+
 /* ============ 5 U-I 拟合 ============ */
 (function(){
   const svg=$('uiSVG');
@@ -688,9 +757,9 @@ function fmt(x,n){return Number(x).toFixed(n);}
     let value=Math.round(raw/p)*p;
     const main=Math.floor(value+1e-9);
     let frac=value-main;
-    let格=Math.round(frac/p);
+    let ge=Math.round(frac/p);
     $('caliMain').textContent=main+' mm';
-    $('caliVer').textContent=格+' × '+p+' = '+fmt(格*p,2)+' mm';
+    $('caliVer').textContent=ge+' × '+p+' = '+fmt(ge*p,2)+' mm';
     $('caliTotal').textContent=fmt(value,2)+' mm';
     draw(value);
   }
