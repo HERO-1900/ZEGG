@@ -153,7 +153,7 @@ const LEAVES=[
  const nodes=[],idx={};
  const root={id:"__root",label:"化学",cat:"root"};nodes.push(root);idx[root.id]=root;
  const na=AREAS.length;
- AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*330;a.y=cy+Math.sin(ang)*330;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
+ AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*430;a.y=cy+Math.sin(ang)*430;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
  const byC={};
  LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*90+(Math.random()*20-10);l.y=a.y+Math.sin(ang)*90+(Math.random()*20-10);l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
  root.x=cx;root.y=cy;root.vx=0;root.vy=0;
@@ -183,25 +183,25 @@ const LEAVES=[
  });
  document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
  // view
- let view={k:0.74,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
- function fit(){view.k=0.74;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
+ let view={k:0.6,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ function fit(){view.k=0.6;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
  // simulation
  let alpha=1;
- function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+34;if(a.cat==="area"&&b.cat==="area")return base+150;return base+30;}
+ function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+42;if(a.cat==="area"&&b.cat==="area")return base+200;return base+34;}
  function tick(){
    const N=nodes.length;
    for(let i=0;i<N;i++){const a=nodes[i];if(a.cat==="root"){continue;}
-     a.vx+=(cx-a.x)*0.0016*alpha; a.vy+=(cy-a.y)*0.0016*alpha;
-     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.010*alpha;a.vy+=(ar.y-a.y)*0.010*alpha;}
+     a.vx+=(cx-a.x)*0.0011*alpha; a.vy+=(cy-a.y)*0.0011*alpha;
+     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.009*alpha;a.vy+=(ar.y-a.y)*0.009*alpha;}
    }
    // repulsion + collision (pairwise)
    for(let i=0;i<N;i++){const a=nodes[i];for(let j=i+1;j<N;j++){const b=nodes[j];
      let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random()-0.5;dy=Math.random()-0.5;}
-     const d=Math.sqrt(d2);const rep=4800*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
+     const d=Math.sqrt(d2);const rep=7600*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
      if(a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(b.cat!=="root"){b.vx-=fx;b.vy-=fy;}
      const ms=sep(a,b);if(d<ms){const push=(ms-d)*0.5;const ox=dx/d*push,oy=dy/d*push;if(!a._fix&&a.cat!=="root"){a.x+=ox;a.y+=oy;}if(!b._fix&&b.cat!=="root"){b.x-=ox;b.y-=oy;}}
    }}
-   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?165:108;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?250:124;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
    nodes.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
    if(alpha>0.04)alpha*=0.99;
    render();
