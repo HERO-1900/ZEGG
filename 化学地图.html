@@ -25,7 +25,7 @@
   .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%}.sw.todo{background:#FBF8EF;border-style:dashed;border-color:#b3a880}
   .stage{position:relative;max-width:1180px;margin:12px auto;padding:0 18px}
   .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
-  svg#graph{display:block;width:100%;height:74vh;min-height:520px;touch-action:none;cursor:grab}
+  svg#graph{display:block;width:100%;height:76vh;min-height:540px;touch-action:none;cursor:grab}
   svg#graph.grabbing{cursor:grabbing}
   .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
   .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
@@ -40,7 +40,7 @@
   .panel a.go{display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
   .panel .soon{display:inline-block;margin-top:8px;background:#FBF8EF;color:#7a6f54;border:3px dashed #b3a880;padding:6px 12px;font-weight:800;font-size:12.5px}
   .panel .x{position:absolute;top:8px;right:10px;font-weight:900;cursor:pointer;font-size:18px;border:none;background:none}
-  .node-label{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3px;stroke-linejoin:round}
+  .nl{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3.5px;stroke-linejoin:round}
   .foot{max-width:1180px;margin:0 auto;padding:8px 18px 60px;font-size:12.5px;font-weight:700;color:#6b5d3a}
 </style>
 </head>
@@ -52,219 +52,211 @@
   <div class="hd">
     <div class="kicker">化学 · 知识图谱</div>
     <h1>化学 · 题型地图 <span class="prog" id="prog"></span></h1>
-    <p class="sub">这是整张高考化学的<b>作战地图</b>:十大板块、每块一丛。实心★=已上线攻坚包(可点开),空心虚线=已规划、待开发。先看全局,再按周逐个攻克。拖动、缩放、点节点看「触发信号+标准动作」。</p>
+    <p class="sub">整张高考化学的<b>作战地图</b>:十大板块,每块一座小岛。实心★=已上线攻坚包(可点开),空心虚线=已规划、待开发。点节点看「触发信号+标准动作」。拖动节点 · 滚轮缩放 · 拖背景平移。</p>
   </div>
   <div class="toolbar">
     <input id="search" placeholder="🔍 搜板块 / 题型…" autocomplete="off">
     <button class="tbtn" id="resetBtn">复位视图</button>
-    <button class="tbtn" id="freezeBtn">暂停布局</button>
     <div class="legend">
-      <span><i class="sw" style="background:#16120A"></i>学科</span>
-      <span><i class="sw" style="background:#1E9E86"></i>板块</span>
+      <span><i class="sw" style="background:#1E9E86"></i>板块(岛)</span>
       <span><i class="sw" style="background:#F3C00E"></i>★已上线</span>
       <span><i class="sw todo"></i>待开发</span>
     </div>
   </div>
   <div class="stage">
     <div class="canvaswrap">
-      <svg id="graph" viewBox="0 0 1400 950"></svg>
+      <svg id="graph" preserveAspectRatio="xMidYMid meet"></svg>
       <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
-      <div class="hint">拖背景平移 · 滚轮缩放 · 拖节点成丛 · 点节点看详情</div>
+      <div class="hint">每座小岛=一个板块 · 点节点看详情 · 滚轮放大某座岛</div>
       <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
     </div>
   </div>
-  <div class="foot">thebest2dan · 化学知识图谱(完整版) · ★=已上线;空心=待开发,将按歼灭名单逐周补齐</div>
+  <div class="foot">thebest2dan · 化学知识图谱(完整版) · ★=已上线;空心=待开发,按歼灭名单逐周补齐</div>
 
 <script>
 /* ====== GRAPH DATA (化学 · 完整) ====== */
 const ACCENT="#1E9E86";
 const GRAPH={
- nodes:[
-  {id:"chem",label:"化学",cat:"root"},
-  // ===== 10 板块(森林) =====
-  {id:"A",label:"化学计量",cat:"area"},
-  {id:"B",label:"结构与周期",cat:"area"},
-  {id:"C",label:"反应与能量",cat:"area"},
-  {id:"D",label:"速率与平衡",cat:"area"},
-  {id:"E",label:"水溶液离子",cat:"area"},
-  {id:"F",label:"电化学",cat:"area"},
-  {id:"G",label:"金属及化合物",cat:"area"},
-  {id:"H",label:"非金属及化合物",cat:"area"},
-  {id:"I",label:"有机化学",cat:"area"},
-  {id:"J",label:"实验与工艺",cat:"area"},
-  // A 计量
-  {id:"a1",label:"阿伏伽德罗常数判断",cat:"leaf",cluster:"A",note:"NA陷阱题:状态/电离/可逆/特殊物质。"},
-  {id:"a2",label:"物质的量浓度与配制",cat:"leaf",cluster:"A",note:"c=n/V、稀释、容量瓶配制误差。"},
-  {id:"a3",label:"气体摩尔体积",cat:"leaf",cluster:"A",note:"标况22.4、阿伏伽德罗定律推论。"},
-  {id:"a4",label:"方程式与过量计算",cat:"leaf",cluster:"A",note:"过量判断、多步反应、差量法。"},
-  {id:"a5",label:"守恒法计算",cat:"leaf",cluster:"A",note:"质量/电子/电荷/原子守恒巧算。"},
-  // B 结构周期
-  {id:"b1",label:"原子结构与同位素",cat:"leaf",cluster:"B",note:"质子中子电子、同位素、相对原子质量。"},
-  {id:"b2",label:"核外电子排布",cat:"leaf",cluster:"B",note:"能层能级、排布式、最外层规律。"},
-  {id:"b3",label:"元素周期律递变",cat:"leaf",cluster:"B",note:"半径、金属性非金属性、酸碱性强弱。"},
-  {id:"b4",label:"位—构—性推断",cat:"leaf",cluster:"B",note:"由位置推结构性质,短周期元素推断题。"},
-  {id:"b5",label:"化学键与晶体",cat:"leaf",cluster:"B",note:"离子/共价键、四类晶体熔沸点比较。"},
-  {id:"b6",label:"电子式·结构式",cat:"leaf",cluster:"B",note:"电子式书写、共价键数、空间构型。"},
-  // C 反应与能量
-  {id:"c1",label:"焓变与热化学方程式",cat:"leaf",cluster:"C",note:"ΔH正负、热化学方程式书写规范。"},
-  {id:"c2",label:"盖斯定律计算",cat:"leaf",cluster:"C",note:"目标反应=已知反应加减,ΔH随之运算。"},
-  {id:"c3",label:"键能计算反应热",cat:"leaf",cluster:"C",note:"ΔH=反应物键能和−生成物键能和。"},
-  {id:"c4",label:"反应热大小比较",cat:"leaf",cluster:"C",note:"状态、量、燃烧热中和热概念辨析。"},
-  // D 速率与平衡 (含3个已上线)
-  {id:"d1",label:"反应速率计算与因素",cat:"leaf",cluster:"D",note:"v=Δc/Δt、浓度温度催化剂压强影响。"},
-  {id:"d2",label:"化学平衡移动",cat:"leaf",cluster:"D",pack:"化学平衡.html",trigger:"改变浓度/压强/温度问移动方向、转化率。",action:"勒夏特列定方向→看v正v逆;催化剂不移动。"},
-  {id:"d3",label:"平衡常数K与转化率",cat:"leaf",cluster:"D",pack:"化学平衡.html",trigger:"求K、判断方向、算转化率α。",action:"三段式(ICE)列式;比较Q与K定方向。"},
-  {id:"d4",label:"化学平衡图像",cat:"leaf",cluster:"D",pack:"化学平衡.html",trigger:"浓度-时间、转化率-温度/压强、含拐点图。",action:"先拐先平定温度/压强高低;看终点定移动。"},
-  {id:"d5",label:"等效平衡",cat:"leaf",cluster:"D",pack:"化学平衡.html",trigger:"恒温恒容/恒压不同投料问是否等效。",action:"换算到同一边比对;恒压看比例恒容看量。"},
-  {id:"d6",label:"速率-平衡综合大题",cat:"leaf",cluster:"D",note:"图表数据+K+转化率+工业条件选择综合。"},
-  // E 水溶液 (1已上线)
-  {id:"e1",label:"弱电解质电离平衡",cat:"leaf",cluster:"E",note:"电离平衡移动、电离度、强弱比较。"},
-  {id:"e2",label:"水的电离与pH计算",cat:"leaf",cluster:"E",note:"Kw、酸碱pH、稀释、混合计算。"},
-  {id:"e3",label:"盐类水解",cat:"leaf",cluster:"E",note:"谁弱谁水解、越弱越水解、双水解、应用。"},
-  {id:"e4",label:"离子浓度与三大守恒",cat:"leaf",cluster:"E",pack:"水溶液离子平衡.html",trigger:"比较离子浓度大小、判断守恒式正误。",action:"抓电离/水解主次→电荷/物料/质子守恒列式。"},
-  {id:"e5",label:"沉淀溶解平衡Ksp",cat:"leaf",cluster:"E",note:"溶度积、沉淀生成转化、Ksp计算。"},
-  {id:"e6",label:"中和滴定曲线",cat:"leaf",cluster:"E",note:"突跃、指示剂选择、滴定曲线点的分析。"},
-  // F 电化学 (1已上线)
-  {id:"f1",label:"原电池原理",cat:"leaf",cluster:"F",note:"正负极判断、电子离子流向、盐桥。"},
-  {id:"f2",label:"电解池与产物",cat:"leaf",cluster:"F",note:"阴阳极放电顺序、电解产物、惰性/活性电极。"},
-  {id:"f3",label:"电极反应式书写",cat:"leaf",cluster:"F",pack:"电化学.html",trigger:"写陌生电池/电解电极反应式。",action:"判氧化还原极→四步法→按介质补H⁺/OH⁻/H₂O。"},
-  {id:"f4",label:"新型电池/燃料电池",cat:"leaf",cluster:"F",note:"锂电、燃料电池三介质、可充电池充放电。"},
-  {id:"f5",label:"电化学计算",cat:"leaf",cluster:"F",note:"电子守恒、法拉第、串联电路产物量。"},
-  {id:"f6",label:"金属腐蚀与防护",cat:"leaf",cluster:"F",note:"析氢/吸氧腐蚀、牺牲阳极、外加电流保护。"},
-  // G 金属
-  {id:"g1",label:"钠及其化合物",cat:"leaf",cluster:"G",note:"Na、Na2O2、NaOH、碳酸钠碳酸氢钠。"},
-  {id:"g2",label:"铝及两性",cat:"leaf",cluster:"G",note:"Al与酸碱、Al2O3/Al(OH)3两性、铝热反应。"},
-  {id:"g3",label:"铁盐与亚铁盐转化",cat:"leaf",cluster:"G",note:"Fe²⁺/Fe³⁺相互转化与检验、氧化还原。"},
-  {id:"g4",label:"镁铜及其他",cat:"leaf",cluster:"G",note:"Mg、Cu及其盐、焰色反应。"},
-  {id:"g5",label:"金属冶炼与活动性",cat:"leaf",cluster:"G",note:"冶炼方法选择、金属活动性顺序应用。"},
-  // H 非金属
-  {id:"h1",label:"氯及其化合物",cat:"leaf",cluster:"H",note:"Cl2制备、HClO、漂白、氯水成分。"},
-  {id:"h2",label:"硫与硫酸",cat:"leaf",cluster:"H",note:"SO2性质、浓硫酸特性、硫酸工业。"},
-  {id:"h3",label:"氮、硝酸与氨",cat:"leaf",cluster:"H",note:"NO/NO2、硝酸氧化性、氨与铵盐、喷泉。"},
-  {id:"h4",label:"碳硅及无机材料",cat:"leaf",cluster:"H",note:"CO2/碳酸盐、Si/SiO2、硅酸盐材料。"},
-  {id:"h5",label:"非金属综合推断",cat:"leaf",cluster:"H",note:"框图推断、气体制备与性质综合。"},
-  // I 有机 (1已上线)
-  {id:"i1",label:"有机结构与命名",cat:"leaf",cluster:"I",note:"结构简式、官能团、系统命名、同系物。"},
-  {id:"i2",label:"烃(烷烯炔苯)",cat:"leaf",cluster:"I",note:"取代/加成/氧化、燃烧通式、苯的结构。"},
-  {id:"i3",label:"烃的衍生物",cat:"leaf",cluster:"I",note:"卤代烃醇酚醛羧酸酯的性质与转化。"},
-  {id:"i4",label:"同分异构体书写",cat:"leaf",cluster:"I",note:"碳链/位置/官能团异构、限定条件计数。"},
-  {id:"i5",label:"有机推断",cat:"leaf",cluster:"I",pack:"有机推断.html",trigger:"分子式+现象推结构、转化框图、信息迁移。",action:"算不饱和度→认官能团→转化网络→数异构。"},
-  {id:"i6",label:"有机合成路线设计",cat:"leaf",cluster:"I",note:"逆合成分析、引入/转化官能团、保护基。"},
-  {id:"i7",label:"糖类蛋白质油脂",cat:"leaf",cluster:"I",note:"葡萄糖、淀粉纤维素、氨基酸蛋白质、油脂。"},
-  // J 实验 (1已上线含工艺)
-  {id:"j1",label:"仪器与基本操作",cat:"leaf",cluster:"J",note:"仪器识别、加热、称量、气密性检查。"},
-  {id:"j2",label:"分离与提纯",cat:"leaf",cluster:"J",note:"过滤蒸馏萃取分液结晶、除杂原则。"},
-  {id:"j3",label:"物质检验与鉴别",cat:"leaf",cluster:"J",note:"离子检验、气体检验、鉴别方案设计。"},
-  {id:"j4",label:"气体制备综合",cat:"leaf",cluster:"J",note:"装置选择、净化干燥、收集、尾气处理。"},
-  {id:"j5",label:"中和滴定与误差",cat:"leaf",cluster:"J",pack:"化学实验.html",trigger:"定量实验问误差偏高/偏低/无影响。",action:"c待=c标V标/V待→看V标被读大还是读小。"},
-  {id:"j6",label:"工艺流程题",cat:"leaf",cluster:"J",pack:"化学实验.html",trigger:"流程题问某步目的、试剂作用、条件控制。",action:"认环节(预处理/除杂/分离/提纯/循环)逐问目的。"},
-  {id:"j7",label:"实验方案设计与评价",cat:"leaf",cluster:"J",note:"对比实验、变量控制、方案优劣评价。"},
-  {id:"j8",label:"探究性实验",cat:"leaf",cluster:"J",note:"假设-验证、异常现象解释、数据处理。"}
+ areas:[
+  {id:"A",label:"化学计量"},{id:"B",label:"结构与周期"},{id:"C",label:"反应与能量"},
+  {id:"D",label:"速率与平衡"},{id:"E",label:"水溶液离子"},{id:"F",label:"电化学"},
+  {id:"G",label:"金属及化合物"},{id:"H",label:"非金属及化合物"},{id:"I",label:"有机化学"},{id:"J",label:"实验与工艺"}
  ],
- links:[]
+ leaves:[
+  {id:"a1",label:"NA阿伏伽德罗常数",cluster:"A",note:"NA陷阱题:状态/电离/可逆/特殊物质。"},
+  {id:"a2",label:"浓度与配制",cluster:"A",note:"c=n/V、稀释、容量瓶配制误差。"},
+  {id:"a3",label:"气体摩尔体积",cluster:"A",note:"标况22.4、阿伏伽德罗定律推论。"},
+  {id:"a4",label:"过量计算",cluster:"A",note:"过量判断、多步反应、差量法。"},
+  {id:"a5",label:"守恒法计算",cluster:"A",note:"质量/电子/电荷/原子守恒巧算。"},
+  {id:"b1",label:"原子结构同位素",cluster:"B",note:"质子中子电子、同位素、相对原子质量。"},
+  {id:"b2",label:"核外电子排布",cluster:"B",note:"能层能级、排布式、最外层规律。"},
+  {id:"b3",label:"周期律递变",cluster:"B",note:"半径、金属非金属性、酸碱性强弱。"},
+  {id:"b4",label:"位构性推断",cluster:"B",note:"由位置推结构性质,短周期推断题。"},
+  {id:"b5",label:"化学键与晶体",cluster:"B",note:"离子/共价键、四类晶体熔沸点比较。"},
+  {id:"b6",label:"电子式结构式",cluster:"B",note:"电子式书写、共价键数、空间构型。"},
+  {id:"c1",label:"焓变热化学式",cluster:"C",note:"ΔH正负、热化学方程式书写规范。"},
+  {id:"c2",label:"盖斯定律",cluster:"C",note:"目标反应=已知反应加减,ΔH随之运算。"},
+  {id:"c3",label:"键能算反应热",cluster:"C",note:"ΔH=反应物键能和−生成物键能和。"},
+  {id:"c4",label:"反应热比较",cluster:"C",note:"状态、量、燃烧热中和热概念辨析。"},
+  {id:"d1",label:"速率计算与因素",cluster:"D",note:"v=Δc/Δt、浓度温度催化剂压强影响。"},
+  {id:"d2",label:"化学平衡移动",cluster:"D",pack:"化学平衡.html",trigger:"改变浓度/压强/温度问移动方向、转化率。",action:"勒夏特列定方向→看v正v逆;催化剂不移动。"},
+  {id:"d3",label:"平衡常数K转化率",cluster:"D",pack:"化学平衡.html",trigger:"求K、判断方向、算转化率α。",action:"三段式(ICE)列式;比较Q与K定方向。"},
+  {id:"d4",label:"化学平衡图像",cluster:"D",pack:"化学平衡.html",trigger:"浓度-时间、转化率-温度/压强、含拐点图。",action:"先拐先平定温度/压强高低;看终点定移动。"},
+  {id:"d5",label:"等效平衡",cluster:"D",pack:"化学平衡.html",trigger:"恒温恒容/恒压不同投料问是否等效。",action:"换算到同一边比对;恒压看比例恒容看量。"},
+  {id:"d6",label:"速率平衡综合",cluster:"D",note:"图表数据+K+转化率+工业条件选择综合。"},
+  {id:"e1",label:"弱电解质电离",cluster:"E",note:"电离平衡移动、电离度、强弱比较。"},
+  {id:"e2",label:"pH计算",cluster:"E",note:"Kw、酸碱pH、稀释、混合计算。"},
+  {id:"e3",label:"盐类水解",cluster:"E",note:"谁弱谁水解、越弱越水解、双水解、应用。"},
+  {id:"e4",label:"离子浓度三守恒",cluster:"E",pack:"水溶液离子平衡.html",trigger:"比较离子浓度大小、判断守恒式正误。",action:"抓电离/水解主次→电荷/物料/质子守恒列式。"},
+  {id:"e5",label:"沉淀溶解Ksp",cluster:"E",note:"溶度积、沉淀生成转化、Ksp计算。"},
+  {id:"e6",label:"中和滴定曲线",cluster:"E",note:"突跃、指示剂选择、滴定曲线点分析。"},
+  {id:"f1",label:"原电池原理",cluster:"F",note:"正负极判断、电子离子流向、盐桥。"},
+  {id:"f2",label:"电解池与产物",cluster:"F",note:"阴阳极放电顺序、电解产物、惰性活性电极。"},
+  {id:"f3",label:"电极反应式书写",cluster:"F",pack:"电化学.html",trigger:"写陌生电池/电解电极反应式。",action:"判氧化还原极→四步法→按介质补H⁺/OH⁻/H₂O。"},
+  {id:"f4",label:"新型/燃料电池",cluster:"F",note:"锂电、燃料电池三介质、可充电池充放电。"},
+  {id:"f5",label:"电化学计算",cluster:"F",note:"电子守恒、法拉第、串联电路产物量。"},
+  {id:"f6",label:"金属腐蚀防护",cluster:"F",note:"析氢/吸氧腐蚀、牺牲阳极、外加电流保护。"},
+  {id:"g1",label:"钠及化合物",cluster:"G",note:"Na、Na2O2、NaOH、碳酸钠碳酸氢钠。"},
+  {id:"g2",label:"铝及两性",cluster:"G",note:"Al与酸碱、Al2O3/Al(OH)3两性、铝热反应。"},
+  {id:"g3",label:"铁盐亚铁盐",cluster:"G",note:"Fe²⁺/Fe³⁺转化与检验、氧化还原。"},
+  {id:"g4",label:"镁铜及其他",cluster:"G",note:"Mg、Cu及其盐、焰色反应。"},
+  {id:"g5",label:"金属冶炼",cluster:"G",note:"冶炼方法选择、金属活动性顺序应用。"},
+  {id:"h1",label:"氯及化合物",cluster:"H",note:"Cl2制备、HClO、漂白、氯水成分。"},
+  {id:"h2",label:"硫与硫酸",cluster:"H",note:"SO2性质、浓硫酸特性、硫酸工业。"},
+  {id:"h3",label:"氮硝酸与氨",cluster:"H",note:"NO/NO2、硝酸氧化性、氨与铵盐、喷泉。"},
+  {id:"h4",label:"碳硅与材料",cluster:"H",note:"CO2/碳酸盐、Si/SiO2、硅酸盐材料。"},
+  {id:"h5",label:"非金属推断",cluster:"H",note:"框图推断、气体制备与性质综合。"},
+  {id:"i1",label:"结构与命名",cluster:"I",note:"结构简式、官能团、系统命名、同系物。"},
+  {id:"i2",label:"烃烷烯炔苯",cluster:"I",note:"取代/加成/氧化、燃烧通式、苯的结构。"},
+  {id:"i3",label:"烃的衍生物",cluster:"I",note:"卤代烃醇酚醛羧酸酯的性质与转化。"},
+  {id:"i4",label:"同分异构书写",cluster:"I",note:"碳链/位置/官能团异构、限定条件计数。"},
+  {id:"i5",label:"有机推断",cluster:"I",pack:"有机推断.html",trigger:"分子式+现象推结构、转化框图、信息迁移。",action:"算不饱和度→认官能团→转化网络→数异构。"},
+  {id:"i6",label:"有机合成设计",cluster:"I",note:"逆合成分析、引入/转化官能团、保护基。"},
+  {id:"i7",label:"糖蛋白质油脂",cluster:"I",note:"葡萄糖、淀粉纤维素、氨基酸蛋白质、油脂。"},
+  {id:"j1",label:"仪器基本操作",cluster:"J",note:"仪器识别、加热、称量、气密性检查。"},
+  {id:"j2",label:"分离与提纯",cluster:"J",note:"过滤蒸馏萃取分液结晶、除杂原则。"},
+  {id:"j3",label:"检验与鉴别",cluster:"J",note:"离子检验、气体检验、鉴别方案设计。"},
+  {id:"j4",label:"气体制备",cluster:"J",note:"装置选择、净化干燥、收集、尾气处理。"},
+  {id:"j5",label:"中和滴定误差",cluster:"J",pack:"化学实验.html",trigger:"定量实验问误差偏高/偏低/无影响。",action:"c待=c标V标/V待→看V标被读大还是读小。"},
+  {id:"j6",label:"工艺流程题",cluster:"J",pack:"化学实验.html",trigger:"流程题问某步目的、试剂作用、条件控制。",action:"认环节(预处理/除杂/分离/提纯/循环)逐问目的。"},
+  {id:"j7",label:"方案设计评价",cluster:"J",note:"对比实验、变量控制、方案优劣评价。"},
+  {id:"j8",label:"探究性实验",cluster:"J",note:"假设-验证、异常现象解释、数据处理。"}
+ ]
 };
-// auto-build links: root→area, area→its leaves; plus a few cross ties
-(function(){
- const L=GRAPH.links;
- GRAPH.nodes.filter(n=>n.cat==="area").forEach(a=>L.push(["chem",a.id]));
- GRAPH.nodes.filter(n=>n.cat==="leaf").forEach(n=>L.push([n.cluster,n.id]));
- [["d1","d2"],["e2","e3"],["e3","e4"],["f1","f3"],["f2","f3"],["i2","i3"],["i3","i5"],["i4","i5"],["a4","a5"],["c1","c2"],["g3","h5"],["d6","d4"],["j5","e6"]].forEach(x=>L.push(x));
-})();
-/* ====== FOREST FORCE-GRAPH ENGINE (reusable) ====== */
+/* ====== GROVE LAYOUT ENGINE (grid of islands + halo) ====== */
 (function(){
  const svg=document.getElementById('graph');const NS="http://www.w3.org/2000/svg";
- const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
- const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
- const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
- const W=1400,H=950,cx=W/2,cy=H/2;
- const idx={};GRAPH.nodes.forEach(n=>idx[n.id]=n);
- const areas=GRAPH.nodes.filter(n=>n.cat==="area");
- const RING=355;
- areas.forEach((a,i)=>{const ang=-Math.PI/2+i/areas.length*2*Math.PI;a._ax=cx+Math.cos(ang)*RING;a._ay=cy+Math.sin(ang)*RING;});
- // init positions
- const root=idx[GRAPH.nodes[0].id];
- GRAPH.nodes.forEach(n=>{
-   if(n.cat==="root"){n.x=cx;n.y=cy;}
-   else if(n.cat==="area"){n.x=n._ax+(Math.random()*30-15);n.y=n._ay+(Math.random()*30-15);}
-   else{const a=idx[n.cluster];n.x=a._ax+(Math.random()*150-75);n.y=a._ay+(Math.random()*150-75);}
-   n.vx=0;n.vy=0;
- });
- const links=GRAPH.links.map(l=>({s:idx[l[0]],t:idx[l[1]]}));
- const R={root:36,area:26,leafLive:17,leafTodo:13};
- const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width','2');e.setAttribute('stroke-opacity','.28');linkG.appendChild(e);return e;});
- let live=0,total=0;
- const nodeEls=GRAPH.nodes.map(n=>{
-   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
-   const isLive=!!n.pack;const isTodo=n.cat==="leaf"&&!n.pack;
-   if(n.cat==="leaf"){total++;if(isLive)live++;}
-   const c=document.createElementNS(NS,'circle');
-   let r=n.cat==="root"?R.root:n.cat==="area"?R.area:(isLive?R.leafLive:R.leafTodo);
-   c.setAttribute('r',r);
-   if(n.cat==="root"){c.setAttribute('fill','#16120A');c.setAttribute('stroke','#16120A');}
-   else if(n.cat==="area"){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');}
-   else if(isLive){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');}
-   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-dasharray','5 4');}
-   c.setAttribute('stroke-width',n.cat==="area"?3.5:isLive?4:2.5);
-   g.appendChild(c);
-   if(isLive){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5);st.setAttribute('font-size','15');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
-   const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');t.setAttribute('text-anchor','middle');t.setAttribute('y',r+14);
-   t.setAttribute('font-size',n.cat==="root"?18:n.cat==="area"?15:11.5);t.setAttribute('fill',isTodo?'#7a6f54':'#16120A');t.textContent=n.label;g.appendChild(t);
-   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;return g;
+ const bgG=document.createElementNS(NS,'g');svg.appendChild(bgG);
+ const linkG=document.createElementNS(NS,'g');svg.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');svg.appendChild(nodeG);
+ // group leaves by cluster
+ const byCluster={};GRAPH.leaves.forEach(l=>{(byCluster[l.cluster]=byCluster[l.cluster]||[]).push(l);});
+ // grid
+ const n=GRAPH.areas.length;const cols=Math.ceil(Math.sqrt(n*1.35));const rows=Math.ceil(n/cols);
+ const CELL_W=430,CELL_H=400,PAD=60;
+ const W=cols*CELL_W+PAD*2,H=rows*CELL_H+PAD*2;
+ svg.setAttribute('viewBox','0 0 '+W+' '+H);
+ const idx={};let live=0,total=0;
+ // compute positions
+ GRAPH.areas.forEach((a,ai)=>{
+   const col=ai%cols,row=Math.floor(ai/cols);
+   a.x=PAD+col*CELL_W+CELL_W/2; a.y=PAD+row*CELL_H+CELL_H/2; a.isArea=true; idx[a.id]=a;
+   const kids=byCluster[a.id]||[];const L=kids.length;
+   const halo=Math.min(160,92+L*7);a._halo=halo;
+   kids.forEach((k,ki)=>{
+     const ang=-Math.PI/2+ki/L*2*Math.PI;
+     k.x=a.x+Math.cos(ang)*halo; k.y=a.y+Math.sin(ang)*halo; k._ang=ang; idx[k.id]=k;
+     total++; if(k.pack)live++;
+   });
  });
  document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
- let view={k:0.82,tx:0,ty:0};
- function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
- // center the 0.82 view
- view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();
- let alpha=1,frozen=false;
- function tick(){
-   if(frozen)return;const n=GRAPH.nodes;
-   for(let i=0;i<n.length;i++){const a=n[i];if(a.cat==="root"||a._fix)continue;
-     if(a.cat==="area"){a.vx+=(a._ax-a.x)*0.045*alpha;a.vy+=(a._ay-a.y)*0.045*alpha;}
-     else{const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.05*alpha;a.vy+=(ar.y-a.y)*0.05*alpha;}
-     for(let j=0;j<n.length;j++){if(i===j)continue;const b=n[j];let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random();dy=Math.random();}
-       const same=(a.cluster&&a.cluster===b.cluster);const base=same?1500:3200;const d=Math.sqrt(d2);const rep=base*alpha/d2;a.vx+=dx/d*rep;a.vy+=dy/d*rep;}
-   }
-   links.forEach(l=>{const a=l.s,b=l.t;if(a.cat==="root"||b.cat==="root")return;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=70;const f=(d-rest)*0.02*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
-   n.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.85;a.vy*=0.85;a.x+=a.vx;a.y+=a.vy;});
-   alpha*=0.992;if(alpha<0.03)alpha=0.03;render();
- }
- function render(){links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});GRAPH.nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});}
- function loop(){tick();requestAnimationFrame(loop);}loop();
- function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
- let drag=null,moved=false;
- nodeEls.forEach((g,i)=>{const nd=GRAPH.nodes[i];
-   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=nd;moved=false;nd._fix=true;alpha=0.5;g.setPointerCapture(ev.pointerId);});
-   g.addEventListener('pointermove',ev=>{if(drag!==nd)return;moved=true;const w=toWorld(ev.clientX,ev.clientY);nd.x=w.x;nd.y=w.y;nd.vx=0;nd.vy=0;render();});
-   g.addEventListener('pointerup',ev=>{if(drag===nd){nd._fix=false;drag=null;if(!moved)openPanel(nd);}});
+ // draw grove background discs + area→leaf links
+ const lineEls=[];
+ GRAPH.areas.forEach(a=>{
+   const bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',a.x);bg.setAttribute('cy',a.y);bg.setAttribute('r',a._halo+46);
+   bg.setAttribute('fill',ACCENT);bg.setAttribute('fill-opacity','0.07');bg.setAttribute('stroke',ACCENT);bg.setAttribute('stroke-opacity','0.35');bg.setAttribute('stroke-width','2');bg.setAttribute('stroke-dasharray','3 6');bgG.appendChild(bg);a._bg=bg;
+   (byCluster[a.id]||[]).forEach(k=>{const e=document.createElementNS(NS,'line');e.setAttribute('x1',a.x);e.setAttribute('y1',a.y);e.setAttribute('x2',k.x);e.setAttribute('y2',k.y);e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width','1.6');e.setAttribute('stroke-opacity','.3');linkG.appendChild(e);lineEls.push({e:e,a:a,k:k});});
  });
+ // draw nodes
+ function mkNode(d,isArea){
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const isLive=!!d.pack;
+   const r=isArea?30:(isLive?17:13);
+   const c=document.createElementNS(NS,'circle');c.setAttribute('r',r);
+   if(isArea){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','4');}
+   else if(isLive){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','4');}
+   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width','2.5');c.setAttribute('stroke-dasharray','5 4');}
+   g.appendChild(c);
+   if(isLive){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');
+   if(isArea){t.setAttribute('y',-r-9);t.setAttribute('font-size','17');t.setAttribute('fill','#16120A');}
+   else{
+     // place label outward from hub to avoid overlap
+     const a=idx[d.cluster];const outAng=d._ang;const oy=Math.sin(outAng);
+     if(oy>0.35){t.setAttribute('y',r+15);} else {t.setAttribute('y',-r-7);}
+     t.setAttribute('font-size','12.5');t.setAttribute('fill',isLive?'#16120A':'#6b5d3a');
+   }
+   t.textContent=d.label;g.appendChild(t);
+   g.setAttribute('transform','translate('+d.x+','+d.y+')');
+   nodeG.appendChild(g);d._g=g;d._c=c;d._t=t;
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();startDrag(d,ev,g);});
+   return g;
+ }
+ GRAPH.areas.forEach(a=>mkNode(a,true));
+ GRAPH.leaves.forEach(l=>mkNode(l,false));
+ // view transform
+ let view={k:1,tx:0,ty:0};
+ function applyView(){nodeG.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');linkG.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');bgG.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ applyView();
+ function toWorld(cx,cy){const rect=svg.getBoundingClientRect();
+   // account for preserveAspectRatio meet scaling
+   const scale=Math.min(rect.width/W,rect.height/H);const offX=(rect.width-W*scale)/2,offY=(rect.height-H*scale)/2;
+   const sx=(cx-rect.left-offX)/scale, sy=(cy-rect.top-offY)/scale;
+   return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};
+ }
+ // dragging nodes
+ let drag=null,moved=false;
+ function startDrag(d,ev,g){drag=d;moved=false;try{g.setPointerCapture(ev.pointerId);}catch(e){}}
+ svg.addEventListener('pointermove',ev=>{
+   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;updateNode(drag);if(drag.isArea){/* move whole island */}return;}
+   if(pan){view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();}
+ });
+ window.addEventListener('pointerup',ev=>{
+   if(drag){if(!moved)openPanel(drag);drag=null;}
+   if(pan){pan=null;svg.classList.remove('grabbing');}
+ });
+ function updateNode(d){
+   d._g.setAttribute('transform','translate('+d.x+','+d.y+')');
+   if(d.isArea){d._bg.setAttribute('cx',d.x);d._bg.setAttribute('cy',d.y);}
+   lineEls.forEach(o=>{if(o.a===d||o.k===d){o.e.setAttribute('x1',o.a.x);o.e.setAttribute('y1',o.a.y);o.e.setAttribute('x2',o.k.x);o.e.setAttribute('y2',o.k.y);}});
+ }
+ // background pan
  let pan=null;
- svg.addEventListener('pointerdown',ev=>{pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
- svg.addEventListener('pointermove',ev=>{if(!pan)return;view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();});
- window.addEventListener('pointerup',()=>{pan=null;svg.classList.remove('grabbing');});
- svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.12:0.89;const nk=Math.max(0.3,Math.min(3,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
- document.getElementById('zin').onclick=()=>zoomBtn(1.2);
- document.getElementById('zout').onclick=()=>zoomBtn(1/1.2);
- function zoomBtn(f){const nk=Math.max(0.3,Math.min(3,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
- document.getElementById('resetBtn').onclick=()=>{view={k:0.82,tx:0,ty:0};view.tx=cx-cx*0.82;view.ty=cy-cy*0.82;applyView();alpha=0.7;};
- const fb=document.getElementById('freezeBtn');fb.onclick=()=>{frozen=!frozen;fb.textContent=frozen?'继续布局':'暂停布局';};
+ svg.addEventListener('pointerdown',ev=>{if(drag)return;pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const scale=Math.min(rect.width/W,rect.height/H);const offX=(rect.width-W*scale)/2,offY=(rect.height-H*scale)/2;const mx=(ev.clientX-rect.left-offX)/scale,my=(ev.clientY-rect.top-offY)/scale;const f=ev.deltaY<0?1.15:0.87;const nk=Math.max(0.5,Math.min(4,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zb(1.25);document.getElementById('zout').onclick=()=>zb(1/1.25);
+ function zb(f){const cx=W/2,cy=H/2;const nk=Math.max(0.5,Math.min(4,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{view={k:1,tx:0,ty:0};applyView();};
+ // panel
  const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
  document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
- function openPanel(nd){
-   const isLive=!!nd.pack,isTodo=nd.cat==="leaf"&&!nd.pack;
-   const catName=nd.cat==="root"?'学科':nd.cat==="area"?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
-   const col=nd.cat==="area"?ACCENT:isLive?'#C8930E':'#9a8f74';
-   let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+nd.label+'</h3>';
-   if(nd.cat==="area"){const kids=GRAPH.nodes.filter(x=>x.cluster===nd.id);const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。点丛中的节点看详情。</div>';}
-   if(nd.note)h+='<div class="row">'+nd.note+'</div>';
-   if(nd.trigger)h+='<div class="trig"><b>触发信号:</b>'+nd.trigger+'</div>';
-   if(nd.action)h+='<div class="act"><b>标准动作:</b>'+nd.action+'</div>';
-   if(isLive)h+='<a class="go" href="'+nd.pack+'">打开攻坚包 →</a>';
+ function openPanel(d){
+   const isLive=!!d.pack,isTodo=!d.isArea&&!d.pack;
+   const catName=d.isArea?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
+   const col=d.isArea?ACCENT:isLive?'#C8930E':'#9a8f74';
+   let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+d.label+'</h3>';
+   if(d.isArea){const kids=byCluster[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。点岛上的节点看详情。</div>';}
+   if(d.note)h+='<div class="row">'+d.note+'</div>';
+   if(d.trigger)h+='<div class="trig"><b>触发信号:</b>'+d.trigger+'</div>';
+   if(d.action)h+='<div class="act"><b>标准动作:</b>'+d.action+'</div>';
+   if(isLive)h+='<a class="go" href="'+d.pack+'">打开攻坚包 →</a>';
    if(isTodo)h+='<div class="soon">⛏ 待开发攻坚包 · 已列入计划,将按周逐个攻克</div>';
    pbody.innerHTML=h;panel.classList.add('show');
  }
+ // search
  const search=document.getElementById('search');
- search.addEventListener('input',()=>{const q=search.value.trim();GRAPH.nodes.forEach(nd=>{const hit=q===''||nd.label.indexOf(q)>=0;nd._c.setAttribute('opacity',hit?1:0.15);nd._t.setAttribute('opacity',hit?1:0.15);});});
+ const all=GRAPH.areas.concat(GRAPH.leaves);
+ search.addEventListener('input',()=>{const q=search.value.trim();all.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.12);d._t.setAttribute('opacity',hit?1:0.12);if(q&&hit&&!d.isArea){d._c.setAttribute('stroke','#E0382A');}else if(!d.isArea){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
 })();
 </script>
 </body>
