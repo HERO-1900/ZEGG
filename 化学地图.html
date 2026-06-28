@@ -25,7 +25,7 @@
   .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%}.sw.todo{background:#FBF8EF;border-style:dashed;border-color:#b3a880}
   .stage{position:relative;max-width:1180px;margin:12px auto;padding:0 18px}
   .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
-  svg#graph{display:block;width:100%;height:76vh;min-height:540px;touch-action:none;cursor:grab}
+  svg#graph{display:block;width:100%;height:78vh;min-height:540px;touch-action:none;cursor:grab}
   svg#graph.grabbing{cursor:grabbing}
   .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
   .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
@@ -52,22 +52,23 @@
   <div class="hd">
     <div class="kicker">化学 · 知识图谱</div>
     <h1>化学 · 题型地图 <span class="prog" id="prog"></span></h1>
-    <p class="sub">整张高考化学的<b>作战地图</b>:十大板块,每块一座小岛。实心★=已上线攻坚包(可点开),空心虚线=已规划、待开发。点节点看「触发信号+标准动作」。拖动节点 · 滚轮缩放 · 拖背景平移。</p>
+    <p class="sub">活的知识网:<b>拖任意节点,整张网会被弹簧牵着一起动</b>。十大板块各成一团,实心★=已上线攻坚包(可点开),空心=待开发。点节点看「触发信号+标准动作」。滚轮缩放 · 拖背景平移。</p>
   </div>
   <div class="toolbar">
     <input id="search" placeholder="🔍 搜板块 / 题型…" autocomplete="off">
-    <button class="tbtn" id="resetBtn">复位视图</button>
+    <button class="tbtn" id="resetBtn">复位 / 重排</button>
     <div class="legend">
-      <span><i class="sw" style="background:#1E9E86"></i>板块(岛)</span>
+      <span><i class="sw" style="background:#16120A"></i>学科</span>
+      <span><i class="sw" style="background:#1E9E86"></i>板块</span>
       <span><i class="sw" style="background:#F3C00E"></i>★已上线</span>
       <span><i class="sw todo"></i>待开发</span>
     </div>
   </div>
   <div class="stage">
     <div class="canvaswrap">
-      <svg id="graph" preserveAspectRatio="xMidYMid meet"></svg>
+      <svg id="graph" viewBox="0 0 1600 1120"></svg>
       <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
-      <div class="hint">每座小岛=一个板块 · 点节点看详情 · 滚轮放大某座岛</div>
+      <div class="hint">拖节点扯动整张网 · 滚轮缩放 · 点节点看详情</div>
       <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
     </div>
   </div>
@@ -76,13 +77,12 @@
 <script>
 /* ====== GRAPH DATA (化学 · 完整) ====== */
 const ACCENT="#1E9E86";
-const GRAPH={
- areas:[
+const AREAS=[
   {id:"A",label:"化学计量"},{id:"B",label:"结构与周期"},{id:"C",label:"反应与能量"},
   {id:"D",label:"速率与平衡"},{id:"E",label:"水溶液离子"},{id:"F",label:"电化学"},
   {id:"G",label:"金属及化合物"},{id:"H",label:"非金属及化合物"},{id:"I",label:"有机化学"},{id:"J",label:"实验与工艺"}
- ],
- leaves:[
+];
+const LEAVES=[
   {id:"a1",label:"NA阿伏伽德罗常数",cluster:"A",note:"NA陷阱题:状态/电离/可逆/特殊物质。"},
   {id:"a2",label:"浓度与配制",cluster:"A",note:"c=n/V、稀释、容量瓶配制误差。"},
   {id:"a3",label:"气体摩尔体积",cluster:"A",note:"标况22.4、阿伏伽德罗定律推论。"},
@@ -141,111 +141,95 @@ const GRAPH={
   {id:"j6",label:"工艺流程题",cluster:"J",pack:"化学实验.html",trigger:"流程题问某步目的、试剂作用、条件控制。",action:"认环节(预处理/除杂/分离/提纯/循环)逐问目的。"},
   {id:"j7",label:"方案设计评价",cluster:"J",note:"对比实验、变量控制、方案优劣评价。"},
   {id:"j8",label:"探究性实验",cluster:"J",note:"假设-验证、异常现象解释、数据处理。"}
- ]
-};
-/* ====== GROVE LAYOUT ENGINE (grid of islands + halo) ====== */
+];
+/* ====== LIVE FORCE ENGINE (springs + repulsion + collision, draggable) ====== */
 (function(){
  const svg=document.getElementById('graph');const NS="http://www.w3.org/2000/svg";
- const bgG=document.createElementNS(NS,'g');svg.appendChild(bgG);
- const linkG=document.createElementNS(NS,'g');svg.appendChild(linkG);
- const nodeG=document.createElementNS(NS,'g');svg.appendChild(nodeG);
- // group leaves by cluster
- const byCluster={};GRAPH.leaves.forEach(l=>{(byCluster[l.cluster]=byCluster[l.cluster]||[]).push(l);});
- // grid
- const n=GRAPH.areas.length;const cols=Math.ceil(Math.sqrt(n*1.35));const rows=Math.ceil(n/cols);
- const CELL_W=430,CELL_H=400,PAD=60;
- const W=cols*CELL_W+PAD*2,H=rows*CELL_H+PAD*2;
- svg.setAttribute('viewBox','0 0 '+W+' '+H);
- const idx={};let live=0,total=0;
- // compute positions
- GRAPH.areas.forEach((a,ai)=>{
-   const col=ai%cols,row=Math.floor(ai/cols);
-   a.x=PAD+col*CELL_W+CELL_W/2; a.y=PAD+row*CELL_H+CELL_H/2; a.isArea=true; idx[a.id]=a;
-   const kids=byCluster[a.id]||[];const L=kids.length;
-   const halo=Math.min(160,92+L*7);a._halo=halo;
-   kids.forEach((k,ki)=>{
-     const ang=-Math.PI/2+ki/L*2*Math.PI;
-     k.x=a.x+Math.cos(ang)*halo; k.y=a.y+Math.sin(ang)*halo; k._ang=ang; idx[k.id]=k;
-     total++; if(k.pack)live++;
-   });
+ const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
+ const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
+ const W=1600,H=1120,cx=W/2,cy=H/2;
+ // build node list: root + areas + leaves
+ const nodes=[],idx={};
+ const root={id:"__root",label:"化学",cat:"root"};nodes.push(root);idx[root.id]=root;
+ const na=AREAS.length;
+ AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*330;a.y=cy+Math.sin(ang)*330;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
+ const byC={};
+ LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*90+(Math.random()*20-10);l.y=a.y+Math.sin(ang)*90+(Math.random()*20-10);l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
+ root.x=cx;root.y=cy;root.vx=0;root.vy=0;
+ // links
+ const L=[];AREAS.forEach(a=>L.push([root.id,a.id]));LEAVES.forEach(l=>L.push([l.cluster,l.id]));
+ [["d1","d2"],["e2","e3"],["e3","e4"],["f1","f3"],["f2","f3"],["i3","i5"],["i4","i5"],["a4","a5"],["c1","c2"],["d4","d3"],["j5","j6"]].forEach(x=>L.push(x));
+ const links=L.map(l=>({s:idx[l[0]],t:idx[l[1]]}));
+ const R={root:34,area:25,live:17,todo:13};
+ function rad(n){return n.cat==="root"?R.root:n.cat==="area"?R.area:(n.pack?R.live:R.todo);}
+ // SVG els
+ const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width',(l.s.cat==="root"||l.t.cat==="root")?2.2:1.7);e.setAttribute('stroke-opacity',(l.s.cat==="root"||l.t.cat==="root")?.32:.42);linkG.appendChild(e);return e;});
+ let live=0,total=0;
+ nodes.forEach(n=>{
+   if(n.cat==="leaf"){total++;if(n.pack)live++;}
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const c=document.createElementNS(NS,'circle');c.setAttribute('r',rad(n));
+   if(n.cat==="root"){c.setAttribute('fill','#16120A');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else if(n.cat==="area"){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',3.5);}
+   else if(n.pack){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width',2.5);c.setAttribute('stroke-dasharray','5 4');}
+   g.appendChild(c);
+   if(n.pack){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');t.setAttribute('y',rad(n)+14);
+   t.setAttribute('font-size',n.cat==="root"?18:n.cat==="area"?15:12);t.setAttribute('fill',(n.cat==="leaf"&&!n.pack)?'#6b5d3a':'#16120A');t.textContent=n.label;g.appendChild(t);
+   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=n;moved=false;n._fix=true;alpha=Math.max(alpha,.7);try{g.setPointerCapture(ev.pointerId);}catch(e){}});
  });
  document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
- // draw grove background discs + area→leaf links
- const lineEls=[];
- GRAPH.areas.forEach(a=>{
-   const bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',a.x);bg.setAttribute('cy',a.y);bg.setAttribute('r',a._halo+46);
-   bg.setAttribute('fill',ACCENT);bg.setAttribute('fill-opacity','0.07');bg.setAttribute('stroke',ACCENT);bg.setAttribute('stroke-opacity','0.35');bg.setAttribute('stroke-width','2');bg.setAttribute('stroke-dasharray','3 6');bgG.appendChild(bg);a._bg=bg;
-   (byCluster[a.id]||[]).forEach(k=>{const e=document.createElementNS(NS,'line');e.setAttribute('x1',a.x);e.setAttribute('y1',a.y);e.setAttribute('x2',k.x);e.setAttribute('y2',k.y);e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width','1.6');e.setAttribute('stroke-opacity','.3');linkG.appendChild(e);lineEls.push({e:e,a:a,k:k});});
- });
- // draw nodes
- function mkNode(d,isArea){
-   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
-   const isLive=!!d.pack;
-   const r=isArea?30:(isLive?17:13);
-   const c=document.createElementNS(NS,'circle');c.setAttribute('r',r);
-   if(isArea){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','4');}
-   else if(isLive){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','4');}
-   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width','2.5');c.setAttribute('stroke-dasharray','5 4');}
-   g.appendChild(c);
-   if(isLive){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
-   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');
-   if(isArea){t.setAttribute('y',-r-9);t.setAttribute('font-size','17');t.setAttribute('fill','#16120A');}
-   else{
-     // place label outward from hub to avoid overlap
-     const a=idx[d.cluster];const outAng=d._ang;const oy=Math.sin(outAng);
-     if(oy>0.35){t.setAttribute('y',r+15);} else {t.setAttribute('y',-r-7);}
-     t.setAttribute('font-size','12.5');t.setAttribute('fill',isLive?'#16120A':'#6b5d3a');
+ // view
+ let view={k:0.74,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ function fit(){view.k=0.74;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
+ // simulation
+ let alpha=1;
+ function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+34;if(a.cat==="area"&&b.cat==="area")return base+150;return base+30;}
+ function tick(){
+   const N=nodes.length;
+   for(let i=0;i<N;i++){const a=nodes[i];if(a.cat==="root"){continue;}
+     a.vx+=(cx-a.x)*0.0016*alpha; a.vy+=(cy-a.y)*0.0016*alpha;
+     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.010*alpha;a.vy+=(ar.y-a.y)*0.010*alpha;}
    }
-   t.textContent=d.label;g.appendChild(t);
-   g.setAttribute('transform','translate('+d.x+','+d.y+')');
-   nodeG.appendChild(g);d._g=g;d._c=c;d._t=t;
-   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();startDrag(d,ev,g);});
-   return g;
+   // repulsion + collision (pairwise)
+   for(let i=0;i<N;i++){const a=nodes[i];for(let j=i+1;j<N;j++){const b=nodes[j];
+     let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random()-0.5;dy=Math.random()-0.5;}
+     const d=Math.sqrt(d2);const rep=4800*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
+     if(a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(b.cat!=="root"){b.vx-=fx;b.vy-=fy;}
+     const ms=sep(a,b);if(d<ms){const push=(ms-d)*0.5;const ox=dx/d*push,oy=dy/d*push;if(!a._fix&&a.cat!=="root"){a.x+=ox;a.y+=oy;}if(!b._fix&&b.cat!=="root"){b.x-=ox;b.y-=oy;}}
+   }}
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?165:108;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
+   nodes.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
+   if(alpha>0.04)alpha*=0.99;
+   render();
  }
- GRAPH.areas.forEach(a=>mkNode(a,true));
- GRAPH.leaves.forEach(l=>mkNode(l,false));
- // view transform
- let view={k:1,tx:0,ty:0};
- function applyView(){nodeG.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');linkG.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');bgG.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
- applyView();
- function toWorld(cx,cy){const rect=svg.getBoundingClientRect();
-   // account for preserveAspectRatio meet scaling
-   const scale=Math.min(rect.width/W,rect.height/H);const offX=(rect.width-W*scale)/2,offY=(rect.height-H*scale)/2;
-   const sx=(cx-rect.left-offX)/scale, sy=(cy-rect.top-offY)/scale;
-   return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};
- }
- // dragging nodes
- let drag=null,moved=false;
- function startDrag(d,ev,g){drag=d;moved=false;try{g.setPointerCapture(ev.pointerId);}catch(e){}}
+ function render(){links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});}
+ function loop(){tick();requestAnimationFrame(loop);}loop();
+ // interaction
+ function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
+ let drag=null,moved=false,pan=null;
  svg.addEventListener('pointermove',ev=>{
-   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;updateNode(drag);if(drag.isArea){/* move whole island */}return;}
+   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;drag.vx=0;drag.vy=0;alpha=Math.max(alpha,.5);return;}
    if(pan){view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();}
  });
- window.addEventListener('pointerup',ev=>{
-   if(drag){if(!moved)openPanel(drag);drag=null;}
-   if(pan){pan=null;svg.classList.remove('grabbing');}
- });
- function updateNode(d){
-   d._g.setAttribute('transform','translate('+d.x+','+d.y+')');
-   if(d.isArea){d._bg.setAttribute('cx',d.x);d._bg.setAttribute('cy',d.y);}
-   lineEls.forEach(o=>{if(o.a===d||o.k===d){o.e.setAttribute('x1',o.a.x);o.e.setAttribute('y1',o.a.y);o.e.setAttribute('x2',o.k.x);o.e.setAttribute('y2',o.k.y);}});
- }
- // background pan
- let pan=null;
+ window.addEventListener('pointerup',()=>{if(drag){drag._fix=false;if(!moved)openPanel(drag);drag=null;}if(pan){pan=null;svg.classList.remove('grabbing');}});
  svg.addEventListener('pointerdown',ev=>{if(drag)return;pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
- svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const scale=Math.min(rect.width/W,rect.height/H);const offX=(rect.width-W*scale)/2,offY=(rect.height-H*scale)/2;const mx=(ev.clientX-rect.left-offX)/scale,my=(ev.clientY-rect.top-offY)/scale;const f=ev.deltaY<0?1.15:0.87;const nk=Math.max(0.5,Math.min(4,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
- document.getElementById('zin').onclick=()=>zb(1.25);document.getElementById('zout').onclick=()=>zb(1/1.25);
- function zb(f){const cx=W/2,cy=H/2;const nk=Math.max(0.5,Math.min(4,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
- document.getElementById('resetBtn').onclick=()=>{view={k:1,tx:0,ty:0};applyView();};
- // panel
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.13:0.88;const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zb(1.2);document.getElementById('zout').onclick=()=>zb(1/1.2);
+ function zb(f){const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{nodes.forEach(n=>{if(n.cat==="root")return;const a=n.cat==="area"?n:idx[n.cluster];n.vx=0;n.vy=0;});alpha=1;fit();};
  const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
  document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
  function openPanel(d){
-   const isLive=!!d.pack,isTodo=!d.isArea&&!d.pack;
-   const catName=d.isArea?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
-   const col=d.isArea?ACCENT:isLive?'#C8930E':'#9a8f74';
+   const isLive=!!d.pack,isTodo=d.cat==="leaf"&&!d.pack;
+   const catName=d.cat==="root"?'学科':d.cat==="area"?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
+   const col=d.cat==="area"?ACCENT:isLive?'#C8930E':d.cat==="root"?'#16120A':'#9a8f74';
    let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+d.label+'</h3>';
-   if(d.isArea){const kids=byCluster[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。点岛上的节点看详情。</div>';}
+   if(d.cat==="area"){const kids=byC[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。拖一拖,或点周围节点看详情。</div>';}
+   if(d.cat==="root")h+='<div class="row">整张化学知识网。拖动任意节点会牵动相连的板块与题型。</div>';
    if(d.note)h+='<div class="row">'+d.note+'</div>';
    if(d.trigger)h+='<div class="trig"><b>触发信号:</b>'+d.trigger+'</div>';
    if(d.action)h+='<div class="act"><b>标准动作:</b>'+d.action+'</div>';
@@ -253,10 +237,8 @@ const GRAPH={
    if(isTodo)h+='<div class="soon">⛏ 待开发攻坚包 · 已列入计划,将按周逐个攻克</div>';
    pbody.innerHTML=h;panel.classList.add('show');
  }
- // search
  const search=document.getElementById('search');
- const all=GRAPH.areas.concat(GRAPH.leaves);
- search.addEventListener('input',()=>{const q=search.value.trim();all.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.12);d._t.setAttribute('opacity',hit?1:0.12);if(q&&hit&&!d.isArea){d._c.setAttribute('stroke','#E0382A');}else if(!d.isArea){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
+ search.addEventListener('input',()=>{const q=search.value.trim();nodes.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.13);d._t.setAttribute('opacity',hit?1:0.13);if(q&&hit&&d.cat==="leaf"){d._c.setAttribute('stroke','#E0382A');}else if(d.cat==="leaf"){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
 })();
 </script>
 </body>
