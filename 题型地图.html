@@ -110,7 +110,7 @@ const CROSS=[["math","phys"],["chem","bio"],["eng","chin"],["m_der","p_mp"],["c_
  const byC={};
  LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*100;l.y=a.y+Math.sin(ang)*100;l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
  const L=[];AREAS.forEach(a=>L.push([root.id,a.id,false]));LEAVES.forEach(l=>L.push([l.cluster,l.id,false]));CROSS.forEach(x=>L.push([x[0],x[1],true]));
- const links=L.map(l=>({s:idx[l[0]],t:idx[l[1]],cross:l[2]}));
+ const links=L.filter(l=>idx[l[0]]&&idx[l[1]]).map(l=>({s:idx[l[0]],t:idx[l[1]],cross:l[2]}));
  const R={root:38,area:27,live:18};
  function rad(n){return n.cat==="root"?R.root:n.cat==="area"?R.area:R.live;}
  const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke',l.cross?'#E0382A':'#16120A');e.setAttribute('stroke-width',l.cross?2.4:(l.s.cat==="root"||l.t.cat==="root")?2.2:1.7);e.setAttribute('stroke-opacity',l.cross?.55:(l.s.cat==="root"||l.t.cat==="root")?.32:.42);if(l.cross)e.setAttribute('stroke-dasharray','8 5');linkG.appendChild(e);return e;});
