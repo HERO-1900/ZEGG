@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内环境与稳态 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);--accent:var(--violet);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--violet);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--violet);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.g::before{background:var(--green)}
+  h3{font-size:17px;font-weight:900;margin:20px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--violet);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--violet);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:13.5px;font-weight:700;box-shadow:3px 3px 0 var(--violet)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--violet)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;min-width:54px}
+  .sl{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+  .sl .lab{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between}
+  input[type=range]{accent-color:var(--violet);width:100%}
+  .seg{display:inline-flex;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .seg button{background:var(--card);border:0;border-right:3px solid var(--ink);padding:7px 12px;font-weight:800;font-size:13px;cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--violet);color:#fff}
+  .out{font-weight:900;font-size:14.5px;border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:8px}
+  .small{font-size:12.5px;font-weight:700;color:#6b5d3a}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+  .dot{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>内环境与稳态全攻坚</h1>
+    <p class="lead">体液分区、内环境=血浆+组织液+淋巴、三者转化关系、内环境作为物质交换的媒介、渗透压/pH/温度三大理化性质、稳态的动态平衡与神经-体液-免疫调节网络、内环境成分辨析、稳态失调实例——把"细胞泡在什么里、跟外界怎么换物质"彻底理顺。</p>
+
+    <div class="say">🗣️ <b>内环境(人话版):</b> 你身上几十万亿个细胞,绝大多数<b>不直接碰空气和食物</b>,而是泡在一层"体内的水"里,这层水就叫<b>内环境</b>。它由三部分组成:泡组织细胞的<b>组织液</b>、血管里的<b>血浆</b>、淋巴管里的<b>淋巴(液)</b>。细胞要的 O₂、养料从这层水里拿,产生的 CO₂、废物往这层水里排,再由血液运走。<br>只要这层水的<b>成分和温度、渗透压、酸碱度</b>保持相对稳定(不是死板不变,而是<b>动态平衡</b>),细胞就能正常干活——这种"稳"就叫<b>稳态</b>,靠<b>神经-体液-免疫</b>三套系统一起调。</div>
+
+    <h2>① 体液与内环境:三种液的家谱</h2>
+    <p class="lead">人体内所有以水为基础的液体统称<b>体液</b>。体液分两大块:细胞里面的叫<b>细胞内液</b>(约占 2/3),细胞外面的叫<b>细胞外液</b>(约占 1/3)。<b>细胞外液就是内环境</b>,它=血浆+组织液+淋巴。</p>
+    <div class="card">
+      <div class="mono">体液 = 细胞内液(2/3) + 细胞外液(1/3)　；　细胞外液 = 内环境 = 血浆 + 组织液 + 淋巴</div>
+      <table>
+        <tr><th>液体</th><th>位置</th><th>泡着谁</th><th>特点</th></tr>
+        <tr><td>细胞内液</td><td>细胞内部</td><td>——</td><td>约占体液 2/3,不属于内环境</td></tr>
+        <tr><td>血浆</td><td>血管内</td><td>血细胞</td><td>蛋白质含量最高,运输主力</td></tr>
+        <tr><td>组织液</td><td>组织细胞之间</td><td>绝大多数组织细胞</td><td>由血浆渗出,成分与血浆近似但蛋白质少</td></tr>
+        <tr><td>淋巴(液)</td><td>淋巴管内</td><td>淋巴细胞</td><td>由部分组织液进入淋巴管形成</td></tr>
+      </table>
+      <p class="trap">⚠ 三种液体里<b>只有血浆蛋白质含量高</b>;组织液、淋巴由血浆渗出而来,蛋白质少(大分子蛋白难穿毛细血管壁)。这是判断"哪种液体"的关键指标。</p>
+    </div>
+
+    <h2 class="b">② 三种液体的转化关系(方向要记死)</h2>
+    <p class="lead">血浆、组织液、淋巴不是各管各的,它们互相流动、彼此转化。方向记牢是本节最高频考点。</p>
+    <div class="keybox"><b>转化口诀(单/双向):</b><br>血浆 ⇄ 组织液(双向,穿毛细血管壁)<br>组织液 → 淋巴(单向,进入毛细淋巴管)<br>淋巴 → 血浆(单向,经淋巴循环由锁骨下静脉汇入血液)<br>⇒ 血浆与淋巴之间<b>不能直接转化</b>,必须经组织液中转。</div>
+    <div class="viz">
+      <h3>血浆 ↔ 组织液 ↔ 淋巴 转化交互图</h3>
+      <p class="small">点某条箭头,看这一步"谁流向谁、是单向还是双向、物质怎么走"。</p>
+      <svg id="fluidSvg" viewBox="0 0 700 300" aria-label="三种液体转化"></svg>
+      <div class="out" id="fluidOut">👆 点上面任意一条箭头查看该转化的方向与说明。</div>
+    </div>
+
+    <h2 class="g">③ 内环境是细胞与外界物质交换的媒介</h2>
+    <p class="lead">细胞不直接与外界打交道:它通过内环境,再借助<b>消化、呼吸、循环、泌尿</b>等系统间接与外界环境进行物质交换。</p>
+    <div class="card">
+      <div class="eq">外界 →(呼吸/消化系统)→ 内环境 ⇄ 组织细胞</div>
+      <div class="eq">组织细胞代谢废物 → 内环境 →(泌尿/呼吸/皮肤)→ 外界</div>
+      <p style="margin:6px 0"><b>O₂ 路线:</b>外界空气 → 肺泡 → 血浆(与血红蛋白结合)→ 组织液 → 组织细胞。<br><b>CO₂ 路线:</b>组织细胞 → 组织液 → 血浆 → 肺泡 → 呼出。<br><b>养料路线:</b>食物 → 消化道消化吸收 → 血浆 → 组织液 → 细胞。<br><b>废物路线:</b>细胞 → 组织液 → 血浆 → 肾脏(尿)/皮肤(汗)排出。</p>
+      <p class="trap">⚠ 细胞代谢产生的 CO₂ 浓度<b>最高处在组织细胞内(线粒体)</b>,而不是内环境;内环境是运输通道。判断"某物质浓度梯度方向"时别弄反。</p>
+    </div>
+    <div class="viz">
+      <h3>细胞与外界物质交换流程(O₂/CO₂/养料/废物)</h3>
+      <p class="small">点四种物质按钮,看它经内环境在"外界 ⇄ 细胞"之间怎么走。</p>
+      <div class="ctrlrow"><div class="seg" id="segEx"><button data-m="o2" class="on">O₂</button><button data-m="co2">CO₂</button><button data-m="nutri">养料</button><button data-m="waste">废物</button></div></div>
+      <svg id="exSvg" viewBox="0 0 700 260" aria-label="物质交换流程"></svg>
+      <div class="out" id="exOut"></div>
+    </div>
+
+    <h2 class="o">④ 内环境的理化性质:渗透压 · pH · 温度</h2>
+    <p class="lead">内环境的稳定不只是成分稳,还包括三大<b>理化性质</b>的相对稳定。这三条是稳态的核心指标。</p>
+    <div class="card">
+      <h3>㈠ 渗透压</h3>
+      <p style="margin:4px 0">溶液渗透压高低取决于<b>单位体积溶液中溶质微粒数目</b>。血浆渗透压主要由<b>无机盐(尤其 Na⁺、Cl⁻)和蛋白质</b>决定;其中无机盐贡献最大,血浆蛋白维持血浆渗透压(影响水在血管内外分布)。人体血浆渗透压约 <b>770 kPa</b>(37℃),与 0.9% NaCl(生理盐水)相当。</p>
+      <h3>㈡ 酸碱度(pH)</h3>
+      <p style="margin:4px 0">正常人血浆 pH 约 <b>7.35~7.45</b>,弱碱性且稳定。靠血浆中的<b>缓冲对(如 H₂CO₃/NaHCO₃、NaH₂PO₄/Na₂HPO₄)</b>调节:进酸时 HCO₃⁻ 中和,进碱时 H₂CO₃/NaH₂PO₄ 中和,使 pH 波动很小。</p>
+      <h3>㈢ 温度</h3>
+      <p style="margin:4px 0">人体细胞外液温度维持在约 <b>37℃</b>,由产热与散热的动态平衡(神经-体液调节)保持恒定,保证酶活性正常。</p>
+      <p class="trap">⚠ 缓冲物质是<b>弱酸及其对应的强碱盐</b>组成的缓冲对,不是"抵消一切";超出缓冲能力(如剧烈代谢紊乱)仍会酸/碱中毒。</p>
+    </div>
+    <div class="viz">
+      <h3>pH 缓冲对动态演示(加酸/加碱 → 缓冲维持)</h3>
+      <p class="small">点"加酸"或"加碱",看有缓冲(蓝)与无缓冲(红)时 pH 的变化差别。缓冲对把冲击"吃掉"。</p>
+      <div class="ctrlrow"><button class="btn" id="phAcid">滴入酸(H⁺)</button><button class="btn" id="phBase">滴入碱(OH⁻)</button><button class="btn" id="phReset">重置</button></div>
+      <svg id="phSvg" viewBox="0 0 700 240" aria-label="pH缓冲"></svg>
+      <div class="out" id="phOut"></div>
+    </div>
+    <div class="viz">
+      <h3>体温 / 渗透压稳态曲线(围绕设定点波动)</h3>
+      <p class="small">拖动"扰动强度",看指标被推离设定点后靠调节被拉回——这就是动态平衡。切换看体温或渗透压。</p>
+      <div class="ctrlrow"><div class="seg" id="segHomeo"><button data-m="temp" class="on">体温 37℃</button><button data-m="osmo">渗透压 770kPa</button></div></div>
+      <div class="ctrlrow"><div class="sl"><div class="lab"><span>扰动强度</span><span id="distV">40</span></div><input type="range" id="distSl" min="0" max="100" value="40"></div></div>
+      <svg id="homeoSvg" viewBox="0 0 700 240" aria-label="稳态曲线"></svg>
+      <div class="out" id="homeoOut"></div>
+    </div>
+
+    <h2 class="g">⑤ 稳态概念与调节机制</h2>
+    <p class="lead">正常机体通过调节作用,使各器官、系统协调活动,共同维持<b>内环境的相对稳定状态</b>,叫稳态。稳态是一种<b>动态平衡</b>——不是绝对不变,而是在一定范围内波动。</p>
+    <div class="keybox"><b>稳态调节机制(必背):</b><br>调节基础 = 各器官、系统协调一致地正常运行。<br>调节网络 = <b>神经-体液-免疫</b> 三者共同调节(现代观点)。<br>直接调节手段常以<b>负反馈调节</b>为主,把偏离拉回设定点。</div>
+    <div class="card">
+      <table>
+        <tr><th>系统</th><th>怎么参与稳态</th><th>典型例子</th></tr>
+        <tr><td>神经系统</td><td>快速、精确的反射调节</td><td>体温调节、血压反射、内分泌腺受神经支配</td></tr>
+        <tr><td>体液(内分泌)</td><td>激素随血液运输,作用广而持久</td><td>血糖(胰岛素/胰高血糖素)、水盐(抗利尿激素、醛固酮)</td></tr>
+        <tr><td>免疫系统</td><td>清除外来病原、监视清除异常细胞,守护内环境</td><td>抵御感染、清除衰老/癌变细胞</td></tr>
+      </table>
+      <p class="small">口径:神经调节<b>快而短</b>,体液调节<b>慢而久</b>,免疫是<b>防卫与清除</b>。三者相互配合,内环境才稳。</p>
+    </div>
+    <div class="viz">
+      <h3>稳态调节网络:神经-体液-免疫(点节点看职责)</h3>
+      <p class="small">点中央"内环境稳态",或点三大系统节点,看各自如何守护稳态、如何互相协作。</p>
+      <svg id="netSvg" viewBox="0 0 700 320" aria-label="稳态调节网络"></svg>
+      <div class="out" id="netOut">👆 点任意节点查看它在稳态中的作用。</div>
+    </div>
+
+    <h2 class="r">⑥ 内环境成分辨析(高频陷阱)</h2>
+    <p class="lead">题目最爱问"某物质是否属于内环境成分"。判断口径:<b>该物质是否存在于血浆/组织液/淋巴中</b>。存在于细胞内、消化道内、外界环境中的,都不算。</p>
+    <div class="card">
+      <table>
+        <tr><th>属于内环境成分</th><th>不属于内环境成分</th></tr>
+        <tr>
+          <td>血浆蛋白、抗体、大多数激素、葡萄糖、氨基酸、甘油、脂肪酸、无机盐(Na⁺/K⁺/Cl⁻/Ca²⁺)、O₂、CO₂、尿素、乳酸、神经递质(存在于组织液中)</td>
+          <td>血红蛋白(在红细胞内)、各种细胞内的酶(呼吸酶、DNA 聚合酶等)、消化酶(在消化道内,属外界环境)、DNA/RNA/糖原(细胞内)、纤维素等(细胞外但非体液内)</td>
+        </tr>
+      </table>
+      <div class="keybox"><b>三条判据一记就会:</b><br>① 在<b>细胞内</b>发生/存在的(如呼吸酶、血红蛋白、糖原)→ 不属于;<br>② 在<b>消化道、呼吸道、外界</b>的(如消化酶、食物)→ 不属于(消化道与外界相通);<br>③ 在<b>血浆/组织液/淋巴</b>中的(如抗体、激素、递质、养料废物)→ 属于。</div>
+      <p class="trap">⚠ 经典对比:<b>血浆蛋白</b>(在血浆里)<b>属于</b>内环境;<b>血红蛋白</b>(在红细胞里)<b>不属于</b>。同理消化酶不属于(在消化道≈外界),但抗体、激素、递质在体液里,属于。</p>
+    </div>
+    <div class="viz">
+      <h3>内环境成分判别器(选物质 → 判断 + 原因)</h3>
+      <p class="small">点一个物质,判别器会告诉你它<b>是否属于</b>内环境成分,并给出原因。</p>
+      <div class="chips" id="subChips"></div>
+      <div class="verdict" id="subVerdict">👆 选一个物质试试。</div>
+    </div>
+
+    <h2 class="o">⑦ 稳态失调实例</h2>
+    <div class="card">
+      <table>
+        <tr><th>失调</th><th>指标偏离</th><th>后果/表现</th></tr>
+        <tr><td>发热(高烧)</td><td>体温 &gt; 37℃</td><td>产热&gt;散热,酶活性受影响,过高会危及生命</td></tr>
+        <tr><td>组织水肿</td><td>组织液增多</td><td>血浆蛋白减少/淋巴回流受阻/毛细血管通透性↑ → 水滞留组织液</td></tr>
+        <tr><td>低血糖 / 高血糖</td><td>血糖偏离 3.9~6.1 mmol/L</td><td>低血糖:头晕昏迷;糖尿病:多饮多食多尿、消瘦</td></tr>
+        <tr><td>酸中毒 / 碱中毒</td><td>血浆 pH 越界</td><td>剧烈运动/代谢紊乱使缓冲失效,酶活性异常</td></tr>
+        <tr><td>抽搐</td><td>血钙偏低</td><td>Ca²⁺ 过低 → 神经肌肉兴奋性升高 → 抽搐</td></tr>
+        <tr><td>尿毒症</td><td>代谢废物潴留</td><td>肾功能衰竭,尿素等废物无法排出,内环境紊乱</td></tr>
+      </table>
+      <p class="small">共同逻辑:<b>某项理化性质或成分超出正常范围 → 细胞代谢受影响 → 出现症状</b>。稳态是生命活动正常进行的必要条件。</p>
+    </div>
+
+    <h2>⑧ 全题型地图(触发信号 → 标准动作 → 例题 → 陷阱)</h2>
+
+    <div class="card">
+      <span class="tag" style="color:var(--violet)">题型 A · 判断内环境成分</span>
+      <p style="margin:6px 0"><b>触发信号:</b>"下列属于/不属于内环境(细胞外液)成分的是""能在内环境中发生的反应是"。</p>
+      <p style="margin:6px 0"><b>标准动作:</b>①问它在哪里 → 血浆/组织液/淋巴 = 属于;细胞内 = 不属于;消化道/外界 = 不属于。②反应能否在内环境发生 → 看反应物是否都是内环境成分(如消化、有氧呼吸、DNA复制都<b>不在</b>内环境;抗原-抗体结合、CO₂+H₂O、乳酸+缓冲对<b>在</b>内环境)。</p>
+      <p style="margin:6px 0"><b>例题:</b>下列不属于内环境成分的是 A.血浆蛋白 B.血红蛋白 C.抗体 D.葡萄糖。<br><b>解:</b>血红蛋白在红细胞<b>内</b> → 选 <b>B</b>。其余都在血浆/组织液中。</p>
+      <p class="trap">陷阱:消化酶、呼吸酶、血红蛋白最爱设成"属于"来骗人;记住"在细胞内或消化道就不算"。</p>
+    </div>
+
+    <div class="card">
+      <span class="tag" style="color:var(--blue)">题型 B · 三种液体关系</span>
+      <p style="margin:6px 0"><b>触发信号:</b>给一张"血浆—组织液—淋巴"箭头图,问箭头方向、某字母代表哪种液体、能否相互转化。</p>
+      <p style="margin:6px 0"><b>标准动作:</b>①双向箭头两端是<b>血浆⇄组织液</b>;②只有单向流出、无回流的是<b>淋巴</b>(组织液→淋巴→血浆);③蛋白质含量最高的是血浆。血浆与淋巴<b>不能直接转化</b>。</p>
+      <p style="margin:6px 0"><b>例题:</b>图中 A⇄B、B→C、C→A(单向)。判断 A、B、C。<br><b>解:</b>A、B 双向 → 一为血浆一为组织液;C 只接收 B、只流向 A 且单向 → C 是<b>淋巴</b>;能与外界经毛细血管直接换物的、蛋白最多的是<b>血浆(A)</b>,则 <b>B 组织液、C 淋巴</b>。</p>
+      <p class="trap">陷阱:把"淋巴→血浆"画成双向就是错;淋巴不会直接回到组织液,更不直接变血浆以外的东西。</p>
+    </div>
+
+    <div class="card">
+      <span class="tag" style="color:var(--orange)">题型 C · 渗透压 / pH 调节</span>
+      <p style="margin:6px 0"><b>触发信号:</b>"大量出汗/饮水后渗透压怎样变""注射生理盐水的原因""血浆 pH 为何稳定""加酸后为何变化不大"。</p>
+      <p style="margin:6px 0"><b>标准动作:</b>①渗透压:失水(出汗、失盐)→ 溶质浓度升高 → 渗透压升高;②pH:找缓冲对——H₂CO₃/NaHCO₃ 等,进酸 HCO₃⁻ 中和、进碱 H₂CO₃/H₂PO₄⁻ 中和。③生理盐水 0.9% NaCl 与血浆渗透压相等(等渗),不引起细胞吸水/失水。</p>
+      <p style="margin:6px 0"><b>例题:</b>剧烈运动产生大量乳酸,血浆 pH 为何基本不变?<br><b>解:</b>乳酸进入血浆后与 <b>NaHCO₃</b> 反应生成乳酸钠和 H₂CO₃,H₂CO₃ 再分解为 CO₂ 经呼吸排出,故 pH 变化很小。</p>
+      <p class="trap">陷阱:别把"细胞内液渗透压"当血浆渗透压来源;血浆渗透压主要由<b>无机盐和蛋白质</b>共同决定。</p>
+    </div>
+
+    <div class="card">
+      <span class="tag" style="color:var(--red)">题型 D · 稳态失调分析</span>
+      <p style="margin:6px 0"><b>触发信号:</b>给一个病例(水肿、发热、抽搐、酸中毒),问原因或"内环境哪项指标异常"。</p>
+      <p style="margin:6px 0"><b>标准动作:</b>①定位偏离的指标(成分/渗透压/pH/温度);②找因果链:如水肿=组织液增多,原因是血浆蛋白↓(营养不良/肾病)、淋巴回流受阻、毛细血管通透性↑、过敏等;③回到"稳态是代谢必要条件"作结。</p>
+      <p style="margin:6px 0"><b>例题:</b>某人下肢长期水肿,血浆蛋白偏低。解释机理。<br><b>解:</b>血浆蛋白↓ → 血浆渗透压↓ → 血浆吸水能力下降、组织液回流减少 → 组织液增多 → 水肿。</p>
+      <p class="trap">陷阱:水肿不是"血浆增多",而是<b>组织液增多</b>;别把"血糖高就一定糖尿病"当必然,要看具体调节环节。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 血浆蛋白<b>属于</b>内环境(在血浆里);血红蛋白<b>不属于</b>(在红细胞内)。别混。</p>
+      <p class="trap">② 消化酶在消化道中,消化道与外界相通,故消化酶及消化过程<b>不属于</b>内环境。</p>
+      <p class="trap">③ 血浆与淋巴<b>不能直接转化</b>,必须经组织液:组织液→淋巴→(淋巴循环)→血浆。</p>
+      <p class="trap">④ 血浆⇄组织液是<b>双向</b>;组织液→淋巴、淋巴→血浆都是<b>单向</b>。</p>
+      <p class="trap">⑤ 稳态是<b>动态平衡</b>(在一定范围波动),不是"绝对恒定不变"。</p>
+      <p class="trap">⑥ 现代稳态调节是<b>神经-体液-免疫</b>共同调节,别只写"神经和体液"。</p>
+      <p class="trap">⑦ 内环境理化性质包括<b>渗透压、pH、温度</b>三项,不要只答一项。</p>
+      <p class="trap">⑧ 组织水肿是<b>组织液增多</b>,不是血浆多;成因有蛋白↓、淋巴受阻、通透性↑、过敏等多种。</p>
+      <p class="trap">⑨ 有氧呼吸(在线粒体)、DNA复制/转录/翻译、蛋白质合成都在<b>细胞内</b>,不在内环境发生。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0">▸ <b>"是否属于内环境"的万能三问:</b>它在哪儿?→ 血浆/组织液/淋巴里=是;细胞里=否;消化道/呼吸道/外界=否。反应能否在内环境发生同理——看反应物是否<b>都</b>在内环境。</p>
+      <p style="margin:6px 0">▸ <b>水肿四因归纳:</b>①血浆蛋白↓(营养不良、肝病少合成、肾病随尿丢失)→ 血浆渗透压↓;②淋巴回流受阻(如丝虫病)→ 组织液排不走;③毛细血管通透性↑(过敏、炎症)→ 蛋白漏入组织液;④组织液渗透压↑(局部代谢产物积累)。四条都指向"组织液增多"。</p>
+      <p style="margin:6px 0">▸ <b>渗透压=水的去向:</b>比较两侧渗透压即知水往哪走(水从低渗向高渗侧渗透)。血浆蛋白维持血浆渗透压,是把水"留在血管里"的关键;蛋白掉了水就外渗成水肿。</p>
+      <p style="margin:6px 0">▸ <b>缓冲原理写规范:</b>进酸——H⁺ + HCO₃⁻ → H₂CO₃ →(碳酸酐酶)→ H₂O + CO₂↑(呼出);进碱——OH⁻ + H₂CO₃ → HCO₃⁻ + H₂O。缓冲对由弱酸及其强碱盐组成,双向"吃掉"冲击。</p>
+      <p style="margin:6px 0">▸ <b>稳态的意义升华:</b>稳态是内环境理化性质与成分的相对稳定,是机体<b>进行正常生命活动的必要条件</b>;一旦稳态被破坏,酶活性、代谢乃至生命都会受威胁。答题结尾常需回扣这句。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:光合作用/呼吸作用攻坚</p>
+  </div>
+
+<script>
+/* ===== ① 三种液体转化交互图 ===== */
+(function(){
+ const svg=document.getElementById('fluidSvg'),out=document.getElementById('fluidOut');
+ const NS='http://www.w3.org/2000/svg';
+ function node(x,y,w,h,fill,title,sub){
+  const r=document.createElementNS(NS,'rect');r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx','8');r.setAttribute('fill',fill);r.setAttribute('stroke','#16120A');r.setAttribute('stroke-width','4');svg.appendChild(r);
+  const t=document.createElementNS(NS,'text');t.setAttribute('x',x+w/2);t.setAttribute('y',y+h/2-4);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','17');t.setAttribute('font-weight','900');t.setAttribute('fill','#fff');t.textContent=title;svg.appendChild(t);
+  const s=document.createElementNS(NS,'text');s.setAttribute('x',x+w/2);s.setAttribute('y',y+h/2+16);s.setAttribute('text-anchor','middle');s.setAttribute('font-size','11');s.setAttribute('font-weight','700');s.setAttribute('fill','#fff');s.textContent=sub;svg.appendChild(s);
+ }
+ const info={
+  bp:{t:'血浆 ⇄ 组织液(双向)',d:'血浆经毛细血管壁滤出成为组织液,组织液大部分又渗回血浆。这是双向转化:水、无机盐、O₂、养料、CO₂、废物都在此往返。大分子血浆蛋白难穿血管壁,故组织液蛋白质比血浆少。'},
+  pl:{t:'组织液 → 淋巴(单向)',d:'少量组织液连同渗出的大分子进入毛细淋巴管,形成淋巴(液)。这是单向的——淋巴不会直接倒流回组织液。'},
+  lb:{t:'淋巴 → 血浆(单向)',d:'淋巴经淋巴循环,最终由锁骨下静脉汇入血液,回到血浆。单向。这样组织液里漏出的蛋白等被送回血液,并参与免疫。'}
+ };
+ function drawArrow(id,x1,y1,x2,y2,two,col){
+  const g=document.createElementNS(NS,'g');g.style.cursor='pointer';g.dataset.id=id;
+  const l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',col);l.setAttribute('stroke-width','7');l.setAttribute('marker-end','url(#ahv)');if(two)l.setAttribute('marker-start','url(#ahv)');g.appendChild(l);
+  const hit=document.createElementNS(NS,'line');hit.setAttribute('x1',x1);hit.setAttribute('y1',y1);hit.setAttribute('x2',x2);hit.setAttribute('y2',y2);hit.setAttribute('stroke','transparent');hit.setAttribute('stroke-width','22');g.appendChild(hit);
+  g.onclick=function(){const i=info[id];out.innerHTML='<b>'+i.t+'</b><br>'+i.d;svg.querySelectorAll('line[data-active]').forEach(x=>x.removeAttribute('data-active'));l.setAttribute('stroke','#F3C00E');setTimeout(()=>l.setAttribute('stroke',col),600);};
+  svg.appendChild(g);
+ }
+ svg.innerHTML='<defs><marker id="ahv" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#16120A"/></marker></defs>';
+ node(60,110,180,80,'#1450C8','血浆','血管内·蛋白多');
+ node(300,40,180,80,'#1E9E86','组织液','细胞之间');
+ node(300,180,180,80,'#7A3FF2','淋巴','淋巴管内');
+ drawArrow('bp',245,150,300,95,true,'#16120A');
+ drawArrow('pl',390,120,390,180,false,'#16120A');
+ drawArrow('lb',300,220,245,175,false,'#16120A');
+ const cap=document.createElementNS(NS,'text');cap.setAttribute('x',530);cap.setAttribute('y',130);cap.setAttribute('font-size','12');cap.setAttribute('font-weight','800');cap.setAttribute('fill','#16120A');cap.textContent='双向:血浆⇄组织液';svg.appendChild(cap);
+ const cap2=document.createElementNS(NS,'text');cap2.setAttribute('x',530);cap2.setAttribute('y',150);cap2.setAttribute('font-size','12');cap2.setAttribute('font-weight','800');cap2.setAttribute('fill','#16120A');cap2.textContent='单向:组织液→淋巴→血浆';svg.appendChild(cap2);
+})();
+
+/* ===== ③ 物质交换流程 ===== */
+(function(){
+ const svg=document.getElementById('exSvg'),out=document.getElementById('exOut'),seg=document.getElementById('segEx');
+ const NS='http://www.w3.org/2000/svg';
+ let mode='o2';
+ function box(x,y,w,h,fill,lab){
+  const r=document.createElementNS(NS,'rect');r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx','6');r.setAttribute('fill',fill);r.setAttribute('stroke','#16120A');r.setAttribute('stroke-width','3.5');svg.appendChild(r);
+  const t=document.createElementNS(NS,'text');t.setAttribute('x',x+w/2);t.setAttribute('y',y+h/2+4);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','13');t.setAttribute('font-weight','900');t.setAttribute('fill','#fff');t.textContent=lab;svg.appendChild(t);
+ }
+ function arrow(x1,y1,x2,y2,col,lab){
+  const l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',col);l.setAttribute('stroke-width','5');l.setAttribute('marker-end','url(#ahe)');svg.appendChild(l);
+  if(lab){const t=document.createElementNS(NS,'text');t.setAttribute('x',(x1+x2)/2);t.setAttribute('y',(y1+y2)/2-8);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','12');t.setAttribute('font-weight','900');t.setAttribute('fill',col);t.textContent=lab;svg.appendChild(t);}
+ }
+ const data={
+  o2:{col:'#1450C8',lab:'O₂',dir:1,steps:['外界(空气)','肺(呼吸系统)','血浆','组织液','组织细胞'],
+    out:'<b>O₂</b>:外界空气 → 肺泡换气进血浆(与血红蛋白结合运输)→ 组织液 → 组织细胞。方向由高浓度(肺)流向低浓度(细胞)。'},
+  co2:{col:'#1E9E86',lab:'CO₂',dir:-1,steps:['外界(呼出)','肺(呼吸系统)','血浆','组织液','组织细胞'],
+    out:'<b>CO₂</b>:组织细胞(线粒体产生,浓度最高)→ 组织液 → 血浆 → 肺 → 呼出。方向与 O₂ 相反。'},
+  nutri:{col:'#E86A17',lab:'养料',dir:1,steps:['外界(食物)','消化系统吸收','血浆','组织液','组织细胞'],
+    out:'<b>养料(葡萄糖/氨基酸等)</b>:食物经消化系统消化吸收 → 血浆 → 组织液 → 组织细胞利用。'},
+  waste:{col:'#E0382A',lab:'废物',dir:-1,steps:['外界(尿/汗排出)','泌尿系统/皮肤','血浆','组织液','组织细胞'],
+    out:'<b>代谢废物(尿素等)</b>:组织细胞产生 → 组织液 → 血浆 → 肾脏(尿)/皮肤(汗)排出体外。'}
+ };
+ function draw(){
+  const d=data[mode];
+  svg.innerHTML='<defs><marker id="ahe" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#16120A"/></marker></defs>';
+  const xs=[20,160,300,440,560],w=120,y=100,h=60;
+  const cols=['#6b5d3a','#1450C8','#7A3FF2','#1E9E86','#16120A'];
+  d.steps.forEach((s,i)=>box(xs[i],y,w,h,cols[i],s));
+  const inEnv=document.createElementNS(NS,'text');inEnv.setAttribute('x',370);inEnv.setAttribute('y',88);inEnv.setAttribute('text-anchor','middle');inEnv.setAttribute('font-size','12');inEnv.setAttribute('font-weight','900');inEnv.setAttribute('fill','#7A3FF2');inEnv.textContent='← 内环境(血浆+组织液)→';svg.appendChild(inEnv);
+  for(let i=0;i<xs.length-1;i++){
+   const ax=xs[i]+w, bx=xs[i+1];
+   if(d.dir===1) arrow(ax,y+h/2,bx,y+h/2,d.col,i===1?d.lab:'');
+   else arrow(bx,y+h/2,ax,y+h/2,d.col,i===2?d.lab:'');
+  }
+  const box2=document.createElementNS(NS,'rect');box2.setAttribute('x',300);box2.setAttribute('y',92);box2.setAttribute('width',260);box2.setAttribute('height',76);box2.setAttribute('fill','none');box2.setAttribute('stroke','#7A3FF2');box2.setAttribute('stroke-width','3');box2.setAttribute('stroke-dasharray','6 4');box2.setAttribute('rx','6');svg.appendChild(box2);
+  out.innerHTML=d.out;
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;draw();};});
+ draw();
+})();
+
+/* ===== ④ pH 缓冲演示 ===== */
+(function(){
+ const svg=document.getElementById('phSvg'),out=document.getElementById('phOut');
+ const NS='http://www.w3.org/2000/svg';
+ let buf=7.4, raw=7.0; // buf=有缓冲, raw=无缓冲(纯水起点7)
+ const bufHist=[7.4], rawHist=[7.0];
+ function clamp(v){return Math.max(0,Math.min(14,v));}
+ function addAcid(){
+  raw=clamp(raw-1.4); rawHist.push(raw);
+  buf=clamp(buf-0.08); bufHist.push(buf);
+  draw('滴入酸:无缓冲组 pH 骤降;缓冲组 HCO₃⁻ 中和 H⁺,pH 几乎不动(7.35~7.45)。');
+ }
+ function addBase(){
+  raw=clamp(raw+1.4); rawHist.push(raw);
+  buf=clamp(buf+0.08); bufHist.push(buf);
+  draw('滴入碱:无缓冲组 pH 骤升;缓冲组 H₂CO₃/NaH₂PO₄ 中和 OH⁻,pH 几乎不动。');
+ }
+ function reset(){buf=7.4;raw=7.0;bufHist.length=0;rawHist.length=0;bufHist.push(7.4);rawHist.push(7.0);draw('已重置。左轴 pH 0~14。反复点加酸/加碱,对比两条线。');}
+ function draw(msg){
+  svg.innerHTML='';
+  const x0=50,y0=200,plotW=600,plotH=170;
+  // axes
+  const ax=document.createElementNS(NS,'line');ax.setAttribute('x1',x0);ax.setAttribute('y1',y0);ax.setAttribute('x2',x0+plotW);ax.setAttribute('y2',y0);ax.setAttribute('stroke','#16120A');ax.setAttribute('stroke-width','3');svg.appendChild(ax);
+  const ay=document.createElementNS(NS,'line');ay.setAttribute('x1',x0);ay.setAttribute('y1',y0);ay.setAttribute('x2',x0);ay.setAttribute('y2',20);ay.setAttribute('stroke','#16120A');ay.setAttribute('stroke-width','3');svg.appendChild(ay);
+  [0,7,14].forEach(v=>{const yy=y0-(v/14)*plotH;const t=document.createElementNS(NS,'text');t.setAttribute('x',x0-8);t.setAttribute('y',yy+4);t.setAttribute('text-anchor','end');t.setAttribute('font-size','11');t.setAttribute('font-weight','800');t.textContent='pH'+v;svg.appendChild(t);const g=document.createElementNS(NS,'line');g.setAttribute('x1',x0);g.setAttribute('y1',yy);g.setAttribute('x2',x0+plotW);g.setAttribute('y2',yy);g.setAttribute('stroke','#ccc');g.setAttribute('stroke-width','1');svg.appendChild(g);});
+  // normal band 7.35-7.45
+  const by1=y0-(7.45/14)*plotH, by2=y0-(7.35/14)*plotH;
+  const band=document.createElementNS(NS,'rect');band.setAttribute('x',x0);band.setAttribute('y',by1);band.setAttribute('width',plotW);band.setAttribute('height',by2-by1+2);band.setAttribute('fill','rgba(30,158,134,0.25)');svg.appendChild(band);
+  const bt=document.createElementNS(NS,'text');bt.setAttribute('x',x0+plotW-6);bt.setAttribute('y',by1-3);bt.setAttribute('text-anchor','end');bt.setAttribute('font-size','10');bt.setAttribute('font-weight','800');bt.setAttribute('fill','#1E9E86');bt.textContent='正常带 7.35~7.45';svg.appendChild(bt);
+  function line(hist,col){const n=Math.max(hist.length,2);let d='';hist.forEach((v,i)=>{const px=x0+(hist.length<2?0:(i/(n-1))*plotW);const py=y0-(v/14)*plotH;d+=(i===0?'M':'L')+px+' '+py+' ';});const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke',col);p.setAttribute('stroke-width','4');svg.appendChild(p);const last=hist[hist.length-1];const lx=x0+plotW,ly=y0-(last/14)*plotH;const c=document.createElementNS(NS,'circle');c.setAttribute('cx',lx);c.setAttribute('cy',ly);c.setAttribute('r',6);c.setAttribute('fill',col);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','2');svg.appendChild(c);}
+  line(rawHist,'#E0382A');
+  line(bufHist,'#1450C8');
+  const lg=document.createElementNS(NS,'text');lg.setAttribute('x',x0+10);lg.setAttribute('y',36);lg.setAttribute('font-size','12');lg.setAttribute('font-weight','900');lg.setAttribute('fill','#1450C8');lg.textContent='蓝=有缓冲(血浆)';svg.appendChild(lg);
+  const lg2=document.createElementNS(NS,'text');lg2.setAttribute('x',x0+10);lg2.setAttribute('y',52);lg2.setAttribute('font-size','12');lg2.setAttribute('font-weight','900');lg2.setAttribute('fill','#E0382A');lg2.textContent='红=无缓冲(纯水)';svg.appendChild(lg2);
+  out.innerHTML=(msg||'')+' 当前:缓冲组 pH≈<b>'+buf.toFixed(2)+'</b>,无缓冲组 pH≈<b>'+raw.toFixed(1)+'</b>。';
+ }
+ document.getElementById('phAcid').onclick=addAcid;
+ document.getElementById('phBase').onclick=addBase;
+ document.getElementById('phReset').onclick=reset;
+ draw('滴入酸/碱观察对比。血浆靠缓冲对把冲击"吃掉",pH 稳定在 7.35~7.45。');
+})();
+
+/* ===== ④b 稳态曲线(体温/渗透压) ===== */
+(function(){
+ const svg=document.getElementById('homeoSvg'),out=document.getElementById('homeoOut'),seg=document.getElementById('segHomeo'),sl=document.getElementById('distSl'),dv=document.getElementById('distV');
+ const NS='http://www.w3.org/2000/svg';
+ let mode='temp';
+ const conf={temp:{set:37,unit:'℃',amp:1.2,name:'体温',lo:36.2,hi:37.8,band:[36.5,37.5]},
+             osmo:{set:770,unit:'kPa',amp:40,name:'渗透压',lo:700,hi:840,band:[740,800]}};
+ function draw(){
+  const c=conf[mode];const dist=+sl.value;dv.textContent=dist;
+  svg.innerHTML='';
+  const x0=60,y0=200,plotW=600,plotH=170;
+  const ax=document.createElementNS(NS,'line');ax.setAttribute('x1',x0);ax.setAttribute('y1',y0);ax.setAttribute('x2',x0+plotW);ax.setAttribute('y2',y0);ax.setAttribute('stroke','#16120A');ax.setAttribute('stroke-width','3');svg.appendChild(ax);
+  const ay=document.createElementNS(NS,'line');ay.setAttribute('x1',x0);ay.setAttribute('y1',y0);ay.setAttribute('x2',x0);ay.setAttribute('y2',20);ay.setAttribute('stroke','#16120A');ay.setAttribute('stroke-width','3');svg.appendChild(ay);
+  const lo=c.lo,hi=c.hi;
+  function yOf(val){return y0-((val-lo)/(hi-lo))*plotH;}
+  // normal band
+  const by1=yOf(c.band[1]),by2=yOf(c.band[0]);
+  const band=document.createElementNS(NS,'rect');band.setAttribute('x',x0);band.setAttribute('y',by1);band.setAttribute('width',plotW);band.setAttribute('height',by2-by1);band.setAttribute('fill','rgba(122,63,242,0.16)');svg.appendChild(band);
+  // set-point line
+  const sy=yOf(c.set);
+  const sp=document.createElementNS(NS,'line');sp.setAttribute('x1',x0);sp.setAttribute('y1',sy);sp.setAttribute('x2',x0+plotW);sp.setAttribute('y2',sy);sp.setAttribute('stroke','#7A3FF2');sp.setAttribute('stroke-dasharray','6 4');sp.setAttribute('stroke-width','2');svg.appendChild(sp);
+  const spt=document.createElementNS(NS,'text');spt.setAttribute('x',x0+plotW-6);spt.setAttribute('y',sy-5);spt.setAttribute('text-anchor','end');spt.setAttribute('font-size','11');spt.setAttribute('font-weight','900');spt.setAttribute('fill','#7A3FF2');spt.textContent='设定点 '+c.set+c.unit;svg.appendChild(spt);
+  // labels
+  [lo,c.set,hi].forEach(v=>{const yy=yOf(v);const t=document.createElementNS(NS,'text');t.setAttribute('x',x0-8);t.setAttribute('y',yy+4);t.setAttribute('text-anchor','end');t.setAttribute('font-size','10');t.setAttribute('font-weight','800');t.textContent=(mode==='temp'?v.toFixed(1):v.toFixed(0));svg.appendChild(t);});
+  // curve: damped oscillation around set point, amplitude scaled by disturbance
+  const amp=c.amp*(dist/100)*2.2;
+  let d='';const N=200;
+  for(let i=0;i<=N;i++){const frac=i/N;const px=x0+frac*plotW;const decay=Math.exp(-frac*3.0);const val=c.set+amp*Math.sin(frac*10)*decay;const py=yOf(val);d+=(i===0?'M':'L')+px+' '+py+' ';}
+  const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke','#1E9E86');p.setAttribute('stroke-width','4');svg.appendChild(p);
+  // arrows for disturbance -> pull back
+  const at=document.createElementNS(NS,'text');at.setAttribute('x',x0+60);at.setAttribute('y',40);at.setAttribute('font-size','12');at.setAttribute('font-weight','900');at.setAttribute('fill','#16120A');at.textContent='扰动→偏离→负反馈调节→回到设定点';svg.appendChild(at);
+  const peak=c.set+amp;
+  out.innerHTML='<b>'+c.name+'</b> 被扰动推离设定点 '+c.set+c.unit+'(最大偏到约 '+(mode==='temp'?peak.toFixed(1):peak.toFixed(0))+c.unit+'),随后经<b>神经-体液调节(负反馈)</b>逐渐回到设定点附近——这就是<b>动态平衡</b>。紫色带是正常波动范围,超出即稳态失调(如高烧、渗透压紊乱)。';
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;draw();};});
+ sl.oninput=draw;draw();
+})();
+
+/* ===== ⑤ 稳态调节网络 ===== */
+(function(){
+ const svg=document.getElementById('netSvg'),out=document.getElementById('netOut');
+ const NS='http://www.w3.org/2000/svg';
+ const nodes={
+  center:{x:350,y:160,r:66,fill:'#7A3FF2',t:'内环境',s:'稳态',
+    d:'<b>内环境稳态</b>:内环境理化性质(渗透压/pH/温度)和成分的相对稳定。它由神经-体液-免疫三者<b>共同调节</b>,是机体进行正常生命活动的必要条件。'},
+  nerve:{x:130,y:70,r:52,fill:'#1450C8',t:'神经',s:'快·准',
+    d:'<b>神经系统</b>:通过反射进行快速、精确的调节。如体温调节中枢、渗透压感受器→抗利尿激素、血压反射。特点:反应快、作用范围小、时间短。'},
+  humor:{x:570,y:70,r:52,fill:'#1E9E86',t:'体液',s:'广·久',
+    d:'<b>体液(内分泌)调节</b>:激素随血液运输作用于全身。如胰岛素/胰高血糖素调血糖、抗利尿激素与醛固酮调水盐。特点:较缓慢、范围广、作用持久。'},
+  immune:{x:350,y:280,r:52,fill:'#E86A17',t:'免疫',s:'守·清',
+    d:'<b>免疫系统</b>:防卫、监视、清除。抵御病原入侵、清除衰老与异常(癌变)细胞,维护内环境不被外来/异常因素破坏。'}
+ };
+ function drawEdge(a,b){const l=document.createElementNS(NS,'line');l.setAttribute('x1',nodes[a].x);l.setAttribute('y1',nodes[a].y);l.setAttribute('x2',nodes[b].x);l.setAttribute('y2',nodes[b].y);l.setAttribute('stroke','#16120A');l.setAttribute('stroke-width','3');l.setAttribute('stroke-dasharray','5 4');svg.appendChild(l);}
+ function drawNode(k){const n=nodes[k];const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+  const c=document.createElementNS(NS,'circle');c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',n.r);c.setAttribute('fill',n.fill);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','4');g.appendChild(c);
+  const t=document.createElementNS(NS,'text');t.setAttribute('x',n.x);t.setAttribute('y',n.y-2);t.setAttribute('text-anchor','middle');t.setAttribute('font-size',n.r>60?'22':'18');t.setAttribute('font-weight','900');t.setAttribute('fill','#fff');t.textContent=n.t;g.appendChild(t);
+  const s=document.createElementNS(NS,'text');s.setAttribute('x',n.x);s.setAttribute('y',n.y+18);s.setAttribute('text-anchor','middle');s.setAttribute('font-size','12');s.setAttribute('font-weight','800');s.setAttribute('fill','#fff');s.textContent=n.s;g.appendChild(s);
+  g.onclick=function(){out.innerHTML=n.d;c.setAttribute('stroke','#F3C00E');setTimeout(()=>c.setAttribute('stroke','#16120A'),600);};
+  svg.appendChild(g);
+ }
+ svg.innerHTML='';
+ drawEdge('center','nerve');drawEdge('center','humor');drawEdge('center','immune');
+ drawEdge('nerve','humor');drawEdge('nerve','immune');drawEdge('humor','immune');
+ ['center','nerve','humor','immune'].forEach(drawNode);
+})();
+
+/* ===== ⑥ 内环境成分判别器 ===== */
+(function(){
+ const chips=document.getElementById('subChips'),verdict=document.getElementById('subVerdict');
+ const items=[
+  {n:'血浆蛋白',in:true,d:'存在于血浆中 → 属于内环境成分。它还维持血浆渗透压。'},
+  {n:'血红蛋白',in:false,d:'存在于红细胞内(细胞内) → 不属于内环境成分。别与血浆蛋白混。'},
+  {n:'抗体',in:true,d:'由浆细胞分泌到血浆/组织液中 → 属于内环境成分。'},
+  {n:'消化酶',in:false,d:'存在于消化道内,消化道与外界相通,相当于外界环境 → 不属于内环境。'},
+  {n:'呼吸酶',in:false,d:'在细胞内(线粒体/细胞质基质)催化呼吸 → 不属于内环境成分。'},
+  {n:'葡萄糖',in:true,d:'血浆、组织液中都有,是养料 → 属于内环境成分。'},
+  {n:'胰岛素',in:true,d:'激素,分泌进血液随血浆运输 → 属于内环境成分。'},
+  {n:'神经递质',in:true,d:'释放到突触间隙(属组织液)中传递信号 → 属于内环境成分。'},
+  {n:'CO₂',in:true,d:'细胞产生后进入组织液、血浆运输 → 属于内环境成分(在体液中)。'},
+  {n:'尿素',in:true,d:'代谢废物,由血浆运往肾脏排出,存在于体液中 → 属于内环境成分。'},
+  {n:'糖原',in:false,d:'储存在肝细胞/肌细胞内(细胞内) → 不属于内环境成分。'},
+  {n:'DNA聚合酶',in:false,d:'在细胞核/细胞内参与复制 → 不属于内环境成分。'},
+  {n:'Na⁺/Cl⁻',in:true,d:'血浆等体液中的无机盐,主要决定渗透压 → 属于内环境成分。'},
+  {n:'纤维素',in:false,d:'植物细胞壁成分/食物残渣,不在人体体液中 → 不属于内环境成分。'}
+ ];
+ items.forEach(it=>{const c=document.createElement('div');c.className='chip';c.textContent=it.n;c.onclick=function(){chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');verdict.style.borderColor='#16120A';const head=it.in?'<span style="color:#1E9E86">[属于] 属于内环境成分</span>':'<span style="color:#E0382A">[不属于] 不属于内环境成分</span>';verdict.innerHTML=head+'　—　<b>'+it.n+'</b><br><span style="font-weight:700">'+it.d+'</span>';};chips.appendChild(c);});
+})();
+
+/* ===== ⑪ 自测 ===== */
+(function(){
+ const qs=[
+  {q:"1. 体液、细胞内液、细胞外液(内环境)三者关系?",a:"体液=细胞内液(约2/3)+细胞外液(约1/3);细胞外液就是内环境=血浆+组织液+淋巴。"},
+  {q:"2. 内环境由哪三种液体组成?",a:"血浆、组织液、淋巴(细胞外液)。细胞内液不属于内环境。"},
+  {q:"3. 三种液体的转化方向?",a:"血浆⇄组织液(双向);组织液→淋巴(单向);淋巴→血浆(单向)。血浆与淋巴不能直接转化。"},
+  {q:"4. 内环境有哪三大理化性质?",a:"渗透压、酸碱度(pH)、温度。均维持相对稳定。"},
+  {q:"5. 血浆渗透压主要由什么决定?约多少?",a:"主要由无机盐(尤其Na⁺、Cl⁻)和蛋白质决定;约770kPa(37℃),与0.9%NaCl相当。"},
+  {q:"6. 血浆pH约多少?靠什么维持?",a:"约7.35~7.45;靠缓冲对(如H₂CO₃/NaHCO₃、NaH₂PO₄/Na₂HPO₄)调节。"},
+  {q:"7. 稳态的概念与调节机制?",a:"机体通过调节使内环境保持相对稳定(动态平衡),由神经-体液-免疫共同调节。"},
+  {q:"8. 血浆蛋白与血红蛋白哪个属于内环境成分?",a:"血浆蛋白属于(在血浆中);血红蛋白不属于(在红细胞内)。"},
+  {q:"9. 为什么消化酶不属于内环境成分?",a:"消化酶在消化道内,消化道与外界相通,相当于外界环境,不在血浆/组织液/淋巴中。"},
+  {q:"10. 内环境为什么是细胞与外界物质交换的媒介?",a:"细胞不直接接触外界,而是通过内环境,再经消化、呼吸、循环、泌尿等系统与外界间接交换物质。"},
+  {q:"11. 组织水肿的常见原因?",a:"组织液增多所致:血浆蛋白减少、淋巴回流受阻、毛细血管通透性增大、过敏等。"},
+  {q:"12. 剧烈运动产生乳酸,血浆pH为何基本不变?",a:"乳酸与NaHCO₃反应生成乳酸钠和H₂CO₃,H₂CO₃分解为CO₂经呼吸排出,缓冲对使pH变化很小。"}
+ ];
+ const quiz=document.getElementById('quiz');
+ qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

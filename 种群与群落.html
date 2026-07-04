@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>种群与群落 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);--accent:var(--orange);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--orange);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.g::before{background:var(--green)}
+  h3{font-size:17px;font-weight:900;margin:20px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--orange);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--orange);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:13.5px;font-weight:700;box-shadow:3px 3px 0 var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--orange)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;min-width:54px}
+  .sl{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+  .sl .lab{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between}
+  input[type=range]{accent-color:var(--orange);width:100%}
+  input[type=number]{border:3px solid var(--ink);padding:6px 8px;font-weight:800;font-size:14px;width:90px;font-family:inherit}
+  .seg{display:inline-flex;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .seg button{background:var(--card);border:0;border-right:3px solid var(--ink);padding:7px 12px;font-weight:800;font-size:13px;cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--orange);color:#fff}
+  .out{font-weight:900;font-size:14.5px;border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:8px}
+  .small{font-size:12.5px;font-weight:700;color:#6b5d3a}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+  .dot{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+  .fields{display:flex;flex-wrap:wrap;gap:14px;margin:8px 0}
+  .fld{display:flex;flex-direction:column;gap:3px}.fld label{font-weight:800;font-size:12.5px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>种群与群落全攻坚</h1>
+    <p class="lead">种群的数量特征、密度调查(样方法/标志重捕)、J 型与 S 型增长、K 值与 K/2、种间关系、群落空间结构、演替——把"数量怎么变、种间怎么处、群落怎么长"三条线理清,曲线题、计算题一眼看穿。</p>
+
+    <div class="say">🗣️ <b>三条主线(人话版):</b> 这一章就问三件事。<br>① <b>一个种群有多少、怎么变</b>:先数清楚(种群密度),再看它是涨是跌(出生率死亡率、迁入迁出决定),还能预测未来(年龄组成)。数量随时间的变化画出来,就是 <b>J 型(敞开吃)</b> 和 <b>S 型(有天花板 K 值)</b> 两条曲线。<br>② <b>物种之间怎么相处</b>:抢饭吃(竞争)、你吃我(捕食)、互相帮(互利共生)、占便宜(寄生)。<br>③ <b>一片地上长成什么样、怎么长起来的</b>:同一时刻的立体分布是 <b>群落结构</b>(垂直分层、水平镶嵌);随时间从裸地长成森林是 <b>演替</b>。<br>一句话:<b>种群看数量,群落看关系与演替。</b></div>
+
+    <h2 class="g">① 种群的数量特征</h2>
+    <p class="lead">种群密度是核心特征;出生率死亡率、迁入迁出直接决定密度增减;年龄组成能<b>预测</b>未来趋势;性别比例通过影响出生率间接影响密度。</p>
+    <div class="card">
+      <table>
+        <tr><th>特征</th><th>含义 / 作用</th></tr>
+        <tr><td><b>种群密度</b></td><td>单位面积或体积内某种群的个体数,是种群<b>最基本</b>的数量特征</td></tr>
+        <tr><td><b>出生率、死亡率</b></td><td>单位时间新增/死亡个体占比,<b>直接决定</b>种群密度的增减</td></tr>
+        <tr><td><b>迁入率、迁出率</b></td><td>迁入迁出个体占比,也<b>直接影响</b>密度(城市人口变化主因)</td></tr>
+        <tr><td><b>年龄组成</b></td><td>各年龄段比例,分增长型/稳定型/衰退型,可<b>预测</b>未来密度变化</td></tr>
+        <tr><td><b>性别比例</b></td><td>雌雄个体数之比,通过影响出生率<b>间接</b>影响密度</td></tr>
+      </table>
+      <p class="trap">⚠ 因果链:年龄组成 → (通过)出生率死亡率 → 种群密度。年龄组成和性别比例都不直接改变密度,而是通过出生率(死亡率)起作用。</p>
+    </div>
+    <div class="keybox"><b>年龄组成三型:</b><br>增长型:幼年多、老年少 → 出生 &gt; 死亡 → 未来<b>密度增大</b>(金字塔底宽顶尖)<br>稳定型:各年龄段大致均衡 → 出生 ≈ 死亡 → 未来<b>密度稳定</b>(近似柱形)<br>衰退型:幼年少、老年多 → 出生 &lt; 死亡 → 未来<b>密度减小</b>(倒金字塔/上宽下窄)</div>
+    <div class="viz">
+      <h3>年龄组成金字塔:选类型 → 预测未来</h3>
+      <p class="small">点击切换三种年龄组成,看金字塔形状与未来密度趋势的对应关系。</p>
+      <div class="ctrlrow"><div class="seg" id="segAge"><button data-m="grow" class="on">增长型</button><button data-m="stab">稳定型</button><button data-m="decl">衰退型</button></div></div>
+      <svg id="ageSvg" viewBox="0 0 360 260" aria-label="年龄组成金字塔"></svg>
+      <div class="out" id="ageOut"></div>
+    </div>
+
+    <h2 class="b">② 种群密度的调查:样方法 &amp; 标志重捕法</h2>
+    <p class="lead">植物、活动范围小的动物(昆虫卵、蚜虫、跳蝻)用<b>样方法</b>;活动能力强、活动范围大的动物用<b>标志重捕法</b>。</p>
+    <div class="card">
+      <h3>样方法</h3>
+      <p style="margin:4px 0">在被调查种群的分布范围内,随机取若干样方,计数每个样方内的个体数,求<b>平均值</b>估算种群密度。<b>随机取样</b>是关键(如五点取样法、等距取样法)。</p>
+      <p class="trap">⚠ 计数边线个体时的"计上不计下、计左不计右"(只计相邻两条边及其顶角上的个体);样方大小和数目要合适;必须随机,不能主观选密的或稀的。</p>
+      <h3>标志重捕法</h3>
+      <div class="eq">N ÷ 标记总数 = 重捕数 ÷ 重捕中被标记数</div>
+      <div class="eq">⟹ N = (初次标记数 × 重捕数) ÷ 重捕中被标记数</div>
+      <p style="margin:4px 0"><b>原理:</b>标记个体在总体中所占比例,等于重捕样本中标记个体所占比例。</p>
+    </div>
+    <div class="viz">
+      <h3>标志重捕计算器(含偏差演示)</h3>
+      <p class="small">输入三个数,算出估算 N。再切换"偏差情形",看标记脱落/被捕食等如何让估算偏大或偏小。</p>
+      <div class="fields">
+        <div class="fld"><label>初次标记数 M</label><input type="number" id="mkM" value="40" min="1"></div>
+        <div class="fld"><label>重捕总数 n</label><input type="number" id="mkN" value="50" min="1"></div>
+        <div class="fld"><label>重捕中标记数 m</label><input type="number" id="mkm" value="8" min="1"></div>
+      </div>
+      <div class="ctrlrow"><div class="seg" id="segBias"><button data-b="none" class="on">无偏差</button><button data-b="fall">标记脱落</button><button data-b="wary">标记后难再捕</button><button data-b="eaten">重捕数偏小</button></div></div>
+      <div class="out" id="mkOut"></div>
+      <p class="small">口诀:分母(m)偏小 → 估算 N 偏大;分母偏大 → 估算 N 偏小。</p>
+    </div>
+
+    <h2 class="o">③ 种群数量变化:J 型 vs S 型</h2>
+    <p class="lead">食物空间无限、无天敌无传染病的<b>理想条件</b>下呈 <b>J 型</b>(无 K 值);自然界资源有限、有环境阻力,呈 <b>S 型</b>(有 K 值,增长速率在 K/2 最大)。</p>
+    <div class="card">
+      <div class="eq">J 型:Nₜ = N₀ · λᵗ　(λ = 一年后数量 ÷ 当年数量,λ 恒定 &gt; 1)</div>
+      <table>
+        <tr><th></th><th>J 型曲线</th><th>S 型曲线</th></tr>
+        <tr><td>条件</td><td>理想:资源空间无限、无天敌</td><td>现实:资源空间有限、有环境阻力</td></tr>
+        <tr><td>K 值</td><td>无 K 值,持续上升</td><td>有 K 值(环境容纳量)</td></tr>
+        <tr><td>增长率</td><td>保持不变(λ 恒定)</td><td>逐渐减小</td></tr>
+        <tr><td>增长速率</td><td>越来越大</td><td>先增大后减小,在 <b>K/2</b> 最大</td></tr>
+      </table>
+      <p class="trap">⚠ 区分"增长率"与"增长速率"。J 型是<b>增长率(倍数)不变</b>,增长速率(每单位时间新增个体数)却越来越大。S 型的<b>增长速率</b>在 K/2 处达到最大,K 处为 0。</p>
+    </div>
+    <div class="viz">
+      <h3>J 型 vs S 型曲线(叠加增长速率曲线)</h3>
+      <p class="small">调初始数量、增长率、K 值,看两条曲线;S 型的增长速率(紫)在 K/2 处出现峰值。</p>
+      <div class="ctrlrow"><label>初始 N₀</label><div class="sl"><div class="lab"><span>2 → 30</span><span id="vN0">6</span></div><input type="range" id="cN0" min="2" max="30" value="6"></div></div>
+      <div class="ctrlrow"><label>增长率 r</label><div class="sl"><div class="lab"><span>低 → 高</span><span id="vR">50</span></div><input type="range" id="cR" min="15" max="90" value="50"></div></div>
+      <div class="ctrlrow"><label>K 值</label><div class="sl"><div class="lab"><span>小 → 大</span><span id="vK">70</span></div><input type="range" id="cK" min="40" max="95" value="70"></div></div>
+      <div class="ctrlrow"><div class="seg" id="segCurve"><button data-s="both" class="on">两条都看</button><button data-s="j">只看 J 型</button><button data-s="s">只看 S 型</button></div></div>
+      <svg id="curveSvg" viewBox="0 0 360 240" aria-label="J型S型曲线"></svg>
+      <div class="legend"><span><span class="dot" style="background:#E0382A"></span>J 型数量</span><span><span class="dot" style="background:#1E9E86"></span>S 型数量</span><span><span class="dot" style="background:#7A3FF2"></span>S 型增长速率</span><span><span class="dot" style="background:#1450C8"></span>K/2 线</span></div>
+      <div class="out" id="curveOut"></div>
+    </div>
+
+    <h2 class="r">④ K 值与生产实践</h2>
+    <div class="card">
+      <table>
+        <tr><th>目标</th><th>控制思路</th><th>原理</th></tr>
+        <tr><td><b>持续最大捕获(渔业)</b></td><td>捕获后使剩余量维持在 <b>K/2</b></td><td>K/2 时增长速率最大,种群恢复最快、可持续产量最高</td></tr>
+        <tr><td><b>灭鼠/防虫</b></td><td>降低环境容纳量 <b>K</b>(断粮、藏食、灭天敌之敌)</td><td>只杀不改 K,数量很快回升;降 K 才能持久压制</td></tr>
+        <tr><td><b>濒危保护</b></td><td>建保护区、改善栖息地以<b>提高 K</b></td><td>提高环境容纳量,让种群有更大生存空间</td></tr>
+      </table>
+      <p class="trap">⚠ 灭鼠若只在数量高时大量捕杀,反而使种群落到 K/2 附近、增长速率最大,回升更快;正确做法是<b>降低 K</b>(减少食物和栖所)。</p>
+    </div>
+
+    <h2 class="v">⑤ 种间关系</h2>
+    <p class="lead">两个物种之间的四种典型关系:竞争、捕食、互利共生、寄生。看数量随时间的波动曲线可判断关系类型。</p>
+    <div class="card">
+      <table>
+        <tr><th>关系</th><th>数量曲线特征</th><th>举例</th></tr>
+        <tr><td><b>互利共生</b></td><td>同步升降,"同生共死",两条曲线趋势一致</td><td>豆科植物与根瘤菌、大肠杆菌与人</td></tr>
+        <tr><td><b>捕食</b></td><td>此消彼长,有先后:被捕食者先增,捕食者随后增;峰值捕食者<b>滞后</b></td><td>猞猁与雪兔、狼与兔</td></tr>
+        <tr><td><b>竞争</b></td><td>"你死我活"或此消彼长;可能一方灭绝,或达到平衡</td><td>大小两种草履虫、水稻与稗草</td></tr>
+        <tr><td><b>寄生</b></td><td>寄生者获利、宿主受害,宿主一般不立即死亡</td><td>蛔虫与人、菟丝子与大豆</td></tr>
+      </table>
+      <p class="trap">⚠ 捕食曲线判"谁吃谁":<b>先增先减、数量多</b>的是被捕食者;<b>后增后减、数量少、峰值滞后</b>的是捕食者。互利共生看"同增同减",竞争看"一升一降甚至一方归零"。</p>
+    </div>
+    <div class="viz">
+      <h3>种间关系动态曲线(切换类型)</h3>
+      <p class="small">切换关系类型,观察两条数量曲线的相对起伏,对照"如何判断"。</p>
+      <div class="ctrlrow"><div class="seg" id="segRel"><button data-r="pred" class="on">捕食</button><button data-r="mut">互利共生</button><button data-r="comp">竞争</button><button data-r="para">寄生</button></div></div>
+      <svg id="relSvg" viewBox="0 0 360 220" aria-label="种间关系曲线"></svg>
+      <div class="legend"><span><span class="dot" style="background:#1E9E86"></span>物种甲</span><span><span class="dot" style="background:#E0382A"></span>物种乙</span></div>
+      <div class="out" id="relOut"></div>
+    </div>
+
+    <h2 class="g">⑥ 群落的空间结构</h2>
+    <p class="lead">群落是同一时间、一定区域内<b>各种生物种群</b>的集合。它在空间上有<b>垂直</b>与<b>水平</b>两种结构,是长期自然选择、对资源利用分化的结果。</p>
+    <div class="card">
+      <table>
+        <tr><th>结构</th><th>表现</th><th>成因 / 意义</th></tr>
+        <tr><td><b>垂直结构</b></td><td>明显<b>分层</b>:森林乔木→灌木→草本;水中不同水层的浮游/游泳生物</td><td>植物分层主要由<b>光照</b>决定;动物分层随植物(食物和栖所)分层。提高对光等资源的利用</td></tr>
+        <tr><td><b>水平结构</b></td><td>不同地段呈<b>镶嵌</b>分布(斑块状)</td><td>受地形、光照、湿度、土壤、生物自身及人为等影响</td></tr>
+      </table>
+      <p class="trap">⚠ "分层"是群落的垂直结构(不同物种);一片草地上高矮不齐的同一种植物<b>不算</b>群落分层。区分"物种在空间上的分布"与"个体高矮"。</p>
+    </div>
+
+    <h2 class="o">⑦ 群落演替</h2>
+    <p class="lead">随时间推移,一个群落被另一个群落<b>替代</b>的过程叫演替。按起点分为<b>初生演替</b>与<b>次生演替</b>。</p>
+    <div class="card">
+      <table>
+        <tr><th></th><th>初生演替</th><th>次生演替</th></tr>
+        <tr><td>起点</td><td>从未有过生物、或原有生物被<b>彻底消灭</b>的地方(无土壤、无繁殖体)</td><td>原有植被虽不存在,但<b>保留了土壤条件</b>(甚至种子、繁殖体)</td></tr>
+        <tr><td>例子</td><td>裸岩、沙丘、火山岩、冰川泥上的演替</td><td>弃耕农田、火灾后的草原、过量砍伐后的森林</td></tr>
+        <tr><td>速度</td><td>慢,经历时间长</td><td>快,经历时间短</td></tr>
+        <tr><td>典型序列</td><td>裸岩 → 地衣 → 苔藓 → 草本 → 灌木 → 森林</td><td>弃耕农田 → 草本 → 灌木 → 森林(起点起点更高)</td></tr>
+      </table>
+      <p class="trap">⚠ 判初生/次生看"有没有留下土壤与繁殖体":火山岩=初生;火灾后的草原/弃耕农田=次生。人类活动可改变演替的<b>速度和方向</b>。</p>
+      <p class="small">注:演替不一定都以森林为终点,还受气候等环境限制(干旱区可能停在草本或灌木阶段)。</p>
+    </div>
+    <div class="viz">
+      <h3>群落演替动画(可切换初生/次生)</h3>
+      <p class="small">选择起点,点"演替"逐步推进,看群落如何从裸地/弃耕田一步步长成森林。</p>
+      <div class="ctrlrow"><div class="seg" id="segSucc"><button data-t="prim" class="on">初生(裸岩)</button><button data-t="sec">次生(弃耕田)</button></div><button class="btn" id="succNext">下一步 →</button><button class="btn" id="succReset">重置</button></div>
+      <svg id="succSvg" viewBox="0 0 360 220" aria-label="群落演替"></svg>
+      <div class="out" id="succOut"></div>
+    </div>
+
+    <h2 class="b">⑧ 样方法取样演示</h2>
+    <p class="lead">样方法的灵魂是<b>随机取样</b>。下面在一片"草地"上撒点(个体),用随机样方去估算,再和真实密度比较,体会样方数越多、越随机,估计越准。</p>
+    <div class="viz">
+      <h3>样方法随机取样交互演示</h3>
+      <p class="small">点"随机布样方"投放若干样方,计数样方内个体求平均,估算全场密度,与真实值对比。</p>
+      <div class="ctrlrow"><label>样方数</label><div class="sl"><div class="lab"><span>1 → 12</span><span id="vQuad">5</span></div><input type="range" id="quadN" min="1" max="12" value="5"></div><button class="btn" id="quadGo">随机布样方</button></div>
+      <svg id="quadSvg" viewBox="0 0 360 240" aria-label="样方法取样"></svg>
+      <div class="out" id="quadOut"></div>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>增长率 ≠ 增长速率。</b>J 型是"增长率(倍数 λ)不变",但增长速率越来越大;S 型增长速率在 <b>K/2 最大</b>、K 处为 0,而不是 K 处最大。</p>
+      <p class="trap">② <b>标志重捕偏差:</b>标记物脱落、标记使个体更易被捕食或更难再捕、两次调查间大量出生死亡,都会使 m(重捕中标记数)偏小 → 估算 N <b>偏大</b>;反之偏小。</p>
+      <p class="trap">③ <b>初生 vs 次生看土壤:</b>裸岩/沙丘/火山岩(无土壤繁殖体)是初生;弃耕农田、火灾后草原(留有土壤)是次生。</p>
+      <p class="trap">④ <b>K 值不是最大值。</b>K 是环境容纳量(种群能长期维持的稳定值),会随环境变化而波动,并非种群历史最高峰。</p>
+      <p class="trap">⑤ <b>年龄组成、性别比例</b>不直接决定密度,而是通过影响出生率(死亡率)间接起作用;能"预测趋势"的是年龄组成。</p>
+      <p class="trap">⑥ <b>捕食曲线定角色:</b>先增先减、数量多的是被捕食者;峰值滞后、数量少的是捕食者。别记反。</p>
+      <p class="trap">⑦ <b>群落"分层"指不同物种</b>在垂直空间的分布(光照决定植物分层);同种植物高矮不齐不是群落分层。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0">▸ <b>J 型与 S 型的关系:</b>S 型可看作"J 型的增长被环境阻力逐步扣掉"。同一时刻,J 型与 S 型的<b>差值 = 环境阻力(被淘汰的个体)</b>,这个差随时间越拉越大,是"因环境阻力而死亡/未出生的个体数"。</p>
+      <p style="margin:6px 0">▸ <b>K/2 的双重含义:</b>它既是 S 型增长速率的峰值点(数学上 dN/dt 最大),也是渔业"最大可持续产量"的采捕后留存量。灭鼠反向利用:别让种群停留在 K/2,而要压低 K。</p>
+      <p style="margin:6px 0">▸ <b>λ 与增长率换算:</b>Nₜ=N₀λᵗ 中,增长率 = λ−1。λ&gt;1 增长,λ=1 稳定,λ&lt;1 下降,λ=0 灭绝。看到"λ 恒定"就想 J 型;看到"λ 先大后小趋近 1"就想 S 型。</p>
+      <p style="margin:6px 0">▸ <b>演替的"方向与速度"答题模板:</b>问人类活动影响时答"改变演替的速度和方向";问初生慢的原因答"从无土壤、无繁殖体开始,需先形成土壤";问群落能否达森林答"取决于气候等环境条件,干旱区可能止于草本/灌木"。</p>
+      <p style="margin:6px 0">▸ <b>丰富度:</b>群落中物种数目的多少叫物种丰富度。统计土壤小动物常用<b>取样器取样法</b>(个体小、不便标志重捕或样方),丰富度统计用记名计算法或目测估计法。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:光合作用/呼吸作用攻坚</p>
+  </div>
+
+<script>
+/* ===== ① 年龄组成金字塔 ===== */
+(function(){
+ const svg=document.getElementById('ageSvg'),out=document.getElementById('ageOut'),seg=document.getElementById('segAge');
+ const NS='http://www.w3.org/2000/svg';
+ let mode='grow';
+ const bands=['老年','中年','青年','少年','幼年'];
+ const data={
+  grow:[8,16,26,38,52],
+  stab:[24,28,30,30,32],
+  decl:[46,38,28,18,10]
+ };
+ function draw(){
+  svg.innerHTML='';
+  const d=data[mode];
+  const cx=180,top=24,bh=30,gap=6,maxW=150;
+  d.forEach((val,i)=>{
+   const y=top+i*(bh+gap);
+   const w=(val/60)*maxW;
+   ['L','R'].forEach(side=>{
+    const r=document.createElementNS(NS,'rect');
+    const x=side==='L'?cx-w:cx;
+    r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',bh);
+    r.setAttribute('fill',mode==='grow'?'#1E9E86':mode==='stab'?'#1450C8':'#E0382A');
+    r.setAttribute('stroke','#16120A');r.setAttribute('stroke-width','2.5');svg.appendChild(r);
+   });
+   const t=document.createElementNS(NS,'text');t.setAttribute('x',cx);t.setAttribute('y',y+bh/2+4);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','11');t.setAttribute('font-weight','900');t.setAttribute('fill','#fff');t.textContent=bands[i];svg.appendChild(t);
+  });
+  const axis=document.createElementNS(NS,'line');axis.setAttribute('x1',cx);axis.setAttribute('y1',top-4);axis.setAttribute('x2',cx);axis.setAttribute('y2',top+5*(bh+gap));axis.setAttribute('stroke','#16120A');axis.setAttribute('stroke-width','2');svg.appendChild(axis);
+  const lab=document.createElementNS(NS,'text');lab.setAttribute('x',cx);lab.setAttribute('y',top+5*(bh+gap)+16);lab.setAttribute('text-anchor','middle');lab.setAttribute('font-size','11');lab.setAttribute('font-weight','800');lab.textContent='← 各年龄段个体数 →';svg.appendChild(lab);
+  if(mode==='grow')out.innerHTML='<b>增长型</b>:幼年个体远多于老年 → 出生率 &gt; 死亡率 → 未来种群密度<b>增大</b>。金字塔<b>底宽顶尖</b>。';
+  else if(mode==='stab')out.innerHTML='<b>稳定型</b>:各年龄段大致均衡 → 出生率 ≈ 死亡率 → 未来种群密度<b>基本稳定</b>。近似<b>柱形</b>。';
+  else out.innerHTML='<b>衰退型</b>:幼年个体少、老年个体多 → 出生率 &lt; 死亡率 → 未来种群密度<b>减小</b>。呈<b>上宽下窄</b>。';
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;draw();};});
+ draw();
+})();
+
+/* ===== ② 标志重捕计算器 ===== */
+(function(){
+ const M=document.getElementById('mkM'),Nn=document.getElementById('mkN'),m=document.getElementById('mkm'),out=document.getElementById('mkOut'),seg=document.getElementById('segBias');
+ let bias='none';
+ function draw(){
+  const vM=Math.max(1,+M.value||0),vN=Math.max(1,+Nn.value||0),vm=Math.max(1,+m.value||0);
+  const est=(vM*vN)/vm;
+  let txt='<b>估算 N = (M × n) ÷ m = ('+vM+' × '+vN+') ÷ '+vm+' ≈ '+est.toFixed(1)+'</b> 只。';
+  txt+='<br><span class="small">标记比例 M÷N = 重捕标记比例 m÷n</span>';
+  if(bias==='none'){
+   txt+='<br>无系统偏差:估算值接近真实值。';
+  } else if(bias==='fall'){
+   txt+='<br>⚠ <b>标记脱落</b>:部分标记个体重捕时看不出标记 → 实测 m <b>偏小</b> → 估算 N <b>偏大</b>。';
+  } else if(bias==='wary'){
+   txt+='<br>⚠ <b>标记后更难再被捕</b>(如受惊变机警)→ 重捕中标记个体减少 → m <b>偏小</b> → 估算 N <b>偏大</b>。';
+  } else {
+   txt+='<br>⚠ <b>标记个体更易被天敌捕食/易死</b>→ 存活的标记个体减少 → m <b>偏小</b> → 估算 N <b>偏大</b>。';
+  }
+  out.innerHTML=txt;
+ }
+ [M,Nn,m].forEach(el=>el.oninput=draw);
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');bias=b.dataset.b;draw();};});
+ draw();
+})();
+
+/* ===== ③ J型 vs S型曲线 + 增长速率 ===== */
+(function(){
+ const svg=document.getElementById('curveSvg'),out=document.getElementById('curveOut');
+ const NS='http://www.w3.org/2000/svg';
+ const cN0=document.getElementById('cN0'),cR=document.getElementById('cR'),cK=document.getElementById('cK');
+ const vN0=document.getElementById('vN0'),vR=document.getElementById('vR'),vK=document.getElementById('vK');
+ const seg=document.getElementById('segCurve');
+ let show='both';
+ const X0=40,Y0=190,W=300,H=160;
+ function px(t){return X0+(t/40)*W;}
+ function py(v){return Y0-(v/100)*H;}
+ function line(x1,y1,x2,y2,col,dash){const l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',col);l.setAttribute('stroke-width','3');if(dash)l.setAttribute('stroke-dasharray',dash);svg.appendChild(l);}
+ function path(d,col,w,dash){const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke',col);p.setAttribute('stroke-width',w);if(dash)p.setAttribute('stroke-dasharray',dash);svg.appendChild(p);}
+ function txt(x,y,s,col,size,anc){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',size||'11');t.setAttribute('font-weight','800');t.setAttribute('fill',col||'#16120A');if(anc)t.setAttribute('text-anchor',anc);t.textContent=s;svg.appendChild(t);}
+ function draw(){
+  const N0=+cN0.value,r=+cR.value/100,K=+cK.value;
+  vN0.textContent=N0;vR.textContent=(+cR.value);vK.textContent=K;
+  svg.innerHTML='';
+  line(X0,Y0,X0+W,Y0,'#16120A');line(X0,Y0,X0,Y0-H,'#16120A');
+  txt(X0+W-8,Y0+16,'时间 t →','#16120A','11','end');
+  txt(6,Y0-H+10,'数量 N','#16120A','11');
+  // J-curve  N=N0*(1+r)^t  (discrete-ish), clip at 100
+  if(show==='both'||show==='j'){
+   let d='';let started=false;
+   for(let t=0;t<=40;t+=0.5){
+    let v=N0*Math.pow(1+r*0.12,t);
+    if(v>108)break;
+    d+=(!started?'M':'L')+px(t)+' '+py(v)+' ';started=true;
+   }
+   path(d,'#E0382A',3.5);
+   txt(X0+40,Y0-H+20,'J 型','#E0382A','12');
+  }
+  // S-curve logistic
+  if(show==='both'||show==='s'){
+   const rr=r*0.28;
+   let d='';
+   for(let t=0;t<=40;t+=0.5){
+    const v=K/(1+((K-N0)/N0)*Math.exp(-rr*t));
+    d+=(t===0?'M':'L')+px(t)+' '+py(v)+' ';
+   }
+   path(d,'#1E9E86',3.5);
+   // K line
+   line(X0,py(K),X0+W,py(K),'#16120A','5 4');
+   txt(X0+W,py(K)-5,'K','#16120A','11','end');
+   // K/2 line
+   line(X0,py(K/2),X0+W,py(K/2),'#1450C8','4 3');
+   txt(X0+2,py(K/2)-4,'K/2','#1450C8','10');
+   // growth rate curve (dN/dt = rr*N*(1-N/K)), scaled
+   let dg='';let maxRate=0;
+   const rateArr=[];
+   for(let t=0;t<=40;t+=0.5){
+    const v=K/(1+((K-N0)/N0)*Math.exp(-rr*t));
+    const g=rr*v*(1-v/K);
+    rateArr.push([t,g]);
+    if(g>maxRate)maxRate=g;
+   }
+   rateArr.forEach((pr,i)=>{
+    const t=pr[0],g=pr[1];
+    const scaled=(g/maxRate)*60;
+    dg+=(i===0?'M':'L')+px(t)+' '+py(scaled)+' ';
+   });
+   path(dg,'#7A3FF2',2.5,'3 2');
+   txt(X0+W-6,py(58),'增长速率','#7A3FF2','10','end');
+  }
+  let msg='J 型(红)在理想条件下持续加速上升(无 K);S 型(绿)受环境阻力趋于 K。';
+  if(show==='both'||show==='s')msg+=' 紫色<b>增长速率</b>曲线在 <b>K/2</b> 处达到峰值,K 处降为 0。';
+  out.innerHTML=msg+' 当前 K='+K+',K/2='+(K/2)+'。';
+ }
+ [cN0,cR,cK].forEach(s=>s.oninput=draw);
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');show=b.dataset.s;draw();};});
+ draw();
+})();
+
+/* ===== ⑤ 种间关系动态曲线 ===== */
+(function(){
+ const svg=document.getElementById('relSvg'),out=document.getElementById('relOut'),seg=document.getElementById('segRel');
+ const NS='http://www.w3.org/2000/svg';
+ let rel='pred';
+ const X0=40,Y0=180,W=300,H=150;
+ function path(d,col){const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke',col);p.setAttribute('stroke-width','3.5');svg.appendChild(p);}
+ function line(x1,y1,x2,y2){const l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke','#16120A');l.setAttribute('stroke-width','3');svg.appendChild(l);}
+ function txt(x,y,s,col,anc){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size','11');t.setAttribute('font-weight','800');t.setAttribute('fill',col||'#16120A');if(anc)t.setAttribute('text-anchor',anc);t.textContent=s;svg.appendChild(t);}
+ function px(f){return X0+f*W;}
+ function py(v){return Y0-(v/100)*H;}
+ function draw(){
+  svg.innerHTML='';
+  line(X0,Y0,X0+W,Y0);line(X0,Y0,X0,Y0-H);
+  txt(X0+W-8,Y0+16,'时间 →','#16120A','end');
+  txt(6,Y0-H+10,'数量','#16120A');
+  let dA='',dB='';
+  for(let i=0;i<=200;i++){
+   const f=i/200;const t=f*Math.PI*4;let a,b;
+   if(rel==='pred'){
+    a=50+34*Math.sin(t);              // 被捕食者(甲):先增
+    b=44+30*Math.sin(t-0.9);          // 捕食者(乙):滞后、较少
+    b=b*0.8+10;
+   } else if(rel==='mut'){
+    a=45+30*Math.sin(t-Math.PI/2);
+    b=40+28*Math.sin(t-Math.PI/2);    // 同步升降
+   } else if(rel==='comp'){
+    a=75-60*f;                        // 甲逐渐取胜
+    b=25+55*f; b=Math.max(3,25+55*f-70*Math.max(0,f-0.4)); // 乙先增后被压至近0
+   } else { // 寄生
+    a=60+16*Math.sin(t*0.6);          // 宿主起伏但整体受损略降
+    a=a-10*f;
+    b=20+14*Math.sin(t*0.6-0.5)+18*f; // 寄生者随宿主增长
+   }
+   a=Math.max(2,Math.min(98,a));b=Math.max(2,Math.min(98,b));
+   dA+=(i===0?'M':'L')+px(f)+' '+py(a)+' ';
+   dB+=(i===0?'M':'L')+px(f)+' '+py(b)+' ';
+  }
+  path(dA,'#1E9E86');path(dB,'#E0382A');
+  let msg;
+  if(rel==='pred')msg='<b>捕食</b>:甲(绿,被捕食者)先增先减、数量多;乙(红,捕食者)峰值<b>滞后</b>、数量少。此消彼长有先后。';
+  else if(rel==='mut')msg='<b>互利共生</b>:两曲线<b>同步升降</b>(同生共死),趋势一致。如豆科植物与根瘤菌。';
+  else if(rel==='comp')msg='<b>竞争</b>:资源有限,甲(绿)逐渐占优,乙(红)被压制甚至<b>趋于灭绝</b>。你死我活。';
+  else msg='<b>寄生</b>:寄生者(红)随宿主(绿)增多而增多、获利;宿主受害数量略降,一般不立即死亡。';
+  out.innerHTML=msg;
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');rel=b.dataset.r;draw();};});
+ draw();
+})();
+
+/* ===== ⑦ 群落演替动画 ===== */
+(function(){
+ const svg=document.getElementById('succSvg'),out=document.getElementById('succOut'),seg=document.getElementById('segSucc');
+ const NS='http://www.w3.org/2000/svg';
+ let type='prim',step=0;
+ const primStages=[
+  {n:'裸岩',d:'寸草不生,只有岩石,无土壤、无繁殖体。'},
+  {n:'地衣',d:'地衣分泌有机酸腐蚀岩石,开始形成薄土。'},
+  {n:'苔藓',d:'苔藓在薄土上定居,进一步积累土壤。'},
+  {n:'草本',d:'草本植物入侵,土壤加厚,动物随之增多。'},
+  {n:'灌木',d:'灌木遮蔽草本,群落分层出现。'},
+  {n:'森林',d:'乔木占据优势,形成结构复杂的森林(相对稳定)。'}
+ ];
+ const secStages=[
+  {n:'弃耕农田',d:'保留了土壤和繁殖体,起点比裸岩高得多。'},
+  {n:'一年生草本',d:'杂草迅速覆盖,一年生草本先占领。'},
+  {n:'多年生草本',d:'多年生草本取代,群落更稳定。'},
+  {n:'灌木',d:'灌木入侵,开始分层。'},
+  {n:'森林',d:'乔木成林,演替速度比初生快得多。'}
+ ];
+ function rect(x,y,w,h,fill){const r=document.createElementNS(NS,'rect');r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('fill',fill);r.setAttribute('stroke','#16120A');r.setAttribute('stroke-width','2');svg.appendChild(r);}
+ function tri(cx,by,w,h,fill){const p=document.createElementNS(NS,'polygon');p.setAttribute('points',(cx-w/2)+','+by+' '+(cx+w/2)+','+by+' '+cx+','+(by-h));p.setAttribute('fill',fill);p.setAttribute('stroke','#16120A');p.setAttribute('stroke-width','2');svg.appendChild(p);}
+ function circle(cx,cy,rr,fill){const c=document.createElementNS(NS,'circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',rr);c.setAttribute('fill',fill);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','2');svg.appendChild(c);}
+ function txt(x,y,s,col,size,anc){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',size||'11');t.setAttribute('font-weight','800');t.setAttribute('fill',col||'#16120A');if(anc)t.setAttribute('text-anchor',anc);t.textContent=s;svg.appendChild(t);}
+ function draw(){
+  svg.innerHTML='';
+  const stages=type==='prim'?primStages:secStages;
+  if(step>=stages.length)step=stages.length-1;
+  const ground=190;
+  // ground / rock base
+  rect(20,ground,320,20,type==='prim'&&step===0?'#9a8f76':'#7a5a34');
+  const st=step;
+  // draw cumulative vegetation depending on furthest stage reached
+  const cx0=60,spacing=52;
+  for(let s=0;s<=st;s++){
+   const cx=40+s*spacing+26;
+   const stage=stages[s];
+   const name=stage.n;
+   if(name==='裸岩'){/* rock only */ rect(cx-16,ground-10,32,10,'#9a8f76'); }
+   else if(name==='地衣'){ for(let k=0;k<4;k++)circle(cx-12+k*8,ground-3,3,'#8fae5a'); }
+   else if(name==='苔藓'){ rect(cx-14,ground-8,28,8,'#5f8f3e'); }
+   else if(name.indexOf('草本')>=0||name==='一年生草本'||name==='多年生草本'){ for(let k=0;k<5;k++){const gx=cx-14+k*7;const l=document.createElementNS(NS,'line');l.setAttribute('x1',gx);l.setAttribute('y1',ground);l.setAttribute('x2',gx);l.setAttribute('y2',ground-16);l.setAttribute('stroke','#3e9e2e');l.setAttribute('stroke-width','2.5');svg.appendChild(l);} }
+   else if(name==='灌木'){ circle(cx,ground-16,14,'#2e8b57'); rect(cx-2,ground-14,4,14,'#7a5a34'); }
+   else if(name==='森林'){ rect(cx-3,ground-40,6,40,'#7a5a34'); tri(cx,ground-30,34,44,'#1E7a3e'); }
+   else if(name==='弃耕农田'){ rect(cx-16,ground-6,32,6,'#8a6a3a'); for(let k=0;k<3;k++){const gx=cx-10+k*10;const l=document.createElementNS(NS,'line');l.setAttribute('x1',gx);l.setAttribute('y1',ground);l.setAttribute('x2',gx);l.setAttribute('y2',ground-8);l.setAttribute('stroke','#7e9e3e');l.setAttribute('stroke-width','2');svg.appendChild(l);} }
+  }
+  // stage label boxes along bottom
+  for(let s=0;s<stages.length;s++){
+   const cx=40+s*spacing+26;
+   const on=s<=st;
+   txt(cx,ground+34,stages[s].n,on?'#16120A':'#b7ac90','9','middle');
+   if(s<stages.length-1)txt(cx+spacing/2,ground+34,'→',on&&s<st?'#E86A17':'#b7ac90','11','middle');
+  }
+  const cur=stages[st];
+  out.innerHTML='阶段 '+(st+1)+'/'+stages.length+':<b>'+cur.n+'</b> —— '+cur.d+(st===stages.length-1?' <b>('+(type==='prim'?'初生':'次生')+'演替完成)</b>':'');
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');type=b.dataset.t;step=0;draw();};});
+ document.getElementById('succNext').onclick=function(){const stages=type==='prim'?primStages:secStages;if(step<stages.length-1)step++;draw();};
+ document.getElementById('succReset').onclick=function(){step=0;draw();};
+ draw();
+})();
+
+/* ===== ⑧ 样方法取样演示 ===== */
+(function(){
+ const svg=document.getElementById('quadSvg'),out=document.getElementById('quadOut');
+ const NS='http://www.w3.org/2000/svg';
+ const quadN=document.getElementById('quadN'),vQuad=document.getElementById('vQuad');
+ const FW=320,FH=200,FX=20,FY=16;
+ const total=180; // true individuals
+ let pts=[];
+ function scatter(){
+  pts=[];
+  for(let i=0;i<total;i++){
+   // clustered-ish but roughly uniform
+   pts.push([FX+8+Math.random()*(FW-16),FY+8+Math.random()*(FH-16)]);
+  }
+ }
+ function txt(x,y,s,col,size,anc){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',size||'11');t.setAttribute('font-weight','800');t.setAttribute('fill',col||'#16120A');if(anc)t.setAttribute('text-anchor',anc);t.textContent=s;svg.appendChild(t);}
+ function draw(placeQuads){
+  const n=+quadN.value;vQuad.textContent=n;
+  svg.innerHTML='';
+  const bg=document.createElementNS(NS,'rect');bg.setAttribute('x',FX);bg.setAttribute('y',FY);bg.setAttribute('width',FW);bg.setAttribute('height',FH);bg.setAttribute('fill','#eaf3e2');bg.setAttribute('stroke','#16120A');bg.setAttribute('stroke-width','3');svg.appendChild(bg);
+  // individuals
+  pts.forEach(p=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r',2.4);c.setAttribute('fill','#1E9E86');svg.appendChild(c);});
+  const qs=FH*0.28; // quadrat size (square)
+  let counts=[];
+  if(placeQuads){
+   const areaField=FW*FH,areaQuad=qs*qs;
+   for(let i=0;i<n;i++){
+    const qx=FX+4+Math.random()*(FW-qs-8);
+    const qy=FY+4+Math.random()*(FH-qs-8);
+    const r=document.createElementNS(NS,'rect');r.setAttribute('x',qx);r.setAttribute('y',qy);r.setAttribute('width',qs);r.setAttribute('height',qs);r.setAttribute('fill','rgba(232,106,23,0.18)');r.setAttribute('stroke','#E86A17');r.setAttribute('stroke-width','2.5');svg.appendChild(r);
+    let c=0;pts.forEach(p=>{if(p[0]>=qx&&p[0]<=qx+qs&&p[1]>=qy&&p[1]<=qy+qs)c++;});
+    counts.push(c);
+   }
+   const avgPerQuad=counts.reduce((a,b)=>a+b,0)/n;
+   const density=avgPerQuad/(qs*qs); // per svg-unit^2
+   const trueDensity=total/(FW*FH);
+   const estTotal=Math.round(density*FW*FH);
+   out.innerHTML='布下 <b>'+n+'</b> 个样方,平均每样方 <b>'+avgPerQuad.toFixed(1)+'</b> 个 → 估算全场约 <b>'+estTotal+'</b> 个(真实 '+total+' 个)。'+(n>=6?'样方越多、越随机,估计越接近真实值。':'样方偏少时波动较大,多取几个更准。');
+  } else {
+   txt(FX+FW/2,FY+FH/2,'点"随机布样方"开始',' #6b5d3a','12','middle');
+   out.innerHTML='绿点=草地上的个体(真实共 '+total+' 个)。样方法用<b>随机</b>样方的平均密度去估算全场,样方越多越准。';
+  }
+ }
+ quadN.oninput=function(){draw(false);};
+ document.getElementById('quadGo').onclick=function(){draw(true);};
+ scatter();draw(false);
+})();
+
+/* ===== ⑪ 自测 ===== */
+(function(){
+ const qs=[
+  {q:"1. 种群最基本的数量特征是什么?",a:"种群密度。它是单位面积或体积内某种群的个体数。"},
+  {q:"2. 哪些特征直接决定种群密度?年龄组成和性别比例呢?",a:"出生率死亡率、迁入率迁出率直接决定密度;年龄组成能预测趋势,性别比例通过影响出生率间接影响密度,二者都不直接决定密度。"},
+  {q:"3. 标志重捕法的计算式是什么?",a:"N = (初次标记数 M × 重捕总数 n) ÷ 重捕中被标记数 m。原理:标记比例 M÷N = 重捕标记比例 m÷n。"},
+  {q:"4. 若标记物容易脱落,估算 N 会偏大还是偏小?为什么?",a:"偏大。脱落使重捕中被认出的标记个体 m 偏小,分母变小,估算 N 偏大。"},
+  {q:"5. J 型曲线的数学表达式与条件是什么?",a:"Nt = N0·λ^t,λ 恒定。条件:食物空间无限、气候适宜、无天敌无传染病的理想状态,无 K 值。"},
+  {q:"6. S 型曲线的增长速率在何处最大?K 处是多少?",a:"增长速率在 K/2 处最大;在 K 处增长速率为 0(数量稳定在 K)。"},
+  {q:"7. 增长率和增长速率有何区别(以 J 型为例)?",a:"J 型的增长率(倍数,λ−1)保持不变,但增长速率(每单位时间新增个体数)越来越大。"},
+  {q:"8. 渔业为何要把捕捞后的种群维持在 K/2?",a:"K/2 时增长速率最大,种群恢复最快,能实现最大可持续产量。"},
+  {q:"9. 灭鼠时正确的持久做法是什么?为什么单纯捕杀效果差?",a:"应降低环境容纳量 K(断绝食物、减少栖所)。单纯捕杀使种群落到 K/2 附近增长速率最大,回升更快。"},
+  {q:"10. 如何从数量曲线判断捕食关系中谁是捕食者?",a:"先增先减、数量多的是被捕食者;峰值滞后、数量少的是捕食者(此消彼长且有先后)。"},
+  {q:"11. 群落垂直分层的主要决定因素是什么?动物分层受什么影响?",a:"植物的垂直分层主要由光照决定;动物分层则依赖植物提供的食物和栖息空间。"},
+  {q:"12. 初生演替与次生演替的根本区别?各举一例。",a:"看起点有无土壤和繁殖体:初生从无土壤的裸地开始(裸岩、火山岩);次生保留土壤条件(弃耕农田、火灾后草原),速度更快。"}
+ ];
+ const quiz=document.getElementById('quiz');
+ qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

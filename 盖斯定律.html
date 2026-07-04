@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>反应热与盖斯定律 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1E9E86;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--green)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .seesaw-wrap{position:relative;height:170px;margin:6px 0}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .cons-eq{font-family:"SF Mono",Consolas,monospace;font-size:15px;font-weight:800;cursor:pointer;padding:8px 10px;border:3px solid var(--ink);margin:6px 0;background:var(--card)}
+  .cons-eq:hover{background:var(--yellow)}
+  .hess-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:3px solid var(--ink);background:var(--card);padding:8px 10px;margin:6px 0;font-family:"SF Mono",Consolas,monospace;font-weight:800;font-size:13.5px}
+  .hess-row select{border:3px solid var(--ink);font-weight:800;font-size:13px;padding:3px 6px;font-family:inherit;background:#fff}
+  .hess-eqtxt{flex:1;min-width:180px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>反应热与盖斯定律</h1>
+    <p class="lead">焓变 ΔH、热化学方程式、盖斯定律、键能计算、燃烧热与中和热——把"能量账本"讲成人话,再动手拼一拼、拖一拖,你就能在选择与填空里稳拿反应热的分。</p>
+
+    <div class="say">🗣️ <b>把反应想成一次"搬家"。</b> 反应物是起点、生成物是终点。ΔH 就是"终点减起点"的能量差账单:<b>放热</b>(ΔH&lt;0)是往低处搬、多出来的能量放给了环境;<b>吸热</b>(ΔH&gt;0)是往高处搬、得从环境借能量。<br>盖斯定律说的更绝:<b>这笔账只看起点和终点,不管你走哪条路。</b> 所以只要把几个"已知路线"(热化学方程式)像搭积木一样加加减减、乘个倍数,就能拼出你要的那条路,ΔH 也跟着做同样的加减倍乘。抓住<b>"符号跟着放吸、状态要标全、系数和 ΔH 同倍"</b>这几句,反应热就再也不翻车。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 焓变 ΔH 与放热吸热 → ② 热化学方程式书写规范 → ③ 盖斯定律(线性组合) → ④ 由键能求 ΔH → ⑤ 燃烧热与中和热 → ⑥ 反应热大小比较。每节都配可拨动、可拖动的可视化。</div>
+
+    <!-- ========================= 1 焓变 ========================= -->
+    <h2 class="b">① 反应热与焓变 ΔH</h2>
+    <p class="lead">化学反应总伴随能量变化。恒压下反应吸收或放出的热量叫<b>反应热</b>,用<b>焓变 ΔH</b> 表示,单位 kJ/mol。</p>
+    <div class="card">
+      <div class="mono">ΔH = H(生成物) − H(反应物)　　放热 ΔH &lt; 0(负)　　吸热 ΔH &gt; 0(正)</div>
+      <h3>放热与吸热的本质(两种视角)</h3>
+      <table>
+        <tr><th>视角</th><th>放热反应(ΔH&lt;0)</th><th>吸热反应(ΔH&gt;0)</th></tr>
+        <tr><td>能量高低</td><td>反应物总能量 &gt; 生成物总能量</td><td>反应物总能量 &lt; 生成物总能量</td></tr>
+        <tr><td>键能视角</td><td>成键放出 &gt; 断键吸收</td><td>成键放出 &lt; 断键吸收</td></tr>
+        <tr><td>常见例子</td><td>燃烧、中和、金属与酸、多数化合</td><td>C+CO₂、C+H₂O、多数分解、Ba(OH)₂·8H₂O 与 NH₄Cl</td></tr>
+      </table>
+      <p class="trap">⚠ ΔH 是<b>带符号</b>的物理量。说"放热 100 kJ/mol"要写 ΔH = −100 kJ/mol,那个负号不能丢;比大小时也必须连符号一起比(见 ⑥)。</p>
+      <p class="trap">⚠ 反应吸放热与反应"是否需要加热"无关。铝热反应要点燃却是放热;有些吸热反应常温也能自发。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 能量-反应进程图(可拖)</div>
+      <p class="step">拖动<b>反应物能量</b>、<b>生成物能量</b>、<b>过渡态(活化能顶点)</b>三个点。图会实时算出 ΔH(放热/吸热)、正反应活化能 Eₐ 与逆反应活化能 Eₐ'。</p>
+      <canvas id="cEnergy" width="760" height="330"></canvas>
+      <div class="readout">
+        <div><b>ΔH</b><span id="enDH">—</span></div>
+        <div><b>正反应活化能 Eₐ</b><span id="enEa">—</span></div>
+        <div><b>逆反应活化能 Eₐ'</b><span id="enEar">—</span></div>
+      </div>
+      <p class="trap" id="enNote" style="margin-top:6px"></p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 放热 / 吸热 能量条</div>
+      <p class="step">选一个反应,看反应物与生成物两根"能量柱"的高低,差值就是 ΔH。柱往下掉=放热,柱往上爬=吸热。</p>
+      <div class="chips" id="barChips"></div>
+      <svg id="barSvg" viewBox="0 0 760 220"></svg>
+      <div class="verdict" id="barNote"></div>
+    </div>
+
+    <!-- ========================= 2 热化学方程式 ========================= -->
+    <h2 class="g">② 热化学方程式书写规范</h2>
+    <div class="card">
+      <div class="eq">2H₂(g) + O₂(g) → 2H₂O(l)　　ΔH = −571.6 kJ/mol</div>
+      <h3>四条铁律</h3>
+      <p class="step">① <b>标状态:</b> 每种物质后必须注明聚集状态——气(g)、液(l)、固(s)、溶液(aq)。同一物质状态不同,ΔH 不同。</p>
+      <p class="step">② <b>ΔH 带正负与单位:</b> 放热写负、吸热写正,单位统一 kJ/mol,写在方程式后面并空一格。</p>
+      <p class="step">③ <b>系数是物质的量,可用分数:</b> 热化学方程式里系数只表示"多少 mol",允许写 ½、¾;系数改变几倍,ΔH 就跟着改变几倍。</p>
+      <p class="step">④ <b>不写"↑↓"、可逆号照常:</b> 热化学方程式不标气体沉淀符号;条件(点燃、催化剂)一般不写在等号上。</p>
+      <table>
+        <tr><th>写法</th><th>是否规范</th><th>问题</th></tr>
+        <tr><td>H₂ + ½O₂ = H₂O　ΔH=−285.8 kJ/mol</td><td>❌</td><td>没标状态</td></tr>
+        <tr><td>H₂(g) + ½O₂(g) → H₂O(l)　ΔH=−285.8 kJ</td><td>❌</td><td>单位漏 /mol</td></tr>
+        <tr><td>2H₂(g) + O₂(g) → 2H₂O(l)　ΔH=−285.8 kJ/mol</td><td>❌</td><td>系数翻倍,ΔH 忘翻倍(应为 −571.6)</td></tr>
+        <tr><td>H₂(g) + ½O₂(g) → H₂O(l)　ΔH=−285.8 kJ/mol</td><td>✅</td><td>状态全、符号对、单位对、系数与 ΔH 匹配</td></tr>
+      </table>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 热化学方程式书写检查器</div>
+      <p class="step">选一个"病句"或"正确"写法,逐条检查:状态、ΔH 符号、单位、系数与 ΔH 是否同倍。看清一个规范方程式到底该长什么样。</p>
+      <div class="chips" id="checkChips"></div>
+      <div class="mono" id="checkEq" style="text-align:center"></div>
+      <div id="checkList"></div>
+      <div class="verdict" id="checkVerdict"></div>
+    </div>
+
+    <!-- ========================= 3 盖斯定律 ========================= -->
+    <h2 class="o">③ 盖斯定律(核心)</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--orange)">🗣️ <b>反应热只与始态、终态有关,与途径无关。</b> 不管中间绕多少步,只要起点终点相同,总 ΔH 就相同。这让我们能用<b>已知</b>的热化学方程式,通过加、减、乘倍数,"拼"出难以直接测的目标反应的 ΔH。</div>
+      <h3>操作口诀:目标反应 = 已知方程的线性组合</h3>
+      <p class="step">① <b>方程怎么加减,ΔH 就怎么加减;</b> ② <b>方程乘几倍,ΔH 就乘几倍;</b> ③ <b>方程反写(倒过来),ΔH 变号。</b></p>
+      <h3>范例:求 C(s) + ½O₂(g) → CO(g) 的 ΔH</h3>
+      <div class="mono">已知① C(s)+O₂(g)→CO₂(g)　ΔH₁=−393.5 kJ/mol
+已知② CO(g)+½O₂(g)→CO₂(g)　ΔH₂=−283.0 kJ/mol
+目标 = ① − ②　→　ΔH = ΔH₁ − ΔH₂ = −393.5 −(−283.0) = −110.5 kJ/mol</div>
+      <p class="step">技巧:把目标方程里的物质当"锚点",在已知方程里定位它该在左还是右、系数是多少,决定每个已知方程<b>乘几倍、正写还是反写</b>,消去中间物种(这里 CO₂ 被抵消)。</p>
+      <p class="trap">⚠ 反写方程一定要变号!乘倍数时 ΔH 同步乘。相加后中间产物(如上例 CO₂)必须刚好抵消,否则组合系数取错了。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 盖斯定律拼接器</div>
+      <p class="step">给你 3 个已知热化学方程式。给每个选一个<b>系数</b>(负数=反写变号,0=不用)。系统自动线性组合,消项后拼出净反应并算出总 ΔH。试着凑出目标: <b>C(s)+½O₂(g) → CO(g)</b>。</p>
+      <div id="hessRows"></div>
+      <div class="ctrl"><button class="vbtn" id="hessTarget">一键填入正确组合</button><button class="vbtn dark" id="hessClear">清零</button></div>
+      <div class="mono" id="hessNet" style="text-align:center">选择系数后这里显示拼出的净反应</div>
+      <div class="readout">
+        <div><b>拼出的 ΔH</b><span id="hessDH">—</span></div>
+        <div><b>是否消掉中间物</b><span id="hessClean">—</span></div>
+        <div><b>与目标是否一致</b><span id="hessMatch">—</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 4 键能 ========================= -->
+    <h2 class="v">④ 由键能求反应热</h2>
+    <div class="card">
+      <div class="mono">ΔH = 反应物总键能(断键吸收) − 生成物总键能(成键放出)</div>
+      <p class="step"><b>记忆:</b> 断键要吸能(拆房子费劲)、成键要放能(盖房子发热)。反应物的键全断掉吸的能量,减去生成物的键全成时放的能量,就是 ΔH。</p>
+      <h3>范例:H₂(g) + Cl₂(g) → 2HCl(g)</h3>
+      <div class="mono">断键吸收 = E(H−H) + E(Cl−Cl) = 436 + 243 = 679 kJ
+成键放出 = 2 × E(H−Cl) = 2 × 431 = 862 kJ
+ΔH = 679 − 862 = −183 kJ/mol　(放热)</div>
+      <p class="trap">⚠ 别把公式记反!是"反应物键能 − 生成物键能"。若记成生成物减反应物,符号全错。</p>
+      <p class="trap">⚠ 数键要数全:1 mol N₂ 有 1 个 N≡N,1 mol H₂O 有 2 个 O−H,1 mol CH₄ 有 4 个 C−H。系数别漏乘。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 键能计算器</div>
+      <p class="step">选一个反应,拖动各键的键能,实时算断键总吸收、成键总放出与 ΔH,并判定放热/吸热。看键能一变,ΔH 怎么跟着走。</p>
+      <div class="chips" id="bondChips"></div>
+      <div id="bondSliders"></div>
+      <div class="readout">
+        <div><b>断键吸收(反应物)</b><span id="bdBreak">—</span></div>
+        <div><b>成键放出(生成物)</b><span id="bdForm">—</span></div>
+        <div><b>ΔH = 断 − 成</b><span id="bdDH">—</span></div>
+      </div>
+      <div class="verdict" id="bdVerdict"></div>
+    </div>
+
+    <!-- ========================= 5 燃烧热中和热 ========================= -->
+    <h2 class="r">⑤ 燃烧热与中和热</h2>
+    <div class="card">
+      <h3>燃烧热</h3>
+      <p class="step"><b>定义:</b> 25℃、101 kPa 下,<b>1 mol</b> 纯物质<b>完全燃烧</b>生成<b>稳定氧化物</b>时放出的热量。</p>
+      <p class="step">要点:①"1 mol 可燃物"为基准,故写热化学方程式时可燃物系数常为分数;② 完全燃烧生成稳定氧化物:C→CO₂(不是 CO)、H→H₂O(<b>液态 l</b>,不是气态)、S→SO₂;③ 燃烧热 ΔH 恒为负。</p>
+      <div class="mono">C₈H₁₈(l) + 25/2 O₂(g) → 8CO₂(g) + 9H₂O(l)　ΔH = −5518 kJ/mol</div>
+      <h3>中和热</h3>
+      <p class="step"><b>定义:</b> 稀溶液中,<b>强酸与强碱</b>反应生成<b>1 mol H₂O(l)</b> 时放出的热量,约 <b>57.3 kJ/mol</b>(ΔH=−57.3 kJ/mol)。</p>
+      <p class="step">要点:① 以"生成 1 mol 水"为基准;② 必须是稀的强酸强碱;③ 若用弱酸/弱碱,电离要吸热,放出热量<b>偏小</b>(&lt;57.3);④ 若用浓硫酸,稀释放热使测得值<b>偏大</b>。</p>
+      <table>
+        <tr><th>概念</th><th>基准量</th><th>ΔH 符号</th><th>易错</th></tr>
+        <tr><td>燃烧热</td><td>1 mol 可燃物完全燃烧</td><td>负</td><td>H 要生成液态水;C 要到 CO₂</td></tr>
+        <tr><td>中和热</td><td>生成 1 mol H₂O(l)</td><td>负</td><td>弱酸弱碱偏小;浓酸偏大</td></tr>
+      </table>
+      <p class="trap">⚠ 中和热与燃烧热的 ΔH 都是负值,但描述时可只说"放出 57.3 kJ",写方程式时不能丢负号。</p>
+    </div>
+
+    <!-- ========================= 6 反应热大小比较 ========================= -->
+    <h2 class="v">⑥ 反应热大小比较</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--violet)">🗣️ <b>比 ΔH 大小是"连符号一起比",不是比放热多少。</b> 因为放热 ΔH 是负数,放热越多、ΔH 反而越小(越负)。这是最容易被绕晕的一句话。</div>
+      <h3>三个要盯住的变量</h3>
+      <p class="step">① <b>符号:</b> ΔH 带正负一起比大小。−100 kJ/mol &lt; −50 kJ/mol(前者更小);吸热(正)一定大于放热(负)。</p>
+      <p class="step">② <b>状态:</b> 生成液态水比生成气态水多放热(气→液再放热),故生成 l 的 ΔH 更小(更负)。反应物/生成物聚集状态不同,ΔH 不同。</p>
+      <p class="step">③ <b>量(系数):</b> 系数翻倍 ΔH 翻倍。比较前先统一到"同样多的物质的量"。</p>
+      <div class="mono">例:S(g)+O₂(g)→SO₂(g) ΔH₁　与　S(s)+O₂(g)→SO₂(g) ΔH₂
+S(g) 能量比 S(s) 高 → 从 S(g) 出发放热更多 → ΔH₁ &lt; ΔH₂(ΔH₁ 更负)</div>
+      <p class="trap">⚠ 口误重灾区:"放热多所以 ΔH 大"是错的。放热多 → ΔH 更负 → ΔH 反而<b>小</b>。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 反应热大小比较器</div>
+      <p class="step">给两个反应 A、B(带 ΔH)。点"比较",系统连符号一起比,给出 ΔH 大小关系,并点出隐藏陷阱(状态/量/符号)。</p>
+      <div class="chips" id="cmpChips"></div>
+      <svg id="cmpSvg" viewBox="0 0 760 200"></svg>
+      <div class="verdict" id="cmpVerdict"></div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑦ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑧ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. ΔH 丢符号:"放热 100 kJ/mol"必须写 ΔH=−100 kJ/mol,负号是 ΔH 的一部分。</p>
+      <p class="trap">2. 比大小忘带符号:放热越多 ΔH 越小(越负)。−200 &lt; −100,别当成"200 大"。</p>
+      <p class="trap">3. 热化学方程式不标状态,或写了 ↑↓。必须标 (g)(l)(s)(aq),不写气体沉淀符号。</p>
+      <p class="trap">4. 系数翻倍而 ΔH 没翻倍。系数与 ΔH 必须"同倍",分数系数也合法。</p>
+      <p class="trap">5. 盖斯拼接时反写方程忘记 ΔH 变号,或乘倍数只乘了方程没乘 ΔH。</p>
+      <p class="trap">6. 键能公式记反:是"反应物总键能 − 生成物总键能",别写成生成物减反应物。</p>
+      <p class="trap">7. 燃烧热里 H 写成生成气态水:必须是液态 H₂O(l);C 必须到 CO₂ 才算完全燃烧。</p>
+      <p class="trap">8. 用弱酸弱碱测中和热偏小(电离吸热);用浓硫酸偏大(稀释放热)。</p>
+      <p class="trap">9. 单位漏 /mol:ΔH 单位是 kJ/mol,不是 kJ。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>盖斯定律 = 状态函数思想:</b> 焓 H 是状态函数,只看始末。这与"能量守恒"是一体两面——绕任何路径回到同一状态,总能量变化必然相等,否则就能造永动机。</p>
+      <p class="step">▸ <b>键能法 vs 盖斯法互相印证:</b> 同一反应两种算法结果应一致。键能给的是近似(键能是平均值),盖斯基于实测数据更准;考试若两者矛盾,以盖斯/实验数据为准。</p>
+      <p class="step">▸ <b>能量图上一眼读三量:</b> 反应物到峰是 Eₐ(正),生成物到峰是 Eₐ'(逆),ΔH = Eₐ − Eₐ'。催化剂降低 Eₐ 与 Eₐ' 但<b>不改变 ΔH</b>(始末不变)。</b></p>
+      <p class="step">▸ <b>把线性组合写成矩阵/向量:</b> 每个已知方程是一个"反应向量",目标是它们的线性组合。中间物系数必须清零——这就是解线性方程组,拔高题可直接列方程解组合系数。</p>
+      <p class="step">▸ <b>盖斯定律的应用场景:</b> 无法直接测(如 C→CO 总伴随 CO₂)、反应太慢、条件苛刻的反应热,都靠盖斯"迂回"求得。理解这一点,就懂了它为什么是核心工具。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:化学反应速率与平衡 / 水溶液离子平衡</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function sup(n){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>map[c]||c).join('');}
+function signStr(x){return (x>0?'+':'')+x;}
+
+/* ============ 交互1 能量-反应进程图(可拖) ============ */
+(function(){
+  const cv=document.getElementById('cEnergy'),ctx=cv.getContext('2d');
+  const W=760,H=330,padL=60,padB=44,padT=24,padR=30;
+  // 能量值(kJ/mol,示意坐标)
+  let react=200,prod=90,peak=340;
+  const plotW=W-padL-padR,plotH=H-padB-padT;
+  const Emax=500,Emin=0;
+  function ey(e){return padT+plotH*(1-(e-Emin)/(Emax-Emin));}
+  // 三个可拖点的 x 位置固定
+  const xR=padL+plotW*0.12, xP=padL+plotW*0.88, xPk=padL+plotW*0.5;
+  const handles=[
+    {name:'react',x:xR,get:()=>react,set:v=>react=v},
+    {name:'prod', x:xP,get:()=>prod, set:v=>prod=v},
+    {name:'peak', x:xPk,get:()=>peak, set:v=>peak=v}
+  ];
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // axes
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padL,padT-6);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+    ctx.fillText('能量 / (kJ/mol)',padL-46,padT+2);
+    ctx.fillText('反应进程 →',W-140,H-padB+30);
+    // curve: reactant plateau -> peak -> product plateau
+    const yR=ey(react),yP=ey(prod),yPk=ey(peak);
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=4;ctx.beginPath();
+    ctx.moveTo(padL,yR);ctx.lineTo(xR,yR);
+    ctx.bezierCurveTo(xR+plotW*0.18,yR, xPk-plotW*0.14,yPk, xPk,yPk);
+    ctx.bezierCurveTo(xPk+plotW*0.14,yPk, xP-plotW*0.18,yP, xP,yP);
+    ctx.lineTo(W-padR,yP);ctx.stroke();
+    // dashed guides
+    ctx.setLineDash([5,5]);ctx.strokeStyle='#999';ctx.lineWidth=1.5;
+    [ [yR,'反应物'],[yP,'生成物'],[yPk,'过渡态'] ].forEach(function(g){ctx.beginPath();ctx.moveTo(padL,g[0]);ctx.lineTo(W-padR,g[0]);ctx.stroke();});
+    ctx.setLineDash([]);
+    // labels
+    ctx.fillStyle='#1450C8';ctx.font='bold 12px sans-serif';
+    ctx.fillText('反应物',xR-18,yR-10);ctx.fillText('生成物',xP-18,yP+18);ctx.fillText('过渡态',xPk-20,yPk-10);
+    // draggable handles
+    handles.forEach(function(h){const y=ey(h.get());ctx.beginPath();ctx.arc(h.x,y,8,0,7);ctx.fillStyle='#E86A17';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.stroke();});
+    // ΔH arrow between reactant and product levels at right
+    const ax=W-padR-8;
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ax,yR);ctx.lineTo(ax,yP);ctx.stroke();
+    ctx.fillStyle='#7A3FF2';ctx.font='bold 11px sans-serif';ctx.fillText('ΔH',ax-30,(yR+yP)/2);
+    // readouts
+    const dH=Math.round(prod-react), Ea=Math.round(peak-react), Ear=Math.round(peak-prod);
+    document.getElementById('enDH').textContent=signStr(dH)+' kJ/mol';
+    document.getElementById('enEa').textContent=Ea+' kJ/mol';
+    document.getElementById('enEar').textContent=Ear+' kJ/mol';
+    const note=document.getElementById('enNote');
+    if(dH<0){note.textContent='⚠ 生成物低于反应物 → ΔH<0 → 放热反应。ΔH = 生成物能量 − 反应物能量 = '+signStr(dH)+' kJ/mol,也等于 Eₐ − Eₐ′。';note.style.color='#E0382A';}
+    else if(dH>0){note.textContent='⚠ 生成物高于反应物 → ΔH>0 → 吸热反应。ΔH = '+signStr(dH)+' kJ/mol = Eₐ − Eₐ′。';note.style.color='#1450C8';}
+    else{note.textContent='⚠ 生成物与反应物等高 → ΔH=0(理想化)。';note.style.color='#16120A';}
+  }
+  let dragging=null;
+  function pos(evt){const r=cv.getBoundingClientRect();const sx=cv.width/r.width,sy=cv.height/r.height;const t=evt.touches?evt.touches[0]:evt;return{x:(t.clientX-r.left)*sx,y:(t.clientY-r.top)*sy};}
+  function pick(p){for(let i=0;i<handles.length;i++){const y=ey(handles[i].get());if(Math.abs(p.x-handles[i].x)<20&&Math.abs(p.y-y)<20)return handles[i];}return null;}
+  function moveTo(p){if(!dragging)return;let e=Emin+(1-(p.y-padT)/plotH)*(Emax-Emin);e=Math.max(20,Math.min(480,e));
+    if(dragging.name==='peak'){e=Math.max(e,react+5,prod+5);}
+    dragging.set(Math.round(e));
+    if(dragging.name!=='peak'&&peak<Math.max(react,prod)+5){peak=Math.max(react,prod)+40;}
+    draw();}
+  cv.addEventListener('mousedown',function(e){dragging=pick(pos(e));});
+  window.addEventListener('mousemove',function(e){if(dragging){moveTo(pos(e));}});
+  window.addEventListener('mouseup',function(){dragging=null;});
+  cv.addEventListener('touchstart',function(e){dragging=pick(pos(e));if(dragging)e.preventDefault();},{passive:false});
+  cv.addEventListener('touchmove',function(e){if(dragging){moveTo(pos(e));e.preventDefault();}},{passive:false});
+  cv.addEventListener('touchend',function(){dragging=null;});
+  draw();
+})();
+
+/* ============ 交互2 放热吸热能量条 ============ */
+(function(){
+  const data=[
+    {k:'H₂ + Cl₂ → 2HCl',r:80,p:-103,dh:-183,note:'反应物能量高、生成物能量低 → 放热,ΔH=−183 kJ/mol。柱子往下掉。'},
+    {k:'C + O₂ → CO₂(燃烧)',r:100,p:-293.5,dh:-393.5,note:'燃烧是典型放热,ΔH=−393.5 kJ/mol。反应物柱高、生成物柱低。'},
+    {k:'CaCO₃ → CaO + CO₂(分解)',r:0,p:178.5,dh:178.5,note:'分解吸热:生成物能量更高 → ΔH=+178.5 kJ/mol。柱子往上爬。'},
+    {k:'C + CO₂ → 2CO(吸热)',r:0,p:172.5,dh:172.5,note:'碳还原 CO₂ 吸热,ΔH=+172.5 kJ/mol。需要持续高温供能。'},
+    {k:'N₂ + 3H₂ ⇌ 2NH₃(放热)',r:60,p:-32,dh:-92,note:'合成氨放热,ΔH=−92 kJ/mol。放热但需高温高压催化(动力学原因)。'}
+  ];
+  const chips=document.getElementById('barChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;draw();};chips.appendChild(b);});
+  const svg=document.getElementById('barSvg');
+  function draw(){
+    const d=data[cur];
+    // map energy to y: choose scale so both fit. baseline center 110
+    const all=[d.r,d.p];const maxE=Math.max(...all,50),minE=Math.min(...all,-50);
+    const top=30,bot=175,span=bot-top;
+    function ey(e){return bot-((e-minE)/(maxE-minE||1))*span;}
+    const yR=ey(d.r),yP=ey(d.p);
+    const rColor='#E0382A',pColor= d.dh<0?'#1E9E86':'#1450C8';
+    let s='';
+    s+='<line x1="40" y1="'+bot+'" x2="720" y2="'+bot+'" stroke="#16120A" stroke-width="2"/>';
+    // reactant bar
+    s+='<rect x="140" y="'+yR+'" width="150" height="'+(bot-yR)+'" fill="'+rColor+'" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="215" y="'+(yR-8)+'" text-anchor="middle" font-size="13" font-weight="800">反应物</text>';
+    // product bar
+    s+='<rect x="470" y="'+yP+'" width="150" height="'+(bot-yP)+'" fill="'+pColor+'" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="545" y="'+(yP-8)+'" text-anchor="middle" font-size="13" font-weight="800">生成物</text>';
+    // ΔH arrow
+    const midx=380;
+    s+='<line x1="'+midx+'" y1="'+yR+'" x2="'+midx+'" y2="'+yP+'" stroke="#7A3FF2" stroke-width="3"/>';
+    const dir=d.dh<0?'▼ 放热':'▲ 吸热';
+    s+='<text x="'+midx+'" y="'+((yR+yP)/2)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#7A3FF2">ΔH</text>';
+    s+='<text x="'+midx+'" y="'+((yR+yP)/2+18)+'" text-anchor="middle" font-size="12" font-weight="800" fill="'+(d.dh<0?'#1E9E86':'#1450C8')+'">'+dir+'</text>';
+    svg.innerHTML=s;
+    const nb=document.getElementById('barNote');nb.textContent=d.note;nb.style.borderColor=d.dh<0?'#1E9E86':'#1450C8';
+  }
+  draw();
+})();
+
+/* ============ 交互3 热化学方程式检查器 ============ */
+(function(){
+  const data=[
+    {k:'病句A',eq:'H₂ + ½O₂ = H₂O　ΔH = −285.8 kJ/mol',
+     checks:[['标状态','✗ 缺 (g)(l)(s)'],['ΔH 符号','✓ 放热为负'],['单位 /mol','✓ 有 kJ/mol'],['系数与 ΔH 同倍','✓ 匹配']],
+     ok:false,fix:'应写:H₂(g) + ½O₂(g) → H₂O(l)　ΔH=−285.8 kJ/mol(补全状态)。'},
+    {k:'病句B',eq:'H₂(g) + ½O₂(g) → H₂O(l)　ΔH = −285.8 kJ',
+     checks:[['标状态','✓ 状态齐全'],['ΔH 符号','✓ 放热为负'],['单位 /mol','✗ 漏了 /mol'],['系数与 ΔH 同倍','✓ 匹配']],
+     ok:false,fix:'应写 ΔH=−285.8 kJ/mol(单位补 /mol)。'},
+    {k:'病句C',eq:'2H₂(g) + O₂(g) → 2H₂O(l)　ΔH = −285.8 kJ/mol',
+     checks:[['标状态','✓ 状态齐全'],['ΔH 符号','✓ 放热为负'],['单位 /mol','✓ 有 kJ/mol'],['系数与 ΔH 同倍','✗ 系数翻倍 ΔH 没翻倍']],
+     ok:false,fix:'系数是原来 2 倍,ΔH 应为 −571.6 kJ/mol。'},
+    {k:'病句D',eq:'C(s) + O₂(g) → CO₂(g)↑　ΔH = −393.5 kJ/mol',
+     checks:[['标状态','✓ 状态齐全'],['ΔH 符号','✓ 放热为负'],['单位 /mol','✓ 有 kJ/mol'],['不写 ↑↓','✗ 多写了 ↑']],
+     ok:false,fix:'热化学方程式不标 ↑↓:应写 C(s)+O₂(g)→CO₂(g)　ΔH=−393.5 kJ/mol。'},
+    {k:'正确√',eq:'H₂(g) + ½O₂(g) → H₂O(l)　ΔH = −285.8 kJ/mol',
+     checks:[['标状态','✓ 状态齐全'],['ΔH 符号','✓ 放热为负'],['单位 /mol','✓ 有 kJ/mol'],['系数与 ΔH 同倍','✓ 匹配']],
+     ok:true,fix:'完全规范:状态全、符号对、单位对、系数与 ΔH 匹配。'}
+  ];
+  const chips=document.getElementById('checkChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  function render(){
+    const d=data[cur];
+    document.getElementById('checkEq').textContent=d.eq;
+    let s='<table><tr><th>检查项</th><th>结果</th></tr>';
+    d.checks.forEach(c=>{const bad=c[1].indexOf('✗')>=0;s+='<tr><td>'+c[0]+'</td><td style="color:'+(bad?'#E0382A':'#1E9E86')+';font-weight:900">'+c[1]+'</td></tr>';});
+    s+='</table>';
+    document.getElementById('checkList').innerHTML=s;
+    const v=document.getElementById('checkVerdict');
+    v.textContent=(d.ok?'✅ 规范! ':'❌ 不规范 → ')+d.fix;
+    v.style.borderColor=d.ok?'#1E9E86':'#E0382A';
+  }
+  render();
+})();
+
+/* ============ 交互4 盖斯定律拼接器 ============ */
+(function(){
+  // 物种统一编号,系数向量方式表示每个已知反应(左负右正的净化学计量)
+  // 物种: C(s), O2, CO2, CO
+  const species=['C(s)','O₂','CO₂','CO'];
+  // 每个反应记为产物系数 - 反应物系数
+  const reactions=[
+    {label:'① C(s)+O₂→CO₂', dh:-393.5, vec:[-1,-1,1,0]},
+    {label:'② CO+½O₂→CO₂', dh:-283.0, vec:[0,-0.5,1,-1]},
+    {label:'③ 2CO+O₂→2CO₂', dh:-566.0, vec:[0,-1,2,-2]}
+  ];
+  const target={vec:[-1,-0.5,0,1], dh:-110.5, label:'C(s)+½O₂→CO(g)'};
+  const coeffChoices=[-2,-1,0,1,2];
+  const rowsBox=document.getElementById('hessRows');
+  const selects=[];
+  reactions.forEach((r,i)=>{
+    const row=document.createElement('div');row.className='hess-row';
+    const sel=document.createElement('select');
+    coeffChoices.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=(c>0?'+'+c:''+c)+'×';sel.appendChild(o);});
+    sel.value='0';sel.onchange=recompute;selects.push(sel);
+    row.appendChild(sel);
+    const txt=document.createElement('span');txt.className='hess-eqtxt';txt.innerHTML=r.label+'　ΔH='+r.dh+' kJ/mol';
+    row.appendChild(txt);
+    rowsBox.appendChild(row);
+  });
+  function fmtVec(vec){
+    // build reactants (negative) and products (positive)
+    const left=[],right=[];
+    vec.forEach((v,i)=>{if(Math.abs(v)<1e-9)return;const mag=Math.abs(v);const coef=(mag===1?'':(mag%1===0?mag:mag))+'';
+      const term=(mag===1?'':mag+' ')+species[i];
+      if(v<0)left.push(term);else right.push(term);});
+    if(left.length===0&&right.length===0)return '(空)';
+    return (left.join(' + ')||'∅')+' → '+(right.join(' + ')||'∅');
+  }
+  function recompute(){
+    const vec=[0,0,0,0];let dh=0;
+    selects.forEach((s,i)=>{const c=+s.value;dh+=c*reactions[i].dh;for(let k=0;k<4;k++)vec[k]+=c*reactions[i].vec[k];});
+    document.getElementById('hessNet').textContent=fmtVec(vec);
+    document.getElementById('hessDH').textContent=(dh===0?'—':signStr(+dh.toFixed(1))+' kJ/mol');
+    // clean = intermediates (O2 index1, CO2 index2) — target should keep no CO2; check CO2 cancelled to 0 unless target has it
+    const co2Left=Math.abs(vec[2]-target.vec[2])<1e-9;
+    const anySel=selects.some(s=>+s.value!==0);
+    document.getElementById('hessClean').textContent = !anySel?'—':(Math.abs(vec[2])<1e-9?'✓ CO₂ 已消去':'✗ CO₂ 残留 '+vec[2]);
+    // match target vec (up to nothing) and dh
+    let match=anySel;
+    for(let k=0;k<4;k++){if(Math.abs(vec[k]-target.vec[k])>1e-9)match=false;}
+    const m=document.getElementById('hessMatch');
+    if(!anySel){m.textContent='—';m.style.color='#16120A';}
+    else if(match&&Math.abs(dh-target.dh)<0.1){m.textContent='✓ 命中目标 ('+target.label+')';m.style.color='#1E9E86';}
+    else{m.textContent='✗ 未命中,继续调';m.style.color='#E0382A';}
+  }
+  document.getElementById('hessTarget').onclick=function(){selects[0].value='1';selects[1].value='-1';selects[2].value='0';recompute();};
+  document.getElementById('hessClear').onclick=function(){selects.forEach(s=>s.value='0');recompute();};
+  recompute();
+})();
+
+/* ============ 交互5 键能计算器 ============ */
+(function(){
+  const data=[
+    {k:'H₂ + Cl₂ → 2HCl', breakB:[['H−H',436,1],['Cl−Cl',243,1]], formB:[['H−Cl',431,2]],
+     note:'断键 436+243=679,成键 2×431=862,ΔH=679−862=−183 kJ/mol,放热。'},
+    {k:'N₂ + 3H₂ → 2NH₃', breakB:[['N≡N',946,1],['H−H',436,3]], formB:[['N−H',391,6]],
+     note:'断键 946+3×436=2254,成键 6×391=2346,ΔH=2254−2346=−92 kJ/mol,放热。'},
+    {k:'2H₂ + O₂ → 2H₂O(g)', breakB:[['H−H',436,2],['O=O',498,1]], formB:[['O−H',463,4]],
+     note:'断键 2×436+498=1370,成键 4×463=1852,ΔH=1370−1852=−482 kJ/mol,放热。'},
+    {k:'H₂ + I₂ → 2HI', breakB:[['H−H',436,1],['I−I',151,1]], formB:[['H−I',299,2]],
+     note:'断键 436+151=587,成键 2×299=598,ΔH=587−598=−11 kJ/mol,微放热。'}
+  ];
+  const chips=document.getElementById('bondChips');let cur=0;
+  const slidersBox=document.getElementById('bondSliders');
+  const cur_vals={};
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;build();};chips.appendChild(b);});
+  let vals=[];
+  function build(){
+    const d=data[cur];
+    vals=[];
+    slidersBox.innerHTML='';
+    const bonds=[];
+    d.breakB.forEach(b=>bonds.push({side:'break',name:b[0],val:b[1],n:b[2]}));
+    d.formB.forEach(b=>bonds.push({side:'form',name:b[0],val:b[1],n:b[2]}));
+    bonds.forEach((b,idx)=>{
+      const wrap=document.createElement('div');wrap.className='ctrl';
+      const lab=document.createElement('span');lab.innerHTML=(b.side==='break'?'断 ':'成 ')+b.name+' ×'+b.n+':<b id="bv'+idx+'">'+b.val+'</b> kJ/mol';
+      const sl=document.createElement('input');sl.type='range';sl.min='100';sl.max='1000';sl.value=b.val;
+      sl.oninput=function(){b.val=+sl.value;document.getElementById('bv'+idx).textContent=b.val;compute(bonds);};
+      wrap.appendChild(lab);wrap.appendChild(sl);slidersBox.appendChild(wrap);
+    });
+    compute(bonds);
+  }
+  function compute(bonds){
+    let br=0,fo=0;
+    bonds.forEach(b=>{if(b.side==='break')br+=b.val*b.n;else fo+=b.val*b.n;});
+    const dh=br-fo;
+    document.getElementById('bdBreak').textContent=br+' kJ';
+    document.getElementById('bdForm').textContent=fo+' kJ';
+    document.getElementById('bdDH').textContent=signStr(dh)+' kJ/mol';
+    const v=document.getElementById('bdVerdict');
+    if(dh<0){v.textContent='ΔH='+signStr(dh)+' kJ/mol <0 → 放热(成键放出 > 断键吸收)。';v.style.borderColor='#1E9E86';}
+    else if(dh>0){v.textContent='ΔH='+signStr(dh)+' kJ/mol >0 → 吸热(断键吸收 > 成键放出)。';v.style.borderColor='#1450C8';}
+    else{v.textContent='ΔH=0(断键与成键恰好抵消)。';v.style.borderColor='#16120A';}
+  }
+  build();
+})();
+
+/* ============ 交互6 反应热大小比较器 ============ */
+(function(){
+  const data=[
+    {k:'状态陷阱(气/液水)',
+     A:{t:'H₂(g)+½O₂(g)→H₂O(g)',dh:-241.8},
+     B:{t:'H₂(g)+½O₂(g)→H₂O(l)',dh:-285.8},
+     note:'生成液态水比气态水多放热(气→液再放热)。放热多 → ΔH 更负。故 ΔH(B) < ΔH(A)。⚠陷阱:别以为"放热多的 ΔH 大"。'},
+    {k:'状态陷阱(固/气硫)',
+     A:{t:'S(s)+O₂(g)→SO₂(g)',dh:-297},
+     B:{t:'S(g)+O₂(g)→SO₂(g)',dh:-594},
+     note:'S(g) 能量高于 S(s),从更高能量出发放热更多。ΔH(B) < ΔH(A)。⚠比较时始态状态不同要留意。'},
+    {k:'量(系数)陷阱',
+     A:{t:'C(s)+O₂(g)→CO₂(g)',dh:-393.5},
+     B:{t:'2C(s)+2O₂(g)→2CO₂(g)',dh:-787},
+     note:'系数翻倍 ΔH 翻倍。B 是 A 的 2 倍,放热更多,ΔH(B) < ΔH(A)。⚠比较前应统一物质的量。'},
+    {k:'吸热 vs 放热',
+     A:{t:'C(s)+CO₂(g)→2CO(g)',dh:172.5},
+     B:{t:'C(s)+O₂(g)→CO₂(g)',dh:-393.5},
+     note:'A 吸热(ΔH>0)、B 放热(ΔH<0)。正数一定大于负数,故 ΔH(A) > ΔH(B)。⚠符号定乾坤。'}
+  ];
+  const chips=document.getElementById('cmpChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;draw();};chips.appendChild(b);});
+  const svg=document.getElementById('cmpSvg');
+  function draw(){
+    const d=data[cur];
+    const a=d.A.dh,b=d.B.dh;
+    // number line from -700 to +300
+    const lo=-700,hi=300,x0=60,x1=700;
+    function nx(v){return x0+((v-lo)/(hi-lo))*(x1-x0);}
+    let s='';
+    s+='<line x1="'+x0+'" y1="110" x2="'+x1+'" y2="110" stroke="#16120A" stroke-width="3"/>';
+    // zero mark
+    const zx=nx(0);
+    s+='<line x1="'+zx+'" y1="95" x2="'+zx+'" y2="125" stroke="#7A3FF2" stroke-width="3"/>';
+    s+='<text x="'+zx+'" y="145" text-anchor="middle" font-size="12" font-weight="800" fill="#7A3FF2">0</text>';
+    s+='<text x="'+x0+'" y="90" font-size="11" font-weight="800" fill="#6b5d3a">← ΔH 越小(越负,放热越多)</text>';
+    s+='<text x="'+(x1-150)+'" y="90" font-size="11" font-weight="800" fill="#6b5d3a">ΔH 越大(吸热) →</text>';
+    // points
+    const pA=nx(a),pB=nx(b);
+    s+='<circle cx="'+pA+'" cy="110" r="10" fill="#E0382A" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+pA+'" y="80" text-anchor="middle" font-size="13" font-weight="900" fill="#E0382A">A</text>';
+    s+='<text x="'+pA+'" y="172" text-anchor="middle" font-size="11" font-weight="700">'+signStr(a)+'</text>';
+    s+='<circle cx="'+pB+'" cy="110" r="10" fill="#1450C8" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+pB+'" y="80" text-anchor="middle" font-size="13" font-weight="900" fill="#1450C8">B</text>';
+    s+='<text x="'+pB+'" y="172" text-anchor="middle" font-size="11" font-weight="700">'+signStr(b)+'</text>';
+    svg.innerHTML=s;
+    const rel = a<b?'ΔH(A) < ΔH(B)':(a>b?'ΔH(A) > ΔH(B)':'ΔH(A) = ΔH(B)');
+    const v=document.getElementById('cmpVerdict');
+    v.innerHTML='<div style="font-family:monospace">A: '+d.A.t+'　ΔH='+signStr(a)+' kJ/mol</div>'
+      +'<div style="font-family:monospace">B: '+d.B.t+'　ΔH='+signStr(b)+' kJ/mol</div>'
+      +'<div style="margin-top:6px;color:#7A3FF2">结论:'+rel+'(连符号一起比!)</div>'
+      +'<div style="margin-top:4px;color:#E0382A;font-size:13px">'+d.note+'</div>';
+    v.style.borderColor='#7A3FF2';
+  }
+  draw();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'用盖斯定律求目标 ΔH',sig:'给几个已知热化学方程式,求某个"不好直接测"的反应 ΔH;题干出现『根据盖斯定律』『由下列数据』。',act:'把目标方程物质当锚点,定位每个已知方程该乘几倍、正写还是反写(反写变号),相加消去中间物,ΔH 做相同加减倍乘。',ex:'由 C+O₂→CO₂(ΔH₁=−393.5)与 CO+½O₂→CO₂(ΔH₂=−283.0),求 C+½O₂→CO:目标=①−②,ΔH=ΔH₁−ΔH₂=−110.5 kJ/mol。',trap:'反写忘变号;乘倍数只乘方程没乘 ΔH;中间物没消干净。'},
+    {t:'由键能计算反应热',sig:'给出各化学键的键能,求某气相反应 ΔH;表格列 E(H−H)、E(Cl−Cl) 之类。',act:'ΔH=反应物总键能−生成物总键能;逐一数清每种键的个数(乘系数),断键吸能、成键放能。',ex:'H₂+Cl₂→2HCl:ΔH=(436+243)−2×431=679−862=−183 kJ/mol。',trap:'公式记反(应反应物减生成物);键数漏乘(2HCl 有 2 个 H−Cl)。'},
+    {t:'热化学方程式书写/正误判断',sig:'写热化学方程式,或判断给定方程式是否正确;选项在状态、符号、单位、系数上做文章。',act:'四查:标状态(g/l/s/aq)、ΔH 正负、单位 kJ/mol、系数与 ΔH 同倍;不写 ↑↓。',ex:'H₂(g)+½O₂(g)→H₂O(l) ΔH=−285.8 kJ/mol 为正确写法;若系数翻倍,ΔH 也应翻倍为 −571.6。',trap:'漏状态、漏 /mol、系数变而 ΔH 未变、多写 ↑↓。'},
+    {t:'比较反应热 ΔH 大小',sig:'给两个反应(带 ΔH)比大小,或用『>、<』连接;常涉及水气/液、硫固/气、系数倍数。',act:'连符号一起比:放热越多 ΔH 越小(越负);再看状态、量是否统一。',ex:'生成 H₂O(l) 的 ΔH 比生成 H₂O(g) 更小(更负),因为多放了气液转化的热。',trap:'把"放热多"当成"ΔH 大";忽略状态或系数差异。'},
+    {t:'能量图/反应进程图分析',sig:'给能量-进程曲线,读 ΔH、正逆活化能、催化剂影响;图上有峰和两条能级线。',act:'ΔH=生成物能量−反应物能量;Eₐ(正)=峰−反应物,Eₐ′(逆)=峰−生成物;ΔH=Eₐ−Eₐ′;催化剂降 Eₐ 不改 ΔH。',ex:'反应物 200、峰 340、生成物 90:ΔH=−110、Eₐ=140、Eₐ′=250,放热。',trap:'把活化能当反应热;以为催化剂能改变 ΔH。'},
+    {t:'燃烧热/中和热概念与计算',sig:'求某物质燃烧热、写燃烧热方程;或中和热测定实验、误差分析。',act:'燃烧热以 1 mol 可燃物为基准、生成稳定氧化物(H→液态水);中和热以生成 1 mol H₂O(l) 为基准,约 −57.3 kJ/mol。',ex:'C₈H₁₈(l)+25/2O₂(g)→8CO₂(g)+9H₂O(l) ΔH=−5518 kJ/mol(1 mol 辛烷)。',trap:'H 写成气态水;弱酸弱碱测中和热偏小;浓硫酸偏大。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(m=>{const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 某反应放热 92 kJ/mol,ΔH 应写成多少?',a:'ΔH=−92 kJ/mol。放热为负,负号不能丢,单位是 kJ/mol。'},
+    {q:'2. 盖斯定律的核心内容是什么?',a:'反应热只与反应体系的始态和终态有关,与反应途径无关。因此目标反应的 ΔH 可由已知热化学方程式线性组合(加减倍乘)求得。'},
+    {q:'3. 已知 C(s)+O₂(g)→CO₂(g) ΔH₁=−393.5,CO(g)+½O₂(g)→CO₂(g) ΔH₂=−283.0。求 C(s)+½O₂(g)→CO(g) 的 ΔH。',a:'目标=①−②,ΔH=ΔH₁−ΔH₂=−393.5−(−283.0)=−110.5 kJ/mol。'},
+    {q:'4. 由键能求 ΔH 的公式是什么?写出 H₂+Cl₂→2HCl 的计算。',a:'ΔH=反应物总键能−生成物总键能。=(436+243)−2×431=679−862=−183 kJ/mol,放热。'},
+    {q:'5. 判断:2H₂(g)+O₂(g)→2H₂O(l) ΔH=−285.8 kJ/mol 是否正确?',a:'不正确。系数是"1 mol H₂ 版本"的 2 倍,ΔH 应同倍为 −571.6 kJ/mol。'},
+    {q:'6. 生成液态水与生成气态水的反应,哪个 ΔH 更小?为什么?',a:'生成液态水的 ΔH 更小(更负)。因为气态水变液态水还要放热,故从反应物到 H₂O(l) 放出的总热量更多,ΔH 更负。'},
+    {q:'7. 中和热的定义是什么?约为多少?用弱酸测会偏大还是偏小?',a:'稀溶液中强酸与强碱反应生成 1 mol H₂O(l) 放出的热,约 57.3 kJ/mol(ΔH=−57.3)。用弱酸/弱碱因电离吸热,测得偏小。'},
+    {q:'8. 燃烧热要求生成"稳定氧化物",H 元素应生成什么状态的水?',a:'生成液态水 H₂O(l)。若写成气态水,放热量偏小,不符合燃烧热定义。'},
+    {q:'9. 催化剂能改变反应的 ΔH 吗?为什么?',a:'不能。催化剂只降低正逆反应的活化能、加快速率,但始态终态不变,ΔH 不变。'},
+    {q:'10. 能量图中,反应物 200、过渡态 340、生成物 90(kJ/mol)。求 ΔH、正逆活化能。',a:'ΔH=90−200=−110 kJ/mol(放热);正反应 Eₐ=340−200=140;逆反应 Eₐ′=340−90=250 kJ/mol。'},
+    {q:'11. 比较:A 吸热 ΔH=+172.5,B 放热 ΔH=−393.5,谁的 ΔH 大?',a:'ΔH(A)>ΔH(B)。正数一定大于负数,连符号一起比,吸热的 ΔH 大于放热的 ΔH。'},
+    {q:'12. 为什么 C(s)→CO(g) 的反应热不能直接测量,要用盖斯定律?',a:'因为碳不完全燃烧总会伴随生成部分 CO₂,无法只得到 CO,故直接测不准。用盖斯定律通过 C→CO₂ 与 CO→CO₂ 两个可测反应间接求得。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

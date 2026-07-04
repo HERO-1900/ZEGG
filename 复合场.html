@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>带电粒子在复合场中的运动 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl button.on{background:var(--accent)}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:110px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+  .toggles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .toggles label{border:3px solid var(--ink);padding:6px 11px;font-weight:800;font-size:13px;background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink);display:flex;align-items:center;gap:6px}
+  .toggles label.on{background:var(--accent);color:#fff}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>带电粒子在复合场中的运动</h1>
+    <p class="lead">重力场 + 电场 + 磁场,任意两个或三个叠在一起,就是「复合场」。它是高考物理压轴大题的常客,难点从来不是公式，而是「先分清有几个力、各自什么方向」，再判断合力决定什么轨迹。这页给你一套受力分析三步法 + 四大典型情境模板，再用动画把速度选择器、平衡后圆周、三力直线一个个拨给你看。</p>
+
+    <div class="say">🗣️ <b>复合场(人话版):</b> 别被吓到——复合场就是把你学过的三种力<b>叠罗汉</b>。第一步永远是<b>数力</b>:有没有重力(mg，永远竖直向下)？带电就一定有电场力(qE，沿电场方向，正电荷同向、负电荷反向)？有磁场且粒子在动就有洛伦兹力(qvB，永远垂直于速度)。第二步看<b>合力</b>:合力为零→匀速直线(或静止)；合力恒定→类平抛/匀变速；只剩洛伦兹力→匀速圆周。第三步<b>能量</b>:洛伦兹力永远<b>不做功</b>(垂直速度)，改变动能的只能是电场力和重力。</div>
+
+    <div class="keybox"><b>三步法速记:</b> ① <b>数力定方向</b>——先画重力 mg↓，再画电场力 qE(沿E，正同负反)，最后画洛伦兹力 qvB(⊥v，左手定则/右手定则)。② <b>看合力定轨迹</b>——合力=0 直线匀速；合力恒定 抛物线；合力只剩洛伦兹力 圆周。③ <b>能量分析</b>——洛伦兹力不做功，W合=W电+W重=ΔEk。</div>
+
+    <h2 class="b">① 核心原理:三种力的叠加与受力分析三步</h2>
+    <div class="card">
+      <h3>三种力，各有各的脾气</h3>
+      <table>
+        <tr><th>力</th><th>大小</th><th>方向</th><th>做功?</th></tr>
+        <tr><td>重力</td><td>mg</td><td>永远竖直向下</td><td>随竖直位移做功</td></tr>
+        <tr><td>电场力</td><td>qE</td><td>沿电场E:正电荷同向，负电荷反向</td><td>随沿场位移做功</td></tr>
+        <tr><td>洛伦兹力</td><td>qvB</td><td>永远⊥速度v(左手定则，负电荷反向)</td><td><b>永远不做功</b></td></tr>
+      </table>
+      <p class="trap">⚠ 洛伦兹力的大小 qvB 随速度 v 变，方向随 v 转——所以它单独作用时给出<b>圆周</b>(大小不变、方向永远垂直)。它是三种力里唯一「不做功」的力，能量分析时直接划掉。</p>
+    </div>
+    <div class="card">
+      <h3>四大典型情境(务必记熟)</h3>
+      <p style="margin:6px 0"><b>① 速度选择器:</b> 电场力与洛伦兹力平衡 qE = qvB → <b>v = E/B</b>。只有这个速度的粒子直行通过，与电荷种类、正负、质量<b>全无关</b>——这是它能「选速度」的原因。</p>
+      <p style="margin:6px 0"><b>② 重力与电场力平衡:</b> 若 qE = mg(方向相反)，则重力和电场力抵消，粒子在磁场中<b>合力只剩洛伦兹力</b> → 做<b>匀速圆周运动</b>，半径 r = mv/(qB)。</p>
+      <p style="margin:6px 0"><b>③ 三力都有且平衡:</b> 重力、电场力、洛伦兹力三者合力为零 → 粒子做<b>匀速直线运动</b>(因为洛伦兹力要求速度方向、大小都不变，合力才能持续为零)。</p>
+      <p style="margin:6px 0"><b>④ 回旋加速器 / 磁流体发电机:</b> 回旋加速器——磁场负责圆周(不做功、周期 T=2πm/(qB) 与速率无关)，交变电场负责在缝隙里加速(做功增能)。磁流体发电机——洛伦兹力把正负电荷推向两极，形成电压 U=Bvd。</p>
+    </div>
+    <div class="keybox"><b>能量总账:</b> 洛伦兹力 <b>W洛=0</b>(永远)。所以动能的变化只由电场力和重力负责:<b>W电 + W重 = ΔEk</b>。粒子在纯磁场里绕圈，速率、动能永远不变。</div>
+
+    <div class="viz">
+      <div class="vlabel">🌀 互动 1 — 复合场粒子运动总模拟(勾选场、调大小与电荷正负 → 看轨迹)</div>
+      <canvas id="simCv" width="700" height="360"></canvas>
+      <div class="toggles" id="simToggles">
+        <label data-f="g" class="on"><input type="checkbox" checked>重力场 g</label>
+        <label data-f="e"><input type="checkbox">电场 E(↓向下)</label>
+        <label data-f="b"><input type="checkbox">磁场 B(⊙出屏)</label>
+      </div>
+      <div class="ctrl">
+        <button id="simGo">▶ 发射</button><button id="simReset">↺ 重置</button>
+        <button id="simCharge" class="on">电荷:正 (+)</button>
+        <label>E <input id="simE" type="range" min="0" max="10" value="5" step="1"></label>
+        <label>B <input id="simB" type="range" min="1" max="10" value="5" step="1"></label>
+        <label>v₀ <input id="simV" type="range" min="2" max="10" value="6" step="1"></label>
+      </div>
+      <div class="verdict" id="simVerdict">勾选不同的场，看轨迹变化:纯重力→抛物线；纯磁场→圆周；重力+磁场→摆线。</div>
+      <p class="small">红点=粒子。绿=重力，蓝=电场力，橙=洛伦兹力(实时矢量)。物理为真实数值积分:F合=mg+qE+qv×B。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🧭 互动 2 — 受力分析交互(选情境 → 显示 mg / qE / qvB 三矢量)</div>
+      <svg id="forceSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="fscene on" data-s="0">速度选择器</button>
+        <button class="fscene" data-s="1">重力=电场力(磁场圆周)</button>
+        <button class="fscene" data-s="2">三力平衡直线</button>
+        <button class="fscene" data-s="3">纯磁场圆周</button>
+      </div>
+      <div class="verdict" id="forceNote"></div>
+      <p class="small">绿=重力mg，蓝=电场力qE，橙=洛伦兹力qvB，虚线=速度v。看每个情境里哪些力出现、如何平衡。</p>
+    </div>
+
+    <h2 class="o">② 情境A · 速度选择器:qE = qvB → v = E/B</h2>
+    <div class="card">
+      <div class="eq">平衡条件:qE = qvB  →  v = E/B</div>
+      <p style="margin:8px 0"><b>原理:</b> 正交的电场和磁场区域，一束速度各异的带电粒子射入。电场力 qE 与洛伦兹力 qvB 方向相反。只有当 <b>qE = qvB</b> 即 <b>v = E/B</b> 时二力平衡，粒子<b>直线</b>通过；速度偏大→洛伦兹力占上风偏转，偏小→电场力占上风反向偏转。</p>
+      <p style="margin:8px 0"><b class="tag">关键结论:</b> 选出的速度 v = E/B <b>与电荷正负、电荷量、质量都无关</b>！因为 qE=qvB 两边的 q 约掉了。所以它对正负电荷、任意质量都选同一个速度。</p>
+      <p class="trap">⚠ 陷阱:① 速度选择器里一般<b>不计重力</b>(粒子质量极小或题目声明忽略)；若题目强调有重力，要三力一起分析。② 判断哪个粒子偏向哪边，靠比较 qE 与 qvB 谁大——v>E/B 时洛伦兹力大。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 速度选择器(调 E、B → 只有 v=E/B 的粒子直行)</div>
+      <canvas id="selCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="selGo">▶ 发射三束</button><button id="selReset">↺ 重置</button>
+        <label>E <input id="selE" type="range" min="2" max="10" value="6" step="1"></label>
+        <label>B <input id="selB" type="range" min="2" max="10" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>选出速度 v=E/B</b><span id="selVsel">1.00</span></div>
+        <div><b>慢粒子(偏电场力)</b><span id="selSlow">偏下</span></div>
+        <div><b>刚好粒子</b><span id="selJust">直行✓</span></div>
+        <div><b>快粒子(偏洛伦兹)</b><span id="selFast">偏上</span></div>
+      </div>
+      <p class="small">三束不同速度的正电荷同时射入。改 E、B 看选出的速度 v=E/B 变化——只有正好等于 E/B 的那束走直线。</p>
+    </div>
+
+    <h2 class="g">③ 情境B · 重力与电场力平衡 → 磁场中匀速圆周</h2>
+    <div class="card">
+      <div class="eq">若 qE = mg(方向相反) → 合力只剩洛伦兹力 → 匀速圆周 r = mv/(qB)</div>
+      <p style="margin:8px 0"><b>原理:</b> 让电场力竖直向上、恰好等于重力(qE=mg)，两者抵消。剩下的唯一的力是洛伦兹力——它永远垂直于速度、大小不变(速率不变)，正是<b>匀速圆周运动</b>的向心力条件。</p>
+      <div class="eq">洛伦兹力提供向心力:qvB = mv²/r  →  r = mv/(qB)，T = 2πm/(qB)</div>
+      <p style="margin:8px 0"><b class="tag">秒杀点:</b> 周期 T = 2πm/(qB) <b>与速率 v、半径 r 无关</b>！速度大半径大，但转一圈时间不变(回旋加速器的物理基础)。</p>
+      <p class="trap">⚠ 陷阱:圆周运动的前提是「合力恰好只剩洛伦兹力」。只要重力没被电场力精确抵消，剩余的恒力会叠加，轨迹就不是圆(变成摆线/复杂曲线)。做题先验证 qE 是否真的等于 mg。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⭕ 互动 4 — 重力与电场力平衡演示(拖动看 qE 与 mg 是否相等 → 圆周 or 偏离)</div>
+      <canvas id="circCv" width="700" height="320"></canvas>
+      <div class="ctrl">
+        <button id="circGo">▶ 播放</button><button id="circReset">↺ 重置</button>
+        <label>电场力 qE <input id="circE" type="range" min="0" max="20" value="10" step="1"></label>
+        <label>磁场 B <input id="circB" type="range" min="3" max="10" value="6" step="1"></label>
+      </div>
+      <div class="verdict" id="circNote"></div>
+      <p class="small">重力 mg 固定=10。滑动 qE:等于10时电场力抵消重力→标准圆周；不等时残余合力叠加→轨迹变形(摆线)。</p>
+    </div>
+
+    <h2 class="v">④ 情境C · 三力平衡 → 匀速直线</h2>
+    <div class="card">
+      <div class="eq">mg + qE + qvB = 0(矢量和为零) → 匀速直线运动</div>
+      <p style="margin:8px 0"><b>原理:</b> 三个力矢量相加恰好为零，合力为零 → 粒子保持<b>匀速直线</b>。注意:洛伦兹力 qvB 依赖速度 v(大小和方向)。要维持合力恒为零，v 必须保持不变——这正好是匀速直线运动，自洽。</p>
+      <p style="margin:8px 0"><b>典型配置:</b> 例如粒子水平匀速飞行:重力 mg 向下，电场力 qE 一部分平衡重力，洛伦兹力 qvB 补上剩余——三力围成闭合三角形(首尾相接)则平衡。</p>
+      <p class="trap">⚠ 陷阱:三力平衡下速度一旦被扰动(变大/变小/换方向)，洛伦兹力立即变化，平衡被打破。所以「三力平衡直线」是一个对速度<b>敏感的临界态</b>，只有特定 v 才成立。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 5 — 三力平衡直线匀速(三矢量首尾相接闭合 → 直线)</div>
+      <svg id="triSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="triGo">▶ 演示平衡</button><button id="triBreak">✗ 破坏平衡(改v)</button><button id="triReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="triNote"></div>
+      <p class="small">左:力矢量三角形(绿mg+蓝qE+橙qvB)。右:粒子轨迹。三力闭合→直线；破坏后合力不为零→偏转。</p>
+    </div>
+
+    <h2 class="r">⑤ 能量分析:洛伦兹力不做功</h2>
+    <div class="card">
+      <div class="eq">W洛 = 0(永远) →  W电 + W重 = ΔEk</div>
+      <p style="margin:8px 0"><b>为什么洛伦兹力不做功:</b> 洛伦兹力 F=qvB 永远垂直于速度 v。功 W=F·s·cosθ，而 F⊥v(即 F⊥位移方向)，cos90°=0，所以做功恒为零。它只改变速度<b>方向</b>，绝不改变速度<b>大小</b>(动能)。</p>
+      <p style="margin:8px 0"><b>谁改变动能:</b> 只有电场力(W电=qU=qEd沿场)和重力(W重=mgh)能改变动能。做能量分析时，把洛伦兹力直接划掉，只算电场力和重力做的功。</p>
+      <p class="trap">⚠ 陷阱:① 别把「粒子在磁场里加速」写成洛伦兹力做功——纯磁场里速率不变！要加速必须靠电场(回旋加速器的缝隙电场)。② 磁流体发电机中，是洛伦兹力把电荷「推」到两极形成电压，但它对单个电荷仍不做功，能量来自推动流体的外力/动能。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 6 — 能量分析:洛伦兹力不做功，电场力改变动能</div>
+      <canvas id="enCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button class="enmode on" data-m="0">纯磁场(圆周,动能不变)</button>
+        <button class="enmode" data-m="1">磁场+电场(电场力加速)</button>
+      </div>
+      <svg id="enBar" viewBox="0 0 700 70" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small">上:粒子轨迹。下:动能条。纯磁场里动能条纹丝不动(W洛=0)；加电场后，电场力做正功→动能条增长。</p>
+    </div>
+
+    <h2 class="b">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 速度选择器 / 质谱仪前级</h3>
+      <p><b class="tag">触发信号:</b>正交电磁场，一束不同速度粒子入射，问哪些粒子直行/如何选速度/E与B关系。</p>
+      <p><b class="tag">标准动作:</b>写 qE=qvB → v=E/B(约去q)。判偏向:v>E/B洛伦兹力大偏向洛伦兹力侧，v<E/B电场力大偏向电场力侧。</p>
+      <p><b class="tag">示例(带解):</b>E=2×10⁴ V/m，B=0.4 T，求选出速度。v=E/B=2×10⁴/0.4=5×10⁴ m/s。所有 5×10⁴ m/s 的粒子(不论正负、质量)都直行。</p>
+      <p class="trap">陷阱:算出的 v 与 q、m 无关别写成有关；一般不计重力(除非题目指明)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 重力被电场力平衡后的磁场圆周</h3>
+      <p><b class="tag">触发信号:</b>带电小球/液滴在正交电磁场中做圆周，题目给 qE=mg 或要你先验证。</p>
+      <p><b class="tag">标准动作:</b>先验证 qE=mg(电场力方向须竖直向上抵消重力) → 合力只剩洛伦兹力 → qvB=mv²/r → r=mv/(qB)，T=2πm/(qB)。</p>
+      <p><b class="tag">示例(带解):</b>m=1×10⁻⁵ kg，q=2×10⁻⁶ C，B=0.5 T，v=100 m/s，且 qE=mg 已满足。r=mv/(qB)=(1×10⁻⁵×100)/(2×10⁻⁶×0.5)=1×10⁻³/1×10⁻⁶=1000 m。</p>
+      <p class="trap">陷阱:没验证 qE=mg 就套圆周公式；电场力方向弄反(应竖直向上)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 三力平衡的匀速直线</h3>
+      <p><b class="tag">触发信号:</b>带电粒子在重力+电场+磁场中匀速直线飞行，求某场的大小/方向或速度。</p>
+      <p><b class="tag">标准动作:</b>合力为零，正交分解(水平、竖直)或矢量三角形闭合，列两个方程解未知量。洛伦兹力 qvB 依赖 v。</p>
+      <p><b class="tag">示例(带解):</b>粒子水平向右匀速，重力 mg 向下，磁场使洛伦兹力向上 qvB，电场力水平。竖直:qvB=mg → v=mg/(qB)；水平:qE=0 或平衡水平分量。</p>
+      <p class="trap">陷阱:忘了洛伦兹力方向垂直于v(随v定)；正负电荷洛伦兹力方向相反判错。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 复合场综合(先直线后圆周/进出场)</h3>
+      <p><b class="tag">触发信号:</b>粒子先在一个区域(如加速电场)获得速度，再进入复合场区做圆周或平衡，多段衔接。</p>
+      <p><b class="tag">标准动作:</b>分段:加速段用动能定理 qU=½mv² 求入射速度 → 复合场段判轨迹(圆周/直线/抛物线) → 速度/位置衔接。</p>
+      <p><b class="tag">示例(带解):</b>粒子经电压U加速:qU=½mv²→v=√(2qU/m)。进入 qE=mg 的复合场磁场圆周:r=mv/(qB)=√(2mU/q)/B。</p>
+      <p class="trap">陷阱:段与段速度不衔接；进入磁场区后误算速率变化(纯磁场速率不变)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 能量分析(回旋加速器/磁流体)</h3>
+      <p><b class="tag">触发信号:</b>回旋加速器求末速度/最大动能、周期；磁流体发电机求电压/电流。</p>
+      <p><b class="tag">标准动作:</b>回旋:磁场定周期 T=2πm/(qB)、半径 r=mv/(qB)；缝隙电场每次做功 qU，末动能 Ek=½mv²_max=q²B²R²/(2m)。磁流体:U=Bvd。</p>
+      <p><b class="tag">示例(带解):</b>回旋加速器 D 形盒半径 R，末速 v_max=qBR/m，最大动能 Ek=½m·v²_max=q²B²R²/(2m)。周期与速率无关。</p>
+      <p class="trap">陷阱:以为洛伦兹力给粒子加速(错，是缝隙电场加速)；末动能公式记混。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 洛伦兹力<b>永远不做功</b>——纯磁场里速率、动能不变，别写「磁场加速粒子」。</p>
+      <p class="trap">② 速度选择器 v=E/B <b>与电荷正负、q、m 全无关</b>(q约掉了)，别答成有关。</p>
+      <p class="trap">③ 圆周运动的前提是「合力恰好只剩洛伦兹力」——必须先验证 qE=mg(或重力可忽略)，否则不是圆。</p>
+      <p class="trap">④ 是否计重力:宏观带电小球/液滴通常<b>要</b>算重力；基本粒子(电子、质子)在电磁场中通常<b>忽略</b>重力(除非题目强调)。看清对象！</p>
+      <p class="trap">⑤ 电场力方向:正电荷沿E，负电荷逆E——正负别弄反。</p>
+      <p class="trap">⑥ 洛伦兹力方向用左手定则(电流方向=正电荷速度方向；负电荷再反向)，别只记大小。</p>
+      <p class="trap">⑦ 周期 T=2πm/(qB) 与速率、半径无关；能量却随 r² 增大——两者别混。</p>
+      <p class="trap">⑧ 三力平衡是对速度敏感的临界态，v 一变就破——不要以为任意速度都平衡。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 先问「合力等于什么」，轨迹自动浮现:</b> 合力=0→直线；合力=恒定矢量→类平抛(抛物线)；合力=只剩洛伦兹力(垂直v、大小随v)→圆周；恒力+洛伦兹力同时存在→摆线。把「数力→求合力→认轨迹」练成条件反射，压轴题上来就能定型。</p>
+      <p style="margin:8px 0"><b>② 把「重力+电场力」打包成一个「等效重力」:</b> 当重力和电场力都是恒力时，把它们的矢量和当作「等效重力 G_eff」，问题就退化成「等效重力场 + 磁场」。若 G_eff=0(qE抵消mg)→纯磁场圆周；若 G_eff≠0→等效的「重力场中带电粒子」，可用类平抛/摆线分析。这个打包技巧能把三力问题降维成两力。</p>
+      <p style="margin:8px 0"><b>③ 洛伦兹力不做功是能量分析的「免费简化」:</b> 任何复合场能量问题，第一步就把洛伦兹力划掉——动能变化只由电场力(qU)和重力(mgh)负责。这一刀下去，能量方程立刻清爽:½mv²−½mv₀²=qU+mgh。</p>
+      <p style="margin:8px 0"><b>④ 周期与速率无关是回旋加速器的灵魂:</b> T=2πm/(qB) 不含 v——这就是为什么用<b>固定频率</b>的交变电场就能一直和粒子同步加速。理解这一点，回旋加速器的所有问题(频率、末速度、总时间)一把抓。相对论修正(高速时质量增大、周期变长)是拔高延伸。</p>
+      <p style="margin:8px 0"><b>⑤ 用「对称性」秒杀圆周几何:</b> 磁场中圆周问题，画出圆心(在洛伦兹力方向、即垂直速度方向上，距离 r)、用弦、弧、几何对称找进出场点和偏转角。半径 r=mv/(qB) 一算，几何关系(弦长、偏角)全靠圆的对称性推，比硬算坐标快得多。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想，再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:电磁感应攻坚包、物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+
+/* canvas 箭头工具 */
+function arrow(ctx,x0,y0,x1,y1,col,w){
+  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w||3;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+  const ang=Math.atan2(y1-y0,x1-x0),h=9;
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  ctx.lineTo(x1-h*Math.cos(ang-0.4),y1-h*Math.sin(ang-0.4));
+  ctx.lineTo(x1-h*Math.cos(ang+0.4),y1-h*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+}
+/* svg 箭头 */
+function svgArrow(svg,x0,y0,x1,y1,col,w){
+  el(svg,'line',{x1:x0,y1:y0,x2:x1,y2:y1,stroke:col,'stroke-width':w||4,'stroke-linecap':'round'});
+  const ang=Math.atan2(y1-y0,x1-x0),h=12;
+  const ax=x1-h*Math.cos(ang-0.4),ay=y1-h*Math.sin(ang-0.4);
+  const bx=x1-h*Math.cos(ang+0.4),by=y1-h*Math.sin(ang+0.4);
+  el(svg,'polygon',{points:x1+','+y1+' '+ax+','+ay+' '+bx+','+by,fill:col});
+}
+
+/* ===== 互动1:复合场总模拟 ===== */
+(function(){
+  const cv=document.getElementById('simCv');const ctx=cv.getContext('2d');
+  const vd=document.getElementById('simVerdict');
+  const fields={g:true,e:false,b:false};
+  let charge=1; // +1 or -1
+  let E=5,B=5,v0=6;
+  const Es=document.getElementById('simE'),Bs=document.getElementById('simB'),Vs=document.getElementById('simV');
+  let px,py,vx,vy,running=false,trail=[];
+  const m=1,q=1; // 归一质量电荷，charge 决定符号
+  function sync(){E=+Es.value;B=+Bs.value;v0=+Vs.value;}
+  Es.oninput=Bs.oninput=Vs.oninput=()=>{sync();reset();};
+  document.querySelectorAll('#simToggles label').forEach(lb=>{
+    lb.querySelector('input').onchange=()=>{
+      fields[lb.dataset.f]=lb.querySelector('input').checked;
+      lb.classList.toggle('on',lb.querySelector('input').checked);
+      reset();describe();
+    };
+  });
+  document.getElementById('simCharge').onclick=function(){
+    charge=-charge;this.textContent=charge>0?'电荷:正 (+)':'电荷:负 (−)';
+    this.classList.toggle('on');reset();
+  };
+  function reset(){sync();px=80;py=180;vx=v0*8;vy=0;running=false;trail=[];draw();}
+  function describe(){
+    const g=fields.g,e=fields.e,b=fields.b;
+    let s='';
+    if(!g&&!e&&!b)s='没有任何场:匀速直线。';
+    else if(b&&!g&&!e)s='纯磁场:洛伦兹力⊥v，做匀速圆周(速率不变)。';
+    else if((g||e)&&!b)s='只有恒力(重力/电场力):类平抛，抛物线轨迹。';
+    else if(b&&(g||e))s='恒力+磁场:轨迹是摆线(圆周叠加漂移)。';
+    else s='多个恒力:合力恒定，抛物线。';
+    vd.textContent=s;
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 背景场标记
+    if(fields.b){ // 磁场出屏:圆点阵
+      ctx.fillStyle='rgba(20,80,200,0.18)';
+      for(let gx=40;gx<cv.width;gx+=48)for(let gy=30;gy<cv.height;gy+=48){
+        ctx.beginPath();ctx.arc(gx,gy,3,0,2*Math.PI);ctx.fill();
+      }
+    }
+    if(fields.e){ // 电场向下箭头背景
+      ctx.strokeStyle='rgba(20,80,200,0.14)';ctx.lineWidth=2;
+      for(let gx=60;gx<cv.width;gx+=90){ctx.beginPath();ctx.moveTo(gx,20);ctx.lineTo(gx,cv.height-20);ctx.stroke();}
+    }
+    // 轨迹
+    ctx.strokeStyle=RED;ctx.lineWidth=2.5;ctx.beginPath();
+    trail.forEach((p,i)=>{if(i===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1]);});
+    ctx.stroke();
+    // 粒子
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(px,py,8,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+    ctx.fillText(charge>0?'+':'−',px,py+4);ctx.textAlign='left';
+    // 实时力矢量(缩放显示)
+    const speed=Math.hypot(vx,vy)||0.001;
+    const sc=3.2;
+    if(fields.g){arrow(ctx,px,py,px,py+9*sc,GREEN,3);}
+    if(fields.e){const fe=charge*E*0.9;arrow(ctx,px,py,px,py+fe*sc,BLUE,3);}
+    if(fields.b){ // 洛伦兹力 = q v x B, B出屏(+z). F = q(v x B); v=(vx,vy,0),B=(0,0,B) => v x B=(vy*B,-vx*B,0)
+      const fbx=charge*(vy*B*0.02),fby=charge*(-vx*B*0.02);
+      arrow(ctx,px,py,px+fbx*sc*8,py+fby*sc*8,ORANGE,3);
+    }
+    // 图例
+    ctx.font='bold 12px sans-serif';
+    ctx.fillStyle=GREEN;ctx.fillText('■ 重力',14,cv.height-42);
+    ctx.fillStyle=BLUE;ctx.fillText('■ 电场力',14,cv.height-26);
+    ctx.fillStyle=ORANGE;ctx.fillText('■ 洛伦兹力',14,cv.height-10);
+  }
+  function step(){
+    if(!running)return;
+    const dt=0.016, steps=3;
+    for(let s=0;s<steps;s++){
+      let ax=0,ay=0;
+      if(fields.g)ay+=9.8*0.5;              // 重力向下
+      if(fields.e)ay+=charge*E*0.9;          // 电场力(E向下)
+      if(fields.b){ax+=charge*(vy*B*0.02);ay+=charge*(-vx*B*0.02);} // 洛伦兹
+      vx+=ax*dt*10;vy+=ay*dt*10;
+      px+=vx*dt;py+=vy*dt;
+    }
+    trail.push([px,py]);if(trail.length>1200)trail.shift();
+    if(px>cv.width+20||px<-20||py>cv.height+20||py<-20){running=false;}
+    draw();
+    if(running)requestAnimationFrame(step);
+  }
+  document.getElementById('simGo').onclick=()=>{reset();running=true;describe();requestAnimationFrame(step);};
+  document.getElementById('simReset').onclick=()=>{reset();describe();};
+  reset();describe();
+})();
+
+/* ===== 互动2:受力分析交互 ===== */
+(function(){
+  const svg=document.getElementById('forceSvg');const note=document.getElementById('forceNote');
+  let scene=0;
+  const cx=350,cy=150;
+  function draw(){
+    clr(svg);
+    // 场背景提示
+    el(svg,'rect',{x:0,y:0,width:700,height:300,fill:'#fff'});
+    // 粒子
+    el(svg,'circle',{cx:cx,cy:cy,r:16,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+5,'font-size':15,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='+';
+    const L=70;
+    let txt='';
+    if(scene===0){ // 速度选择器:电场力向下,洛伦兹力向上,平衡;v水平
+      el(svg,'line',{x1:cx-120,y1:cy,x2:cx-40,y2:cy,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+      svgArrow(svg,cx-40,cy,cx+120,cy,INK,3); // v
+      el(svg,'text',{x:cx+120,y:cy-8,'font-size':13,'font-weight':900,fill:INK}).textContent='v';
+      svgArrow(svg,cx,cy,cx,cy+L,BLUE,4); // qE 向下
+      el(svg,'text',{x:cx+8,y:cy+L+4,'font-size':13,'font-weight':900,fill:BLUE}).textContent='qE';
+      svgArrow(svg,cx,cy,cx,cy-L,ORANGE,4); // qvB 向上
+      el(svg,'text',{x:cx+8,y:cy-L-2,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='qvB';
+      txt='速度选择器:电场力 qE 与洛伦兹力 qvB 大小相等、方向相反 → 平衡 → v=E/B 时直行(不计重力)。';
+    }else if(scene===1){ // 重力=电场力,磁场圆周
+      svgArrow(svg,cx,cy,cx,cy+L,GREEN,4); // mg 向下
+      el(svg,'text',{x:cx+8,y:cy+L+4,'font-size':13,'font-weight':900,fill:GREEN}).textContent='mg';
+      svgArrow(svg,cx,cy,cx,cy-L,BLUE,4); // qE 向上
+      el(svg,'text',{x:cx+8,y:cy-L-2,'font-size':13,'font-weight':900,fill:BLUE}).textContent='qE';
+      // v 水平,洛伦兹力指向圆心
+      el(svg,'line',{x1:cx-40,y1:cy,x2:cx-160,y2:cy,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+      svgArrow(svg,cx+40,cy,cx+150,cy,INK,3);
+      el(svg,'text',{x:cx+150,y:cy-8,'font-size':13,'font-weight':900,fill:INK}).textContent='v';
+      // 圆虚线
+      el(svg,'circle',{cx:cx,cy:cy-95,r:95,fill:'none',stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'7 6'});
+      svgArrow(svg,cx,cy,cx,cy-45,ORANGE,4); // 洛伦兹力向上(向心)
+      el(svg,'text',{x:cx-40,y:cy-30,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='qvB→向心';
+      txt='qE=mg 抵消 → 合力只剩洛伦兹力 qvB(⊥v，指向圆心) → 匀速圆周 r=mv/(qB)。';
+    }else if(scene===2){ // 三力平衡直线
+      // v 水平向右
+      svgArrow(svg,cx+30,cy,cx+150,cy,INK,3);
+      el(svg,'text',{x:cx+150,y:cy-8,'font-size':13,'font-weight':900,fill:INK}).textContent='v';
+      svgArrow(svg,cx,cy,cx,cy+L,GREEN,4);
+      el(svg,'text',{x:cx+8,y:cy+L+4,'font-size':13,'font-weight':900,fill:GREEN}).textContent='mg';
+      svgArrow(svg,cx,cy,cx,cy-L*0.6,ORANGE,4); // 洛伦兹力向上一部分
+      el(svg,'text',{x:cx+8,y:cy-L*0.6-2,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='qvB';
+      svgArrow(svg,cx,cy,cx,cy-L*0.4,BLUE,4);
+      // 把 qE 画到另一位置避免重叠
+      svgArrow(svg,cx-2,cy,cx-2,cy-L*0.4-30,BLUE,4);
+      el(svg,'text',{x:cx-70,y:cy-L-2,'font-size':13,'font-weight':900,fill:BLUE}).textContent='qE';
+      txt='三力 mg+qE+qvB 矢量和=0 → 合力为零 → 匀速直线。此态对速度敏感(v变则破)。';
+    }else{ // 纯磁场圆周
+      el(svg,'circle',{cx:cx,cy:cy,r:90,fill:'none',stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'7 6'});
+      // v 切向
+      svgArrow(svg,cx,cy-90,cx+90,cy-90,INK,3);
+      el(svg,'text',{x:cx+92,y:cy-95,'font-size':13,'font-weight':900,fill:INK}).textContent='v';
+      // 洛伦兹力指向圆心
+      svgArrow(svg,cx,cy-90,cx,cy-30,ORANGE,4);
+      el(svg,'text',{x:cx+8,y:cy-55,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='qvB';
+      // 粒子挪到轨道上
+      el(svg,'circle',{cx:cx,cy:cy-90,r:13,fill:RED,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:cy-86,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='+';
+      // 中间粒子清掉(覆盖)
+      el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+      el(svg,'text',{x:cx-6,y:cy+22,'font-size':12,'font-weight':800,fill:INK}).textContent='圆心';
+      txt='纯磁场(忽略重力):洛伦兹力唯一，永远⊥v指向圆心 → 匀速圆周，速率不变，T=2πm/(qB)。';
+    }
+    note.textContent=txt;
+  }
+  document.querySelectorAll('.fscene').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.fscene').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');scene=+b.dataset.s;draw();
+  });
+  draw();
+})();
+
+/* ===== 互动3:速度选择器 ===== */
+(function(){
+  const cv=document.getElementById('selCv');const ctx=cv.getContext('2d');
+  let E=6,B=6,running=false;
+  const Es=document.getElementById('selE'),Bs=document.getElementById('selB');
+  const vsel=document.getElementById('selVsel');
+  let parts=[]; // {x,y,v,tag}
+  function sync(){E=+Es.value;B=+Bs.value;vsel.textContent=(E/B).toFixed(2);}
+  Es.oninput=Bs.oninput=()=>{sync();reset();};
+  function reset(){
+    sync();running=false;
+    const vSel=E/B;
+    parts=[
+      {y:110,v:vSel*0.6,col:GREEN,x:40},
+      {y:150,v:vSel,col:RED,x:40},
+      {y:190,v:vSel*1.5,col:VIO,x:40}
+    ];
+    draw();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 场区背景
+    ctx.fillStyle='rgba(20,80,200,0.06)';ctx.fillRect(40,60,560,200);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(40,60,560,200);
+    // B 出屏点阵
+    ctx.fillStyle='rgba(20,80,200,0.25)';
+    for(let gx=70;gx<600;gx+=54)for(let gy=80;gy<250;gy+=44){ctx.beginPath();ctx.arc(gx,gy,2.5,0,2*Math.PI);ctx.fill();}
+    // E 场向下箭头
+    ctx.strokeStyle='rgba(224,56,42,0.35)';ctx.lineWidth=2;
+    for(let gx=90;gx<600;gx+=130){arrow(ctx,gx,72,gx,110,'rgba(224,56,42,0.5)',2);}
+    ctx.fillStyle=RED;ctx.font='bold 12px sans-serif';ctx.fillText('E↓',608,80);
+    ctx.fillStyle=BLUE;ctx.fillText('B⊙',608,100);
+    // 入口狭缝
+    ctx.fillStyle=INK;ctx.fillRect(36,100,8,100);
+    ctx.font='bold 11px sans-serif';ctx.fillStyle=INK;ctx.fillText('入射',10,155);
+    // 出口
+    ctx.strokeStyle=INK;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(600,60);ctx.lineTo(600,260);ctx.stroke();ctx.setLineDash([]);
+    // 粒子
+    parts.forEach(p=>{
+      ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,6,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();
+    });
+    // 标注
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('慢(绿):电场力>洛伦兹→偏下',420,285);
+  }
+  function step(){
+    if(!running)return;
+    const vSel=E/B;
+    parts.forEach(p=>{
+      p.x+=p.v*1.6;
+      // 竖直偏转:净力 = 电场力(向下) - 洛伦兹力(向上,∝v)
+      // 正比:aq ∝ (E - v*B). v=vSel时为0
+      const net=(E - p.v*B)*0.03; // >0 向下
+      p.y+=net;
+      p.v*=1;
+    });
+    draw();
+    if(parts[0].x<600)requestAnimationFrame(step);else running=false;
+  }
+  document.getElementById('selGo').onclick=()=>{reset();running=true;requestAnimationFrame(step);};
+  document.getElementById('selReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:重力与电场力平衡→圆周 ===== */
+(function(){
+  const cv=document.getElementById('circCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('circNote');
+  const mg=10;let qE=10,B=6,running=false;
+  const Es=document.getElementById('circE'),Bs=document.getElementById('circB');
+  let px,py,vx,vy,trail=[];
+  function sync(){qE=+Es.value;B=+Bs.value;}
+  Es.oninput=Bs.oninput=()=>{sync();reset();};
+  function reset(){sync();px=350;py=240;vx=9;vy=0;trail=[];running=false;draw();describe();}
+  function describe(){
+    const diff=qE-mg;
+    let s;
+    if(Math.abs(diff)<0.5)s='qE≈mg:电场力抵消重力→合力只剩洛伦兹力→标准匀速圆周 ✓';
+    else if(diff>0)s='qE>mg:剩余向上的净力叠加→轨迹上漂的摆线(非纯圆)。';
+    else s='qE<mg:剩余向下的净力叠加→轨迹下漂的摆线(非纯圆)。';
+    note.textContent=s;
+    note.style.borderColor=Math.abs(diff)<0.5?GREEN:ORANGE;
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // B 点阵
+    ctx.fillStyle='rgba(20,80,200,0.16)';
+    for(let gx=40;gx<cv.width;gx+=46)for(let gy=30;gy<cv.height;gy+=46){ctx.beginPath();ctx.arc(gx,gy,2.5,0,2*Math.PI);ctx.fill();}
+    // 轨迹
+    ctx.strokeStyle=RED;ctx.lineWidth=2.5;ctx.beginPath();
+    trail.forEach((p,i)=>{if(i===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1]);});ctx.stroke();
+    // 粒子
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(px,py,8,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    // 力矢量
+    const sc=2.2;
+    arrow(ctx,px,py,px,py+mg*sc,GREEN,3); // mg
+    arrow(ctx,px,py,px,py-qE*sc,BLUE,3);  // qE 向上
+    ctx.font='bold 12px sans-serif';
+    ctx.fillStyle=GREEN;ctx.fillText('mg=10',14,cv.height-26);
+    ctx.fillStyle=BLUE;ctx.fillText('qE='+qE,14,cv.height-10);
+    ctx.fillStyle=ORANGE;ctx.fillText('轨迹(红)',14,20);
+  }
+  function step(){
+    if(!running)return;
+    const dt=0.02,steps=2;
+    for(let s=0;s<steps;s++){
+      let ax=0,ay=0;
+      ay+=mg*0.5;        // 重力向下
+      ay-=qE*0.5;        // 电场力向上
+      // 洛伦兹 B出屏,正电荷: F=q v×B, v×B=(vy*B,-vx*B). 用系数
+      ax+=(vy*B*0.06);ay+=(-vx*B*0.06);
+      vx+=ax*dt*10;vy+=ay*dt*10;
+      px+=vx*dt*6;py+=vy*dt*6;
+    }
+    trail.push([px,py]);if(trail.length>1400)trail.shift();
+    if(px<-30||px>cv.width+30||py<-30||py>cv.height+30)running=false;
+    draw();
+    if(running)requestAnimationFrame(step);
+  }
+  document.getElementById('circGo').onclick=()=>{reset();running=true;requestAnimationFrame(step);};
+  document.getElementById('circReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:三力平衡直线 ===== */
+(function(){
+  const svg=document.getElementById('triSvg');const note=document.getElementById('triNote');
+  let broken=false,anim=false,t=0;
+  function draw(){
+    clr(svg);
+    el(svg,'rect',{x:0,y:0,width:700,height:300,fill:'#fff'});
+    // 左:力三角形
+    el(svg,'text',{x:120,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='力矢量三角形';
+    const ox=120,oy=90;
+    if(!broken){
+      // 闭合三角形: mg向下, qE 斜上, qvB 斜上 → 首尾相接回到起点
+      svgArrow(svg,ox,oy,ox,oy+80,GREEN,4); // mg 下
+      el(svg,'text',{x:ox-26,y:oy+50,'font-size':12,'font-weight':900,fill:GREEN}).textContent='mg';
+      svgArrow(svg,ox,oy+80,ox+70,oy+30,BLUE,4); // qE
+      el(svg,'text',{x:ox+40,y:oy+70,'font-size':12,'font-weight':900,fill:BLUE}).textContent='qE';
+      svgArrow(svg,ox+70,oy+30,ox,oy,ORANGE,4); // qvB 回到起点
+      el(svg,'text',{x:ox+55,y:oy+8,'font-size':12,'font-weight':900,fill:ORANGE}).textContent='qvB';
+      el(svg,'text',{x:120,y:230,'font-size':12.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='闭合 → 合力=0';
+    }else{
+      // 破坏:qvB 变短,三角形不闭合,留缺口
+      svgArrow(svg,ox,oy,ox,oy+80,GREEN,4);
+      el(svg,'text',{x:ox-26,y:oy+50,'font-size':12,'font-weight':900,fill:GREEN}).textContent='mg';
+      svgArrow(svg,ox,oy+80,ox+70,oy+30,BLUE,4);
+      el(svg,'text',{x:ox+40,y:oy+70,'font-size':12,'font-weight':900,fill:BLUE}).textContent='qE';
+      svgArrow(svg,ox+70,oy+30,ox+20,oy+8,ORANGE,4); // 变短,不回起点
+      el(svg,'text',{x:ox+60,y:oy+8,'font-size':12,'font-weight':900,fill:ORANGE}).textContent='qvB↓';
+      // 缺口=合力
+      el(svg,'line',{x1:ox+20,y1:oy+8,x2:ox,y2:oy,stroke:RED,'stroke-width':3,'stroke-dasharray':'4 3'});
+      el(svg,'text',{x:120,y:230,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='不闭合 → 合力≠0';
+    }
+    // 右:轨迹
+    el(svg,'line',{x1:380,y1:50,x2:380,y2:260,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:520,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='粒子轨迹';
+    let d='M400 155 ';
+    if(!broken){
+      d='M400 155 L660 155'; // 直线
+    }else{
+      // 抛物线偏转
+      for(let k=0;k<=40;k++){const x=400+k*6.5;const dx=k*6.5;const y=155+0.006*dx*dx;d+=(k===0?'M':'L')+x+' '+Math.min(y,258)+' ';}
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:broken?ORANGE:GREEN,'stroke-width':4});
+    // 动画粒子
+    let ppx,ppy;
+    if(!broken){ppx=400+t*260;ppy=155;}
+    else{const dx=t*260;ppx=400+dx;ppy=Math.min(155+0.006*dx*dx,258);}
+    el(svg,'circle',{cx:ppx,cy:ppy,r:9,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:ppx,y:ppy+4,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='+';
+    note.textContent=broken?'速度被改变→洛伦兹力 qvB 变化→三力不再闭合→合力≠0→偏离直线(抛物偏转)。'
+                          :'三力矢量首尾相接、三角形闭合→合力为零→匀速直线运动。';
+    note.style.borderColor=broken?ORANGE:GREEN;
+  }
+  function loop(){if(!anim)return;t+=0.012;if(t>=1){t=1;anim=false;}draw();if(anim)requestAnimationFrame(loop);}
+  document.getElementById('triGo').onclick=()=>{broken=false;t=0;anim=true;requestAnimationFrame(loop);};
+  document.getElementById('triBreak').onclick=()=>{broken=true;t=0;anim=true;requestAnimationFrame(loop);};
+  document.getElementById('triReset').onclick=()=>{broken=false;t=0;anim=false;draw();};
+  draw();
+})();
+
+/* ===== 互动6:能量分析 ===== */
+(function(){
+  const cv=document.getElementById('enCv');const ctx=cv.getContext('2d');
+  const bar=document.getElementById('enBar');
+  let mode=0,t=0,running=true;
+  const cx=200,cy=120,R=80;
+  let ke=1; // 归一动能
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // B 点阵
+    ctx.fillStyle='rgba(20,80,200,0.14)';
+    for(let gx=30;gx<420;gx+=42)for(let gy=25;gy<230;gy+=42){ctx.beginPath();ctx.arc(gx,gy,2.3,0,2*Math.PI);ctx.fill();}
+    if(mode===0){
+      // 纯磁场圆周
+      ctx.strokeStyle='rgba(224,56,42,0.35)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,R,0,2*Math.PI);ctx.stroke();
+      const a=t;
+      const px=cx+R*Math.cos(a),py=cy+R*Math.sin(a);
+      ctx.fillStyle=RED;ctx.beginPath();ctx.arc(px,py,9,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      // 速度切向
+      arrow(ctx,px,py,px-30*Math.sin(a),py+30*Math.cos(a),INK,2.5);
+      // 洛伦兹力指向圆心
+      arrow(ctx,px,py,cx+(R-40)*Math.cos(a),cy+(R-40)*Math.sin(a),ORANGE,2.5);
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+      ctx.fillText('速率不变→动能不变 (W洛=0)',cx-90,240);
+      ke=1;
+    }else{
+      // 磁场+电场:粒子螺旋外扩(电场持续做正功加速)
+      ctx.strokeStyle='rgba(30,158,134,0.3)';ctx.lineWidth=2;
+      // 画渐开螺旋示意
+      ctx.beginPath();
+      for(let k=0;k<=200;k++){const aa=k/200*(t+0.1)*6;const rr=25+aa*2.6;const x=cx+rr*Math.cos(aa),y=cy+rr*Math.sin(aa);if(k===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+      ctx.stroke();
+      const aa=(t+0.1)*6;const rr=25+aa*2.6;
+      const px=cx+rr*Math.cos(aa),py=cy+rr*Math.sin(aa);
+      ctx.fillStyle=RED;ctx.beginPath();ctx.arc(Math.min(px,410),py,9,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      // 电场力(蓝,切向做正功示意)
+      arrow(ctx,px,py,px-26*Math.sin(aa),py+26*Math.cos(aa),BLUE,2.5);
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+      ctx.fillText('电场力做正功→半径↑速率↑动能↑',cx-100,240);
+      ke=Math.min(2.4,1+t*0.9);
+    }
+  }
+  function drawBar(){
+    clr(bar);const total=560,X0=100,y=16,h=28;
+    const frac=Math.min(1,ke/2.6);
+    el(bar,'rect',{x:X0,y:y,width:total,height:h,fill:'none',stroke:INK,'stroke-width':3});
+    el(bar,'rect',{x:X0,y:y,width:total*frac,height:h,fill:BLUE});
+    el(bar,'text',{x:12,y:y+19,'font-size':12,'font-weight':800,fill:INK}).textContent='动能 Ek';
+    el(bar,'text',{x:X0+total*frac/2,y:y+19,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=mode===0?'不变':'增大↑';
+    el(bar,'text',{x:X0,y:y+52,'font-size':11.5,'font-weight':800,fill:INK}).textContent=mode===0?'纯磁场:洛伦兹力不做功，动能条纹丝不动。':'加电场:电场力做正功，动能条持续增长。';
+  }
+  function loop(){if(!running)return;t+=mode===0?0.05:0.012;if(mode===1&&t>1.4){t=1.4;}draw();drawBar();requestAnimationFrame(loop);}
+  document.querySelectorAll('.enmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.enmode').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');mode=+b.dataset.m;t=0;
+  });
+  running=true;requestAnimationFrame(loop);
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 复合场受力分析的三步是什么?",a:"① 数力定方向(先重力mg↓，再电场力qE沿E，最后洛伦兹力qvB⊥v)；② 看合力定轨迹(合力=0直线，恒定抛物线，只剩洛伦兹力圆周)；③ 能量分析(洛伦兹力不做功，W电+W重=ΔEk)。"},
+ {q:"2. 速度选择器的选速条件?为什么与电荷无关?",a:"qE=qvB → v=E/B。两边都有q，约掉后 v 只由 E、B 决定，与电荷正负、电荷量、质量都无关，所以对所有粒子选同一速度。"},
+ {q:"3. 为什么洛伦兹力永远不做功?",a:"洛伦兹力 F=qvB 永远垂直于速度v(即垂直位移方向)，W=Fs·cos90°=0。它只改变速度方向，不改变速度大小(动能)。"},
+ {q:"4. 带电粒子在磁场中做匀速圆周的条件是什么?",a:"合力恰好只剩洛伦兹力。若有重力，需电场力精确抵消重力(qE=mg)；或粒子质量极小重力可忽略。此时 qvB=mv²/r，r=mv/(qB)。"},
+ {q:"5. 圆周运动周期 T 与速率有关吗?",a:"无关。T=2πm/(qB) 只由 m、q、B 决定，与速率v、半径r无关。速度大则半径大，但转一圈时间不变(回旋加速器基础)。"},
+ {q:"6. E=2×10⁴ V/m，B=0.4 T 的速度选择器，选出的速度是多少?",a:"v=E/B=2×10⁴/0.4=5×10⁴ m/s。所有速度为 5×10⁴ m/s 的粒子(不论正负、质量)都直行通过。"},
+ {q:"7. 三力(重力+电场力+洛伦兹力)平衡时粒子做什么运动?为什么?",a:"匀速直线运动。三力矢量和为零→合力为零。因为洛伦兹力依赖速度，只有速度保持不变(匀速直线)时合力才持续为零，自洽。"},
+ {q:"8. 什么时候要考虑重力，什么时候忽略?",a:"宏观带电小球、液滴、尘埃通常要算重力；电子、质子等基本粒子在电磁场中通常忽略重力(除非题目强调)。看清研究对象。"},
+ {q:"9. 回旋加速器里，是什么给粒子加速?磁场起什么作用?",a:"缝隙里的交变电场给粒子加速(做正功)。磁场使粒子做圆周(不做功)、并保证周期恒定 T=2πm/(qB)，使电场频率能一直与粒子同步。"},
+ {q:"10. 带电小球 m=1×10⁻⁵kg，q=2×10⁻⁶C，B=0.5T，v=100m/s，qE=mg，求圆周半径。",a:"r=mv/(qB)=(1×10⁻⁵×100)/(2×10⁻⁶×0.5)=1×10⁻³/1×10⁻⁶=1000 m。"},
+ {q:"11. 若速度选择器里速度 v>E/B，粒子偏向哪边?",a:"v>E/B 时洛伦兹力 qvB>qE，洛伦兹力占上风，粒子偏向洛伦兹力方向。反之 v<E/B 偏向电场力方向。"},
+ {q:"12. 「等效重力」技巧是什么?",a:"当重力和电场力都是恒力时，把它们的矢量和当作等效重力 G_eff。若 G_eff=0(qE抵消mg)→纯磁场圆周；若 G_eff≠0→当作等效重力场中的带电粒子(类平抛/摆线)，把三力问题降维成两力。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
