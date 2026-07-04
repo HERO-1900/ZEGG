@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学反应速率 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1E9E86;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .ctrl input[type=number]{width:90px;border:3px solid var(--ink);padding:5px 7px;font-weight:800;font-size:13.5px;font-family:"SF Mono",Consolas,monospace}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--blue)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>化学反应速率</h1>
+    <p class="lead">速率是「反应快慢的度量」。会算(v=Δc/Δt)、会换算(速率之比=系数之比)、会解释(有效碰撞与活化能)、会设计(控制变量)、会读图(v-t 曲线)——五件事拿下,速率题就从「感觉题」变成「送分题」。</p>
+
+    <div class="say">🗣️ <b>把反应想成一群人在挤地铁:</b> 速率就是「单位时间挤进去多少人」。<b>浓度大</b>=人挤人(碰撞多),<b>温度高</b>=大家跑得快(撞得更狠更频),<b>催化剂</b>=开了条捷径(门槛降低,更多人够得着)。<br>但不是每次相撞都成功——只有<b>能量够高、方向也对</b>的碰撞才「有效」。这些够格的分子叫<b>活化分子</b>,那道门槛叫<b>活化能</b>。所有影响速率的因素,归根到底都在改<b>「有效碰撞的频率」</b>这一件事。抓住这条主线,浓度/温度/催化剂/压强的所有结论都能自己推出来。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 速率定义 v=Δc/Δt → ② 速率之比=系数之比(换算)→ ③ 影响因素(浓度/温度/催化剂/压强/表面积)→ ④ 有效碰撞理论与活化能 → ⑤ 控制变量探究 → ⑥ v-t 图像 → ⑦ 全题型地图 → 易错集 / 拔高 / 自测。每节都配可拨动的可视化。</div>
+
+    <!-- ========================= 1 速率定义 ========================= -->
+    <h2 class="b">① 化学反应速率的定义</h2>
+    <p class="lead">用「某物质浓度的变化量」除以「所用时间」来衡量反应快慢。它永远取<b>正值</b>,是一段时间的<b>平均速率</b>。</p>
+    <div class="card">
+      <div class="eq">v = Δc / Δt　　单位:mol/(L·s) 或 mol/(L·min)</div>
+      <p class="step">Δc 是浓度变化量的<b>绝对值</b>(反应物减少、生成物增加,都取正)。所以<b>速率没有负数</b>。</p>
+      <p class="step">中学算的都是这段时间内的<b>平均速率</b>(不是某一瞬间的瞬时速率)。反应通常越到后面越慢,所以平均速率随所取时间段而不同。</p>
+      <h3>三个使用要点</h3>
+      <table>
+        <tr><th>要点</th><th>说明</th></tr>
+        <tr><td>必须指明物质</td><td>「v=0.1」不完整,要写「v(O₂)=0.1 mol/(L·s)」——不同物质速率数值不同</td></tr>
+        <tr><td>纯固体 / 纯液体不算</td><td>它们浓度视为常数,不用来表示速率(但可参与影响,见下文表面积)</td></tr>
+        <tr><td>同一反应比较</td><td>要换算到同一物质、同一单位才能比大小(见交互 6)</td></tr>
+      </table>
+      <p class="trap">⚠ 速率是「区间平均」不是「瞬时」;是「浓度变化」不是「质量/物质的量变化」——分母永远带体积(浓度)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 速率计算器(算 v + 按系数换算)</div>
+      <p class="step">以 2A + B → 3C 为例:输入某物质的 Δc 与 Δt,算出它的 v,并<b>自动换算</b>到其它物质(速率之比=系数之比 2:1:3)。</p>
+      <div class="ctrl"><span>选定物质</span>
+        <select id="calcWho" style="border:3px solid var(--ink);padding:5px 8px;font-weight:800;font-size:13.5px">
+          <option value="0">A (系数2)</option><option value="1">B (系数1)</option><option value="2">C (系数3)</option>
+        </select>
+      </div>
+      <div class="ctrl"><span>Δc (mol/L)</span><input id="calcDc" type="number" value="0.6" step="0.1" min="0">
+        <span>Δt (s)</span><input id="calcDt" type="number" value="3" step="0.5" min="0.1"></div>
+      <div class="readbig"><span id="calcMain">v(A) = 0.20 mol/(L·s)</span></div>
+      <div class="readout">
+        <div><b>v(A) mol/(L·s)</b><span id="cvA">—</span></div>
+        <div><b>v(B) mol/(L·s)</b><span id="cvB">—</span></div>
+        <div><b>v(C) mol/(L·s)</b><span id="cvC">—</span></div>
+      </div>
+      <p class="trap" id="calcNote" style="margin-top:6px"></p>
+    </div>
+
+    <!-- ========================= 2 速率之比=系数之比 ========================= -->
+    <h2 class="g">② 速率之比 = 化学计量数之比</h2>
+    <div class="card">
+      <p class="step">对反应 <b>mA + nB → pC + qD</b>,任意时刻各物质速率满足:</p>
+      <div class="eq">v(A) : v(B) : v(C) : v(D) = m : n : p : q</div>
+      <p class="step">这是<b>换算的核心</b>:知道一个物质的速率,乘除系数比就能求任意其它物质的速率。也是「比较不同物质表示的速率」时,必须先统一到同一物质的原因。</p>
+      <h3>用它做两件事</h3>
+      <p class="step">① <b>换算:</b> v(B) = v(A) × n/m(把 A 的速率换成 B 的)。</p>
+      <p class="step">② <b>比较:</b> 题目给不同物质的速率,先都除以各自系数(化成「归一速率」v/系数),归一值大的反应更快。</p>
+      <p class="trap">⚠ 换算比的是「速率」与「系数」,不要和平衡里的「浓度变化量之比=系数比」搞混(那个也成立,但概念不同)。纯固体/纯液体不参与这个比。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 速率比 = 系数比 演示</div>
+      <p class="step">拖动反应进度,看 2A + B ⇌ 3C 中三种物质浓度<b>同步</b>变化——A 掉得快(系数2)、B 掉得慢(系数1)、C 涨得最快(系数3)。它们的变化速率之比始终 = 2:1:3。</p>
+      <canvas id="cRatio" width="760" height="300"></canvas>
+      <div class="ctrl"><span>反应进度</span><input id="ratioSlide" type="range" min="0" max="100" value="0"></div>
+      <div class="readout">
+        <div><b>v(A) : v(B) : v(C)</b><span id="ratioShow">2 : 1 : 3</span></div>
+        <div><b>Δc(A) : Δc(B) : Δc(C)</b><span id="ratioDelta">—</span></div>
+        <div><b>结论</b><span>比值恒为系数比</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 3 影响因素 ========================= -->
+    <h2 class="o">③ 影响反应速率的因素</h2>
+    <div class="card">
+      <p class="step"><b>内因</b>是反应物本身的性质(决定性);<b>外因</b>是浓度、温度、催化剂、压强、接触面积等,是考试的主战场。</p>
+      <table>
+        <tr><th>因素</th><th>怎么变</th><th>对速率</th><th>微观原因</th></tr>
+        <tr><td>浓度 ↑</td><td>增大反应物浓度</td><td>加快 ↑</td><td>单位体积活化分子数↑ → 有效碰撞频率↑</td></tr>
+        <tr><td>温度 ↑</td><td>每升高 10℃</td><td>约快 <b>2~4 倍</b></td><td>活化分子百分数↑、分子运动更快 → 有效碰撞↑</td></tr>
+        <tr><td>催化剂</td><td>加入合适催化剂</td><td><b>显著加快 ↑↑</b></td><td>降低活化能 → 活化分子百分数大增</td></tr>
+        <tr><td>压强 ↑(气体)</td><td>缩小体积/增大压强</td><td>加快 ↑</td><td>等效于增大浓度(分子挤得更密)</td></tr>
+        <tr><td>表面积 ↑(固体)</td><td>研成粉末/块状变细</td><td>加快 ↑</td><td>接触面积大 → 碰撞机会多</td></tr>
+      </table>
+      <h3>压强的三个易错情形</h3>
+      <p class="step">① 恒温<b>缩小容器体积</b>加压 → 各气体浓度都↑ → <b>加快</b>。</p>
+      <p class="step">② 恒温恒容,充入<b>惰性气体</b>(如 Ar)→ 总压↑但各反应气浓度<b>不变</b> → 速率<b>不变</b>。</p>
+      <p class="step">③ 恒温恒压,充入惰性气体 → 体积变大 → 反应气浓度<b>降低</b> → 速率<b>减慢</b>。</p>
+      <p class="trap">⚠ 压强影响速率的本质是「有没有改变反应气体的浓度」。惰性气体是常见陷阱:看它有没有把反应气「稀释」或「压缩」。固体、纯液体加多少都不改变浓度,只有表面积起作用。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 影响因素滑块 → 碰撞频率与速率</div>
+      <p class="step">拨浓度、温度、催化剂,看盒子里分子怎么跑、有效碰撞(闪光)有多密、速率条有多长。红点=活化分子,灰点=普通分子。</p>
+      <canvas id="cFactor" width="760" height="240"></canvas>
+      <div class="ctrl"><span>浓度 <b id="fcC">中</b></span><input id="slC" type="range" min="0" max="100" value="50"></div>
+      <div class="ctrl"><span>温度 <b id="fcT">中</b></span><input id="slT" type="range" min="0" max="100" value="50"></div>
+      <div class="ctrl"><span>催化剂</span><button class="vbtn" id="btnCat">未加入(点击加入)</button></div>
+      <div class="readout">
+        <div><b>活化分子百分数</b><span id="fcPct">—</span></div>
+        <div><b>有效碰撞频率(相对)</b><span id="fcFreq">—</span></div>
+        <div><b>相对速率</b><span id="fcRate">—</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 4 有效碰撞 ========================= -->
+    <h2 class="v">④ 有效碰撞理论与活化能</h2>
+    <div class="card">
+      <p class="step"><b>有效碰撞:</b> 能真正引发反应的碰撞。要满足两个条件——<b>能量足够高</b>(达到或超过活化能)且<b>取向合适</b>(撞的方向对)。</p>
+      <p class="step"><b>活化分子:</b> 能量高到足以发生有效碰撞的分子。<b>活化能 Ea:</b> 普通分子变成活化分子所需的「最低能量门槛」(能垒高度)。</p>
+      <h3>为什么各因素能加快速率(统一解释)</h3>
+      <table>
+        <tr><th>因素</th><th>活化分子百分数</th><th>单位体积活化分子数</th><th>有效碰撞频率</th></tr>
+        <tr><td>增大浓度</td><td>不变</td><td>增大 ↑</td><td>增大 ↑</td></tr>
+        <tr><td>升高温度</td><td><b>增大 ↑</b></td><td>增大 ↑</td><td>增大 ↑</td></tr>
+        <tr><td>加催化剂</td><td><b>增大 ↑</b>(降 Ea)</td><td>增大 ↑</td><td>增大 ↑</td></tr>
+      </table>
+      <p class="step"><b>催化剂的本质:</b> 提供一条活化能更低的新途径,让更多分子「够得着」门槛 → 活化分子百分数大增 → 速率暴涨。反应<b>前后催化剂质量、化学性质不变</b>。</p>
+      <p class="trap">⚠ 催化剂<b>只降低活化能、加快速率</b>,<b>不改变反应的 ΔH</b>(始态终态能量差不变)!正逆反应的活化能<b>同时</b>降低,故正逆速率<b>同等程度</b>加快,平衡不移动。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 活化能能垒 + 催化剂降门槛</div>
+      <p class="step">左侧是「能量-反应进程」曲线:峰高=活化能。点催化剂看峰<b>变矮</b>(Ea 变小),但反应物、生成物的能量高度<b>不变</b>(ΔH 不变)。右侧分子能量分布:门槛左移 → 越过门槛的<b>活化分子(红)变多</b>。</p>
+      <canvas id="cEa" width="760" height="300"></canvas>
+      <div class="ctrl"><button class="vbtn" id="btnEa">加入催化剂(降低活化能)</button><button class="vbtn dark" id="btnEaR">移除催化剂</button></div>
+      <div class="verdict" id="eaNote">未加催化剂:活化能高,越过门槛的活化分子少。</div>
+    </div>
+
+    <!-- ========================= 5 控制变量 ========================= -->
+    <h2 class="r">⑤ 控制变量法探究速率</h2>
+    <div class="card">
+      <p class="step"><b>核心思想:</b> 想研究「某一个因素」对速率的影响,就<b>只改变这一个</b>,其它所有条件必须<b>完全相同</b>。这样才能把速率差异「归因」给这个变量。</p>
+      <h3>设计三步走</h3>
+      <p class="step">① 明确<b>自变量</b>(你要研究的,如温度)与<b>因变量</b>(速率,通过看气泡快慢/变色时间/沉淀出现时间等衡量)。</p>
+      <p class="step">② 设置<b>对照组</b>:除自变量外,浓度、体积、颗粒大小、催化剂等一律相同。</p>
+      <p class="step">③ 用「快慢的可观察指标」定量或半定量比较(如「出现浑浊所需时间」——时间短=速率快)。</p>
+      <p class="trap">⚠ 表格里若同时有两个格子数值不同(比如既改浓度又改温度),就<b>无法判断到底是谁的功劳</b>——这是实验题最经典的送命陷阱。总反应体积常需靠加水「补齐」,以保证浓度这个变量被单独控制。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 控制变量实验设计器</div>
+      <p class="step">你要研究「<b id="cvTarget">温度</b>」对速率的影响。为「实验②」相对「实验①(基准)」设置各条件,系统判断这个对照是否<b>只有目标变量在变</b>(合格 = 单一变量)。</p>
+      <div class="ctrl"><span>研究目标</span>
+        <select id="cvGoal" style="border:3px solid var(--ink);padding:5px 8px;font-weight:800;font-size:13.5px">
+          <option value="temp">温度</option><option value="conc">浓度</option><option value="cat">催化剂</option>
+        </select>
+      </div>
+      <table id="cvTable" style="font-size:13px">
+        <tr><th>变量</th><th>实验①(基准)</th><th>实验②(你设置)</th></tr>
+      </table>
+      <div class="verdict" id="cvVerdict">选择研究目标,并把实验②各条件设为「相同」或「不同」。</div>
+    </div>
+
+    <!-- ========================= 6 v-t 图像 ========================= -->
+    <h2 class="b">⑥ 速率-时间(v-t)图像</h2>
+    <div class="card">
+      <p class="step">v-t 图横轴是时间、纵轴是正/逆反应速率。<b>看突变判断改了什么条件、看正逆是否同步判断平衡怎么动。</b></p>
+      <table>
+        <tr><th>操作</th><th>v(正) 与 v(逆) 的变化</th><th>图像特征</th></tr>
+        <tr><td>升温</td><td>两者都突然增大</td><td>正逆都「跳」上去,吸热方向跳得更高</td></tr>
+        <tr><td>加催化剂</td><td>正逆<b>同等</b>增大</td><td>两条线一起跳到同一高度,平衡不移</td></tr>
+        <tr><td>增大反应物浓度</td><td>v(正) 瞬间↑、v(逆) 从原值起</td><td>正线突跳、逆线连续,随后相互靠拢到新平衡</td></tr>
+        <tr><td>增大压强(气体减小体积)</td><td>正逆都↑,系数大的一侧↑更多</td><td>两线都跳,再趋于新平衡</td></tr>
+      </table>
+      <p class="trap">⚠ 「突变=瞬间跳」(浓度、压强、温度、催化剂都会引起跳变);判断平衡移动方向看<b>跳变后正逆谁在上</b>。催化剂的标志:正逆<b>跳到完全相同</b>的高度。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · v-t 图像:改条件看曲线</div>
+      <p class="step">对一个已建立平衡的可逆反应,在虚线时刻施加一种操作,看 v(正)红线、v(逆)蓝线怎么<b>突跳</b>再重新趋衡。</p>
+      <div class="chips" id="vtChips"></div>
+      <canvas id="cVT" width="760" height="300"></canvas>
+      <div class="verdict" id="vtNote"></div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑦ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑧ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. 速率写成负数。Δc 取绝对值,速率恒为正;反应物「减少」也用正值表示。</p>
+      <p class="trap">2. 比较速率不换算。不同物质的速率数值不同,必须先除以各自系数(化成 v/系数)或换到同一物质再比大小。</p>
+      <p class="trap">3. 把催化剂当成能改变 ΔH。催化剂只降活化能、加快速率,<b>ΔH 不变</b>;正逆速率同等加快,平衡不移。</p>
+      <p class="trap">4. 拿纯固体/纯液体的「量」说浓度。固体、纯液体浓度视为常数,加多少都不改变速率——但把固体<b>磨细(增大表面积)</b>会加快。</p>
+      <p class="trap">5. 惰性气体一律算「加压加快」。恒容充惰气:反应气浓度不变→速率不变;恒压充惰气:被稀释→速率反而变慢。</p>
+      <p class="trap">6. 控制变量时同时改了两个条件,却去比速率归因——无效实验。总体积常要用水补齐以固定浓度。</p>
+      <p class="trap">7. 把平均速率当瞬时速率。中学 v=Δc/Δt 是一段时间的平均值;反应通常越往后越慢。</p>
+      <p class="trap">8. v-t 图里把催化剂画成「只升 v(正)」。催化剂让正逆<b>同步同高</b>跳升,这是它区别于「加浓度」的标志。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>一条主线贯穿所有因素:</b> 所有外因加快速率,最终都落在「<b>单位时间内有效碰撞次数增多</b>」。浓度/压强改的是「碰撞频率」;温度/催化剂改的是「活化分子百分数」。用这一句能自己推出全部结论。</p>
+      <p class="step">▸ <b>温度 vs 催化剂的区别:</b> 温度靠「给分子加能量」抬高越过门槛的比例;催化剂靠「降低门槛本身」。前者会同时影响平衡常数 K,后者不影响 K、不影响平衡。</p>
+      <p class="step">▸ <b>速率与平衡分家:</b> 速率讲「多快到」,平衡讲「最终到哪」。催化剂、增大表面积只影响「多快」不影响「哪」;浓度、温度、压强既影响速率也可能移动平衡——答题先分清问的是哪个。</p>
+      <p class="step">▸ <b>大学视角(了解即可):</b> 速率方程 v=k·c(A)^a·c(B)^b,k 只随温度和催化剂变(阿伦尼乌斯:k 与 e^(−Ea/RT) 成正比)。这解释了「催化剂降 Ea→k 猛增」「升温→k 增大」的定量根源。</p>
+      <p class="step">▸ <b>看图先看「跳没跳」:</b> v-t 图突变=瞬时改条件;渐变=浓度自然消耗。突变后正逆谁高谁就是平衡移动方向;正逆跳到同高=催化剂或等体积不变的压强变化。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:化学平衡 / 水溶液离子平衡</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function sup(n){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>map[c]||c).join('');}
+function trim(x){return (Math.round(x*1e6)/1e6).toString();}
+
+/* ============ 交互1 速率计算器 ============ */
+(function(){
+  const coef=[2,1,3];const names=['A','B','C'];
+  const whoEl=document.getElementById('calcWho');
+  const dcEl=document.getElementById('calcDc');
+  const dtEl=document.getElementById('calcDt');
+  function update(){
+    const who=+whoEl.value;
+    const dc=Math.abs(parseFloat(dcEl.value));
+    const dt=Math.abs(parseFloat(dtEl.value));
+    if(!(dc>=0)||!(dt>0)){document.getElementById('calcMain').textContent='请输入有效的 Δc 与 Δt';return;}
+    const vSel=dc/dt;
+    const vPerUnit=vSel/coef[who];
+    const vs=coef.map(c=>vPerUnit*c);
+    document.getElementById('calcMain').textContent='v('+names[who]+') = '+trim(vSel)+' mol/(L·s)';
+    document.getElementById('cvA').textContent=trim(vs[0]);
+    document.getElementById('cvB').textContent=trim(vs[1]);
+    document.getElementById('cvC').textContent=trim(vs[2]);
+    document.getElementById('calcNote').textContent='⚠ 换算依据:v(A):v(B):v(C)=系数比 2:1:3。先把选定物质速率除以它的系数('+coef[who]+')得『归一速率』'+trim(vPerUnit)+',再乘各自系数即得。';
+  }
+  whoEl.onchange=update;dcEl.oninput=update;dtEl.oninput=update;update();
+})();
+
+/* ============ 交互6 速率比=系数比 ============ */
+(function(){
+  const cv=document.getElementById('cRatio'),ctx=cv.getContext('2d');
+  const W=760,H=300,padL=55,padB=44,padT=20,padR=20;
+  const c0=[1.0,0.5,0.0];const coef=[-2,-1,3];const cols=['#E0382A','#E86A17','#1E9E86'];const nm=['A','B','C'];
+  const maxExt=0.4;
+  function x(t){return padL+t*(W-padL-padR);}
+  function y(c){return H-padB-(c/1.1)*(H-padB-padT);}
+  function draw(prog){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('c /(mol/L)',padL-46,padT+30);ctx.fillText('反应进程 →',W-130,H-padB+30);
+    for(let g=0;g<=1;g+=0.2){const yy=y(g);ctx.strokeStyle='#d9cfae';ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();ctx.fillStyle='#6b5d3a';ctx.fillText(g.toFixed(1),padL-38,yy+4);}
+    for(let i=0;i<3;i++){
+      ctx.strokeStyle=cols[i];ctx.lineWidth=4;ctx.beginPath();
+      for(let t=0;t<=prog+0.001;t+=0.01){const ext=maxExt*t;const c=Math.max(0,c0[i]+coef[i]*ext);t===0?ctx.moveTo(x(t),y(c)):ctx.lineTo(x(t),y(c));}
+      ctx.stroke();
+      const extNow=maxExt*prog;const cNow=Math.max(0,c0[i]+coef[i]*extNow);
+      ctx.fillStyle=cols[i];ctx.beginPath();ctx.arc(x(prog),y(cNow),6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=cols[i];ctx.font='bold 13px sans-serif';ctx.fillText(nm[i],x(prog)+9,y(cNow)+4);
+    }
+    const extNow=maxExt*prog;
+    document.getElementById('ratioDelta').textContent=trim(2*extNow)+' : '+trim(1*extNow)+' : '+trim(3*extNow);
+  }
+  document.getElementById('ratioSlide').oninput=function(e){draw((+e.target.value)/100);};
+  draw(0);
+})();
+
+/* ============ 交互2 影响因素滑块 ============ */
+(function(){
+  const cv=document.getElementById('cFactor'),ctx=cv.getContext('2d');
+  const W=760,BH=170;let cat=false;
+  const btn=document.getElementById('btnCat');
+  btn.onclick=function(){cat=!cat;btn.textContent=cat?'已加入(点击移除)':'未加入(点击加入)';btn.classList.toggle('warn',cat);update();};
+  let mols=[];
+  function label(v){return v<34?'低':(v<67?'中':'高');}
+  function build(n){
+    while(mols.length<n)mols.push({x:60+Math.random()*440,y:30+Math.random()*BH-15,vx:(Math.random()-0.5),vy:(Math.random()-0.5)});
+    while(mols.length>n)mols.pop();
+  }
+  function update(){
+    const c=+document.getElementById('slC').value,t=+document.getElementById('slT').value;
+    document.getElementById('fcC').textContent=label(c);
+    document.getElementById('fcT').textContent=label(t);
+    const n=Math.round(10+c/100*30);
+    build(n);
+    /* 活化分子百分数:温度决定,催化剂再加成 */
+    let pct=8+t/100*32;if(cat)pct+=22;pct=Math.min(pct,95);
+    const speed=0.5+t/100*2.2;
+    for(const m of mols){const sp=Math.hypot(m.vx,m.vy)||1;m.vx=m.vx/sp*speed;m.vy=m.vy/sp*speed;}
+    /* 有效碰撞频率 ~ 浓度^2 * 活化分子百分数 * 速度 */
+    const conc=0.4+c/100*1.6;
+    const freq=conc*conc*(pct/100)*speed;
+    const rate=freq;
+    document.getElementById('fcPct').textContent=pct.toFixed(0)+'%';
+    document.getElementById('fcFreq').textContent=freq.toFixed(2);
+    document.getElementById('fcRate').textContent=rate.toFixed(2);
+    window._fcPct=pct;window._fcRate=rate;
+  }
+  let flashes=[];
+  function draw(){
+    ctx.clearRect(0,0,W,240);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(50,15,470,BH);
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('反应盒(红=活化分子 灰=普通分子)',56,12);
+    const pct=window._fcPct||10;
+    const actCount=Math.round(mols.length*pct/100);
+    mols.forEach((m,i)=>{
+      m.x+=m.vx;m.y+=m.vy;
+      if(m.x<58){m.x=58;m.vx*=-1;}if(m.x>512){m.x=512;m.vx*=-1;}
+      if(m.y<23){m.y=23;m.vy*=-1;}if(m.y>177){m.y=177;m.vy*=-1;}
+      const act=i<actCount;
+      ctx.beginPath();ctx.arc(m.x,m.y,act?6:5,0,7);ctx.fillStyle=act?'#E0382A':'#999';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=1.5;ctx.stroke();
+    });
+    /* 随机有效碰撞闪光,频率跟 rate 走 */
+    const rate=window._fcRate||0.2;
+    if(Math.random()<Math.min(rate*0.16,0.9)&&actCount>1){
+      const a=mols[Math.floor(Math.random()*Math.max(1,actCount))];
+      if(a)flashes.push({x:a.x,y:a.y,life:1});
+    }
+    flashes.forEach(f=>{f.life-=0.06;ctx.beginPath();ctx.arc(f.x,f.y,10*(1-f.life)+4,0,7);ctx.strokeStyle='rgba(243,192,14,'+f.life+')';ctx.lineWidth=3;ctx.stroke();});
+    flashes=flashes.filter(f=>f.life>0);
+    /* 速率条 */
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('相对速率',560,30);
+    const barMax=170,bh=Math.min(barMax,rate*46);
+    ctx.fillStyle='#e3d9b8';ctx.fillRect(600,15,90,barMax);ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(600,15,90,barMax);
+    ctx.fillStyle='#1E9E86';ctx.fillRect(600,15+barMax-bh,90,bh);ctx.strokeRect(600,15+barMax-bh,90,bh);
+    requestAnimationFrame(draw);
+  }
+  document.getElementById('slC').oninput=update;document.getElementById('slT').oninput=update;
+  update();draw();
+})();
+
+/* ============ 交互3 活化能能垒 + 催化剂 ============ */
+(function(){
+  const cv=document.getElementById('cEa'),ctx=cv.getContext('2d');
+  const W=760,H=300;let cat=false;
+  document.getElementById('btnEa').onclick=function(){cat=true;note();};
+  document.getElementById('btnEaR').onclick=function(){cat=false;note();};
+  function note(){document.getElementById('eaNote').textContent=cat
+    ?'已加催化剂:活化能降低(峰变矮)→ 越过门槛的活化分子(红)明显增多 → 速率大增。但反应物、生成物能量高度不变,ΔH 不变!'
+    :'未加催化剂:活化能高,越过门槛的活化分子少。';}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    /* 左:能量-进程曲线 */
+    const lx=40,rx=380,base=250,eReact=200,eProd=150;
+    const peakNo=70,peakCat=130;const peakY=cat?peakCat:peakNo;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(lx,20);ctx.lineTo(lx,base);ctx.lineTo(rx+10,base);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('能量',lx-4,16);ctx.fillText('反应进程 →',rx-90,base+22);
+    /* 无催化剂虚线参考 */
+    if(cat){ctx.setLineDash([5,5]);ctx.strokeStyle='#bbb';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(lx+20,eReact);ctx.quadraticCurveTo((lx+rx)/2,peakNo,rx-10,eProd);ctx.stroke();ctx.setLineDash([]);}
+    /* 当前曲线 */
+    ctx.strokeStyle=cat?'#1E9E86':'#E0382A';ctx.lineWidth=4;ctx.beginPath();
+    ctx.moveTo(lx+20,eReact);ctx.quadraticCurveTo((lx+rx)/2,peakY,rx-10,eProd);ctx.stroke();
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(lx,eReact);ctx.lineTo(lx+20,eReact);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(rx-10,eProd);ctx.lineTo(rx+10,eProd);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 11px sans-serif';ctx.fillText('反应物',lx+2,eReact-6);ctx.fillText('生成物',rx-40,eProd-6);
+    /* 活化能标注 */
+    const midX=(lx+rx)/2;
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(midX,peakY);ctx.lineTo(midX,eReact);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#7A3FF2';ctx.fillText('Ea',midX+4,(peakY+eReact)/2);
+    /* ΔH 标注 */
+    ctx.fillStyle='#16120A';ctx.fillText('ΔH 不变',rx-58,(eReact+eProd)/2+30);
+    ctx.strokeStyle='#16120A';ctx.setLineDash([2,2]);ctx.beginPath();ctx.moveTo(rx+2,eReact);ctx.lineTo(rx+2,eProd);ctx.stroke();ctx.setLineDash([]);
+    /* 右:能量分布 + 门槛 */
+    const ox=430,ow=300,obase=250,otop=40;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ox,otop);ctx.lineTo(ox,obase);ctx.lineTo(ox+ow,obase);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('分子数',ox-2,otop-6);ctx.fillText('分子能量 →',ox+ow-90,obase+22);
+    /* 分布曲线 */
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=ow;i+=4){const e=i/ow;const yv=obase-190*Math.exp(-Math.pow((e-0.32)/0.2,2))*(e*3.2);ctx.lineTo(ox+i,Math.max(otop,yv));}
+    ctx.stroke();
+    /* 门槛线 */
+    const thr=cat?0.5:0.66;const thrX=ox+thr*ow;
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=3;ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(thrX,otop);ctx.lineTo(thrX,obase);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#E0382A';ctx.font='bold 11px sans-serif';ctx.fillText('活化能门槛',thrX-30,otop+2);
+    /* 门槛右侧填充=活化分子 */
+    ctx.fillStyle='rgba(224,56,42,0.30)';
+    ctx.beginPath();ctx.moveTo(thrX,obase);
+    for(let i=Math.round(thr*ow);i<=ow;i+=4){const e=i/ow;const yv=obase-190*Math.exp(-Math.pow((e-0.32)/0.2,2))*(e*3.2);ctx.lineTo(ox+i,Math.max(otop,yv));}
+    ctx.lineTo(ox+ow,obase);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#E0382A';ctx.font='bold 11px sans-serif';ctx.fillText('红色区=活化分子',thrX+6,obase-12);
+  }
+  function loop(){draw();}
+  document.getElementById('btnEa').addEventListener('click',loop);
+  document.getElementById('btnEaR').addEventListener('click',loop);
+  note();draw();
+})();
+
+/* ============ 交互4 控制变量设计器 ============ */
+(function(){
+  const goals={
+    temp:{name:'温度',vars:['温度','浓度','催化剂','固体颗粒大小']},
+    conc:{name:'浓度',vars:['浓度','温度','催化剂','固体颗粒大小']},
+    cat:{name:'催化剂',vars:['催化剂','温度','浓度','固体颗粒大小']}
+  };
+  const goalEl=document.getElementById('cvGoal');
+  const table=document.getElementById('cvTable');
+  const sel={};
+  function rebuild(){
+    const g=goals[goalEl.value];
+    document.getElementById('cvTarget').textContent=g.name;
+    table.innerHTML='<tr><th>变量</th><th>实验①(基准)</th><th>实验②(你设置)</th></tr>';
+    g.vars.forEach((v,i)=>{
+      const tr=document.createElement('tr');
+      const isTarget=(i===0);
+      const base=isTarget?'基准值':'基准值';
+      const s=document.createElement('select');
+      s.style.cssText='border:2px solid var(--ink);padding:3px 5px;font-weight:800;font-size:12.5px';
+      s.innerHTML='<option value="same">与①相同</option><option value="diff">与①不同</option>';
+      if(isTarget)s.value='diff';
+      s.onchange=judge;
+      sel[v]={el:s,target:isTarget};
+      tr.innerHTML='<td>'+(isTarget?'<b style="color:var(--green)">'+v+'(目标)</b>':v)+'</td><td>'+base+'</td>';
+      const td=document.createElement('td');td.appendChild(s);tr.appendChild(td);
+      table.appendChild(tr);
+    });
+    judge();
+  }
+  function judge(){
+    let targetDiff=false,otherDiff=[];
+    for(const v in sel){
+      const isDiff=sel[v].el.value==='diff';
+      if(sel[v].target){targetDiff=isDiff;}
+      else if(isDiff){otherDiff.push(v);}
+    }
+    const box=document.getElementById('cvVerdict');
+    const gname=goals[goalEl.value].name;
+    if(!targetDiff){box.textContent='❌ 目标变量『'+gname+'』没有改变——对照组里目标必须不同,否则实验说明不了任何问题。';box.style.borderColor='var(--red)';}
+    else if(otherDiff.length>0){box.textContent='❌ 除了『'+gname+'』,你还改了:'+otherDiff.join('、')+'。同时变了多个因素,速率差异无法归因给谁——违反单一变量原则!';box.style.borderColor='var(--red)';}
+    else{box.textContent='✅ 合格!只有目标变量『'+gname+'』不同,其它全部相同——这是标准的控制变量对照,速率差异可归因于'+gname+'。';box.style.borderColor='var(--green)';}
+  }
+  goalEl.onchange=rebuild;rebuild();
+})();
+
+/* ============ 交互5 v-t 图像 ============ */
+(function(){
+  const cv=document.getElementById('cVT'),ctx=cv.getContext('2d');
+  const W=760,H=300,padL=55,padB=44,padT=24,padR=20;
+  /* 平衡态 v(正)=v(逆)=base;在 tHit 施加操作 */
+  const ops=[
+    {k:'升高温度',note:'升温:v(正)、v(逆)都突跳增大;此反应正向吸热则正跳更高→平衡正移。','vf':1.9,'vr':1.5,col:'#E0382A'},
+    {k:'加催化剂',note:'加催化剂:v(正)、v(逆)『同等』突跳到相同高度→平衡不移动。这是催化剂的图像标志。','vf':1.7,'vr':1.7,col:'#1E9E86'},
+    {k:'增大反应物浓度',note:'增大反应物浓度:v(正)瞬间跳高、v(逆)从原值连续起步,随后互相靠拢到新平衡→平衡正移。','vf':2.0,'vr':1.0,col:'#1450C8'},
+    {k:'增大压强(减小体积)',note:'加压(缩体积):v(正)、v(逆)都跳,气体系数大的一侧跳得多→向气体分子数减小方向移动。','vf':1.8,'vr':1.4,col:'#7A3FF2'}
+  ];
+  const chips=document.getElementById('vtChips');let cur=0;
+  ops.forEach((o,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=o.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;anim();};chips.appendChild(b);});
+  const base=1.0,tHit=0.4;
+  function x(t){return padL+t*(W-padL-padR);}
+  function y(v){return H-padB-(v/2.4)*(H-padB-padT);}
+  let prog=0,raf=null;
+  function anim(){prog=0;if(raf)cancelAnimationFrame(raf);function f(){prog+=0.02;if(prog>1)prog=1;draw();if(prog<1)raf=requestAnimationFrame(f);else raf=null;}raf=requestAnimationFrame(f);}
+  function vAt(kind,t){
+    const o=ops[cur];
+    if(t<tHit)return base;
+    /* 突跳后向各自新平衡值渐近(简单指数趋近) */
+    const jump=(kind==='f')?o.vf:o.vr;
+    const settle=(o.vf+o.vr)/2;/* 新平衡两者相等 */
+    const tau=(t-tHit)/(1-tHit);
+    return jump+(settle-jump)*(1-Math.exp(-3*tau));
+  }
+  function drawLine(kind,col,upto){
+    ctx.strokeStyle=col;ctx.lineWidth=4;ctx.beginPath();let started=false;
+    for(let t=0;t<=upto+0.001;t+=0.005){
+      if(t>=tHit&&t-0.005<tHit){/* 画突跳竖线 */ctx.lineTo(x(tHit),y(vAt(kind,tHit)));}
+      const v=vAt(kind,t);
+      if(!started){ctx.moveTo(x(t),y(v));started=true;}else ctx.lineTo(x(t),y(v));
+    }
+    ctx.stroke();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('v 速率',padL-46,padT+4);ctx.fillText('时间 t →',W-110,H-padB+26);
+    for(let g=0;g<=2;g+=0.5){const yy=y(g);ctx.strokeStyle='#d9cfae';ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();}
+    /* 操作时刻虚线 */
+    ctx.setLineDash([5,5]);ctx.strokeStyle='#7A3FF2';ctx.beginPath();ctx.moveTo(x(tHit),padT);ctx.lineTo(x(tHit),H-padB);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#7A3FF2';ctx.font='bold 11px sans-serif';ctx.fillText('施加操作',x(tHit)+4,padT+12);
+    drawLine('f','#E0382A',prog);
+    drawLine('r','#1450C8',prog);
+    /* 图例 */
+    ctx.fillStyle='#E0382A';ctx.font='bold 12px sans-serif';ctx.fillText('■ v(正)',W-160,padT+14);
+    ctx.fillStyle='#1450C8';ctx.fillText('■ v(逆)',W-95,padT+14);
+    document.getElementById('vtNote').textContent=ops[cur].note;
+    document.getElementById('vtNote').style.borderColor=ops[cur].col;
+  }
+  anim();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'速率计算(v=Δc/Δt)',sig:'给某物质的浓度变化量和时间,求速率;或给一段时间物质的量与体积。',act:'先化成浓度变化 Δc(除以体积),再除以 Δt;结果取正值并注明是哪种物质。',ex:'2L 容器中 4s 内 N₂ 减少 0.8mol → Δc(N₂)=0.4mol/L,v(N₂)=0.4/4=0.1 mol/(L·s)。',trap:'忘记除体积(用了物质的量而非浓度);速率写成负数。'},
+    {t:'速率换算(系数比)',sig:'已知一种物质速率,求另一种;或给多物质速率验证是否同一反应。',act:'v之比=系数之比;目标物速率 = 已知速率 × 目标系数/已知系数。',ex:'N₂+3H₂⇌2NH₃ 中 v(N₂)=0.1 → v(H₂)=0.1×3=0.3,v(NH₃)=0.1×2=0.2 mol/(L·s)。',trap:'比反了(乘除颠倒);把纯固体也拉进比里。'},
+    {t:'比较不同条件/物质的速率大小',sig:'给几组用不同物质、不同单位表示的速率,问哪个反应最快。',act:'统一单位;各除以自身系数得『归一速率 v/系数』;归一值大者快。',ex:'甲 v(A)=0.3(系数3)归一0.1;乙 v(B)=0.15(系数1)归一0.15 → 乙快。',trap:'不换算直接比数值大小;单位不统一(s 与 min 混用)。'},
+    {t:'影响因素分析(浓度/温度/催化剂/压强)',sig:'改变某条件问速率如何变;或问某操作为何加快/不变。',act:'落到『是否改变反应气浓度或活化分子百分数』;逐一判断。',ex:'恒容充 Ar:反应气浓度不变→速率不变;缩体积:浓度增大→加快。',trap:'惰性气体一律当加压加快;固体加量当成加浓度。'},
+    {t:'有效碰撞/活化能解释题',sig:'问『为什么升温/加催化剂能加快速率』,要求用理论解释。',act:'温度→活化分子百分数↑;催化剂→降低活化能→活化分子百分数↑;浓度→单位体积活化分子数↑;都使有效碰撞频率↑。',ex:'加催化剂加快:降低活化能,更多分子成为活化分子,有效碰撞增多。',trap:'说催化剂改变了ΔH;把『分子数增多』和『百分数增大』混为一谈。'},
+    {t:'控制变量实验设计/评价',sig:'表格列多组实验条件,设计或补全以研究某因素;或判断某组能否得出结论。',act:'确保只有目标变量不同、其余全同;体积用水补齐;用可观察指标(时间/气泡)比快慢。',ex:'研究浓度对速率影响:两组温度、催化剂相同,只酸浓度不同,总体积加水补相同。',trap:'两个变量同时改;总体积不一致导致浓度未真正被控制。'},
+    {t:'固体表面积 / 纯液体的影响',sig:'把块状固体磨成粉末;增减固体或纯液体的量。',act:'固体磨细→表面积↑→加快;固体、纯液体『量』变不改变浓度、不改变速率。',ex:'大理石块换成粉末与盐酸反应更快(接触面积增大)。',trap:'以为多加固体就加快;忽略磨细能加快。'},
+    {t:'v-t 图像识别',sig:'给 v-t 曲线,判断在某时刻施加了什么操作、平衡如何移动。',act:'看是否突跳(瞬时改条件);比较跳变后 v正 v逆 谁高定移动方向;正逆跳到同高=催化剂。',ex:'某时刻正逆同时跳到相同高度且平衡不移→加了催化剂。',trap:'把加浓度(只正跳)当成催化剂(正逆同跳)。'},
+    {t:'速率与图像综合(浓度-时间转速率)',sig:'给 c-t 曲线求某段平均速率;或多物质 c-t 曲线判系数比。',act:'取两点算 Δc/Δt;由各物质浓度变化量之比反推系数比(=速率比)。',ex:'某段 A 降 0.4、B 降 0.2、C 升 0.6 → 系数比 2:1:3。',trap:'用瞬时切线当平均速率;读错起止点。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(m=>{const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 化学反应速率的定义式与常用单位是什么?为什么它恒为正值?',a:'v=Δc/Δt,单位 mol/(L·s) 或 mol/(L·min)。Δc 取浓度变化的绝对值,反应物减少也用正值表示,所以速率恒为正。'},
+    {q:'2. 2L 密闭容器中,4s 内 O₂ 的物质的量减少 0.8mol,求 v(O₂)。',a:'Δc(O₂)=0.8/2=0.4 mol/L,v(O₂)=0.4/4=0.1 mol/(L·s)。注意先除体积化成浓度。'},
+    {q:'3. 反应 N₂+3H₂⇌2NH₃ 中 v(N₂)=0.1 mol/(L·s),求 v(H₂) 与 v(NH₃)。',a:'速率之比=系数之比 1:3:2。v(H₂)=0.1×3=0.3,v(NH₃)=0.1×2=0.2 mol/(L·s)。'},
+    {q:'4. 甲反应 v(A)=0.3 mol/(L·s)(A 系数3),乙反应 v(B)=0.15 mol/(L·s)(B 系数1),谁快?',a:'各除以自身系数得归一速率:甲 0.3/3=0.1,乙 0.15/1=0.15。乙的归一速率更大,乙反应更快。'},
+    {q:'5. 温度每升高 10℃,反应速率大约变为原来的几倍?微观原因是什么?',a:'约 2~4 倍。升温使活化分子百分数增大、分子运动加快,有效碰撞频率增大,故速率加快。'},
+    {q:'6. 恒温恒容容器中充入不参与反应的 Ar,反应速率如何变化?为什么?',a:'不变。恒容下各反应气体浓度没变(只是总压增大),有效碰撞频率不变,故速率不变。'},
+    {q:'7. 催化剂为什么能显著加快反应速率?它会改变反应的 ΔH 吗?',a:'催化剂降低活化能,使更多分子成为活化分子、活化分子百分数大增,有效碰撞频率大增。它不改变ΔH,正逆速率同等加快,平衡不移动。'},
+    {q:'8. 把块状大理石换成大理石粉末与同浓度盐酸反应,速率变化及原因?',a:'加快。固体磨细使接触面积(表面积)增大,单位时间碰撞机会增多。注意固体『量』不算浓度,只有表面积起作用。'},
+    {q:'9. 有效碰撞需要满足哪两个条件?什么是活化分子和活化能?',a:'需能量足够高(达到活化能)且取向合适。活化分子是能量足以发生有效碰撞的分子;活化能是普通分子变为活化分子所需的最低能量门槛。'},
+    {q:'10. 要研究浓度对某反应速率的影响,实验设计要注意什么?',a:'只改变浓度这一个变量,温度、催化剂、颗粒大小等其它条件全部相同;通常还要用水把各组总体积补成相同,以确保只有浓度在变。'},
+    {q:'11. v-t 图中,某时刻 v(正)与 v(逆)同时突跳到完全相同的高度且平衡不移,施加了什么操作?',a:'加入了催化剂(或对气体分子数不变的反应改变压强)。催化剂使正逆速率同等增大,平衡不移动,这是其图像标志。'},
+    {q:'12. 恒温恒压下向反应体系充入惰性气体,速率如何变化?为什么?',a:'减慢。恒压充惰气使容器体积增大,各反应气体被稀释、浓度降低,有效碰撞减少,故速率减慢。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

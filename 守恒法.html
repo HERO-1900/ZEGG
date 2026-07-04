@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>守恒法速算 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#7A3FF2;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:120px;accent-color:var(--accent);height:6px}
+  .ctrl input[type=number]{width:66px;border:3px solid var(--ink);padding:5px 6px;font-weight:800;font-size:13.5px;font-family:"SF Mono",Consolas,monospace}
+  .ctrl select{border:3px solid var(--ink);padding:5px 6px;font-weight:800;font-size:13px;background:#fff}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--green)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .seesaw-wrap{position:relative;height:200px;margin:6px 0}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .cons-eq{font-family:"SF Mono",Consolas,monospace;font-size:15px;font-weight:800;cursor:pointer;padding:8px 10px;border:3px solid var(--ink);margin:6px 0;background:var(--card)}
+  .cons-eq:hover{background:var(--yellow)}
+  .picker-q{border:3px solid var(--ink);background:var(--card);padding:10px 12px;margin:8px 0;font-weight:700;font-size:14px}
+  .pick-opt{display:inline-block;border:3px solid var(--ink);background:#fff;padding:6px 12px;margin:4px 6px 0 0;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .pick-opt.on{background:var(--accent);color:#fff}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>守恒法速算</h1>
+    <p class="lead">质量守恒 · 原子(元素)守恒 · 电子守恒 · 电荷守恒——四把"绕开繁琐方程"的快刀。不管中间过程多复杂,只盯住某个"从头到尾不变的量",列一个等式就能秒杀。这是选择题、填空计算题拉开差距的核心技法。</p>
+
+    <div class="say">🗣️ <b>守恒法 = 不看过程,只看两头。</b> 一道题里可能发生好几步反应、生成一堆中间产物,如果老老实实配平每一个方程再连立,又慢又容易错。<br>守恒法换个视角:反应前后,总有一个量是<b>纹丝不动</b>的——总质量不变、某种原子的个数不变、得电子总数=失电子总数、溶液里正电荷总量=负电荷总量。抓住这个"不变量"直接列等式,<b>中间过程全部跳过</b>。所谓"抓两头、扔中间",一步到位。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 四大守恒是什么(说人话) → ② 质量守恒 → ③ 原子/元素守恒(关系式法·抓两头) → ④ 电子守恒(氧化还原核心) → ⑤ 电荷守恒(离子浓度式) → ⑥ 得失电子守恒解题四步 → ⑦ 全题型地图 → ⑧ 易错集 → ⑨ 尖子生拔高 → ⑩ 自测。每节都配可拨动的可视化。</div>
+
+    <!-- ========================= 1 四大守恒总览 ========================= -->
+    <h2 class="v">① 四大守恒:各盯住哪个"不变量"</h2>
+    <div class="card">
+      <table>
+        <tr><th>守恒</th><th>不变的量</th><th>核心等式</th><th>主战场</th></tr>
+        <tr><td>质量守恒</td><td>反应前后总质量</td><td>m(前) = m(后)</td><td>差量法、气体计算、混合物</td></tr>
+        <tr><td>原子/元素守恒</td><td>某元素原子个数(物质的量)</td><td>n(某元素) 前 = 后</td><td>多步反应关系式法、"抓两头"</td></tr>
+        <tr><td>电子守恒</td><td>转移的电子总数</td><td>n(得e⁻) = n(失e⁻)</td><td>一切氧化还原计算的核心</td></tr>
+        <tr><td>电荷守恒</td><td>溶液电中性(总电荷)</td><td>Σ正电荷 = Σ负电荷</td><td>离子浓度大小、粒子守恒式</td></tr>
+      </table>
+      <p class="trap">⚠ 四个守恒都是"永远成立"的天然约束,不需要配平、不需要写方程。难点在于:①认出该用哪一个;②别漏项、别漏系数(尤其电荷守恒漏乘电荷数、电子守恒漏乘价态差)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 守恒法选择器:给题目特征,推荐用哪种守恒</div>
+      <p class="step">依次选择题目的三个特征,系统实时推荐最合适的守恒思路,并说明理由。练熟这一步,考试时"一眼看穿"该用哪把刀。</p>
+      <div id="pickerBox"></div>
+      <div class="verdict" id="pickVerdict">先在上面各选一项。</div>
+    </div>
+
+    <!-- ========================= 2 质量守恒 ========================= -->
+    <h2 class="b">② 质量守恒(总质量不变)</h2>
+    <div class="card">
+      <p class="step"><b>说人话:</b> 化学反应只是原子重新组合,原子既不凭空产生也不消失,所以<b>反应前所有物质的总质量 = 反应后所有物质的总质量</b>。</p>
+      <div class="eq">m(反应物总) = m(生成物总)</div>
+      <p class="step"><b>常见用法——差量法:</b> 固体增重 = 吸收的气体质量;溶液增重 = 加入的量 − 逸出气体的量。抓"变化量"直接列比例。</p>
+      <div class="ex"><b>例:</b> 把 a g 铁片放入 CuSO₄ 溶液,取出洗净干燥后质量增加了 0.8 g。求参加反应的铁的物质的量。<br><b>解(质量守恒·差量法):</b> Fe + Cu²⁺ → Fe²⁺ + Cu。每 1 mol Fe(56 g)溶解、析出 1 mol Cu(64 g),固体净增 64−56 = 8 g。<br>净增 0.8 g → 反应的 Fe = 0.8 / 8 = <b>0.1 mol</b>。中间不必称 Fe、Cu 各多少,只看"增重"这一头。</div>
+      <p class="trap">⚠ 差量法要认准"谁的差":固体质量差、气体体积差、溶液质量差要对应清楚。逸出气体使溶液质量减少,别加错方向。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 质量守恒配平检查器</div>
+      <p class="step">拖动各物质的化学计量数,系统按原子守恒统计左右两侧每种元素的原子个数。全部相等(左右总质量也相等)时判定"已配平"。</p>
+      <div class="ctrl" id="balCtrl"></div>
+      <div class="readbig" id="balEq">—</div>
+      <svg id="balSvg" viewBox="0 0 760 150"></svg>
+      <div class="verdict" id="balVerdict">拖动系数使左右每种原子数相等。</div>
+    </div>
+
+    <!-- ========================= 3 原子/元素守恒 ========================= -->
+    <h2 class="g">③ 原子 / 元素守恒(关系式法 · 抓两头)</h2>
+    <div class="card">
+      <p class="step"><b>说人话:</b> 某种元素的原子,不管中间变成多少种化合物、经过多少步反应,它的<b>总个数(总物质的量)始终不变</b>。多步连续反应时,把首尾两端含该元素的物质"用一根等式串起来",中间产物全跳过——这就是<b>关系式法</b>。</p>
+      <div class="eq">n(某元素)始 = n(某元素)终　→　建立首尾物质的量关系式</div>
+      <h3>关系式法三步</h3>
+      <p class="step">① 找出<b>贯穿始终</b>的元素(它是"传递棒");② 按每步反应的原子个数比,把首尾两种物质的系数对应起来;③ 一步列比例求未知,<b>中间物质不必算</b>。</p>
+      <div class="ex"><b>例(工业制硫酸,多步抓两头):</b> S → SO₂ → SO₃ → H₂SO₄。硫元素守恒:1 个 S 原子最终进 1 个 H₂SO₄。<br>关系式:<b>S ~ H₂SO₄</b>(1:1)。故 32 g 硫(1 mol)理论上最多制 <b>1 mol</b> H₂SO₄(98 g),完全不用逐步配平三个方程。</div>
+      <div class="ex"><b>例(氮元素守恒):</b> NH₃ → NO → NO₂ → HNO₃。氮守恒 <b>NH₃ ~ HNO₃</b>(1:1),但注意此链中 O₂ 用量要另用电子守恒或氧守恒算。</div>
+      <p class="trap">⚠ 找传递元素要选"每步都不流失"的那个。若某步该元素分流(部分变成别的产物),比例就不是简单 1:1,要按实际原子个数配。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 原子/元素守恒关系式法:多步反应抓首尾</div>
+      <p class="step">选一条多步反应链,系统高亮"贯穿的传递元素",自动跳过中间产物,直接连出首尾关系式,并按你输入的起始量算出终产物量。</p>
+      <div class="chips" id="relChips"></div>
+      <svg id="relSvg" viewBox="0 0 760 170"></svg>
+      <div class="ctrl"><span>起始量 n(首) =</span><input id="relN" type="number" value="2" min="0" step="0.5"> mol</div>
+      <div class="verdict" id="relVerdict"></div>
+    </div>
+
+    <!-- ========================= 4 电子守恒 ========================= -->
+    <h2 class="r">④ 电子守恒(氧化还原计算的核心)</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--red)">🗣️ <b>氧化还原里,电子不会凭空多也不会少。</b> 有物质失电子(被氧化,化合价升高),就必有物质得电子(被还原,化合价降低)。二者一进一出,总数必然相等:<b>得电子总数 = 失电子总数</b>。这是所有氧化还原计算的"总开关"。</div>
+      <div class="eq">Σ n(还原剂)·失e⁻数 = Σ n(氧化剂)·得e⁻数</div>
+      <p class="step"><b>每摩尔物质转移的电子数 = 变价元素个数 × 单个原子的价态变化(化合价差的绝对值)。</b></p>
+      <div class="ex"><b>例:</b> Fe 与足量稀 HNO₃ 反应,生成 Fe³⁺ 和 NO。求 1 mol Fe 消耗的 HNO₃(被还原部分)。<br><b>解(电子守恒):</b> Fe:0 → +3,每 mol 失 3 mol e⁻。N:+5 → +2(NO),每 mol 得 3 mol e⁻。<br>令得=失:1×3 = n(NO)×3 → n(NO) = <b>1 mol</b>,即被还原的 HNO₃ 为 1 mol。(总 HNO₃ 还要加上生成 Fe(NO₃)₃ 提供 NO₃⁻ 的 3 mol,用氮守恒补。)</div>
+      <p class="trap">⚠ "转移电子数"最容易错在<b>价态差算错</b>和<b>变价原子个数漏乘</b>。如 Cl₂ 中两个 Cl,KClO₃ 中 Cl 是 +5,C 在 CO₂ 里是 +4——务必逐个确认价态。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 电子守恒天平:得电子 ⚖ 失电子</div>
+      <p class="step">左盘 = 氧化剂得电子总数,右盘 = 还原剂失电子总数。输入两侧的"价态变化"和"物质的量",天平自动判平衡;把某一项设为未知(留空),点求解算出它。</p>
+      <div class="ctrl">
+        <span style="color:var(--red)">还原剂(失e⁻):</span>
+        n=<input id="loseN" type="number" value="1" min="0" step="0.5">
+        Δ价=<input id="loseD" type="number" value="3" min="1" step="1">
+      </div>
+      <div class="ctrl">
+        <span style="color:var(--blue)">氧化剂(得e⁻):</span>
+        n=<input id="gainN" type="number" value="" placeholder="?求解" step="0.5">
+        Δ价=<input id="gainD" type="number" value="3" min="1" step="1">
+      </div>
+      <div class="seesaw-wrap"><svg id="eSaw" viewBox="0 0 760 200"></svg></div>
+      <div class="ctrl"><button class="vbtn" id="eSolve">求空缺项</button><button class="vbtn dark" id="eReset">重置</button></div>
+      <div class="verdict" id="eVerdict"></div>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 氧化还原双线桥:交互标得失电子数</div>
+      <p class="step">选一个经典氧化还原反应,点"升价"元素和"降价"元素,系统画出双线桥并标出每处转移的电子数,验证上桥总数 = 下桥总数(电子守恒)。</p>
+      <div class="chips" id="bridgeChips"></div>
+      <svg id="bridgeSvg" viewBox="0 0 760 230"></svg>
+      <div class="verdict" id="bridgeVerdict"></div>
+    </div>
+
+    <!-- ========================= 5 电荷守恒 ========================= -->
+    <h2 class="o">⑤ 电荷守恒(溶液电中性)</h2>
+    <div class="card">
+      <p class="step"><b>说人话:</b> 任何电解质溶液整体<b>不带电</b>。所以溶液里<b>所有阳离子带的正电荷总数 = 所有阴离子带的负电荷总数</b>。注意:是"电荷总数",带 2 价的离子浓度要 ×2。</p>
+      <div class="eq">Σ [c(阳离子)×电荷数] = Σ [c(阴离子)×电荷数]</div>
+      <div class="ex"><b>例(Na₂CO₃ 溶液):</b> 阳离子 Na⁺、H⁺;阴离子 CO₃²⁻、HCO₃⁻、OH⁻。<br>电荷守恒:<b>c(Na⁺) + c(H⁺) = 2·c(CO₃²⁻) + c(HCO₃⁻) + c(OH⁻)</b>。CO₃²⁻ 带 2 个负电荷,系数 ×2。</div>
+      <p class="step"><b>用途:</b> 判断离子浓度大小、判等式正误、已知几种离子浓度求另一种;与物料守恒配合可推出质子守恒。</p>
+      <p class="trap">⚠ 三大坑:①漏掉 H⁺ / OH⁻(它们总在场);②多价离子忘记乘电荷数;③把"电荷守恒"和"物料守恒"混用(物料守恒是元素总量,不乘电荷)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 电荷守恒离子式构建器</div>
+      <p class="step">选一种溶液,勾出其中存在的阳离子与阴离子,系统自动按"电荷数加权"生成正确的电荷守恒等式,并对多价离子标出 ×2、×3。</p>
+      <div class="chips" id="chgChips"></div>
+      <div class="verdict" id="chgEq" style="font-family:'SF Mono',Consolas,monospace;font-size:15px">—</div>
+      <svg id="chgSvg" viewBox="0 0 760 130"></svg>
+      <div class="verdict" id="chgNote"></div>
+    </div>
+
+    <!-- ========================= 6 得失电子守恒四步 ========================= -->
+    <h2 class="v">⑥ 得失电子守恒解题四步(终态法)</h2>
+    <div class="card">
+      <p class="step"><b>第 1 步 定变价元素:</b> 标出反应前后所有元素的化合价,找出<b>化合价改变</b>的元素(升价 = 被氧化 = 还原剂;降价 = 被还原 = 氧化剂)。</p>
+      <p class="step"><b>第 2 步 算每摩尔得失电子数:</b> 单原子转移 e⁻ 数 = |价态差|;整摩尔物质 = |价态差| × 变价原子个数。</p>
+      <p class="step"><b>第 3 步 令 得 = 失:</b> Σ n(氧化剂)·得e⁻ = Σ n(还原剂)·失e⁻,列一个方程。</p>
+      <p class="step"><b>第 4 步 解未知:</b> 代入已知量,直接解出所求(不必配平整个方程)。</p>
+      <div class="ex"><b>终态法典型:</b> 一定量 Fe 与 HNO₃ 反应,只需知道"始态 Fe 的价 0、终态 Fe³⁺ 的价 +3"和"N 从 +5 降到某产物价",无论中间经历 Fe²⁺ 还是别的,只按<b>始末价态差</b>算电子转移即可。这就是"终态法"——只认起点和终点。</div>
+      <div class="mono">口诀:标价 → 定差 → 乘量 → 令得=失。氧化还原一切计算,尽在此四步。</div>
+    </div>
+
+    <!-- ========================= 7 全题型地图 ========================= -->
+    <h2 class="o">⑦ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 8 易错集 ========================= -->
+    <h2 class="r">⑧ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. 电子守恒<b>价态差算错</b>:如把 KMnO₄ 中 Mn(+7→+2)当成得 5e⁻ 没问题,但 Cr₂O₇²⁻ 中有 2 个 Cr(+6→+3),每个得 3,共得 <b>6 e⁻</b>,别漏乘 2。</p>
+      <p class="trap">2. 混淆"物质的量"与"电子数":n(氧化剂) 不等于得电子数,必须再乘以每摩尔的得电子数(价态差×原子个数)。</p>
+      <p class="trap">3. 电荷守恒<b>漏乘电荷数</b>:CO₃²⁻、SO₄²⁻、Ca²⁺、Al³⁺ 等要乘 2 或 3;而<b>物料守恒不乘电荷</b>,两者别搞反。</p>
+      <p class="trap">4. 电荷守恒<b>漏掉 H⁺ / OH⁻</b>:水溶液里这两个永远存在,再"中性"也要写上。</p>
+      <p class="trap">5. 关系式法找错<b>传递元素</b>:该元素若中途分流到别的产物,系数比就不是 1:1。</p>
+      <p class="trap">6. 差量法搞错<b>差的方向</b>:溶液吸收气体则增重,逸出气体则减重;固体增重对应析出更重的产物。</p>
+      <p class="trap">7. 歧化 / 归中反应:同一元素既升价又降价(如 Cl₂+NaOH),电子守恒仍成立,但升、降价原子要<b>分开计</b>。</p>
+      <p class="trap">8. 电子守恒只对<b>氧化还原</b>反应用;非氧化还原(如复分解、水解)没有电子转移,别硬套。</p>
+    </div>
+
+    <!-- ========================= 9 尖子生拔高 ========================= -->
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>守恒是"不变量"哲学:</b> 化学计算的本质是找一个"不随过程改变的量"。四大守恒就是化学里最稳的四个不变量,先问自己"这题什么没变",往往就是突破口。</p>
+      <p class="step">▸ <b>多守恒联立秒杀:</b> 难题常需两把刀配合——氮守恒定 HNO₃ 总量、电子守恒定被还原量;质量守恒定固体、原子守恒定气体。谁也别单打独斗。</p>
+      <p class="step">▸ <b>终态法忽略中间价态:</b> Fe 与 HNO₃ 可能先生成 Fe²⁺ 再被氧化成 Fe³⁺。只要给定终态是 Fe³⁺,按 0→+3 直接算,中间的 Fe²⁺ 完全不影响电子总账。</p>
+      <p class="step">▸ <b>电荷守恒 − 物料守恒 = 质子守恒:</b> 三大守恒并非独立,两两可推。压轴离子浓度题,先写电荷与物料,相减即得质子守恒,常一步定胜负。</p>
+      <p class="step">▸ <b>整体法看多步:</b> 面对"混合气体通过多个装置""金属与混酸多步反应",把整个体系当黑箱,只列首尾守恒,避开逐段配平的泥潭。</p>
+    </div>
+
+    <!-- ========================= 10 自测 ========================= -->
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:氧化还原反应 / 水溶液离子平衡</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function sup(n){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>map[c]||c).join('');}
+
+/* ============ 交互1 电子守恒天平 ============ */
+(function(){
+  const svg=document.getElementById('eSaw');
+  const loseN=document.getElementById('loseN'),loseD=document.getElementById('loseD');
+  const gainN=document.getElementById('gainN'),gainD=document.getElementById('gainD');
+  const V=document.getElementById('eVerdict');
+  let tiltNow=0,raf=null;
+  function nums(){
+    return{lN:parseFloat(loseN.value),lD:parseFloat(loseD.value),gN:parseFloat(gainN.value),gD:parseFloat(gainD.value)};
+  }
+  function render(){
+    const s=nums();
+    const lose=(isNaN(s.lN)||isNaN(s.lD))?null:s.lN*s.lD;
+    const gain=(isNaN(s.gN)||isNaN(s.gD))?null:s.gN*s.gD;
+    let target=0,msg='';
+    if(lose===null||gain===null){
+      target=0;msg='有一项留空 → 点『求空缺项』,按 得e⁻ = 失e⁻ 解出它。';
+    }else{
+      const diff=lose-gain;
+      target=Math.max(-1,Math.min(1,diff/(Math.abs(lose)+Math.abs(gain)+0.001)*2));
+      if(Math.abs(diff)<1e-6){target=0;msg='✅ 平衡!失电子 '+lose+' = 得电子 '+gain+'(mol e⁻)。电子守恒成立。';V.style.borderColor='#1E9E86';}
+      else{msg='✗ 不平衡:失 '+lose+' mol e⁻,得 '+gain+' mol e⁻。'+(diff>0?'失>得,右盘(失)沉。':'得>失,左盘(得)沉。');V.style.borderColor='#E0382A';}
+    }
+    V.textContent=msg;if(lose===null||gain===null)V.style.borderColor='#16120A';
+    animate(target,lose,gain);
+  }
+  function animate(target){
+    cancelAnimationFrame(raf);
+    function f(){tiltNow+=(target-tiltNow)*0.15;if(Math.abs(target-tiltNow)<0.005)tiltNow=target;draw();if(tiltNow!==target)raf=requestAnimationFrame(f);}
+    f();
+  }
+  function draw(){
+    const s=nums();
+    const lose=(isNaN(s.lN)||isNaN(s.lD))?null:s.lN*s.lD;
+    const gain=(isNaN(s.gN)||isNaN(s.gD))?null:s.gN*s.gD;
+    const cx=380,cy=110,L=250,ang=tiltNow*0.16;
+    // left pan = 得e⁻(氧化剂), right pan = 失e⁻(还原剂). 若失>得 右沉(target>0) → 右盘y增
+    const xL=cx-L*Math.cos(ang),yL=cy+L*Math.sin(ang);
+    const xR=cx+L*Math.cos(ang),yR=cy-L*Math.sin(ang);
+    const gainTxt=gain===null?'?':gain;const loseTxt=lose===null?'?':lose;
+    svg.innerHTML=
+      '<polygon points="'+(cx-24)+',175 '+(cx+24)+',175 '+cx+',120" fill="#16120A"/>'
+      +'<line x1="'+xL+'" y1="'+yL+'" x2="'+xR+'" y2="'+yR+'" stroke="#16120A" stroke-width="8" stroke-linecap="round"/>'
+      +'<line x1="'+xL+'" y1="'+yL+'" x2="'+xL+'" y2="'+(yL+26)+'" stroke="#16120A" stroke-width="3"/>'
+      +'<line x1="'+xR+'" y1="'+yR+'" x2="'+xR+'" y2="'+(yR+26)+'" stroke="#16120A" stroke-width="3"/>'
+      +'<rect x="'+(xL-52)+'" y="'+(yL+26)+'" width="104" height="46" fill="#1450C8" stroke="#16120A" stroke-width="3"/>'
+      +'<text x="'+xL+'" y="'+(yL+46)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">得e⁻(氧化剂)</text>'
+      +'<text x="'+xL+'" y="'+(yL+64)+'" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">'+gainTxt+' mol</text>'
+      +'<rect x="'+(xR-52)+'" y="'+(yR+26)+'" width="104" height="46" fill="#E0382A" stroke="#16120A" stroke-width="3"/>'
+      +'<text x="'+xR+'" y="'+(yR+46)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">失e⁻(还原剂)</text>'
+      +'<text x="'+xR+'" y="'+(yR+64)+'" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">'+loseTxt+' mol</text>';
+  }
+  document.getElementById('eSolve').onclick=function(){
+    const s=nums();
+    const loseNaN=isNaN(s.lN)||isNaN(s.lD),gainNaN=isNaN(s.gN)||isNaN(s.gD);
+    if(!loseNaN&&gainNaN){ // solve gain side. need gD
+      if(isNaN(s.gD)){V.textContent='请先填氧化剂的 Δ价。';return;}
+      const g=(s.lN*s.lD)/s.gD;gainN.value=+g.toFixed(4);
+    }else if(loseNaN&&!gainNaN){
+      if(isNaN(s.lD)){V.textContent='请先填还原剂的 Δ价。';return;}
+      const l=(s.gN*s.gD)/s.lD;loseN.value=+l.toFixed(4);
+    }else{V.textContent='请把要求解的 n 那一格留空,再点求解。';return;}
+    render();
+  };
+  document.getElementById('eReset').onclick=function(){loseN.value=1;loseD.value=3;gainN.value='';gainD.value=3;render();};
+  [loseN,loseD,gainN,gainD].forEach(el=>el.oninput=render);
+  render();
+})();
+
+/* ============ 交互2 双线桥 ============ */
+(function(){
+  const data=[
+    {k:'Fe + Cu²⁺ → Fe²⁺ + Cu',up:{el:'Fe',from:0,to:2,n:1},down:{el:'Cu',from:2,to:0,n:1},
+      note:'Fe:0→+2 失 2e⁻(×1)=2;Cu²⁺:+2→0 得 2e⁻(×1)=2。上桥=下桥=2,守恒。'},
+    {k:'2Na + Cl₂ → 2NaCl',up:{el:'Na',from:0,to:1,n:2},down:{el:'Cl',from:0,to:-1,n:2},
+      note:'Na:0→+1 失 1e⁻,2 个共失 2;Cl:0→−1 得 1e⁻,2 个共得 2。上=下=2。'},
+    {k:'Fe + 4HNO₃ → Fe(NO₃)₃ + NO↑ + 2H₂O',up:{el:'Fe',from:0,to:3,n:1},down:{el:'N',from:5,to:2,n:1},
+      note:'Fe:0→+3 失 3e⁻;N(NO 中):+5→+2 得 3e⁻,只有 1 个 N 被还原。上=下=3。另 3 个 N 仍为 +5(NO₃⁻,未变价)。'},
+    {k:'MnO₂ + 4HCl(浓) → MnCl₂ + Cl₂↑ + 2H₂O',up:{el:'Cl',from:-1,to:0,n:2},down:{el:'Mn',from:4,to:2,n:1},
+      note:'Mn:+4→+2 得 2e⁻;Cl:−1→0 失 1e⁻,有 2 个 Cl 被氧化(共失 2)。上=下=2。另 2 个 Cl 留在 MnCl₂ 中仍为 −1。'},
+    {k:'Cl₂ + 2NaOH → NaCl + NaClO + H₂O(歧化)',up:{el:'Cl',from:0,to:1,n:1},down:{el:'Cl',from:0,to:-1,n:1},
+      note:'同一元素 Cl 歧化:1 个 0→+1 失 1e⁻,1 个 0→−1 得 1e⁻。升、降价原子分开计,失=得=1。'}
+  ];
+  const chips=document.getElementById('bridgeChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;draw();};chips.appendChild(b);});
+  const svg=document.getElementById('bridgeSvg');
+  function draw(){
+    const d=data[cur];
+    const upTot=Math.abs(d.up.to-d.up.from)*d.up.n;
+    const downTot=Math.abs(d.down.to-d.down.from)*d.down.n;
+    const balanced=upTot===downTot;
+    // layout: 两个方框代表升价元素(上桥,失e⁻)与降价元素(下桥,得e⁻)
+    const y1=70,y2=170,xA=170,xB=590;
+    let s='';
+    s+='<text x="380" y="26" text-anchor="middle" font-size="14" font-weight="900">'+d.k+'</text>';
+    // 升价 box (还原剂, 失e⁻) 左上
+    s+='<rect x="'+(xA-80)+'" y="'+(y1-24)+'" width="160" height="48" fill="#E0382A" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+xA+'" y="'+(y1-4)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">'+d.up.el+' '+valstr(d.up.from)+'→'+valstr(d.up.to)+'</text>';
+    s+='<text x="'+xA+'" y="'+(y1+16)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">失 '+upTot+' e⁻</text>';
+    // 降价 box (氧化剂, 得e⁻) 右下
+    s+='<rect x="'+(xB-80)+'" y="'+(y2-24)+'" width="160" height="48" fill="#1450C8" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+xB+'" y="'+(y2-4)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">'+d.down.el+' '+valstr(d.down.from)+'→'+valstr(d.down.to)+'</text>';
+    s+='<text x="'+xB+'" y="'+(y2+16)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">得 '+downTot+' e⁻</text>';
+    // 上桥: 从升价上方绕到降价上方 (失电子交给氧化剂)
+    s+='<path d="M '+(xA)+' '+(y1-24)+' C '+(xA)+' 30, '+(xB)+' 30, '+(xB)+' '+(y2-24)+'" fill="none" stroke="#E0382A" stroke-width="3.5" marker-end="url(#arR)"/>';
+    s+='<text x="380" y="44" text-anchor="middle" font-size="12.5" font-weight="900" fill="#E0382A">失 '+upTot+' e⁻ →</text>';
+    // 下桥
+    s+='<path d="M '+(xA)+' '+(y1+24)+' C '+(xA)+' 215, '+(xB)+' 215, '+(xB)+' '+(y2+24)+'" fill="none" stroke="#1450C8" stroke-width="3.5" marker-end="url(#arB)"/>';
+    s+='<text x="380" y="212" text-anchor="middle" font-size="12.5" font-weight="900" fill="#1450C8">得 '+downTot+' e⁻</text>';
+    s+='<defs><marker id="arR" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#E0382A"/></marker>'
+      +'<marker id="arB" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1450C8"/></marker></defs>';
+    svg.innerHTML=s;
+    const V=document.getElementById('bridgeVerdict');
+    V.textContent=(balanced?'✅ 上桥(失 '+upTot+')= 下桥(得 '+downTot+')e⁻,电子守恒。':'⚠ 上下桥不等,请检查')+' '+d.note;
+    V.style.borderColor=balanced?'#1E9E86':'#E0382A';
+  }
+  function valstr(v){return (v>0?'+':'')+v;}
+  draw();
+})();
+
+/* ============ 交互3 关系式法(原子守恒) ============ */
+(function(){
+  const data=[
+    {k:'制硫酸 S→SO₂→SO₃→H₂SO₄',el:'S',chain:['S','SO₂','SO₃','H₂SO₄'],ratio:1,unit:'H₂SO₄',
+      note:'硫元素守恒:每 1 个 S 最终进 1 个 H₂SO₄。关系式 S ~ H₂SO₄(1:1)。'},
+    {k:'制硝酸 NH₃→NO→NO₂→HNO₃',el:'N',chain:['NH₃','NO','NO₂','HNO₃'],ratio:1,unit:'HNO₃',
+      note:'氮元素守恒:NH₃ ~ HNO₃(1:1)。中间 NO、NO₂ 全跳过。'},
+    {k:'CO₂→碳酸→2NaHCO₃? 碳守恒',el:'C',chain:['CO₂','H₂CO₃','NaHCO₃'],ratio:1,unit:'NaHCO₃',
+      note:'碳元素守恒:1 个 C 从 CO₂ 传到 1 个 NaHCO₃。CO₂ ~ NaHCO₃(1:1)。'},
+    {k:'2Al→Al₂O₃→2Al(OH)₃(铝守恒)',el:'Al',chain:['Al','Al₂O₃','Al(OH)₃'],ratio:1,unit:'Al(OH)₃',
+      note:'铝元素守恒:1 个 Al 最终进 1 个 Al(OH)₃。Al ~ Al(OH)₃(1:1)。中间 Al₂O₃ 含 2 个 Al,但按单原子传递仍 1:1。'}
+  ];
+  const chips=document.getElementById('relChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.chain[0]+'→'+d.chain[d.chain.length-1];b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;draw();};chips.appendChild(b);});
+  const svg=document.getElementById('relSvg');
+  document.getElementById('relN').oninput=draw;
+  function draw(){
+    const d=data[cur];const n=d.chain.length;
+    const y=70;let s='';
+    const gap=(700)/(n);
+    for(let i=0;i<n;i++){
+      const x=60+i*gap+gap/2-40;const cx=60+i*gap+gap/2;
+      const isEnd=(i===0||i===n-1);
+      s+='<rect x="'+(cx-46)+'" y="'+(y-24)+'" width="92" height="48" fill="'+(isEnd?'#1E9E86':'#ddd')+'" stroke="#16120A" stroke-width="3"/>';
+      s+='<text x="'+cx+'" y="'+(y+6)+'" text-anchor="middle" font-size="13" font-weight="900" fill="'+(isEnd?'#fff':'#777')+'">'+d.chain[i]+'</text>';
+      if(i<n-1){const nx=60+(i+1)*gap+gap/2;s+='<text x="'+((cx+nx)/2)+'" y="'+(y+5)+'" text-anchor="middle" font-size="18" font-weight="900" fill="#16120A">→</text>';}
+      if(!isEnd)s+='<text x="'+cx+'" y="'+(y+42)+'" text-anchor="middle" font-size="10.5" font-weight="800" fill="#999">中间·跳过</text>';
+    }
+    // 抓两头虚线弧
+    const x0=60+0*gap+gap/2,xEnd=60+(n-1)*gap+gap/2;
+    s+='<path d="M '+x0+' '+(y-26)+' C '+x0+' 6, '+xEnd+' 6, '+xEnd+' '+(y-26)+'" fill="none" stroke="#7A3FF2" stroke-width="3.5" stroke-dasharray="7 5"/>';
+    s+='<text x="380" y="20" text-anchor="middle" font-size="12.5" font-weight="900" fill="#7A3FF2">'+d.el+' 元素守恒 · 抓两头</text>';
+    s+='<text x="'+x0+'" y="'+(y+42)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#1E9E86">首</text>';
+    s+='<text x="'+xEnd+'" y="'+(y+42)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#1E9E86">尾</text>';
+    svg.innerHTML=s;
+    const nIn=parseFloat(document.getElementById('relN').value);
+    const nOut=isNaN(nIn)?NaN:nIn*d.ratio;
+    const V=document.getElementById('relVerdict');
+    V.innerHTML='<b>关系式:'+d.chain[0]+' ~ '+d.unit+'('+d.ratio+':'+d.ratio+')</b>　'+d.note+
+      (isNaN(nOut)?'':'<br>代入:起始 '+nIn+' mol '+d.chain[0]+' → 最多得 <b>'+(+nOut.toFixed(4))+' mol '+d.unit+'</b>。');
+    V.style.borderColor='#7A3FF2';
+  }
+  draw();
+})();
+
+/* ============ 交互4 电荷守恒构建器 ============ */
+(function(){
+  // charge: 正=阳, 负=阴; abs=电荷数
+  const data=[
+    {k:'Na₂CO₃ 溶液',ions:[['Na⁺',1],['H⁺',1],['CO₃²⁻',-2],['HCO₃⁻',-1],['OH⁻',-1]],
+      note:'Na₂CO₃:阳离子 Na⁺、H⁺;阴离子 CO₃²⁻(×2)、HCO₃⁻、OH⁻。'},
+    {k:'NaHCO₃ 溶液',ions:[['Na⁺',1],['H⁺',1],['HCO₃⁻',-1],['CO₃²⁻',-2],['OH⁻',-1]],
+      note:'NaHCO₃:CO₃²⁻ 来自 HCO₃⁻ 电离,仍要计入且 ×2。'},
+    {k:'NH₄Cl 溶液',ions:[['NH₄⁺',1],['H⁺',1],['Cl⁻',-1],['OH⁻',-1]],
+      note:'NH₄Cl:阳离子 NH₄⁺、H⁺;阴离子 Cl⁻、OH⁻。均为 1 价。'},
+    {k:'Na₂SO₄ 溶液',ions:[['Na⁺',1],['H⁺',1],['SO₄²⁻',-2],['OH⁻',-1]],
+      note:'Na₂SO₄:SO₄²⁻ 带 2 负电荷,系数 ×2。'},
+    {k:'AlCl₃ 溶液',ions:[['Al³⁺',3],['H⁺',1],['Cl⁻',-1],['OH⁻',-1]],
+      note:'AlCl₃:Al³⁺ 带 3 正电荷,系数 ×3;水解显酸性但守恒式照写。'}
+  ];
+  const chips=document.getElementById('chgChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;draw();};chips.appendChild(b);});
+  const svg=document.getElementById('chgSvg');
+  function term(name,q){const a=Math.abs(q);return (a>1?a+'·':'')+'c('+name+')';}
+  function draw(){
+    const d=data[cur];
+    const pos=d.ions.filter(x=>x[1]>0),neg=d.ions.filter(x=>x[1]<0);
+    const lhs=pos.map(x=>term(x[0],x[1])).join(' + ');
+    const rhs=neg.map(x=>term(x[0],x[1])).join(' + ');
+    document.getElementById('chgEq').innerHTML='<b>电荷守恒:</b> '+lhs+' = '+rhs;
+    // svg: two columns
+    let s='<text x="200" y="22" text-anchor="middle" font-size="13" font-weight="900" fill="#E0382A">阳离子(正电荷)</text>';
+    s+='<text x="560" y="22" text-anchor="middle" font-size="13" font-weight="900" fill="#1450C8">阴离子(负电荷)</text>';
+    s+='<text x="380" y="80" text-anchor="middle" font-size="30" font-weight="900">=</text>';
+    pos.forEach((io,i)=>{const x=80+i*130;s+=bubble(x,60,io[0],io[1],'#E0382A');});
+    neg.forEach((io,i)=>{const x=440+i*130;if(x<720)s+=bubble(x,60,io[0],io[1],'#1450C8');});
+    svg.innerHTML=s;
+    const V=document.getElementById('chgNote');
+    V.textContent=d.note+' 提示:带 2、3 价的离子在守恒式里系数要乘电荷数(×2 / ×3)。';
+    V.style.borderColor='#E86A17';
+  }
+  function bubble(x,y,name,q,col){
+    const a=Math.abs(q);
+    let s='<circle cx="'+x+'" cy="'+y+'" r="30" fill="'+col+'" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#fff">'+name+'</text>';
+    if(a>1)s+='<text x="'+(x+26)+'" y="'+(y-22)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#16120A">×'+a+'</text>';
+    return s;
+  }
+  draw();
+})();
+
+/* ============ 交互5 守恒法选择器 ============ */
+(function(){
+  const box=document.getElementById('pickerBox');
+  const dims=[
+    {label:'① 反应类型',opts:['有元素化合价变化(氧化还原)','无化合价变化(复分解/水解等)','多步连续反应','溶液中离子共存']},
+    {label:'② 要求的量',opts:['转移电子数 / 氧化剂或还原剂的量','某终产物的量(经多步)','固体增重 / 气体体积','某离子浓度 / 判等式']},
+    {label:'③ 题面关键词',opts:['得失电子、被氧化被还原、变价','抓两头、传递元素、连续转化','差量、增重、逸出气体','c(离子)、电中性、大小比较']}
+  ];
+  const sel=[-1,-1,-1];
+  dims.forEach((dim,di)=>{
+    const q=document.createElement('div');q.className='picker-q';
+    q.innerHTML='<div>'+dim.label+'</div>';
+    dim.opts.forEach((o,oi)=>{
+      const b=document.createElement('span');b.className='pick-opt';b.textContent=o;
+      b.onclick=()=>{[...q.querySelectorAll('.pick-opt')].forEach(x=>x.classList.remove('on'));b.classList.add('on');sel[di]=oi;evaluate();};
+      q.appendChild(b);
+    });
+    box.appendChild(q);
+  });
+  function evaluate(){
+    const V=document.getElementById('pickVerdict');
+    if(sel.some(x=>x<0)){V.textContent='还有选项未选。';V.style.borderColor='#16120A';return;}
+    // score four conservations
+    const score={mass:0,atom:0,ele:0,charge:0};
+    // dim0
+    [ {ele:2},{mass:1,charge:1},{atom:2},{charge:2} ][sel[0]] && Object.entries([{ele:2},{mass:1,charge:1},{atom:2},{charge:2}][sel[0]]).forEach(([k,v])=>score[k]+=v);
+    // dim1
+    Object.entries([{ele:2},{atom:2},{mass:2},{charge:2}][sel[1]]).forEach(([k,v])=>score[k]+=v);
+    // dim2
+    Object.entries([{ele:2},{atom:2},{mass:2},{charge:2}][sel[2]]).forEach(([k,v])=>score[k]+=v);
+    const names={mass:'质量守恒(差量法)',atom:'原子/元素守恒(关系式法·抓两头)',ele:'电子守恒(得e⁻=失e⁻)',charge:'电荷守恒(电中性)'};
+    let best='mass',bv=-1;Object.keys(score).forEach(k=>{if(score[k]>bv){bv=score[k];best=k;}});
+    const reasons={
+      ele:'有化合价变化 + 求转移电子/氧化还原量 → 用电子守恒:令 得e⁻总数 = 失e⁻总数。',
+      atom:'多步连续反应 + 求终产物 → 用原子守恒:抓贯穿的传递元素,直接连首尾关系式,跳过中间。',
+      mass:'涉及固体增重/气体逸出 → 用质量守恒(差量法):抓"变化量"列比例。',
+      charge:'溶液离子浓度/判等式 → 用电荷守恒:阳离子正电荷总数 = 阴离子负电荷总数(多价×电荷数)。'
+    };
+    V.innerHTML='👉 推荐:<b>'+names[best]+'</b><br>'+reasons[best];
+    V.style.borderColor='#7A3FF2';
+  }
+})();
+
+/* ============ 交互6 质量守恒配平检查 ============ */
+(function(){
+  // 反应: a Fe + b O₂ → c Fe₃O₄ ; 正确 3:2:1 (3Fe+2O2->Fe3O4)
+  const species=[
+    {name:'Fe',atoms:{Fe:1},mass:56,side:-1},
+    {name:'O₂',atoms:{O:2},mass:32,side:-1},
+    {name:'Fe₃O₄',atoms:{Fe:3,O:4},mass:232,side:1}
+  ];
+  const coef=[3,2,1];
+  const ctrl=document.getElementById('balCtrl');
+  species.forEach((sp,i)=>{
+    const wrap=document.createElement('span');wrap.style.cssText='display:flex;align-items:center;gap:4px';
+    wrap.innerHTML='<b>'+sp.name+'</b>:';
+    const inp=document.createElement('input');inp.type='number';inp.min='1';inp.max='9';inp.value=coef[i];inp.style.width='56px';
+    inp.oninput=()=>{coef[i]=Math.max(1,Math.min(9,parseInt(inp.value)||1));draw();};
+    wrap.appendChild(inp);ctrl.appendChild(wrap);
+  });
+  const svg=document.getElementById('balSvg');
+  function draw(){
+    document.getElementById('balEq').textContent=coef[0]+' Fe + '+coef[1]+' O₂ → '+coef[2]+' Fe₃O₄';
+    const els=['Fe','O'];
+    const left={Fe:0,O:0},right={Fe:0,O:0};
+    species.forEach((sp,i)=>{Object.entries(sp.atoms).forEach(([e,c])=>{if(sp.side<0)left[e]+=c*coef[i];else right[e]+=c*coef[i];});});
+    const mL=coef[0]*56+coef[1]*32,mR=coef[2]*232;
+    let s='';const cols=[{e:'Fe',x:230},{e:'O',x:530}];
+    cols.forEach(c=>{
+      const ok=left[c.e]===right[c.e];
+      s+='<text x="'+c.x+'" y="26" text-anchor="middle" font-size="14" font-weight="900">'+c.e+' 原子</text>';
+      s+='<rect x="'+(c.x-120)+'" y="40" width="100" height="46" fill="#1450C8" stroke="#16120A" stroke-width="3"/>';
+      s+='<text x="'+(c.x-70)+'" y="60" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">左(反应物)</text>';
+      s+='<text x="'+(c.x-70)+'" y="78" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">'+left[c.e]+'</text>';
+      s+='<text x="'+c.x+'" y="70" text-anchor="middle" font-size="20" font-weight="900" fill="'+(ok?'#1E9E86':'#E0382A')+'">'+(ok?'=':'≠')+'</text>';
+      s+='<rect x="'+(c.x+20)+'" y="40" width="100" height="46" fill="#E86A17" stroke="#16120A" stroke-width="3"/>';
+      s+='<text x="'+(c.x+70)+'" y="60" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">右(生成物)</text>';
+      s+='<text x="'+(c.x+70)+'" y="78" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">'+right[c.e]+'</text>';
+    });
+    s+='<text x="380" y="120" text-anchor="middle" font-size="13" font-weight="800">左侧总质量 '+mL+' g ，右侧总质量 '+mR+' g</text>';
+    svg.innerHTML=s;
+    const balanced=(left.Fe===right.Fe)&&(left.O===right.O);
+    const V=document.getElementById('balVerdict');
+    if(balanced){V.textContent='✅ 已配平!每种原子左右相等,总质量也相等('+mL+' g = '+mR+' g)。这正是质量守恒。';V.style.borderColor='#1E9E86';}
+    else{V.textContent='✗ 未配平:Fe 左'+left.Fe+'/右'+right.Fe+',O 左'+left.O+'/右'+right.O+'。调系数使左右每种原子都相等(正确 3 : 2 : 1)。';V.style.borderColor='#E0382A';}
+  }
+  draw();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'氧化还原·电子守恒求量',sig:'出现『被氧化/被还原』『转移电子数』『氧化剂与还原剂物质的量之比』;或已知一方求另一方。',act:'标价→定价态差→乘物质的量→令 得e⁻=失e⁻,一个等式解出未知,不必配平整个方程。',ex:'足量稀 HNO₃ 与 Fe 反应生成 Fe³⁺、NO:1 mol Fe 失 3e⁻ = n(NO)×3 → n(NO)=1 mol。',trap:'价态差算错、变价原子个数漏乘(如 Cr₂O₇²⁻ 有 2 个 Cr)。'},
+    {t:'多步反应·原子守恒求关系式',sig:'『连续转化』S→SO₂→SO₃→H₂SO₄ 这类多步链,求首端一定量能得多少终产物。',act:'找贯穿始终的传递元素,按原子个数比连出首尾关系式(如 S~H₂SO₄ 1:1),一步比例求解。',ex:'32 g S(1 mol)最多制 1 mol H₂SO₄(98 g),中间 SO₂、SO₃ 全跳过。',trap:'传递元素若中途分流,比例不是简单 1:1。'},
+    {t:'混合物计算(质量+原子守恒联立)',sig:'一堆混合固体/气体反应,给总质量、总物质的量,求各组分。',act:'设未知量,分别写质量守恒方程与某元素原子守恒方程,联立求解(常两个方程两个未知)。',ex:'Na₂CO₃ 与 NaHCO₃ 混合,加盐酸测 CO₂:用碳守恒定 CO₂ 总量、钠守恒或质量守恒定各自量。',trap:'别把物质的量当质量,单位与摩尔质量要对上。'},
+    {t:'电荷守恒·列离子浓度式',sig:'『下列关系正确的是』『c(离子)大小比较』『电中性』;给几种离子浓度求另一种。',act:'写出全部阳、阴离子,阳正=阴负,多价×电荷数;与物料守恒配合推质子守恒。',ex:'Na₂CO₃:c(Na⁺)+c(H⁺)=2c(CO₃²⁻)+c(HCO₃⁻)+c(OH⁻)。',trap:'漏 H⁺/OH⁻;多价漏乘电荷;与物料守恒混用。'},
+    {t:'气体/金属与混酸(整体法+多守恒)',sig:'金属与稀硝酸/混合酸反应,问酸用量、气体成分、电子转移。',act:'氮守恒定 HNO₃ 总量(=盐中 NO₃⁻+气体中 N),电子守恒定被还原的 N,质量或原子守恒补齐。',ex:'Cu 与稀 HNO₃:被还原 HNO₃(→NO)用电子守恒,成盐 NO₃⁻ 用氮守恒,两者相加为总酸。',trap:'把总 HNO₃ 全当被还原;只有变价的那部分才参与电子守恒。'},
+    {t:'差量法(质量守恒的变形)',sig:'固体『增重/减重』、溶液质量变化、气体体积差。',act:'找出每 1 mol 反应对应的『差量』,用实际差量÷单位差量得反应物质的量。',ex:'铁片浸 CuSO₄ 增重 0.8 g,每 mol 净增 8 g → 反应 Fe 0.1 mol。',trap:'差的方向搞反(吸收气体增重 vs 逸出气体减重)。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(m=>{const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 守恒法的核心思想是什么?为什么能『绕开繁琐方程』?',a:'抓住反应前后某个不变的量(总质量/某元素原子数/得失电子总数/溶液总电荷),直接列等式,跳过所有中间过程与配平。'},
+    {q:'2. 1 mol Fe 与足量稀 HNO₃ 反应生成 Fe³⁺ 和 NO,转移电子多少 mol?生成 NO 多少 mol?',a:'Fe:0→+3,失 3 mol e⁻,转移 3 mol e⁻。N:+5→+2,每 mol NO 得 3e⁻。令得=失:3=3n(NO)→n(NO)=1 mol。'},
+    {q:'3. 写出 0.1 mol/L Na₂CO₃ 溶液的电荷守恒式。',a:'c(Na⁺)+c(H⁺)=2c(CO₃²⁻)+c(HCO₃⁻)+c(OH⁻)。CO₃²⁻ 系数 ×2,别漏 H⁺/OH⁻。'},
+    {q:'4. 工业上 32 g 硫(S→SO₂→SO₃→H₂SO₄)理论最多制多少克 H₂SO₄?',a:'硫守恒 S~H₂SO₄(1:1)。32 g S=1 mol → 1 mol H₂SO₄=98 g。'},
+    {q:'5. 铁片放入 CuSO₄ 溶液,取出后增重 3.2 g,反应了多少 mol Fe?',a:'每 mol Fe 溶解析出 1 mol Cu,净增 64−56=8 g。增重 3.2 g → 3.2/8=0.4 mol Fe(质量守恒·差量法)。'},
+    {q:'6. Cr₂O₇²⁻ 被还原为 Cr³⁺,1 mol Cr₂O₇²⁻ 得多少 mol 电子?',a:'Cr:+6→+3,每个得 3e⁻;Cr₂O₇²⁻ 含 2 个 Cr → 共得 6 mol e⁻。别漏乘 2。'},
+    {q:'7. 2 mol NH₃ 全部氧化成 HNO₃(NH₃→NO→NO₂→HNO₃),最多得多少 mol HNO₃?',a:'氮守恒 NH₃~HNO₃(1:1)→ 2 mol HNO₃。中间 NO、NO₂ 跳过。'},
+    {q:'8. Cl₂+2NaOH→NaCl+NaClO+H₂O,转移电子多少?为什么升降价要分开算?',a:'Cl 歧化:1 个 0→+1 失 1e⁻,1 个 0→−1 得 1e⁻,转移 1 mol e⁻(每 mol Cl₂)。同一元素既升又降,升价与降价原子必须分别统计。'},
+    {q:'9. 电荷守恒与物料守恒最大的区别是什么?',a:'电荷守恒按『电荷数加权』(多价×电荷数),等式两边是正、负电荷总量;物料守恒按『元素原子总量』,不乘电荷。'},
+    {q:'10. Cu 与稀 HNO₃ 反应,消耗的 HNO₃ 分成哪两部分?各用什么守恒算?',a:'一部分被还原变成 NO(用电子守恒:Cu 失 2e⁻ = N 得 3e⁻ 定 NO 量);一部分成盐 Cu(NO₃)₂ 提供 NO₃⁻(用氮守恒)。两部分相加为总 HNO₃。'},
+    {q:'11. MnO₂+4HCl(浓)→MnCl₂+Cl₂↑+2H₂O,4 个 HCl 里几个被氧化?转移几 mol 电子?',a:'Mn:+4→+2 得 2e⁻;只有 2 个 Cl(−1→0)被氧化失 2e⁻,另 2 个 Cl 留在 MnCl₂ 仍 −1。每 mol MnO₂ 转移 2 mol e⁻。'},
+    {q:'12. 一定量 Fe 先生成 Fe²⁺ 再被氧化为 Fe³⁺,用终态法算电子转移时中间的 Fe²⁺ 要不要管?',a:'不用管。终态法只认始态(Fe 0 价)与终态(Fe³⁺),按 0→+3 每 mol 失 3e⁻,中间价态不影响电子总账。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

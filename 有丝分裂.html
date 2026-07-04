@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有丝分裂与细胞周期 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);--accent:var(--violet);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--violet);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--violet);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.g::before{background:var(--green)}
+  h3{font-size:17px;font-weight:900;margin:20px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--violet);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--violet);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:13.5px;font-weight:700;box-shadow:3px 3px 0 var(--violet)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--violet)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;min-width:54px}
+  .sl{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+  .sl .lab{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between}
+  input[type=range]{accent-color:var(--violet);width:100%}
+  .seg{display:inline-flex;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);flex-wrap:wrap}
+  .seg button{background:var(--card);border:0;border-right:3px solid var(--ink);padding:7px 12px;font-weight:800;font-size:13px;cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--violet);color:#fff}
+  .out{font-weight:900;font-size:14.5px;border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:8px}
+  .small{font-size:12.5px;font-weight:700;color:#6b5d3a}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+  .dot{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>有丝分裂与细胞周期全攻坚</h1>
+    <p class="lead">细胞周期(间期 G1/S/G2 + 分裂期 M)、有丝分裂前中后末四期特征、动植物细胞异同、染色体/DNA/染色单体的数目曲线、根尖装片实验、有丝 vs 减数——把"染色体在干什么"看清,时期判断和数目计算一眼定。</p>
+
+    <div class="say">🗣️ <b>有丝分裂(人话版):</b> 一个细胞要变两个,得先<b>把家产复印一份、再平分</b>。<b>间期</b>是"闷头复印"(DNA 复制、造蛋白质),从外面几乎看不出动静,却是耗时最长、最重要的准备。<b>分裂期(M)</b>才开始"分家":<b>前期</b>把散乱的 DNA 缠成看得见的染色体、拉出纺锤丝;<b>中期</b>把染色体排在赤道板上站好队(此时最清楚、最好数);<b>后期</b>着丝点一裂,姐妹染色单体分开、被拉向两极(染色体数瞬间加倍);<b>末期</b>两个新细胞收尾。<br>一句话记牢:<b>间期复制,前期现形,中期排队,后期分家,末期成双</b>。</div>
+
+    <h2>① 细胞周期:间期 + 分裂期(M)</h2>
+    <p class="lead">连续分裂的细胞,从一次分裂完成到下一次分裂完成为一个<b>细胞周期</b>。分为<b>分裂间期</b>(占绝大部分时间)和<b>分裂期 M</b>。间期又分 G1(合成前期)、S(DNA 合成)、G2(合成后期)。</p>
+    <div class="card">
+      <table>
+        <tr><th>时期</th><th>关键事件</th><th>占比 / 提示</th></tr>
+        <tr><td>G1(合成前期)</td><td>合成 DNA 复制所需的酶与蛋白质</td><td>间期,时间较长</td></tr>
+        <tr><td>S(合成期)</td><td><b>DNA 复制</b>(数目加倍)、有关蛋白质合成</td><td>DNA 在此翻倍</td></tr>
+        <tr><td>G2(合成后期)</td><td>合成分裂所需蛋白质,为 M 期做准备</td><td>间期收尾</td></tr>
+        <tr><td>M(分裂期)</td><td>前 → 中 → 后 → 末,染色体平分入两细胞</td><td>时间短,现象明显</td></tr>
+      </table>
+      <p class="trap">⚠ <b>间期最重要、耗时最长</b>——DNA 复制和蛋白质合成都在间期完成。分裂期只是"把复制好的家产分开",并不再造新 DNA。做"哪期时间最长/最关键"必选间期。</p>
+    </div>
+    <div class="keybox"><b>周期口诀:</b>一个周期 = 间期(G1→S→G2) + 分裂期 M(前→中→后→末)。间期长、分裂期短;S 期复制 DNA。</div>
+
+    <h2 class="v">② 有丝分裂各期特征(动画分步)</h2>
+    <p class="lead">用四句口诀锁死四期:<b>前期</b>膜仁消失现两体(纺锤体、染色体)出纺锤丝;<b>中期</b>着丝点排赤道板、形态数目最清晰;<b>后期</b>着丝点分裂、姐妹染色单体分开移向两极;<b>末期</b>"两消两现"(纺锤体、染色体消失,核膜、核仁重现)。</p>
+    <div class="card">
+      <table>
+        <tr><th>时期</th><th>染色体行为</th><th>记忆口诀</th></tr>
+        <tr><td>前期</td><td>染色质→染色体,核膜核仁消失,纺锤体形成</td><td>膜仁消失现两体</td></tr>
+        <tr><td>中期</td><td>着丝点整齐排在赤道板上,形态数目最清晰</td><td>形数清晰赤道板</td></tr>
+        <tr><td>后期</td><td><b>着丝点分裂</b>,姐妹染色单体分开成两条子染色体,移向两极</td><td>点裂体分向两极</td></tr>
+        <tr><td>末期</td><td>染色体→染色质,核膜核仁重现,纺锤体消失,细胞一分为二</td><td>两消两现细胞分</td></tr>
+      </table>
+      <p class="trap">⚠ 观察染色体形态数目最佳时期是<b>中期</b>(排列整齐、缠绕最紧);<b>着丝点分裂发生在后期</b>——不是中期、也不由纺锤丝"拉裂",而是着丝点自己一分为二。</p>
+    </div>
+    <div class="viz">
+      <h3>有丝分裂各期分步动画(染色体 + 纺锤体)</h3>
+      <p class="small">点四期按钮看染色体行为与纺锤丝变化;或点"▶ 连续"自动循环。以 2N=4 演示。</p>
+      <div class="ctrlrow">
+        <div class="seg" id="phaseSeg"><button data-p="0" class="on">间期</button><button data-p="1">前期</button><button data-p="2">中期</button><button data-p="3">后期</button><button data-p="4">末期</button></div>
+        <button class="btn" id="phasePlay">▶ 连续</button>
+      </div>
+      <canvas id="mitoCv" width="700" height="300"></canvas>
+      <div class="out" id="mitoOut"></div>
+    </div>
+
+    <h2 class="g">③ 染色体 / DNA / 染色单体 数目变化(拖时间轴)</h2>
+    <p class="lead">整个周期三条线各有节奏:<b>DNA</b> 在 S 期由 2C 复制到 4C,后期结束平分回 2C;<b>染色单体</b> S 期出现(0→4条,以 2N=2 计每条含 2 条单体)、后期着丝点分裂时归 0;<b>染色体数</b>大部分时间为 2N,<b>后期着丝点分裂瞬间变 4N</b>,末期分成两细胞后回 2N。</p>
+    <div class="keybox"><b>数染色体只数着丝点!</b> 有几个着丝点就是几条染色体。着丝点分裂 → 染色体数加倍(后期);DNA 复制 → DNA 数加倍(S 期)。二者时机不同,别混。</div>
+    <div class="viz">
+      <h3>三条曲线交互(以 2N = 2 为例)</h3>
+      <p class="small">拖动时间轴扫过 G1→S→G2→前→中→后→末,实时读出染色体数、DNA 数、染色单体数,并高亮当前所处时期。</p>
+      <input type="range" id="tlPtr" min="0" max="100" value="10" style="width:100%">
+      <svg id="curveSvg" viewBox="0 0 380 240" aria-label="三条数目曲线"></svg>
+      <div class="legend"><span><span class="dot" style="background:#E0382A"></span>染色体数</span><span><span class="dot" style="background:#1450C8"></span>DNA 数</span><span><span class="dot" style="background:#1E9E86"></span>染色单体数</span></div>
+      <div class="out" id="curveOut"></div>
+    </div>
+
+    <h2 class="o">④ 植物细胞 vs 动物细胞有丝分裂</h2>
+    <p class="lead">过程基本相同,差别只在<b>纺锤体的来源</b>和<b>末期如何一分为二</b>两处——这是选择题最爱考的对比点。</p>
+    <div class="card">
+      <table>
+        <tr><th>比较项</th><th>植物细胞</th><th>动物细胞</th></tr>
+        <tr><td>纺锤体来源</td><td>细胞<b>两极</b>直接发出纺锤丝(无中心体)</td><td>由<b>中心体</b>(发出星射线)形成纺锤体</td></tr>
+        <tr><td>末期分裂方式</td><td>赤道板处出现<b>细胞板 → 细胞壁</b>(向四周扩展)</td><td>细胞膜从中部<b>向内凹陷缢裂</b></td></tr>
+        <tr><td>中心体</td><td>无(低等植物有)</td><td>有,间期复制</td></tr>
+      </table>
+      <p class="trap">⚠ 记法:<b>植物"板"、动物"缢"</b>;<b>植物两极冒丝、动物中心体</b>。别把细胞板当成染色体排列的赤道板——细胞板是末期新壁的雏形,赤道板是中期一个假想平面。</p>
+    </div>
+    <div class="viz">
+      <h3>动 / 植物细胞分裂对比(切换)</h3>
+      <div class="ctrlrow"><div class="seg" id="cellSeg"><button data-c="plant" class="on">植物细胞</button><button data-c="animal">动物细胞</button></div></div>
+      <svg id="cellSvg" viewBox="0 0 700 260" aria-label="动植物细胞分裂对比"></svg>
+      <div class="out" id="cellOut"></div>
+    </div>
+
+    <h2 class="r">⑤ 着丝点分裂演示(后期加倍)</h2>
+    <p class="lead">全周期最"戏剧"的一瞬:进入<b>后期</b>,每条染色体的<b>着丝点一分为二</b>,原来连在一起的两条姐妹染色单体立刻成为两条独立的子染色体,被纺锤丝拉向相反两极——<b>染色体数瞬间加倍(2N→4N)</b>,而 DNA 数不变。</p>
+    <div class="viz">
+      <h3>着丝点分裂:后期染色体数加倍</h3>
+      <p class="small">拖动滑块从"中期"推进到"后期",看着丝点裂开、姐妹染色单体分离、染色体计数从 2N 跳到 4N。</p>
+      <div class="ctrlrow"><div class="sl"><div class="lab"><span>中期 → 后期(推进)</span><span id="cenV">0</span></div><input type="range" id="cenPtr" min="0" max="100" value="0"></div></div>
+      <svg id="cenSvg" viewBox="0 0 380 240" aria-label="着丝点分裂"></svg>
+      <div class="out" id="cenOut"></div>
+    </div>
+
+    <h2 class="b">⑥ 观察根尖分生区装片实验</h2>
+    <p class="lead">经典实验:观察植物细胞有丝分裂,取<b>根尖分生区</b>(细胞正方形、排列紧密、能连续分裂)。核心流程<b>解离 → 漂洗 → 染色 → 制片</b>,再镜下寻找各期,以间期细胞最多。</p>
+    <div class="card">
+      <table>
+        <tr><th>步骤</th><th>操作 / 试剂</th><th>目的</th></tr>
+        <tr><td>解离</td><td>盐酸 + 酒精(15%HCl 与 95%酒精 1:1)</td><td>使组织细胞分散开</td></tr>
+        <tr><td>漂洗</td><td>清水漂洗约 10 min</td><td>洗去盐酸,便于染色</td></tr>
+        <tr><td>染色</td><td>龙胆紫 / 醋酸洋红(碱性染料)</td><td>使染色体(质)着色</td></tr>
+        <tr><td>制片</td><td>取材→压片(盖玻片上加压使细胞分散成单层)</td><td>细胞铺平便于观察</td></tr>
+      </table>
+      <p class="trap">⚠ 高频陷阱:① 解离时细胞已<b>死亡</b>,看不到染色体连续运动,只能看到某一固定时期的"定格"。② 视野里<b>间期细胞数目最多</b>(因间期最长)。③ 要看清染色体形态数目,应找<b>中期</b>细胞。④ 装片顺序不能颠倒:先解离才能染色。</p>
+    </div>
+    <div class="viz">
+      <h3>装片制作流程步进</h3>
+      <div class="ctrlrow"><div class="seg" id="prepSeg"><button data-s="0" class="on">解离</button><button data-s="1">漂洗</button><button data-s="2">染色</button><button data-s="3">制片</button><button data-s="4">观察</button></div></div>
+      <svg id="prepSvg" viewBox="0 0 700 200" aria-label="装片流程"></svg>
+      <div class="out" id="prepOut"></div>
+    </div>
+
+    <h2 class="v">⑦ 时期判别器(给特征 → 判断哪一期)</h2>
+    <p class="lead">考试给你一句描述或一张图,让你判断处于哪一期。把关键特征当成"信号",按下面的判别器练手。</p>
+    <div class="viz">
+      <h3>时期判别器</h3>
+      <p class="small">勾选你观察到的特征,系统判断最可能的时期。</p>
+      <div class="chips" id="featChips"></div>
+      <div class="out" id="judgeOut">请勾选一个或多个特征……</div>
+      <p class="small">判别逻辑:核膜核仁在→间期或末期;纺锤体+散乱染色体→前期;赤道板整齐排列→中期;着丝点已裂、染色体移向两极→后期。</p>
+    </div>
+
+    <h2 class="o">⑧ 全题型地图(信号 → 动作 → 例题 → 陷阱)</h2>
+
+    <div class="card">
+      <h3>题型 1 · 判断所处时期</h3>
+      <p><span class="tag">触发信号:</span>给出染色体行为描述 / 图像,问"处于有丝分裂哪一期"。</p>
+      <p><span class="tag">标准动作:</span>先看核膜核仁(在→间/末),再看染色体位置(赤道板→中;移向两极→后;散乱+纺锤体→前)。</p>
+      <div class="mono">例:某细胞核膜消失、染色体散乱分布、出现纺锤丝 → 前期。</div>
+      <p class="trap">⚠ 别只凭"染色体清晰"就选中期;还要看是否整齐排在赤道板上。移向两极且数目加倍才是后期。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 2 · 染色体 / DNA / 单体数目计算</h3>
+      <p><span class="tag">触发信号:</span>"某时期染色体数、DNA 数、染色单体数各为多少"(设体细胞 2N)。</p>
+      <p><span class="tag">标准动作:</span>数染色体只数<b>着丝点</b>;DNA 在 S 期后为 4C;单体在 S 期后~后期前 = 2×染色体数,后期起归 0。</p>
+      <div class="mono">2N=4 的细胞:中期→染色体4、DNA8、单体8;后期→染色体8、DNA8、单体0;末期(一个子细胞)→染色体4、DNA4、单体0。</div>
+      <p class="trap">⚠ 后期染色体数加倍但 DNA 不变(着丝点分裂 ≠ DNA 复制);末期分成两个细胞后,每个细胞恢复 2N、DNA 2C。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 3 · 曲线 / 柱状图识别</h3>
+      <p><span class="tag">触发信号:</span>给出"数目—时间"曲线或柱状图,让你判断代表哪条(染色体/DNA/单体)、或标出某时期。</p>
+      <p><span class="tag">标准动作:</span>找"台阶":S 期缓慢上升的是<b>DNA</b>;后期<b>突然翻倍</b>的是<b>染色体</b>;S 期升起、后期<b>陡降为 0</b> 的是<b>染色单体</b>。</p>
+      <div class="mono">曲线"斜坡上升"→DNA(S期复制);"竖直翻倍"→染色体(后期着丝点分裂);"升起后归零"→染色单体。</div>
+      <p class="trap">⚠ DNA 是逐渐(斜)上升,染色体是瞬间(竖直)加倍——斜升 vs 竖跳是区分二者的关键。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 4 · 根尖装片实验</h3>
+      <p><span class="tag">触发信号:</span>问试剂作用、步骤顺序、为何某类细胞最多、为何看不到运动。</p>
+      <p><span class="tag">标准动作:</span>背熟"解离(盐酸酒精)→漂洗(水)→染色(龙胆紫/醋酸洋红)→制片(压片)";间期最多因间期最长;看不到运动因解离已使细胞死亡。</p>
+      <div class="mono">例:装片中占比最大的细胞处于——间期(细胞周期中间期时间最长)。</div>
+      <p class="trap">⚠ 解离后细胞已死,不可能"跟踪一个细胞看完整个分裂";染色前必须漂洗,否则盐酸影响染色。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 5 · 图像辨析(动/植、有丝/减数)</h3>
+      <p><span class="tag">触发信号:</span>给细胞分裂图,问是动物还是植物、有丝还是减数、哪一期。</p>
+      <p><span class="tag">标准动作:</span>有中心体/星射线且缢裂→动物;两极冒丝、有细胞壁/细胞板→植物;有同源染色体配对(联会、四分体)→减数第一次;着丝点分裂且无联会→有丝或减二。</p>
+      <div class="mono">看到"细胞板"→植物末期;看到"缢裂"→动物末期;看到"四分体/联会"→减数第一次分裂。</div>
+      <p class="trap">⚠ 有丝分裂全程<b>无同源染色体联会、无四分体</b>;一旦出现联会/四分体就不是有丝分裂。</p>
+    </div>
+
+    <h2 class="g">⑨ 有丝分裂 vs 减数分裂(对比锁定)</h2>
+    <div class="card">
+      <table>
+        <tr><th>比较项</th><th>有丝分裂</th><th>减数分裂</th></tr>
+        <tr><td>分裂次数</td><td>1 次</td><td>2 次(DNA 只复制 1 次)</td></tr>
+        <tr><td>子细胞数 / 染色体</td><td>2 个,与母细胞相同(2N)</td><td>4 个,减半(N)</td></tr>
+        <tr><td>同源染色体行为</td><td>无联会、无四分体</td><td>减一有联会、四分体、同源分开</td></tr>
+        <tr><td>着丝点分裂</td><td>后期</td><td>减二后期(减一后期同源分开、着丝点不裂)</td></tr>
+        <tr><td>意义</td><td>亲代与子代遗传物质稳定,个体生长、组织更新</td><td>产生生殖细胞,维持染色体数目恒定、增加变异</td></tr>
+      </table>
+      <p class="trap">⚠ 判断"有丝 or 减数"最快的信号:<b>有没有联会 / 四分体 / 同源染色体分开</b>。有 → 减数;完全没有、且着丝点在后期一次分裂 → 有丝。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 数染色体<b>只数着丝点</b>:一个着丝点 = 一条染色体,不管上面有几条单体。</p>
+      <p class="trap">② <b>DNA 复制在 S 期,着丝点分裂在后期</b>——两个"加倍"时机不同,别混为一谈。</p>
+      <p class="trap">③ 观察染色体形态数目最佳期是<b>中期</b>,不是后期;后期数目虽多但两极分散、不便观察。</p>
+      <p class="trap">④ 后期染色体数加倍,<b>但 DNA 数不变</b>(着丝点分裂不产生新 DNA)。</p>
+      <p class="trap">⑤ <b>细胞板 ≠ 赤道板</b>:细胞板是末期植物新壁雏形;赤道板是中期一个假想平面(无实体)。</p>
+      <p class="trap">⑥ 根尖装片:解离后细胞已<b>死亡</b>,看到的是定格,不能追踪同一细胞;间期细胞最多。</p>
+      <p class="trap">⑦ 有丝分裂全程<b>无同源染色体联会、无四分体</b>;出现联会即非有丝分裂。</p>
+      <p class="trap">⑧ 间期虽"看不出动静",却是耗时最长、最关键(复制 DNA、合成蛋白质)的时期。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0">▸ <b>"三看法"秒判分裂类型与时期:</b>一看<b>同源染色体是否成对(联会/四分体)</b>→定有丝/减数;二看<b>着丝点是否分裂</b>→定后期与否;三看<b>细胞质分裂方式(板/缢)</b>→定动植物。三步套下来,任何分裂图都能定位。</p>
+      <p style="margin:6px 0">▸ <b>数目"四量"统一口径:</b>设体细胞 2N。间期后(G2)~中期:染色体 2N、DNA 4C、单体 4N、每条染色体含 2 单体;后期:着丝点裂,染色体 4N、DNA 4C、单体 0;末期成两细胞:各 2N、2C。做题先把这张"账"记死。</p>
+      <p style="margin:6px 0">▸ <b>曲线"斜升 vs 竖跳"判读:</b>DNA 曲线在 S 期呈<b>斜坡</b>渐增(复制是逐步的);染色体曲线在后期呈<b>竖直翻倍</b>(着丝点瞬间分裂)。凡"缓慢上升"必是 DNA,凡"瞬间翻倍"必是染色体。</p>
+      <p style="margin:6px 0">▸ <b>细胞周期时长测算:</b>某时期细胞在视野中所占<b>比例 = 该时期时长 / 周期总时长</b>。已知周期总时长,乘以比例即得各期时长——这是"用装片统计推时长"的探究题标准思路。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:光合作用/呼吸作用攻坚 · 遗传计算攻坚</p>
+  </div>
+
+<script>
+/* ===== ② 有丝分裂各期分步动画 (2N=4) ===== */
+(function(){
+ const cv=document.getElementById('mitoCv'),ctx=cv.getContext('2d');
+ const out=document.getElementById('mitoOut'),seg=document.getElementById('phaseSeg');
+ const W=cv.width,H=cv.height;
+ let phase=0,playing=false,pt=0;
+ const names=['间期','前期','中期','后期','末期'];
+ const desc=[
+  '<b>间期</b>:染色质细长分散,核膜核仁完整;DNA 复制、蛋白质合成(外观几乎无变化,却最关键)。',
+  '<b>前期</b>:膜仁消失现两体——染色质缩短变粗成染色体,核膜核仁消失,纺锤体(丝)出现。',
+  '<b>中期</b>:着丝点整齐排列在赤道板上,染色体形态数目最清晰(观察最佳期)。',
+  '<b>后期</b>:着丝点分裂,姐妹染色单体分开成子染色体,被纺锤丝拉向两极,染色体数瞬间加倍(4→8)。',
+  '<b>末期</b>:两消两现——染色体解螺旋、纺锤体消失,核膜核仁重现,细胞一分为二(得两个 2N 子细胞)。'
+ ];
+ const cxL=W/2, cyL=H/2;
+ function drawCell(){
+  ctx.strokeStyle='#16120A';ctx.lineWidth=4;
+  ctx.beginPath();ctx.ellipse(cxL,cyL,300,120,0,0,7);ctx.stroke();
+ }
+ function nucleus(show){
+  if(!show)return;
+  ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.ellipse(cxL,cyL,150,80,0,0,7);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#7A3FF2';ctx.beginPath();ctx.arc(cxL+40,cyL,10,0,7);ctx.fill();
+ }
+ function spindle(from){ /* from: 'poles' */
+  ctx.strokeStyle='#6b5d3a';ctx.lineWidth=1.5;
+  const px1=cxL-250,px2=cxL+250;
+  for(let i=-3;i<=3;i++){
+   ctx.beginPath();ctx.moveTo(px1,cyL);ctx.lineTo(cxL,cyL+i*18);ctx.stroke();
+   ctx.beginPath();ctx.moveTo(px2,cyL);ctx.lineTo(cxL,cyL+i*18);ctx.stroke();
+  }
+  ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(px1,cyL,6,0,7);ctx.fill();
+  ctx.beginPath();ctx.arc(px2,cyL,6,0,7);ctx.fill();
+ }
+ /* one chromosome with two sister chromatids joined at centromere */
+ function chrom(x,y,col,scale,split,offset){
+  scale=scale||1;
+  const armH=26*scale;
+  // split: 0 joined ... 1 fully separated (draw two, moving apart by offset)
+  function chromatid(cx){
+   ctx.strokeStyle=col;ctx.lineWidth=8*scale;ctx.lineCap='round';
+   ctx.beginPath();ctx.moveTo(cx,y-armH);ctx.lineTo(cx,y+armH);ctx.stroke();
+  }
+  if(split<=0){
+   chromatid(x-4*scale);chromatid(x+4*scale);
+   ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(x,y,5*scale,0,7);ctx.fill();
+  } else {
+   const d=offset*split;
+   chromatid(x-d-4*scale);
+   ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(x-d,y,5*scale,0,7);ctx.fill();
+   chromatid(x+d+4*scale);
+   ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(x+d,y,5*scale,0,7);ctx.fill();
+  }
+ }
+ function tangled(){
+  ctx.strokeStyle='#E0382A';ctx.lineWidth=2;
+  for(let i=0;i<5;i++){
+   ctx.beginPath();
+   let x=cxL-60+i*30,y=cyL-40;
+   ctx.moveTo(x,y);
+   for(let k=0;k<6;k++){x+=(Math.random()-0.5)*20;y+=14;ctx.lineTo(x,y);}
+   ctx.stroke();
+  }
+ }
+ function frame(){
+  ctx.clearRect(0,0,W,H);
+  drawCell();
+  const cols=['#E0382A','#1450C8','#E86A17','#1E9E86'];
+  if(phase===0){ // interphase
+   nucleus(true);
+   ctx.strokeStyle='#E0382A';ctx.lineWidth=1.6;
+   for(let i=0;i<6;i++){ctx.beginPath();let x=cxL-90+i*30,y=cyL-40;ctx.moveTo(x,y);for(let k=0;k<7;k++){x+=Math.sin(k+i)*10;y+=11;ctx.lineTo(x,y);}ctx.stroke();}
+  } else if(phase===1){ // prophase
+   spindle();
+   // 4 chromosomes scattered
+   chrom(cxL-120,cyL-30,cols[0],1,0,0);
+   chrom(cxL-40,cyL+30,cols[1],1,0,0);
+   chrom(cxL+60,cyL-25,cols[2],1,0,0);
+   chrom(cxL+140,cyL+20,cols[3],1,0,0);
+  } else if(phase===2){ // metaphase
+   spindle();
+   // aligned on equator (vertical line at cxL)
+   ctx.strokeStyle='#7A3FF2';ctx.setLineDash([5,4]);ctx.lineWidth=2;
+   ctx.beginPath();ctx.moveTo(cxL,cyL-95);ctx.lineTo(cxL,cyL+95);ctx.stroke();ctx.setLineDash([]);
+   chrom(cxL,cyL-75,cols[0],1,0,0);
+   chrom(cxL,cyL-25,cols[1],1,0,0);
+   chrom(cxL,cyL+25,cols[2],1,0,0);
+   chrom(cxL,cyL+75,cols[3],1,0,0);
+   ctx.fillStyle='#7A3FF2';ctx.font='800 12px sans-serif';ctx.textAlign='center';ctx.fillText('赤道板',cxL,cyL-105);
+  } else if(phase===3){ // anaphase
+   spindle();
+   const s=playing?Math.min(1,(pt%120)/60):1;
+   const off=200*s;
+   // each chromosome's sister chromatids move to opposite poles
+   [[cyL-75],[cyL-25],[cyL+25],[cyL+75]].forEach((yy,i)=>{
+    chrom(cxL,yy[0],cols[i],0.9,1,off);
+   });
+   ctx.fillStyle='#E0382A';ctx.font='800 12px sans-serif';ctx.textAlign='center';
+   ctx.fillText('着丝点分裂 → 移向两极',cxL,cyL-105);
+  } else { // telophase
+   // two daughter nuclei forming
+   ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.setLineDash([6,4]);
+   ctx.beginPath();ctx.ellipse(cxL-150,cyL,90,60,0,0,7);ctx.stroke();
+   ctx.beginPath();ctx.ellipse(cxL+150,cyL,90,60,0,0,7);ctx.stroke();ctx.setLineDash([]);
+   // decondensing chromosomes each side
+   ctx.strokeStyle='#E0382A';ctx.lineWidth=2;
+   [-150,150].forEach(dx=>{for(let i=0;i<4;i++){ctx.beginPath();let x=cxL+dx-40+i*22,y=cyL-30;ctx.moveTo(x,y);for(let k=0;k<5;k++){x+=Math.sin(k+i)*8;y+=13;ctx.lineTo(x,y);}ctx.stroke();}});
+   // cleavage in middle
+   ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.setLineDash([4,4]);
+   ctx.beginPath();ctx.moveTo(cxL,cyL-118);ctx.lineTo(cxL,cyL+118);ctx.stroke();ctx.setLineDash([]);
+  }
+  ctx.fillStyle='#16120A';ctx.font='900 16px sans-serif';ctx.textAlign='left';
+  ctx.fillText(names[phase],20,28);
+  if(playing){pt++; if(pt%180===0){phase=(phase+1)%5;setSeg();out.innerHTML=desc[phase];}}
+  requestAnimationFrame(frame);
+ }
+ function setSeg(){seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.p===phase));}
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){phase=+b.dataset.p;pt=0;setSeg();out.innerHTML=desc[phase];};});
+ document.getElementById('phasePlay').onclick=function(){playing=!playing;this.textContent=playing?'⏸ 暂停':'▶ 连续';};
+ out.innerHTML=desc[0];
+ frame();
+})();
+
+/* ===== ③ 三条曲线 (染色体/DNA/单体) 时间轴 ===== */
+(function(){
+ const svg=document.getElementById('curveSvg'),out=document.getElementById('curveOut'),ptr=document.getElementById('tlPtr');
+ const NS='http://www.w3.org/2000/svg';
+ // timeline 0..100 : G1[0-25] S[25-45] G2[45-55] 前[55-65] 中[65-72] 后[72-82] 末[82-100]
+ // With 2N=2. base values (units): chromosome, DNA, chromatid
+ function vals(x){
+  let chr=2,dna=2,cha=0,ph='';
+  if(x<25){chr=2;dna=2;cha=0;ph='G1(合成前期)';}
+  else if(x<45){ // S: DNA ramps 2->4, chromatids appear 0->2 per chr => total single-value line: chromatids count = 2*chr once replicated
+   const f=(x-25)/20; dna=2+2*f; cha=2*f*2; chr=2; ph='S(DNA 复制中)';}
+  else if(x<55){chr=2;dna=4;cha=4;ph='G2(合成后期)';}
+  else if(x<65){chr=2;dna=4;cha=4;ph='前期';}
+  else if(x<72){chr=2;dna=4;cha=4;ph='中期';}
+  else if(x<82){chr=4;dna=4;cha=0;ph='后期(着丝点已分裂)';}
+  else {chr=2;dna=2;cha=0;ph='末期(已分成两细胞,单个计)';}
+  return {chr:chr,dna:dna,cha:cha,ph:ph};
+ }
+ const X0=40,X1=350,Y0=200,YT=30,maxV=4;
+ function sx(x){return X0+(x/100)*(X1-X0);}
+ function sy(v){return Y0-(v/maxV)*(Y0-YT);}
+ function line(col,key){
+  let d='';
+  for(let x=0;x<=100;x+=0.5){const v=vals(x)[key];d+=(x===0?'M':'L')+sx(x).toFixed(1)+' '+sy(v).toFixed(1)+' ';}
+  const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke',col);p.setAttribute('stroke-width','3.5');svg.appendChild(p);
+ }
+ function txt(x,y,s,col,anchor,size){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',size||'10');t.setAttribute('font-weight','800');t.setAttribute('fill',col||'#16120A');if(anchor)t.setAttribute('text-anchor',anchor);t.textContent=s;svg.appendChild(t);}
+ function draw(){
+  svg.innerHTML='';
+  // axes
+  const ax=document.createElementNS(NS,'line');ax.setAttribute('x1',X0);ax.setAttribute('y1',Y0);ax.setAttribute('x2',X1);ax.setAttribute('y2',Y0);ax.setAttribute('stroke','#16120A');ax.setAttribute('stroke-width','3');svg.appendChild(ax);
+  const ay=document.createElementNS(NS,'line');ay.setAttribute('x1',X0);ay.setAttribute('y1',Y0);ay.setAttribute('x2',X0);ay.setAttribute('y2',YT);ay.setAttribute('stroke','#16120A');ay.setAttribute('stroke-width','3');svg.appendChild(ay);
+  // gridlines for 2 and 4
+  [2,4].forEach(v=>{const g=document.createElementNS(NS,'line');g.setAttribute('x1',X0);g.setAttribute('y1',sy(v));g.setAttribute('x2',X1);g.setAttribute('y2',sy(v));g.setAttribute('stroke','#c9bfa2');g.setAttribute('stroke-width','1');g.setAttribute('stroke-dasharray','3 3');svg.appendChild(g);txt(X0-6,sy(v)+3,''+v,'#6b5d3a','end');});
+  // phase separators
+  [25,45,55,65,72,82].forEach(x=>{const s=document.createElementNS(NS,'line');s.setAttribute('x1',sx(x));s.setAttribute('y1',Y0);s.setAttribute('x2',sx(x));s.setAttribute('y2',YT);s.setAttribute('stroke','#e0d8bf');s.setAttribute('stroke-width','1');svg.appendChild(s);});
+  txt(sx(12),Y0+16,'间期','#6b5d3a','middle');
+  txt(sx(68),Y0+16,'分裂期','#6b5d3a','middle');
+  txt(4,YT-6,'数目','#16120A',null,'10');
+  // lines (draw chromatid & DNA & chromosome; slightly offset overlapping ones)
+  line('#1E9E86','cha'); // chromatid
+  line('#1450C8','dna'); // DNA
+  line('#E0382A','chr'); // chromosome
+  // pointer
+  const x=+ptr.value;const V=vals(x);
+  const pl=document.createElementNS(NS,'line');pl.setAttribute('x1',sx(x));pl.setAttribute('y1',Y0);pl.setAttribute('x2',sx(x));pl.setAttribute('y2',YT);pl.setAttribute('stroke','#16120A');pl.setAttribute('stroke-width','2');pl.setAttribute('stroke-dasharray','4 3');svg.appendChild(pl);
+  [['chr','#E0382A'],['dna','#1450C8'],['cha','#1E9E86']].forEach(k=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',sx(x));c.setAttribute('cy',sy(V[k[0]]));c.setAttribute('r',5);c.setAttribute('fill',k[1]);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','2');svg.appendChild(c);});
+  out.innerHTML='当前:<b>'+V.ph+'</b> —— 染色体 <b>'+Math.round(V.chr)+'</b>,DNA <b>'+(Math.round(V.dna*10)/10)+'</b>,染色单体 <b>'+Math.round(V.cha)+'</b>(以 2N=2 计)。' +
+   (x>=72&&x<82?' ← 后期着丝点分裂,染色体翻倍、单体归 0!':'') + (x>=25&&x<45?' ← S 期 DNA 正在复制。':'');
+ }
+ ptr.oninput=draw;draw();
+})();
+
+/* ===== ④ 动/植物细胞分裂对比 ===== */
+(function(){
+ const svg=document.getElementById('cellSvg'),out=document.getElementById('cellOut'),seg=document.getElementById('cellSeg');
+ const NS='http://www.w3.org/2000/svg';
+ let mode='plant';
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ function txt(x,y,s,col,size,anchor){const t=el('text',{x:x,y:y,'font-size':size||'12','font-weight':'800',fill:col||'#16120A'});if(anchor)t.setAttribute('text-anchor',anchor);t.textContent=s;svg.appendChild(t);}
+ function draw(){
+  svg.innerHTML='';
+  // two panels: prophase-ish (left) and telophase (right) for the chosen cell type
+  txt(175,22,mode==='plant'?'植物细胞(前期:两极冒丝)':'动物细胞(前期:中心体发丝)','#16120A','13','middle');
+  txt(525,22,mode==='plant'?'植物细胞(末期:细胞板)':'动物细胞(末期:缢裂)','#16120A','13','middle');
+  // LEFT panel
+  if(mode==='plant'){
+   svg.appendChild(el('rect',{x:60,y:50,width:230,height:150,fill:'#F4EFE2',stroke:'#1E9E86','stroke-width':'6'})); // thick wall
+   txt(175,44,'厚细胞壁','#1E9E86','10','middle');
+  } else {
+   svg.appendChild(el('ellipse',{cx:175,cy:125,rx:115,ry:75,fill:'#F4EFE2',stroke:'#16120A','stroke-width':'3'})); // membrane only
+   // centrioles/asters at poles
+   [65,285].forEach(px=>{svg.appendChild(el('circle',{cx:px,cy:125,r:7,fill:'#E86A17',stroke:'#16120A','stroke-width':'2'}));for(let a=0;a<8;a++){const ang=a/8*6.28;svg.appendChild(el('line',{x1:px,y1:125,x2:px+Math.cos(ang)*16,y2:125+Math.sin(ang)*16,stroke:'#E86A17','stroke-width':'1.5'}));}});
+   txt(175,208,'中心体(星射线)','#E86A17','10','middle');
+  }
+  // spindle fibers left
+  const px1=mode==='plant'?70:65,px2=mode==='plant'?280:285;
+  for(let i=-2;i<=2;i++){svg.appendChild(el('line',{x1:px1,y1:125,x2:175,y2:125+i*20,stroke:'#6b5d3a','stroke-width':'1.3'}));svg.appendChild(el('line',{x1:px2,y1:125,x2:175,y2:125+i*20,stroke:'#6b5d3a','stroke-width':'1.3'}));}
+  if(mode==='plant'){txt(175,120,'两极直接发出纺锤丝','#1E9E86','9','middle');}
+  // chromosomes on equator
+  [-40,0,40].forEach(dy=>{svg.appendChild(el('line',{x1:175,y1:125+dy-14,x2:175,y2:125+dy+14,stroke:'#E0382A','stroke-width':'6','stroke-linecap':'round'}));});
+
+  // RIGHT panel — telophase
+  if(mode==='plant'){
+   svg.appendChild(el('rect',{x:410,y:50,width:230,height:150,fill:'#F4EFE2',stroke:'#1E9E86','stroke-width':'6'}));
+   // cell plate forming in the middle (dashed vertical growing outward)
+   svg.appendChild(el('line',{x1:525,y1:60,x2:525,y2:190,stroke:'#7A3FF2','stroke-width':'6','stroke-dasharray':'8 5'}));
+   txt(525,44,'细胞板 → 新细胞壁','#7A3FF2','10','middle');
+   // dot arrows outward
+   txt(525,215,'从中央向四周扩展','#6b5d3a','10','middle');
+  } else {
+   // membrane pinching (two lobes)
+   svg.appendChild(el('path',{d:'M470 55 Q410 125 470 195 Q525 150 525 125 Q525 100 470 55 Z',fill:'#F4EFE2',stroke:'#16120A','stroke-width':'3'}));
+   svg.appendChild(el('path',{d:'M580 55 Q640 125 580 195 Q525 150 525 125 Q525 100 580 55 Z',fill:'#F4EFE2',stroke:'#16120A','stroke-width':'3'}));
+   svg.appendChild(el('path',{d:'M525 60 Q505 90 525 125 Q505 160 525 190',fill:'none',stroke:'#E0382A','stroke-width':'2.5','stroke-dasharray':'4 3'}));
+   txt(525,44,'细胞膜向内缢裂','#E0382A','10','middle');
+   txt(525,215,'从中部凹陷分成两个','#6b5d3a','10','middle');
+  }
+  // two daughter nuclei each side (right)
+  [472,578].forEach(cx=>svg.appendChild(el('ellipse',{cx:cx,cy:125,rx:34,ry:26,fill:'none',stroke:'#1450C8','stroke-width':'2.5','stroke-dasharray':'5 4'})));
+
+  out.innerHTML=mode==='plant'
+   ? '<b>植物细胞</b>:无中心体,纺锤体由细胞<b>两极直接发出</b>;末期赤道板处形成<b>细胞板 → 细胞壁</b>,向四周扩展把细胞隔成两个。'
+   : '<b>动物细胞</b>:由<b>中心体</b>(发出星射线)形成纺锤体;末期细胞膜从中部<b>向内凹陷缢裂</b>,把细胞缢成两个。';
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.c;draw();};});
+ draw();
+})();
+
+/* ===== ⑤ 着丝点分裂演示 ===== */
+(function(){
+ const svg=document.getElementById('cenSvg'),out=document.getElementById('cenOut'),ptr=document.getElementById('cenPtr');
+ const NS='http://www.w3.org/2000/svg';
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ function txt(x,y,s,col,size,anchor){const t=el('text',{x:x,y:y,'font-size':size||'11','font-weight':'800',fill:col||'#16120A'});if(anchor)t.setAttribute('text-anchor',anchor);t.textContent=s;svg.appendChild(t);}
+ const CX=190,CY=120;
+ function draw(){
+  svg.innerHTML='';
+  const s=+ptr.value/100;document.getElementById('cenV').textContent=Math.round(+ptr.value);
+  // cell outline
+  svg.appendChild(el('ellipse',{cx:CX,cy:CY,rx:170,ry:100,fill:'none',stroke:'#16120A','stroke-width':'3'}));
+  // poles
+  [CX-150,CX+150].forEach(px=>svg.appendChild(el('circle',{cx:px,cy:CY,r:5,fill:'#16120A'})));
+  // two chromosomes (2N=2) shown; each has two sister chromatids joined at centromere
+  const rows=[CY-45,CY+45];
+  rows.forEach((y,ri)=>{
+   const col=ri===0?'#E0382A':'#1450C8';
+   const off=140*s; // separation distance
+   if(s<0.5){
+    // still joined (metaphase-like), draw two chromatids close with centromere dot
+    svg.appendChild(el('line',{x1:CX-5,y1:y-24,x2:CX-5,y2:y+24,stroke:col,'stroke-width':'8','stroke-linecap':'round'}));
+    svg.appendChild(el('line',{x1:CX+5,y1:y-24,x2:CX+5,y2:y+24,stroke:col,'stroke-width':'8','stroke-linecap':'round'}));
+    svg.appendChild(el('circle',{cx:CX,cy:y,r:6,fill:'#16120A'}));
+   } else {
+    const d=off*(s-0.5)/0.5;
+    // spindle fibers pulling
+    svg.appendChild(el('line',{x1:CX-150,y1:CY,x2:CX-d,y2:y,stroke:'#6b5d3a','stroke-width':'1.5'}));
+    svg.appendChild(el('line',{x1:CX+150,y1:CY,x2:CX+d,y2:y,stroke:'#6b5d3a','stroke-width':'1.5'}));
+    svg.appendChild(el('line',{x1:CX-d,y1:y-24,x2:CX-d,y2:y+24,stroke:col,'stroke-width':'8','stroke-linecap':'round'}));
+    svg.appendChild(el('circle',{cx:CX-d,cy:y,r:5,fill:'#16120A'}));
+    svg.appendChild(el('line',{x1:CX+d,y1:y-24,x2:CX+d,y2:y+24,stroke:col,'stroke-width':'8','stroke-linecap':'round'}));
+    svg.appendChild(el('circle',{cx:CX+d,cy:y,r:5,fill:'#16120A'}));
+   }
+  });
+  const chrCount = s<0.5?2:4;
+  txt(CX,26,s<0.5?'中期:着丝点未裂 · 染色体 2N=2':'后期:着丝点已裂 · 染色体 4N=4','#16120A','12','middle');
+  out.innerHTML = s<0.5
+   ? '当前为<b>中期</b>:每条染色体含 2 条姐妹染色单体,共着一个着丝点 → 染色体数 = <b>2</b>(数着丝点)。'
+   : '<b>后期:着丝点一分为二</b>,姐妹染色单体分开成独立子染色体、拉向两极 → 染色体数瞬间加倍为 <b>4</b>,而 DNA 数不变(仍为 4)。';
+ }
+ ptr.oninput=draw;draw();
+})();
+
+/* ===== ⑥ 装片制作流程步进 ===== */
+(function(){
+ const svg=document.getElementById('prepSvg'),out=document.getElementById('prepOut'),seg=document.getElementById('prepSeg');
+ const NS='http://www.w3.org/2000/svg';
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ function txt(x,y,s,col,size,anchor){const t=el('text',{x:x,y:y,'font-size':size||'11','font-weight':'800',fill:col||'#16120A'});if(anchor)t.setAttribute('text-anchor',anchor||'middle');t.textContent=s;svg.appendChild(t);}
+ const steps=[
+  {n:'① 解离',c:'#1E9E86',d:'盐酸+酒精(15%HCl:95%酒精=1:1),使组织细胞相互分离开(细胞随之死亡)。'},
+  {n:'② 漂洗',c:'#1450C8',d:'清水漂洗约 10 分钟,洗去解离液(盐酸),否则会影响后续染色效果。'},
+  {n:'③ 染色',c:'#7A3FF2',d:'用龙胆紫(或醋酸洋红)等碱性染料染色 3~5 分钟,使染色体(质)着色。'},
+  {n:'④ 制片',c:'#E86A17',d:'盖上盖玻片,加压压片,使细胞分散成均匀单层,便于观察。'},
+  {n:'⑤ 观察',c:'#E0382A',d:'低倍找分生区(正方形细胞、排列紧密),再换高倍找各期;间期细胞最多,看形态数目找中期。'}
+ ];
+ let cur=0;
+ function draw(){
+  svg.innerHTML='';
+  const bw=118,gap=14,x0=30,y=70,h=54;
+  steps.forEach((st,i)=>{
+   const x=x0+i*(bw+gap);
+   svg.appendChild(el('rect',{x:x,y:y,width:bw,height:h,fill:i===cur?st.c:'#F4EFE2',stroke:'#16120A','stroke-width':i===cur?'4':'3'}));
+   txt(x+bw/2,y+32,st.n,i===cur?'#fff':'#16120A','15');
+   if(i<steps.length-1){svg.appendChild(el('line',{x1:x+bw,y1:y+h/2,x2:x+bw+gap,y2:y+h/2,stroke:'#16120A','stroke-width':'3','marker-end':'url(#pah)'}));}
+  });
+  svg.insertBefore((function(){const d=el('defs',{});const m=el('marker',{id:'pah',markerWidth:'9',markerHeight:'9',refX:'6',refY:'4.5',orient:'auto'});const p=el('path',{d:'M0,0 L9,4.5 L0,9 z',fill:'#16120A'});m.appendChild(p);d.appendChild(m);return d;})(),svg.firstChild);
+  out.innerHTML='<b>'+steps[cur].n+'</b>:'+steps[cur].d;
+  seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.s===cur));
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){cur=+b.dataset.s;draw();};});
+ draw();
+})();
+
+/* ===== ⑦ 时期判别器 ===== */
+(function(){
+ const box=document.getElementById('featChips'),out=document.getElementById('judgeOut');
+ // features tagged with which phase(s) they support
+ const feats=[
+  {t:'核膜、核仁完整存在',ph:['间期','末期']},
+  {t:'染色质细长分散(未成染色体)',ph:['间期']},
+  {t:'核膜、核仁消失',ph:['前期','中期','后期']},
+  {t:'出现纺锤体(丝)',ph:['前期','中期','后期']},
+  {t:'染色体散乱分布',ph:['前期']},
+  {t:'着丝点整齐排在赤道板上',ph:['中期']},
+  {t:'染色体形态数目最清晰',ph:['中期']},
+  {t:'着丝点分裂、单体分开',ph:['后期']},
+  {t:'染色体移向两极',ph:['后期']},
+  {t:'染色体数目暂时加倍',ph:['后期']},
+  {t:'出现细胞板 / 缢裂,细胞一分为二',ph:['末期']}
+ ];
+ const sel=new Set();
+ feats.forEach((f,i)=>{const c=document.createElement('div');c.className='chip';c.textContent=f.t;c.onclick=function(){if(sel.has(i)){sel.delete(i);c.classList.remove('on');}else{sel.add(i);c.classList.add('on');}judge();};box.appendChild(c);});
+ const phases=['间期','前期','中期','后期','末期'];
+ function judge(){
+  if(sel.size===0){out.innerHTML='请勾选一个或多个特征……';return;}
+  const score={间期:0,前期:0,中期:0,后期:0,末期:0};
+  sel.forEach(i=>feats[i].ph.forEach(p=>score[p]++));
+  let best=phases[0],bv=-1;phases.forEach(p=>{if(score[p]>bv){bv=score[p];best=p;}});
+  // ties
+  const ties=phases.filter(p=>score[p]===bv&&bv>0);
+  const tips={
+   间期:'核膜核仁在、染色质分散、无纺锤体 → 间期(DNA 复制、时间最长)。',
+   前期:'膜仁消失、纺锤体出现、染色体散乱 → 前期(膜仁消失现两体)。',
+   中期:'着丝点排在赤道板、形态数目最清晰 → 中期(观察最佳期)。',
+   后期:'着丝点分裂、单体分开移向两极、染色体数加倍 → 后期。',
+   末期:'两消两现、出现细胞板或缢裂 → 末期(细胞一分为二)。'
+  };
+  if(ties.length>1){
+   out.innerHTML='当前特征在 <b>'+ties.join(' / ')+'</b> 之间尚不能唯一确定,请再补一个关键特征(如是否有纺锤体、着丝点是否分裂)。';
+  }else{
+   out.innerHTML='最可能处于 → <b>'+best+'</b>。'+tips[best];
+  }
+ }
+ judge();
+})();
+
+/* ===== ⑫ 自测 ===== */
+(function(){
+ const qs=[
+  {q:"1. 一个细胞周期由哪两部分组成?哪部分时间最长?",a:"分裂间期(G1→S→G2)+ 分裂期 M(前→中→后→末)。间期时间最长、最关键(DNA 复制、蛋白质合成)。"},
+  {q:"2. DNA 复制发生在细胞周期的哪个时期?",a:"分裂间期的 S 期(合成期)。此时 DNA 数目由 2C 加倍到 4C。"},
+  {q:"3. 有丝分裂前期的特征?",a:"膜仁消失现两体:染色质变成染色体,核膜核仁消失,纺锤体(丝)出现,染色体散乱分布。"},
+  {q:"4. 观察染色体形态和数目最好在哪一期?为什么?",a:"中期。此时着丝点整齐排在赤道板上、染色体缠绕最紧、形态数目最清晰。"},
+  {q:"5. 着丝点分裂发生在哪一期?会导致什么变化?",a:"后期。着丝点一分为二,姐妹染色单体分开成子染色体、移向两极,染色体数瞬间加倍(2N→4N),DNA 数不变。"},
+  {q:"6. 末期的'两消两现'指什么?",a:"两消:纺锤体消失、染色体(解螺旋成染色质)消失;两现:核膜重现、核仁重现。随后细胞一分为二。"},
+  {q:"7. 植物细胞与动物细胞有丝分裂的两点主要区别?",a:"纺锤体来源:植物由两极直接发出、动物由中心体形成;末期分裂:植物形成细胞板→细胞壁、动物细胞膜向内缢裂。"},
+  {q:"8. 设体细胞 2N=4,中期与后期的染色体、DNA、染色单体数各为多少?",a:"中期:染色体4、DNA8、单体8;后期:染色体8、DNA8、单体0(着丝点已分裂)。"},
+  {q:"9. 数染色体的依据是什么?",a:"只数着丝点——有几个着丝点就是几条染色体,无论其上有几条染色单体。"},
+  {q:"10. 观察根尖分生区装片的正确流程?",a:"解离(盐酸+酒精)→ 漂洗(清水)→ 染色(龙胆紫/醋酸洋红)→ 制片(压片),再镜下观察。"},
+  {q:"11. 为什么装片中间期细胞数目最多?为什么看不到染色体连续运动?",a:"因间期在细胞周期中时间最长,故间期细胞比例最大;解离时细胞已死亡,只能看到某一时期的定格,无法追踪连续运动。"},
+  {q:"12. 如何快速区分有丝分裂与减数分裂?",a:"看有无同源染色体联会/四分体:有 → 减数分裂;完全没有、且着丝点仅在后期分裂一次、子细胞染色体数与母细胞相同 → 有丝分裂。"}
+ ];
+ const quiz=document.getElementById('quiz');
+ qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

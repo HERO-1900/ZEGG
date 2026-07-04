@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>酶与ATP · 细胞代谢基础 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);--accent:var(--orange);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--orange);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.g::before{background:var(--green)}
+  h3{font-size:17px;font-weight:900;margin:20px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--orange);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--orange);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:13.5px;font-weight:700;box-shadow:3px 3px 0 var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--orange)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;min-width:54px}
+  .sl{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+  .sl .lab{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between}
+  input[type=range]{accent-color:var(--orange);width:100%}
+  .seg{display:inline-flex;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .seg button{background:var(--card);border:0;border-right:3px solid var(--ink);padding:7px 12px;font-weight:800;font-size:13px;cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--orange);color:#fff}
+  .out{font-weight:900;font-size:14.5px;border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:8px}
+  .small{font-size:12.5px;font-weight:700;color:#6b5d3a}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+  .dot{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>酶与 ATP · 细胞代谢基础全攻坚</h1>
+    <p class="lead">酶的本质与作用、三大特性、温度/pH/浓度曲线、探究实验的变量控制、ATP 的结构与 ADP↔ATP 相互转化——把"细胞代谢的两块基石"理顺,选择题稳拿、实验题会答。</p>
+
+    <div class="say">🗣️ <b>酶与 ATP(人话版):</b> 把细胞想成一座<b>不停开工的工厂</b>。<b>酶</b>是工厂里的"<b>专用工具/催化剂</b>":它只帮忙<b>降低反应门槛(活化能)</b>,让本来要高温高压才发生的反应在常温常压下飞快进行——但它<b>不出力、不提供能量</b>,自己反应前后不变。<b>ATP</b>则是工厂通用的"<b>充电电池 / 现金</b>":需要能量的活动(肌肉收缩、主动运输、合成)都花它。呼吸作用、光合作用负责给电池<b>充电(合成 ATP)</b>,用的时候<b>放电(水解 ATP)</b>。<br>一句话:<b>酶管"快不快",ATP 管"能量够不够"</b>——它俩合起来撑起整个细胞代谢。</div>
+
+    <h2 class="o">① 酶的本质:绝大多数是蛋白质,少数是 RNA</h2>
+    <div class="card">
+      <p style="margin:4px 0">酶是<b>活细胞产生的、具有催化作用的有机物</b>。<b>绝大多数酶是蛋白质</b>(其基本单位是氨基酸),<b>少数酶是 RNA</b>(如某些核酶,基本单位是核糖核苷酸)。</p>
+      <table>
+        <tr><th>项目</th><th>蛋白质类酶</th><th>RNA 类酶(核酶)</th></tr>
+        <tr><td>数量</td><td>绝大多数</td><td>少数</td></tr>
+        <tr><td>基本单位</td><td>氨基酸</td><td>核糖核苷酸</td></tr>
+        <tr><td>合成场所</td><td>核糖体(经转录、翻译)</td><td>转录得到(RNA)</td></tr>
+        <tr><td>检测试剂</td><td>双缩脲试剂→紫色</td><td>不与双缩脲呈色</td></tr>
+      </table>
+      <p class="trap">⚠ 别说"酶都是蛋白质"。正确说法:<b>绝大多数酶是蛋白质,少数是 RNA</b>。也别说"所有酶都在核糖体合成"——RNA 类酶不在核糖体合成。</p>
+    </div>
+
+    <h2>② 酶的作用:催化、降低活化能(而非提供能量)</h2>
+    <p class="lead">酶的作用是<b>催化</b>:通过<b>显著降低化学反应的活化能</b>,让反应更容易发生、速率大大加快。酶<b>不改变反应的方向和平衡</b>,<b>不为反应提供能量</b>,反应前后自身数量和性质<b>不变</b>。</p>
+    <div class="keybox"><b>一句话记死:</b> 酶只<b>降低活化能</b>,不<b>提供能量</b>;它让"翻过山头"更省力,但不推你上山。无机催化剂也能降活化能,但酶降得<b>更多、更专一、条件更温和</b>。</div>
+    <div class="viz">
+      <h3>viz① 活化能能垒动画(无酶高垒 vs 有酶低垒)</h3>
+      <p class="small">同一个反应,反应物→产物总能量差(ΔE)不变;酶只把中间那道"能垒(活化能)"压低,分子更容易越过。点按钮切换有酶/无酶,看小球能否翻过山头。</p>
+      <canvas id="eaCv" width="700" height="320"></canvas>
+      <div class="ctrlrow">
+        <div class="seg" id="eaSeg"><button data-m="no" class="on">无酶(高活化能)</button><button data-m="yes">有酶(低活化能)</button></div>
+        <button class="btn" id="eaGo">▶ 发射分子</button>
+      </div>
+      <div class="out" id="eaOut"></div>
+    </div>
+
+    <h2 class="v">③ 酶的三大特性:高效、专一、条件温和</h2>
+    <div class="card">
+      <table>
+        <tr><th>特性</th><th>含义</th><th>实验/例证</th></tr>
+        <tr><td>高效性</td><td>催化效率远高于无机催化剂(约高 10⁷~10¹³ 倍)</td><td>过氧化氢分解:肝脏研磨液(含过氧化氢酶) vs FeCl₃ 溶液,前者产气快得多</td></tr>
+        <tr><td>专一性</td><td>一种酶只能催化一种或一类特定底物的反应("锁与钥匙")</td><td>蔗糖酶只水解蔗糖,不水解麦芽糖;淀粉酶不水解蔗糖</td></tr>
+        <tr><td>作用条件温和</td><td>需适宜温度、pH;过高温、过酸过碱会使酶(蛋白质)变性失活</td><td>人体多数酶最适约 37℃;胃蛋白酶最适 pH≈2,胰蛋白酶最适 pH≈8</td></tr>
+      </table>
+      <p class="trap">⚠ "专一性"常考对照:验证专一性要让<b>同一种酶</b>面对<b>不同底物</b>(如淀粉酶分别加淀粉、蔗糖),看只有对应底物被分解。</p>
+    </div>
+    <div class="viz">
+      <h3>viz③ 专一性"锁与钥匙"模型(底物与酶匹配才反应)</h3>
+      <p class="small">点选不同底物送入酶的活性中心。形状匹配→结合并被催化分解;形状不匹配→无法结合、不反应。这就是酶的<b>专一性</b>。</p>
+      <div class="chips" id="lkChips">
+        <span class="chip on" data-s="star">底物 A(与酶匹配)</span>
+        <span class="chip" data-s="tri">底物 B(不匹配)</span>
+        <span class="chip" data-s="circ">底物 C(不匹配)</span>
+      </div>
+      <svg id="lkSvg" viewBox="0 0 700 260" aria-label="锁钥模型"></svg>
+      <div class="ctrlrow"><button class="btn" id="lkGo">▶ 送入活性中心</button></div>
+      <div class="out" id="lkOut"></div>
+    </div>
+
+    <h2 class="r">④ 影响酶活性的因素:温度、pH、浓度</h2>
+    <p class="lead">温度、pH 影响酶的<b>活性</b>(改变酶的空间结构);底物浓度、酶浓度影响<b>反应速率</b>(改变酶接触底物的机会)。关键区分:<b>高温使酶变性失活是不可逆的;低温只是抑制,升温后可恢复</b>。</p>
+    <div class="card">
+      <h3>温度</h3>
+      <p style="margin:4px 0">存在<b>最适温度</b>,此时酶活性最高。<b>高温</b>使酶(蛋白质)空间结构被破坏、<b>变性失活,不可逆</b>;<b>低温</b>只是使酶活性降低、被<b>抑制,酶未被破坏,回到最适温度活性可恢复</b>。</p>
+      <h3>pH</h3>
+      <p style="margin:4px 0">存在<b>最适 pH</b>。<b>过酸或过碱</b>都会使酶变性失活(通常不可逆)。不同酶最适 pH 不同(胃蛋白酶≈2,唾液淀粉酶≈7,胰蛋白酶≈8)。</p>
+      <h3>底物浓度 / 酶浓度</h3>
+      <p style="margin:4px 0">酶量一定时,增大<b>底物浓度</b>反应速率先升后达<b>饱和(平台)</b>(酶被"占满");底物足量时,增大<b>酶浓度</b>反应速率大致成正比上升。</p>
+    </div>
+    <div class="viz">
+      <h3>viz② 温度-酶活曲线 &amp; pH-酶活曲线(拖动看活性)</h3>
+      <p class="small">拖动滑块改变温度或 pH,红点显示当前酶活性,并标出"最适点"和"失活区"。切换上方按钮看两条曲线。</p>
+      <div class="seg" id="tpSeg" style="margin-bottom:8px"><button data-m="temp" class="on">温度曲线</button><button data-m="ph">pH 曲线</button></div>
+      <div class="ctrlrow" id="tempCtrl"><label>温度</label><div class="sl"><div class="lab"><span>0℃ → 80℃</span><span id="tempV">37℃</span></div><input type="range" id="tempSl" min="0" max="80" value="37"></div></div>
+      <div class="ctrlrow" id="phCtrl" style="display:none"><label>pH</label><div class="sl"><div class="lab"><span>1 → 13</span><span id="phV">7</span></div><input type="range" id="phSl" min="1" max="13" value="7"></div></div>
+      <svg id="tpSvg" viewBox="0 0 360 230" aria-label="温度pH酶活曲线"></svg>
+      <div class="out" id="tpOut"></div>
+    </div>
+    <div class="viz">
+      <h3>viz⑤ 底物浓度-反应速率曲线(酶量限制→饱和)</h3>
+      <p class="small">拖动底物浓度,看反应速率先升后趋于<b>饱和平台</b>(酶被占满,成了限制因素)。再拖"酶浓度",看平台高度整体抬升。</p>
+      <div class="ctrlrow"><label>底物</label><div class="sl"><div class="lab"><span>底物浓度 0→高</span><span id="subV">40</span></div><input type="range" id="subSl" min="0" max="100" value="40"></div></div>
+      <div class="ctrlrow"><label>酶量</label><div class="sl"><div class="lab"><span>酶浓度 低→高</span><span id="enzV">50</span></div><input type="range" id="enzSl" min="20" max="100" value="50"></div></div>
+      <svg id="subSvg" viewBox="0 0 360 220" aria-label="底物浓度反应速率曲线"></svg>
+      <div class="out" id="subOut"></div>
+    </div>
+
+    <h2 class="g">⑤ 探究实验:变量控制与对照</h2>
+    <p class="lead">酶的探究实验核心是<b>控制变量</b>:只让<b>自变量</b>变化,严格控制<b>无关变量</b>相同且适宜,观测<b>因变量</b>,并设<b>对照</b>。</p>
+    <div class="card">
+      <table>
+        <tr><th>变量</th><th>含义</th><th>例(探究温度对酶活性的影响)</th></tr>
+        <tr><td>自变量</td><td>人为改变、要研究的因素</td><td>温度(如 0℃、37℃、60℃)</td></tr>
+        <tr><td>因变量</td><td>随自变量变化、需检测的结果</td><td>底物分解量/产物量(如淀粉剩余量、气泡多少)</td></tr>
+        <tr><td>无关变量</td><td>除自变量外影响结果、须控制相同的量</td><td>pH、底物量、酶量、时间、试管规格等</td></tr>
+      </table>
+      <p class="trap">⚠ 探究<b>温度</b>影响时,检测试剂要用<b>碘液</b>(不能用斐林试剂,因斐林需水浴加热会干扰温度变量);探究<b>pH</b>影响时,要<b>先分别调好温度和 pH 再混合</b>底物与酶,避免在不适温度/pH 下提前反应。</p>
+      <p class="trap">⚠ 用 H₂O₂ 探究时不能用"温度"作自变量的对照来测过氧化氢酶——因为加热本身也会加速 H₂O₂ 分解,干扰因变量。</p>
+    </div>
+    <div class="viz">
+      <h3>viz⑥ 探究实验变量控制器(自变量/因变量/无关变量)</h3>
+      <p class="small">选择你要研究的自变量,系统自动判定谁是因变量、哪些无关变量必须控制相同,并提示常见陷阱。</p>
+      <div class="seg" id="varSeg"><button data-m="temp" class="on">研究温度</button><button data-m="ph">研究 pH</button><button data-m="sub">研究底物浓度</button><button data-m="enz">研究酶浓度</button></div>
+      <svg id="varSvg" viewBox="0 0 700 200" aria-label="变量控制器"></svg>
+      <div class="out" id="varOut"></div>
+    </div>
+
+    <h2 class="b">⑥ ATP 的结构:A—P~P~P</h2>
+    <div class="card">
+      <p style="margin:4px 0">ATP 中文名<b>三磷酸腺苷</b>,结构式简写 <b>A—P~P~P</b>:</p>
+      <div class="mono">A = 腺苷(腺嘌呤 + 核糖)　P = 磷酸基团　— 普通磷酸键　~ 高能磷酸键</div>
+      <p style="margin:4px 0">一个 ATP 含<b>三个磷酸基团、两个高能磷酸键(~)</b>。远离 A 的那个高能磷酸键最容易断裂:水解时断掉<b>末端一个</b>高能磷酸键,释放能量并生成 <b>ADP + Pi</b>。</p>
+      <div class="eq">ATP ⇌ ADP + Pi + 能量</div>
+      <p class="trap">⚠ "A"在 ATP 里指<b>腺苷</b>(腺嘌呤+核糖);而在 DNA/RNA 碱基里"A"指<b>腺嘌呤</b>。别混。ATP 中的"腺苷"其实就是 RNA 中腺嘌呤核糖核苷酸去掉两个磷酸后的部分——所以 ATP 也是合成 RNA 的原料之一。</p>
+    </div>
+    <div class="viz">
+      <h3>viz④ ATP ⇌ ADP 相互转化动画(合成吸能 / 水解放能)</h3>
+      <p class="small">点"水解"看末端 ~P 断裂、放出能量供生命活动;点"合成"看 ADP + Pi 结合、吸收来自呼吸/光合的能量。注意:这两个过程<b>物质可逆,但能量来源与去向不同,不是简单可逆</b>。</p>
+      <div class="ctrlrow">
+        <div class="seg" id="atpSeg"><button data-m="hyd" class="on">水解(放能)</button><button data-m="syn">合成(吸能)</button></div>
+        <button class="btn" id="atpGo">▶ 播放一次</button>
+      </div>
+      <svg id="atpSvg" viewBox="0 0 700 280" aria-label="ATP转化动画"></svg>
+      <div class="out" id="atpOut"></div>
+    </div>
+
+    <h2 class="o">⑦ ATP ⇌ ADP 相互转化:能量通货</h2>
+    <div class="card">
+      <p style="margin:4px 0">ATP 是细胞的<b>直接能源物质("能量通货")</b>。生命活动直接消耗 ATP,而非直接烧糖。</p>
+      <table>
+        <tr><th></th><th>ATP 水解</th><th>ATP 合成</th></tr>
+        <tr><td>过程</td><td>ATP → ADP + Pi</td><td>ADP + Pi → ATP</td></tr>
+        <tr><td>能量</td><td><b>释放</b>能量,供各项生命活动</td><td><b>需要(吸收)</b>能量</td></tr>
+        <tr><td>能量来源/去向</td><td>去向:主动运输、肌肉收缩、合成、生物发光等</td><td>来源:动物/人来自<b>呼吸作用</b>;绿色植物来自<b>呼吸作用 + 光合作用</b></td></tr>
+        <tr><td>催化酶</td><td>ATP 水解酶</td><td>ATP 合成酶</td></tr>
+      </table>
+      <div class="keybox"><b>"相互转化不可逆"如何理解:</b> 物质上 ADP+Pi 与 ATP 可以互相转化,但<b>合成用的能量(来自呼吸/光合)与水解释放去向的能量(用于生命活动)不是同一批</b>,催化酶也不同,所以<b>不是一个简单的可逆反应</b>。ATP 在细胞内含量少但转化极快,"现产现用"。</div>
+    </div>
+    <div class="card">
+      <h3>与呼吸作用、光合作用的联系</h3>
+      <p style="margin:4px 0">▸ <b>呼吸作用</b>:分解有机物释放能量,一部分转移到 ATP 中(为细胞供能),其余以热能散失。<br>▸ <b>光合作用</b>:光反应产生的 ATP <b>只用于暗反应</b>(不能供其它生命活动);而供细胞日常活动的 ATP 主要来自<b>呼吸作用</b>。<br>▸ 呼吸/光合中的"造 ATP"与生命活动中的"用 ATP"首尾相接,构成能量的持续流动。</p>
+      <p class="trap">⚠ 常考点:光反应生成的 ATP<b>只供暗反应</b>,不能用于主动运输等其它活动;为其它活动供能的 ATP 来自呼吸作用。</p>
+    </div>
+
+    <h2 class="v">⑧ 全题型地图(触发 → 动作 → 例题 → 陷阱)</h2>
+
+    <div class="card">
+      <h3>题型 A · 酶的本质与特性判断</h3>
+      <p><b class="tag">触发:</b>题干出现"酶的化学本质""是否都是蛋白质""高效/专一/温和""与无机催化剂比较"。</p>
+      <p><b class="tag">动作:</b>①本质=绝大多数蛋白质+少数RNA;②作用=降活化能不供能;③三特性对号入座;④与无机催化剂比:更高效、专一、条件温和,但都只降活化能。</p>
+      <p><b class="tag">例题:</b>"下列关于酶的叙述正确的是"——选"酶能降低化学反应的活化能"。</p>
+      <p class="trap">⚠ 陷阱:"酶都是蛋白质"(错,少数是RNA)、"酶为反应提供能量"(错,只降活化能)、"酶在反应后被消耗"(错,前后不变)。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 B · 温度/pH 曲线分析</h3>
+      <p><b class="tag">触发:</b>给出"酶活性-温度"或"酶活性-pH"曲线/表格,问最适值、失活可逆性、曲线走向。</p>
+      <p><b class="tag">动作:</b>①找峰值=最适;②峰两侧下降的原因分开说:温度左侧低温(抑制、可恢复)、右侧高温(变性、不可逆);pH 两侧均为变性失活;③"低温保存酶/食物"用的是低温抑制且可恢复。</p>
+      <p><b class="tag">例题:</b>"将酶从 0℃ 移到 37℃ 活性升高,从 80℃ 移到 37℃ 活性不恢复,原因?"——0℃只是抑制;80℃已变性,结构破坏不可逆。</p>
+      <p class="trap">⚠ 陷阱:把低温失活当成"变性"(错);认为高温后降温酶能复活(错,高温变性不可逆)。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 C · 探究实验的变量控制</h3>
+      <p><b class="tag">触发:</b>"探究……对酶活性的影响""设计实验""指出自变量/因变量/无关变量""评价实验方案"。</p>
+      <p><b class="tag">动作:</b>①锁定自变量(题目研究的那个);②因变量=可检测的结果(产物量/底物剩余/气泡/透光度);③无关变量列全并"相同且适宜";④选对检测试剂:测温度用碘液(不用需加热的斐林);⑤研究pH时先分别调好pH再混合。</p>
+      <p><b class="tag">例题:</b>"探究温度对唾液淀粉酶的影响,为何用碘液而非斐林试剂?"——斐林需水浴加热,会改变(干扰)自变量温度。</p>
+      <p class="trap">⚠ 陷阱:用 H₂O₂ 探究过氧化氢酶时把"温度"当自变量(错,加热本身也分解 H₂O₂);先混合底物与酶再调温/调pH(错,应先分别调好再混合)。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 D · ATP 转化与能量来源</h3>
+      <p><b class="tag">触发:</b>"ATP 结构 A—P~P~P""ATP↔ADP""直接/间接能源""能量来源""光反应 ATP 去向"。</p>
+      <p><b class="tag">动作:</b>①结构:三磷酸腺苷、2个高能磷酸键、水解断末端;②ATP=直接能源(能量通货),糖类=主要能源、脂肪=储能;③合成能量来源:动物=呼吸,植物=呼吸+光合;④光反应 ATP 只供暗反应。</p>
+      <p><b class="tag">例题:</b>"人体成熟红细胞消耗 ATP 主要来自哪种呼吸?"——成熟红细胞无线粒体,只能靠<b>无氧呼吸(葡萄糖→乳酸)</b>供 ATP。</p>
+      <p class="trap">⚠ 陷阱:把糖类当"直接能源"(错,直接能源是 ATP);认为光反应的 ATP 能供主动运输(错,只供暗反应);认为 ADP↔ATP 是简单可逆(错,能量来源/去向与催化酶不同)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 酶只<b>降低活化能</b>,<b>不提供能量</b>、不改变反应方向和平衡;反应前后自身不变。</p>
+      <p class="trap">② <b>高温使酶变性失活,不可逆</b>;<b>低温只是抑制,可恢复</b>。两者机理完全不同,别写反。</p>
+      <p class="trap">③ 酶<b>绝大多数是蛋白质,少数是 RNA</b>——不能说"酶都是蛋白质"。</p>
+      <p class="trap">④ ATP 水解/合成都需要酶催化,是<b>酶促反应</b>(ATP 水解酶、ATP 合成酶);ATP 含<b>2 个</b>高能磷酸键,水解只断末端<b>1 个</b>。</p>
+      <p class="trap">⑤ 探究温度用<b>碘液</b>不用斐林(斐林要加热);研究 pH 要<b>先调好 pH 再混合</b>底物与酶。</p>
+      <p class="trap">⑥ 直接能源是 <b>ATP</b>,不是糖;光反应产生的 ATP <b>只供暗反应</b>。</p>
+      <p class="trap">⑦ 底物浓度增大→速率先升后<b>饱和(酶被占满)</b>;酶浓度增大(底物足量)→速率大致成正比升高。别把两条曲线的"平台"原因搞混。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0">▸ <b>曲线"两侧下降"分因作答:</b>温度曲线左侧(低温)写"抑制、可逆",右侧(高温)写"变性、不可逆";pH 曲线两侧均写"变性失活"。阅卷按这两点给分,别只写"活性降低"。</p>
+      <p style="margin:6px 0">▸ <b>"验证 vs 探究"审题:</b>验证专一性/高效性→结论已知,做对照即可;探究最适温度/pH→结论未知,需在预估最适值附近<b>设置较小梯度</b>的多组,才能找出峰值。</p>
+      <p style="margin:6px 0">▸ <b>限制因素思想迁移:</b>底物浓度曲线的平台=酶量成为限制因素;此时提高<b>酶浓度</b>才有效——与光合"限制因子"同一逻辑。</p>
+      <p style="margin:6px 0">▸ <b>ATP 与磷元素/核酸的横向联系:</b>ATP 去掉两个磷酸即为腺嘌呤核糖核苷酸,是合成 RNA 的原料;缺磷会同时影响 ATP 与核酸合成——常作跨模块综合题。</p>
+      <p style="margin:6px 0">▸ <b>"物质可逆、过程不可逆"辨析:</b> ADP+Pi⇌ATP 在物质上互变,但合成(吸能,来自呼吸/光合)与水解(放能,供生命活动)由不同酶催化、能量来去不同,故整体<b>不是简单可逆反应</b>。这是高频简答踩分点。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:光合作用 / 呼吸作用全攻坚</p>
+  </div>
+
+<script>
+/* ===== viz① 活化能能垒动画 ===== */
+(function(){
+ const cv=document.getElementById('eaCv'),ctx=cv.getContext('2d');
+ const W=cv.width,H=cv.height;
+ let mode='no';               // no = 无酶(高垒), yes = 有酶(低垒)
+ let ball=null;               // {x, launched}
+ // 能垒曲线:反应物平台(左高) -> 峰(活化能顶) -> 产物平台(右低)
+ const baseY=250, reactY=170, prodY=210;
+ function peakY(){ return mode==='no' ? 60 : 130; }   // 高垒 vs 低垒
+ function curveY(x){
+  // x in [80,620]; 峰在 x=350
+  const xL=80,xP=350,xR=620;
+  if(x<=xL) return reactY;
+  if(x>=xR) return prodY;
+  const py=peakY();
+  if(x<xP){ const t=(x-xL)/(xP-xL); return reactY+(py-reactY)*(0.5-0.5*Math.cos(Math.PI*t)); }
+  const t=(x-xP)/(xR-xP); return py+(prodY-py)*(0.5-0.5*Math.cos(Math.PI*t));
+ }
+ function draw(){
+  ctx.clearRect(0,0,W,H);
+  // 轴
+  ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(50,20);ctx.lineTo(50,baseY);ctx.lineTo(660,baseY);ctx.stroke();
+  ctx.fillStyle='#16120A';ctx.font='800 12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('能量',12,30);ctx.textAlign='right';ctx.fillText('反应进程 →',655,baseY+22);
+  // 能垒曲线
+  ctx.strokeStyle= mode==='no' ? '#E0382A' : '#1E9E86';ctx.lineWidth=5;
+  ctx.beginPath();
+  for(let x=80;x<=620;x+=2){const y=curveY(x);if(x===80)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+  ctx.stroke();
+  // 反应物 / 产物 标注
+  ctx.fillStyle='#16120A';ctx.font='900 13px sans-serif';ctx.textAlign='center';
+  ctx.fillText('反应物',110,reactY-12);ctx.fillText('产物',600,prodY+22);
+  // 活化能双箭头(从反应物平台到峰顶)
+  const py=peakY();
+  ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.setLineDash([5,3]);
+  ctx.beginPath();ctx.moveTo(350,reactY);ctx.lineTo(350,py);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#7A3FF2';ctx.font='900 12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('活化能',360,(reactY+py)/2);
+  ctx.fillText(mode==='no'?'(高)':'(低)',360,(reactY+py)/2+16);
+  // ΔE(总能量差,不变)
+  ctx.strokeStyle='#1450C8';ctx.lineWidth=2;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(120,reactY);ctx.lineTo(120,prodY);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1450C8';ctx.font='800 11px sans-serif';ctx.textAlign='left';
+  ctx.fillText('ΔE 不变',124,(reactY+prodY)/2+4);
+  // 小球
+  if(ball){
+   const y=curveY(ball.x)-10;
+   ctx.beginPath();ctx.arc(ball.x,y,10,0,7);ctx.fillStyle='#F3C00E';ctx.fill();
+   ctx.lineWidth=3;ctx.strokeStyle='#16120A';ctx.stroke();
+  } else {
+   const y=curveY(90)-10;
+   ctx.beginPath();ctx.arc(90,y,10,0,7);ctx.fillStyle='#F3C00E';ctx.fill();
+   ctx.lineWidth=3;ctx.strokeStyle='#16120A';ctx.stroke();
+  }
+ }
+ let raf=null;
+ function launch(){
+  if(raf)cancelAnimationFrame(raf);
+  ball={x:90};
+  const peak=peakY();
+  // 无酶:高垒,小球"能量不足",冲到接近峰前折返;有酶:低垒,越过成为产物
+  const success = (mode==='yes');
+  const stopX = success ? 620 : 300; // 无酶时卡在峰前
+  function step(){
+   draw();
+   if(ball.x < stopX){ ball.x += success?5:4; raf=requestAnimationFrame(step);}
+   else if(!success){
+    // 折返回反应物
+    const back=function(){draw();if(ball.x>92){ball.x-=5;raf=requestAnimationFrame(back);}else{ball=null;draw();document.getElementById('eaOut').innerHTML='<b>无酶:活化能高</b>,常温下分子能量多数不足以越过能垒,反应<b>极慢甚至几乎不发生</b>。';}};
+    back();
+   } else {
+    document.getElementById('eaOut').innerHTML='<b>有酶:活化能被大幅降低</b>,分子轻松越过能垒 → 变成产物,反应<b>飞快进行</b>。注意:酶没改变反应物与产物的总能量差(ΔE),只降低了中间那道门槛。';
+   }
+  }
+  step();
+ }
+ document.querySelectorAll('#eaSeg button').forEach(b=>{b.onclick=function(){document.querySelectorAll('#eaSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;ball=null;if(raf)cancelAnimationFrame(raf);draw();document.getElementById('eaOut').innerHTML=mode==='no'?'无酶状态:能垒很高。点"发射分子"看小球能否翻过。':'有酶状态:能垒被压低。点"发射分子"看小球轻松越过。';};});
+ document.getElementById('eaGo').onclick=launch;
+ draw();
+ document.getElementById('eaOut').innerHTML='无酶状态:能垒很高。点"发射分子"看小球能否翻过。';
+})();
+
+/* ===== viz② 温度 / pH 酶活曲线 ===== */
+(function(){
+ const svg=document.getElementById('tpSvg'),out=document.getElementById('tpOut');
+ const NS='http://www.w3.org/2000/svg';
+ const seg=document.getElementById('tpSeg');
+ const tempSl=document.getElementById('tempSl'),phSl=document.getElementById('phSl');
+ const tempV=document.getElementById('tempV'),phV=document.getElementById('phV');
+ const tempCtrl=document.getElementById('tempCtrl'),phCtrl=document.getElementById('phCtrl');
+ let mode='temp';
+ // 温度:最适 37,高温不可逆失活;这里活性用钟形,高温端更陡(变性)
+ function tempAct(tp){
+  if(tp>=60) return 0;                       // 高温变性失活
+  const x=(tp-37)/16; let a=Math.exp(-x*x);
+  return Math.max(0,a);
+ }
+ function phAct(p){
+  const x=(p-7)/2.6; let a=Math.exp(-x*x);
+  return Math.max(0,a);
+ }
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ function axis(xlab){
+  svg.appendChild(el('line',{x1:40,y1:190,x2:340,y2:190,stroke:'#16120A','stroke-width':3}));
+  svg.appendChild(el('line',{x1:40,y1:190,x2:40,y2:20,stroke:'#16120A','stroke-width':3}));
+  const lx=el('text',{x:250,y:208,'font-size':11,'font-weight':800});lx.textContent=xlab;svg.appendChild(lx);
+  const ly=el('text',{x:6,y:30,'font-size':11,'font-weight':800});ly.textContent='酶活性';svg.appendChild(ly);
+ }
+ function draw(){
+  svg.innerHTML='';
+  const isT=(mode==='temp');
+  axis(isT?'温度(℃)→':'pH →');
+  const min=isT?0:1,max=isT?80:13,cur=isT?+tempSl.value:+phSl.value;
+  const actFn=isT?tempAct:phAct;
+  // 曲线
+  let d='';
+  for(let i=0;i<=100;i++){const val=min+(max-min)*i/100;const a=actFn(val);const px=40+i*3;const py=190-a*150;d+=(i===0?'M':'L')+px+' '+py+' ';}
+  svg.appendChild(el('path',{d:d,fill:'none',stroke:isT?'#E0382A':'#1450C8','stroke-width':4}));
+  // 最适点
+  const opt=isT?37:7;
+  const ox=40+(opt-min)/(max-min)*300, oy=190-actFn(opt)*150;
+  svg.appendChild(el('circle',{cx:ox,cy:oy,r:5,fill:'#1E9E86',stroke:'#16120A','stroke-width':2}));
+  const ot=el('text',{x:ox,y:oy-10,'font-size':10,'font-weight':800,'text-anchor':'middle',fill:'#1E9E86'});ot.textContent='最适 '+(isT?'37℃':'pH7');svg.appendChild(ot);
+  // 失活区阴影(温度高温端)
+  if(isT){
+   svg.appendChild(el('rect',{x:40+(60-min)/(max-min)*300,y:20,width:300-(60-min)/(max-min)*300,height:170,fill:'rgba(224,56,42,0.12)'}));
+   const ft=el('text',{x:315,y:60,'font-size':9,'font-weight':800,'text-anchor':'end',fill:'#E0382A'});ft.textContent='高温变性区';svg.appendChild(ft);
+  }
+  // 当前点
+  const cx=40+(cur-min)/(max-min)*300, cy=190-actFn(cur)*150;
+  svg.appendChild(el('line',{x1:cx,y1:190,x2:cx,y2:cy,stroke:'#16120A','stroke-dasharray':'4 3','stroke-width':2}));
+  svg.appendChild(el('circle',{cx:cx,cy:cy,r:7,fill:'#F3C00E',stroke:'#16120A','stroke-width':3}));
+  // readout
+  const a=(actFn(cur)*100).toFixed(0);
+  let msg;
+  if(isT){
+   tempV.textContent=cur+'℃';
+   if(cur>=60) msg='<b>高温(≥60℃):酶已变性失活,活性≈0,不可逆</b>,降温也无法恢复。';
+   else if(cur<15) msg='低温:活性很低,但<b>只是被抑制,酶未破坏,升到最适温度活性可恢复</b>。';
+   else if(Math.abs(cur-37)<=4) msg='接近<b>最适温度(约37℃)</b>,酶活性最高。';
+   else if(cur<37) msg='低于最适:温度升高活性上升(抑制减弱,可恢复)。';
+   else msg='高于最适但未变性:活性随温度升高而下降,接近高温将变性失活。';
+   out.innerHTML='温度='+cur+'℃,相对活性≈<b>'+a+'%</b>。'+msg;
+  } else {
+   phV.textContent=cur;
+   if(a<3) msg='<b>过酸/过碱:酶变性失活</b>,通常不可逆。';
+   else if(Math.abs(cur-7)<=1) msg='接近<b>最适 pH</b>,活性最高。';
+   else msg='偏离最适 pH:活性下降;过酸或过碱都会使酶变性。';
+   out.innerHTML='pH='+cur+',相对活性≈<b>'+a+'%</b>。'+msg;
+  }
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;tempCtrl.style.display=mode==='temp'?'flex':'none';phCtrl.style.display=mode==='ph'?'flex':'none';draw();};});
+ tempSl.oninput=draw;phSl.oninput=draw;draw();
+})();
+
+/* ===== viz③ 专一性锁钥模型 ===== */
+(function(){
+ const svg=document.getElementById('lkSvg'),out=document.getElementById('lkOut');
+ const chips=document.getElementById('lkChips');
+ const NS='http://www.w3.org/2000/svg';
+ let sel='star', anim=null, prog=0, phase='idle';
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ // 酶的活性中心是"星形凹槽",只有 star 底物匹配
+ function substrateShape(kind,x,y,col,cut){
+  // cut: 0 未分解, 1 已分解(裂成两半用位移表示,这里简单画两块)
+  const g=el('g',{});
+  if(kind==='star'){
+   const pts=starPts(x,y,26,13,5);
+   g.appendChild(el('polygon',{points:pts,fill:col,stroke:'#16120A','stroke-width':3}));
+   const t=el('text',{x:x,y:y+4,'font-size':11,'font-weight':900,'text-anchor':'middle',fill:'#16120A'});t.textContent='A';g.appendChild(t);
+  } else if(kind==='tri'){
+   g.appendChild(el('polygon',{points:(x-24)+','+(y+20)+' '+(x+24)+','+(y+20)+' '+x+','+(y-24),fill:col,stroke:'#16120A','stroke-width':3}));
+   const t=el('text',{x:x,y:y+12,'font-size':11,'font-weight':900,'text-anchor':'middle',fill:'#fff'});t.textContent='B';g.appendChild(t);
+  } else {
+   g.appendChild(el('circle',{cx:x,cy:y,r:24,fill:col,stroke:'#16120A','stroke-width':3}));
+   const t=el('text',{x:x,y:y+4,'font-size':11,'font-weight':900,'text-anchor':'middle',fill:'#fff'});t.textContent='C';g.appendChild(t);
+  }
+  return g;
+ }
+ function starPts(cx,cy,R,r,n){let s='';for(let i=0;i<n*2;i++){const ang=Math.PI/n*i-Math.PI/2;const rad=i%2===0?R:r;s+=(cx+Math.cos(ang)*rad)+','+(cy+Math.sin(ang)*rad)+' ';}return s.trim();}
+ function drawEnzyme(){
+  // 酶主体 + 星形凹槽(活性中心)在左侧
+  const g=el('g',{});
+  g.appendChild(el('rect',{x:360,y:70,width:200,height:120,rx:14,fill:'#E86A17',stroke:'#16120A','stroke-width':4}));
+  const t=el('text',{x:460,y:60,'font-size':13,'font-weight':900,'text-anchor':'middle',fill:'#16120A'});t.textContent='酶(活性中心=星形凹槽)';g.appendChild(t);
+  // 凹槽:用白色星形挖空表示
+  g.appendChild(el('polygon',{points:starPts(390,130,26,13,5),fill:'#F4EFE2',stroke:'#16120A','stroke-width':3}));
+  return g;
+ }
+ function render(subX){
+  svg.innerHTML='';
+  svg.appendChild(drawEnzyme());
+  const col = sel==='star'?'#F3C00E':(sel==='tri'?'#7A3FF2':'#1450C8');
+  if(phase==='cut'){
+   // 分解为两半(仅 star)
+   svg.appendChild(substrateShape('star',360,110,'#F3C00E'));
+   svg.appendChild(substrateShape('star',360,155,'#F3C00E'));
+   const t=el('text',{x:150,y:230,'font-size':13,'font-weight':900,fill:'#1E9E86'});t.textContent='底物被催化分解 → 产物';svg.appendChild(t);
+  } else {
+   svg.appendChild(substrateShape(sel,subX,130,col));
+  }
+ }
+ function run(){
+  if(anim)cancelAnimationFrame(anim);
+  phase='moving';prog=0;
+  const startX=90, endX=390;
+  function step(){
+   const x=startX+(endX-startX)*Math.min(1,prog);
+   render(x);
+   if(prog<1){prog+=0.03;anim=requestAnimationFrame(step);}
+   else{
+    if(sel==='star'){
+     phase='cut';render(endX);
+     out.innerHTML='<b>底物 A 与酶的活性中心形状匹配</b> → 结合成酶-底物复合物 → 被催化分解为产物。这就是<b>专一性</b>:一种酶只催化其对应底物。';
+    } else {
+     // 弹回
+     phase='reject';
+     let bx=endX;
+     const back=function(){render(bx);if(bx>110){bx-=6;anim=requestAnimationFrame(back);}else{phase='idle';render(90);out.innerHTML='<b>底物形状与活性中心不匹配</b> → 无法结合、被弹开,<b>不发生反应</b>。酶不催化非对应底物,体现专一性。';}};
+     back();
+    }
+   }
+  }
+  step();
+ }
+ chips.querySelectorAll('.chip').forEach(c=>{c.onclick=function(){chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');sel=c.dataset.s;phase='idle';if(anim)cancelAnimationFrame(anim);render(90);out.innerHTML='已选底物,点"送入活性中心"查看是否匹配。';};});
+ document.getElementById('lkGo').onclick=run;
+ render(90);
+ out.innerHTML='默认选中匹配底物 A,点"送入活性中心"看它被结合并分解;换成 B/C 看不匹配被弹开。';
+})();
+
+/* ===== viz④ ATP ⇌ ADP 转化动画 ===== */
+(function(){
+ const svg=document.getElementById('atpSvg'),out=document.getElementById('atpSvg')&&document.getElementById('atpOut');
+ const seg=document.getElementById('atpSeg');
+ const NS='http://www.w3.org/2000/svg';
+ let mode='hyd', anim=null, prog=0;
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ // A—P~P~P:A在左,三个P向右,末端P可脱离
+ function drawMolecule(detach){
+  // detach: 0..1 末端Pi脱离程度; mode hyd 增大, syn 减小
+  const g=el('g',{});
+  const y=120;
+  // A 腺苷
+  g.appendChild(el('rect',{x:80,y:y-26,width:70,height:52,rx:10,fill:'#7A3FF2',stroke:'#16120A','stroke-width':3}));
+  const at=el('text',{x:115,y:y+5,'font-size':16,'font-weight':900,'text-anchor':'middle',fill:'#fff'});at.textContent='A';g.appendChild(at);
+  const al=el('text',{x:115,y:y-34,'font-size':10,'font-weight':800,'text-anchor':'middle'});al.textContent='腺苷';g.appendChild(al);
+  // 键与磷酸
+  const px=[190,270,350];  // 三个P的位置
+  // 普通键 A—P1
+  g.appendChild(el('line',{x1:150,y1:y,x2:px[0]-24,y2:y,stroke:'#16120A','stroke-width':4}));
+  // 高能键 P1~P2, P2~P3(用波浪/加粗表示)
+  bond(g,px[0]+24,px[1]-24,y,'~');
+  bond(g,px[1]+24,px[2]-24,y,'~');
+  // P1,P2 固定
+  for(let i=0;i<2;i++)phosphate(g,px[i],y);
+  // P3 末端:随 detach 上移离开
+  const dy = -detach*70, dx = detach*40;
+  const p3x=px[2]+dx, p3y=y+dy;
+  phosphate(g,p3x,p3y);
+  // 键在断裂中变虚
+  if(detach>0.02){
+   // 覆盖高能键末段为虚线表示断裂
+   g.appendChild(el('line',{x1:px[1]+24,y1:y,x2:p3x-24,y2:p3y,stroke:'#E0382A','stroke-width':3,'stroke-dasharray':'5 4'}));
+  }
+  // 能量球
+  if(mode==='hyd'&&detach>0.3){
+   for(let k=0;k<3;k++){const ex=p3x+Math.cos(k*2)*(20+detach*20),ey=p3y+Math.sin(k*2)*(20+detach*20);g.appendChild(el('circle',{cx:ex,cy:ey,r:5,fill:'#F3C00E',stroke:'#16120A','stroke-width':1.5}));}
+   const et=el('text',{x:p3x+20,y:p3y-30,'font-size':12,'font-weight':900,fill:'#E0382A'});et.textContent='释放能量→生命活动';g.appendChild(et);
+  }
+  if(mode==='syn'&&detach>0.3){
+   const et=el('text',{x:p3x+20,y:p3y-30,'font-size':12,'font-weight':900,fill:'#1E9E86'});et.textContent='吸收能量(呼吸/光合)';g.appendChild(et);
+  }
+  // 标签
+  const lab=el('text',{x:230,y:210,'font-size':13,'font-weight':900,'text-anchor':'middle'});
+  lab.textContent = detach>0.6 ? 'ADP + Pi' : (detach<0.1?'ATP (A—P~P~P)':'ATP ⇌ ADP + Pi');
+  g.appendChild(lab);
+  return g;
+ }
+ function phosphate(g,x,y){
+  g.appendChild(el('circle',{cx:x,cy:y,r:20,fill:'#E86A17',stroke:'#16120A','stroke-width':3}));
+  const t=el('text',{x:x,y:y+5,'font-size':14,'font-weight':900,'text-anchor':'middle',fill:'#fff'});t.textContent='P';g.appendChild(t);
+ }
+ function bond(g,x1,x2,y,type){
+  g.appendChild(el('line',{x1:x1,y1:y,x2:x2,y2:y,stroke:'#16120A','stroke-width':4}));
+  const t=g.ownerSVGElement;
+  const tt=document.createElementNS(NS,'text');tt.setAttribute('x',(x1+x2)/2);tt.setAttribute('y',y-12);tt.setAttribute('font-size','16');tt.setAttribute('font-weight','900');tt.setAttribute('text-anchor','middle');tt.setAttribute('fill','#E0382A');tt.textContent='~';g.appendChild(tt);
+ }
+ function render(det){svg.innerHTML='';svg.appendChild(drawMolecule(det));}
+ function play(){
+  if(anim)cancelAnimationFrame(anim);
+  prog=0;
+  const from = mode==='hyd'?0:1, to = mode==='hyd'?1:0;
+  function step(){
+   const d=from+(to-from)*prog;
+   render(d);
+   if(prog<1){prog+=0.02;anim=requestAnimationFrame(step);}
+   else{
+    if(mode==='hyd') out.innerHTML='<b>水解(放能):</b> 末端高能磷酸键(~)断裂,ATP → ADP + Pi,<b>释放能量</b>供主动运输、肌肉收缩、合成等生命活动。催化酶:ATP 水解酶。';
+    else out.innerHTML='<b>合成(吸能):</b> ADP + Pi 重新结合形成末端高能磷酸键,<b>吸收</b>来自<b>呼吸作用(动植物)/光合作用(植物)</b>的能量。催化酶:ATP 合成酶。';
+   }
+  }
+  step();
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;render(mode==='hyd'?0:1);out.innerHTML=mode==='hyd'?'点"播放一次"看 ATP 末端 ~P 断裂、放能。':'点"播放一次"看 ADP+Pi 结合成 ATP、吸能。';};});
+ document.getElementById('atpGo').onclick=play;
+ render(0);
+ out.innerHTML='点"播放一次"看 ATP 末端高能磷酸键断裂、放能;切换到"合成"看逆过程吸能。';
+})();
+
+/* ===== viz⑤ 底物浓度-反应速率曲线 ===== */
+(function(){
+ const svg=document.getElementById('subSvg'),out=document.getElementById('subOut');
+ const NS='http://www.w3.org/2000/svg';
+ const subSl=document.getElementById('subSl'),enzSl=document.getElementById('enzSl');
+ const subV=document.getElementById('subV'),enzV=document.getElementById('enzV');
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ // 米氏型:v = Vmax*S/(Km+S); Vmax 随酶量升高
+ function rate(S,Vmax){const Km=25;return Vmax*S/(Km+S);}
+ function draw(){
+  const S=+subSl.value,E=+enzSl.value;subV.textContent=S;enzV.textContent=E;
+  const Vmax=E*1.3;
+  svg.innerHTML='';
+  svg.appendChild(el('line',{x1:40,y1:180,x2:340,y2:180,stroke:'#16120A','stroke-width':3}));
+  svg.appendChild(el('line',{x1:40,y1:180,x2:40,y2:20,stroke:'#16120A','stroke-width':3}));
+  const lx=el('text',{x:230,y:198,'font-size':11,'font-weight':800});lx.textContent='底物浓度 →';svg.appendChild(lx);
+  const ly=el('text',{x:6,y:30,'font-size':11,'font-weight':800});ly.textContent='反应速率';svg.appendChild(ly);
+  // 平台参考线(Vmax)
+  const platY=180-(Vmax*1.0);
+  svg.appendChild(el('line',{x1:40,y1:platY,x2:340,y2:platY,stroke:'#E86A17','stroke-dasharray':'5 4','stroke-width':2}));
+  const pt=el('text',{x:330,y:platY-4,'font-size':9,'font-weight':800,'text-anchor':'end',fill:'#E86A17'});pt.textContent='最大速率(酶被占满)';svg.appendChild(pt);
+  // 曲线
+  let d='';
+  for(let i=0;i<=100;i++){const s=i;const v=rate(s,Vmax);const px=40+i*3;const py=180-v*1.0;d+=(i===0?'M':'L')+px+' '+py+' ';}
+  svg.appendChild(el('path',{d:d,fill:'none',stroke:'#1E9E86','stroke-width':4}));
+  // 当前点
+  const v=rate(S,Vmax);const cx=40+S*3,cy=180-v*1.0;
+  svg.appendChild(el('line',{x1:cx,y1:180,x2:cx,y2:cy,stroke:'#16120A','stroke-dasharray':'4 3','stroke-width':2}));
+  svg.appendChild(el('circle',{cx:cx,cy:cy,r:7,fill:'#E0382A',stroke:'#16120A','stroke-width':3}));
+  const ratio=v/Vmax;
+  let msg;
+  if(ratio<0.5) msg='低底物区:速率随底物浓度<b>近似线性上升</b>(底物是限制因素)。';
+  else if(ratio<0.85) msg='中段:上升变缓,酶逐渐被占用。';
+  else msg='<b>饱和平台:酶已基本被占满,再加底物速率几乎不变</b>。此时<b>酶量成为限制因素——提高酶浓度才有效</b>。';
+  out.innerHTML='底物='+S+',酶量='+E+',速率≈<b>'+v.toFixed(0)+'</b>(最大≈'+Vmax.toFixed(0)+')。'+msg;
+ }
+ subSl.oninput=draw;enzSl.oninput=draw;draw();
+})();
+
+/* ===== viz⑥ 探究实验变量控制器 ===== */
+(function(){
+ const svg=document.getElementById('varSvg'),out=document.getElementById('varOut');
+ const seg=document.getElementById('varSeg');
+ const NS='http://www.w3.org/2000/svg';
+ let mode='temp';
+ const data={
+  temp:{iv:'温度',dv:'底物分解量 / 产物量',ctrl:['pH','底物浓度','酶浓度','时间'],trap:'检测用<b>碘液</b>不用斐林(斐林要水浴加热,会干扰温度自变量);梯度如 0℃/37℃/60℃。'},
+  ph:{iv:'pH',dv:'底物分解量 / 产物量',ctrl:['温度','底物浓度','酶浓度','时间'],trap:'<b>先分别调好各组 pH 再把底物与酶混合</b>,避免在不适 pH 下提前反应;温度控制在最适。'},
+  sub:{iv:'底物浓度',dv:'单位时间产物量 / 反应速率',ctrl:['温度','pH','酶浓度','时间'],trap:'保持<b>酶量一定</b>,才能看到速率先升后<b>饱和</b>;梯度要覆盖到平台段。'},
+  enz:{iv:'酶浓度',dv:'单位时间产物量 / 反应速率',ctrl:['温度','pH','底物浓度','时间'],trap:'保持<b>底物足量</b>,速率才随酶量近似成正比升高(否则底物先耗尽)。'}
+ };
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ function box(x,y,w,h,fill,title,sub){
+  svg.appendChild(el('rect',{x:x,y:y,width:w,height:h,rx:8,fill:fill,stroke:'#16120A','stroke-width':3}));
+  const t=el('text',{x:x+w/2,y:y+24,'font-size':14,'font-weight':900,'text-anchor':'middle',fill:'#fff'});t.textContent=title;svg.appendChild(t);
+  if(sub){const s=el('text',{x:x+w/2,y:y+46,'font-size':11,'font-weight':700,'text-anchor':'middle',fill:'#fff'});s.textContent=sub;svg.appendChild(s);}
+ }
+ function draw(){
+  const d=data[mode];
+  svg.innerHTML='';
+  box(20,60,180,90,'#1450C8','自变量',d.iv);
+  box(260,60,180,90,'#E86A17','因变量','(观测/检测)');
+  box(500,40,180,130,'#1E9E86','无关变量','(须相同且适宜)');
+  // 自变量 -> 因变量 箭头
+  svg.appendChild(el('defs',{}));
+  const def=el('marker',{id:'vah',markerWidth:9,markerHeight:9,refX:6,refY:4.5,orient:'auto'});
+  def.appendChild(el('path',{d:'M0,0 L9,4.5 L0,9 z',fill:'#16120A'}));
+  const defs=el('defs',{});defs.appendChild(def);svg.appendChild(defs);
+  svg.appendChild(el('line',{x1:200,y1:105,x2:255,y2:105,stroke:'#16120A','stroke-width':3,'marker-end':'url(#vah)'}));
+  const dvt=el('text',{x:260,y:130,'font-size':11,'font-weight':800,'text-anchor':'middle',fill:'#16120A'});svg.appendChild(dvt);
+  // 因变量文本
+  const dvl=el('text',{x:350,y:120,'font-size':11,'font-weight':800,'text-anchor':'middle',fill:'#fff'});dvl.textContent=d.dv;svg.appendChild(dvl);
+  // 无关变量列表
+  d.ctrl.forEach((c,i)=>{const t=el('text',{x:590,y:70+i*24,'font-size':12,'font-weight':800,'text-anchor':'middle',fill:'#fff'});t.textContent='· '+c;svg.appendChild(t);});
+  out.innerHTML='研究<b>'+d.iv+'</b>时:自变量=<b>'+d.iv+'</b>;因变量=<b>'+d.dv+'</b>;无关变量(相同且适宜)=<b>'+d.ctrl.join('、')+'</b>。<br>⚠ '+d.trap;
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;draw();};});
+ draw();
+})();
+
+/* ===== 自测 ===== */
+(function(){
+ const qs=[
+  {q:"1. 酶的化学本质是什么?",a:"绝大多数酶是蛋白质(基本单位是氨基酸),少数酶是 RNA(如核酶)。不能说酶都是蛋白质。"},
+  {q:"2. 酶的作用原理是?它提供能量吗?",a:"酶通过显著降低化学反应的活化能来加快反应速率;它不提供能量、不改变反应方向和平衡,反应前后自身不变。"},
+  {q:"3. 酶有哪三大特性?",a:"高效性(比无机催化剂高效得多)、专一性(一种酶只催化一种/一类底物)、作用条件温和(需适宜温度、pH)。"},
+  {q:"4. 高温和低温对酶的影响有何本质区别?",a:"高温使酶(蛋白质)变性、空间结构破坏而失活,不可逆;低温只是抑制酶活性,酶未被破坏,回到最适温度活性可恢复。"},
+  {q:"5. 探究温度对酶活性影响时,为什么用碘液而不用斐林试剂?",a:"斐林试剂检测还原糖需水浴加热,加热会改变(干扰)自变量温度,故用无需加热的碘液检测淀粉是否被分解。"},
+  {q:"6. 研究 pH 对酶活性影响时,操作顺序要注意什么?",a:"应先分别把各组调到设定 pH(温度控制在最适),再将底物与酶混合;避免在不适 pH 下提前反应影响结果。"},
+  {q:"7. ATP 的结构简式与含义?",a:"A—P~P~P。A=腺苷(腺嘌呤+核糖),P=磷酸基团,~=高能磷酸键。一个 ATP 含 3 个磷酸、2 个高能磷酸键。"},
+  {q:"8. ATP 水解时断的是哪个键?生成什么?",a:"断裂末端(远离 A)的一个高能磷酸键,释放能量,生成 ADP + Pi。ATP⇌ADP+Pi 都是酶促反应。"},
+  {q:"9. 为什么说 ADP↔ATP 相互转化不是简单可逆反应?",a:"物质上可互变,但合成吸收的能量来自呼吸/光合、水解释放的能量用于生命活动,来源与去向不同,且由不同酶(合成酶/水解酶)催化,故不是简单可逆。"},
+  {q:"10. 合成 ATP 的能量来源在动物和绿色植物中分别是什么?",a:"动物/人:呼吸作用;绿色植物:呼吸作用 + 光合作用。"},
+  {q:"11. 光反应产生的 ATP 用在哪里?能供主动运输吗?",a:"只用于暗反应(卡尔文循环)中 C3 的还原,不能供主动运输等其它生命活动;其它活动的 ATP 来自呼吸作用。"},
+  {q:"12. 底物浓度增大到一定程度反应速率不再上升,原因?此时如何提高速率?",a:"酶量一定时酶被底物占满(饱和),底物不再是限制因素;此时提高酶浓度才能进一步提高反应速率。"}
+ ];
+ const quiz=document.getElementById('quiz');
+ qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

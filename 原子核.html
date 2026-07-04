@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原子结构与原子核 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .ctrl select,.ctrl input[type=number]{border:3px solid var(--ink);padding:5px 8px;font-weight:800;font-size:13px;font-family:inherit;background:#fff;color:var(--ink)}
+  .ctrl input[type=number]{width:70px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>原子结构与原子核</h1>
+    <p class="lead">这一章是高考物理的「送分区」——公式少、模型固定、几乎全是「守恒配平 + 代数字」。但每年都有人栽在能级跃迁的谱线条数、半衰期的『不受外界影响』、核反应配平的守恒到底守什么上。这页把整章拆成一套可背可算的动作,再用 6 个动画把抽象的原子拨给你看。</p>
+
+    <div class="say">🗣️ <b>整章说人话:</b> 原子里面是「一个很小很重的核 + 外面绕圈的电子」(卢瑟福用 α 粒子撞出来的)。电子只能待在<b>固定的几层楼(能级)</b>,上下楼要<b>吞/吐一个光子</b>,光子能量恰好等于楼层差 hν=E高−E低。核里面是<b>质子+中子(合称核子)</b>;不稳定的核会<b>衰变</b>放出 α/β/γ,配平只认<b>质量数守恒、电荷数守恒</b>两条铁律。核裂开/合并时少掉一点质量(<b>质量亏损</b>),这点质量按 ΔE=Δmc² 变成巨大能量——这就是核能。</div>
+
+    <div class="keybox"><b>整章四条铁律速记:</b> ① 能级跃迁 <b>hν=E高−E低</b>,吸光子上楼、放光子下楼,能量必须<b>恰好</b>等于能级差;② 一群 n 能级氢原子最多辐射 <b>C(n,2)=n(n−1)/2</b> 条谱线;③ 核反应配平只守 <b>质量数A + 电荷数Z</b>(不是质量守恒!);④ 半衰期是<b>统计规律</b>,剩余=初始×(1/2)^(t/T),<b>与温度、压强、化学状态全无关</b>。</div>
+
+    <h2>① 原子结构:从枣糕到核式结构</h2>
+    <p class="lead">人类怎么知道原子中间有个核?靠一个撞击实验。把这条历史线记牢,散射实验的题就秒懂。</p>
+    <div class="card">
+      <h3>三步认识原子</h3>
+      <div class="mono">汤姆孙「枣糕模型」:正电荷像面团均匀铺满,电子像枣嵌在里面。(后被推翻)</div>
+      <div class="mono">卢瑟福 α 粒子散射实验:α 粒子打金箔,绝大多数直穿,极少数大角度偏转,个别被弹回。</div>
+      <div class="mono">结论——核式结构:原子中心有个体积极小、集中几乎全部质量和全部正电荷的「核」,电子在核外绕行。</div>
+      <p class="trap">⚠ 大角度偏转说明正电荷<b>高度集中</b>(不是均匀分布);极少数偏转说明核<b>体积极小</b>(原子内部很空)。α 粒子偏转是因为受到<b>核的库仑斥力</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — α 粒子散射实验:看少数粒子大角度偏转</div>
+      <canvas id="scatCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="scatGo">▶ 发射 α 粒子束</button><button id="scatReset">↺ 重置</button>
+      </div>
+      <p class="small">α 粒子(黄)从左射向金核(红)。大多数几乎直穿(离核远),越靠近核偏转越大,正对核心的被弹回。这就是「核式结构」的证据:核小、集中、带正电。</p>
+    </div>
+
+    <h2 class="b">② 玻尔模型:定态、轨道量子化、能级</h2>
+    <div class="card">
+      <h3>玻尔三条假设</h3>
+      <p style="margin:6px 0"><b>① 定态假设:</b> 电子只能在某些<b>特定的、稳定的轨道</b>上运动,这些状态叫「定态」。在定态上电子<b>不辐射能量</b>(哪怕在加速)。</p>
+      <p style="margin:6px 0"><b>② 轨道量子化:</b> 轨道半径不能任意取值,只能取<b>一系列分立值</b>(r∝n²);对应能量也分立,叫「能级」。</p>
+      <p style="margin:6px 0"><b>③ 跃迁假设:</b> 电子在两个定态之间跳变(跃迁)时,吸收或放出一个光子,<b>hν=E高−E低</b>。</p>
+      <div class="eq">氢原子能级公式: En = E₁/n² , E₁ = −13.6 eV (n=1,2,3…)</div>
+      <p style="margin:6px 0">n=1 基态(能量最低最稳定,−13.6eV);n=2 第一激发态(−3.4eV);n=3(−1.51eV)…;n→∞ 时 E→0,电子被电离(挣脱原子)。</p>
+      <p class="trap">⚠ 能级是<b>负值</b>!负号表示束缚态。n 越大能量<b>越高</b>(越接近0)。基态最稳定,原子总倾向于回到基态。电离能就是从某能级到 E=0 所需能量。</p>
+    </div>
+
+    <h2 class="g">③ 能级跃迁:吸收/辐射光子与谱线</h2>
+    <div class="card">
+      <div class="eq">hν = E高 − E低 (h=6.63×10⁻³⁴ J·s)</div>
+      <p style="margin:8px 0"><b>上楼(激发)= 吸收光子</b>:从低能级跳到高能级,吸收一个能量恰好等于能级差的光子。<br><b>下楼(退激)= 辐射光子</b>:从高能级跳到低能级,放出一个能量等于能级差的光子(看到的就是发射谱线)。</p>
+      <div class="keybox" style="margin:8px 0"><b>谱线条数公式:</b> 一群(注意是「一群」大量)处于 n 能级的氢原子,向下跃迁时最多能辐射 <b>C(n,2) = n(n−1)/2</b> 条不同频率的谱线。<br>例:n=4 → C(4,2)=4×3/2=<b>6</b> 条;n=3 → 3 条;n=5 → 10 条。</p>
+      <p class="trap">⚠ 「一个」氢原子从 n 能级跳到基态,最多只放 <b>n−1</b> 个光子(一条路径);而「一群」氢原子因为跳法各不相同,合起来才有 C(n,2) 条谱线。题目问「一群」用 C(n,2),问「一个原子最多放几个光子」用 n−1,别混!</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌈 互动 1 — 氢原子能级跃迁动画:点两个能级,看吸收/辐射光子 + 谱线</div>
+      <canvas id="jumpCv" width="700" height="330"></canvas>
+      <div class="ctrl">
+        <span class="small">点一个能级作起点,再点另一个作终点(上跳=吸收,下跳=辐射)。</span>
+        <button id="jumpReset">↺ 清除</button>
+      </div>
+      <div class="verdict" id="jumpNote">点两条能级线试试。</div>
+      <p class="small">左:氢原子能级图(数值真实,单位 eV)。右:被辐射光子对应在可见/紫外光谱上的一条谱线(能量越大越偏紫/紫外)。hν=E高−E低。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 2 — 谱线条数计算器:选 n,画出所有跃迁 = C(n,2) 条</div>
+      <svg id="linesSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>激发到 n =
+          <select id="linesN"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
+        </label>
+        <span class="verdict" id="linesCount" style="margin:0;padding:6px 12px"></span>
+      </div>
+      <p class="small">每条彩色弧 = 一种可能的向下跃迁(一条谱线)。总数 = C(n,2) = n(n−1)/2。数一数验证公式!</p>
+    </div>
+
+    <h2 class="o">④ 原子核组成与三种衰变</h2>
+    <div class="card">
+      <h3>核的组成</h3>
+      <p style="margin:6px 0"><b>原子核 = 质子(Z 个) + 中子(N 个)</b>,质子和中子统称<b>核子</b>。质子数 Z = 电荷数 = 元素序数(决定是什么元素);<b>质量数 A = Z + N</b>(核子总数)。</p>
+      <p style="margin:6px 0">符号写法:<b>ᴬ<sub>Z</sub>X</b>,左上角质量数 A,左下角电荷数(质子数)Z。同位素:Z 相同、N 不同(如 ¹H、²H、³H)。</p>
+      <h3>三种放射性衰变</h3>
+      <table>
+        <tr><th>衰变</th><th>放出什么</th><th>质量数A变化</th><th>电荷数Z变化</th></tr>
+        <tr><td><b>α 衰变</b></td><td>α 粒子 = ⁴₂He 核</td><td><b>−4</b></td><td><b>−2</b></td></tr>
+        <tr><td><b>β 衰变</b></td><td>电子 ⁰₋₁e(核内中子→质子)</td><td><b>不变</b></td><td><b>+1</b></td></tr>
+        <tr><td><b>γ 辐射</b></td><td>γ 光子(高能电磁波)</td><td>不变</td><td>不变</td></tr>
+      </table>
+      <div class="eq">α: ᴬ<sub>Z</sub>X → ⁴₂He + ⁽ᴬ⁻⁴⁾<sub>(Z−2)</sub>Y　　β: ᴬ<sub>Z</sub>X → ⁰₋₁e + ᴬ<sub>(Z+1)</sub>Y</div>
+      <p class="trap">⚠ β 衰变的电子<b>来自核内</b>:一个中子变成一个质子 + 一个电子(¹₀n→¹₁p+⁰₋₁e),所以电荷数+1、质量数不变。γ 通常<b>伴随</b> α 或 β 发生(核退激),单独 γ 不改变核的种类。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">☢️ 互动 3 — 三种衰变演示:看核子数、电荷数怎么变</div>
+      <canvas id="decayCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <button class="dtype on" data-t="a">α 衰变</button>
+        <button class="dtype" data-t="b">β 衰变</button>
+        <button class="dtype" data-t="g">γ 辐射</button>
+        <button id="decayGo">▶ 衰变一次</button>
+      </div>
+      <div class="verdict" id="decayNote"></div>
+      <p class="small">红=质子,蓝=中子。α 抛出 2 质子+2 中子(⁴₂He);β 一个中子变质子并弹出电子(绿);γ 只放光子、成分不变。看左上标签 A/Z 的变化。</p>
+    </div>
+
+    <h2 class="v">⑤ 半衰期:与外界无关的统计规律</h2>
+    <div class="card">
+      <div class="eq">剩余 N = N₀ · (1/2)^(t/T)　(T = 半衰期)</div>
+      <p style="margin:8px 0"><b>半衰期 T:</b> 放射性元素有一半的原子核发生衰变所需的时间。经过 1 个 T 剩一半,2 个 T 剩 1/4,3 个 T 剩 1/8……质量同理 m = m₀·(1/2)^(t/T)。</p>
+      <div class="keybox" style="margin:8px 0"><b>命门:</b> 半衰期是<b>大量原子核的统计规律</b>,由核本身性质决定,<b>与温度、压强、体积、是否化合、物理化学状态全都无关</b>!你加热、加压、通电都<b>改变不了</b> T。而且对<b>单个</b>核无法预测它何时衰变(随机)。</p>
+      <p class="trap">⚠ 高频陷阱:题目说「升高温度/增大压强,半衰期如何变?」——答案永远是<b>不变</b>!另一个陷阱:半衰期只对<b>大量</b>核有意义,单个核何时衰变是随机的,不能说「半个 T 后这个核衰变一半」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 4 — 半衰期指数衰减曲线:拖时间,看剩余核数(标 T、2T、3T)</div>
+      <svg id="halfSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>时间 t = <input id="halfT" type="range" min="0" max="500" value="120" step="1"></label>
+        <span class="vlabel">(半衰期 T = 100)</span>
+      </div>
+      <div class="live">
+        <div><b>已过 t</b><span id="hvT">0</span></div>
+        <div><b>= 几个半衰期</b><span id="hvN">0</span></div>
+        <div><b>剩余比例</b><span id="hvR">100%</span></div>
+        <div><b>剩余核数</b><span id="hvC">1000</span></div>
+      </div>
+      <p class="small">曲线 N=N₀·(1/2)^(t/T)。红点=当前时刻。竖虚线标出 T、2T、3T,对应剩余 1/2、1/4、1/8。指数衰减,永远不会真的到 0。</p>
+    </div>
+
+    <h2 class="r">⑥ 核反应方程:守恒配平</h2>
+    <div class="card">
+      <div class="keybox" style="margin:6px 0"><b>两条守恒(且仅这两条)配平:</b> ① 反应前后<b>质量数A之和相等</b>;② 反应前后<b>电荷数Z之和相等</b>。用这两条就能解出未知粒子。</p>
+      <p style="margin:8px 0"><b>四类核反应都遵守这两条守恒:</b></p>
+      <table>
+        <tr><th>类型</th><th>例子</th></tr>
+        <tr><td>衰变</td><td>²³⁸<sub>92</sub>U → ⁴₂He + ²³⁴<sub>90</sub>Th</td></tr>
+        <tr><td>人工转变(卢瑟福发现质子)</td><td>¹⁴₇N + ⁴₂He → ¹⁷₈O + ¹₁H</td></tr>
+        <tr><td>裂变</td><td>²³⁵<sub>92</sub>U + ¹₀n → ¹⁴¹<sub>56</sub>Ba + ⁹²<sub>36</sub>Kr + 3¹₀n</td></tr>
+        <tr><td>聚变</td><td>²₁H + ³₁H → ⁴₂He + ¹₀n</td></tr>
+      </table>
+      <p class="trap">⚠ <b>核反应中质量并不严格守恒</b>——守恒的是「质量数A(核子个数)」和「电荷数Z」,不是质量(kg)!正因为有<b>质量亏损 Δm</b>,才释放核能。别把「质量数守恒」说成「质量守恒」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 核反应方程配平器:填缺项,验质量数/电荷数守恒</div>
+      <div class="card" style="margin:8px 0;background:#fff">
+        <div id="balEq" style="font-family:'SF Mono',Consolas,monospace;font-size:17px;font-weight:900;text-align:center;line-height:2.4"></div>
+        <div class="ctrl" style="justify-content:center">
+          <label>A(质量数)= <input id="balA" type="number" value="" placeholder="?"></label>
+          <label>Z(电荷数)= <input id="balZ" type="number" value="" placeholder="?"></label>
+          <button id="balCheck">✓ 验证守恒</button>
+          <button id="balNext">下一题 ↻</button>
+        </div>
+        <div class="verdict" id="balNote">填出缺失粒子的 A 和 Z,点验证。</div>
+      </div>
+      <p class="small">左边质量数之和必须 = 右边;左边电荷数之和必须 = 右边。用这两条就能解出问号粒子。</p>
+    </div>
+
+    <h2 class="b">⑦ 质量亏损与核能;裂变与聚变</h2>
+    <div class="card">
+      <div class="eq">ΔE = Δm · c² (c = 3×10⁸ m/s)</div>
+      <p style="margin:8px 0"><b>质量亏损 Δm:</b> 核反应中,反应后总质量比反应前<b>减少</b>了一点点(Δm = m前 − m后 > 0,释能反应)。这减少的质量按爱因斯坦质能方程变成能量 ΔE=Δmc²,就是释放的核能。</p>
+      <div class="mono">若质量用原子质量单位 u:1u 对应 931.5 MeV。ΔE(MeV) = Δm(u) × 931.5</div>
+      <h3>裂变 vs 聚变</h3>
+      <table>
+        <tr><th></th><th>裂变</th><th>聚变(热核反应)</th></tr>
+        <tr><td>过程</td><td>重核分裂成中等核</td><td>轻核结合成较重核</td></tr>
+        <tr><td>典型</td><td>²³⁵U + n → Ba + Kr + 3n</td><td>²₁H + ³₁H → ⁴₂He + n</td></tr>
+        <tr><td>条件</td><td>链式反应(临界体积)</td><td>超高温(上亿度)</td></tr>
+        <tr><td>应用</td><td>核电站、原子弹</td><td>氢弹、太阳、未来能源</td></tr>
+      </table>
+      <p class="trap">⚠ 裂变和聚变都<b>释放核能、都有质量亏损</b>。中等质量数的核比结合能最大最稳定,所以「重核裂开」和「轻核聚合」都往中间靠 → 都放能。别以为只有聚变放能。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">💥 互动 6 — 质量亏损 → 核能计算器:输入 Δm,算 ΔE=Δmc²</div>
+      <div class="card" style="margin:8px 0;background:#fff">
+        <div class="ctrl" style="justify-content:center">
+          <label>质量亏损 Δm =
+            <input id="meDm" type="number" value="0.0186" step="0.001">
+            <select id="meUnit"><option value="u" selected>u(原子质量单位)</option><option value="kg">kg</option></select>
+          </label>
+          <button id="meGo">计算 ΔE</button>
+        </div>
+        <div class="readout">
+          <div><b>ΔE (J)</b><span id="meJ">—</span></div>
+          <div><b>ΔE (MeV)</b><span id="meMeV">—</span></div>
+          <div><b>换算依据</b><span id="meWay">1u=931.5MeV</span></div>
+        </div>
+        <div class="verdict" id="meNote" style="margin-top:10px"></div>
+      </div>
+      <p class="small">用 u 时走 ΔE=Δm×931.5 MeV(高考最常用);用 kg 时走 ΔE=Δmc²=Δm×(3×10⁸)² J。默认值 0.0186u 是氘氚聚变的典型亏损(约 17.3 MeV)。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 能级跃迁与谱线</h3>
+      <p><b class="tag">触发信号:</b>给氢原子能级图/能级公式,问吸收或辐射光子能量、频率、波长,或问一群原子谱线条数。</p>
+      <p><b class="tag">标准动作:</b>①算能级差 ΔE=E高−E低 → ②hν=ΔE 求频率 ν=ΔE/h,波长 λ=c/ν(能级差用 J,eV 先×1.6×10⁻¹⁹)→ ③问谱线条数用 C(n,2)=n(n−1)/2。</p>
+      <p><b class="tag">示例(带解):</b>氢原子从 n=3(−1.51eV)跃迁到 n=2(−3.4eV),放出光子。ΔE=−1.51−(−3.4)=1.89eV。ν=ΔE/h=1.89×1.6×10⁻¹⁹/6.63×10⁻³⁴≈4.6×10¹⁴Hz。若问「一群 n=3 的氢原子」谱线条数=C(3,2)=3 条。</p>
+      <p class="trap">陷阱:能级差正负号(下跳放能取正);「一群」用C(n,2)、「一个原子」最多放 n−1 个光子;能级差单位 eV↔J 换算漏乘 1.6×10⁻¹⁹。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 半衰期计算</h3>
+      <p><b class="tag">触发信号:</b>给半衰期 T 和经过时间 t(或质量/核数变化),求剩余量、经过几个半衰期、原有量。</p>
+      <p><b class="tag">标准动作:</b>①算 t/T = 经过几个半衰期 n → ②剩余=初始×(1/2)ⁿ。已衰变=初始−剩余。反问 t:由剩余比例反推 (1/2)ⁿ 得 n,t=nT。</p>
+      <p><b class="tag">示例(带解):</b>某核 T=8 天,初始 800g,经过 24 天剩多少?n=24/8=3,剩余=800×(1/2)³=800×1/8=100g。已衰变 700g。</p>
+      <p class="trap">陷阱:问「温度升高半衰期怎么变」→不变;t 不是整数倍 T 时用指数式别硬套整数;半衰期只对大量核有效,别用于单个核。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 核反应方程配平</h3>
+      <p><b class="tag">触发信号:</b>给核反应方程,某个粒子写成 ᴬ<sub>Z</sub>X 求 A、Z 或判断放出的是什么粒子(α/β/n/p)。</p>
+      <p><b class="tag">标准动作:</b>①质量数守恒:∑A左=∑A右 → 解未知 A;②电荷数守恒:∑Z左=∑Z右 → 解未知 Z;③按 A、Z 对号入座认粒子(²₁H氘、³₁H氚、⁴₂He α、¹₀n中子、¹₁H质子、⁰₋₁e电子)。</p>
+      <p><b class="tag">示例(带解):</b>¹⁴₇N + ⁴₂He → ¹⁷₈O + ᴬ<sub>Z</sub>X。A:14+4=17+A → A=1;Z:7+2=8+Z → Z=1。是 ¹₁H(质子)。</p>
+      <p class="trap">陷阱:把「质量数守恒」当「质量守恒」(错,有质量亏损);电荷数别漏中子电荷为 0、电子电荷为 −1;方程两边粒子系数别漏(如 3¹₀n)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 质量亏损求核能</h3>
+      <p><b class="tag">触发信号:</b>给反应前后各粒子质量(u 或 kg),求释放的核能 ΔE。</p>
+      <p><b class="tag">标准动作:</b>①Δm=m反应前总质量−m反应后总质量;②若用 u:ΔE=Δm×931.5 MeV;若用 kg:ΔE=Δm×(3×10⁸)² J。</p>
+      <p><b class="tag">示例(带解):</b>²₁H+³₁H→⁴₂He+¹₀n,Δm=0.0186u。ΔE=0.0186×931.5≈17.3 MeV。这是一次聚变释放的能量。</p>
+      <p class="trap">陷阱:Δm 方向搞反(应是前−后>0);u 与 kg 单位混用;把 931.5 MeV 记成别的数;忘了这是「一次反应」放的能,算总能量要乘反应次数。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — α 粒子散射实验</h3>
+      <p><b class="tag">触发信号:</b>问散射现象说明什么、为什么绝大多数直穿而极少数大角度偏转、偏转的力是什么。</p>
+      <p><b class="tag">标准动作:</b>①绝大多数直穿→原子内部很空,核体积极小;②极少数大角度偏转/被弹回→正电荷和几乎全部质量集中在极小的核上;③偏转原因→α 粒子与核之间的库仑斥力(同为正电)。</p>
+      <p><b class="tag">示例(带解):</b>问「α 粒子被大角度弹回说明什么?」答:说明存在一个体积极小、质量很大、带正电的核,α 粒子正对它时受强库仑斥力被弹回。</p>
+      <p class="trap">陷阱:说成「核带负电」(错,带正电,斥力才偏转);混淆枣糕模型(均匀分布)与核式结构(高度集中);把偏转归为万有引力(其实是库仑力)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 跃迁吸收的光子能量必须<b>恰好</b>等于能级差,多一点少一点都<b>不吸收</b>(除非能量足够大直接电离)。</p>
+      <p class="trap">② 半衰期<b>不受</b>温度、压强、化学状态影响;单个核何时衰变不可预测(随机)。</p>
+      <p class="trap">③ 核反应配平守的是<b>质量数A + 电荷数Z</b>,<b>不是质量守恒</b>(有质量亏损才释放核能)。</p>
+      <p class="trap">④ 「一群」n 能级氢原子谱线条数 <b>C(n,2)=n(n−1)/2</b>;「一个」原子最多放 <b>n−1</b> 个光子。别混。</p>
+      <p class="trap">⑤ 能级是<b>负值</b>,n 越大能量越高(越接近0);基态最稳定。电离是 E→0。</p>
+      <p class="trap">⑥ β 衰变的电子来自<b>核内中子转质子</b>,不是核外电子;质量数不变、电荷数+1。</p>
+      <p class="trap">⑦ γ 辐射不改变核的种类(A、Z 都不变),通常伴随 α/β 发生。</p>
+      <p class="trap">⑧ 大角度散射说明正电荷<b>集中</b>(不是均匀),偏转力是<b>库仑斥力</b>(不是引力)。</p>
+      <p class="trap">⑨ 质量亏损 Δm = 前−后 > 0;用 u 时 ×931.5 得 MeV,用 kg 时 ×c² 得 J,别混单位。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 用「结合能曲线」统一看裂变与聚变:</b> 比结合能(每个核子的结合能)在中等质量数(Fe 附近)最大、核最稳定。重核往左裂、轻核往右聚,都往「更稳定的中部」靠拢,所以<b>都释放能量</b>。理解这条曲线,裂变聚变为何都放能一眼看穿。</p>
+      <p style="margin:8px 0"><b>② 能级差与光谱的一一对应:</b> 氢光谱的每条线都对应一个确定的能级跃迁(莱曼系→跃回n=1、巴耳末系→跃回n=2)。看到「可见光谱」就想到巴耳末系(终点n=2)。能量越大波长越短(紫端),ΔE↑→λ↓。把 hν=hc/λ=ΔE 三个量串成一条链。</p>
+      <p style="margin:8px 0"><b>③ 谱线条数 C(n,2) 的本质是组合:</b> n 个能级两两之间有一条可能的跃迁,就是从 n 个里选 2 个,C(n,2)。一旦理解成「选两层楼」,再也不会记错公式。而单个原子只能走一条向下的路径(最多经过 n−1 步),所以放 n−1 个光子。</p>
+      <p style="margin:8px 0"><b>④ 质能方程是「核反应放能」的总账:</b> 任何放能核反应都必然有质量亏损,反之亦然。ΔE=Δmc² 里 c² 是个巨大系数(9×10¹⁶),所以极小的质量亏损→巨大能量,这就是核能远超化学能的根本原因。用能量守恒审计:反应物静能 = 生成物静能 + 释放能。</p>
+      <p style="margin:8px 0"><b>⑤ 把整章串成一条「稳定性」主线:</b> 电子要回基态(能级最低最稳)、核要走向中等质量数(比结合能最大最稳)、不稳定核靠衰变变稳定。<b>一切过程都朝更稳定的状态演化,并在此过程中释放多余能量(光子/核能)</b>。抓住「趋稳释能」这条主线,整章的现象都能自洽解释。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 氢原子能级数值(eV):En = -13.6/n^2 */
+function En(n){return -13.6/(n*n);}
+
+/* ===== 互动1:氢原子能级跃迁动画 ===== */
+(function(){
+  const cv=document.getElementById('jumpCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('jumpNote');
+  const levels=[1,2,3,4,5];
+  // 在画布左侧画能级线,记录每条线的 y 与 n
+  const L=60, R=430, top=40, bot=290;
+  function yFor(n){ // 按能量映射:E1=-13.6(最低,画最下),E->0(最上)
+    const e=En(n); const emin=-13.6, emax=0;
+    return bot - (e-emin)/(emax-emin)*(bot-top);
+  }
+  let sel=[]; // 选中的两个 n
+  let anim=null; // {from,to,t}
+  function drawStatic(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 标题分区
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(470,20);ctx.lineTo(470,310);ctx.stroke();
+    ctx.font='bold 12px sans-serif';ctx.fillStyle='#6b5d3a';
+    ctx.fillText('能级图 (eV)',L,26);ctx.fillText('对应谱线(光子)',500,26);
+    // 能级线
+    levels.forEach(n=>{
+      const y=yFor(n);
+      ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(R,y);ctx.stroke();
+      ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.textAlign='left';
+      ctx.fillText('n='+n,R+6,y+5);
+      ctx.textAlign='right';ctx.fillStyle='#6b5d3a';ctx.font='bold 11px sans-serif';
+      ctx.fillText(En(n).toFixed(2),L-6,y+4);ctx.textAlign='left';
+    });
+    // 选中高亮
+    sel.forEach(n=>{const y=yFor(n);ctx.strokeStyle=ORANGE;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(R,y);ctx.stroke();});
+    ctx.strokeStyle=INK;
+  }
+  // 谱线颜色:按光子能量映射到近似可见光色(能量越大越蓝/紫)
+  function photonColor(dE){
+    // 可见光大约 1.6~3.3 eV;巴耳末系落在这里。做个渐变映射
+    const t=Math.max(0,Math.min(1,(dE-1.5)/(3.4-1.5)));
+    // 红(低能)->紫(高能)
+    const r=Math.round(230-t*130), g=Math.round(40+t*20), b=Math.round(40+t*200);
+    return 'rgb('+r+','+g+','+b+')';
+  }
+  function drawSpectrum(dE){
+    // 谱背景
+    ctx.fillStyle='#111';ctx.fillRect(495,120,190,90);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(495,120,190,90);
+    if(dE>0){
+      const col=photonColor(dE);
+      // 谱线位置:能量越大越靠右(偏紫)
+      const t=Math.max(0,Math.min(1,(dE-0.5)/(13.6-0.5)));
+      const x=505+t*170;
+      ctx.strokeStyle=col;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x,124);ctx.lineTo(x,206);ctx.stroke();
+      ctx.fillStyle=col;ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+      ctx.fillText(dE.toFixed(2)+' eV',590,232);ctx.textAlign='left';
+    }
+    ctx.fillStyle='#6b5d3a';ctx.font='bold 10px sans-serif';
+    ctx.fillText('← 红/长波   蓝紫/短波 →',500,250);
+  }
+  function loop(){
+    if(!anim){return;}
+    drawStatic();
+    const y0=yFor(anim.from), y1=yFor(anim.to);
+    const t=anim.t;
+    const ex=(L+R)/2;
+    const cy=y0+(y1-y0)*t;
+    // 电子小球
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(ex,cy,9,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    // 箭头
+    ctx.strokeStyle=anim.up?GREEN:RED;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(ex+40,y0);ctx.lineTo(ex+40,y1);ctx.stroke();
+    const dir=anim.up?-1:1;
+    ctx.beginPath();ctx.moveTo(ex+40,y1);ctx.lineTo(ex+34,y1-dir*8);ctx.lineTo(ex+46,y1-dir*8);ctx.closePath();ctx.fillStyle=anim.up?GREEN:RED;ctx.fill();
+    // 光子(波浪),上跳=吸收(从右进入),下跳=辐射(向右飞出)
+    const dE=Math.abs(En(anim.to)-En(anim.from));
+    const px=anim.up? (680-anim.t*250) : (ex+80+anim.t*250);
+    const py=(y0+y1)/2;
+    const col=photonColor(dE);
+    ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<40;i++){const xx=px+i*2.2;const yy=py+Math.sin(i*0.9)*6;if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+    ctx.stroke();
+    if(!anim.up){drawSpectrum(dE);}
+    anim.t+=0.02;
+    if(anim.t>=1){
+      anim=null;drawStatic();
+      // 保留一条谱线
+      if(dEfinal>0)drawSpectrum(dEfinal);
+      return;
+    }
+    requestAnimationFrame(loop);
+  }
+  let dEfinal=0;
+  function trigger(a,b){
+    const up=b>a; // n 大=能量高。b>a 表示到更高层=吸收
+    const dE=Math.abs(En(b)-En(a));
+    dEfinal=up?0:dE; // 只有辐射(下跳)留谱线
+    anim={from:a,to:b,t:0,up:up};
+    const h=6.63e-34;
+    const nu=(dE*1.6e-19)/h;
+    if(up){
+      note.innerHTML='⬆️ <b>吸收光子(激发上跳)</b> n='+a+'→n='+b+' :需吸收能量 ΔE='+dE.toFixed(2)+' eV 的光子。hν=E高−E低。';
+      note.style.borderColor=GREEN;
+    }else{
+      note.innerHTML='⬇️ <b>辐射光子(退激下跳)</b> n='+a+'→n='+b+' :放出 ΔE='+dE.toFixed(2)+' eV 的光子,ν='+nu.toExponential(2)+' Hz(右侧谱线)。';
+      note.style.borderColor=RED;
+    }
+    requestAnimationFrame(loop);
+  }
+  cv.addEventListener('click',(e)=>{
+    const rect=cv.getBoundingClientRect();
+    const my=(e.clientY-rect.top)*(cv.height/rect.height);
+    const mx=(e.clientX-rect.left)*(cv.width/rect.width);
+    if(mx>R+40)return;
+    // 找最近能级
+    let best=1,bd=1e9;
+    levels.forEach(n=>{const d=Math.abs(yFor(n)-my);if(d<bd){bd=d;best=n;}});
+    if(bd>26)return;
+    sel.push(best);
+    if(sel.length===2){
+      if(sel[0]===sel[1]){sel=[best];drawStatic();return;}
+      trigger(sel[0],sel[1]);
+      sel=[];
+    }else{drawStatic();note.textContent='已选起点 n='+best+',再点终点能级。';}
+  });
+  document.getElementById('jumpReset').onclick=()=>{sel=[];anim=null;dEfinal=0;drawStatic();note.textContent='点两条能级线试试。';};
+  drawStatic();
+})();
+
+/* ===== 互动2:谱线条数计算器 ===== */
+(function(){
+  const svg=document.getElementById('linesSvg');
+  const sel=document.getElementById('linesN');
+  const cnt=document.getElementById('linesCount');
+  function yFor(n,N){ const top=40,bot=280; return bot-(n-1)/(N-1)*(bot-top); }
+  function draw(){
+    const N=+sel.value;clr(svg);
+    const L=70,R=420;
+    // 能级线
+    for(let n=1;n<=N;n++){
+      const y=yFor(n,N);
+      el(svg,'line',{x1:L,y1:y,x2:R,y2:y,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:R+8,y:y+5,'font-size':13,'font-weight':900,fill:INK}).textContent='n='+n;
+    }
+    // 所有向下跃迁弧:C(N,2) 条,从每个高能级到每个更低能级
+    const cols=[RED,ORANGE,YEL,GREEN,BLUE,VIO,'#c72','#297'];
+    let idx=0;
+    for(let hi=2;hi<=N;hi++){
+      for(let lo=1;lo<hi;lo++){
+        const y1=yFor(hi,N),y2=yFor(lo,N);
+        const col=cols[idx%cols.length];
+        // 用不同 x 起点错开
+        const x=L+40+idx*((R-L-80)/(Math.max(1,N*(N-1)/2)));
+        const cx=x+ (hi-lo)*14;
+        const d='M '+x+' '+y1+' Q '+(cx+40)+' '+((y1+y2)/2)+' '+x+' '+y2;
+        el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':2.6,opacity:0.9});
+        idx++;
+      }
+    }
+    const c=N*(N-1)/2;
+    cnt.innerHTML='n='+N+' → C('+N+',2)='+N+'×'+(N-1)+'/2 = <b>'+c+'</b> 条谱线';
+    cnt.style.borderColor=ORANGE;
+    // 图例文字
+    el(svg,'text',{x:L,y:20,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='每条弧 = 一种向下跃迁 = 一条谱线';
+  }
+  sel.onchange=draw;draw();
+})();
+
+/* ===== 互动3:三种衰变 ===== */
+(function(){
+  const cv=document.getElementById('decayCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('decayNote');
+  let type='a';let running=false;
+  // 母核:例 铀类,A=A0 Z=Z0 ; 用一堆核子表示
+  let A0=14,Z0=6; // 示意用较小核便于画
+  let t=0;
+  const btns=document.querySelectorAll('.dtype');
+  btns.forEach(b=>b.onclick=()=>{btns.forEach(x=>x.classList.remove('on'));b.classList.add('on');type=b.dataset.t;t=0;running=false;draw();});
+  // 生成核子位置(圆盘排布)
+  function nucleons(A,Z,cx,cy){
+    const arr=[];
+    for(let i=0;i<A;i++){
+      const ang=i*2.399963; const rad=6+Math.sqrt(i)*7;
+      arr.push({x:cx+Math.cos(ang)*rad,y:cy+Math.sin(ang)*rad,proton:i<Z});
+    }
+    return arr;
+  }
+  function drawNucleus(cx,cy,A,Z,glow){
+    if(glow){ctx.fillStyle='rgba(243,192,14,0.35)';ctx.beginPath();ctx.arc(cx,cy,55,0,2*Math.PI);ctx.fill();}
+    const arr=nucleons(A,Z,cx,cy);
+    arr.forEach(nu=>{
+      ctx.fillStyle=nu.proton?RED:BLUE;
+      ctx.beginPath();ctx.arc(nu.x,nu.y,6,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=1.2;ctx.stroke();
+    });
+  }
+  function label(x,y,txt){ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText(txt,x,y);}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#6b5d3a';ctx.font='bold 12px sans-serif';
+    ctx.fillText('红=质子(Z)  蓝=中子(N)  绿=电子  黄=光子',20,24);
+    // 目标核参数
+    let A1=A0,Z1=Z0,ejTxt='',descr='';
+    if(type==='a'){A1=A0-4;Z1=Z0-2;ejTxt='α(⁴₂He)';descr='α 衰变:放出 ⁴₂He,A −4,Z −2';}
+    if(type==='b'){A1=A0;Z1=Z0+1;ejTxt='电子⁰₋₁e';descr='β 衰变:中子→质子+电子,A 不变,Z +1';}
+    if(type==='g'){A1=A0;Z1=Z0;ejTxt='γ 光子';descr='γ 辐射:只放光子,A、Z 都不变';}
+    const p=running?Math.min(1,t):0;
+    // 母核(左)
+    const mx=180,my=150;
+    drawNucleus(mx,my,A0,Z0,type==='g'&&running);
+    label(80,60,'母核 A='+A0+' Z='+Z0);
+    // 子核(右)
+    if(running&&p>0.15){
+      const sx=520,sy=150;
+      drawNucleus(sx,sy,A1,Z1,false);
+      label(470,60,'子核 A='+A1+' Z='+Z1);
+      // 抛出物飞行
+      const fx=mx+(sx-mx)*0; // 从母核抛向下方
+      const ex=mx+(p)*180, ey=my+ (p)*70;
+      if(type==='a'){
+        // 画 α:2红2蓝小团
+        [[0,0],[10,0],[0,10],[10,10]].forEach((o,i)=>{ctx.fillStyle=i<2?RED:BLUE;ctx.beginPath();ctx.arc(ex+o[0],ey+o[1],5,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=1;ctx.stroke();});
+      }else if(type==='b'){
+        ctx.fillStyle=GREEN;ctx.beginPath();ctx.arc(ex,ey,7,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();
+        ctx.fillStyle='#fff';ctx.font='bold 10px sans-serif';ctx.fillText('e⁻',ex-6,ey+4);
+      }else{
+        // γ 光子波
+        ctx.strokeStyle=YEL;ctx.lineWidth=3;ctx.beginPath();
+        for(let i=0;i<26;i++){const xx=mx+40+i*3+p*160;const yy=my+80+Math.sin(i*0.8)*6;if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+        ctx.stroke();
+      }
+    }
+    note.innerHTML='<b>'+descr+'</b>　抛出:'+ejTxt+'。母核 A='+A0+',Z='+Z0+' → 子核 A='+A1+',Z='+Z1+'。（质量数与电荷数各自守恒）';
+    note.style.borderColor=type==='a'?ORANGE:type==='b'?BLUE:YEL;
+  }
+  function loop(){if(!running)return;t+=0.02;if(t>=1.1){running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('decayGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  draw();
+})();
+
+/* ===== 互动4:半衰期指数衰减曲线 ===== */
+(function(){
+  const svg=document.getElementById('halfSvg');
+  const slider=document.getElementById('halfT');
+  const T=100,N0=1000;
+  const hvT=document.getElementById('hvT'),hvN=document.getElementById('hvN'),hvR=document.getElementById('hvR'),hvC=document.getElementById('hvC');
+  const X0=60,Y0=30,W=600,H=240,TMAX=500;
+  function Nof(t){return N0*Math.pow(0.5,t/T);}
+  function draw(){
+    clr(svg);
+    // 轴
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-6,y:Y0+8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='N';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // 曲线
+    let d='';
+    for(let k=0;k<=200;k++){const t=k/200*TMAX;const x=X0+t/TMAX*W;const y=Y0+H-Nof(t)/N0*H;d+=(k===0?'M':'L')+x+' '+y+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:ORANGE,'stroke-width':4});
+    // T,2T,3T 竖虚线
+    [1,2,3,4].forEach(k=>{
+      const t=k*T;if(t>TMAX)return;
+      const x=X0+t/TMAX*W;const y=Y0+H-Nof(t)/N0*H;
+      el(svg,'line',{x1:x,y1:y,x2:x,y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4',opacity:0.6});
+      el(svg,'line',{x1:X0,y1:y,x2:x,y2:y,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4',opacity:0.6});
+      el(svg,'text',{x:x,y:Y0+H+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=k+'T';
+      const frac=Math.pow(0.5,k);
+      el(svg,'text',{x:X0-8,y:y+4,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'end'}).textContent=(frac).toFixed(k>2?3:2);
+    });
+    // N0 标记
+    el(svg,'text',{x:X0-8,y:Y0+4,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'end'}).textContent='1';
+    // 当前点
+    const t=+slider.value;const x=X0+t/TMAX*W;const y=Y0+H-Nof(t)/N0*H;
+    el(svg,'line',{x1:x,y1:Y0,x2:x,y2:Y0+H,stroke:RED,'stroke-width':2,opacity:0.5});
+    el(svg,'circle',{cx:x,cy:y,r:7,fill:RED,stroke:INK,'stroke-width':3});
+    // readout
+    const n=t/T;const r=Math.pow(0.5,n);
+    hvT.textContent=t;hvN.textContent=n.toFixed(2);hvR.textContent=(r*100).toFixed(1)+'%';hvC.textContent=Math.round(N0*r);
+  }
+  slider.oninput=draw;draw();
+})();
+
+/* ===== 互动5:核反应方程配平器 ===== */
+(function(){
+  const eqDiv=document.getElementById('balEq');
+  const inA=document.getElementById('balA'),inZ=document.getElementById('balZ');
+  const note=document.getElementById('balNote');
+  // 每题:粒子数组,其中一个 unknown:true 为待求;记录正确 A/Z
+  const probs=[
+    { // 卢瑟福发现质子
+      left:[{A:14,Z:7,s:'N'},{A:4,Z:2,s:'He'}],
+      right:[{A:17,Z:8,s:'O'},{A:1,Z:1,s:'?',unknown:true}],
+      ans:{A:1,Z:1,name:'¹₁H(质子)'}
+    },
+    { // 铀 alpha 衰变
+      left:[{A:238,Z:92,s:'U'}],
+      right:[{A:4,Z:2,s:'He'},{A:234,Z:90,s:'?',unknown:true}],
+      ans:{A:234,Z:90,name:'²³⁴₉₀Th(钍)'}
+    },
+    { // 氘氚聚变求中子
+      left:[{A:2,Z:1,s:'H'},{A:3,Z:1,s:'H'}],
+      right:[{A:4,Z:2,s:'He'},{A:1,Z:0,s:'?',unknown:true}],
+      ans:{A:1,Z:0,name:'¹₀n(中子)'}
+    },
+    { // beta 衰变
+      left:[{A:14,Z:6,s:'C'}],
+      right:[{A:14,Z:7,s:'N'},{A:0,Z:-1,s:'?',unknown:true}],
+      ans:{A:0,Z:-1,name:'⁰₋₁e(电子)'}
+    },
+    { // 铀裂变求中子数(这里求缺失的一个粒子 = 中子)
+      left:[{A:235,Z:92,s:'U'},{A:1,Z:0,s:'n'}],
+      right:[{A:141,Z:56,s:'Ba'},{A:92,Z:36,s:'Kr'},{A:3,Z:0,s:'?',unknown:true,mult:'3'}],
+      ans:{A:3,Z:0,name:'3¹₀n(三个中子)'}
+    }
+  ];
+  let pi=0;
+  function fmt(p){
+    const mult=p.mult?p.mult:'';
+    if(p.unknown)return mult+'(<span style="color:#E86A17">A='+(p.A!==undefined&&showAns?p.A:'?')+',Z='+(p.Z!==undefined&&showAns?p.Z:'?')+'</span>)X';
+    return mult+p.A+'/'+p.Z+' '+p.s;
+  }
+  let showAns=false;
+  function render(){
+    const pr=probs[pi];
+    let s='';
+    pr.left.forEach((p,i)=>{s+=(i>0?' + ':'')+partStr(p);});
+    s+=' → ';
+    pr.right.forEach((p,i)=>{s+=(i>0?' + ':'')+partStr(p);});
+    eqDiv.innerHTML=s;
+  }
+  function partStr(p){
+    const mult=p.mult?p.mult:'';
+    if(p.unknown){
+      const a=showAns?p.A:'?', z=showAns?p.Z:'?';
+      return mult+'<span style="border:2px solid #E86A17;padding:2px 6px;color:#E86A17">('+a+','+z+')X</span>';
+    }
+    return mult+'<sup>'+p.A+'</sup><sub>'+p.Z+'</sub>'+p.s;
+  }
+  function check(){
+    const pr=probs[pi];
+    const ua=parseInt(inA.value,10), uz=parseInt(inZ.value,10);
+    if(isNaN(ua)||isNaN(uz)){note.textContent='请先填入 A 和 Z 两个数字。';note.style.borderColor=INK;return;}
+    // 计算左右质量数/电荷数(未知项用用户输入)
+    function sum(arr,key){return arr.reduce((s,p)=>{const m=p.mult?parseInt(p.mult,10):1;const v=p.unknown?(key==='A'?ua:uz):p[key];return s+m*v;},0);}
+    const AL=sum(pr.left,'A'),AR=sum(pr.right,'A');
+    const ZL=sum(pr.left,'Z'),ZR=sum(pr.right,'Z');
+    const okA=AL===AR, okZ=ZL===ZR;
+    const correct=(ua===pr.ans.A&&uz===pr.ans.Z);
+    if(correct){
+      showAns=true;render();
+      note.innerHTML='✅ <b>守恒成立!</b> 质量数 左'+AL+'=右'+AR+',电荷数 左'+ZL+'=右'+ZR+'。缺失粒子是 <b>'+pr.ans.name+'</b>。';
+      note.style.borderColor=GREEN;
+    }else{
+      note.innerHTML='❌ 还不对。你的 A='+ua+',Z='+uz+' → 质量数:左'+AL+(okA?'=':'≠')+'右'+AR+';电荷数:左'+ZL+(okZ?'=':'≠')+'右'+ZR+'。用两条守恒重解。';
+      note.style.borderColor=RED;
+    }
+  }
+  function next(){pi=(pi+1)%probs.length;showAns=false;inA.value='';inZ.value='';note.textContent='填出缺失粒子的 A 和 Z,点验证。';note.style.borderColor=INK;render();}
+  document.getElementById('balCheck').onclick=check;
+  document.getElementById('balNext').onclick=next;
+  render();
+})();
+
+/* ===== 互动6:质量亏损 -> 核能计算器 ===== */
+(function(){
+  const dm=document.getElementById('meDm'),unit=document.getElementById('meUnit');
+  const oJ=document.getElementById('meJ'),oMeV=document.getElementById('meMeV'),oWay=document.getElementById('meWay');
+  const note=document.getElementById('meNote');
+  const c=3e8, u_kg=1.6605e-27, MeV_J=1.602e-13;
+  function go(){
+    const v=parseFloat(dm.value);
+    if(isNaN(v)||v<0){note.textContent='请输入非负的质量亏损 Δm。';note.style.borderColor=INK;return;}
+    let J,MeV;
+    if(unit.value==='u'){
+      MeV=v*931.5; J=MeV*MeV_J;
+      oWay.textContent='ΔE=Δm×931.5';
+    }else{
+      J=v*c*c; MeV=J/MeV_J;
+      oWay.textContent='ΔE=Δm·c²';
+    }
+    oJ.textContent=J.toExponential(3);
+    oMeV.textContent=MeV.toFixed(2);
+    let cls='';
+    if(MeV>15&&MeV<25)cls='(约等于一次氘氚聚变的量级 ~17 MeV)';
+    else if(MeV>150)cls='(重核裂变量级,~200 MeV)';
+    note.innerHTML='Δm='+v+' '+unit.value+' → 释放核能 <b>ΔE≈'+MeV.toFixed(2)+' MeV</b> = '+J.toExponential(2)+' J。'+cls+' 极小质量亏损→巨大能量,因为 c² 极大。';
+    note.style.borderColor=ORANGE;
+  }
+  document.getElementById('meGo').onclick=go;
+  dm.oninput=go;unit.onchange=go;go();
+})();
+
+/* ===== α 粒子散射(散射实验) ===== */
+(function(){
+  const cv=document.getElementById('scatCv');const ctx=cv.getContext('2d');
+  const NX=cv.width, NY=cv.height;
+  const coreX=NX*0.72, coreY=NY/2, k=1400; // 核位置与斥力常数
+  let particles=[];let running=false;
+  function spawn(){
+    particles=[];
+    const n=14;
+    for(let i=0;i<n;i++){
+      const y=NY*0.12 + i*(NY*0.76)/(n-1);
+      particles.push({x:-20-Math.random()*80,y:y,vx:3.4,vy:0,trail:[],done:false});
+    }
+  }
+  function step(p){
+    // 库仑斥力(反平方)
+    const dx=p.x-coreX, dy=p.y-coreY;
+    const r2=dx*dx+dy*dy; const r=Math.sqrt(r2)+0.01;
+    const f=k/r2;
+    p.vx+=f*dx/r; p.vy+=f*dy/r;
+    p.x+=p.vx; p.y+=p.vy;
+    p.trail.push([p.x,p.y]); if(p.trail.length>120)p.trail.shift();
+    if(p.x>NX+40||p.x<-60||p.y<-60||p.y>NY+60)p.done=true;
+  }
+  function draw(){
+    ctx.clearRect(0,0,NX,NY);
+    // 金箔示意(竖线)
+    ctx.strokeStyle='#d9b23a';ctx.lineWidth=2;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(coreX,0);ctx.lineTo(coreX,NY);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#6b5d3a';ctx.font='bold 12px sans-serif';
+    ctx.fillText('金核(带正电,集中几乎全部质量)',coreX-140,24);
+    ctx.fillText('α 粒子束 →',20,NY/2-90);
+    // 核
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(coreX,coreY,12,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.fillText('+',coreX-3,coreY+4);
+    // 粒子与轨迹
+    particles.forEach(p=>{
+      ctx.strokeStyle='rgba(232,106,23,0.5)';ctx.lineWidth=1.6;ctx.beginPath();
+      p.trail.forEach((t,i)=>{if(i===0)ctx.moveTo(t[0],t[1]);else ctx.lineTo(t[0],t[1]);});ctx.stroke();
+      if(!p.done){ctx.fillStyle=YEL;ctx.beginPath();ctx.arc(p.x,p.y,5,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();}
+    });
+  }
+  function loop(){
+    if(!running){return;}
+    particles.forEach(p=>{if(!p.done)step(p);});
+    draw();
+    if(particles.every(p=>p.done)){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('scatGo').onclick=()=>{spawn();running=true;requestAnimationFrame(loop);};
+  document.getElementById('scatReset').onclick=()=>{running=false;spawn();draw();};
+  spawn();draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 卢瑟福 α 粒子散射实验中,极少数粒子大角度偏转甚至被弹回,说明什么?",a:"说明原子中心有一个体积极小、集中了几乎全部质量和全部正电荷的核。绝大多数直穿说明原子内部很空;大角度偏转的原因是 α 粒子受到核的库仑斥力。"},
+ {q:"2. 玻尔模型的三条假设分别是什么?",a:"①定态假设:电子只能在特定稳定轨道上运动,定态时不辐射能量;②轨道量子化:轨道半径与能量只能取分立值(能级);③跃迁假设:两定态间跃迁时吸收/放出光子,hν=E高−E低。"},
+ {q:"3. 氢原子能级公式?n=1、n=2 的能量各是多少?",a:"En=E₁/n²,E₁=−13.6eV。n=1:−13.6eV(基态);n=2:−13.6/4=−3.4eV(第一激发态)。n→∞ 时 E→0(电离)。"},
+ {q:"4. 氢原子从 n=3 跃迁到 n=2,是吸收还是辐射?能量多少?",a:"从高能级(n=3,−1.51eV)到低能级(n=2,−3.4eV),是向下跃迁,辐射光子。hν=E高−E低=−1.51−(−3.4)=1.89eV。"},
+ {q:"5. 一群处于 n=4 能级的氢原子,最多能辐射几条谱线?一个原子最多放几个光子?",a:"一群:C(4,2)=4×3/2=6 条谱线。一个原子最多放 n−1=3 个光子(一条向下路径)。别混!"},
+ {q:"6. 原子核由什么组成?质量数 A 与质子数 Z、中子数 N 的关系?",a:"由质子和中子(统称核子)组成。A=Z+N(核子总数);Z=质子数=电荷数=元素序数;N=中子数=A−Z。"},
+ {q:"7. α、β、γ 三种衰变各放出什么?质量数、电荷数如何变?",a:"α:放 ⁴₂He,A−4、Z−2;β:放电子⁰₋₁e(核内中子→质子),A不变、Z+1;γ:放光子,A、Z 都不变。"},
+ {q:"8. β 衰变放出的电子来自哪里?",a:"来自核内:一个中子转变为一个质子和一个电子(¹₀n→¹₁p+⁰₋₁e),电子被放出。不是核外电子。"},
+ {q:"9. 半衰期会受温度、压强影响吗?对单个核适用吗?",a:"不会!半衰期只由核本身性质决定,与温度、压强、化学状态全无关。它是大量核的统计规律,对单个核何时衰变无法预测(随机)。"},
+ {q:"10. 某放射性核 T=8 天,初始 800g,24 天后剩多少?",a:"n=24/8=3 个半衰期,剩余=800×(1/2)³=800×1/8=100g。已衰变 700g。公式 m=m₀·(1/2)^(t/T)。"},
+ {q:"11. 核反应方程配平守的是什么?是质量守恒吗?",a:"守的是质量数A之和相等 + 电荷数Z之和相等,两条守恒。不是质量(kg)守恒!正因为有质量亏损 Δm,才释放核能。"},
+ {q:"12. ²₁H+³₁H→⁴₂He+X,X 是什么?若 Δm=0.0186u,放出多少能量?",a:"配平:A:2+3=5=4+A→A=1;Z:1+1=2=2+Z→Z=0,X 是 ¹₀n(中子)。ΔE=Δm×931.5=0.0186×931.5≈17.3 MeV。"},
+ {q:"13. 裂变和聚变都释放能量吗?为什么?",a:"都释放。中等质量数的核比结合能最大最稳定,重核裂开、轻核聚合都向中部靠拢,都有质量亏损,都放能(ΔE=Δmc²)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

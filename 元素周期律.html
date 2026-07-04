@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>元素周期律与位构性推断 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .ctrl input[type=text]{border:3px solid var(--ink);padding:7px 10px;font-weight:800;font-size:14px;font-family:"SF Mono",Consolas,monospace;flex:1;min-width:180px}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--green)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  /* periodic table */
+  .ptable{display:grid;grid-template-columns:repeat(18,1fr);gap:3px;margin:8px 0}
+  .pcell{aspect-ratio:1;border:2px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;cursor:pointer;background:var(--card);font-size:12px;line-height:1;padding:2px;min-height:30px}
+  .pcell.empty{border:none;background:none;cursor:default}
+  .pcell small{font-size:8px;font-weight:700;color:#6b5d3a}
+  .pcell.sel{outline:3px solid var(--red);outline-offset:-1px;z-index:2}
+  @media(max-width:640px){.ptable{gap:1.5px}.pcell{font-size:9px;min-height:20px}.pcell small{display:none}}
+  .quest{border:3px solid var(--ink);background:var(--card);padding:10px 14px;margin:8px 0;font-weight:800;font-size:14px}
+  .opt{display:block;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin:6px 0;font-weight:800;font-size:14px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .opt:hover{background:var(--yellow)}.opt.right{background:var(--green);color:#fff}.opt.wrong{background:var(--red);color:#fff}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>元素周期律与位构性推断</h1>
+    <p class="lead">周期表不是要背的一张大表,而是一台"预测机":知道一个元素在哪(位),就能推它的原子结构(构),再推它的性质(性)——三者互相锁死。把递变规律讲成人话,再动手推几道短周期推断,选择题的元素推断稳拿分。</p>
+
+    <div class="say">🗣️ <b>周期表就是元素的"座位表",座位决定脾气。</b> 横着一排叫<b>周期</b>(从左到右一层电子越填越满),竖着一列叫<b>族</b>(最外层电子数相同、脾气相近)。<br>坐得越靠左下角,越像"大方的金属"(容易丢电子);越靠右上角,越像"贪心的非金属"(容易抢电子)。稀有气体在最右边一列,吃饱了不理人。<br>做题只要记住三句:<b>同周期从左到右,原子半径变小、越来越非金属</b>;<b>同主族从上到下,半径变大、越来越金属</b>;<b>"位—构—性"三者可以互相推</b>。抓住这几条,再配几个"信号弹"(化合价、焰色、特殊颜色气体),短周期推断题就是送分。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 原子结构与周期表骨架 → ② 同周期递变 → ③ 同主族递变 → ④ 微粒半径比较 → ⑤ 位—构—性互推 → ⑥ 短周期元素推断突破口。每节都配可拨动的可视化,交互周期表可以直接点着玩。</div>
+
+    <!-- ========================= 1 结构与周期表 ========================= -->
+    <h2 class="b">① 原子结构与周期表骨架</h2>
+    <p class="lead">周期表的"经纬"直接由原子结构决定,两条黄金对应关系必须刻进脑子:</p>
+    <div class="card">
+      <div class="keybox" style="margin:6px 0"><b>周期序数 = 电子层数</b>　　<b>主族序数 = 最外层电子数 = 最高正化合价</b>(O、F 除外)</div>
+      <h3>三张必背的"数字换算"</h3>
+      <table>
+        <tr><th>已知</th><th>推出</th><th>关系</th></tr>
+        <tr><td>原子序数 Z</td><td>核内质子数、核外电子数(中性原子)</td><td>Z = 质子数 = 电子数</td></tr>
+        <tr><td>电子层数</td><td>所在周期</td><td>层数 = 周期序数</td></tr>
+        <tr><td>最外层电子数(主族)</td><td>所在族、最高正价</td><td>最外层数 = 主族序数 = 最高正价</td></tr>
+      </table>
+      <p class="step"><b>短周期</b>指第 1、2、3 周期(共 2+8+8=18 种元素,H 到 Ar)。高考推断题主角基本都在短周期里。</p>
+      <p class="step"><b>最高正价 + |最低负价| = 8</b>(适用于第 ⅣA~ⅦA 族的非金属)。如 S:最高 +6、最低 −2,6+2=8。</p>
+      <p class="trap">⚠ O 一般无正价(常见 −2),F 只有 −1、没有正价。这条"例外"是高频陷阱,别再套"最高正价=主族序数"。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 点一点周期表,看"位→构→性"</div>
+      <p class="step">点任意一个短周期元素格子,读出它的周期、族、电子层排布、原子半径趋势、金属/非金属性、最高正价——把"座位"翻译成"脾气"。</p>
+      <div class="ptable" id="ptable"></div>
+      <div class="readout" style="grid-template-columns:1fr 1fr 1fr;margin-top:10px">
+        <div><b>周期 / 族</b><span id="ptPos">—</span></div>
+        <div><b>电子排布</b><span id="ptConf">—</span></div>
+        <div><b>最高正价</b><span id="ptVal">—</span></div>
+      </div>
+      <div class="verdict" id="ptNote" style="margin-top:8px">点上面任一元素格子查看它的位—构—性。</div>
+    </div>
+
+    <!-- ========================= 2 同周期递变 ========================= -->
+    <h2 class="o">② 同周期递变(从左 → 右)</h2>
+    <div class="card">
+      <p class="step">同一周期从左到右:核电荷数增大、电子层数不变 → 核对电子吸引变强,于是:</p>
+      <table>
+        <tr><th>性质</th><th>从左 → 右 的变化</th><th>原因</th></tr>
+        <tr><td>原子半径</td><td><b>逐渐减小 ↓</b></td><td>核电荷增大、层数不变,核吸得更紧</td></tr>
+        <tr><td>金属性</td><td>减弱 ↓</td><td>越来越不易失电子</td></tr>
+        <tr><td>非金属性</td><td><b>增强 ↑</b></td><td>越来越易得电子</td></tr>
+        <tr><td>最高正化合价</td><td>+1 → +7 逐渐升高</td><td>最外层电子数递增(=主族序数)</td></tr>
+        <tr><td>最高氧化物对应水化物</td><td>酸性增强、碱性减弱</td><td>非金属性增强 → 最高价含氧酸更强</td></tr>
+        <tr><td>气态氢化物</td><td>稳定性增强、还原性减弱</td><td>非金属性增强 → 与 H 结合更牢</td></tr>
+      </table>
+      <p class="step"><b>第 3 周期典型链条:</b> Na→Mg→Al→Si→P→S→Cl,金属性 Na最强、非金属性 Cl最强。最高价含氧酸酸性:HClO₄ &gt; H₂SO₄ &gt; H₃PO₄ &gt; H₂SiO₃;气态氢化物稳定性:HCl &gt; H₂S &gt; PH₃ &gt; SiH₄。</p>
+      <p class="trap">⚠ "非金属性强 → 最高价含氧酸酸性强、气态氢化物稳定"是判断非金属性的两把尺子;别拿"氢化物酸性"来比非金属性(HF 是弱酸,但 F 非金属性极强)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 递变方向箭头图(半径 / 金属性)</div>
+      <p class="step">点切换看"同周期"或"同主族"两套方向:半径怎么走、金属性怎么走一目了然。箭头指向"增大/增强"的方向。</p>
+      <div class="chips" id="trendChips"></div>
+      <svg id="trendSvg" viewBox="0 0 760 300"></svg>
+      <div class="verdict" id="trendNote"></div>
+    </div>
+
+    <!-- ========================= 3 同主族递变 ========================= -->
+    <h2 class="g">③ 同主族递变(从上 → 下)</h2>
+    <div class="card">
+      <p class="step">同一主族从上到下:电子层数增多、最外层电子数不变 → 核对最外层电子吸引变弱,于是:</p>
+      <table>
+        <tr><th>性质</th><th>从上 → 下 的变化</th><th>原因</th></tr>
+        <tr><td>原子半径</td><td><b>逐渐增大 ↑</b></td><td>电子层数增多,原子变胖</td></tr>
+        <tr><td>金属性</td><td><b>增强 ↑</b></td><td>最外层离核远、越来越易失电子</td></tr>
+        <tr><td>非金属性</td><td>减弱 ↓</td><td>越来越不易得电子</td></tr>
+        <tr><td>气态氢化物稳定性</td><td>减弱 ↓</td><td>非金属性减弱</td></tr>
+      </table>
+      <p class="step"><b>典型链条:</b> 碱金属 Li→Na→K→Rb→Cs,金属性依次增强(K 遇水比 Na 更剧烈);卤族 F→Cl→Br→I,非金属性依次减弱(F₂ 能把 Cl⁻ 置换出来)。</p>
+      <div class="keybox" style="margin:8px 0"><b>金属性最强 → 左下角 Cs(Fr)</b>;<b>非金属性最强 → 右上角 F</b>。这是"两个角"记忆法。</div>
+      <p class="trap">⚠ 同主族比较半径:H &lt; Li &lt; Na &lt; K……层数越多半径越大;别被"最外层都相同"误导成半径相同。</p>
+    </div>
+
+    <!-- ========================= 4 微粒半径 ========================= -->
+    <h2 class="v">④ 微粒半径比较(万能三步)</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--violet)">🗣️ <b>比半径就一句口诀:先看层数,再看核数,同层结构核多径小。</b> 电子层数多的胖;层数一样时,谁核电荷大谁把电子拽得更紧、反而更小。</div>
+      <h3>三步走(按顺序,前一步能分出高下就停)</h3>
+      <p class="step">① <b>先看电子层数:</b> 层数越多,半径越大(如 Na &gt; Li,Cl⁻ &gt; F⁻)。</p>
+      <p class="step">② <b>层数相同,再看核电荷数:</b> 核电荷越大,吸引越强,半径越小(如 Na &gt; Mg &gt; Al;O²⁻ &gt; F⁻ &gt; Na⁺ &gt; Mg²⁺ &gt; Al³⁺,它们都是 10 电子的"同电子层结构")。</p>
+      <p class="step">③ <b>同种元素:</b> 阳离子 &lt; 原子 &lt; 阴离子(失电子变小、得电子变大)。如 Na⁺ &lt; Na,Cl &lt; Cl⁻。</p>
+      <div class="keybox" style="margin:8px 0"><b>"10 电子微粒"经典序列:</b> O²⁻ &gt; F⁻ &gt; Na⁺ &gt; Mg²⁺ &gt; Al³⁺(核电荷 8→13 递增,半径递减)。</div>
+      <p class="trap">⚠ 最常见翻车:上来就比核电荷。<b>半径永远先看层数!</b> 只有层数相同(同电子层结构)时才比核电荷。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 微粒半径比较器</div>
+      <p class="step">在框里输入几种微粒(用空格或逗号隔开,如 <b>Na Mg Al</b> 或 <b>O2- F- Na+ Mg2+</b>),点排序,给出从大到小排列和"层数/核数"理由。</p>
+      <div class="ctrl"><input id="radIn" type="text" value="O2- F- Na+ Mg2+ Al3+"><button class="vbtn" id="radGo">排序</button><button class="vbtn dark" id="radEg1">同层例</button><button class="vbtn dark" id="radEg2">同族例</button></div>
+      <div class="readbig" id="radOut">—</div>
+      <div class="verdict" id="radNote">输入微粒后点『排序』。</div>
+    </div>
+
+    <!-- ========================= 5 位构性 ========================= -->
+    <h2 class="b">⑤ 位—构—性三者互推</h2>
+    <div class="card">
+      <p class="step">这是元素周期律的"灵魂三角":<b>位置(周期/族) ⇌ 结构(电子层/最外层) ⇌ 性质(金属性/化合价/氧化还原)</b>。任给一角,可推另外两角。</p>
+      <table>
+        <tr><th>已知</th><th>桥梁</th><th>可推</th></tr>
+        <tr><td>位置(第几周期第几族)</td><td>层数=周期、最外层=主族</td><td>结构(电子排布)、最高正价</td></tr>
+        <tr><td>结构(电子层排布)</td><td>层数→周期、最外层→族</td><td>位置;进而推性质强弱</td></tr>
+        <tr><td>性质(化合价、金属性)</td><td>最高正价→主族;金属/非金强弱→位置区域</td><td>位置、结构</td></tr>
+      </table>
+      <p class="step"><b>推理链示例:</b> 某元素最高正价 +6、气态氢化物为 H₂X → 最外层 6 个电子(ⅥA)、最低价 −2 → 若为短周期第 3 周期 → 就是硫 S(1s²2s²2p⁶3s²3p⁴,3 层、最外层 6)。</p>
+      <p class="trap">⚠ 推断先定"第几层"(周期),再定"最外层几个"(族),两个坐标一交叉,元素就唯一确定。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 位—构—性互推闯关</div>
+      <p class="step">给你一条线索(可能是位置、结构或性质),选出正确的元素。答对进入下一关,把"三角互推"练成条件反射。</p>
+      <div class="quest" id="wgcQ">加载中…</div>
+      <div id="wgcOpts"></div>
+      <div class="verdict" id="wgcNote"></div>
+      <div class="ctrl"><button class="vbtn dark" id="wgcNext">下一关 →</button><span>第 <b id="wgcNo">1</b> / <b id="wgcTot">1</b> 关　得分:<b id="wgcScore">0</b></span></div>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 短周期推断"信号库"</div>
+      <p class="step">勾选题目给的条件"信号",系统实时缩小候选范围,直到锁定唯一元素——把碎线索拼成答案就是推断题的全部套路。</p>
+      <div class="chips" id="sigChips"></div>
+      <svg id="sigSvg" viewBox="0 0 760 130"></svg>
+      <div class="verdict" id="sigNote">勾选上面的信号,看候选被逐步筛掉。</div>
+    </div>
+
+    <!-- ========================= 6 短周期推断突破口 ========================= -->
+    <h2 class="r">⑥ 短周期推断的常见突破口</h2>
+    <div class="card">
+      <h3>五类"信号弹"</h3>
+      <p class="step">① <b>原子序数关系:</b> "a、b 相邻""原子序数相差 8/2""a 是 b 的两倍"等 → 直接定位。相差 8 常暗示同主族相邻周期。</p>
+      <p class="step">② <b>最外层与次外层电子数关系:</b> "最外层=次外层" → 常见 Be(2,2)、Ar;"最外层=次外层 2 倍" → C(2,4);"最外层=次外层 3 倍" → O(2,6);"最外层电子数是电子层数 2 倍" → C 或 S。</p>
+      <p class="step">③ <b>化合价特征:</b> 只有 −1 价、无正价 → F;最高正价 +7 → Cl(短周期);最高 +5、氢化物 RH₃ → N 或 P;+6、氢化物 H₂R → S。</p>
+      <p class="step">④ <b>单质/化合物特殊性质:</b> 焰色黄 → Na;焰色紫(透过蓝钴玻璃) → K;地壳含量最多 → O,其次 Si;空气中最多的气体单质 → N₂;能使湿润红色石蕊试纸变蓝的气体 → NH₃;有刺激性、黄绿色气体 → Cl₂。</p>
+      <p class="step">⑤ <b>单质及化合物的"最之最":</b> 最轻的气体 → H₂;硬度最大的单质 → 金刚石(C);半导体材料主角 → Si;形成化合物种类最多的元素 → C。</p>
+      <div class="keybox" style="margin:8px 0"><b>短周期"锚点"速记:</b> H(1)、C(6)、N(7)、O(8)、F(9)、Na(11)、Al(13)、Si(14)、S(16)、Cl(17)。这十个几乎撑起所有推断题。</div>
+      <p class="trap">⚠ "原子序数最大的短周期元素"是 Ar(18),不是 Cl;"最高正价最高"的短周期主族元素是 Cl(+7)。别把稀有气体也套进最高正价规律。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 金属性 / 非金属性强弱"证据判别器"</div>
+      <p class="step">点一条"证据",判断它能不能、以及怎样比较金属性或非金属性强弱。区分"有效证据"和"常见无效证据",这是选择题里最坑的一类。</p>
+      <div class="chips" id="evChips"></div>
+      <div class="verdict" id="evNote">点上面任一条证据看它是否有效。</div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑦ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑧ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. 比半径上来就看核电荷。<b>永远先看电子层数</b>,层数相同才比核电荷(同电子层结构核多径小)。</p>
+      <p class="trap">2. 死套"最高正价 = 主族序数"。<b>O 一般无正价、F 无正价</b>,这两个是例外。</p>
+      <p class="trap">3. 拿"氢化物酸性"比非金属性。非金属性强弱看<b>单质氧化性/置换、最高价含氧酸酸性、气态氢化物稳定性</b>,不看氢化物水溶液酸性(HF 弱酸但 F 非金属性最强)。</p>
+      <p class="trap">4. 拿"最高价含氧酸酸性"或"氢化物酸性"去比金属性。金属性强弱看<b>单质与水/酸反应置换 H₂ 的难易、最高价氧化物对应水化物(氢氧化物)的碱性强弱</b>。</p>
+      <p class="trap">5. 把"原子序数最大的短周期元素"当成 Cl。是 <b>Ar(18)</b>。</p>
+      <p class="trap">6. 忘了 Na⁺、Mg²⁺、Al³⁺、O²⁻、F⁻、Ne 都是"10 电子微粒",半径要按核电荷从大到小排。</p>
+      <p class="trap">7. 把同主族半径当成相同(最外层电子数相同 ≠ 半径相同,层数越多越大)。</p>
+      <p class="trap">8. 混淆"金属性/非金属性"(得失电子难易的本质属性)与"氧化性/还原性强弱"(具体反应表现)——方向一致但描述对象不同。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>用"核对外层电子的吸引力"统一理解一切递变:</b> 半径、金属性、电负性、电离能全是"这股拉力大小"的不同表现。拉力强 → 半径小、非金属性强;拉力弱 → 半径大、金属性强。一个物理图景吃掉所有规律。</p>
+      <p class="step">▸ <b>对角线规则:</b> Li 与 Mg、Be 与 Al、B 与 Si 在斜对角上性质相似(周期"变小"与主族"变大"两种趋势抵消)。这是竞赛与压轴的暗线。</p>
+      <p class="step">▸ <b>第一电离能的"反常":</b> ⅡA &gt; ⅢA、ⅤA &gt; ⅥA(全满/半满稳定,如 Mg&gt;Al、P&gt;S、N&gt;O),不是单调递增,是高考选修高频陷阱。</p>
+      <p class="step">▸ <b>金属性看电离能、非金属性看电负性:</b> 电离能越小越易失电子(金属性强);电负性越大越能抢电子(非金属性强)。用数量指标替代定性判断,更硬。</p>
+      <p class="step">▸ <b>推断题的"降维"技巧:</b> 把所有线索先各自缩到一个"坐标条件"(定周期或定族),再取交集。多条件几乎总能唯一确定元素,别一条一条盲试。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:化学平衡 / 水溶液离子平衡</p>
+  </div>
+
+<script>
+/* ============ 短周期元素数据(H~Ar) ============ */
+var ELEMS={
+  H :{z:1, sym:'H', name:'氢', p:1,g:'ⅠA', col:1, row:1, out:1, layers:[1],           mnv:1,  type:'非金属',note:'最轻的气体单质 H₂;可与多种元素结合。'},
+  He:{z:2, sym:'He',name:'氦', p:1,g:'0',  col:18,row:1, out:2, layers:[2],           mnv:0,  type:'稀有气体',note:'稀有气体,最外层 2 电子达稳定,不显化合价。'},
+  Li:{z:3, sym:'Li',name:'锂', p:2,g:'ⅠA', col:1, row:2, out:1, layers:[2,1],         mnv:1,  type:'金属',  note:'碱金属,活泼金属,与 Mg 有对角线相似。'},
+  Be:{z:4, sym:'Be',name:'铍', p:2,g:'ⅡA', col:2, row:2, out:2, layers:[2,2],         mnv:2,  type:'金属',  note:'最外层=次外层(2,2);与 Al 对角线相似,两性。'},
+  B :{z:5, sym:'B', name:'硼', p:2,g:'ⅢA', col:13,row:2, out:3, layers:[2,3],         mnv:3,  type:'准金属',note:'与 Si 对角线相似。'},
+  C :{z:6, sym:'C', name:'碳', p:2,g:'ⅣA', col:14,row:2, out:4, layers:[2,4],         mnv:4,  type:'非金属',note:'最外层=次外层2倍(2,4);形成化合物最多;金刚石硬度最大。'},
+  N :{z:7, sym:'N', name:'氮', p:2,g:'ⅤA', col:15,row:2, out:5, layers:[2,5],         mnv:5,  type:'非金属',note:'空气中最多的气体单质 N₂;最高 +5,氢化物 NH₃。'},
+  O :{z:8, sym:'O', name:'氧', p:2,g:'ⅥA', col:16,row:2, out:6, layers:[2,6],         mnv:0,  type:'非金属',note:'地壳含量最多;最外层=次外层3倍(2,6);一般无正价,常见 −2。'},
+  F :{z:9, sym:'F', name:'氟', p:2,g:'ⅦA', col:17,row:2, out:7, layers:[2,7],         mnv:0,  type:'非金属',note:'非金属性最强!只有 −1 价、无正价;右上角之王。'},
+  Ne:{z:10,sym:'Ne',name:'氖', p:2,g:'0',  col:18,row:2, out:8, layers:[2,8],         mnv:0,  type:'稀有气体',note:'10 电子稀有气体,稳定结构。'},
+  Na:{z:11,sym:'Na',name:'钠', p:3,g:'ⅠA', col:1, row:3, out:1, layers:[2,8,1],       mnv:1,  type:'金属',  note:'焰色黄;活泼金属,与水剧烈反应放 H₂。'},
+  Mg:{z:12,sym:'Mg',name:'镁', p:3,g:'ⅡA', col:2, row:3, out:2, layers:[2,8,2],       mnv:2,  type:'金属',  note:'与 Li 对角线相似;燃烧耀眼白光。'},
+  Al:{z:13,sym:'Al',name:'铝', p:3,g:'ⅢA', col:13,row:3, out:3, layers:[2,8,3],       mnv:3,  type:'金属',  note:'两性金属,与 Be 对角线相似;Al³⁺ 是 10 电子微粒。'},
+  Si:{z:14,sym:'Si',name:'硅', p:3,g:'ⅣA', col:14,row:3, out:4, layers:[2,8,4],       mnv:4,  type:'准金属',note:'半导体材料主角;地壳含量第二。'},
+  P :{z:15,sym:'P', name:'磷', p:3,g:'ⅤA', col:15,row:3, out:5, layers:[2,8,5],       mnv:5,  type:'非金属',note:'最高 +5;半满 3p³ 使第一电离能反常高于 S。'},
+  S :{z:16,sym:'S', name:'硫', p:3,g:'ⅥA', col:16,row:3, out:6, layers:[2,8,6],       mnv:6,  type:'非金属',note:'最外层是层数2倍(6=3×2);最高 +6,氢化物 H₂S。'},
+  Cl:{z:17,sym:'Cl',name:'氯', p:3,g:'ⅦA', col:17,row:3, out:7, layers:[2,8,7],       mnv:7,  type:'非金属',note:'黄绿色刺激气体 Cl₂;短周期最高正价 +7(HClO₄ 最强酸)。'},
+  Ar:{z:18,sym:'Ar',name:'氩', p:3,g:'0',  col:18,row:3, out:8, layers:[2,8,8],       mnv:0,  type:'稀有气体',note:'原子序数最大的短周期元素;稳定结构。'}
+};
+var ORDER=['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar'];
+
+/* ============ 交互1 交互周期表 ============ */
+(function(){
+  var tbl=document.getElementById('ptable');
+  var grid={};
+  ORDER.forEach(function(k){grid[ELEMS[k].row+'-'+ELEMS[k].col]=k;});
+  for(var r=1;r<=3;r++){
+    for(var c=1;c<=18;c++){
+      var key=grid[r+'-'+c];
+      var cell=document.createElement('div');
+      if(key){
+        var e=ELEMS[key];
+        cell.className='pcell';cell.dataset.k=key;
+        cell.innerHTML='<small>'+e.z+'</small>'+e.sym;
+        cell.style.background = e.type==='金属'?'#f6d9c8' : e.type==='准金属'?'#e6e0c0' : e.type==='稀有气体'?'#d7cff0' : '#cfe0f5';
+        cell.onclick=(function(kk){return function(){select(kk);};})(key);
+      }else{cell.className='pcell empty';}
+      tbl.appendChild(cell);
+    }
+  }
+  function select(k){
+    var e=ELEMS[k];
+    [].forEach.call(tbl.children,function(c){c.classList.remove('sel');if(c.dataset.k===k)c.classList.add('sel');});
+    document.getElementById('ptPos').textContent='第'+e.p+'周期 · '+e.g+'族';
+    document.getElementById('ptConf').textContent=e.layers.join(',')+'(共'+e.z+'e)';
+    var val = (e.g==='0')?'无(稳定)' : (k==='O')?'一般无正价(−2)' : (k==='F')?'无正价(−1)' : ('+'+e.mnv);
+    document.getElementById('ptVal').textContent=val;
+    var metal = e.type==='金属'?'金属性' : e.type==='非金属'?'非金属性' : e.type==='准金属'?'介于金属与非金属之间' : '稀有气体';
+    document.getElementById('ptNote').textContent='【'+e.name+' '+e.sym+'】位:第'+e.p+'周期'+e.g+'族;构:'+e.layers.join(',')+'(共'+e.z+'个电子、'+e.layers.length+'层);性:'+metal+'。'+e.note;
+  }
+  select('Na');
+})();
+
+/* ============ 交互2 递变方向箭头图 ============ */
+(function(){
+  var data=[
+    {k:'同周期(左→右)',draw:function(){return '<text x="380" y="30" text-anchor="middle" font-size="15" font-weight="900">同一周期 从左到右</text>'
+      +'<line x1="120" y1="90" x2="640" y2="90" stroke="#E86A17" stroke-width="8" marker-end="url(#ar)"/>'
+      +'<text x="120" y="78" font-size="13" font-weight="800">Na</text><text x="620" y="78" font-size="13" font-weight="800">Cl</text>'
+      +'<text x="380" y="128" text-anchor="middle" font-size="14" font-weight="900" fill="#E0382A">原子半径 ↓ 减小</text>'
+      +'<text x="380" y="158" text-anchor="middle" font-size="14" font-weight="900" fill="#1450C8">金属性 ↓ 减弱　非金属性 ↑ 增强</text>'
+      +'<text x="380" y="188" text-anchor="middle" font-size="14" font-weight="900" fill="#1E9E86">最高正价 +1 → +7 升高</text>'
+      +'<text x="380" y="218" text-anchor="middle" font-size="13" font-weight="800">最高价含氧酸酸性 ↑　气态氢化物稳定性 ↑</text>'
+      +'<text x="380" y="262" text-anchor="middle" font-size="12" font-weight="700" fill="#6b5d3a">核电荷增大、层数不变 → 核吸得更紧</text>';}},
+    {k:'同主族(上→下)',draw:function(){return '<text x="380" y="30" text-anchor="middle" font-size="15" font-weight="900">同一主族 从上到下</text>'
+      +'<line x1="380" y1="55" x2="380" y2="235" stroke="#E86A17" stroke-width="8" marker-end="url(#ar)"/>'
+      +'<text x="410" y="62" font-size="13" font-weight="800">Li / F</text><text x="410" y="232" font-size="13" font-weight="800">Cs / I</text>'
+      +'<text x="180" y="110" text-anchor="middle" font-size="14" font-weight="900" fill="#E0382A">原子半径 ↑ 增大</text>'
+      +'<text x="180" y="150" text-anchor="middle" font-size="14" font-weight="900" fill="#1450C8">金属性 ↑ 增强</text>'
+      +'<text x="180" y="190" text-anchor="middle" font-size="14" font-weight="900" fill="#7A3FF2">非金属性 ↓ 减弱</text>'
+      +'<text x="600" y="130" text-anchor="middle" font-size="13" font-weight="800" fill="#1E9E86">氢化物稳定性 ↓</text>'
+      +'<text x="600" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="#6b5d3a">层数增多、离核变远 → 吸引变弱</text>';}}
+  ];
+  var svg=document.getElementById('trendSvg'),chips=document.getElementById('trendChips'),cur=0;
+  var defs='<defs><marker id="ar" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E86A17"/></marker></defs>';
+  data.forEach(function(d,i){var b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=function(){[].forEach.call(chips.children,function(x){x.classList.remove('on');});b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  function render(){svg.innerHTML=defs+data[cur].draw();document.getElementById('trendNote').textContent=cur===0?'同周期:核电荷↑、层数不变 → 半径变小、金属性减弱非金属性增强,最高正价 +1→+7。':'同主族:层数↑、最外层不变 → 半径变大、金属性增强非金属性减弱。';}
+  render();
+})();
+
+/* ============ 交互3 微粒半径比较器 ============ */
+(function(){
+  // 简化 shell 半径估算:主导层数,同层看核电荷。用"层数*100 - 核电荷*z权 + 电荷微调"
+  function parse(tok){
+    tok=tok.replace(/−/g,'-'); // unicode minus
+    var m=tok.match(/^([A-Z][a-z]?)([0-9]*)([+\-]?)$/);
+    if(!m){ // 允许 Na+ / Mg2+ / O2- / Cl-
+      m=tok.match(/^([A-Z][a-z]?)(?:(\d+)?([+\-]))?$/);
+    }
+    if(!m)return null;
+    var sym=m[1];var num=m[2]?parseInt(m[2]):1;var sign=m[3]||'';
+    if(!ELEMS[sym])return null;
+    var Z=ELEMS[sym].z;
+    var charge=0;
+    if(sign==='+')charge=num; else if(sign==='-')charge=-num; else charge=0;
+    var electrons=Z-charge; // 阳离子失电子 charge>0 → 少电子
+    // 电子层数:按电子数落在 2,10,18 分界
+    var layers = electrons<=2?1 : electrons<=10?2 : electrons<=18?3 : 4;
+    // 有效核对外层吸引 ~ Z ;层数优先
+    return {tok:tok,sym:sym,Z:Z,charge:charge,electrons:electrons,layers:layers};
+  }
+  function cmp(a,b){
+    // 层数多者半径大
+    if(a.layers!==b.layers)return b.layers-a.layers;
+    // 同层(同电子层结构或同层)核电荷大者半径小
+    if(a.Z!==b.Z)return a.Z-b.Z; // Z 小的半径大,排前面 → 升序? 我们要从大到小,先放大的
+    return 0;
+  }
+  function run(){
+    var raw=document.getElementById('radIn').value.trim();
+    if(!raw){document.getElementById('radOut').textContent='—';document.getElementById('radNote').textContent='请输入微粒。';return;}
+    var toks=raw.split(/[\s,,、]+/).filter(function(x){return x;});
+    var items=[],bad=[];
+    toks.forEach(function(t){var p=parse(t);if(p)items.push(p);else bad.push(t);});
+    if(items.length<2){document.getElementById('radOut').textContent='—';document.getElementById('radNote').textContent='识别失败'+(bad.length?'('+bad.join(' ')+'):':':')+'请用如 Na Mg Al 或 O2- F- Na+ 的写法。';return;}
+    // 从大到小:层数多在前;同层核电荷小在前
+    items.sort(function(a,b){
+      if(a.layers!==b.layers)return b.layers-a.layers; // 层多→大→前
+      return a.Z-b.Z; // 同层 Z 小→半径大→前
+    });
+    var out=items.map(function(i){return i.tok;}).join(' > ');
+    document.getElementById('radOut').textContent=out;
+    // 理由
+    var sameLayer=items.every(function(i){return i.layers===items[0].layers;});
+    var note='';
+    if(sameLayer){
+      note='这些微粒电子层数都相同('+items[0].layers+'层,同电子层结构),按『核电荷越大半径越小』排:核电荷 '+items.map(function(i){return i.sym+'('+i.Z+')';}).join(' < ')+' → 半径从大到小如上。';
+    }else{
+      note='先按电子层数分层(层多半径大);层数相同的再按核电荷大小(核多径小)。层数:'+items.map(function(i){return i.tok+'→'+i.layers+'层';}).join('、')+'。';
+    }
+    if(bad.length)note+=' (未识别:'+bad.join(' ')+')';
+    document.getElementById('radNote').textContent=note;
+  }
+  document.getElementById('radGo').onclick=run;
+  document.getElementById('radEg1').onclick=function(){document.getElementById('radIn').value='O2- F- Na+ Mg2+ Al3+';run();};
+  document.getElementById('radEg2').onclick=function(){document.getElementById('radIn').value='Li Na K';run();};
+  run();
+})();
+
+/* ============ 交互4 位构性闯关 ============ */
+(function(){
+  var levels=[
+    {q:'线索:第 3 周期 ⅥA 族的元素是?(位→构→性)',ans:'S',opts:['P','S','Cl','O'],why:'第3周期=3个电子层,ⅥA=最外层6个电子 → 2,8,6 → 硫 S。'},
+    {q:'线索:某原子电子排布为 2,8,1,它是?(构→位)',ans:'Na',opts:['Li','Na','Al','K'],why:'3层→第3周期;最外层1个→ⅠA;即钠 Na,活泼金属。'},
+    {q:'线索:最高正价 +7、气态氢化物很稳定的短周期元素?(性→位)',ans:'Cl',opts:['F','S','Cl','P'],why:'最高+7→ⅦA;短周期ⅦA是 Cl(F无正价);HClO₄ 最强酸、HCl 稳定。'},
+    {q:'线索:最外层电子数是次外层 3 倍的短周期元素?(构→位)',ans:'O',opts:['C','N','O','F'],why:'次外层2、最外层6=2×3 → 2,6 → 氧 O。'},
+    {q:'线索:地壳中含量最多、常见化合价 −2 的元素?(性→构)',ans:'O',opts:['Si','O','Al','S'],why:'地壳最多是 O(其次 Si);O 一般无正价、常见 −2。'},
+    {q:'线索:第 3 周期原子半径最大的元素?(位→性)',ans:'Na',opts:['Na','Mg','Al','Cl'],why:'同周期从左到右半径减小,最左的 Na 半径最大(稀有气体不计入主族比较)。'},
+    {q:'线索:最外层电子数=电子层数、且为金属的短周期元素?(构→性)',ans:'Mg',opts:['Be','Mg','Al','Na'],why:'Mg 是 2,8,2:最外层2=层数? 层数3、最外层2不等。正确取最外层=层数:Al(3层最外层3)。此处选最外层=层数的金属→Al。'},
+    {q:'线索:半导体材料的主角、第 3 周期 ⅣA 族元素?(位→性)',ans:'Si',opts:['C','Si','Al','P'],why:'第3周期ⅣA → 2,8,4 → 硅 Si,半导体主角。'}
+  ];
+  // 修正第7关(逻辑冲突),改为干净的一题
+  levels[6]={q:'线索:焰色反应呈黄色、与水剧烈反应放 H₂ 的短周期金属?(性→位)',ans:'Na',opts:['Li','Na','Mg','Al'],why:'焰色黄=钠特征;Na 与水剧烈反应;位于第3周期ⅠA。'};
+  var cur=0,score=0;
+  document.getElementById('wgcTot').textContent=levels.length;
+  function show(){
+    var L=levels[cur];
+    document.getElementById('wgcNo').textContent=cur+1;
+    document.getElementById('wgcQ').textContent=L.q;
+    document.getElementById('wgcNote').textContent='';
+    var box=document.getElementById('wgcOpts');box.innerHTML='';
+    L.opts.forEach(function(o){
+      var d=document.createElement('div');d.className='opt';
+      d.textContent=o+'　('+(ELEMS[o]?ELEMS[o].name:o)+')';
+      d.onclick=function(){
+        [].forEach.call(box.children,function(x){x.style.pointerEvents='none';});
+        if(o===L.ans){d.classList.add('right');score++;document.getElementById('wgcNote').textContent='✅ 对!'+L.why;}
+        else{d.classList.add('wrong');[].forEach.call(box.children,function(x){if(x.textContent.indexOf(L.ans+'　')===0)x.classList.add('right');});document.getElementById('wgcNote').textContent='❌ 正确答案是 '+L.ans+'。'+L.why;}
+        document.getElementById('wgcScore').textContent=score;
+      };
+      box.appendChild(d);
+    });
+  }
+  document.getElementById('wgcNext').onclick=function(){cur=(cur+1)%levels.length;show();};
+  show();
+})();
+
+/* ============ 交互5 短周期推断信号库 ============ */
+(function(){
+  var sigs=[
+    {k:'短周期(1~3周期)',f:function(e){return e.z<=18;}},
+    {k:'第 3 周期',f:function(e){return e.p===3;}},
+    {k:'金属元素',f:function(e){return e.type==='金属';}},
+    {k:'非金属元素',f:function(e){return e.type==='非金属';}},
+    {k:'最外层 ≥ 5 电子',f:function(e){return e.out>=5&&e.g!=='0';}},
+    {k:'最高正价 +6',f:function(e){return e.mnv===6&&e.g!=='0';}},
+    {k:'最高正价 +7',f:function(e){return e.mnv===7&&e.g!=='0';}},
+    {k:'焰色/特殊(Na黄)',f:function(e){return e.sym==='Na';}},
+    {k:'地壳含量最多',f:function(e){return e.sym==='O';}},
+    {k:'半导体主角',f:function(e){return e.sym==='Si';}},
+    {k:'ⅦA 族',f:function(e){return e.g==='ⅦA';}}
+  ];
+  var chips=document.getElementById('sigChips'),svg=document.getElementById('sigSvg');
+  var on=[];
+  sigs.forEach(function(s,i){var b=document.createElement('div');b.className='chip';b.textContent=s.k;b.onclick=function(){var idx=on.indexOf(i);if(idx>=0){on.splice(idx,1);b.classList.remove('on');}else{on.push(i);b.classList.add('on');}render();};chips.appendChild(b);});
+  function render(){
+    var cand=ORDER.filter(function(k){return on.every(function(i){return sigs[i].f(ELEMS[k]);});});
+    var s='';
+    var n=cand.length;var maxShow=Math.min(n,12);
+    cand.slice(0,maxShow).forEach(function(k,i){
+      var e=ELEMS[k];var x=50+i*58;
+      var col = n===1?'#1E9E86' : e.type==='金属'?'#E86A17':e.type==='非金属'?'#1450C8':'#7A3FF2';
+      s+='<circle cx="'+x+'" cy="55" r="24" fill="'+col+'" stroke="#16120A" stroke-width="3"/>';
+      s+='<text x="'+x+'" y="60" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">'+e.sym+'</text>';
+    });
+    if(n===0)s='<text x="380" y="60" text-anchor="middle" font-size="15" font-weight="900" fill="#E0382A">这些信号互相矛盾,无候选元素!请检查条件。</text>';
+    s+='<text x="380" y="112" text-anchor="middle" font-size="13" font-weight="800">候选剩 '+n+' 种'+(n>12?'(仅显示前12)':'')+'</text>';
+    svg.innerHTML=s;
+    var note;
+    if(on.length===0)note='勾选题目给的信号,候选会被逐步筛掉。';
+    else if(n===1)note='🎯 已锁定唯一元素:'+ELEMS[cand[0]].name+' '+ELEMS[cand[0]].sym+'('+ELEMS[cand[0]].z+')。这就是推断题"多条件取交集"的过程。';
+    else if(n===0)note='当前信号组合无解——现实推断题里若出现,说明读题有误或有条件被误用。';
+    else note='当前候选:'+cand.map(function(k){return ELEMS[k].sym;}).join('、')+'。再加一个信号继续缩小。';
+    document.getElementById('sigNote').textContent=note;
+  }
+  render();
+})();
+
+/* ============ 交互6 金属性/非金属性证据判别器 ============ */
+(function(){
+  var ev=[
+    {k:'单质与水/酸反应置换 H₂ 越易 → 金属性越强',ok:true,note:'✅ 有效(金属性)。如 Na 与冷水剧烈、Mg 需热水 → 金属性 Na>Mg。'},
+    {k:'最高价氧化物对应水化物碱性越强 → 金属性越强',ok:true,note:'✅ 有效(金属性)。如 NaOH 强碱 > Mg(OH)₂ > Al(OH)₃(两性) → Na>Mg>Al。'},
+    {k:'金属间的置换反应(活泼金属把不活泼的换出)',ok:true,note:'✅ 有效(金属性)。如 Fe+CuSO₄ → Fe 比 Cu 金属性强。'},
+    {k:'单质氧化性越强 / 越易得电子 → 非金属性越强',ok:true,note:'✅ 有效(非金属性)。如 Cl₂ 能把 Br⁻ 置换 → Cl 非金属性 > Br。'},
+    {k:'最高价含氧酸酸性越强 → 非金属性越强',ok:true,note:'✅ 有效(非金属性)。如 HClO₄ > H₂SO₄ > H₃PO₄ → Cl>S>P。'},
+    {k:'气态氢化物越稳定 → 非金属性越强',ok:true,note:'✅ 有效(非金属性)。如 HF>HCl>HBr 稳定性 → F>Cl>Br。'},
+    {k:'气态氢化物水溶液酸性越强 → 非金属性越强',ok:false,note:'❌ 无效!氢化物水溶液酸性≠非金属性。HF 是弱酸但 F 非金属性最强,HCl 强酸却 Cl<F。'},
+    {k:'最高正价越高 → 非金属性越强',ok:false,note:'❌ 无效!最高正价由族序数定,不直接反映非金属性(且 O、F 是例外)。'},
+    {k:'熔沸点越高 → 金属性越强',ok:false,note:'❌ 无效!熔沸点由晶体结构/金属键决定,与得失电子难易(金属性)无因果关系。'},
+    {k:'密度越大 → 金属性越强',ok:false,note:'❌ 无效!密度是物理性质,与金属性无关。'}
+  ];
+  var chips=document.getElementById('evChips');
+  ev.forEach(function(e){var b=document.createElement('div');b.className='chip';b.textContent=e.k;b.onclick=function(){[].forEach.call(chips.children,function(x){x.classList.remove('on');});b.classList.add('on');var nd=document.getElementById('evNote');nd.textContent=e.note;nd.style.borderColor=e.ok?'#1E9E86':'#E0382A';};chips.appendChild(b);});
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  var maps=[
+    {t:'微粒半径大小比较',sig:'给几种原子或离子(常含 10 电子微粒),排半径大小或判正误。',act:'三步:先看电子层数(多者大)→ 同层看核电荷(多者小)→ 同种元素阳离子<原子<阴离子。',ex:'O²⁻、F⁻、Na⁺、Mg²⁺、Al³⁺(都是 10 电子)→ 半径 O²⁻>F⁻>Na⁺>Mg²⁺>Al³⁺。',trap:'上来就比核电荷,忘了先看层数;同种元素得失电子对半径的影响漏判。'},
+    {t:'金属性 / 非金属性强弱判断',sig:'比较两元素金属性或非金属性;判断"证据"能否说明强弱。',act:'金属性看:置换 H₂ 难易、最高价氢氧化物碱性、金属间置换。非金属性看:单质氧化性/置换、最高价含氧酸酸性、气态氢化物稳定性。',ex:'S 与 Cl 谁非金属性强?比 HClO₄ 与 H₂SO₄ 酸性、比 HCl 与 H₂S 稳定性 → Cl>S。',trap:'拿氢化物水溶液酸性(HF弱酸)、最高正价、熔沸点当证据 → 全是无效证据。'},
+    {t:'位—构—性互推',sig:'给位置/结构/性质中的一项,求其余两项或某具体信息(化合价、排布)。',act:'层数↔周期、最外层↔主族↔最高正价三座桥梁;先定周期再定族,坐标一交叉唯一确定。',ex:'最高+6、氢化物 H₂X、第3周期 → 硫 S(2,8,6)。',trap:'O、F 无正价套错公式;把稀有气体也塞进"最高正价=族序数"。'},
+    {t:'短周期元素定位推断',sig:'一段文字给多条线索(序数关系、层电子关系、焰色、颜色、含量之最)求元素。',act:'把每条线索各缩成一个坐标条件(定周期或定族),再取交集;十个锚点元素优先套。',ex:'焰色黄、与水剧烈反应放 H₂ → Na;地壳最多 → O;半导体主角 → Si。',trap:'"短周期序数最大"是 Ar 不是 Cl;最外层/次外层关系记混(C是2倍、O是3倍)。'},
+    {t:'同周期/同主族递变结论应用',sig:'比酸碱性强弱、氢化物稳定性、化合价高低,或判断递变趋势正误。',act:'同周期左→右:半径↓、非金属性↑、最高价酸性↑、氢化物稳定性↑;同主族上→下:半径↑、金属性↑。',ex:'酸性 HClO₄>H₂SO₄>H₃PO₄>H₂SiO₃;稳定性 HF>HCl>HBr>HI。',trap:'把"氢化物酸性"当"稳定性";把同主族半径当相同。'},
+    {t:'电离能 / 电负性(选修拔高)',sig:'比第一电离能、电负性,或解释反常(Mg>Al、P>S)。',act:'总趋势:同周期→右电离能/电负性增大,同主族→下减小;全满半满(ⅡA、ⅤA)电离能反常偏高。',ex:'第一电离能 Mg>Al、P>S、N>O(半满/全满稳定)。',trap:'误以为电离能单调递增,忽略 ⅡA>ⅢA、ⅤA>ⅥA 的反常。'},
+    {t:'对角线规则 / 相似性',sig:'给出斜对角元素性质相似,或问谁与谁相似。',act:'Li~Mg、Be~Al、B~Si 三对对角线相似;周期变小与主族变大两趋势抵消。',ex:'Be(OH)₂ 与 Al(OH)₃ 都两性;Li 与 Mg 都与 N₂ 直接化合。',trap:'把对角线当成同族;超出这三对乱套。'}
+  ];
+  var box=document.getElementById('map');
+  maps.forEach(function(m){var d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  var qs=[
+    {q:'1. 周期序数、主族序数分别等于原子结构里的什么?',a:'周期序数=电子层数;主族序数=最外层电子数=最高正化合价(O、F 除外)。'},
+    {q:'2. 把 O²⁻、F⁻、Na⁺、Mg²⁺、Al³⁺ 按半径从大到小排列并说明理由。',a:'O²⁻>F⁻>Na⁺>Mg²⁺>Al³⁺。它们都是 10 电子的同电子层结构,层数相同,核电荷越大吸引越强、半径越小(核电荷 8→13 递增)。'},
+    {q:'3. 同周期从左到右,原子半径、金属性、非金属性、最高正价各怎么变?',a:'半径减小;金属性减弱、非金属性增强;最高正价从 +1 升到 +7。因核电荷增大、层数不变。'},
+    {q:'4. 同主族从上到下,半径和金属性怎么变?为什么?',a:'半径增大、金属性增强。因电子层数增多,最外层离核变远,越来越易失电子。'},
+    {q:'5. 判断非金属性强弱可以用哪些证据?哪些是无效证据?',a:'有效:单质氧化性/置换、最高价含氧酸酸性、气态氢化物稳定性。无效:氢化物水溶液酸性(HF 弱酸却 F 最强)、最高正价、熔沸点。'},
+    {q:'6. 判断金属性强弱可以用哪些证据?',a:'单质与水/酸反应置换 H₂ 的难易、最高价氧化物对应水化物(氢氧化物)的碱性强弱、金属间的置换反应。'},
+    {q:'7. 某短周期元素最外层电子数是次外层的 3 倍,是哪种元素?',a:'次外层 2、最外层 6=2×3 → 电子排布 2,6 → 氧 O。'},
+    {q:'8. 原子序数最大的短周期元素是谁?最高正价最高的短周期主族元素是谁?',a:'序数最大是 Ar(18);最高正价最高的短周期主族元素是 Cl(+7)。'},
+    {q:'9. 第 3 周期元素中,最高价氧化物对应水化物酸性最强、碱性最强的分别是?',a:'酸性最强 HClO₄(Cl);碱性最强 NaOH(Na)。左端最金属、右端最非金属。'},
+    {q:'10. 用位—构—性推理:某元素在第 3 周期 ⅥA 族,写出它的电子排布、最高正价、气态氢化物。',a:'硫 S:2,8,6;最高正价 +6;气态氢化物 H₂S(稳定性弱于 HCl)。'},
+    {q:'11. 简述短周期推断题的通用解法。',a:'把每条线索各缩成一个坐标条件(定周期或定族),再取交集;优先套十个锚点元素(H、C、N、O、F、Na、Al、Si、S、Cl)。'},
+    {q:'12. 举出三对"对角线相似"的元素,并各说一个相似表现。',a:'Li~Mg(都能与 N₂ 直接化合成氮化物);Be~Al(氢氧化物都两性);B~Si(都是重要的非金属/准金属,含氧酸相似)。'}
+  ];
+  var quiz=document.getElementById('quiz');
+  qs.forEach(function(o){var d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>
