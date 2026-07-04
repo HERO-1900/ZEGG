@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>直线运动(运动学) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+  .graphrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.graphrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>直线运动(运动学)</h1>
+    <p class="lead">运动学是整个力学的地基:选择填空的送分题、大题的第一步全靠它。难点不在公式多,而在「矢量方向」「图像会读」「推论会用」「追及会判临界」。这页把概念说透,再用 6 个动画把公式、图像、追及全部拨给你看。</p>
+
+    <div class="say">🗣️ <b>运动学(人话版):</b> 就是不管「为什么动」,只描述「怎么动」——位置、快慢、变快变慢。四个匀变速公式其实是<b>一家人</b>:v=v₀+at(时间和速度)、x=v₀t+½at²(时间和位移),再消掉 t 就得 v²=v₀²+2ax(不含时间)。做题第一步永远是:<b>定正方向</b>,写下已知量,看缺哪个量→选那条<b>不含它</b>的公式。图像题记死两句:<b>x-t 图看斜率就是速度,v-t 图斜率是加速度、面积是位移</b>。</div>
+
+    <div class="keybox"><b>四大黄金公式速记:</b> ① v = v₀ + at(缺 x)　② x = v₀t + ½at²(缺 v)　③ v² = v₀² + 2ax(缺 t)　④ x = (v₀+v)/2 · t(缺 a)。→ 题目缺哪个物理量,就用<b>不含那个量</b>的公式,少绕弯路。全部量都是<b>矢量</b>,先定正方向再代符号!</div>
+
+    <h2 class="b">① 基本概念:先把「量」说清楚</h2>
+    <div class="card">
+      <table>
+        <tr><th>概念</th><th>说人话</th><th>关键点</th></tr>
+        <tr><td>参考系</td><td>你以谁为「不动」来看运动</td><td>选不同参考系,同一运动描述不同</td></tr>
+        <tr><td>质点</td><td>忽略大小形状,当成一个点</td><td>看研究问题能否忽略尺寸</td></tr>
+        <tr><td>位移 x</td><td>起点直指终点的有向线段</td><td><b>矢量</b>,只看头尾,不管走多绕</td></tr>
+        <tr><td>路程 s</td><td>实际走过轨迹的总长度</td><td><b>标量</b>,恒 ≥ |位移|</td></tr>
+        <tr><td>平均速度</td><td>位移 ÷ 时间</td><td><b>矢量</b> = x / t,方向同位移</td></tr>
+        <tr><td>平均速率</td><td>路程 ÷ 时间</td><td><b>标量</b> = s / t,一般 ≠ 平均速度大小</td></tr>
+        <tr><td>瞬时速度</td><td>某一时刻的快慢与方向</td><td>Δt→0 的平均速度;x-t 图切线斜率</td></tr>
+        <tr><td>加速度 a</td><td>速度变化的快慢</td><td>a = Δv/Δt,<b>方向同 Δv</b>,不是同 v!</td></tr>
+      </table>
+      <div class="eq">平均速度 = x / t　　加速度 a = Δv / Δt = (v − v₀) / t</div>
+      <p class="trap">⚠ 加速度方向 = 速度<b>变化量</b> Δv 的方向,不是速度 v 的方向!a 与 v 同向 → 加速;a 与 v 反向 → 减速。刹车、竖直上抛上升段都是 a 与 v 反向。</p>
+    </div>
+
+    <h2 class="o">② 匀变速直线运动:四大公式 + 图像联动</h2>
+    <div class="card">
+      <div class="eq">v = v₀ + at</div>
+      <div class="eq">x = v₀t + ½at²</div>
+      <div class="eq">v² = v₀² + 2ax　(不含 t,求「末速度/位移」神器)</div>
+      <div class="eq">x = (v₀ + v)/2 · t　(平均速度 × 时间)</div>
+      <p style="margin:8px 0"><b>选公式口诀:</b> 列出 v₀、v、a、x、t 五个量,题目给三缺二,看<b>要求的量</b>和<b>没给的量</b>,选一条正好不含「没给的量」的公式,一步到位。</p>
+      <p class="trap">⚠ 减速运动 a 取<b>负号</b>(与 v₀ 反向)。刹车问题先算「停下来要多久」t停=v₀/|a|,超过 t停 后车已静止,不能再代公式(否则算出「倒着开」的荒谬结果)!</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚗 互动 1 — 匀变速运动模拟(调 v₀ / a → 小球运动 + 同步 x-t、v-t 图)</div>
+      <canvas id="kinCv" width="700" height="120"></canvas>
+      <div class="graphrow">
+        <svg id="kinXT" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg"></svg>
+        <svg id="kinVT" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="ctrl">
+        <button id="kinGo">▶ 播放</button><button id="kinReset">↺ 重置</button>
+        <label>v₀ <input id="kinV0" type="range" min="0" max="8" value="4" step="0.5"></label>
+        <label>a <input id="kinA" type="range" min="-3" max="3" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>时间 t (s)</b><span id="kT">0</span></div>
+        <div><b>位移 x (m)</b><span id="kX">0</span></div>
+        <div><b>速度 v (m/s)</b><span id="kV">0</span></div>
+        <div><b>加速度 a</b><span id="kA">0</span></div>
+      </div>
+      <p class="small">左图 x-t:抛物线,切线斜率=速度。右图 v-t:直线,斜率=加速度,线下面积=位移。a&lt;0 时先减速可能反向(试试 v₀=4,a=−2)。</p>
+    </div>
+
+    <h2 class="g">③ 重要推论:考场秒杀神器</h2>
+    <div class="card">
+      <h3>推论 1 — 中间时刻速度 = 全程平均速度</h3>
+      <div class="eq">v(t/2) = (v₀ + v) / 2 = x / t</div>
+      <p style="margin:6px 0">匀变速运动中,「时间中点」的瞬时速度 = 全程平均速度。求平均速度时不用积分,直接用两端速度取平均。</p>
+      <h3>推论 2 — 连续相等时间内位移差恒定(纸带求 a 的命门)</h3>
+      <div class="eq">Δx = x₂ − x₁ = x₃ − x₂ = … = aT²</div>
+      <p style="margin:6px 0">每个相等时间间隔 T 内,相邻位移之差是常数 aT²。这就是<b>纸带/闪光照片求加速度</b>的原理:a = Δx / T²。用逐差法更准:a = (x₄+x₅+x₆ − x₁−x₂−x₃) / (9T²)。</p>
+      <h3>推论 3 — 初速度为 0 的匀加速(v₀=0)比例之美</h3>
+      <table>
+        <tr><th>量</th><th>1T末 : 2T末 : 3T末 …</th></tr>
+        <tr><td>末速度 v</td><td>1 : 2 : 3 : …(∝ t)</td></tr>
+        <tr><td>总位移 x</td><td>1 : 4 : 9 : …(∝ t²)</td></tr>
+        <tr><td>第 n 个 T 内位移</td><td>1 : 3 : 5 : 7 : …(奇数比)</td></tr>
+        <tr><td>连续相等位移用时</td><td>1 : (√2−1) : (√3−√2) : …</td></tr>
+      </table>
+      <p class="trap">⚠ 这些比例<b>只在初速度为 0</b> 时成立!v₀≠0 不能直接套。位移比 1:4:9 是「从 0 到 nT 的总位移比」,别和「第 n 段位移比 1:3:5」搞混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 2 — 纸带求加速度(相等时间间隔的点 → Δx=aT² 计算)</div>
+      <svg id="tapeSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="tapeGo">▶ 打点动画</button><button id="tapeReset">↺ 重置</button>
+        <label>加速度 a <input id="tapeA" type="range" min="0.5" max="4" value="2" step="0.5"></label>
+        <label>初速 v₀ <input id="tapeV0" type="range" min="0" max="4" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>x₁ (cm)</b><span id="tx1">0</span></div>
+        <div><b>x₂ (cm)</b><span id="tx2">0</span></div>
+        <div><b>x₃ (cm)</b><span id="tx3">0</span></div>
+        <div><b>Δx=aT² (cm)</b><span id="tdx">0</span></div>
+      </div>
+      <p class="small">T=0.1s 打一个点。相邻间距差 Δx 恒定 = aT²。由 a = Δx / T² 反求加速度——这就是纸带实验的核心。</p>
+    </div>
+
+    <h2 class="v">④ 自由落体 与 竖直上抛</h2>
+    <div class="card">
+      <h3>自由落体:v₀=0 的匀加速,a=g</h3>
+      <div class="eq">v = gt　　h = ½gt²　　v² = 2gh　(g≈9.8,常取 10 m/s²)</div>
+      <p style="margin:6px 0">只有重力、从静止下落。就是 v₀=0、a=g 的匀加速直线运动,上面所有比例(1:2:3、1:4:9、1:3:5)全部适用。</p>
+      <h3>竖直上抛:全过程 a=g 向下(恒定!)</h3>
+      <p style="margin:6px 0"><b>上升下降对称:</b> 上升到最高点用时 = 下降回原点用时 = v₀/g;上升的最大高度 H=v₀²/(2g);经过同一位置,上升与下降的速率相等、方向相反。</p>
+      <div class="eq">上升时间 t↑ = v₀/g　最大高度 H = v₀²/(2g)　全程 a = g(向下)</div>
+      <p class="trap">⚠ 竖直上抛<b>全过程加速度都是 g、方向向下</b>,包括最高点!最高点 v=0 但 a≠0(仍是 g)。取整体法:全程当作初速 v₀ 向上、a=−g 的匀变速,一个公式算到底,别分上下两段硬拆。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 自由落体 vs 竖直上抛 对称演示</div>
+      <canvas id="fallCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <button id="fallGo">▶ 播放</button><button id="fallReset">↺ 重置</button>
+        <label>上抛初速 v₀ <input id="fallV0" type="range" min="8" max="20" value="14" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>上抛 上升时间</b><span id="fUp">0</span></div>
+        <div><b>上抛 最大高度</b><span id="fH">0</span></div>
+        <div><b>上抛 当前 v</b><span id="fV">0</span></div>
+        <div><b>自由落体 v</b><span id="fFV">0</span></div>
+      </div>
+      <p class="small">左:自由落体(v₀=0)。右:竖直上抛。注意上抛在最高点 v=0 但 a 始终=g;上升段与下降段完全对称(同一高度速率相等)。</p>
+    </div>
+
+    <h2 class="r">⑤ 运动图像:x-t 图 与 v-t 图</h2>
+    <div class="card">
+      <h3>x-t 图(位置-时间)</h3>
+      <p style="margin:6px 0"><b>斜率 = 速度</b>(切线斜率=瞬时速度);<b>水平线 = 静止</b>;<b>直线 = 匀速</b>;<b>曲线 = 变速</b>;<b>两图线交点 = 两物体相遇</b>(同一时刻在同一位置)。斜率正=正向运动,斜率负=反向。</p>
+      <h3>v-t 图(速度-时间)——信息最丰富</h3>
+      <p style="margin:6px 0"><b>斜率 = 加速度</b>;<b>与 t 轴围成的面积 = 位移</b>(t 轴上方为正、下方为负,含正负!);<b>直线 = 匀变速</b>;<b>水平线 = 匀速</b>;两图线交点 = <b>速度相等</b>(不是相遇!)。</p>
+      <table>
+        <tr><th></th><th>x-t 图</th><th>v-t 图</th></tr>
+        <tr><td>纵轴</td><td>位置 x</td><td>速度 v</td></tr>
+        <tr><td>斜率含义</td><td>速度</td><td>加速度</td></tr>
+        <tr><td>面积含义</td><td>无意义</td><td><b>位移</b>(含正负)</td></tr>
+        <tr><td>交点含义</td><td><b>相遇</b></td><td>速度相等</td></tr>
+      </table>
+      <p class="trap">⚠ 最大混淆:x-t 图交点=相遇,v-t 图交点只是速度相等(不一定相遇)!v-t 图<b>面积是位移含正负</b>,反向段面积要减去;若问路程,则正负面积绝对值相加。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 4 — v-t 图面积 = 位移演示(拖出梯形面积 → 位移,含反向)</div>
+      <svg id="areaSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="areamode on" data-m="0">匀加速(三角面积)</button>
+        <button class="areamode" data-m="1">先加后匀(梯形)</button>
+        <button class="areamode" data-m="2">先正后负(含反向)</button>
+        <label>拖时间 <input id="areaT" type="range" min="0" max="100" value="100" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>正面积(位移+)</b><span id="aPos">0</span></div>
+        <div><b>负面积(位移−)</b><span id="aNeg">0</span></div>
+        <div><b>净位移 x</b><span id="aNet">0</span></div>
+        <div><b>路程 s</b><span id="aPath">0</span></div>
+      </div>
+      <p class="small">滑动「拖时间」看面积如何累积成位移。模式③里 t 轴下方的红色面积是负位移,净位移 = 正 − 负,路程 = 正 + 负。</p>
+    </div>
+
+    <h2 class="o">⑥ 追及与相遇问题</h2>
+    <div class="card">
+      <h3>两大临界:速度相等时刻</h3>
+      <p style="margin:6px 0"><b>核心思想:</b> 追及相遇的所有临界,都发生在<b>两者速度相等</b>的时刻。速度相等时,两者距离取<b>极值</b>(极大或极小)。</p>
+      <table>
+        <tr><th>情形</th><th>速度相等时的意义</th></tr>
+        <tr><td>后车追前车(后车快)</td><td>速度相等时<b>距离最大</b>?不——若还没追上,此后差距缩小;判「能否追上」看此刻是否已追上</td></tr>
+        <tr><td>快车追慢车,同向</td><td>速度相等瞬间是「相距最近」;若此刻仍未追上则永远追不上,若恰好追上则临界</td></tr>
+        <tr><td>前车快、后车慢(拉开)</td><td>速度相等时<b>距离最小</b>(之后越拉越远)</td></tr>
+        <tr><td>相向而行</td><td>位移之和 = 初始间距 时相遇</td></tr>
+      </table>
+      <div class="eq">追及判据:速度相等时刻 t* → 比较此刻两者位置差与初始间距</div>
+      <p class="trap">⚠ 「恰好追上/恰好不相撞」的临界条件是<b>速度相等且位置相同</b>。先求 v₁=v₂ 的时刻 t*,再算此刻间距:间距&gt;0 追不上,=0 恰好,&lt;0 已相撞(要重新找相撞时刻)。不要盲目令位移相等解方程。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🏁 互动 5 — 追及相遇模拟(两物体不同 v₀/a → 标出速度相等时刻、最大间距/相遇点)</div>
+      <canvas id="chaseCv" width="700" height="130"></canvas>
+      <svg id="chaseGraph" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="chaseGo">▶ 播放</button><button id="chaseReset">↺ 重置</button>
+        <label>后车 v₀ <input id="chV0" type="range" min="0" max="12" value="0" step="1"></label>
+        <label>后车 a <input id="chA" type="range" min="0" max="4" value="2" step="0.5"></label>
+        <label>前车匀速 v <input id="chVf" type="range" min="2" max="10" value="6" step="1"></label>
+        <label>初始间距 d <input id="chD" type="range" min="0" max="40" value="10" step="2"></label>
+      </div>
+      <div class="verdict" id="chaseNote"></div>
+      <p class="small">红=后车(匀加速),蓝=前车(匀速)。图上竖线标出速度相等时刻。看此刻间距判断能否追上/最大间距。</p>
+    </div>
+
+    <h2 class="v">⑦ 图像识别器:给图 → 描述运动</h2>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 6 — 图像识别器(给 x-t 或 v-t 图 → 描述这段运动)</div>
+      <svg id="recSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="recNew">🎲 换一题</button>
+      </div>
+      <div class="chips" id="recChips"></div>
+      <div class="verdict" id="recVerdict">先看图,选一个描述,再核对答案。</div>
+      <p class="small">随机给一张 x-t 或 v-t 图,判断它描述的运动状态。练成「看图秒读」的条件反射。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 公式选择(给三缺二求某量)</h3>
+      <p><b class="tag">触发信号:</b>直线运动,给出 v₀、a、t、x、v 中的三个,求其余。</p>
+      <p><b class="tag">标准动作:</b>定正方向 → 列出五个量、标出已知与所求 → 看「没给的量」→ 选不含它的公式一步求解。</p>
+      <p><b class="tag">示例(带解):</b>汽车 v₀=10 m/s,a=−2 m/s²(刹车),问 5 s 后位移。先判 t停=10/2=5 s,恰好 5 s 停下。x=(v₀²)/(2|a|)=100/4=25 m。若问 6 s 位移,仍是 25 m(第 5 s 后已停)!</p>
+      <p class="trap">陷阱:刹车类不判 t停 就硬代 x=v₀t+½at²,算出 6 s 位移 &lt;5 s 位移(车倒开),荒谬。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 纸带 / 闪光照片求 a 和 v</h3>
+      <p><b class="tag">触发信号:</b>给纸带上相邻计数点间距 x₁、x₂、x₃…,时间间隔 T,求 a 和某点速度。</p>
+      <p><b class="tag">标准动作:</b>a 用 Δx=aT²(或逐差法 a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²);某点速度用「中间时刻速度=相邻两段平均速度」v_n=(x_n+x_{n+1})/(2T)。</p>
+      <p><b class="tag">示例(带解):</b>T=0.02 s,x₁=1.0、x₂=1.4、x₃=1.8 cm。Δx=0.4 cm=aT² → a=0.004/0.0004=10 m/s²。中间点2速度 v₂=(x₂+x₃)/(2T)=(1.4+1.8)/0.04 cm/s=0.8 m/s。</p>
+      <p class="trap">陷阱:单位!cm 要换 m;计数点若「每 5 个间隔取一个」则 T=5×0.02=0.1 s。用逐差法比单个 Δx 更抗误差。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 图像判读(x-t / v-t)</h3>
+      <p><b class="tag">触发信号:</b>给出 x-t 或 v-t 图,问速度/加速度/位移/相遇/某段运动性质。</p>
+      <p><b class="tag">标准动作:</b>先认清是哪种图 → x-t 看斜率(速度)、交点(相遇);v-t 看斜率(加速度)、面积(位移,含正负)、交点(速度相等)。</p>
+      <p><b class="tag">示例(带解):</b>v-t 图上三角形底 4 s、高 8 m/s,前段位移=½×4×8=16 m;若后段回到 t 轴下方三角形底 2 s 高 −4,位移=−4 m,净位移=12 m,路程=20 m。</p>
+      <p class="trap">陷阱:把 v-t 图当轨迹图;忘了面积含正负;把 v-t 交点当相遇(其实只是速度相等)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 追及与相遇</h3>
+      <p><b class="tag">触发信号:</b>两物体同向/相向,问能否追上、何时相遇、最大(最小)间距。</p>
+      <p><b class="tag">标准动作:</b>写各自 x(t) → 求速度相等时刻 t*(临界)→ 算此刻间距判断 → 需要相遇时刻则令位移满足几何关系解方程。</p>
+      <p><b class="tag">示例(带解):</b>后车静止起步 a=2,前车匀速 6 m/s,初始间距 10 m。v相等:2t=6→t*=3 s。此刻后车位移=½×2×9=9 m,前车=6×3+10=28 m,差 19 m(还没追上,此刻间距最大 19 m)。之后后车更快,继续用位移相等解相遇时刻。</p>
+      <p class="trap">陷阱:不判速度相等临界直接令位移相等;把「相距最近」和「相距最远」情形搞反(看谁在追、谁快)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 多阶段运动(加速+匀速+减速)</h3>
+      <p><b class="tag">触发信号:</b>「先加速到某速,再匀速,最后减速停」这类分段过程。</p>
+      <p><b class="tag">标准动作:</b>逐段用运动学公式,上段末速度=下段初速度衔接;总位移=各段位移和;善用平均速度 x=(v₀+v)/2·t 或 v-t 图求面积。</p>
+      <p><b class="tag">示例(带解):</b>启动 a₁=2 加速到 6 m/s(t₁=3 s,x₁=9 m),匀速 6 m/s 走 4 s(x₂=24 m),再 a=−3 减速停(t₃=2 s,x₃=6 m)。总位移=9+24+6=39 m,总时间 9 s。</p>
+      <p class="trap">陷阱:段与段速度衔接用错;减速段忘判是否在时间内停下;画 v-t 图求面积最直观防错。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 位移 ≠ 路程。位移是矢量(头尾直线),路程是标量(轨迹总长),往返运动位移可为 0 但路程不为 0。</p>
+      <p class="trap">② 加速度方向 = Δv 方向,不是 v 方向!a 与 v 反向即减速(刹车、上抛上升段)。</p>
+      <p class="trap">③ v-t 图面积是位移<b>含正负</b>,t 轴下方为负;求路程要把正负面积绝对值相加。</p>
+      <p class="trap">④ 追及问题先判「速度相等」临界,再算间距;别一上来就令位移相等。</p>
+      <p class="trap">⑤ 竖直上抛全过程 a=g 向下(含最高点!)。最高点 v=0 但 a≠0。</p>
+      <p class="trap">⑥ 刹车/减速问题先算停下时间 t停,超过后物体静止,不能继续套公式(否则算出倒退)。</p>
+      <p class="trap">⑦ 比例 1:2:3、1:4:9、1:3:5 只在初速度为 0 时成立,v₀≠0 不能直接用。</p>
+      <p class="trap">⑧ 平均速度 = 位移/时间(矢量),≠ 平均速率 = 路程/时间(标量),一般不相等。</p>
+      <p class="trap">⑨ x-t 图交点=相遇;v-t 图交点只是速度相等,别混淆。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① v-t 图是运动学的「上帝视角」:</b> 任何直线运动都能画成 v-t 图。斜率=加速度、面积=位移、交点=速度相等——一张图把追及、多阶段、图像题全部统一。养成先画 v-t 图再动笔的习惯,复杂题也能几何秒解。</p>
+      <p style="margin:8px 0"><b>② 中间时刻速度 = 平均速度,是「对称」的礼物:</b> v(t/2)=(v₀+v)/2 本质是匀变速下 v 对 t 线性,时间中点的值等于两端平均。凡是求平均速度、求中点速度,先想这条,不必列积分。类似地,「位移中点速度」v(x/2)=√((v₀²+v²)/2) 恒大于时间中点速度,可用来判断图像凹凸。</p>
+      <p style="margin:8px 0"><b>③ 逐差法是实验的精度武器:</b> 纸带求 a,单用一个 Δx=aT² 受单点误差影响大;逐差法 a=(x₄+x₅+x₆−x₁−x₂−x₃)/(9T²) 把所有数据都用上,相当于最小二乘,系统抗噪。理解「为什么隔项相减」是拉开分差的地方。</p>
+      <p style="margin:8px 0"><b>④ 追及问题的「相对运动」视角:</b> 以前车为参考系,后车的相对速度、相对加速度决定一切。相对速度为零(速度相等)那一刻,相对位移取极值——这就是所有临界的统一来源。相对速度反向那刻,若相对位移已≥0 则错过、追不上。</p>
+      <p style="margin:8px 0"><b>⑤ 竖直上抛整体法 &gt; 分段法:</b> 把上升下降当成一个初速 v₀ 向上、a=−g 的匀变速全过程,一个公式(取向上为正)算到底。落回抛出点时 v=−v₀(速率相同方向反)、位移=0、时间=2v₀/g。分段硬拆容易错符号,整体法一气呵成。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:匀变速运动 + x-t / v-t ===== */
+(function(){
+  const cv=document.getElementById('kinCv');const ctx=cv.getContext('2d');
+  const xtSvg=document.getElementById('kinXT'),vtSvg=document.getElementById('kinVT');
+  const V0=document.getElementById('kinV0'),A=document.getElementById('kinA');
+  const kT=document.getElementById('kT'),kX=document.getElementById('kX'),kV=document.getElementById('kV'),kA=document.getElementById('kA');
+  let v0=4,a=1,t=0,running=false;const TMAX=5;
+  function sync(){v0=+V0.value;a=+A.value;}
+  function xat(tt){return v0*tt+0.5*a*tt*tt;}
+  function vat(tt){return v0+a*tt;}
+  function ranges(){
+    let xmin=0,xmax=0,vmin=0,vmax=0;
+    for(let k=0;k<=100;k++){const tt=k/100*TMAX;const x=xat(tt),v=vat(tt);if(x<xmin)xmin=x;if(x>xmax)xmax=x;if(v<vmin)vmin=v;if(v>vmax)vmax=v;}
+    if(xmax-xmin<1)xmax=xmin+1;if(vmax-vmin<1)vmax=vmin+1;
+    return {xmin,xmax,vmin,vmax};
+  }
+  function axes(svg,label){
+    clr(svg);const X0=38,Y0=14,W=280,H=176;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':2.5});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:X0-4,y:Y0+8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=label;
+    el(svg,'text',{x:X0+W,y:Y0+H+12,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    return {X0,Y0,W,H};
+  }
+  function draw(){
+    const R=ranges();
+    // x-t
+    let g=axes(xtSvg,'x');
+    let zx=g.Y0+g.H-(0-R.xmin)/(R.xmax-R.xmin)*g.H; // 0 line if xmin<0
+    if(R.xmin<0){el(xtSvg,'line',{x1:g.X0,y1:zx,x2:g.X0+g.W,y2:zx,stroke:'#bbb','stroke-width':1.5});}
+    let d='';for(let k=0;k<=100;k++){const tt=k/100*TMAX;const px=g.X0+tt/TMAX*g.W;const py=g.Y0+g.H-(xat(tt)-R.xmin)/(R.xmax-R.xmin)*g.H;d+=(k===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';}
+    el(xtSvg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3});
+    let px=g.X0+t/TMAX*g.W,py=g.Y0+g.H-(xat(t)-R.xmin)/(R.xmax-R.xmin)*g.H;
+    el(xtSvg,'circle',{cx:px,cy:py,r:5,fill:RED,stroke:INK,'stroke-width':2});
+    // v-t (with area shading)
+    let g2=axes(vtSvg,'v');
+    let zy=g2.Y0+g2.H-(0-R.vmin)/(R.vmax-R.vmin)*g2.H;
+    if(R.vmin<0){el(vtSvg,'line',{x1:g2.X0,y1:zy,x2:g2.X0+g2.W,y2:zy,stroke:'#bbb','stroke-width':1.5});}
+    // area up to t
+    let area='';const tc=Math.max(t,0.001);
+    area+='M'+g2.X0+' '+zy+' ';
+    for(let k=0;k<=100;k++){const tt=k/100*tc;const ppx=g2.X0+tt/TMAX*g2.W;const ppy=g2.Y0+g2.H-(vat(tt)-R.vmin)/(R.vmax-R.vmin)*g2.H;area+='L'+ppx.toFixed(1)+' '+ppy.toFixed(1)+' ';}
+    area+='L'+(g2.X0+tc/TMAX*g2.W).toFixed(1)+' '+zy+' Z';
+    el(vtSvg,'path',{d:area,fill:'rgba(20,80,200,0.18)',stroke:'none'});
+    let d2='';for(let k=0;k<=100;k++){const tt=k/100*TMAX;const ppx=g2.X0+tt/TMAX*g2.W;const ppy=g2.Y0+g2.H-(vat(tt)-R.vmin)/(R.vmax-R.vmin)*g2.H;d2+=(k===0?'M':'L')+ppx.toFixed(1)+' '+ppy.toFixed(1)+' ';}
+    el(vtSvg,'path',{d:d2,fill:'none',stroke:ORANGE,'stroke-width':3});
+    let vpx=g2.X0+t/TMAX*g2.W,vpy=g2.Y0+g2.H-(vat(t)-R.vmin)/(R.vmax-R.vmin)*g2.H;
+    el(vtSvg,'circle',{cx:vpx,cy:vpy,r:5,fill:RED,stroke:INK,'stroke-width':2});
+    el(vtSvg,'text',{x:g2.X0+g2.W*0.4,y:zy-6,'font-size':11,'font-weight':800,fill:BLUE}).textContent='面积=位移';
+    // ball
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,90);ctx.lineTo(cv.width,90);ctx.stroke();
+    const xnow=xat(t);const bx=40+(xnow-R.xmin)/(R.xmax-R.xmin+0.0001)*(cv.width-80);
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(bx,72,14,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    // velocity arrow
+    const v=vat(t);const dir=v>=0?1:-1;ctx.strokeStyle=ORANGE;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(bx,72);ctx.lineTo(bx+dir*Math.min(40,Math.abs(v)*6),72);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(bx+dir*Math.min(40,Math.abs(v)*6),72);ctx.lineTo(bx+dir*Math.min(40,Math.abs(v)*6)-dir*7,68);ctx.lineTo(bx+dir*Math.min(40,Math.abs(v)*6)-dir*7,76);ctx.fill();
+    kT.textContent=t.toFixed(2);kX.textContent=xat(t).toFixed(2);kV.textContent=vat(t).toFixed(2);kA.textContent=a.toFixed(1);
+  }
+  function loop(){if(!running)return;t+=0.02;if(t>=TMAX){t=TMAX;running=false;}draw();requestAnimationFrame(loop);}
+  V0.oninput=A.oninput=()=>{sync();t=0;draw();};
+  document.getElementById('kinGo').onclick=()=>{sync();if(t>=TMAX)t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('kinReset').onclick=()=>{running=false;t=0;draw();};
+  sync();draw();
+})();
+
+/* ===== 互动2:纸带求加速度 ===== */
+(function(){
+  const svg=document.getElementById('tapeSvg');
+  const A=document.getElementById('tapeA'),V0=document.getElementById('tapeV0');
+  const tx1=document.getElementById('tx1'),tx2=document.getElementById('tx2'),tx3=document.getElementById('tx3'),tdx=document.getElementById('tdx');
+  let a=2,v0=1;const T=0.1;const N=7;
+  let running=false,shown=0;
+  function sync(){a=+A.value;v0=+V0.value;}
+  // position of dot n (n=0..N) at time n*T
+  function pos(n){const tt=n*T;return v0*tt+0.5*a*tt*tt;} // meters
+  function draw(){
+    clr(svg);const X0=30,Y=90,scale=44; // meters->px, exaggerate
+    el(svg,'line',{x1:20,y1:Y+34,x2:680,y2:Y+34,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:24,y:36,'font-size':12.5,'font-weight':800,fill:INK}).textContent='纸带(T=0.1s 打一点);相邻间距 x₁ x₂ x₃… 差恒为 Δx=aT²';
+    // draw dots
+    for(let n=0;n<=N;n++){
+      if(n>shown)break;
+      const px=X0+pos(n)*scale;
+      el(svg,'circle',{cx:px,cy:Y,r:4.5,fill:INK});
+      el(svg,'text',{x:px,y:Y-10,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=n;
+    }
+    // segment brackets x1..x3
+    const cols=[RED,ORANGE,GREEN];
+    for(let n=0;n<3;n++){
+      if(n+1>shown)break;
+      const pa=X0+pos(n)*scale,pb=X0+pos(n+1)*scale;
+      el(svg,'line',{x1:pa,y1:Y+16,x2:pb,y2:Y+16,stroke:cols[n],'stroke-width':4});
+      el(svg,'line',{x1:pa,y1:Y+10,x2:pa,y2:Y+22,stroke:cols[n],'stroke-width':3});
+      el(svg,'line',{x1:pb,y1:Y+10,x2:pb,y2:Y+22,stroke:cols[n],'stroke-width':3});
+      el(svg,'text',{x:(pa+pb)/2,y:Y+70,'font-size':13,'font-weight':900,fill:cols[n],'text-anchor':'middle'}).textContent='x'+(n+1)+'='+((pos(n+1)-pos(n))*100).toFixed(2)+'cm';
+    }
+    const dx=(a*T*T)*100; // cm
+    tx1.textContent=((pos(1)-pos(0))*100).toFixed(2);
+    tx2.textContent=((pos(2)-pos(1))*100).toFixed(2);
+    tx3.textContent=((pos(3)-pos(2))*100).toFixed(2);
+    tdx.textContent=dx.toFixed(2);
+    el(svg,'text',{x:30,y:Y+96,'font-size':13,'font-weight':900,fill:BLUE}).textContent='Δx = aT² = '+dx.toFixed(2)+' cm  →  a = Δx/T² = '+a.toFixed(2)+' m/s²';
+  }
+  function anim(){if(!running)return;shown++;if(shown>=N){shown=N;running=false;}draw();if(running)setTimeout(anim,260);}
+  A.oninput=V0.oninput=()=>{sync();draw();};
+  document.getElementById('tapeGo').onclick=()=>{sync();shown=0;running=true;anim();};
+  document.getElementById('tapeReset').onclick=()=>{running=false;shown=N;draw();};
+  sync();shown=N;draw();
+})();
+
+/* ===== 互动3:自由落体 vs 竖直上抛 ===== */
+(function(){
+  const cv=document.getElementById('fallCv');const ctx=cv.getContext('2d');
+  const V0=document.getElementById('fallV0');
+  const fUp=document.getElementById('fUp'),fH=document.getElementById('fH'),fV=document.getElementById('fV'),fFV=document.getElementById('fFV');
+  const g=10;let v0=14,t=0,running=false;
+  const H=cv.height;const ground=H-30;const top=30;
+  function sync(){v0=+V0.value;}
+  function upY(tt){ // vertical pos of thrown ball (up positive), returns height above ground
+    return v0*tt-0.5*g*tt*tt;
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // ground
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,ground);ctx.lineTo(cv.width,ground);ctx.stroke();
+    const Hmax=v0*v0/(2*g);
+    const scale=(ground-top)/Math.max(Hmax*1.15, 12);
+    // free fall (left) drops from top
+    const fallDropMax=(ground-top)/scale; // available height in meters
+    const fallY=0.5*g*t*t; // meters fallen
+    let fy=top+fallY*scale;let landed=false;
+    if(fy>=ground){fy=ground;landed=true;}
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(180,fy,13,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('自由落体',150,top-8);
+    // thrown ball (right) from ground
+    let h=upY(t);let onGround=false;if(h<0){h=0;onGround=true;}
+    let ty=ground-h*scale;
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(520,ty,13,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle=INK;ctx.fillText('竖直上抛',492,top-8);
+    // max height line
+    ctx.strokeStyle='#bbb';ctx.setLineDash([5,5]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(440,ground-Hmax*scale);ctx.lineTo(600,ground-Hmax*scale);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=RED;ctx.font='bold 11px sans-serif';ctx.fillText('最高点 v=0, a=g',445,ground-Hmax*scale-6);
+    // a arrows (always down for both)
+    ctx.strokeStyle=ORANGE;ctx.lineWidth=3;
+    [180,520].forEach(cx=>{const by=(cx===180?fy:ty);ctx.beginPath();ctx.moveTo(cx+22,by-8);ctx.lineTo(cx+22,by+14);ctx.stroke();ctx.beginPath();ctx.moveTo(cx+22,by+14);ctx.lineTo(cx+18,by+8);ctx.lineTo(cx+26,by+8);ctx.fill();});
+    ctx.fillStyle=ORANGE;ctx.font='bold 10px sans-serif';ctx.fillText('a=g↓',200,fy);ctx.fillText('a=g↓',540,ty);
+    // readouts
+    fUp.textContent=(v0/g).toFixed(2)+' s';
+    fH.textContent=Hmax.toFixed(2)+' m';
+    fV.textContent=(v0-g*t).toFixed(2);
+    fFV.textContent=(g*t).toFixed(2);
+  }
+  function loop(){if(!running)return;t+=0.02;const total=2*v0/g;if(t>=total+0.5){t=total+0.5;running=false;}draw();requestAnimationFrame(loop);}
+  V0.oninput=()=>{sync();t=0;draw();};
+  document.getElementById('fallGo').onclick=()=>{sync();t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('fallReset').onclick=()=>{running=false;t=0;draw();};
+  sync();draw();
+})();
+
+/* ===== 互动4:v-t 图面积=位移 ===== */
+(function(){
+  const svg=document.getElementById('areaSvg');
+  const T=document.getElementById('areaT');
+  const aPos=document.getElementById('aPos'),aNeg=document.getElementById('aNeg'),aNet=document.getElementById('aNet'),aPath=document.getElementById('aPath');
+  let m=0;const TMAX=6;
+  // v as function of t for each mode (m/s)
+  function vfun(tt){
+    if(m===0){return 2*tt;} // 匀加速 slope 2
+    if(m===1){ if(tt<3) return 3*tt; return 9; } // ramp then constant
+    // mode2: up then negative
+    return 8-2.5*tt; // crosses zero at t=3.2
+  }
+  function draw(){
+    clr(svg);const X0=50,Y0=20,W=600,H=240;
+    // find v range
+    let vmax=0,vmin=0;for(let k=0;k<=100;k++){const v=vfun(k/100*TMAX);if(v>vmax)vmax=v;if(v<vmin)vmin=v;}
+    vmax=Math.max(vmax,1);if(vmin>-1&&m===2)vmin=-9;if(m!==2)vmin=0;
+    const span=vmax-vmin;
+    function py(v){return Y0+H-(v-vmin)/span*H;}
+    const zy=py(0);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:zy,x2:X0+W,y2:zy,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+8,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:zy+18,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const frac=(+T.value)/100;const tc=frac*TMAX;
+    // shade area up to tc, split pos/neg
+    // build polygon following curve then back along zero
+    function shade(){
+      let d='M'+X0+' '+zy+' ';
+      for(let k=0;k<=120;k++){const tt=k/120*tc;const px=X0+tt/TMAX*W;d+='L'+px.toFixed(1)+' '+py(vfun(tt)).toFixed(1)+' ';}
+      d+='L'+(X0+tc/TMAX*W).toFixed(1)+' '+zy+' Z';
+      return d;
+    }
+    // For coloring pos vs neg we shade segments
+    // positive segments (green-ish blue), negative red
+    let posA=0,negA=0;const dt=TMAX/600;
+    for(let k=0;k<Math.round(frac*600);k++){const tt=k*dt;const v=vfun(tt);if(v>=0)posA+=v*dt;else negA+=-v*dt;}
+    // draw shading by sampling small rectangles
+    const steps=Math.round(frac*120);
+    for(let k=0;k<steps;k++){const t0=k/120*TMAX;const t1=(k+1)/120*TMAX;const v=vfun((t0+t1)/2);const x0=X0+t0/TMAX*W;const x1=X0+t1/TMAX*W;const yTop=py(v);const col=v>=0?'rgba(20,80,200,0.28)':'rgba(224,56,42,0.30)';el(svg,'rect',{x:x0,y:Math.min(yTop,zy),width:(x1-x0)+0.5,height:Math.abs(zy-yTop),fill:col,stroke:'none'});}
+    // curve full
+    let d2='';for(let k=0;k<=120;k++){const tt=k/120*TMAX;const px=X0+tt/TMAX*W;d2+=(k===0?'M':'L')+px.toFixed(1)+' '+py(vfun(tt)).toFixed(1)+' ';}
+    el(svg,'path',{d:d2,fill:'none',stroke:ORANGE,'stroke-width':3.5});
+    // marker line at tc
+    const mx=X0+tc/TMAX*W;el(svg,'line',{x1:mx,y1:Y0,x2:mx,y2:Y0+H,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:mx,cy:py(vfun(tc)),r:5,fill:RED,stroke:INK,'stroke-width':2});
+    aPos.textContent=posA.toFixed(2)+' m';aNeg.textContent=negA.toFixed(2)+' m';
+    aNet.textContent=(posA-negA).toFixed(2)+' m';aPath.textContent=(posA+negA).toFixed(2)+' m';
+  }
+  document.querySelectorAll('.areamode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.areamode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();});
+  T.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:追及相遇 ===== */
+(function(){
+  const cv=document.getElementById('chaseCv');const ctx=cv.getContext('2d');
+  const gsvg=document.getElementById('chaseGraph');
+  const note=document.getElementById('chaseNote');
+  const V0=document.getElementById('chV0'),A=document.getElementById('chA'),VF=document.getElementById('chVf'),D=document.getElementById('chD');
+  let v0=0,a=2,vf=6,d=10,t=0,running=false;
+  function sync(){v0=+V0.value;a=+A.value;vf=+VF.value;d=+D.value;}
+  // rear car starts at 0, front car starts at d, moves at vf
+  function xr(tt){return v0*tt+0.5*a*tt*tt;}
+  function xf(tt){return d+vf*tt;}
+  function veq(){ // time when v0+a t = vf
+    if(a<=0){return v0>=vf?0:Infinity;}
+    const t1=(vf-v0)/a;return t1>0?t1:0;
+  }
+  function catchTime(){ // solve xr=xf : 0.5 a t^2 + (v0-vf) t - d =0
+    const A2=0.5*a,B2=(v0-vf),C2=-d;
+    if(Math.abs(A2)<1e-9){ if(Math.abs(B2)<1e-9)return Infinity; const tt=-C2/B2;return tt>0?tt:Infinity; }
+    const disc=B2*B2-4*A2*C2;if(disc<0)return Infinity;const r1=(-B2-Math.sqrt(disc))/(2*A2),r2=(-B2+Math.sqrt(disc))/(2*A2);
+    const cand=[r1,r2].filter(x=>x>1e-6).sort((p,q)=>p-q);return cand.length?cand[0]:Infinity;
+  }
+  function analyze(){
+    const tstar=veq();const tc=catchTime();
+    if(tc!==Infinity){
+      return {tstar,tc,text:'✅ 后车能追上!相遇时刻 t≈'+tc.toFixed(2)+' s。'+(tstar!==Infinity&&tstar>0?'(速度相等在 t*='+tstar.toFixed(2)+' s,此前差距先增后减)':''),col:GREEN};
+    }
+    // cannot catch
+    if(tstar!==Infinity&&isFinite(tstar)){
+      const gap=xf(tstar)-xr(tstar);
+      return {tstar,tc,text:'❌ 追不上。速度相等 t*='+tstar.toFixed(2)+' s 时相距最近 = '+gap.toFixed(2)+' m(此后越拉越远)。',col:RED};
+    }
+    return {tstar,tc,text:'❌ 前车更快,永远追不上,距离持续增大。',col:RED};
+  }
+  function graph(){
+    clr(gsvg);const X0=46,Y0=14,W=610,H=160;
+    const res=analyze();
+    const TT=Math.max(res.tc!==Infinity?res.tc*1.25:(res.tstar!==Infinity&&isFinite(res.tstar)?res.tstar*2:6),4);
+    let mx=1;for(let k=0;k<=100;k++){const tt=k/100*TT;mx=Math.max(mx,xr(tt),xf(tt));}
+    el(gsvg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(gsvg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(gsvg,'text',{x:X0-6,y:Y0+8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(gsvg,'text',{x:X0+W,y:Y0+H+11,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    function path(fn,col){let dd='';for(let k=0;k<=120;k++){const tt=k/120*TT;const px=X0+tt/TT*W;const py=Y0+H-fn(tt)/mx*H*0.92;dd+=(k===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';}el(gsvg,'path',{d:dd,fill:'none',stroke:col,'stroke-width':3.5});}
+    // vertical at v-equal
+    if(res.tstar!==Infinity&&isFinite(res.tstar)&&res.tstar>0&&res.tstar<TT){const vx=X0+res.tstar/TT*W;el(gsvg,'line',{x1:vx,y1:Y0,x2:vx,y2:Y0+H,stroke:VIO,'stroke-width':2,'stroke-dasharray':'5 4'});el(gsvg,'text',{x:vx,y:Y0+H-4,'font-size':11,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='v相等';}
+    path(xr,RED);path(xf,BLUE);
+    // catch point
+    if(res.tc!==Infinity&&res.tc<TT){const cx=X0+res.tc/TT*W;const cy=Y0+H-xr(res.tc)/mx*H*0.92;el(gsvg,'circle',{cx:cx,cy:cy,r:6,fill:GREEN,stroke:INK,'stroke-width':2});el(gsvg,'text',{x:cx,y:cy-9,'font-size':11,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='相遇';}
+    el(gsvg,'text',{x:X0+W*0.55,y:Y0+18,'font-size':12,'font-weight':900,fill:RED}).textContent='后车(加速)';
+    el(gsvg,'text',{x:X0+W*0.55,y:Y0+34,'font-size':12,'font-weight':900,fill:BLUE}).textContent='前车(匀速)';
+    note.textContent=res.text;note.style.borderColor=res.col;
+    return {TT,res};
+  }
+  let TTcache=6;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,95);ctx.lineTo(cv.width,95);ctx.stroke();
+    let mx=1;for(let k=0;k<=60;k++){const tt=k/60*TTcache;mx=Math.max(mx,xf(tt));}
+    const scale=(cv.width-120)/mx;
+    const rx=40+xr(t)*scale,fx=40+xf(t)*scale;
+    ctx.fillStyle=RED;ctx.fillRect(rx-18,68,36,24);ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.strokeRect(rx-18,68,36,24);
+    ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.fillText('后',rx-6,84);
+    ctx.fillStyle=BLUE;ctx.fillRect(fx-18,68,36,24);ctx.strokeStyle=INK;ctx.strokeRect(fx-18,68,36,24);
+    ctx.fillStyle='#fff';ctx.fillText('前',fx-6,84);
+  }
+  function loop(){if(!running)return;t+=0.02;if(t>=TTcache){t=TTcache;running=false;}draw();requestAnimationFrame(loop);}
+  function refresh(){sync();const gr=graph();TTcache=gr.TT;t=0;draw();}
+  V0.oninput=A.oninput=VF.oninput=D.oninput=refresh;
+  document.getElementById('chaseGo').onclick=()=>{sync();const gr=graph();TTcache=gr.TT;t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('chaseReset').onclick=()=>{running=false;refresh();};
+  refresh();
+})();
+
+/* ===== 互动6:图像识别器 ===== */
+(function(){
+  const svg=document.getElementById('recSvg');
+  const chips=document.getElementById('recChips');
+  const vd=document.getElementById('recVerdict');
+  // each item: kind (xt/vt), draw shape, correct desc, options
+  const items=[
+    {kind:'xt',pts:[[0,0.2],[1,0.85]],desc:'匀速直线运动(x-t 为斜直线,速度恒定为正)',ans:'匀速直线运动'},
+    {kind:'xt',pts:[[0,0.5],[1,0.5]],desc:'静止(x-t 水平线,位置不变,速度=0)',ans:'静止'},
+    {kind:'xt',pts:[[0,0.85],[1,0.2]],desc:'反向匀速运动(x-t 斜率为负,朝负方向匀速)',ans:'反向匀速运动'},
+    {kind:'xt',curve:'accel',desc:'从静止开始的匀加速(x-t 为凹向上抛物线,斜率越来越大)',ans:'由静止匀加速'},
+    {kind:'vt',pts:[[0,0.2],[1,0.85]],desc:'匀加速直线运动(v-t 斜直线上升,加速度恒定)',ans:'匀加速直线运动'},
+    {kind:'vt',pts:[[0,0.6],[1,0.6]],desc:'匀速直线运动(v-t 水平线,速度不变)',ans:'匀速直线运动'},
+    {kind:'vt',pts:[[0,0.85],[1,0.2]],desc:'匀减速直线运动(v-t 斜率为负,速度递减)',ans:'匀减速直线运动'},
+    {kind:'vt',pts:[[0,0.9],[0.6,0],[1,0.45]],desc:'先减速到 0 再反向加速(v 先降到零后变负,速度反向)',ans:'先减速后反向加速'}
+  ];
+  const allOpts=['匀速直线运动','静止','反向匀速运动','由静止匀加速','匀加速直线运动','匀减速直线运动','先减速后反向加速'];
+  let cur=null;
+  function draw(it){
+    clr(svg);const X0=54,Y0=20,W=600,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    // zero line for vt with negative
+    const hasNeg=it.kind==='vt'&&it.pts&&it.pts.some(p=>p[1]<0.05&&it===it)&&it.ans==='先减速后反向加速';
+    const zeroY=it.ans==='先减速后反向加速'?Y0+H*0.55:Y0+H;
+    el(svg,'line',{x1:X0,y1:zeroY,x2:X0+W,y2:zeroY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+8,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=it.kind==='xt'?'x':'v';
+    el(svg,'text',{x:X0+W,y:zeroY+18,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    el(svg,'text',{x:X0+8,y:Y0+16,'font-size':13,'font-weight':900,fill:it.kind==='xt'?BLUE:ORANGE}).textContent=(it.kind==='xt'?'x-t 图':'v-t 图');
+    const col=it.kind==='xt'?BLUE:ORANGE;
+    if(it.curve==='accel'){
+      let d='';for(let k=0;k<=60;k++){const f=k/60;const px=X0+f*W;const py=Y0+H-(f*f)*H*0.8;d+=(k===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';}
+      el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':4});
+    }else{
+      const base=it.ans==='先减速后反向加速'?zeroY:Y0+H;
+      const useZero=it.ans==='先减速后反向加速';
+      let d='';it.pts.forEach((p,i)=>{const px=X0+p[0]*W;let py;if(useZero){py=zeroY-(p[1]-0.5)/0.5*(H*0.45);}else{py=Y0+H-p[1]*H;}d+=(i===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';});
+      el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':4});
+    }
+  }
+  function newQ(){
+    cur=items[Math.floor(Math.random()*items.length)];
+    draw(cur);vd.textContent='看图,选一个描述 ↓';vd.style.borderColor=INK;
+    // build options: correct + 3 distractors
+    let opts=[cur.ans];const pool=allOpts.filter(o=>o!==cur.ans);
+    while(opts.length<4&&pool.length){const i=Math.floor(Math.random()*pool.length);opts.push(pool.splice(i,1)[0]);}
+    opts.sort(()=>Math.random()-0.5);
+    clr(chips);
+    opts.forEach(o=>{const b=document.createElement('div');b.className='chip';b.textContent=o;b.onclick=()=>{
+      [...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');
+      if(o===cur.ans){vd.innerHTML='✅ 对!'+cur.desc;vd.style.borderColor=GREEN;}
+      else{vd.innerHTML='❌ 不对。正确答案:<b>'+cur.ans+'</b>——'+cur.desc;vd.style.borderColor=RED;}
+    };chips.appendChild(b);});
+  }
+  document.getElementById('recNew').onclick=newQ;
+  newQ();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 位移和路程有什么区别?什么时候相等?",a:"位移是矢量(起点直指终点的有向线段),路程是标量(实际轨迹总长)。只有单向直线运动(不折返)时二者大小相等;有往返时路程>|位移|,往返回原点时位移=0而路程≠0。"},
+ {q:"2. 加速度的方向由什么决定?a 与 v 同向、反向分别代表什么?",a:"加速度方向 = 速度变化量 Δv 的方向,不是 v 的方向。a 与 v 同向→加速;a 与 v 反向→减速(如刹车、竖直上抛上升段)。"},
+ {q:"3. 四个匀变速公式分别缺哪个量?怎么选?",a:"v=v₀+at 缺 x;x=v₀t+½at² 缺 v;v²=v₀²+2ax 缺 t;x=(v₀+v)/2·t 缺 a。题目没给哪个量,就选不含它的那条公式。"},
+ {q:"4. 匀变速运动中,中间时刻的瞬时速度等于什么?",a:"等于全程平均速度:v(t/2)=(v₀+v)/2=x/t。这是求平均速度、中点速度的秒杀公式。"},
+ {q:"5. 纸带上连续相等时间间隔的位移差有什么规律?怎么求 a?",a:"位移差恒定:Δx=x₂−x₁=x₃−x₂=…=aT²。所以 a=Δx/T²;数据多时用逐差法 a=(x₄+x₅+x₆−x₁−x₂−x₃)/(9T²) 更精确。"},
+ {q:"6. 初速度为 0 的匀加速,前 1T、2T、3T 末的速度比、位移比、第 n 个 T 内位移比分别是?",a:"末速度比 1:2:3;从 0 起总位移比 1:4:9;第 n 个 T 内位移比 1:3:5:7(奇数)。注意只在 v₀=0 时成立。"},
+ {q:"7. 竖直上抛全过程加速度是多少?最高点 a 是多少?",a:"全过程 a=g、方向向下(恒定),包括最高点。最高点 v=0 但 a 仍=g≠0。可用整体法:初速 v₀ 向上、a=−g 一个公式算到底。"},
+ {q:"8. v-t 图中,斜率、面积、交点各代表什么?",a:"斜率=加速度;与 t 轴围成的面积=位移(t 轴上方为正、下方为负,含正负);两图线交点=速度相等(不是相遇)。"},
+ {q:"9. x-t 图交点和 v-t 图交点分别代表什么?最易混淆点是?",a:"x-t 图交点=两物体相遇(同时刻同位置);v-t 图交点=速度相等(不一定相遇)。这是图像题最大陷阱。"},
+ {q:"10. 追及相遇问题,判断能否追上的关键临界是什么?",a:"关键是『速度相等』时刻。快车追慢车:速度相等瞬间相距最近,若此刻仍未追上则永远追不上,恰好追上为临界。先求 v₁=v₂ 的 t*,再算此刻间距判断。"},
+ {q:"11. 汽车 v₀=10 m/s 刹车 a=−2 m/s²,求 6 s 内位移。",a:"先判停车时间 t停=10/2=5 s<6 s,车在第 5 s 已停。位移=v₀²/(2|a|)=100/4=25 m(第 5 s 后位移不再增加)。不能直接套 x=v₀t+½at²!"},
+ {q:"12. v-t 图上,一个三角形(底 4 s,高 8 m/s)在 t 轴上方,后接一个三角形(底 2 s,高 4 m/s)在 t 轴下方,求净位移和路程。",a:"上方面积=½×4×8=16 m,下方面积=½×2×4=4 m(负)。净位移=16−4=12 m;路程=16+4=20 m。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

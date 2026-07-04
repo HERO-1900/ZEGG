@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物质跨膜运输与细胞膜 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);--accent:var(--blue);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.g::before{background:var(--green)}
+  h3{font-size:17px;font-weight:900;margin:20px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:13.5px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--blue)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;min-width:54px}
+  .sl{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+  .sl .lab{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between}
+  input[type=range]{accent-color:var(--blue);width:100%}
+  .seg{display:inline-flex;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .seg button{background:var(--card);border:0;border-right:3px solid var(--ink);padding:7px 12px;font-weight:800;font-size:13px;cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--blue);color:#fff}
+  .out{font-weight:900;font-size:14.5px;border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:8px}
+  .small{font-size:12.5px;font-weight:700;color:#6b5d3a}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+  .dot{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>物质跨膜运输与细胞膜全攻坚</h1>
+    <p class="lead">渗透作用、动植物细胞吸水失水、质壁分离与复原、流动镶嵌模型、三种跨膜方式(自由扩散/协助扩散/主动运输)、胞吞胞吐、影响因素曲线——把"谁能进、往哪走、要不要能、要不要载体"一次理清,曲线题一眼看穿。</p>
+
+    <div class="say">🗣️ <b>细胞膜(人话版):</b> 把细胞膜想成一道<b>会挑人的智能门</b>。门本身是<b>两层磷脂"油墙"</b>(基本支架),墙里镶着各种<b>蛋白质门卫</b>。小分子、脂溶性的(O₂、CO₂、水、甘油、乙醇)能<b>顺着"人多往人少"直接扒墙翻过去</b>——这叫自由扩散,不用门卫、不花钱。像葡萄糖这种"油进不去"的,要<b>门卫(载体)顺人流带一把</b>——协助扩散,用门卫但不花钱。要是想<b>逆着人流往人多的地方挤</b>(低浓度→高浓度),既要门卫又要<b>掏钱(ATP)</b>——这就是主动运输,细胞"主动选择要什么"的本事全靠它。<br>一句话账本:<b>顺浓度=白搭车(不耗能),逆浓度=花钱挤(耗能);要不要载体看是不是脂溶性小分子。</b></div>
+
+    <h2 class="g">① 渗透作用:一切吸水失水的底层原理</h2>
+    <p class="lead">渗透是<b>水分子</b>(溶剂)的扩散。只要满足两个条件,就一定发生渗透。</p>
+    <div class="keybox"><b>渗透发生的两大条件:</b><br>① 有<b>半透膜</b>(只让水等小分子通过,溶质大分子不能通过)<br>② 膜两侧有<b>浓度差</b>(溶液浓度不等)<br><br><b>方向铁律:</b>水分子从<b>浓度低</b>的溶液(自由水多)<b>净移向</b>浓度<b>高</b>的溶液(自由水少)——"水往高浓度处跑"。</div>
+    <div class="card">
+      <p style="margin:4px 0">经典装置:漏斗口封半透膜,内装蔗糖溶液,插入清水烧杯。因内高外低,水净进入漏斗 → <b>漏斗内液面上升</b>,直到水柱压力与渗透吸水趋势平衡才停。若两侧浓度相等,水的进出<b>速率相等,液面不再变</b>(动态平衡,并非停止运动)。</p>
+      <p class="trap">⚠ 渗透只讲<b>水分子</b>的净移动方向;比较的是<b>溶液浓度(物质的量浓度)</b>,不是质量浓度。M(蔗糖)与 M(葡萄糖)相同质量浓度时,葡萄糖分子小、物质的量浓度更高。</p>
+    </div>
+    <div class="viz">
+      <h3>① 渗透装置动画(拖两侧浓度 → 看水流方向与液面)</h3>
+      <p class="small">调节漏斗内、外浓度。箭头示意水分子净流方向,漏斗液面随之升降,直到达到平衡。</p>
+      <div class="ctrlrow"><label>漏斗内</label><div class="sl"><div class="lab"><span>低 → 高浓度</span><span id="oInV">70</span></div><input type="range" id="oIn" min="0" max="100" value="70"></div></div>
+      <div class="ctrlrow"><label>烧杯外</label><div class="sl"><div class="lab"><span>低 → 高浓度</span><span id="oOutV">15</span></div><input type="range" id="oOut" min="0" max="100" value="15"></div></div>
+      <canvas id="osmCv" width="700" height="300"></canvas>
+      <div class="out" id="osmOut"></div>
+    </div>
+
+    <h2 class="v">② 动物细胞与植物细胞的吸水失水</h2>
+    <div class="card">
+      <h3>动物细胞(以红细胞为例)</h3>
+      <p style="margin:4px 0">细胞膜相当于半透膜。<b>外界溶液浓度 &lt; 细胞质浓度</b> → 细胞<b>吸水膨胀</b>(清水中红细胞会涨破,称溶血);<b>外界 &gt; 细胞质</b> → <b>失水皱缩</b>;<b>相等</b> → 保持形态(动态平衡)。</p>
+      <h3>成熟植物细胞</h3>
+      <p style="margin:4px 0">成熟植物细胞有<b>大液泡</b>。发生渗透的结构是<b>原生质层 = 细胞膜 + 液泡膜 + 两膜之间的细胞质</b>,它<b>相当于一层半透膜</b>;细胞壁是<b>全透性</b>(伸缩性小),不阻挡溶液。比较的是<b>外界溶液浓度</b>与<b>细胞液(液泡内)浓度</b>。</p>
+      <p class="trap">⚠ 细胞壁不是半透膜,是全透性的;真正当半透膜的是原生质层。动物细胞没有细胞壁和液泡,不发生"质壁分离",只讲膨胀/皱缩。</p>
+    </div>
+
+    <h2 class="v">③ 质壁分离与复原(成熟植物细胞)</h2>
+    <p class="lead">"质"=原生质层,"壁"=细胞壁。二者伸缩性不同,失水时原生质层收缩比细胞壁快,于是分开——这就是质壁分离。</p>
+    <div class="keybox"><b>两条方向铁律:</b><br>外界溶液浓度 <b>&gt;</b> 细胞液浓度 → 细胞<b>失水</b> → 原生质层收缩 → <b>质壁分离</b><br>外界溶液浓度 <b>&lt;</b> 细胞液浓度 → 细胞<b>吸水</b> → 原生质层膨胀 → <b>质壁分离复原</b><br><br><b>三大用途:</b>① 判断细胞<b>死活</b>(只有活细胞、有选择透过性才会分离与复原;死细胞膜失去选择性,不分离)② <b>测定细胞液浓度</b>(找刚好不分离/刚好分离的临界外界浓度)③ 判断<b>成熟与否</b>(需有大液泡)。</div>
+    <div class="card">
+      <p style="margin:4px 0"><b>实验材料常用:</b>紫色洋葱鳞片叶外表皮(液泡有紫色,便于观察)。<b>试剂:</b>0.3 g/mL 蔗糖溶液使其分离,清水使其复原。</p>
+      <p class="trap">⚠ 若用<b>0.5 g/mL 以上高浓度蔗糖或 KNO₃/尿素</b>:高浓度蔗糖会因过度失水使细胞<b>死亡而不能复原</b>;而 KNO₃、尿素、甘油等能被细胞<b>主动/被动吸收</b>,会出现"先分离后自动复原"(溶质进入细胞后细胞液浓度回升)。</p>
+    </div>
+    <div class="viz">
+      <h3>② 质壁分离与复原(拖外界溶液浓度 → 看细胞状态)</h3>
+      <p class="small">拖动外界浓度。与细胞液浓度(虚线)比较:高于则失水分离,低于则吸水复原。紫色为液泡,原生质层随水分收缩/膨胀。</p>
+      <div class="ctrlrow"><label>外界浓度</label><div class="sl"><div class="lab"><span>清水(0) → 高浓度蔗糖</span><span id="ppV">60</span></div><input type="range" id="ppSl" min="0" max="100" value="60"></div></div>
+      <svg id="ppSvg" viewBox="0 0 360 240" aria-label="质壁分离"></svg>
+      <div class="out" id="ppOut"></div>
+    </div>
+
+    <h2 class="b">④ 细胞膜:流动镶嵌模型</h2>
+    <p class="lead">1972 年 桑格 与 尼克森 提出<b>流动镶嵌模型</b>,是当前公认的膜结构模型。</p>
+    <div class="card">
+      <table>
+        <tr><th>要点</th><th>内容</th></tr>
+        <tr><td>基本支架</td><td><b>磷脂双分子层</b>(亲水头朝外、疏水尾朝内)</td></tr>
+        <tr><td>蛋白质</td><td>镶在表面、嵌入、或<b>贯穿</b>整个双分子层;很多是<b>载体/通道/受体</b></td></tr>
+        <tr><td>糖类</td><td>膜外侧的蛋白质/脂质常连有糖 → <b>糖蛋白(糖被)</b>,起识别、保护、润滑作用</td></tr>
+        <tr><td>流动性</td><td>磷脂和大多数蛋白质可<b>侧向移动</b> → 膜具<b>一定流动性</b>(结构特点)</td></tr>
+        <tr><td>选择透过性</td><td>由载体种类/数量决定"谁能进" → 膜的<b>功能特性</b></td></tr>
+      </table>
+      <p class="trap">⚠ 区分:<b>流动性 = 结构特点</b>(磷脂、蛋白能动);<b>选择透过性 = 功能特性</b>(能挑着运)。流动性是选择透过性、胞吞胞吐等的结构基础。糖蛋白只在膜的<b>外</b>侧,可用来判断膜的内外。</p>
+    </div>
+    <div class="viz">
+      <h3>③ 流动镶嵌模型交互(点按钮看磷脂 / 蛋白 / 流动性)</h3>
+      <p class="small">磷脂双分子层为支架,蛋白质镶嵌贯穿,外侧有糖蛋白。开"流动性"看分子侧向移动。</p>
+      <div class="ctrlrow">
+        <div class="seg" id="segMem"><button data-m="all" class="on">整体</button><button data-m="lip">磷脂</button><button data-m="pro">蛋白</button><button data-m="flow">流动性</button></div>
+      </div>
+      <canvas id="memCv" width="700" height="280"></canvas>
+      <div class="out" id="memOut"></div>
+    </div>
+
+    <h2 class="o">⑤ 三种跨膜运输方式(核心对照)</h2>
+    <p class="lead">四要素判方式:<b>运输方向</b>(顺/逆浓度)、<b>是否需载体</b>、<b>是否耗能</b>、<b>典型例子</b>。</p>
+    <div class="card">
+      <table>
+        <tr><th>方式</th><th>方向</th><th>载体</th><th>能量</th><th>典型例子</th></tr>
+        <tr><td><b>自由扩散</b></td><td>高→低(顺)</td><td>不需</td><td>不耗能</td><td>O₂、CO₂、H₂O、甘油、乙醇、脂肪酸</td></tr>
+        <tr><td><b>协助扩散</b></td><td>高→低(顺)</td><td><b>需</b></td><td>不耗能</td><td>葡萄糖进入红细胞</td></tr>
+        <tr><td><b>主动运输</b></td><td><b>低→高(逆)</b></td><td><b>需</b></td><td><b>耗能(ATP)</b></td><td>小肠上皮吸收葡萄糖/氨基酸、根吸收无机盐离子、细胞排 Na⁺ 吸 K⁺</td></tr>
+      </table>
+      <p style="margin:8px 0">自由扩散 + 协助扩散 合称<b>被动运输</b>(都顺浓度、都不耗能,区别只在要不要载体)。</p>
+    </div>
+    <div class="keybox"><b>胞吞与胞吐(单独一类,不属于跨膜运输):</b><br>针对<b>大分子/颗粒</b>(如蛋白质、多糖、病菌);由膜包裹成囊泡进出(胞吞入、胞吐出);<b>需消耗能量</b>;<b>依赖膜的流动性</b>。<br><b>关键:</b>大分子并没有"穿过"磷脂双分子层,而是被膜包着进出 → <b>不叫跨膜运输</b>。</div>
+    <div class="viz">
+      <h3>④ 三种跨膜方式对比动画(方向 / 载体 / 耗能同屏对照)</h3>
+      <p class="small">三条通道并排:自由扩散(直接穿)、协助扩散(载体转)、主动运输(载体+ATP 逆流)。观察粒子流向与是否有 ATP 闪现。可暂停。</p>
+      <canvas id="cmpCv" width="700" height="300"></canvas>
+      <div class="legend"><span><span class="dot" style="background:#1450C8"></span>被运物质</span><span><span class="dot" style="background:#E86A17"></span>载体蛋白</span><span><span class="dot" style="background:#F3C00E"></span>ATP(耗能)</span></div>
+      <div class="ctrlrow"><button class="btn" id="cmpToggle">⏸ 暂停</button></div>
+    </div>
+
+    <h2 class="r">⑥ 影响运输速率的因素(曲线)</h2>
+    <div class="card">
+      <p style="margin:4px 0"><b>① 浓度差:</b>自由扩散速率与浓度差<b>近似正比(直线上升,不饱和)</b>;协助扩散、主动运输因<b>载体数量有限</b>,浓度差增大到一定程度后<b>饱和(出现平台)</b>。</p>
+      <p style="margin:4px 0"><b>② O₂ 浓度(供能):</b>只影响需能的<b>主动运输</b>——缺氧时 ATP 不足,主动运输速率随 O₂ 升高而加快,后因载体饱和趋于平台;自由扩散、协助扩散<b>不受 O₂ 影响</b>(不耗能)。</p>
+      <p style="margin:4px 0"><b>③ 载体数量:</b>越多,饱和平台越高(只对需载体的协助扩散/主动运输)。温度影响膜流动性与酶/载体活性、ATP 供应,也会影响速率。</p>
+    </div>
+    <div class="viz">
+      <h3>⑤ 运输速率 vs 浓度差(自由扩散线性 vs 协助/主动饱和)</h3>
+      <p class="small">拖指针扫过浓度差,读三条曲线在该点的速率:自由扩散一直涨,协助/主动到平台就不涨了。</p>
+      <input type="range" id="cvPtr" min="0" max="100" value="30" style="width:100%">
+      <svg id="cvSvg" viewBox="0 0 360 230" aria-label="速率vs浓度差"></svg>
+      <div class="legend"><span><span class="dot" style="background:#1450C8"></span>自由扩散</span><span><span class="dot" style="background:#1E9E86"></span>协助扩散</span><span><span class="dot" style="background:#E86A17"></span>主动运输</span></div>
+      <div class="out" id="cvOut"></div>
+    </div>
+    <div class="viz">
+      <h3>⑥ 运输速率 vs O₂ 浓度(区分主动运输)</h3>
+      <p class="small">拖指针扫过 O₂ 浓度:主动运输随 O₂ 上升(先升后平台);协助扩散/自由扩散是水平线(不耗能,不受 O₂ 影响)。这是判断"是不是主动运输"的关键曲线。</p>
+      <input type="range" id="o2Ptr" min="0" max="100" value="30" style="width:100%">
+      <svg id="o2Svg" viewBox="0 0 360 230" aria-label="速率vsO2"></svg>
+      <div class="legend"><span><span class="dot" style="background:#E86A17"></span>主动运输</span><span><span class="dot" style="background:#1E9E86"></span>协助扩散</span><span><span class="dot" style="background:#1450C8"></span>自由扩散</span></div>
+      <div class="out" id="o2Out"></div>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图(触发 → 动作 → 例题 → 陷阱)</h2>
+
+    <div class="card">
+      <h3>题型 A · 运输方式判断</h3>
+      <p><b>触发:</b>题给"方向(顺/逆浓度)、是否需载体、是否耗能、加抑制剂/缺氧后是否变化"。</p>
+      <p><b>动作:</b>三连问 → ①逆浓度吗?逆=主动运输;②顺浓度→需载体吗?需=协助扩散,不需=自由扩散。再用"缺氧/抑制剂使速率下降"锁定主动运输。</p>
+      <p><b>例题:</b>某物质从低浓度一侧运向高浓度一侧,加入呼吸抑制剂后运输停止。判断方式?<br><b>解:</b>逆浓度 + 抑制呼吸(断 ATP)即停 → 需能 → <b>主动运输</b>。</p>
+      <p class="trap">陷阱:只说"需载体"不能区分协助扩散与主动运输,必须再看<b>方向</b>或<b>是否耗能</b>。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 B · 质壁分离分析</h3>
+      <p><b>触发:</b>把植物细胞放入某溶液,问会不会分离/能否复原/图象变化。</p>
+      <p><b>动作:</b>比较外界浓度与细胞液浓度。外&gt;内→失水分离;外&lt;内→吸水(复原/不分离)。再看溶质<b>能否被吸收</b>(KNO₃/尿素/甘油会先分离后自动复原);浓度过高会致死不复原。</p>
+      <p><b>例题:</b>洋葱表皮放入 0.3 g/mL 蔗糖发生质壁分离,换清水后复原;放入等浓度 KNO₃ 则先分离后自动复原。为什么?<br><b>解:</b>蔗糖不被吸收,清水降外界浓度使其吸水复原;K⁺、NO₃⁻ 可被细胞<b>主动运输吸收</b>,细胞液浓度回升 → 又吸水 → <b>自动复原</b>。</p>
+      <p class="trap">陷阱:死细胞(如开水烫过、盐渍过久)膜失去选择透过性,<b>不发生质壁分离</b>——可据此判死活。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 C · 曲线识别(速率 vs 浓度 / O₂)</h3>
+      <p><b>触发:</b>给"运输速率-浓度差"或"运输速率-O₂浓度"曲线,判方式或读限制因素。</p>
+      <p><b>动作:</b>浓度差图 → 一直线上升不饱和=<b>自由扩散</b>;先升后平台(饱和)=需载体(协助扩散或主动运输)。O₂ 图 → 随 O₂ 升高而升高的=<b>主动运输</b>(耗能);水平不变=不耗能(自由/协助扩散)。</p>
+      <p><b>例题:</b>某曲线随浓度差增大先升后达平台,且缺氧时速率明显下降。判断?<br><b>解:</b>有平台→需载体;缺氧下降→耗能 → <b>主动运输</b>。平台的成因是<b>载体数量饱和</b>。</p>
+      <p class="trap">陷阱:平台出现是"载体饱和",不是"浓度差消失";别把协助扩散的平台错当自由扩散。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 D · 渗透计算 / 液面高低比较</h3>
+      <p><b>触发:</b>U 形管/漏斗两侧不同浓度溶液,问液面最终高低或水流方向。</p>
+      <p><b>动作:</b>比较两侧<b>物质的量浓度</b>;水净向高浓度侧移。液面差最终由渗透吸水与水柱压力平衡决定:<b>起始浓度高的一侧液面更高</b>。若溶质能透过半透膜,则最终两侧浓度趋于相等、液面趋平。</p>
+      <p><b>例题:</b>U 形管半透膜(只透水),左 0.1 mol/L 蔗糖,右 0.1 mol/L 葡萄糖,问液面变化?<br><b>解:</b>物质的量浓度相等 → 水进出速率相等 → <b>液面不变</b>(动态平衡)。若改成 0.1 蔗糖 vs 0.2 葡萄糖,水向右(高)移,<b>右侧液面升高</b>。</p>
+      <p class="trap">陷阱:比较浓度要用<b>物质的量浓度</b>而非质量浓度;半透膜是否透溶质决定终态是否趋平。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>水是自由扩散</b>(也有水通道蛋白/协助扩散途径,高考默认水主要靠自由扩散),不要说水靠主动运输。</p>
+      <p class="trap">② <b>大分子的胞吞胞吐不叫跨膜运输</b>(没穿过磷脂双分子层,是膜包着进出);但它<b>需能、依赖膜流动性</b>。</p>
+      <p class="trap">③ <b>只有主动运输才必然耗能</b>;自由扩散、协助扩散都不耗能(缺氧不影响)。</p>
+      <p class="trap">④ <b>载体饱和才限速</b>:协助扩散/主动运输有平台是因载体数量有限;自由扩散无载体、不饱和。</p>
+      <p class="trap">⑤ <b>细胞壁全透性</b>,原生质层才当半透膜;质壁分离的"质"是原生质层不是细胞质基质单指。</p>
+      <p class="trap">⑥ 渗透方向记住"<b>水往高浓度处跑</b>"(向自由水少的一侧);比较的是溶液浓度,不是溶质分子跑向。</p>
+      <p class="trap">⑦ 主动运输方向是<b>低→高(逆浓度)</b>,体现细胞对物质吸收的<b>选择性(主动挑)</b>;协助扩散仍是顺浓度。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0">▸ <b>"先分离后自动复原"三步判:</b>看溶质能否入细胞。蔗糖/大分子不能入→只分离不自动复原;KNO₃/尿素/甘油/乙二醇能入→先失水分离,溶质进入后细胞液浓度回升→再吸水自动复原。写答案要点出"溶质被(主动/被动)吸收使细胞液浓度增大"。</p>
+      <p style="margin:6px 0">▸ <b>用抑制剂/低温/缺氧做"耗能验证":</b>要证明某运输是主动运输,设"加呼吸抑制剂(如 DNP)或低温/缺氧"处理,若速率显著下降即需能→主动运输。这是探究题标准做法。</p>
+      <p style="margin:6px 0">▸ <b>两条平台成因分开写:</b>浓度差曲线的平台=<b>载体饱和</b>;O₂ 曲线的平台=<b>载体饱和(能量已不再是限制)</b>;上升段=<b>能量(ATP)为限制因子</b>。区分"限制因子是载体还是能量"是拔高得分点。</p>
+      <p style="margin:6px 0">▸ <b>选择透过性 = 载体差异:</b>不同细胞对同一离子吸收速率不同,根源是<b>载体蛋白种类和数量不同</b>(基因决定)。膜的选择透过性本质由蛋白质决定,而非磷脂。</p>
+      <p style="margin:6px 0">▸ <b>渗透平衡是"动态"的:</b>浓度相等后水分子仍在双向通过,只是净流为零;答题避免写成"停止运动"。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:光合作用 / 呼吸作用全攻坚</p>
+  </div>
+
+<script>
+/* ===== ① 渗透装置动画 ===== */
+(function(){
+ const cv=document.getElementById('osmCv'),ctx=cv.getContext('2d');
+ const sIn=document.getElementById('oIn'),sOut=document.getElementById('oOut');
+ const vIn=document.getElementById('oInV'),vOut=document.getElementById('oOutV');
+ const out=document.getElementById('osmOut');
+ const W=cv.width,H=cv.height;
+ let level=0,t=0; // level: -1..+1 how high funnel liquid sits
+ function frame(){
+  const cin=+sIn.value,cout=+sOut.value;vIn.textContent=cin;vOut.textContent=cout;
+  const diff=cin-cout; // >0 water flows IN (up), <0 water flows OUT (down)
+  const target=Math.max(-0.8,Math.min(0.95,diff/120));
+  level+=(target-level)*0.06;
+  ctx.clearRect(0,0,W,H);
+  // beaker
+  const bx=180,by=90,bw=360,bh=180;
+  ctx.strokeStyle='#16120A';ctx.lineWidth=4;
+  ctx.strokeRect(bx,by,bw,bh);
+  // outer solution fill (color by conc)
+  const shadeOut=Math.min(0.5,0.05+cout/220);
+  ctx.fillStyle='rgba(20,80,200,'+shadeOut+')';
+  ctx.fillRect(bx+2,by+34,bw-4,bh-36);
+  ctx.fillStyle='#16120A';ctx.font='800 12px sans-serif';ctx.textAlign='center';
+  ctx.fillText('烧杯外液 浓度 '+cout,bx+bw/2,by+bh-10);
+  // funnel neck
+  const nx=W/2,nw=44,ntop=30,nbot=by+120;
+  ctx.beginPath();ctx.moveTo(nx-nw/2,ntop);ctx.lineTo(nx-nw/2,nbot);ctx.moveTo(nx+nw/2,ntop);ctx.lineTo(nx+nw/2,nbot);ctx.stroke();
+  // funnel cone bottom (semipermeable membrane)
+  const my=nbot+38;
+  ctx.beginPath();ctx.moveTo(nx-nw/2,nbot);ctx.lineTo(nx-52,my);ctx.lineTo(nx+52,my);ctx.lineTo(nx+nw/2,nbot);ctx.stroke();
+  // membrane (dashed at bottom of cone)
+  ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#E0382A';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(nx-52,my);ctx.lineTo(nx+52,my);ctx.stroke();ctx.restore();
+  ctx.fillStyle='#E0382A';ctx.font='900 11px sans-serif';ctx.fillText('半透膜',nx+92,my+4);
+  // funnel liquid column - height shows level
+  const baseTop=nbot-10, colTop=baseTop-level*55;
+  const shadeIn=Math.min(0.6,0.08+cin/180);
+  ctx.fillStyle='rgba(122,63,242,'+shadeIn+')';
+  // fill cone
+  ctx.beginPath();ctx.moveTo(nx-52,my);ctx.lineTo(nx-nw/2,nbot);ctx.lineTo(nx+nw/2,nbot);ctx.lineTo(nx+52,my);ctx.closePath();ctx.fill();
+  // fill neck up to colTop
+  ctx.fillRect(nx-nw/2+2,colTop,nw-4,nbot-colTop);
+  ctx.fillStyle='#16120A';ctx.font='800 11px sans-serif';
+  ctx.fillText('漏斗内 浓度 '+cin,nx,ntop-6);
+  // liquid surface line marker
+  ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(nx-nw/2-8,colTop);ctx.lineTo(nx+nw/2+8,colTop);ctx.stroke();
+  // flow arrow across membrane
+  t++;
+  let dir=0;if(diff>2)dir=-1;else if(diff<-2)dir=1; // dir=-1 up(into funnel), +1 down(out)
+  if(dir!==0){
+   const ph=(t%40)/40;
+   for(let k=0;k<3;k++){
+     const yy = dir===-1 ? (my - (ph*30+k*12)) : (my + (ph*30+k*12));
+     if(yy>ntop&&yy<my+60){
+       ctx.fillStyle='#1450C8';ctx.beginPath();ctx.arc(nx-18+k*18,yy,4,0,7);ctx.fill();
+     }
+   }
+   // arrowhead
+   ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+   const ay = dir===-1? my-42 : my+42;
+   ctx.moveTo(nx,dir===-1?my-30:my+30);ctx.lineTo(nx,ay);
+   ctx.moveTo(nx-6,ay+dir*6);ctx.lineTo(nx,ay);ctx.lineTo(nx+6,ay+dir*6);ctx.stroke();
+  }
+  let msg;
+  if(diff>2){msg='漏斗内浓度更高 → 水分子<b>净流入漏斗(向上)</b> → 液面<b>上升</b>,直到水柱压力平衡。';}
+  else if(diff<-2){msg='外界浓度更高 → 水分子<b>净流出漏斗(向下)</b> → 液面<b>下降</b>。';}
+  else{msg='两侧浓度相近 → 水分子进出<b>速率相等,净流为零</b> → 液面<b>不再变化(动态平衡)</b>。';}
+  out.innerHTML=msg+' &nbsp;水总是从<b>低浓度</b>侧净流向<b>高浓度</b>侧。';
+  requestAnimationFrame(frame);
+ }
+ sIn.oninput=()=>{};sOut.oninput=()=>{};
+ frame();
+})();
+
+/* ===== ② 质壁分离与复原 ===== */
+(function(){
+ const svg=document.getElementById('ppSvg'),out=document.getElementById('ppOut'),sl=document.getElementById('ppSl'),v=document.getElementById('ppV');
+ const NS='http://www.w3.org/2000/svg';
+ const cellConc=40; // 细胞液浓度基准
+ function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+ function draw(){
+  const ext=+sl.value;v.textContent=ext;
+  svg.innerHTML='';
+  // 失水程度 shrink: ext>cellConc -> shrink protoplast toward center
+  const diff=ext-cellConc; // >0 lose water (separate)
+  let shrink=0; // 0..1
+  if(diff>0) shrink=Math.min(0.9,diff/70);
+  // cell wall (fixed rectangle rounded)
+  svg.appendChild(el('rect',{x:60,y:40,width:240,height:160,rx:16,fill:'#F4EFE2',stroke:'#16120A','stroke-width':5}));
+  const wt=el('text',{x:180,y:26,'text-anchor':'middle','font-size':'12','font-weight':'900'});wt.textContent='细胞壁(全透性,不动)';svg.appendChild(wt);
+  // gap fills with external solution color when separated
+  if(shrink>0.02){svg.appendChild(el('rect',{x:64,y:44,width:232,height:152,rx:13,fill:'rgba(20,80,200,0.16)'}));}
+  // protoplast (原生质层) - shrinks
+  const cx=180,cy=120;
+  const halfW=112*(1-shrink*0.42), halfH=72*(1-shrink*0.42);
+  svg.appendChild(el('ellipse',{cx:cx,cy:cy,rx:halfW,ry:halfH,fill:'#EADFF9',stroke:'#7A3FF2','stroke-width':4}));
+  // vacuole (purple, 液泡) - shrinks more, deeper color when concentrated
+  const vHalfW=halfW*0.72, vHalfH=halfH*0.72;
+  const vc=Math.min(0.85,0.45+shrink*0.5);
+  svg.appendChild(el('ellipse',{cx:cx,cy:cy,rx:vHalfW,ry:vHalfH,fill:'rgba(122,63,242,'+vc+')',stroke:'#16120A','stroke-width':3}));
+  const vt=el('text',{x:cx,y:cy+4,'text-anchor':'middle','font-size':'11','font-weight':'900',fill:'#fff'});vt.textContent='液泡';svg.appendChild(vt);
+  // label protoplast
+  const pt=el('text',{x:cx,y:200,'text-anchor':'middle','font-size':'11','font-weight':'800',fill:'#7A3FF2'});pt.textContent='原生质层(相当于半透膜)';svg.appendChild(pt);
+  // external label
+  const et=el('text',{x:320,y:120,'font-size':'11','font-weight':'800','text-anchor':'end'});
+  // dashed reference for cell液浓度 already in text
+  let msg;
+  if(diff>6){msg='外界('+ext+') <b>&gt;</b> 细胞液('+cellConc+') → 细胞<b>失水</b> → 原生质层收缩、与壁分开 → <b>质壁分离</b>。'+(ext>85?' 浓度过高可能<b>失水致死、不能复原</b>。':'');}
+  else if(diff<-6){msg='外界('+ext+') <b>&lt;</b> 细胞液('+cellConc+') → 细胞<b>吸水</b> → 原生质层紧贴细胞壁 → <b>不分离 / 分离复原</b>。';}
+  else{msg='外界('+ext+') ≈ 细胞液('+cellConc+') → 水分进出接近平衡,细胞形态基本不变(<b>刚好不分离,可估测细胞液浓度</b>)。';}
+  out.innerHTML=msg+' &nbsp;<span class="small">只有<b>活细胞</b>(有选择透过性)才会分离与复原;死细胞不分离。</span>';
+ }
+ sl.oninput=draw;draw();
+})();
+
+/* ===== ③ 流动镶嵌模型 ===== */
+(function(){
+ const cv=document.getElementById('memCv'),ctx=cv.getContext('2d'),out=document.getElementById('memOut');
+ const seg=document.getElementById('segMem');
+ const W=cv.width,H=cv.height;let mode='all',t=0,running=true;
+ const midTop=110,midBot=175; // bilayer band
+ // phospholipid positions (top layer heads at midTop, tails down; bottom layer heads at midBot, tails up)
+ const N=26;const base=[];
+ for(let i=0;i<N;i++){base.push(30+i*(W-60)/(N-1));}
+ // proteins
+ const proteins=[{x:150,type:'span'},{x:340,type:'span'},{x:520,type:'partial'},{x:610,type:'surface'}];
+ function lipid(x,topY,dir,phase){
+  // head circle + two tails
+  const off=(mode==='flow')?Math.sin((t*0.03)+phase)*10:0;
+  const hx=x+off;
+  const headY = dir===1? topY : topY; // dir 1 top layer heads up
+  ctx.fillStyle='#F3C00E';ctx.strokeStyle='#16120A';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(hx,headY,7,0,7);ctx.fill();ctx.stroke();
+  ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+  const tl = dir===1? 1 : -1;
+  ctx.beginPath();ctx.moveTo(hx-3,headY+7*tl);ctx.lineTo(hx-3+ (mode==='flow'?Math.sin(t*0.04+phase)*3:0),headY+30*tl);
+  ctx.moveTo(hx+3,headY+7*tl);ctx.lineTo(hx+3,headY+30*tl);ctx.stroke();
+ }
+ function frame(){
+  ctx.clearRect(0,0,W,H);
+  // outside / inside labels
+  ctx.fillStyle='#16120A';ctx.font='900 13px sans-serif';ctx.textAlign='left';
+  ctx.fillText('膜外(有糖蛋白)',18,26);ctx.fillText('膜内(细胞质侧)',18,H-14);
+  // faint water
+  ctx.fillStyle='rgba(20,80,200,0.06)';ctx.fillRect(0,0,W,midTop-16);ctx.fillRect(0,midBot+16,W,H-(midBot+16));
+  const showLip=(mode==='all'||mode==='lip'||mode==='flow');
+  const showPro=(mode==='all'||mode==='pro'||mode==='flow');
+  if(showLip){
+   base.forEach((x,i)=>{lipid(x,midTop,1,i*0.5);lipid(x,midBot,-1,i*0.5+3);});
+  } else {
+   // ghost bilayer lines
+   ctx.strokeStyle='rgba(22,18,10,0.25)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(20,midTop);ctx.lineTo(W-20,midTop);ctx.moveTo(20,midBot);ctx.lineTo(W-20,midBot);ctx.stroke();
+  }
+  if(showPro){
+   proteins.forEach((p,i)=>{
+    const off=(mode==='flow')?Math.sin(t*0.02+i)*14:0;
+    const px=p.x+off;
+    ctx.fillStyle='#E86A17';ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+    if(p.type==='span'){ctx.fillRect(px-16,midTop-24,32,(midBot-midTop)+48);ctx.strokeRect(px-16,midTop-24,32,(midBot-midTop)+48);
+      // channel gap
+      ctx.fillStyle='rgba(20,80,200,0.25)';ctx.fillRect(px-4,midTop-24,8,(midBot-midTop)+48);
+      // glycoprotein sugar on outside
+      ctx.fillStyle='#1E9E86';for(let s=0;s<3;s++){ctx.beginPath();ctx.arc(px-8+s*8,midTop-32,4,0,7);ctx.fill();ctx.stroke();}
+    } else if(p.type==='partial'){ctx.beginPath();ctx.ellipse(px,midTop+4,20,20,0,0,7);ctx.fill();ctx.stroke();}
+    else {ctx.beginPath();ctx.ellipse(px,midTop-14,18,12,0,0,7);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#1E9E86';for(let s=0;s<3;s++){ctx.beginPath();ctx.arc(px-8+s*8,midTop-30,4,0,7);ctx.fill();ctx.stroke();}}
+   });
+  }
+  if(running&&mode==='flow')t++;
+  requestAnimationFrame(frame);
+ }
+ function setMsg(){
+  const m={all:'完整膜:<b>磷脂双分子层</b>为基本支架(黄头亲水朝外、尾疏水朝内),<b>蛋白质</b>(橙)镶嵌/贯穿,外侧连<b>糖(绿)→糖蛋白</b>,可标识膜内外。',
+   lip:'<b>磷脂双分子层</b>:两层磷脂尾对尾。亲水的头朝向膜两侧水环境,疏水的尾夹在中间——这是膜的<b>基本支架</b>。',
+   pro:'<b>蛋白质</b>:有的<b>贯穿</b>整个双层(常作载体/通道),有的部分嵌入或附于表面。膜功能(选择透过性)主要由蛋白质决定。',
+   flow:'<b>流动性</b>:磷脂和大多数蛋白质可<b>侧向移动</b>(看它们轻微晃动/漂移)→ 膜具一定流动性,是胞吞胞吐、变形运动的结构基础。'};
+  out.innerHTML=m[mode];
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;setMsg();};});
+ setMsg();frame();
+})();
+
+/* ===== ④ 三种跨膜方式对比动画 ===== */
+(function(){
+ const cv=document.getElementById('cmpCv'),ctx=cv.getContext('2d');
+ const W=cv.width,H=cv.height;let running=true,t=0;
+ const memTop=100,memBot=200; // membrane band; 外(上,高浓度)  内(下,低浓度) for passive
+ const lanes=[{x:120,name:'自由扩散',sub:'顺浓度·无载体·不耗能'},
+              {x:350,name:'协助扩散',sub:'顺浓度·需载体·不耗能'},
+              {x:580,name:'主动运输',sub:'逆浓度·需载体·耗能ATP'}];
+ function membrane(){
+  ctx.fillStyle='rgba(243,192,14,0.30)';ctx.fillRect(0,memTop,W,memBot-memTop);
+  ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(0,memTop);ctx.lineTo(W,memTop);ctx.moveTo(0,memBot);ctx.lineTo(W,memBot);ctx.stroke();
+  ctx.fillStyle='#16120A';ctx.font='900 12px sans-serif';ctx.textAlign='left';
+  ctx.fillText('膜外',10,memTop-46);ctx.fillText('膜内',10,memBot+30);
+ }
+ function dot(x,y,col){ctx.fillStyle=col;ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,6,0,7);ctx.fill();ctx.stroke();}
+ function frame(){
+  ctx.clearRect(0,0,W,H);
+  membrane();
+  const ph=(t%120)/120;
+  lanes.forEach((ln,i)=>{
+   ctx.fillStyle='#16120A';ctx.font='900 13px sans-serif';ctx.textAlign='center';
+   ctx.fillText(ln.name,ln.x,26);
+   ctx.font='700 10px sans-serif';ctx.fillText(ln.sub,ln.x,42);
+   // concentration hint: passive high outside(top), active pushes into high inside
+   if(i===0){
+    // free diffusion: particle top->bottom straight through membrane
+    const y=54+ph*(H-70);
+    dot(ln.x,y,'#1450C8');
+    // gradient dots (more on top)
+    for(let k=0;k<4;k++)dot(ln.x-40,60+k*8,'#1450C8');
+    for(let k=0;k<1;k++)dot(ln.x-40,memBot+30+k*8,'#1450C8');
+   } else if(i===1){
+    // carrier (no ATP): particle top->bottom via carrier that rotates
+    ctx.fillStyle='#E86A17';ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+    ctx.fillRect(ln.x-20,memTop,40,memBot-memTop);ctx.strokeRect(ln.x-20,memTop,40,memBot-memTop);
+    ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillRect(ln.x-6,memTop+4,12,memBot-memTop-8);
+    const y=54+ph*(H-70);
+    dot(ln.x,y,'#1450C8');
+    for(let k=0;k<4;k++)dot(ln.x-45,60+k*8,'#1450C8');
+    for(let k=0;k<1;k++)dot(ln.x-45,memBot+30+k*8,'#1450C8');
+   } else {
+    // active transport: particle bottom(low)->top(high), needs ATP flash, uses carrier
+    ctx.fillStyle='#E86A17';ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+    ctx.fillRect(ln.x-20,memTop,40,memBot-memTop);ctx.strokeRect(ln.x-20,memTop,40,memBot-memTop);
+    // moving UP (against gradient): y goes from bottom to top
+    const y=(H-16)-ph*(H-70);
+    dot(ln.x,y,'#1450C8');
+    // ATP flash near carrier
+    if(y<memBot&&y>memTop){
+      ctx.fillStyle='#F3C00E';ctx.strokeStyle='#16120A';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(ln.x+30,(memTop+memBot)/2,10,0,7);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#16120A';ctx.font='900 9px sans-serif';ctx.textAlign='center';ctx.fillText('ATP',ln.x+30,(memTop+memBot)/2+3);
+    }
+    // gradient: MORE inside(bottom) after transport -> show more dots bottom
+    for(let k=0;k<4;k++)dot(ln.x+45,memBot+30+k*8,'#1450C8');
+    for(let k=0;k<1;k++)dot(ln.x+45,60+k*8,'#1450C8');
+    // arrow up
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ln.x-38,memBot+10);ctx.lineTo(ln.x-38,memTop-10);ctx.moveTo(ln.x-42,memTop-2);ctx.lineTo(ln.x-38,memTop-10);ctx.lineTo(ln.x-34,memTop-2);ctx.stroke();
+   }
+  });
+  // divider lines
+  ctx.strokeStyle='rgba(22,18,10,0.2)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(235,50);ctx.lineTo(235,H);ctx.moveTo(465,50);ctx.lineTo(465,H);ctx.stroke();
+  if(running)t++;
+  requestAnimationFrame(frame);
+ }
+ frame();
+ document.getElementById('cmpToggle').onclick=function(){running=!running;this.textContent=running?'⏸ 暂停':'▶ 播放';};
+})();
+
+/* ===== ⑤ 速率 vs 浓度差 ===== */
+(function(){
+ const svg=document.getElementById('cvSvg'),out=document.getElementById('cvOut'),ptr=document.getElementById('cvPtr');
+ const NS='http://www.w3.org/2000/svg';
+ function el(tag,a){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);return e;}
+ const zero=180,x0=40,plotW=300;
+ function free(c){return c*1.15;}            // linear
+ function facil(c){return 120*(1-Math.exp(-c/22));} // saturating (carrier)
+ function active(c){return 100*(1-Math.exp(-c/18));} // saturating lower plateau
+ function px(c){return x0+c*3;}
+ function py(r){return zero-r*1.1;}
+ function draw(){
+  svg.innerHTML='';
+  svg.appendChild(el('line',{x1:x0,y1:zero,x2:x0+plotW,y2:zero,stroke:'#16120A','stroke-width':3}));
+  svg.appendChild(el('line',{x1:x0,y1:zero,x2:x0,y2:20,stroke:'#16120A','stroke-width':3}));
+  const lx=el('text',{x:x0+plotW-70,y:zero+18,'font-size':'11','font-weight':'800'});lx.textContent='浓度差 →';svg.appendChild(lx);
+  const ly=el('text',{x:6,y:30,'font-size':'11','font-weight':'800'});ly.textContent='运输速率';svg.appendChild(ly);
+  function curve(fn,col){let d='';for(let c=0;c<=100;c++){let y=py(fn(c));if(y<24)y=24;d+=(c===0?'M':'L')+px(c)+' '+y+' ';}svg.appendChild(el('path',{d:d,fill:'none',stroke:col,'stroke-width':4}));}
+  curve(free,'#1450C8');curve(facil,'#1E9E86');curve(active,'#E86A17');
+  const C=+ptr.value;
+  [['#1450C8',free],['#1E9E86',facil],['#E86A17',active]].forEach(a=>{let y=py(a[1](C));if(y<24)y=24;svg.appendChild(el('circle',{cx:px(C),cy:y,r:5,fill:a[0],stroke:'#16120A','stroke-width':2}));});
+  svg.appendChild(el('line',{x1:px(C),y1:zero,x2:px(C),y2:24,stroke:'#16120A','stroke-dasharray':'4 3','stroke-width':2}));
+  const fV=free(C),faV=facil(C),acV=active(C);
+  let note;
+  if(C>60)note='高浓度差:自由扩散<b>仍在上升</b>(无饱和),协助扩散/主动运输已进<b>平台(载体饱和)</b>。';
+  else note='低-中浓度差:三者都在上升;继续增大浓度差,只有<b>自由扩散不封顶</b>。';
+  out.innerHTML='浓度差='+C+':自由扩散≈<b>'+fV.toFixed(0)+'</b>、协助扩散≈<b>'+faV.toFixed(0)+'</b>、主动运输≈<b>'+acV.toFixed(0)+'</b>。'+note+' 平台成因=<b>载体数量有限</b>。';
+ }
+ ptr.oninput=draw;draw();
+})();
+
+/* ===== ⑥ 速率 vs O₂ 浓度 ===== */
+(function(){
+ const svg=document.getElementById('o2Svg'),out=document.getElementById('o2Out'),ptr=document.getElementById('o2Ptr');
+ const NS='http://www.w3.org/2000/svg';
+ function el(tag,a){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);return e;}
+ const zero=180,x0=40,plotW=300;
+ function active(o){return 8+112*(1-Math.exp(-o/25));} // rises with O2 then plateau (carrier saturates)
+ function facil(){return 78;}   // flat (not affected by O2)
+ function free(){return 55;}    // flat
+ function px(o){return x0+o*3;}
+ function py(r){return zero-r*1.1;}
+ function draw(){
+  svg.innerHTML='';
+  svg.appendChild(el('line',{x1:x0,y1:zero,x2:x0+plotW,y2:zero,stroke:'#16120A','stroke-width':3}));
+  svg.appendChild(el('line',{x1:x0,y1:zero,x2:x0,y2:20,stroke:'#16120A','stroke-width':3}));
+  const lx=el('text',{x:x0+plotW-70,y:zero+18,'font-size':'11','font-weight':'800'});lx.textContent='O₂ 浓度 →';svg.appendChild(lx);
+  const ly=el('text',{x:6,y:30,'font-size':'11','font-weight':'800'});ly.textContent='运输速率';svg.appendChild(ly);
+  // active curve
+  let d='';for(let o=0;o<=100;o++){let y=py(active(o));if(y<24)y=24;d+=(o===0?'M':'L')+px(o)+' '+y+' ';}svg.appendChild(el('path',{d:d,fill:'none',stroke:'#E86A17','stroke-width':4}));
+  // flat lines
+  svg.appendChild(el('line',{x1:px(0),y1:py(facil()),x2:px(100),y2:py(facil()),stroke:'#1E9E86','stroke-width':4}));
+  svg.appendChild(el('line',{x1:px(0),y1:py(free()),x2:px(100),y2:py(free()),stroke:'#1450C8','stroke-width':4}));
+  const O=+ptr.value;
+  svg.appendChild(el('circle',{cx:px(O),cy:py(active(O)),r:5,fill:'#E86A17',stroke:'#16120A','stroke-width':2}));
+  svg.appendChild(el('circle',{cx:px(O),cy:py(facil()),r:5,fill:'#1E9E86',stroke:'#16120A','stroke-width':2}));
+  svg.appendChild(el('circle',{cx:px(O),cy:py(free()),r:5,fill:'#1450C8',stroke:'#16120A','stroke-width':2}));
+  svg.appendChild(el('line',{x1:px(O),y1:zero,x2:px(O),y2:24,stroke:'#16120A','stroke-dasharray':'4 3','stroke-width':2}));
+  let note;
+  if(O<30)note='低 O₂:<b>主动运输受限于 ATP</b>,速率低且随 O₂ 上升而升高;两条被动运输<b>不变</b>。';
+  else note='高 O₂:主动运输 ATP 充足,速率进<b>平台(此时限制因子是载体数量)</b>;被动运输始终水平。';
+  out.innerHTML='O₂='+O+':主动运输≈<b>'+active(O).toFixed(0)+'</b>(随 O₂ 变),协助扩散≈<b>'+facil()+'</b>、自由扩散≈<b>'+free()+'</b>(不随 O₂ 变)。'+note+' → <b>随 O₂ 变化的就是主动运输</b>。';
+ }
+ ptr.oninput=draw;draw();
+})();
+
+/* ===== ⑩ 自测 ===== */
+(function(){
+ const qs=[
+  {q:"1. 渗透作用发生需要哪两个条件?水往哪个方向净移动?",a:"需①半透膜②膜两侧有浓度差。水分子从低浓度溶液净移向高浓度溶液(向自由水少的一侧)。"},
+  {q:"2. 成熟植物细胞中相当于半透膜的是什么?细胞壁呢?",a:"原生质层(细胞膜+液泡膜+两膜间细胞质)相当于半透膜;细胞壁是全透性的,不阻挡溶液。"},
+  {q:"3. 质壁分离发生和复原的条件各是什么?能说明什么?",a:"外界浓度>细胞液→失水→分离;外界浓度<细胞液→吸水→复原。可判断细胞死活(活细胞才分离复原)、测细胞液浓度。"},
+  {q:"4. 洋葱表皮放入 KNO₃ 溶液为何先质壁分离后又自动复原?",a:"先因外界浓度高而失水分离;随后 K⁺、NO₃⁻ 被细胞主动运输吸收,细胞液浓度升高→再吸水→自动复原。"},
+  {q:"5. 流动镶嵌模型的基本支架是什么?流动性和选择透过性各属哪种特性?",a:"基本支架是磷脂双分子层。流动性是结构特点(磷脂/蛋白可移动);选择透过性是功能特性(由载体决定谁能进)。"},
+  {q:"6. 自由扩散、协助扩散、主动运输在方向/载体/能量上如何区分?",a:"自由扩散:顺浓度、不需载体、不耗能;协助扩散:顺浓度、需载体、不耗能;主动运输:逆浓度、需载体、耗能(ATP)。"},
+  {q:"7. 葡萄糖进入红细胞、进入小肠上皮细胞分别是什么方式?",a:"进入红细胞是协助扩散(顺浓度、需载体、不耗能);小肠上皮细胞逆浓度吸收葡萄糖是主动运输(耗能)。"},
+  {q:"8. 为什么大分子的胞吞胞吐不属于跨膜运输?它需要能量吗?",a:"因大分子由膜包裹成囊泡进出,并未穿过磷脂双分子层,故不叫跨膜运输;胞吞胞吐需消耗能量,并依赖膜的流动性。"},
+  {q:"9. 运输速率-浓度差曲线中,自由扩散与协助/主动运输的图形差别?平台成因?",a:"自由扩散近似直线上升不饱和;协助扩散、主动运输先升后出现平台(饱和)。平台成因是载体蛋白数量有限。"},
+  {q:"10. 如何用曲线区分主动运输与被动运输?",a:"看运输速率是否随 O₂(能量)浓度变化:随 O₂ 升高而升高的是主动运输(耗能);不随 O₂ 变化(水平线)的是自由扩散或协助扩散。"},
+  {q:"11. U 形管半透膜(只透水)两侧放等物质的量浓度的蔗糖与葡萄糖,液面如何变化?",a:"物质的量浓度相等,水进出速率相等,净流为零,液面不变(动态平衡)。"},
+  {q:"12. 用呼吸抑制剂处理后某物质运输速率明显下降,能得出什么结论?",a:"说明该运输需要能量(ATP),为主动运输;抑制呼吸使 ATP 供应不足,运输随之减慢。"}
+ ];
+ const quiz=document.getElementById('quiz');
+ qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>
