@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>细胞的分化 / 衰老 / 凋亡 / 癌变 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);--accent:var(--green);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--green);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--green);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.o::before{background:var(--orange)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:20px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--green);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:18px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--green);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:13.5px;font-weight:700;box-shadow:3px 3px 0 var(--green)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrlrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+  .ctrlrow label{font-weight:800;font-size:13px;min-width:54px}
+  .sl{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+  .sl .lab{font-weight:800;font-size:12.5px;display:flex;justify-content:space-between}
+  input[type=range]{accent-color:var(--green);width:100%}
+  .seg{display:inline-flex;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .seg button{background:var(--card);border:0;border-right:3px solid var(--ink);padding:7px 12px;font-weight:800;font-size:13px;cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--green);color:#fff}
+  .out{font-weight:900;font-size:14.5px;border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:8px}
+  .small{font-size:12.5px;font-weight:700;color:#6b5d3a}
+  .legend{font-size:12px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+  .dot{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);vertical-align:middle;margin-right:4px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>细胞的分化、衰老、凋亡与癌变全攻坚</h1>
+    <p class="lead">同一套基因组,为什么长成不同细胞?细胞怎么变老、怎么"该死就死"、怎么"叛变"成癌?本包把细胞的一生理顺——分化(基因选择性表达)、全能性、衰老、凋亡与坏死、癌变(基因突变),把最爱设的陷阱一次拆穿。</p>
+
+    <div class="say">🗣️ <b>细胞的一生(人话版):</b> 把受精卵想成一个<b>万能新员工</b>,手里握着公司<b>全套操作手册(基因组)</b>。<b>分化</b>就是他被分到不同岗位——手册没变,只是<b>各自翻开不同章节干活(基因选择性表达)</b>,于是有的成了神经细胞、有的成了红细胞。<b>全能性</b>是说:哪怕分到岗位很久了,理论上他手里那套完整手册还在,给对条件还能"重开一家分公司(长成完整个体)"。<b>衰老</b>是这员工老了——水分少、动作慢、酶活性降。<b>凋亡</b>是公司按<b>预设程序</b>让某些岗位<b>主动光荣退休</b>(基因决定、对生物体有利);<b>坏死</b>是意外事故被动死亡(有害)。<b>癌变</b>最坏:某员工的<b>手册被改写(原癌基因+抑癌基因突变)</b>,从此<b>不听指挥、无限复印自己(无限增殖)</b>还到处乱窜(转移)。</div>
+
+    <h2>① 细胞分化:基因选择性表达的结果</h2>
+    <p class="lead">一个受精卵分裂出的所有细胞遗传物质<b>完全相同</b>,却长成形态、结构、功能各不相同的细胞群——这靠的是<b>基因的选择性表达</b>:不同细胞打开(表达)的基因不同。</p>
+    <div class="card">
+      <h3>分化的四条硬核结论</h3>
+      <table>
+        <tr><th>要点</th><th>说明</th></tr>
+        <tr><td>本质</td><td><b>基因选择性表达</b>的结果(不同细胞表达的基因不同)</td></tr>
+        <tr><td>遗传物质</td><td><b>不变</b>!分化前后 DNA 完全相同,变的只是"哪些基因在工作"</td></tr>
+        <tr><td>特点</td><td><b>持久、稳定、不可逆</b>——正常分化后细胞不会自发变回去,也不再改变类型</td></tr>
+        <tr><td>范围</td><td>贯穿生物体整个生命进程,在<b>胚胎时期达到最大程度</b></td></tr>
+      </table>
+      <div class="keybox"><b>一句话记牢:</b>分化 = <b>基因没变,表达变了</b>。所以分化不是基因丢失、也不是突变,而是"同一本书,各读各的章节"。</div>
+      <p class="trap">⚠ 常错:以为分化是"细胞里基因不同了/丢了一些基因"。错!是<b>基因相同、表达不同</b>。管家基因(如与呼吸有关的酶基因)所有细胞都表达;组织特异性基因(如血红蛋白基因)只在特定细胞表达。</p>
+    </div>
+    <div class="viz">
+      <h3>① 细胞分化 = 基因选择性表达动画</h3>
+      <p class="small">同一套基因组(4 个基因),复制到 3 种细胞里——每种细胞<b>只点亮不同的基因</b>,于是造出不同蛋白、成为不同细胞。点按钮切换目标细胞,看基因组不变、表达谱变。</p>
+      <div class="ctrlrow">
+        <div class="seg" id="segDiff"><button data-c="red" class="on">红细胞</button><button data-c="neuron">神经细胞</button><button data-c="muscle">肌肉细胞</button></div>
+      </div>
+      <canvas id="diffCv" width="700" height="300"></canvas>
+      <div class="legend"><span><span class="dot" style="background:#F3C00E"></span>正在表达(点亮)</span><span><span class="dot" style="background:#8a8170"></span>存在但沉默(不表达)</span></div>
+      <div class="out" id="diffOut"></div>
+    </div>
+
+    <h2 class="b">② 细胞全能性:已分化细胞的"重生潜能"</h2>
+    <p class="lead"><b>全能性</b>:已经分化的细胞<b>仍具有发育成完整个体的潜能</b>。之所以有全能性,是因为每个体细胞都保留着该物种<b>全套的遗传物质(基因)</b>。</p>
+    <div class="card">
+      <h3>全能性三大要点</h3>
+      <table>
+        <tr><th>要点</th><th>说明</th></tr>
+        <tr><td>谁最高</td><td><b>受精卵全能性最高</b>;分化程度越高,全能性越低(越难表达出全套潜能)</td></tr>
+        <tr><td>植物细胞</td><td>全能性高——离体的体细胞经<b>植物组织培养</b>可长成完整植株(脱分化→再分化)</td></tr>
+        <tr><td>动物细胞</td><td>已分化的体<b>细胞核</b>具有全能性——<b>克隆(核移植)</b>可发育成完整个体;但动物已分化体细胞整体一般不表现全能性</td></tr>
+      </table>
+      <div class="keybox"><b>大小排序(记死):</b>受精卵 &gt; 早期胚胎细胞 &gt; 生殖细胞 &gt; 干细胞 &gt; 一般体细胞 &gt; 高度分化细胞。<b>分化程度越高 → 全能性越低</b>。</div>
+      <p class="trap">⚠ 高度分化的<b>动物细胞</b>(如人的成熟红细胞——连细胞核都没有了)几乎不表现全能性;但只要有<b>完整细胞核</b>,核内基因全套仍在,理论上核具全能性(克隆羊多莉的证据)。</p>
+    </div>
+    <div class="viz">
+      <h3>② 全能性梯度图(点击比较)</h3>
+      <p class="small">条越高 = 全能性越强。点击任意两个细胞类型进行比较,读出谁的全能性更高、为什么。</p>
+      <svg id="totiSvg" viewBox="0 0 700 300" aria-label="全能性梯度"></svg>
+      <div class="out" id="totiOut">点两个方块比较它们的全能性。</div>
+    </div>
+
+    <h2 class="o">③ 细胞衰老:六大特征</h2>
+    <p class="lead">细胞衰老是<b>普遍存在的生命现象</b>,细胞的结构和功能发生一系列变化。记住六大特征——考试几乎逐条设选项。</p>
+    <div class="card">
+      <h3>细胞衰老的六大特征</h3>
+      <table>
+        <tr><th>特征</th><th>方向</th><th>后果</th></tr>
+        <tr><td>细胞内水分</td><td>减少 ↓</td><td>细胞<b>体积变小</b>、代谢速率减慢</td></tr>
+        <tr><td>多种酶的活性</td><td>降低 ↓</td><td>细胞代谢速率减慢</td></tr>
+        <tr><td>色素</td><td>积累 ↑</td><td>如老年斑,妨碍细胞内物质交流与传递</td></tr>
+        <tr><td>呼吸速率</td><td>减慢 ↓</td><td>产能减少(与酶活性下降一致)</td></tr>
+        <tr><td>细胞核</td><td>体积增大 ↑、染色质固缩</td><td>染色质收缩、染色加深</td></tr>
+        <tr><td>细胞膜通透性</td><td>改变</td><td>物质运输功能降低</td></tr>
+      </table>
+      <div class="keybox"><b>方向速记:</b>"<b>水少、酶低、色素多、呼吸慢</b>";"<b>核大、膜变</b>"。注意——衰老时<b>细胞体积变小,但细胞核体积增大</b>(方向相反,超高频陷阱)!</div>
+      <p class="trap">⚠ <b>个体衰老 ≠ 细胞衰老</b>。① 多细胞生物:细胞总在更新,幼年个体体内也有衰老细胞,老年个体体内也有新生细胞;个体衰老是许多细胞普遍衰老的过程。② 单细胞生物:细胞衰老或死亡 = 个体衰老或死亡。</p>
+    </div>
+    <div class="viz">
+      <h3>③ 衰老特征勾选清单(判断正误)</h3>
+      <p class="small">勾选你认为"符合细胞衰老"的描述,再点判分。有的选项是故意写反的陷阱。</p>
+      <div id="ageList"></div>
+      <div class="ctrlrow"><button class="btn" id="ageCheck">判分</button><button class="btn" id="ageReset" style="box-shadow:2px 2px 0 var(--green)">重置</button></div>
+      <div class="out" id="ageOut">勾选后点"判分"。</div>
+    </div>
+
+    <h2 class="v">④ 细胞凋亡 vs 细胞坏死</h2>
+    <p class="lead"><b>细胞凋亡</b>是由<b>基因所决定的</b>细胞<b>程序性死亡</b>(programmed cell death),是主动的、受控的,对生物体正常发育有利。<b>细胞坏死</b>是不利因素引起的被动死亡,对生物体有害。</p>
+    <div class="card">
+      <h3>凋亡 vs 坏死 对照表</h3>
+      <table>
+        <tr><th></th><th>细胞凋亡</th><th>细胞坏死</th></tr>
+        <tr><td>方式</td><td><b>主动</b>、程序性</td><td><b>被动</b></td></tr>
+        <tr><td>诱因</td><td><b>基因决定</b>(内在程序)</td><td>不利因素(高温、毒物、机械损伤等外因)</td></tr>
+        <tr><td>对机体</td><td><b>有利</b>(正常生理过程)</td><td><b>有害</b>(病理性)</td></tr>
+        <tr><td>典型例子</td><td>蝌蚪尾巴消失、胎儿手指(蹼)分开、被病原体感染细胞的清除、红骨髓中衰老细胞的清除</td><td>烫伤/冻伤致细胞死亡、缺血坏死</td></tr>
+      </table>
+      <div class="keybox"><b>一句话:</b>凋亡是"<b>基因安排的主动光荣退休,对身体有利</b>";坏死是"<b>意外事故的被动死亡,对身体有害</b>"。凋亡属于<b>正常的生命现象</b>,不是病!</div>
+      <p class="trap">⚠ 高频陷阱:① 把"蝌蚪尾消失/手指分开"说成坏死——错,是<b>凋亡(主动、有利)</b>。② 说凋亡"对生物体不利"——错,凋亡对正常发育和内环境稳态<b>有利</b>。③ 凋亡由<b>基因控制</b>,不是外界不利因素引起。</p>
+    </div>
+    <div class="viz">
+      <h3>④ 凋亡 vs 坏死 对比演示</h3>
+      <p class="small">点选一种细胞死亡方式,看它是主动还是被动、由什么触发、对机体有利还是有害,并配一个典型例子。</p>
+      <div class="ctrlrow">
+        <div class="seg" id="segDeath"><button data-m="apop" class="on">细胞凋亡</button><button data-m="necro">细胞坏死</button></div>
+      </div>
+      <canvas id="deathCv" width="700" height="220"></canvas>
+      <div class="out" id="deathOut"></div>
+    </div>
+
+    <h2 class="r">⑤ 细胞癌变:基因突变的结果</h2>
+    <p class="lead">正常细胞受到<b>致癌因子</b>作用,细胞中的<b>原癌基因</b>和<b>抑癌基因</b>发生<b>基因突变</b>,细胞就会变成不受机体控制的、连续分裂的<b>癌细胞</b>。</p>
+    <div class="card">
+      <h3>两类关键基因</h3>
+      <table>
+        <tr><th>基因</th><th>正常作用</th><th>突变后</th></tr>
+        <tr><td><b>原癌基因</b></td><td>主要负责调节细胞周期、控制细胞<b>正常生长和分裂</b>(踩油门)</td><td>被<b>激活</b>→细胞过度增殖</td></tr>
+        <tr><td><b>抑癌基因</b></td><td>主要<b>阻止细胞不正常增殖</b>(踩刹车)</td><td><b>失活</b>→失去抑制</td></tr>
+      </table>
+      <div class="keybox"><b>记牢:</b>正常细胞变癌细胞,是<b>原癌基因和抑癌基因发生突变</b>的结果——是<b>基因突变(DNA 层面)</b>,不是"细胞里多了一个致癌基因"。油门被踩死 + 刹车失灵 → 无限增殖。</div>
+      <h3>致癌因子(三类)</h3>
+      <table>
+        <tr><th>类型</th><th>举例</th></tr>
+        <tr><td><b>物理</b>致癌因子</td><td>紫外线、X 射线、γ 射线等各种辐射</td></tr>
+        <tr><td><b>化学</b>致癌因子</td><td>黄曲霉素、亚硝胺、苯并芘(煤焦油、砷化物等)</td></tr>
+        <tr><td><b>病毒</b>致癌因子</td><td>Rous 肉瘤病毒等(病毒致癌因子)</td></tr>
+      </table>
+      <h3>癌细胞的三大特征</h3>
+      <table>
+        <tr><th>特征</th><th>说明</th></tr>
+        <tr><td>能<b>无限增殖</b></td><td>不受机体控制,可连续分裂</td></tr>
+        <tr><td><b>形态结构改变</b></td><td>如正常成纤维细胞(梭形)癌变后变为球形</td></tr>
+        <tr><td>细胞膜<b>糖蛋白减少</b></td><td>细胞间黏着性降低,细胞<b>易分散和转移</b></td></tr>
+      </table>
+      <p class="trap">⚠ 高频陷阱:① 癌变的根本原因是<b>基因突变</b>(原癌+抑癌基因),不是基因重组、也不是染色体变异。② 癌细胞<b>糖蛋白减少</b>(不是增多)→ 才容易扩散转移;记反就全错。③ 致癌因子只是诱因,内因是基因突变。</p>
+    </div>
+    <div class="viz">
+      <h3>⑤ 癌变基因机制(原癌 + 抑癌基因突变 → 无限增殖)</h3>
+      <p class="small">正常细胞靠"油门(原癌基因)"和"刹车(抑癌基因)"平衡。用致癌因子分别使它们突变,看细胞何时失控进入无限增殖。</p>
+      <div class="ctrlrow">
+        <button class="btn" id="mutOnco">致癌因子 → 激活原癌基因(踩死油门)</button>
+        <button class="btn" id="mutSupp">致癌因子 → 使抑癌基因失活(剪断刹车)</button>
+        <button class="btn" id="mutReset" style="box-shadow:2px 2px 0 var(--green)">复位</button>
+      </div>
+      <svg id="cancerSvg" viewBox="0 0 700 240" aria-label="癌变机制"></svg>
+      <div class="out" id="cancerOut"></div>
+    </div>
+    <div class="viz">
+      <h3>⑥ 癌细胞三大特征演示</h3>
+      <p class="small">点按钮触发癌变:看细胞①开始无限增殖、②形态由梭形变球形、③膜上糖蛋白减少而彼此分散、转移。</p>
+      <div class="ctrlrow"><button class="btn" id="cancerGo">诱发癌变</button><button class="btn" id="cancerBack" style="box-shadow:2px 2px 0 var(--green)">恢复正常</button></div>
+      <canvas id="ccCv" width="700" height="260"></canvas>
+      <div class="out" id="ccOut">当前:正常细胞。点"诱发癌变"观察三大特征。</div>
+    </div>
+
+    <h2 class="o">⑥ 全题型地图(触发 → 动作 → 例题 → 陷阱)</h2>
+
+    <div class="card">
+      <h3>题型 1 · 分化的本质</h3>
+      <p><b class="tag">触发:</b>题干出现"同一个体不同细胞形态功能不同""基因是否相同""分化的原因/实质"。</p>
+      <p><b class="tag">动作:</b>先答"遗传物质(DNA/基因)相同",再答"<b>基因选择性表达</b>",强调分化<b>不改变遗传物质、不可逆</b>。</p>
+      <p class="mono">例:人的神经细胞与红细胞形态功能差异极大,根本原因是? → 二者<b>基因相同</b>,但<b>选择性表达的基因不同</b>(表达谱不同),故蛋白质不同,形态功能不同。</p>
+      <p class="trap">⚠ 陷阱:错选"基因不同/基因发生了突变"。分化是表达不同,不是基因不同。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 2 · 全能性比较</h3>
+      <p><b class="tag">触发:</b>"哪个细胞全能性最高/最低""为什么植物易组织培养、动物要用核移植"。</p>
+      <p><b class="tag">动作:</b>用排序:<b>受精卵 &gt; 早期胚胎 &gt; 生殖细胞 &gt; 干细胞 &gt; 体细胞 &gt; 高度分化细胞</b>;分化程度越高全能性越低。植物用组织培养;动物用体细胞核移植(核具全能性)。</p>
+      <p class="mono">例:下列全能性最高的是 A.受精卵 B.造血干细胞 C.成熟红细胞 D.肌肉细胞 → 选 <b>A</b>。成熟红细胞无核,几乎无全能性。</p>
+      <p class="trap">⚠ 陷阱:把"细胞核具全能性"说成"体细胞整体表现全能性"(动物做不到,需核移植)。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 3 · 衰老特征判断</h3>
+      <p><b class="tag">触发:</b>"下列属于/不属于细胞衰老特征的是""衰老时哪项增大/减小"。</p>
+      <p><b class="tag">动作:</b>逐条对六特征:水↓体积↓、酶活性↓、色素↑、呼吸↓、<b>核增大染色质固缩</b>、膜通透性改变运输↓。特别盯"体积小但核变大"这对反向变化。</p>
+      <p class="mono">例:细胞衰老时,下列变化正确的是? → "细胞核体积<b>增大</b>、染色质固缩"正确;"细胞内水分增多""酶活性增强"均错(应减少/降低)。</p>
+      <p class="trap">⚠ 陷阱:把"细胞体积变小"错配成"细胞核也变小"。核是<b>增大</b>。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 4 · 凋亡 vs 坏死</h3>
+      <p><b class="tag">触发:</b>"蝌蚪尾消失/手指分开属于""凋亡对机体有利还是有害""由什么控制"。</p>
+      <p><b class="tag">动作:</b>抓三对关键词:主动/被动、基因决定/外因、有利/有害。凋亡=主动+基因+有利;坏死=被动+外因+有害。</p>
+      <p class="mono">例:胎儿手指间的组织消失使手指分开,这一过程属于? → <b>细胞凋亡</b>(由基因决定的程序性死亡,对正常发育有利),不是坏死。</p>
+      <p class="trap">⚠ 陷阱:把凋亡说成"对生物体不利"或"被不利因素引起"。凋亡有利、由基因控制。</p>
+    </div>
+
+    <div class="card">
+      <h3>题型 5 · 癌变机制与特征</h3>
+      <p><b class="tag">触发:</b>"癌变的根本原因""癌细胞为什么易转移""致癌因子分几类"。</p>
+      <p><b class="tag">动作:</b>根本原因=<b>原癌基因和抑癌基因发生基因突变</b>;转移原因=<b>细胞膜糖蛋白减少</b>、黏着性下降;三大特征=无限增殖、形态改变、糖蛋白减少易转移;致癌因子=物理/化学/病毒。</p>
+      <p class="mono">例:癌细胞容易在体内分散和转移的主要原因是? → 细胞膜上<b>糖蛋白等物质减少</b>,细胞间黏着性降低。</p>
+      <p class="trap">⚠ 陷阱:错答"糖蛋白增多";错把病因说成"基因重组/染色体变异"。是<b>基因突变</b>。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集(逐条盯死)</h2>
+    <div class="card">
+      <p class="trap">① 分化<b>不改变遗传物质</b>——分化前后基因(DNA)完全相同,变的只是选择性表达;不是基因丢失或突变。</p>
+      <p class="trap">② 凋亡是<b>主动、有利</b>——由基因决定的程序性死亡,对生物体正常发育有利;蝌蚪尾消失、手指分开都是凋亡不是坏死。</p>
+      <p class="trap">③ 癌变是<b>基因突变</b>——原癌基因+抑癌基因突变,不是基因重组、不是染色体变异。致癌因子是外因,基因突变是内因。</p>
+      <p class="trap">④ 全能性大小:<b>受精卵最高,分化程度越高越低</b>;动物已分化体细胞需<b>核移植</b>才表现全能性(核具全能性,不是整体细胞)。</p>
+      <p class="trap">⑤ 癌细胞<b>糖蛋白减少</b>(不是增多)→ 黏着性降低 → 易分散转移。方向记反直接失分。</p>
+      <p class="trap">⑥ 衰老时<b>细胞体积变小,但细胞核体积增大</b>(染色质固缩);水分减少、酶活性降低、呼吸减慢、色素积累、膜通透性改变。别把核也说成变小。</p>
+      <p class="trap">⑦ <b>个体衰老 ≠ 细胞衰老</b>:多细胞幼年体内也有衰老细胞,老年体内也有新生细胞;只有单细胞生物"细胞衰老=个体衰老"。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:6px 0">▸ <b>"变的是什么"三问定位法:</b>看到分化/衰老/癌变,先问"变的是<b>基因(DNA)本身</b>还是<b>基因的表达</b>?"。分化=表达变(DNA 不变);衰老=表达/酶活变(DNA 不变);<b>癌变=DNA 本身变(基因突变)</b>。这一刀切开三类过程,选项一眼真伪。</p>
+      <p style="margin:6px 0">▸ <b>凋亡的"程序"证据链:</b>凋亡由特定基因编码的蛋白(如某些凋亡相关基因产物)按序执行——能被基因调控,说明它是<b>主动、可编程</b>的;这与坏死"被动崩解"本质不同。答题若能点出"由基因控制的程序性"最稳。</p>
+      <p style="margin:6px 0">▸ <b>癌变是"多步累积"事件:</b>通常需要原癌基因激活<b>和</b>抑癌基因失活<b>多个</b>突变叠加,才彻底失控——这解释了为什么癌症随年龄升高、且是小概率累积过程。答"根本原因"仍写基因突变,但理解"多基因、多步"能应对综合题。</p>
+      <p style="margin:6px 0">▸ <b>全能性 vs 全能性表达:</b>体细胞核内"具有全套基因"是全能性的<b>物质基础(潜能)</b>;能否<b>表达出来</b>取决于分化程度和外部条件。植物细胞脱分化容易(全能性易表达),动物需借核移植/诱导才把潜能"解锁"。区分"具有潜能"与"表达出潜能"是高分关键。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:光合作用 / 呼吸作用全攻坚</p>
+  </div>
+
+<script>
+/* ===== ① 细胞分化 = 基因选择性表达 动画 ===== */
+(function(){
+ const cv=document.getElementById('diffCv'),ctx=cv.getContext('2d');
+ const out=document.getElementById('diffOut'),seg=document.getElementById('segDiff');
+ const W=cv.width,H=cv.height;
+ // 4 genes shared by every cell; each cell type expresses a different subset
+ const genes=['基因A','基因B','基因C','基因D'];
+ const profiles={
+  red:{on:[true,false,false,false],name:'红细胞',prod:'血红蛋白(表达血红蛋白基因)',desc:'只点亮血红蛋白相关基因 → 造血红蛋白、运氧'},
+  neuron:{on:[false,true,true,false],name:'神经细胞',prod:'神经递质与离子通道相关蛋白',desc:'点亮神经相关基因 → 传导兴奋'},
+  muscle:{on:[false,false,true,true],name:'肌肉细胞',prod:'肌动蛋白 / 肌球蛋白',desc:'点亮肌肉相关基因 → 收缩产生运动'}
+ };
+ let cur='red',t=0;
+ function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+ function frame(){
+  ctx.clearRect(0,0,W,H);
+  // source genome (left)
+  ctx.fillStyle='#16120A';ctx.font='900 15px sans-serif';ctx.textAlign='center';
+  ctx.fillText('同一套基因组',120,26);
+  ctx.font='700 11px sans-serif';ctx.fillText('(所有细胞都相同)',120,42);
+  ctx.strokeStyle='#16120A';ctx.lineWidth=4;ctx.fillStyle='#F4EFE2';
+  roundRect(40,54,160,210,14);ctx.fill();ctx.stroke();
+  const p=profiles[cur];
+  for(let i=0;i<4;i++){
+   const gy=76+i*46;
+   ctx.fillStyle='#8a8170';ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+   ctx.fillRect(60,gy,120,32);ctx.strokeRect(60,gy,120,32);
+   ctx.fillStyle='#fff';ctx.font='900 13px sans-serif';ctx.textAlign='center';
+   ctx.fillText(genes[i],120,gy+21);
+  }
+  // arrow
+  ctx.strokeStyle='#16120A';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(210,160);ctx.lineTo(300,160);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(300,160);ctx.lineTo(288,152);ctx.lineTo(288,168);ctx.closePath();ctx.fillStyle='#16120A';ctx.fill();
+  ctx.fillStyle='#E0382A';ctx.font='800 12px sans-serif';ctx.textAlign='center';
+  ctx.fillText('选择性表达',255,148);
+  // target cell (right): same 4 genes, only some lit
+  const cx=490,cy=160,cr=95;
+  ctx.beginPath();ctx.ellipse(cx,cy,cr,cr*0.9,0,0,7);
+  const cellCol=cur==='red'?'#E0382A':cur==='neuron'?'#7A3FF2':'#E86A17';
+  ctx.fillStyle=cellCol;ctx.globalAlpha=0.16;ctx.fill();ctx.globalAlpha=1;
+  ctx.lineWidth=4;ctx.strokeStyle='#16120A';ctx.stroke();
+  ctx.fillStyle='#16120A';ctx.font='900 15px sans-serif';ctx.textAlign='center';
+  ctx.fillText(p.name,cx,cy-cr-8);
+  const pulse=0.5+0.5*Math.sin(t*0.12);
+  for(let i=0;i<4;i++){
+   const gy=cy-72+i*40;
+   const lit=p.on[i];
+   ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+   if(lit){ctx.fillStyle='#F3C00E';ctx.shadowColor='rgba(243,192,14,'+(0.5+0.5*pulse)+')';ctx.shadowBlur=14*pulse;}
+   else{ctx.fillStyle='#8a8170';ctx.shadowBlur=0;}
+   ctx.fillRect(cx-70,gy,140,30);ctx.shadowBlur=0;ctx.strokeRect(cx-70,gy,140,30);
+   ctx.fillStyle=lit?'#16120A':'#fff';ctx.font='900 12px sans-serif';
+   ctx.fillText(genes[i]+(lit?' ✓ 表达':' 沉默'),cx,gy+20);
+  }
+  t++;requestAnimationFrame(frame);
+ }
+ function setInfo(){
+  const p=profiles[cur];
+  out.innerHTML='当前:<b>'+p.name+'</b>。基因组(基因A/B/C/D)<b>三种细胞完全相同</b>,只是各自点亮不同基因 → '+p.desc+',产物:<b>'+p.prod+'</b>。<b>遗传物质不变,变的是表达。</b>';
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=b.dataset.c;setInfo();};});
+ setInfo();frame();
+})();
+
+/* ===== ② 全能性梯度图(点击比较) ===== */
+(function(){
+ const svg=document.getElementById('totiSvg'),out=document.getElementById('totiOut');
+ const NS='http://www.w3.org/2000/svg';
+ const data=[
+  {name:'受精卵',v:100,note:'全能性最高,可发育成完整个体'},
+  {name:'早期胚胎细胞',v:88,note:'全能性很高'},
+  {name:'生殖细胞',v:70,note:'较高,含全套遗传信息'},
+  {name:'干细胞',v:55,note:'较高,可分化为多种细胞'},
+  {name:'一般体细胞',v:32,note:'较低,分化程度较高'},
+  {name:'高度分化细胞',v:14,note:'最低,如成熟红细胞(无核)几乎无全能性'}
+ ];
+ let sel=[];
+ const base=250,scale=1.9,bw=88,x0=44,gap=20;
+ function draw(){
+  svg.innerHTML='';
+  // axis
+  const ax=document.createElementNS(NS,'line');ax.setAttribute('x1',30);ax.setAttribute('y1',base);ax.setAttribute('x2',690);ax.setAttribute('y2',base);ax.setAttribute('stroke','#16120A');ax.setAttribute('stroke-width','3');svg.appendChild(ax);
+  const yl=document.createElementNS(NS,'text');yl.setAttribute('x',6);yl.setAttribute('y',40);yl.setAttribute('font-size','12');yl.setAttribute('font-weight','800');yl.textContent='全能性';svg.appendChild(yl);
+  data.forEach((d,i)=>{
+   const x=x0+i*(bw+gap);const h=d.v*scale;const y=base-h;
+   const r=document.createElementNS(NS,'rect');r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',bw);r.setAttribute('height',h);
+   const on=sel.indexOf(i)>=0;
+   r.setAttribute('fill',on?'#F3C00E':'#1E9E86');r.setAttribute('stroke','#16120A');r.setAttribute('stroke-width','3');r.style.cursor='pointer';
+   r.onclick=()=>pick(i);svg.appendChild(r);
+   const vt=document.createElementNS(NS,'text');vt.setAttribute('x',x+bw/2);vt.setAttribute('y',y-6);vt.setAttribute('text-anchor','middle');vt.setAttribute('font-size','12');vt.setAttribute('font-weight','900');vt.textContent=d.v;svg.appendChild(vt);
+   // wrap name onto up to 2 lines
+   const words=d.name.length>4?[d.name.slice(0,Math.ceil(d.name.length/2)),d.name.slice(Math.ceil(d.name.length/2))]:[d.name];
+   words.forEach((w,k)=>{const nt=document.createElementNS(NS,'text');nt.setAttribute('x',x+bw/2);nt.setAttribute('y',base+16+k*13);nt.setAttribute('text-anchor','middle');nt.setAttribute('font-size','11');nt.setAttribute('font-weight','800');nt.textContent=w;svg.appendChild(nt);});
+  });
+ }
+ function pick(i){
+  const p=sel.indexOf(i);
+  if(p>=0){sel.splice(p,1);}else{sel.push(i);if(sel.length>2)sel.shift();}
+  draw();
+  if(sel.length===1){out.innerHTML='已选 <b>'+data[sel[0]].name+'</b>('+data[sel[0]].note+')。再点一个进行比较。';}
+  else if(sel.length===2){
+   const a=data[sel[0]],b=data[sel[1]];
+   const hi=a.v>=b.v?a:b,lo=a.v>=b.v?b:a;
+   out.innerHTML='比较:<b>'+hi.name+'</b> 全能性 <b>高于</b> <b>'+lo.name+'</b>。规律:<b>分化程度越高,全能性越低</b>。('+hi.name+':'+hi.note+')';
+  } else {out.innerHTML='点两个方块比较它们的全能性。';}
+ }
+ draw();
+})();
+
+/* ===== ③ 衰老特征勾选清单 ===== */
+(function(){
+ const list=document.getElementById('ageList'),out=document.getElementById('ageOut');
+ // correct=true 表示"这是真正的衰老特征";false 表示写反了的陷阱
+ const items=[
+  {t:'细胞内水分减少,细胞体积变小',correct:true},
+  {t:'多种酶的活性降低',correct:true},
+  {t:'细胞内色素积累(如老年斑)',correct:true},
+  {t:'呼吸速率加快、代谢增强',correct:false},
+  {t:'细胞核体积增大、染色质固缩',correct:true},
+  {t:'细胞膜通透性改变,物质运输功能降低',correct:true},
+  {t:'细胞核体积随细胞一起变小',correct:false},
+  {t:'酶活性升高使代谢更旺盛',correct:false}
+ ];
+ items.forEach((it,i)=>{
+  const row=document.createElement('label');
+  row.style.cssText='display:flex;gap:8px;align-items:flex-start;font-weight:700;font-size:14px;margin:6px 0;cursor:pointer';
+  row.innerHTML='<input type="checkbox" data-i="'+i+'" style="margin-top:4px;transform:scale(1.2)"><span>'+it.t+'</span>';
+  list.appendChild(row);
+ });
+ document.getElementById('ageCheck').onclick=function(){
+  let right=0,wrong=[];
+  items.forEach((it,i)=>{
+   const box=list.querySelector('input[data-i="'+i+'"]');
+   const checked=box.checked;
+   const shouldCheck=it.correct;
+   if(checked===shouldCheck){right++;box.parentElement.style.background='rgba(30,158,134,0.15)';}
+   else{wrong.push(it.t);box.parentElement.style.background='rgba(224,56,42,0.15)';}
+  });
+  let msg='得分:<b>'+right+' / '+items.length+'</b>。真正的衰老特征:水少体积小、酶活性↓、色素↑、呼吸↓、<b>核增大染色质固缩</b>、膜通透性改变。';
+  if(wrong.length)msg+='<br>判错的项(绿=正确判断,红=判错):其中"呼吸加快/酶活升高/核变小"都是<b>故意写反的陷阱</b>——衰老时它们是<b>相反方向</b>。';
+  else msg+=' <b>全对!</b>';
+  out.innerHTML=msg;
+ };
+ document.getElementById('ageReset').onclick=function(){
+  list.querySelectorAll('input').forEach(b=>{b.checked=false;b.parentElement.style.background='';});
+  out.innerHTML='勾选后点"判分"。';
+ };
+})();
+
+/* ===== ④ 凋亡 vs 坏死 对比演示 ===== */
+(function(){
+ const cv=document.getElementById('deathCv'),ctx=cv.getContext('2d');
+ const out=document.getElementById('deathOut'),seg=document.getElementById('segDeath');
+ const W=cv.width,H=cv.height;let mode='apop',t=0;
+ function frame(){
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2;
+  if(mode==='apop'){
+   // orderly shrink into apoptotic bodies (controlled)
+   const phase=(t%180)/180;
+   const shrink=1-0.5*phase;
+   ctx.strokeStyle='#16120A';ctx.lineWidth=4;
+   ctx.fillStyle='rgba(30,158,134,0.20)';
+   ctx.beginPath();ctx.arc(cx,cy,54*shrink,0,7);ctx.fill();ctx.stroke();
+   // budding apoptotic bodies
+   if(phase>0.5){
+    for(let k=0;k<4;k++){const a=k*Math.PI/2+phase;const r=30*(phase-0.5)*2*54*0.9;
+     ctx.beginPath();ctx.arc(cx+Math.cos(a)*(60+ (phase-0.5)*40),cy+Math.sin(a)*(40+(phase-0.5)*30),12,0,7);
+     ctx.fillStyle='rgba(30,158,134,0.35)';ctx.fill();ctx.stroke();}
+   }
+   ctx.fillStyle='#1E9E86';ctx.font='900 16px sans-serif';ctx.textAlign='center';
+   ctx.fillText('细胞凋亡:有序、主动',cx,32);
+   ctx.fillStyle='#16120A';ctx.font='800 12px sans-serif';
+   ctx.fillText('细胞规整皱缩 → 形成凋亡小体 → 被清除(不外泄、不发炎)',cx,H-14);
+  } else {
+   // necrosis: swell and burst, spilling contents (passive, harmful)
+   const phase=(t%180)/180;
+   const swell=1+0.5*phase;
+   ctx.strokeStyle='#16120A';ctx.lineWidth=4;
+   ctx.fillStyle='rgba(224,56,42,0.20)';
+   // irregular membrane
+   ctx.beginPath();
+   for(let a=0;a<=6.3;a+=0.2){const rr=54*swell*(1+ (phase>0.6?0.15*Math.sin(a*5+t*0.3):0));ctx.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}
+   ctx.closePath();ctx.fill();ctx.stroke();
+   if(phase>0.6){ // spilling contents
+    for(let k=0;k<10;k++){const a=Math.random()*6.3;const d=54*swell+ (phase-0.6)*120*Math.random();
+     ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,4,0,7);ctx.fillStyle='rgba(224,56,42,0.6)';ctx.fill();}
+   }
+   ctx.fillStyle='#E0382A';ctx.font='900 16px sans-serif';ctx.textAlign='center';
+   ctx.fillText('细胞坏死:被动、崩解',cx,32);
+   ctx.fillStyle='#16120A';ctx.font='800 12px sans-serif';
+   ctx.fillText('细胞肿胀 → 膜破裂 → 内容物外泄 → 引发炎症(对机体有害)',cx,H-14);
+  }
+  t++;requestAnimationFrame(frame);
+ }
+ function setInfo(){
+  if(mode==='apop')out.innerHTML='<b>细胞凋亡</b>:方式=<b>主动、程序性</b>;诱因=<b>基因决定</b>(内在程序);对机体=<b>有利</b>(正常生理)。例:<b>蝌蚪尾巴消失、胎儿手指(蹼)分开</b>、清除被感染或衰老的细胞。';
+  else out.innerHTML='<b>细胞坏死</b>:方式=<b>被动</b>;诱因=<b>不利因素</b>(高温、毒物、缺血、机械损伤等外因);对机体=<b>有害</b>(病理性)。例:烫伤/冻伤致细胞死亡、组织缺血坏死。';
+ }
+ seg.querySelectorAll('button').forEach(b=>{b.onclick=function(){seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;t=0;setInfo();};});
+ setInfo();frame();
+})();
+
+/* ===== ⑤ 癌变基因机制(原癌+抑癌基因) ===== */
+(function(){
+ const svg=document.getElementById('cancerSvg'),out=document.getElementById('cancerOut');
+ const NS='http://www.w3.org/2000/svg';
+ let onco=false,supp=false; // onco=true 原癌基因被激活(油门踩死); supp=true 抑癌基因失活(刹车断)
+ function box(x,y,w,h,fill,lines){
+  const r=document.createElementNS(NS,'rect');r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('fill',fill);r.setAttribute('stroke','#16120A');r.setAttribute('stroke-width','3');svg.appendChild(r);
+  lines.forEach((s,i)=>{const tx=document.createElementNS(NS,'text');tx.setAttribute('x',x+w/2);tx.setAttribute('y',y+22+i*16);tx.setAttribute('text-anchor','middle');tx.setAttribute('font-size',i===0?'14':'11');tx.setAttribute('font-weight',i===0?'900':'700');tx.setAttribute('fill','#fff');tx.textContent=s;svg.appendChild(tx);});
+ }
+ function txt(x,y,s,col,size,anchor){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',size||12);t.setAttribute('font-weight','900');t.setAttribute('fill',col||'#16120A');t.setAttribute('text-anchor',anchor||'middle');t.textContent=s;svg.appendChild(t);}
+ function draw(){
+  svg.innerHTML='';
+  // 原癌基因 = 油门
+  box(30,40,180,60,onco?'#E0382A':'#1E9E86',['原癌基因(油门)',onco?'被激活→过度增殖':'正常调控生长分裂']);
+  // 抑癌基因 = 刹车
+  box(30,140,180,60,supp?'#E0382A':'#1450C8',['抑癌基因(刹车)',supp?'失活→抑制解除':'阻止不正常增殖']);
+  // arrows to cell
+  const a1=document.createElementNS(NS,'line');a1.setAttribute('x1',210);a1.setAttribute('y1',70);a1.setAttribute('x2',330);a1.setAttribute('y2',110);a1.setAttribute('stroke','#16120A');a1.setAttribute('stroke-width','3');svg.appendChild(a1);
+  const a2=document.createElementNS(NS,'line');a2.setAttribute('x1',210);a2.setAttribute('y1',170);a2.setAttribute('x2',330);a2.setAttribute('y2',130);a2.setAttribute('stroke','#16120A');a2.setAttribute('stroke-width','3');svg.appendChild(a2);
+  // cell state
+  const cancer=onco&&supp;
+  const cx=470,cy=120,r=cancer?70:48;
+  const c=document.createElementNS(NS,'circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);c.setAttribute('fill',cancer?'rgba(224,56,42,0.25)':'rgba(30,158,134,0.18)');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width','4');svg.appendChild(c);
+  if(cancer){
+   // extra proliferating cells
+   for(let k=0;k<5;k++){const a=k*1.25;const cc=document.createElementNS(NS,'circle');cc.setAttribute('cx',cx+Math.cos(a)*95);cc.setAttribute('cy',cy+Math.sin(a)*80);cc.setAttribute('r',16);cc.setAttribute('fill','rgba(224,56,42,0.4)');cc.setAttribute('stroke','#16120A');cc.setAttribute('stroke-width','3');svg.appendChild(cc);}
+  }
+  txt(cx,cy+4,cancer?'癌细胞':'正常细胞',cancer?'#E0382A':'#1E9E86',cancer?'16':'14');
+  txt(cx,cancer?200:180,cancer?'无限增殖!':'受控增殖',cancer?'#E0382A':'#6b5d3a','13');
+  // status line
+  let s;
+  if(!onco&&!supp)s='正常:油门+刹车都在,细胞<b>受控增殖</b>。';
+  else if(onco&&!supp)s='原癌基因被激活(油门踩死),但<b>抑癌基因(刹车)还在</b>——尚能部分抑制。';
+  else if(!onco&&supp)s='抑癌基因失活(刹车断),但<b>原癌基因(油门)未过度</b>——尚未完全失控。';
+  else s='<b>原癌基因和抑癌基因都突变了!</b>油门踩死 + 刹车失灵 → 细胞<b>无限增殖</b>,变为<b>癌细胞</b>。这就是癌变的根本原因:<b>基因突变</b>。';
+  out.innerHTML=s;
+ }
+ document.getElementById('mutOnco').onclick=()=>{onco=true;draw();};
+ document.getElementById('mutSupp').onclick=()=>{supp=true;draw();};
+ document.getElementById('mutReset').onclick=()=>{onco=false;supp=false;draw();};
+ draw();
+})();
+
+/* ===== ⑥ 癌细胞三大特征演示 ===== */
+(function(){
+ const cv=document.getElementById('ccCv'),ctx=cv.getContext('2d');
+ const out=document.getElementById('ccOut');
+ const W=cv.width,H=cv.height;
+ let cancer=false,t=0;
+ // normal: few spindle-shaped cells, tightly stuck (many glycoproteins)
+ // cancer: many round cells, dispersing (glycoproteins reduced)
+ let cells=[];
+ function reset(){
+  cells=[];
+  for(let i=0;i<4;i++){cells.push({x:120+i*70,y:H/2,vx:0,vy:0});}
+ }
+ reset();
+ function frame(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#16120A';ctx.font='900 14px sans-serif';ctx.textAlign='left';
+  ctx.fillText(cancer?'癌细胞:①无限增殖 ②形态变球形 ③糖蛋白减少→分散转移':'正常细胞:梭形、彼此紧密黏着(糖蛋白多)',14,24);
+  if(cancer){
+   // proliferate up to a cap
+   if(cells.length<26 && t%6===0){const src=cells[Math.floor(Math.random()*cells.length)];cells.push({x:src.x+(Math.random()-0.5)*20,y:src.y+(Math.random()-0.5)*20,vx:(Math.random()-0.5)*1.4,vy:(Math.random()-0.5)*1.4});}
+   cells.forEach(c=>{c.x+=c.vx;c.y+=c.vy;
+    if(c.x<30||c.x>W-30)c.vx*=-1;if(c.y<44||c.y>H-24)c.vy*=-1;});
+   // draw round cells
+   cells.forEach(c=>{ctx.beginPath();ctx.arc(c.x,c.y,15,0,7);ctx.fillStyle='rgba(224,56,42,0.4)';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#16120A';ctx.stroke();
+    // fewer glycoprotein dots
+    ctx.fillStyle='#7A3FF2';for(let k=0;k<3;k++){const a=k*2.1+t*0.02;ctx.beginPath();ctx.arc(c.x+Math.cos(a)*15,c.y+Math.sin(a)*15,2,0,7);ctx.fill();}});
+   ctx.fillStyle='#E0382A';ctx.font='800 12px sans-serif';ctx.textAlign='center';
+   ctx.fillText('细胞数不断增多且四散移动(易转移)',W/2,H-8);
+  } else {
+   // spindle cells in a tight row
+   cells.forEach((c,i)=>{ctx.save();ctx.translate(c.x,c.y);ctx.beginPath();ctx.ellipse(0,0,28,12,0,0,7);ctx.fillStyle='rgba(30,158,134,0.35)';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#16120A';ctx.stroke();
+    // many glycoprotein dots (dense)
+    ctx.fillStyle='#7A3FF2';for(let k=0;k<10;k++){const a=k*0.628;ctx.beginPath();ctx.arc(Math.cos(a)*28,Math.sin(a)*12,2.4,0,7);ctx.fill();}
+    ctx.restore();});
+   // adhesion links between neighbors
+   ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;
+   for(let i=0;i<cells.length-1;i++){ctx.beginPath();ctx.moveTo(cells[i].x+28,cells[i].y);ctx.lineTo(cells[i+1].x-28,cells[i+1].y);ctx.stroke();}
+   ctx.fillStyle='#1E9E86';ctx.font='800 12px sans-serif';ctx.textAlign='center';
+   ctx.fillText('糖蛋白多(紫点)→ 黏着紧密,不易分散',W/2,H-8);
+  }
+  t++;requestAnimationFrame(frame);
+ }
+ document.getElementById('cancerGo').onclick=function(){cancer=true;out.innerHTML='已诱发癌变:观察<b>①无限增殖(细胞不断增多)②形态由梭形变球形③膜上糖蛋白减少</b>(紫点变少)→ 细胞黏着性降低,<b>易分散和转移</b>。根本原因是<b>原癌基因和抑癌基因突变</b>。';};
+ document.getElementById('cancerBack').onclick=function(){cancer=false;reset();out.innerHTML='已恢复正常:细胞<b>梭形、糖蛋白多、紧密黏着、受控增殖</b>。';};
+ frame();
+})();
+
+/* ===== ⑨ 自测 ===== */
+(function(){
+ const qs=[
+  {q:"1. 细胞分化的本质(根本原因)是什么?分化改变遗传物质吗?",a:"本质是基因的选择性表达(不同细胞表达的基因不同);分化不改变遗传物质,分化前后 DNA 完全相同。"},
+  {q:"2. 为什么高度分化的细胞仍可能具有全能性?哪种细胞全能性最高?",a:"因为已分化细胞的细胞核内仍保留着该物种全套的遗传物质(基因)。受精卵的全能性最高;分化程度越高,全能性越低。"},
+  {q:"3. 植物用什么技术体现体细胞全能性?动物呢?",a:"植物用植物组织培养(离体体细胞脱分化→再分化长成完整植株);动物一般用体细胞核移植(克隆),说明动物已分化细胞的细胞核具有全能性。"},
+  {q:"4. 细胞衰老时,细胞体积和细胞核体积分别怎样变化?",a:"细胞内水分减少,细胞体积变小;但细胞核体积增大、染色质固缩(方向相反,常考陷阱)。"},
+  {q:"5. 写出细胞衰老的六大特征(方向)。",a:"①水分减少体积变小 ②多种酶活性降低 ③色素积累 ④呼吸速率减慢 ⑤细胞核体积增大、染色质固缩 ⑥细胞膜通透性改变、物质运输功能降低。"},
+  {q:"6. 个体衰老和细胞衰老是一回事吗?",a:"多细胞生物不是:幼年个体内也有衰老细胞,老年个体内也有新生细胞,个体衰老是许多细胞普遍衰老的过程。只有单细胞生物,细胞衰老(死亡)才等于个体衰老(死亡)。"},
+  {q:"7. 细胞凋亡由什么决定?对生物体有利还是有害?举两个例子。",a:"由基因决定的程序性死亡(programmed cell death),主动、受控,对生物体正常发育有利。例:蝌蚪尾巴消失、胎儿手指(蹼)分开、清除衰老或被感染的细胞。"},
+  {q:"8. 细胞凋亡和细胞坏死的三点区别?",a:"①方式:凋亡主动/坏死被动;②诱因:凋亡由基因决定/坏死由不利因素(外因)引起;③对机体:凋亡有利(正常)/坏死有害(病理)。"},
+  {q:"9. 细胞癌变的根本原因是什么?涉及哪两类基因?",a:"根本原因是基因突变——原癌基因和抑癌基因发生突变。原癌基因负责调节细胞正常生长分裂,抑癌基因阻止不正常增殖;二者突变后细胞不受控、连续分裂。"},
+  {q:"10. 致癌因子分哪三类?各举一例。",a:"物理致癌因子(紫外线、X射线等辐射)、化学致癌因子(黄曲霉素、亚硝胺、苯并芘等)、病毒致癌因子(某些致癌病毒)。"},
+  {q:"11. 癌细胞的三大特征是什么?为什么容易转移?",a:"①能无限增殖 ②形态结构发生改变(如梭形变球形)③细胞膜上糖蛋白减少。糖蛋白减少使细胞间黏着性降低,所以癌细胞易分散和转移。"},
+  {q:"12. 判断:‘癌细胞膜上糖蛋白增多所以易转移’对吗?为什么?",a:"错。癌细胞膜上糖蛋白是减少(不是增多),黏着性降低才易分散转移;方向记反即错。"}
+ ];
+ const quiz=document.getElementById('quiz');
+ qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

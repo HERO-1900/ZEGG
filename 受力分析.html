@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>受力分析与共点力平衡 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>受力分析与共点力平衡</h1>
+    <p class="lead">受力分析是整个力学的「地基」——地基没打好,后面的牛顿定律、动力学、平衡题全塌。这页教你一套「找力不漏不多」的流程,把弹力/摩擦力的「有没有、朝哪边」判死,再用动画把正交分解、力的三角形、动态平衡、整体隔离一个个拨给你看。</p>
+
+    <div class="say">🗣️ <b>受力分析(人话版):</b> 就是把一个物体「单独拎出来」,问它:<b>有几只手在推你拉你?</b> 每只手就是一个力,画一个箭头(方向 + 大小)。规矩就三条:① <b>只画别人对它的力,不画它对别人的力</b>(受力≠施力);② 按固定顺序找,别漏别多;③ 拿不准弹力/摩擦力有没有,就用<b>假设法</b>——假设它存在,看物体会不会「穿模」或「乱跑」。找齐力之后,只要物体静止或匀速,合力必为零,这就是<b>平衡</b>。</div>
+
+    <div class="keybox"><b>三力速记:</b> ① <b>重力 G=mg</b>,方向永远<b>竖直向下</b>(不是垂直斜面!);② <b>弹力</b>,方向<b>垂直接触面</b>(面对面)或<b>沿绳指向绳收缩方向</b>(绳只能拉不能推),大小看形变、胡克定律 F=kx;③ <b>摩擦力</b>,静摩擦 <b>0≤f≤f<sub>max</sub></b> 方向与「相对运动<b>趋势</b>」相反、大小由平衡定;滑动摩擦 <b>f=μN</b> 方向与「相对运动方向」相反。<b>平衡条件:合力为零</b>,即 ∑F<sub>x</sub>=0 且 ∑F<sub>y</sub>=0。</div>
+
+    <h2 class="b">① 说人话总览:受力分析在干什么</h2>
+    <p class="lead">受力分析不是玄学,是一条能重复执行的「流程」。把它练成条件反射,90% 的力学题第一步就稳了。</p>
+    <div class="card">
+      <div class="mono">第1步:选研究对象——单个物体?还是几个物体当整体?(整体法/隔离法)</div>
+      <div class="mono">第2步:按顺序找力——先重力 G,再接触力(弹力→摩擦力),最后其他力(拉力/电磁力…)。</div>
+      <div class="mono">第3步:每个力问三件事——有没有?朝哪边?多大?(弹力/摩擦力拿不准就用假设法)</div>
+      <div class="mono">第4步:列平衡方程——正交分解 ∑Fx=0、∑Fy=0;或作力的三角形(首尾相连闭合)。</div>
+      <p class="trap">⚠ 最常见的三个死法:① 把「G 沿斜面向下」当重力(错!G 永远竖直向下);② 凭空多画一个「运动方向的力」(运动不需要力维持);③ 静摩擦直接写成 μN(错!静摩擦大小由平衡定,μN 只是它的上限)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 1 — 受力分析器:选情景,逐个亮出重力/弹力/摩擦力</div>
+      <canvas id="faCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button class="fascene on" data-s="0">斜面上静止</button>
+        <button class="fascene" data-s="1">绳挂物(两绳)</button>
+        <button class="fascene" data-s="2">叠放(上下两块)</button>
+        <button class="fascene" data-s="3">传送带上匀速</button>
+      </div>
+      <div class="ctrl">
+        <button class="faforce on" data-f="0">重力 G</button>
+        <button class="faforce" data-f="1">弹力 N</button>
+        <button class="faforce" data-f="2">摩擦力 f / 张力 T</button>
+        <button id="faAll">全部显示</button>
+      </div>
+      <div class="verdict" id="faNote"></div>
+      <p class="small">先只看重力,再一层层点开弹力、摩擦力——体会「按顺序找力」的节奏。每个箭头从物体重心出发。</p>
+    </div>
+
+    <h2>② 核心原理:三种常见力 + 分析步骤 + 平衡条件</h2>
+    <div class="card">
+      <h3>三种常见力(高中力学的全部「主角」)</h3>
+      <table>
+        <tr><th>力</th><th>方向</th><th>大小</th><th>判断有无</th></tr>
+        <tr><td><b>重力 G</b></td><td><b>竖直向下</b>(始终)</td><td>G=mg</td><td>有质量就有,永远存在</td></tr>
+        <tr><td><b>弹力 N</b></td><td>垂直接触面 / 沿绳指向绳收缩方向</td><td>形变决定;弹簧 F=kx</td><td>假设法:接触且有挤压/绳被拉直才有</td></tr>
+        <tr><td><b>静摩擦 f</b></td><td>与相对运动<b>趋势</b>相反</td><td><b>0≤f≤f<sub>max</sub></b>,由平衡定</td><td>接触面粗糙 + 有相对运动趋势</td></tr>
+        <tr><td><b>滑动摩擦 f</b></td><td>与相对运动<b>方向</b>相反</td><td><b>f=μN</b></td><td>接触面粗糙 + 已经相对滑动</td></tr>
+      </table>
+      <div class="keybox" style="margin:10px 0"><b>弹力·绳与面的区别:</b> 绳(和轻杆中被拉的情形)只能<b>拉</b>不能<b>推</b>,张力沿绳指向「绳收缩」方向;支持面弹力只能<b>推</b>(顶出去)不能拉,方向<b>垂直接触面</b>指向被支持物。<b>胡克定律 F=kx</b>,x 是形变量(伸长或压缩),不是弹簧总长!</div>
+    </div>
+    <div class="card">
+      <h3>受力分析步骤(牢记顺序,防漏防多)</h3>
+      <div class="mono">① 明确研究对象:整体 or 隔离某一个。研究谁,就只画谁受的力。</div>
+      <div class="mono">② 按顺序找力:先重力 → 再接触力(先弹力后摩擦力)→ 再其他力(拉力、电场力…)。</div>
+      <div class="mono">③ 只画「受力」不画「施力」:物体对别人的反作用力不画在这张图上。</div>
+      <div class="mono">④ 防漏 + 防多:每个接触点检查有无弹力/摩擦力;不确定用「假设法」验证。</div>
+      <p class="trap">⚠ 假设法判弹力:假设该处有弹力,若去掉它物体会「陷进/穿过」接触面 → 有弹力;若去掉后物体状态不变(如水平面上被斜向上拉离桌面的一刻)→ 无弹力。</p>
+    </div>
+    <div class="card">
+      <h3>共点力平衡条件</h3>
+      <div class="eq">合力为零:F<sub>合</sub> = 0 ⟺ ∑F<sub>x</sub> = 0 且 ∑F<sub>y</sub> = 0</div>
+      <p style="margin:8px 0"><b>二力平衡:</b> 两个力<b>等大、反向、共线</b>。<br><b>三力平衡:</b> 任意两个力的合力,与第三个力<b>等大反向</b>——三个力首尾相接能拼成一个<b>闭合三角形</b>(力的三角形法)。<br><b>多力平衡:</b> 一律<b>正交分解</b>,建 x-y 轴,∑Fx=0、∑Fy=0 联立求解。</p>
+      <div class="keybox" style="margin:8px 0"><b>正交分解选轴技巧:</b> 让<b>尽量多的力落在坐标轴上</b>(斜面题常沿斜面 + 垂直斜面建轴,这样只需分解重力:沿面分量 Gsinθ、垂直面分量 Gcosθ)。</div>
+    </div>
+    <div class="card">
+      <h3>动态平衡:物体缓慢变化中始终保持平衡</h3>
+      <p style="margin:6px 0">有一个力在缓慢改变(如绳角度慢慢变),问其他力怎么增减。三种武器:</p>
+      <p style="margin:6px 0"><b>① 图解法(矢量三角形法):</b> 适用于「一个力大小方向都不变、一个力方向不变、第三个力大小方向都变」的情形。把三力画成闭合三角形,让方向变的那条边转动,直接看各边长短变化。<b>最快最直观。</b></p>
+      <p style="margin:6px 0"><b>② 相似三角形法:</b> 力的三角形与几何图形中的某个三角形相似 → 用边长比例(如绳长、杆长、高)算力,常见于「绳挂球靠墙」模型。</p>
+      <p style="margin:6px 0"><b>③ 函数解析法:</b> 正交分解列式,把待求力写成角度 θ 的函数,再用三角函数极值判断增减/最值。角度关系复杂时用它。</p>
+    </div>
+    <div class="card">
+      <h3>整体法 vs 隔离法:怎么选</h3>
+      <p style="margin:6px 0"><b>整体法:</b> 求系统与外界之间的力(如地面对整体的支持力/摩擦力)、或几个物体加速度相同时——把它们当一个「大物体」,内力不用管。</p>
+      <p style="margin:6px 0"><b>隔离法:</b> 求系统内部两物体之间的相互作用力(如上下两块间的挤压/摩擦)——必须把那个物体单独拎出来分析。</p>
+      <div class="keybox" style="margin:8px 0"><b>口诀:</b> <b>求外力用整体,求内力用隔离</b>;常常先整体求加速度,再隔离求内力,两法配合。</div>
+    </div>
+
+    <h2 class="o">③ 判断弹力/摩擦力的「有无与方向」</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>题目问「某接触面弹力/摩擦力是否存在、方向如何」,或多选题给几个受力图让你选对的。</p>
+      <p><b class="tag">标准动作:</b>① 弹力:用假设法——撤掉该弹力,物体是否发生嵌入/穿过?会 → 有;不会 → 无。方向永远垂直接触面(或沿绳)。② 摩擦力:先判有无弹力(N=0 则摩擦为0),再判相对运动/趋势方向,取其反向。</p>
+      <p><b class="tag">示例(带解):</b>斜面上一物块被水平推力 F 顶住而静止。判斜面摩擦力方向?先假设无摩擦:沿斜面方向,重力分量 Gsinθ 下滑、推力分量 Fcosθ 上顶。若 Fcosθ &gt; Gsinθ,物块有<b>上滑</b>趋势 → 摩擦力沿斜面<b>向下</b>;若 Fcosθ &lt; Gsinθ,有下滑趋势 → 摩擦沿斜面<b>向上</b>;若恰好相等,f=0。可见方向不固定,由「趋势」定。</p>
+      <p class="trap">陷阱:默认「摩擦力一定沿斜面向上」;把静摩擦大小直接写成 μN(应由平衡定);接触面无挤压(N=0)却还画摩擦力。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 2 — 摩擦力方向判断器(静摩擦趋势 / 滑动,可切场景)</div>
+      <canvas id="frCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button class="frscene on" data-s="0">水平面·被推(未动)</button>
+        <button class="frscene" data-s="1">水平面·滑动中</button>
+        <button class="frscene" data-s="2">斜面·静止</button>
+      </div>
+      <div class="ctrl" id="frRow"></div>
+      <div class="verdict" id="frNote"></div>
+      <p class="small">静摩擦看「相对运动<b>趋势</b>」,滑动摩擦看「相对运动<b>方向</b>」,摩擦力都指向其<b>反方向</b>。拖动/切换看方向怎么翻转。</p>
+    </div>
+
+    <h2 class="g">④ 正交分解求平衡(斜面模型)</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>三个及以上的力、方向不整齐,尤其斜面上的物体受力平衡。</p>
+      <p><b class="tag">标准动作:</b>沿斜面 + 垂直斜面建 x-y 轴 → 只分解重力:沿面分量 G<sub>x</sub>=Gsinθ、垂直面分量 G<sub>y</sub>=Gcosθ → 列 ∑Fx=0、∑Fy=0。</p>
+      <p><b class="tag">示例(带解):</b>质量 m 物块静止在倾角 θ 粗糙斜面上。垂直斜面:N=mgcosθ;沿斜面:静摩擦 f=mgsinθ(方向沿面向上,平衡下滑趋势)。注意 f 不是 μN,而是恰好等于 mgsinθ;要求「不下滑」的条件是 mgsinθ ≤ μN=μmgcosθ,即 tanθ ≤ μ。</p>
+      <p class="trap">陷阱:把重力分解成「垂直斜面 = mg」(错!是 mgcosθ);把 N 写成 mg(错!是 mgcosθ);轴选歪导致要分解好几个力。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 3 — 正交分解求平衡:斜面上重力沿面/垂直面分解</div>
+      <canvas id="decCv" width="700" height="320"></canvas>
+      <div class="ctrl">
+        <label>倾角 θ <input id="decTheta" type="range" min="10" max="70" value="30" step="1"></label>
+        <label>质量 m <input id="decM" type="range" min="1" max="5" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>重力 G=mg</b><span id="decG">0</span></div>
+        <div><b>沿面 Gsinθ</b><span id="decGx">0</span></div>
+        <div><b>垂直面 Gcosθ</b><span id="decGy">0</span></div>
+        <div><b>支持力 N</b><span id="decN">0</span></div>
+      </div>
+      <p class="small">竖直红箭头=重力 G;拆成沿斜面(橙)和垂直斜面(蓝)两个分量。平衡时 N=Gcosθ、f=Gsinθ。g取10 N/kg。</p>
+    </div>
+
+    <h2 class="v">⑤ 三力平衡·矢量三角形</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>物体恰受三个力平衡,已知两个力方向,求第三个或求某力大小随角度变化。</p>
+      <p><b class="tag">标准动作:</b>三力首尾相接必闭合成三角形。已知一个力(如重力,大小方向都定),把三个力平移拼三角形,用几何/三角函数解未知边。</p>
+      <p><b class="tag">示例(带解):</b>重为 G 的球用绳挂着靠在光滑竖直墙上,绳与墙夹角 α。球受三力:重力 G(竖直向下)、墙的弹力 N(水平)、绳张力 T(沿绳)。三力闭合三角形:T=G/cosα,N=Gtanα。α 越大绳越倾斜,T、N 都增大。</p>
+      <p class="trap">陷阱:三力不闭合(方向画错);把绳张力方向画成垂直墙面;忘了弹力垂直于墙(水平)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔺 互动 4 — 三力平衡矢量三角形:拖张力方向,弹力随之闭合</div>
+      <canvas id="triCv" width="700" height="330"></canvas>
+      <div class="ctrl">
+        <label>绳与墙夹角 α <input id="triA" type="range" min="10" max="75" value="35" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>重力 G</b><span id="triG">100</span></div>
+        <div><b>绳张力 T</b><span id="triT">0</span></div>
+        <div><b>墙弹力 N</b><span id="triN">0</span></div>
+        <div><b>夹角 α</b><span id="triAv">35°</span></div>
+      </div>
+      <p class="small">左:球靠墙受三力。右:三力首尾相连成<b>闭合</b>三角形(红G↓、蓝N→、紫T沿绳)。改角度看 T=G/cosα、N=Gtanα 怎么变。</p>
+    </div>
+
+    <h2 class="r">⑥ 动态平衡图解法</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>「缓慢转动/移动」某个力(常是绳或杆),问其余力如何增减、何时最小。</p>
+      <p><b class="tag">标准动作:</b>识别三个力谁「大小方向都不变」(常是重力 G)、谁「方向不变」(常是水平墙弹力或竖直支持力)、谁「方向在变」(常是绳张力)。画闭合三角形:不变的力作固定底边,方向不变的力沿固定直线滑动,方向变的力那条边转动,直接读各力长短变化。</p>
+      <p><b class="tag">示例(带解):</b>G 不变、墙弹力 N 始终水平,绳从竖直慢慢向外转。三角形中 G 边固定,N 沿水平线,T 边转动:当 T 与 N 垂直(即 T 沿斜向、绳到某特定方向)时 T 取<b>最小值</b>=Gsinφ。图解一眼看出最小值出现的位置,比解析快。</p>
+      <p class="trap">陷阱:误以为角度变大所有力都变大;找不到「谁不变」导致三角形画不出;求最小值不会用「垂线段最短」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎞️ 互动 5 — 动态平衡图解法:缓慢改变角度,看各力增减</div>
+      <canvas id="dynCv" width="700" height="320"></canvas>
+      <div class="ctrl">
+        <button id="dynPlay">▶ 自动缓变</button><button id="dynStop">⏸ 暂停</button>
+        <label>拉力方向 β <input id="dynB" type="range" min="5" max="160" value="60" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>重力 G(不变)</b><span id="dynG">100</span></div>
+        <div><b>支持力 N(方向不变)</b><span id="dynN">0</span></div>
+        <div><b>拉力 F(方向在变)</b><span id="dynF">0</span></div>
+        <div><b>F 最小值</b><span id="dynFmin">0</span></div>
+      </div>
+      <p class="small">物体在水平面,受重力 G↓、支持力 N↑(方向恒竖直)、拉力 F(方向 β 可变)三力平衡。右侧闭合三角形随 β 转动:当 F ⟂ N 时 F 最小。</p>
+    </div>
+
+    <h2 class="o">⑦ 整体法 vs 隔离法(连接体)</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>两个或多个物体叠放/连接,问它们之间的力(内力)或系统受的外力。</p>
+      <p><b class="tag">标准动作:</b>求外力(地面支持力、外部拉力)→ 整体法,内力抵消不用画;求内力(两块之间挤压/摩擦、绳张力)→ 隔离法,把一块单独分析。</p>
+      <p><b class="tag">示例(带解):</b>A(m₁)叠在 B(m₂)上,一起放水平地面静止。求地面对 B 的支持力:整体法,N<sub>地</sub>=(m₁+m₂)g。求 A、B 间的挤压力:隔离 A,A 只受重力和 B 的支持力,N<sub>AB</sub>=m₁g。两法各取所需,一步到位。</p>
+      <p class="trap">陷阱:求内力却用整体法(内力被消掉,求不出来);隔离时把不作用于该物体的力也画上;漏掉隔离体与其他物体的接触力。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧱 互动 6 — 整体 vs 隔离法对比(叠放连接体)</div>
+      <canvas id="wiCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button class="wimode on" data-m="0">整体法(求地面支持力)</button>
+        <button class="wimode" data-m="1">隔离 A(求 A-B 间力)</button>
+        <button class="wimode" data-m="2">隔离 B(验证)</button>
+      </div>
+      <div class="ctrl">
+        <label>m<sub>A</sub> <input id="wiMA" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>m<sub>B</sub> <input id="wiMB" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="verdict" id="wiNote"></div>
+      <p class="small">切换视角:整体只需算与地面的外力;隔离 A 才能求出 A、B 之间的挤压力。g取10。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 摩擦力方向<b>不一定</b>与运动方向相反!静摩擦与「相对运动<b>趋势</b>」反向,甚至可能与运动方向<b>相同</b>(如传送带带着物体加速时,摩擦力向前)。</p>
+      <p class="trap">② 静摩擦大小<b>由平衡条件</b>(或牛顿定律)决定,<b>不是 μN</b>!μN 只是最大静摩擦的近似上限,只有「已滑动」才用 f=μN。</p>
+      <p class="trap">③ 弹力有无用<b>假设法</b>:撤掉后物体会嵌入/穿模就有,状态不变就无。别一见接触就画弹力。</p>
+      <p class="trap">④ 重力方向<b>永远竖直向下</b>,不是垂直斜面!斜面题里 mgcosθ 才是垂直斜面的分量。</p>
+      <p class="trap">⑤ 动态平衡优先<b>图解法</b>:找准「大小方向都不变的力」和「方向不变的力」,一个三角形看穿全部增减。</p>
+      <p class="trap">⑥ 绳只能<b>拉</b>不能推;支持面只能<b>推</b>不能拉。方向搞反直接全盘错。</p>
+      <p class="trap">⑦ 正交分解要<b>只画受力、不画分量与合力并存</b>:分解后原力就不再单独算(避免重复计力)。</p>
+      <p class="trap">⑧ 求内力误用整体法——内力会被抵消,必须隔离。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 把「趋势」当成第一性问题:</b> 静摩擦的一切(有无、方向、大小)都由「相对运动趋势」和「平衡」共同决定。养成先问「假如没有摩擦,物体会往哪滑?」的习惯,摩擦方向自然浮现,大小再交给平衡方程。</p>
+      <p style="margin:8px 0"><b>② 三力平衡=一个闭合三角形,是压轴利器:</b> 只要三力,别急着正交分解,先想能不能画三角形。若其中两力方向固定、一力大小方向都定,用「相似三角形」把力比换成边长比,常常一行算完对手要半页的题。</p>
+      <p style="margin:8px 0"><b>③ 动态问题:先分类再选法。</b> 「一个不变力 + 一个定向力 + 一个全变力」→ 图解法(矢量三角形转动);角度关系复杂或求精确极值 → 函数解析法(写成 θ 的函数求导/用辅助角)。分类对了,方法自己跳出来。</p>
+      <p style="margin:8px 0"><b>④ 整体—隔离要「反复横跳」:</b> 复杂连接体的黄金流程是「整体求加速度/外力 → 隔离求内力」。学会在两个视角间自由切换,内力外力各取最省的那条路,是拿满分的硬功夫。</p>
+      <p style="margin:8px 0"><b>⑤ 选轴是门艺术:</b> 正交分解不是死沿水平竖直。让待分解的力最少(斜面沿面建轴只需分解重力)、让未知力尽量落在轴上——好的选轴能把三元方程降成一元,省时又少错。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程(动量与能量)攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const INK="#16120A",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",YEL="#F3C00E",VIO="#7A3FF2",ORANGE="#E86A17",BROWN="#8a5a2b";
+const NS="http://www.w3.org/2000/svg";
+function drawArrow(ctx,x1,y1,x2,y2,col,w,label){
+  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w||3.5;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const ang=Math.atan2(y2-y1,x2-x1),h=10+(w||3.5);
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-h*Math.cos(ang-0.42),y2-h*Math.sin(ang-0.42));
+  ctx.lineTo(x2-h*Math.cos(ang+0.42),y2-h*Math.sin(ang+0.42));
+  ctx.closePath();ctx.fill();
+  if(label){ctx.fillStyle=col;ctx.font='bold 15px sans-serif';
+    ctx.fillText(label,x2+6*Math.cos(ang)+ (x2<x1?-18:4), y2+6*Math.sin(ang)+ (y2<y1?-6:16));}
+}
+
+/* ===== 互动1:受力分析器 ===== */
+(function(){
+  const cv=document.getElementById('faCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('faNote');
+  let scene=0;let show=[true,false,false];
+  document.querySelectorAll('.fascene').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.fascene').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    scene=+b.dataset.s;draw();});
+  document.querySelectorAll('.faforce').forEach(b=>b.onclick=()=>{
+    b.classList.toggle('on');const f=+b.dataset.f;show[f]=b.classList.contains('on');draw();});
+  document.getElementById('faAll').onclick=()=>{
+    show=[true,true,true];document.querySelectorAll('.faforce').forEach(x=>x.classList.add('on'));draw();};
+  function base(){ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);}
+  function draw(){
+    base();
+    if(scene===0)sceneIncline();
+    else if(scene===1)sceneRope();
+    else if(scene===2)sceneStack();
+    else sceneBelt();
+  }
+  function box(x,y,w,h,col,txt){ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(x,y,w,h);ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText(txt,x+w/2,y+h/2+5);ctx.textAlign='left';}
+  function sceneIncline(){
+    // 斜面 30 度
+    const th=30*Math.PI/180;
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.fillStyle='#e8e0cc';
+    ctx.beginPath();ctx.moveTo(80,260);ctx.lineTo(600,260);ctx.lineTo(80,260-520*Math.tan(th));ctx.closePath();ctx.fill();ctx.stroke();
+    // 物块中心在斜面上
+    const bx=330,by=260-(600-330)*Math.tan(th)-24; // 大致贴面
+    const cx=bx,cy=by;
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(-th);
+    box(-26,-22,52,44,RED,'m');ctx.restore();
+    const gx=cx,gy=cy;
+    if(show[0])drawArrow(ctx,gx,gy,gx,gy+95,RED,4,'G=mg');
+    if(show[1]){const nx=Math.sin(th),ny=-Math.cos(th);drawArrow(ctx,gx,gy,gx+nx*80,gy+ny*80,BLUE,4,'N');}
+    if(show[2]){const fx=-Math.cos(th),fy=-Math.sin(th);drawArrow(ctx,gx,gy,gx+fx*70,gy+fy*70,GREEN,4,'f');}
+    note.innerHTML='<b>斜面静止:</b>重力 G 竖直向下;支持力 N 垂直斜面向外;静摩擦 f 沿斜面向上(抵消下滑趋势 Gsinθ)。三力平衡 → N=Gcosθ, f=Gsinθ。';
+    note.style.borderColor=INK;
+  }
+  function sceneRope(){
+    const ax=350,ay=200;
+    // 两根绳到顶
+    ctx.strokeStyle=BROWN;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(200,60);ctx.lineTo(ax,ay);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(500,60);ctx.lineTo(ax,ay);ctx.stroke();
+    ctx.fillStyle=INK;ctx.fillRect(160,54,80,8);ctx.fillRect(460,54,80,8);
+    box(ax-28,ay,56,46,RED,'m');
+    const gx=ax,gy=ay+23;
+    if(show[0])drawArrow(ctx,gx,gy,gx,gy+90,RED,4,'G=mg');
+    if(show[1]){
+      // 张力沿绳,从物体指向绳收缩(向上到吊点)
+      const d1x=200-ax,d1y=60-ay,l1=Math.hypot(d1x,d1y);
+      const d2x=500-ax,d2y=60-ay,l2=Math.hypot(d2x,d2y);
+      drawArrow(ctx,gx,gy-20,gx+d1x/l1*95,gy-20+d1y/l1*95,VIO,4,'T₁');
+      drawArrow(ctx,gx,gy-20,gx+d2x/l2*95,gy-20+d2y/l2*95,VIO,4,'T₂');
+    }
+    note.innerHTML='<b>两绳挂物:</b>重力 G 向下;两绳张力 T₁、T₂ 沿各自绳、指向吊点(绳只能拉不能推)。绳张力这里归在「弹力」一类。三力平衡 → 两张力合力竖直向上等于 G。<b>(此情景无摩擦力)</b>';
+    note.style.borderColor=INK;
+  }
+  function sceneStack(){
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(40,250);ctx.lineTo(660,250);ctx.stroke();
+    box(280,190,140,58,BROWN,'B');
+    box(305,140,90,50,RED,'A');
+    const cx=350,cy=165;
+    if(show[0])drawArrow(ctx,cx,cy,cx,cy+90,RED,4,'G_A');
+    if(show[1])drawArrow(ctx,cx,cy,cx,cy-80,BLUE,4,'N_B→A');
+    if(show[2]){ctx.fillStyle=GREEN;ctx.font='bold 13px sans-serif';ctx.fillText('(接触面光滑或无趋势 → f=0)',430,175);}
+    note.innerHTML='<b>叠放(隔离上块 A):</b>A 受重力 G_A 向下、B 对 A 的支持力 N 向上。二力平衡 → N=m_A g。若无水平力/趋势,A 与 B 间摩擦为 0(不能凭空画)。';
+    note.style.borderColor=INK;
+  }
+  function sceneBelt(){
+    ctx.strokeStyle=INK;ctx.lineWidth=4;
+    // 传送带
+    ctx.beginPath();ctx.arc(140,210,34,0,2*Math.PI);ctx.stroke();
+    ctx.beginPath();ctx.arc(560,210,34,0,2*Math.PI);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(140,176);ctx.lineTo(560,176);ctx.moveTo(140,244);ctx.lineTo(560,244);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('传送带 →(带动物体一起匀速)',210,268);
+    box(310,132,70,44,RED,'m');
+    const cx=345,cy=154;
+    if(show[0])drawArrow(ctx,cx,cy,cx,cy+80,RED,4,'G=mg');
+    if(show[1])drawArrow(ctx,cx,cy,cx,cy-78,BLUE,4,'N');
+    if(show[2]){ctx.fillStyle=GREEN;ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText('匀速 → 无相对趋势 → f=0',cx+140,cy);ctx.textAlign='left';}
+    note.innerHTML='<b>传送带上匀速:</b>与带一起<b>匀速</b>运动 → 无相对滑动、无相对运动趋势 → 静摩擦 f=0。只受重力 G 与支持力 N,二力平衡。<b>(注意:若加速阶段,摩擦力会向前 —— 摩擦不一定与运动反向!)</b>';
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 互动2:摩擦力方向判断 ===== */
+(function(){
+  const cv=document.getElementById('frCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('frNote');const row=document.getElementById('frRow');
+  let scene=0;let dir=1; // 推力/运动方向:1 右, -1 左
+  document.querySelectorAll('.frscene').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.frscene').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    scene=+b.dataset.s;buildRow();draw();});
+  function buildRow(){
+    row.innerHTML='';
+    if(scene<2){
+      const b1=mk(scene===0?'趋势/运动向右':'运动向右',1);
+      const b2=mk(scene===0?'趋势/运动向左':'运动向左',-1);
+      row.appendChild(b1);row.appendChild(b2);
+    }
+  }
+  function mk(txt,d){const b=document.createElement('button');b.textContent=txt;b.onclick=()=>{dir=d;draw();
+    [...row.children].forEach(x=>x.style.background=INK);b.style.background=BLUE;};return b;}
+  function base(){ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);}
+  function draw(){
+    base();
+    if(scene===2)sceneIncline();else sceneFlat();
+  }
+  function sceneFlat(){
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(30,170);ctx.lineTo(670,170);ctx.stroke();
+    // 粗糙地面纹
+    ctx.lineWidth=2;for(let x=40;x<670;x+=20){ctx.beginPath();ctx.moveTo(x,170);ctx.lineTo(x-8,182);ctx.stroke();}
+    const cx=350,cy=140;
+    ctx.fillStyle=RED;ctx.fillRect(cx-45,cy-30,90,60);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(cx-45,cy-30,90,60);
+    ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.fillText('m',cx,cy+5);ctx.textAlign='left';
+    if(scene===0){
+      // 推力(未动),摩擦静止反向
+      drawArrow(ctx,cx+dir*45,cy,cx+dir*140,cy,ORANGE,4,dir>0?'推力 F →':'← 推力 F');
+      drawArrow(ctx,cx-dir*45,cy+18,cx-dir*130,cy+18,GREEN,4,'f 静');
+      note.innerHTML='<b>静摩擦:</b>推力向'+(dir>0?'右':'左')+',物体有向'+(dir>0?'右':'左')+'的<b>运动趋势</b>,静摩擦沿地面向'+(dir>0?'左':'右')+'(与趋势反向),大小 f=F(由平衡定,<b>不是 μN</b>)。加大 F 到超过 f_max 才滑动。';
+    }else{
+      // 滑动:速度箭头,摩擦反向
+      drawArrow(ctx,cx,cy-45,cx+dir*110,cy-45,BLUE,4,dir>0?'v →':'← v');
+      drawArrow(ctx,cx-dir*45,cy+18,cx-dir*130,cy+18,GREEN,4,'f=μN');
+      note.innerHTML='<b>滑动摩擦:</b>物体已向'+(dir>0?'右':'左')+'运动,滑动摩擦沿地面向'+(dir>0?'左':'右')+'(与相对运动<b>方向</b>反向),大小 f=μN(N 为正压力)。';
+    }
+    note.style.borderColor=INK;
+  }
+  function sceneIncline(){
+    const th=32*Math.PI/180;
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.fillStyle='#e8e0cc';
+    ctx.beginPath();ctx.moveTo(90,200);ctx.lineTo(620,200);ctx.lineTo(90,200-530*Math.tan(th));ctx.closePath();ctx.fill();ctx.stroke();
+    const cx=360,cy=200-(620-360)*Math.tan(th)-22;
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(-th);
+    ctx.fillStyle=RED;ctx.fillRect(-26,-20,52,40);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(-26,-20,52,40);
+    ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('m',0,5);ctx.textAlign='left';ctx.restore();
+    drawArrow(ctx,cx,cy,cx,cy+80,RED,4,'G');
+    // 下滑趋势 → 摩擦沿面向上
+    const fx=-Math.cos(th),fy=-Math.sin(th);
+    drawArrow(ctx,cx,cy,cx+fx*80,cy+fy*80,GREEN,4,'f 静');
+    const nx=Math.sin(th),ny=-Math.cos(th);
+    drawArrow(ctx,cx,cy,cx+nx*70,cy+ny*70,BLUE,3.5,'N');
+    note.innerHTML='<b>斜面静止:</b>无外力时,重力沿面分量 Gsinθ 使物体有<b>下滑趋势</b> → 静摩擦沿斜面<b>向上</b>,f=Gsinθ(由平衡定)。此时验证是否 Gsinθ≤μGcosθ 即 tanθ≤μ,才能保持静止。';
+    note.style.borderColor=INK;
+  }
+  buildRow();
+  if(row.firstChild)row.firstChild.style.background=BLUE;
+  draw();
+})();
+
+/* ===== 互动3:正交分解 ===== */
+(function(){
+  const cv=document.getElementById('decCv');const ctx=cv.getContext('2d');
+  const T=document.getElementById('decTheta'),M=document.getElementById('decM');
+  const oG=document.getElementById('decG'),oGx=document.getElementById('decGx'),oGy=document.getElementById('decGy'),oN=document.getElementById('decN');
+  T.oninput=M.oninput=draw;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+    const deg=+T.value,th=deg*Math.PI/180,m=+M.value,g=10;
+    const G=m*g,Gx=G*Math.sin(th),Gy=G*Math.cos(th);
+    // 斜面
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.fillStyle='#e8e0cc';
+    const bx=100,by=270,run=460,rise=run*Math.tan(th);
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx+run,by);ctx.lineTo(bx,by-rise);ctx.closePath();ctx.fill();ctx.stroke();
+    // 角标
+    ctx.fillStyle=INK;ctx.font='bold 15px sans-serif';ctx.fillText('θ='+deg+'°',bx+34,by-8);
+    // 物块位置
+    const t=0.5;const px=bx+run*t, py=by-rise*t;
+    const cx=px+Math.sin(th)*26, cy=py-Math.cos(th)*26; // 略移出面外做重心
+    ctx.save();ctx.translate(px+Math.sin(th)*22,py-Math.cos(th)*22);ctx.rotate(-th);
+    ctx.fillStyle=RED;ctx.fillRect(-24,-20,48,40);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(-24,-20,48,40);ctx.restore();
+    const ox=px+Math.sin(th)*22, oy=py-Math.cos(th)*22;
+    const sc=4.2; // px per N
+    // 重力(竖直)
+    drawArrow(ctx,ox,oy,ox,oy+G*sc,RED,4,'G=mg');
+    // 分量:沿面 (down-slope) 橙
+    const dsx=Math.cos(th),dsy=Math.sin(th); // 指向斜面下方
+    drawArrow(ctx,ox,oy,ox+dsx*Gx*sc,oy+dsy*Gx*sc,ORANGE,3.5,'Gsinθ');
+    // 垂直面(压向面) 蓝
+    const pnx=-Math.sin(th),pny=Math.cos(th);
+    drawArrow(ctx,ox,oy,ox+pnx*Gy*sc,oy+pny*Gy*sc,BLUE,3.5,'Gcosθ');
+    // 虚线补成矩形
+    ctx.save();ctx.strokeStyle='#9a8f70';ctx.setLineDash([5,4]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(ox+dsx*Gx*sc,oy+dsy*Gx*sc);ctx.lineTo(ox,oy+G*sc);ctx.moveTo(ox+pnx*Gy*sc,oy+pny*Gy*sc);ctx.lineTo(ox,oy+G*sc);ctx.stroke();ctx.restore();
+    // 支持力 N(垂直面外)= Gcosθ
+    const nnx=Math.sin(th),nny=-Math.cos(th);
+    drawArrow(ctx,ox,oy,ox+nnx*Gy*sc,oy+nny*Gy*sc,GREEN,3.5,'N');
+    oG.textContent=G.toFixed(0)+' N';oGx.textContent=Gx.toFixed(1)+' N';oGy.textContent=Gy.toFixed(1)+' N';oN.textContent=Gy.toFixed(1)+' N';
+  }
+  draw();
+})();
+
+/* ===== 互动4:三力平衡矢量三角形 ===== */
+(function(){
+  const cv=document.getElementById('triCv');const ctx=cv.getContext('2d');
+  const A=document.getElementById('triA');
+  const oT=document.getElementById('triT'),oN=document.getElementById('triN'),oAv=document.getElementById('triAv');
+  A.oninput=draw;
+  const G=100;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+    const a=(+A.value)*Math.PI/180; // 绳与墙(竖直)夹角
+    const T=G/Math.cos(a), N=G*Math.tan(a);
+    // 左:物理情景 —— 墙在左,球靠墙,绳斜向上到墙上某点
+    ctx.strokeStyle=INK;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(110,40);ctx.lineTo(110,290);ctx.stroke();
+    for(let y=48;y<285;y+=16){ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(110,y);ctx.lineTo(96,y+12);ctx.stroke();}
+    const ballx=150,bally=210,rB=26;
+    // 绳:从球到墙上吊点,绳与墙夹角 a
+    const ax=110, ay=bally-(ballx-110)/Math.tan(a);
+    ctx.strokeStyle=BROWN;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(ballx,bally);ctx.lineTo(ax,ay);ctx.stroke();
+    ctx.fillStyle=YEL;ctx.beginPath();ctx.arc(ballx,bally,rB,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('球 G',ballx-16,bally+5);
+    // 三力小箭头
+    drawArrow(ctx,ballx,bally,ballx,bally+58,RED,3,'G');
+    drawArrow(ctx,ballx,bally,ballx+52,bally,BLUE,3,'N');
+    const tdx=ax-ballx,tdy=ay-bally,tl=Math.hypot(tdx,tdy);
+    drawArrow(ctx,ballx,bally,ballx+tdx/tl*70,bally+tdy/tl*70,VIO,3,'T');
+    // 右:矢量三角形(闭合)。G 竖直下,N 水平,T 收尾
+    const bx=460,by=90,sc=1.05;
+    // 从 (bx,by): G 向下
+    const g2=[bx,by+G*sc];
+    drawArrow(ctx,bx,by,g2[0],g2[1],RED,4,'G');
+    // 从 G 末端: N 水平(向右)
+    const n2=[g2[0]+N*sc,g2[1]];
+    drawArrow(ctx,g2[0],g2[1],n2[0],n2[1],BLUE,4,'N');
+    // 从 N 末端回到起点: T(闭合)
+    drawArrow(ctx,n2[0],n2[1],bx,by,VIO,4,'T');
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('闭合三角形:G+N+T=0',bx-20,by-14);
+    oT.textContent=T.toFixed(1)+' N';oN.textContent=N.toFixed(1)+' N';oAv.textContent=(+A.value)+'°';
+  }
+  draw();
+})();
+
+/* ===== 互动5:动态平衡图解法 ===== */
+(function(){
+  const cv=document.getElementById('dynCv');const ctx=cv.getContext('2d');
+  const B=document.getElementById('dynB');
+  const oN=document.getElementById('dynN'),oF=document.getElementById('dynF'),oFmin=document.getElementById('dynFmin');
+  let playing=false;let dir=1;
+  const G=100; // 重力向下
+  B.oninput=()=>{draw();};
+  // 物体在水平面:三力平衡 G(下), N(上,竖直), F(方向 β 相对水平)
+  // 竖直:N + F sinβ = G  → N = G - F sinβ
+  // 水平:F cosβ = 0 ? 需要另一个水平力才能平衡...
+  // 采用经典模型:物体受重力G↓、地面支持力N↑、拉力F(与水平成β,斜向上)、以及水平方向由静摩擦平衡。
+  // 为纯三力闭合演示,改为:重力G↓、支持力N(沿固定方向↑)、拉力F(方向β可变),三力平衡。
+  // 三力平衡要求它们能闭合:G固定↓,N固定方向↑但大小可变? 那与G共线无法与F闭合。
+  // 正确经典三力动态模型:重物用两绳,一绳方向变。这里用:G(定)、绳OA张力F1沿固定方向、绳OB张力F2方向变。
+  // 简化为标准题:G不变(竖直下),F_A 方向不变(沿某固定斜线),F_B 方向变。求F_B最小。
+  // 我们让:G↓固定;支持面N沿固定方向(设与竖直成γ0的固定斜向,代表方向不变的力);F方向β变。
+  // 为清晰,采用最经典:G竖直向下;N始终沿竖直向上(方向不变、大小可变);F与水平成β(方向变、大小可变);
+  // 平衡: 水平 F cosβ 必须=0 → 不成立。所以必须三力不共线两固定。
+  // 采用:G(↓ 定)、N(方向固定:沿"斜面法线",设固定角=90°即水平,大小变)、F(方向β变)。
+  // 即 N 水平(方向不变),F 方向变,G 竖直。 水平: N + Fcosβ' ... 让我们用矢量闭合直接算。
+  // 闭合三角形:G 竖直向下(固定长度L_G)。N 沿水平方向(固定方向,可正可负长度)。F 补齐闭合。
+  // 起点P, G: P->P+(0,G). 然后 N 水平: 到 (nx, P.y+G). 再 F 回到 P.
+  // F 向量 = P - (nx, P.y+G) = (-(nx-Px), -G). F方向由nx定 => 等价一个自由参数。
+  // 令 N 的水平坐标偏移 = d (可正). 则 F=(-d,-G)平移, |F|=sqrt(d^2+G^2), 与竖直夹角 β 满足 tanβ=d/G.
+  // F 最小当 d=0 => F=G (竖直), 但那时 N=0. 这不体现"方向不变力"约束的最小值几何。
+  // 采用真正经典"F最小"模型: 物体在粗糙水平面被拉力F(与水平β)匀速: 竖直 N=G-Fsinβ, 水平 F cosβ = μN = μ(G-Fsinβ)
+  //  => F = μG/(cosβ+μsinβ), F最小当 tanβ=μ, Fmin=μG/√(1+μ²). 这就是标准动态最小拉力题!
+  const mu=0.5;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+    let beta=(+B.value)*Math.PI/180; if(beta>Math.PI/2-0.02)beta=Math.PI/2-0.02;
+    const F=mu*G/(Math.cos(beta)+mu*Math.sin(beta));
+    const N=G-F*Math.sin(beta);
+    const f=F*Math.cos(beta); // = μN
+    const betaMin=Math.atan(mu), Fmin=mu*G/Math.sqrt(1+mu*mu);
+    // 左:物理情景
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(30,220);ctx.lineTo(340,220);ctx.stroke();
+    for(let x=40;x<340;x+=18){ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,220);ctx.lineTo(x-8,232);ctx.stroke();}
+    const cx=170,cy=190;
+    ctx.fillStyle=RED;ctx.fillRect(cx-42,cy-28,84,56);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(cx-42,cy-28,84,56);
+    ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('m',cx,cy+5);ctx.textAlign='left';
+    // G
+    drawArrow(ctx,cx,cy,cx,cy+70,RED,4,'G');
+    // N up
+    drawArrow(ctx,cx,cy-28,cx,cy-28-N*0.7,BLUE,4,'N');
+    // f friction (points left, opposing motion tendency to right)
+    drawArrow(ctx,cx-42,cy+14,cx-42-f*0.8,cy+14,GREEN,3.5,'f');
+    // F at angle beta up-right
+    const FL=F*0.9+40;
+    drawArrow(ctx,cx+30,cy-10,cx+30+Math.cos(beta)*FL,cy-10-Math.sin(beta)*FL,VIO,4,'F');
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('β='+(+B.value)+'°',cx+70,cy-6);
+    // 右:矢量三角形随β转动 (G固定竖直, N方向固定竖直, F+f 组合) —— 展示F的变化
+    // 画一个"力封闭多边形": G↓, N↑(部分抵消), 剩下水平f 与 F 斜。 用直角三角形展示 F 的合成 = (f 水平, Fsinβ 竖直)
+    const ox=470,oy=110,S=1.1;
+    // 画坐标
+    ctx.strokeStyle='#c9bfa0';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(ox,oy-10);ctx.lineTo(ox,oy+160);ctx.moveTo(ox-10,oy+160);ctx.lineTo(ox+180,oy+160);ctx.stroke();ctx.setLineDash([]);
+    // F 向量从原点(ox,oy+160)按 β 画
+    const fx2=ox+Math.cos(beta)*F*S, fy2=oy+160-Math.sin(beta)*F*S;
+    drawArrow(ctx,ox,oy+160,fx2,fy2,VIO,4,'F');
+    // 水平分量 f=Fcosβ
+    drawArrow(ctx,ox,oy+160,ox+Math.cos(beta)*F*S,oy+160,GREEN,3,'Fcosβ=f');
+    // 竖直分量 Fsinβ
+    ctx.strokeStyle='#9a8f70';ctx.setLineDash([5,4]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(fx2,fy2);ctx.lineTo(fx2,oy+160);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=VIO;ctx.font='bold 12px sans-serif';ctx.fillText('Fsinβ(减小N)',fx2+4,(fy2+oy+160)/2);
+    // 最小值标注
+    ctx.fillStyle=INK;ctx.font='bold 12.5px sans-serif';
+    ctx.fillText('拉力 F(β)=μG/(cosβ+μsinβ)',ox-4,oy-16);
+    ctx.fillText('当 tanβ=μ 时 F 最小',ox-4,oy+186);
+    // highlight if near min
+    if(Math.abs(beta-betaMin)<0.05){ctx.fillStyle=RED;ctx.fillText('★ 当前≈最小拉力!',ox-4,oy+204);}
+    oN.textContent=N.toFixed(1)+' N';oF.textContent=F.toFixed(1)+' N';oFmin.textContent=Fmin.toFixed(1)+' N (β='+(betaMin*180/Math.PI).toFixed(0)+'°)';
+  }
+  function loop(){
+    if(!playing)return;
+    let v=+B.value+dir*0.7;
+    if(v>=155){v=155;dir=-1;}if(v<=8){v=8;dir=1;}
+    B.value=v;draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('dynPlay').onclick=()=>{if(!playing){playing=true;requestAnimationFrame(loop);}};
+  document.getElementById('dynStop').onclick=()=>{playing=false;};
+  draw();
+})();
+
+/* ===== 互动6:整体 vs 隔离法 ===== */
+(function(){
+  const cv=document.getElementById('wiCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('wiNote');
+  const MA=document.getElementById('wiMA'),MB=document.getElementById('wiMB');
+  let mode=0;
+  document.querySelectorAll('.wimode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.wimode').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    mode=+b.dataset.m;draw();});
+  MA.oninput=MB.oninput=draw;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+    const mA=+MA.value,mB=+MB.value,g=10;
+    // 地面
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(40,250);ctx.lineTo(660,250);ctx.stroke();
+    for(let x=50;x<660;x+=20){ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,250);ctx.lineTo(x-8,262);ctx.stroke();}
+    const bx=300;
+    // B block
+    const dimB=(mode===2)?1:0.55;
+    ctx.globalAlpha=(mode===1)?0.3:1;
+    ctx.fillStyle=BROWN;ctx.fillRect(bx-10,190,150,60);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(bx-10,190,150,60);
+    ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.fillText('B (m='+mB+')',bx+65,225);
+    ctx.globalAlpha=1;
+    // A block
+    ctx.globalAlpha=(mode===2)?0.3:1;
+    ctx.fillStyle=RED;ctx.fillRect(bx+15,140,100,50);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(bx+15,140,100,50);
+    ctx.fillStyle='#fff';ctx.fillText('A (m='+mA+')',bx+65,170);
+    ctx.globalAlpha=1;ctx.textAlign='left';
+    const cxA=bx+65, cyA=165, cxB=bx+65, cyB=220;
+    if(mode===0){
+      // 整体:视作一个大物体,重力(mA+mB)g 与 地面支持力
+      const Nfloor=(mA+mB)*g;
+      // 画整体虚线框
+      ctx.save();ctx.strokeStyle=BLUE;ctx.setLineDash([7,5]);ctx.lineWidth=3;
+      ctx.strokeRect(bx-16,134,162,122);ctx.restore();
+      drawArrow(ctx,cxA+40,197,cxA+40,197+90,RED,4,'(mA+mB)g');
+      drawArrow(ctx,bx-40,250,bx-40,250-Nfloor*3.2,BLUE,4,'N地');
+      note.innerHTML='<b>整体法:</b>A、B 当一个整体,只看外力:总重力 (m_A+m_B)g 向下,地面支持力 N_地 向上。平衡 → <b>N_地=(m_A+m_B)g='+Nfloor+' N</b>。A、B 间的力是内力,整体法里自动抵消、看不到。';
+    }else if(mode===1){
+      // 隔离A:重力mAg + B对A支持力
+      const Nab=mA*g;
+      ctx.save();ctx.strokeStyle=RED;ctx.setLineDash([7,5]);ctx.lineWidth=3;ctx.strokeRect(bx+11,136,108,58);ctx.restore();
+      drawArrow(ctx,cxA,165,cxA,165+70,RED,4,'m_A g');
+      drawArrow(ctx,cxA,190,cxA,190-Nab*4,BLUE,4,'N_B→A');
+      note.innerHTML='<b>隔离 A:</b>只画 A 受的力——重力 m_A g 向下、B 对 A 的支持力 N 向上。二力平衡 → <b>N_B→A=m_A g='+Nab+' N</b>。这就是 A、B 间的挤压力(内力),必须隔离才求得出。';
+    }else{
+      // 隔离B:重力mBg + 地面支持力 + A对B的压力(=mAg,反作用)
+      const Nfloor=(mA+mB)*g, Nab=mA*g;
+      ctx.save();ctx.strokeStyle=BROWN;ctx.setLineDash([7,5]);ctx.lineWidth=3;ctx.strokeRect(bx-14,186,158,68);ctx.restore();
+      drawArrow(ctx,cxB-30,220,cxB-30,220+70,RED,4,'m_B g');
+      drawArrow(ctx,cxB+30,190,cxB+30,190-Nab*4,ORANGE,4,'N_A→B');
+      drawArrow(ctx,bx-40,250,bx-40,250-Nfloor*3.2,BLUE,4,'N地');
+      note.innerHTML='<b>隔离 B(验证):</b>B 受重力 m_B g、A 压 B 的力 N_A→B=m_A g(牛顿第三定律)、地面支持力 N_地。平衡 → N_地=m_B g+m_A g=<b>'+Nfloor+' N</b>,与整体法一致。✓';
+    }
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 受力分析的规范步骤是什么?",a:"① 选研究对象(整体/隔离);② 按顺序找力:先重力,再接触力(弹力→摩擦力),再其他力;③ 只画受力不画施力;④ 防漏防多,拿不准的弹力/摩擦力用假设法验证。"},
+ {q:"2. 重力的方向是什么?斜面题里常见的错误是什么?",a:"重力方向永远竖直向下,大小 G=mg。常见错误是把重力当作垂直斜面,或把 mgcosθ(垂直斜面分量)当成整个重力。"},
+ {q:"3. 绳的弹力和支持面的弹力方向有何不同?",a:"绳只能拉不能推,张力沿绳、指向绳收缩方向;支持面只能推不能拉,弹力垂直接触面、指向被支持的物体。"},
+ {q:"4. 怎样用假设法判断某处有没有弹力?",a:"假设该处有弹力,再想象撤掉它:若物体会嵌入/穿过接触面,说明确实有弹力;若撤掉后物体状态不变,则该处无弹力。"},
+ {q:"5. 静摩擦力的大小和方向由什么决定?能直接写成 μN 吗?",a:"方向与相对运动趋势相反;大小由平衡条件(或牛顿定律)决定,范围 0≤f≤f_max。不能直接写 μN——μN 只是最大静摩擦的近似上限,只有已经滑动才用 f=μN。"},
+ {q:"6. 质量 m 物块静止在倾角 θ 的粗糙斜面上,求 N 和 f。",a:"垂直斜面:N=mgcosθ;沿斜面:静摩擦 f=mgsinθ,方向沿面向上。保持静止的条件是 tanθ≤μ。"},
+ {q:"7. 三力平衡的几何特征是什么?",a:"三个力首尾相接能拼成一个闭合三角形(力的三角形);等价地,任意两个力的合力与第三个力等大反向。"},
+ {q:"8. 重 G 的球用绳挂着靠光滑竖直墙,绳与墙夹角 α,求绳张力 T 和墙弹力 N。",a:"三力闭合三角形:T=G/cosα,N=Gtanα。α 越大,T、N 都越大。"},
+ {q:"9. 动态平衡的图解法适用于什么情形?怎么用?",a:"适用于一个力大小方向都不变(常是重力)、一个力方向不变、第三个力大小方向都变的情形。画闭合三角形,让方向变的边转动,直接读各力增减和最小值(垂线段最短)。"},
+ {q:"10. 摩擦力一定与物体的运动方向相反吗?举个反例。",a:"不一定!静摩擦与相对运动趋势反向,可能与运动方向相同。如传送带加速带动物体前进时,摩擦力方向向前,与运动方向相同。"},
+ {q:"11. 求连接体的内力和外力,分别用整体法还是隔离法?",a:"求系统与外界之间的外力(如地面支持力)用整体法,内力自动抵消;求系统内部两物体间的力(内力)用隔离法,把该物体单独拎出分析。常先整体求加速度,再隔离求内力。"},
+ {q:"12. A(m₁)叠在 B(m₂)上静止于地面。求地面对 B 的支持力,以及 A、B 间的挤压力。",a:"地面支持力用整体法:N_地=(m₁+m₂)g;A、B 间挤压力用隔离 A:N=m₁g。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

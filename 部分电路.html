@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>部分电路(欧姆定律·串并联·电功率) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>部分电路(欧姆定律·串并联·电功率)</h1>
+    <p class="lead">这是整个电学的地基:一段导体两端加电压,里面就有电流。串联怎么分压、并联怎么分流、电功率三个公式什么时候能用——地基牢了,后面的闭合电路、电磁感应才不塌。这页把每条规律都拨给你,再用可调的电路动画让你亲手验证。</p>
+
+    <div class="say">🗣️ <b>部分电路(人话版):</b> 「部分电路」就是<b>不含电源那一段</b>的电路。核心一句话:电压 U 是「推力」,电阻 R 是「阻力」,电流 I 是被推出来的「水流」,三者的关系就是 <b>I = U / R</b>。串联像一条独木桥,电流没得选、处处一样,电压按电阻大小分;并联像多条并排的车道,电压一样、电流按电阻反比分。功率就是「单位时间干了多少活」,纯电阻用 P=UI=I²R=U²/R 三个都行,电动机这种非纯电阻只能用 P=UI。</div>
+
+    <div class="keybox"><b>三条命根子公式:</b> ① <b>欧姆定律</b> I=U/R(只对金属、电解液这类线性元件;气体、二极管不适用)；② <b>串联分压</b> U₁:U₂=R₁:R₂,<b>并联分流</b> I₁:I₂=R₂:R₁(记住:分压跟电阻,分流反电阻)；③ <b>电功率</b> P=UI;纯电阻再加 P=I²R=U²/R。焦耳定律 Q=I²Rt 永远成立(任何电路的发热)。</div>
+
+    <h2>① 部分电路欧姆定律:I = U / R</h2>
+    <p class="lead">一段导体两端电压 U 越大、电阻 R 越小,通过的电流 I 就越大。这是实验规律,不是所有元件都遵守。</p>
+    <div class="card">
+      <div class="eq">I = U / R　⇔　U = I·R　⇔　R = U / I</div>
+      <p style="margin:8px 0"><b>适用范围:</b> ✔ 金属导体、电解液(离子导电)这类<b>线性元件</b>——电阻 R 是常数,I 与 U 成正比,伏安曲线是<b>过原点的直线</b>。</p>
+      <p style="margin:8px 0"><b>不适用:</b> ✘ 气体导电、二极管、气体放电管等<b>非线性元件</b>——R 随电压/电流变化,I 与 U 不成正比,不能直接套 I=U/R 当常量算。灯泡钨丝虽是金属,但温度升高电阻增大,伏安曲线弯曲,严格说也是非线性。</p>
+      <p class="trap">⚠ R=U/I 只是电阻的「定义式/测量式」,并不表示 R 由 U、I 决定!导体的电阻由材料、长度、横截面积、温度决定(见电阻定律),与是否通电、加多大电压无关。别说「电压大所以电阻大」。</p>
+    </div>
+
+    <h2 class="b">② 电阻定律:R = ρL / S</h2>
+    <div class="card">
+      <div class="eq">R = ρ · L / S</div>
+      <p style="margin:8px 0">导体电阻由三个几何/材料量决定:<b>ρ 电阻率</b>(材料属性,金属小、绝缘体大),<b>L 长度</b>(越长阻越大),<b>S 横截面积</b>(越粗阻越小)。</p>
+      <table>
+        <tr><th>量</th><th>含义</th><th>对 R 的影响</th></tr>
+        <tr><td>ρ 电阻率</td><td>材料本身的属性(Ω·m)</td><td>ρ 越大 R 越大;随温度变化</td></tr>
+        <tr><td>L 长度</td><td>电流通过的路程</td><td>L 加倍,R 加倍(正比)</td></tr>
+        <tr><td>S 面积</td><td>横截面积</td><td>S 加倍,R 减半(反比)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>ρ 与温度:</b> 金属温度升高,ρ 增大(电阻变大);半导体、电解液反而随温度升高 ρ 减小。所以灯泡越亮(越热)电阻越大。</p>
+      <p class="trap">⚠ 把一根导线<b>对折</b>或<b>拉长</b>要小心:拉长时长度变但体积不变(S 随之变小),R 会按 L² 变化;对折时 L 减半、S 加倍,R 变成原来的 1/4。别只改一个量。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 电阻定律 R=ρL/S:调材料 / 长度 / 面积看 R 怎么变</div>
+      <svg id="rhoSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rmat on" data-r="1.7">铜 ρ小</button>
+        <button class="rmat" data-r="2.8">铝 ρ中</button>
+        <button class="rmat" data-r="49">镍铬 ρ大</button>
+      </div>
+      <div class="ctrl">
+        <label>长度 L <input id="rhoL" type="range" min="1" max="5" value="2" step="0.5"></label>
+        <label>面积 S <input id="rhoS" type="range" min="1" max="5" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>ρ (×10⁻⁸ Ω·m)</b><span id="rhoRho">1.7</span></div>
+        <div><b>L (相对)</b><span id="rhoLv">2</span></div>
+        <div><b>S (相对)</b><span id="rhoSv">2</span></div>
+        <div><b>R (相对)</b><span id="rhoR">0</span></div>
+      </div>
+      <p class="small">导体画得越长/越细,电阻越大。R 与 L 成正比、与 S 成反比、与材料 ρ 成正比。</p>
+    </div>
+
+    <h2 class="o">③ 串联电路:一条路,电流处处相等</h2>
+    <div class="card">
+      <h3>串联四条规律</h3>
+      <div class="mono">电流:I = I₁ = I₂ = …　(处处相等,独木桥没岔路)</div>
+      <div class="mono">电压:U = U₁ + U₂ + …　(总电压 = 各分压之和)</div>
+      <div class="mono">电阻:R = R₁ + R₂ + …　(总阻 = 各电阻相加,越串越大)</div>
+      <div class="mono">分压:U₁ : U₂ = R₁ : R₂　(电阻大的分到的电压大)</div>
+      <p style="margin:8px 0"><b>记忆:</b> 串联是「分压」电路。因为电流一样,U=IR,所以谁电阻大谁分到的电压大——<b>分压跟着电阻走</b>。</p>
+      <p class="trap">⚠ 串联总电阻一定<b>大于</b>其中任何一个电阻。若一处断路(某电阻断开),整条电路电流为零,其余用电器都不工作。</p>
+    </div>
+
+    <h2 class="g">④ 并联电路:多条路,电压处处相等</h2>
+    <div class="card">
+      <h3>并联四条规律</h3>
+      <div class="mono">电压:U = U₁ = U₂ = …　(各支路两端电压相同)</div>
+      <div class="mono">电流:I = I₁ + I₂ + …　(干路电流 = 各支路电流之和)</div>
+      <div class="mono">电阻:1/R = 1/R₁ + 1/R₂ + …　(倒数相加;两个时 R=R₁R₂/(R₁+R₂))</div>
+      <div class="mono">分流:I₁ : I₂ = R₂ : R₁　(电阻小的支路分到的电流大)</div>
+      <p style="margin:8px 0"><b>记忆:</b> 并联是「分流」电路。因为电压一样,I=U/R,所以谁电阻小谁分到的电流大——<b>分流跟电阻成反比</b>。</p>
+      <p class="trap">⚠ 并联总电阻一定<b>小于</b>其中任何一个支路电阻(多开一条路,总阻更小)。若某支路断路,其余支路照常工作,只是干路电流减小。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 1 — 串 / 并联电路:切换连接,调 R₁ R₂,看 I / U 分配与总阻</div>
+      <svg id="circSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cSer" class="cmode on">串联</button>
+        <button id="cPar" class="cmode">并联</button>
+      </div>
+      <div class="ctrl">
+        <label>电源U (V) <input id="cU" type="range" min="3" max="12" value="6" step="1"></label>
+        <label>R₁ (Ω) <input id="cR1" type="range" min="1" max="10" value="2" step="1"></label>
+        <label>R₂ (Ω) <input id="cR2" type="range" min="1" max="10" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>总电阻 R (Ω)</b><span id="cRtot">0</span></div>
+        <div><b>干路电流 I (A)</b><span id="cItot">0</span></div>
+        <div><b>R₁ 上 U₁/I₁</b><span id="cB1">0</span></div>
+        <div><b>R₂ 上 U₂/I₂</b><span id="cB2">0</span></div>
+      </div>
+      <p class="small">线条粗细/颜色深浅表示电流大小。串联:电流一条线,电压按 R 分;并联:电压一样,电流按 R 反比分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 2 — 分压 / 分流比例:拖动电阻比,看 U 和 I 怎么分</div>
+      <svg id="ratioSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="rSer" class="rmode on">串联(分压)</button>
+        <button id="rPar" class="rmode">并联(分流)</button>
+      </div>
+      <div class="ctrl">
+        <label>R₁ : R₂ 比 <input id="rRatio" type="range" min="1" max="9" value="3" step="1"></label>
+      </div>
+      <div class="verdict" id="ratioNote"></div>
+      <p class="small">串联:U₁:U₂ = R₁:R₂(跟电阻);并联:I₁:I₂ = R₂:R₁(反电阻)。方块面积即所占比例。</p>
+    </div>
+
+    <h2 class="v">⑤ 电功与电功率、焦耳定律</h2>
+    <div class="card">
+      <h3>基本式(任何电路都成立)</h3>
+      <div class="eq">电功 W = U·I·t　　电功率 P = W/t = U·I</div>
+      <p style="margin:8px 0"><b>物理意义:</b> W 是电流做的功(电能转化成的总量),P 是转化的快慢。单位:W 焦耳(J),P 瓦特(W),1度电=1kW·h=3.6×10⁶ J。</p>
+      <h3>纯电阻电路(电能全变热)</h3>
+      <div class="eq">P = U·I = I²·R = U²/R　(三式等价,可互推)</div>
+      <p style="margin:8px 0">当用电器只是电阻(电阻丝、白炽灯、电炉)时,电能<b>全部</b>变成内能(热),把 U=IR 代入 P=UI 就得到另两式,三个随便用。</p>
+      <h3>非纯电阻电路(有其他能量转化)</h3>
+      <div class="mono">电动机、充电电池:P电=UI(总功率)　>　P热=I²R(发热部分)</div>
+      <p style="margin:8px 0"><b>关键:</b> 电动机把电能变成机械能 + 少量热。此时只能用 <b>P=UI</b> 算总功率、用 <b>I²R</b> 算发热功率,二者<b>不相等</b>,差值 UI−I²R = 输出的机械功率。<b>绝不能</b>用 U²/R 或 I²R 当总功率!</p>
+      <h3>焦耳定律(发热永远成立)</h3>
+      <div class="eq">Q = I²·R·t　(电流通过电阻产生的热,任何电路都对)</div>
+      <p class="trap">⚠ 纯电阻:Q=W=UIt(电能全变热);非纯电阻:Q=I²Rt < W=UIt(还有一部分变成机械能等)。所以焦耳定律用 I²R 最保险,U²/R 只在纯电阻时才等于发热功率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔥 互动 5 — 电功率计算器:P=UI=I²R=U²/R 三式联动(纯电阻)</div>
+      <svg id="powSvg" viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电压 U (V) <input id="powU" type="range" min="1" max="20" value="6" step="1"></label>
+        <label>电阻 R (Ω) <input id="powR" type="range" min="1" max="12" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>电流 I=U/R (A)</b><span id="powI">0</span></div>
+        <div><b>P = U·I</b><span id="powP1">0</span></div>
+        <div><b>P = I²·R</b><span id="powP2">0</span></div>
+        <div><b>P = U²/R</b><span id="powP3">0</span></div>
+      </div>
+      <p class="small">调 U 或 R,三个公式算出的 P <b>始终相等</b>(纯电阻)。这就是三式等价的证据。柱状高度 = 功率大小。</p>
+    </div>
+
+    <h2 class="r">⑥ 伏安特性曲线:线性 vs 灯泡</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>伏安特性曲线</b>是用横轴 U(或 I)、纵轴 I(或 U)画出的元件 I-U 关系图,直接反映元件的导电性质。</p>
+      <table>
+        <tr><th>元件</th><th>I-U 图形状</th><th>说明</th></tr>
+        <tr><td>定值电阻(线性)</td><td>过原点<b>直线</b></td><td>R 恒定,斜率 = 1/R(在 I-U 图上)</td></tr>
+        <tr><td>白炽灯(钨丝)</td><td>向 U 轴弯的<b>曲线</b></td><td>电流大→温度高→R 增大,曲线越来越平</td></tr>
+        <tr><td>二极管</td><td>非线性(单向导通)</td><td>正向导通、反向几乎不通</td></tr>
+      </table>
+      <p class="trap">⚠ <b>斜率是不是电阻的倒数?先看是 I-U 图还是 U-I 图!</b> I-U 图(纵I横U):斜率 = I/U = 1/R,某点电阻 R = U/I = 该点横坐标/纵坐标,<b>不是</b>切线斜率。U-I 图(纵U横I):斜率 = U/I = R。灯泡曲线上不同点的 R 不同,必须用「该点 U 除以该点 I」求,别用切线斜率!</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 伏安特性曲线:线性电阻(直线) vs 灯泡(弯曲),拖电压读电流</div>
+      <svg id="ivSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ivRes" class="ivmode on">定值电阻</button>
+        <button id="ivLamp" class="ivmode">白炽灯</button>
+      </div>
+      <div class="ctrl">
+        <label>电压 U (V) <input id="ivU" type="range" min="0" max="10" value="4" step="0.2"></label>
+      </div>
+      <div class="live">
+        <div><b>U (V)</b><span id="ivUv">0</span></div>
+        <div><b>I (A)</b><span id="ivIv">0</span></div>
+        <div><b>该点电阻 R=U/I</b><span id="ivRv">0</span></div>
+        <div><b>类型</b><span id="ivType">直线</span></div>
+      </div>
+      <p class="small">直线:R 不变(斜率 1/R 恒定)。灯泡:U 越大越弯,R=U/I 越来越大。注意 R 是「该点 U/I」而非切线斜率!</p>
+    </div>
+
+    <h2 class="o">⑦ 电路简化:等电位法 · 去表</h2>
+    <div class="card">
+      <h3>三招把复杂电路变简单</h3>
+      <p style="margin:6px 0"><b>① 去掉理想电表:</b> 理想<b>电流表</b>内阻为 0,相当于<b>一根导线</b>(短路,直接连上);理想<b>电压表</b>内阻无穷大,相当于<b>断路</b>(直接去掉那条支路)。先把电表按这个替换,电路立刻清爽。</p>
+      <p style="margin:6px 0"><b>② 等电位法(缩点):</b> 用理想导线(或电流表)直接相连的两点<b>电位相等</b>,可看作同一点,把它们「捏」到一起;电位相等的两点之间若接电阻,该电阻两端无电压→无电流→可去掉。</p>
+      <p style="margin:6px 0"><b>③ 支路重排:</b> 缩点后重新画图,判断哪些电阻其实是串联、哪些是并联,再逐级合并求总阻。</p>
+      <p class="trap">⚠ 「电流表当导线、电压表当断路」只对<b>理想</b>电表。若题目给电表内阻(非理想),就不能这样简化,要把内阻当电阻算进去。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 6 — 电路简化:等电位法去掉理想电表,看电路如何等效</div>
+      <svg id="simpSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="simpStep" class="cmode">▶ 下一步简化</button>
+        <button id="simpReset" class="cmode">↺ 重置</button>
+      </div>
+      <div class="verdict" id="simpNote"></div>
+      <p class="small">原图含理想电流表A(=导线)、理想电压表V(=断路)。逐步替换、缩点、合并,得到最简等效电阻。</p>
+    </div>
+
+    <h2 class="b">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 串并联综合计算</h3>
+      <p><b class="tag">触发信号:</b>给电源电压和几个电阻的串/并联,求总阻、各处电流电压、总功率。</p>
+      <p><b class="tag">标准动作:</b>先判串还是并 → 求总电阻(串相加/并倒数相加)→ 干路 I=U/R总 → 逐个回代求各 U、I(串联电流相同,并联电压相同)。</p>
+      <p><b class="tag">示例(带解):</b>U=6V,R₁=2Ω 与 R₂=4Ω 串联。R=2+4=6Ω,I=6/6=1A;U₁=IR₁=2V,U₂=IR₂=4V(U₁:U₂=1:2=R₁:R₂)。若改并联:R=2×4/6=4/3Ω,I₁=6/2=3A,I₂=6/4=1.5A,I=4.5A(I₁:I₂=2:1=R₂:R₁)。</p>
+      <p class="trap">陷阱:串联误用「电压相等」、并联误用「电流相等」;混合电路没先分清哪段串哪段并。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 分压 / 分流关系</h3>
+      <p><b class="tag">触发信号:</b>只给比例或某一个量,问另一个,或滑动变阻器分压/限流接法。</p>
+      <p><b class="tag">标准动作:</b>串联用 U₁:U₂=R₁:R₂ 直接分电压;并联用 I₁:I₂=R₂:R₁ 直接分电流。滑动变阻器分压接法:输出电压随滑片位置在 0~U 连续可调。</p>
+      <p><b class="tag">示例(带解):</b>两电阻串联 R₁:R₂=1:3,总电压 8V。U₁=8×1/(1+3)=2V,U₂=6V。并联 R₁:R₂=1:3,干路 I=8A,则 I₁:I₂=3:1,I₁=6A,I₂=2A。</p>
+      <p class="trap">陷阱:把分压比例和分流比例记反;分压是「跟电阻」,分流是「反电阻」。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 电功率计算(含非纯电阻)</h3>
+      <p><b class="tag">触发信号:</b>求功率、发热、判断电动机额定/实际功率,电能转化。</p>
+      <p><b class="tag">标准动作:</b>先判纯电阻还是非纯电阻。纯电阻:P=UI=I²R=U²/R 任选。非纯电阻(电动机):总功率 P=UI,发热 P热=I²R,输出机械功率 = UI−I²R。</p>
+      <p><b class="tag">示例(带解):</b>电动机 U=220V,I=2A,线圈电阻 r=10Ω。总功率 P=UI=440W;发热 P热=I²r=4×10=40W;输出机械功率=440−40=400W;效率=400/440≈91%。</p>
+      <p class="trap">陷阱:对电动机误用 U²/R 或 I²R 当总功率(那是纯电阻公式);发热永远用 I²R。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 电路简化(去表 / 等电位)</h3>
+      <p><b class="tag">触发信号:</b>电路含电流表/电压表,或看起来复杂需要等效,求某支路电流或总阻。</p>
+      <p><b class="tag">标准动作:</b>理想电流表→导线短接;理想电压表→断路去掉;等电位缩点;重画后判串并合并。</p>
+      <p><b class="tag">示例(带解):</b>某电阻两端被理想电流表(导线)短接 → 该电阻两端电压为0、无电流、可去掉,电流全走电流表。含理想电压表的支路无电流,去掉后不影响其余电路。</p>
+      <p class="trap">陷阱:把理想电流表当断路、理想电压表当导线(正好记反);电表非理想时还硬套。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 伏安特性曲线读图</h3>
+      <p><b class="tag">触发信号:</b>给出 I-U 或 U-I 图,求某点电阻、判断元件类型、求功率。</p>
+      <p><b class="tag">标准动作:</b>看清坐标轴(I-U 还是 U-I)。求某点 R = 该点 U ÷ 该点 I(读坐标,不用切线斜率);直线→定值电阻,弯曲→灯泡等非线性;功率 P=UI=该点横×纵。</p>
+      <p><b class="tag">示例(带解):</b>灯泡 I-U 图上某点 U=4V、I=0.5A → R=4/0.5=8Ω,P=UI=4×0.5=2W。另一点 U=2V、I=0.4A → R=5Ω(温度低电阻小),体现灯泡电阻随温度增大。</p>
+      <p class="trap">陷阱:用切线斜率算灯泡电阻(错!);没看清是 I-U 还是 U-I 图导致斜率含义弄反。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 电阻定律(几何变化)</h3>
+      <p><b class="tag">触发信号:</b>导线拉长、对折、换材料/粗细,问电阻怎么变;比较两导体电阻。</p>
+      <p><b class="tag">标准动作:</b>用 R=ρL/S。拉长(体积不变):L×n → S÷n → R×n²。对折:L÷2、S×2 → R÷4。比较用比例:R∝ρL/S。</p>
+      <p><b class="tag">示例(带解):</b>一根电阻 R 的均匀导线拉长为原来 2 倍(体积不变):L→2L,S→S/2,R新=ρ(2L)/(S/2)=4ρL/S=4R。</p>
+      <p class="trap">陷阱:拉长只把 L 加倍忘了 S 变小;对折只考虑长度减半忘了截面加倍。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 欧姆定律 I=U/R 只对<b>线性元件</b>(金属、电解液);气体、二极管、灯泡非线性,不能当常量 R 直接套。</p>
+      <p class="trap">② R=U/I 是定义式,电阻由材料/尺寸/温度决定,<b>不由</b> U、I 决定。别说「电压大电阻大」。</p>
+      <p class="trap">③ 只有<b>纯电阻</b>才能用 P=U²/R 和 P=I²R 算总功率;电动机等非纯电阻只能用 P=UI。</p>
+      <p class="trap">④ 焦耳定律 Q=I²Rt 算<b>发热</b>永远对;但非纯电阻里 Q≠电功 W(W 更大,多的变成机械能)。</p>
+      <p class="trap">⑤ 串联总电阻 <b>大于</b>任一电阻;并联总电阻 <b>小于</b>任一支路电阻。方向别搞反。</p>
+      <p class="trap">⑥ 串联「分压跟电阻」U₁:U₂=R₁:R₂;并联「分流反电阻」I₁:I₂=R₂:R₁。两个比例最易记反。</p>
+      <p class="trap">⑦ 伏安曲线斜率≠电阻倒数的通用规则:要先看 I-U 图还是 U-I 图;灯泡某点电阻用「该点 U/I」,不是切线斜率。</p>
+      <p class="trap">⑧ 电阻定律拉长/对折:长度和横截面积<b>一起</b>变,别只改一个。拉长 2 倍电阻变 4 倍。</p>
+      <p class="trap">⑨ 简化电路:理想电流表=导线(短路),理想电压表=断路;两者极易记反。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 把「哪个量不变」当第一反射:</b> 拿到串并联题,第一件事不是套公式,而是问「电流处处相等(串)还是电压处处相等(并)」。抓住那个不变量,其余全用 I=U/R 顺推。这个习惯让混合电路也不慌——先找出电流一致的段、电压一致的段。</p>
+      <p style="margin:8px 0"><b>② 分压分流的「反直觉」用能量理解:</b> 并联里电阻小的支路电流大、发热 P=I²R 也可能更大,但用 P=U²/R 看更直观(电压相同,R 小则 P 大)。串联里电阻大的分压大,P=I²R 也更大(电流相同,R 大则 P 大)。<b>串联比 I²R、并联比 U²/R</b>,选对公式秒判谁更亮。</p>
+      <p style="margin:8px 0"><b>③ 伏安曲线交点=工作点:</b> 把电源(含内阻)的伏安关系和元件(灯泡)的伏安曲线画在同一张图,<b>交点</b>就是实际工作的 U、I。这是「图解法求非线性元件工作状态」的核心思想,压轴题常考,比联立方程快。</p>
+      <p style="margin:8px 0"><b>④ 电阻定律 + 微元看非均匀导体:</b> 截面变化的导体(如圆台)可切成许多薄片,每片 dR=ρ dL/S(x),串联积分。理解「电阻是可加的微元量」,面对变截面、变电阻率也不怵。</p>
+      <p style="margin:8px 0"><b>⑤ 等电位法的本质是「找零电压支路」:</b> 遇到桥式或对称电路,先找电位相等的两点——它们之间的电阻无电流可去掉(或直接短接),复杂电路瞬间坍缩成简单串并。对称性 + 等电位是简化神器,先看有没有对称轴。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包 · 电磁感应攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:串/并联电路 ===== */
+(function(){
+  const svg=document.getElementById('circSvg');
+  let mode=0; // 0 串, 1 并
+  const U=document.getElementById('cU'),R1=document.getElementById('cR1'),R2=document.getElementById('cR2');
+  const oRt=document.getElementById('cRtot'),oIt=document.getElementById('cItot'),oB1=document.getElementById('cB1'),oB2=document.getElementById('cB2');
+  const bSer=document.getElementById('cSer'),bPar=document.getElementById('cPar');
+  bSer.onclick=()=>{mode=0;bSer.classList.add('on');bPar.classList.remove('on');draw();};
+  bPar.onclick=()=>{mode=1;bPar.classList.add('on');bSer.classList.remove('on');draw();};
+  U.oninput=R1.oninput=R2.oninput=draw;
+  function wireW(I){return Math.max(2,Math.min(12,2+I*1.6));}
+  function battery(x,y){
+    el(svg,'line',{x1:x,y1:y-16,x2:x,y2:y+16,stroke:INK,'stroke-width':4});
+    el(svg,'line',{x1:x+9,y1:y-8,x2:x+9,y2:y+8,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:x-6,y:y-22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='+';
+  }
+  function resistor(x,y,label,col){
+    el(svg,'rect',{x:x-26,y:y-12,width:52,height:24,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x,y:y+5,'font-size':12.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=label;
+  }
+  function draw(){
+    clr(svg);
+    const u=+U.value,r1=+R1.value,r2=+R2.value;
+    let Rt,It,U1,U2,I1,I2;
+    if(mode===0){ // 串联
+      Rt=r1+r2; It=u/Rt; I1=I2=It; U1=It*r1; U2=It*r2;
+    }else{ // 并联
+      Rt=(r1*r2)/(r1+r2); It=u/Rt; U1=U2=u; I1=u/r1; I2=u/r2;
+    }
+    // 电池
+    battery(70,130);
+    if(mode===0){
+      // 串联:一个大回路,两电阻串在上边
+      const wc=wireW(It);
+      el(svg,'line',{x1:70,y1:114,x2:70,y2:50,stroke:INK,'stroke-width':wc});
+      el(svg,'line',{x1:70,y1:50,x2:250,y2:50,stroke:INK,'stroke-width':wc});
+      resistor(300,50,'R₁='+r1+'Ω',ORANGE);
+      el(svg,'line',{x1:250,y1:50,x2:274,y2:50,stroke:INK,'stroke-width':wc});
+      el(svg,'line',{x1:326,y1:50,x2:420,y2:50,stroke:INK,'stroke-width':wc});
+      resistor(470,50,'R₂='+r2+'Ω',GREEN);
+      el(svg,'line',{x1:496,y1:50,x2:620,y2:50,stroke:INK,'stroke-width':wc});
+      el(svg,'line',{x1:620,y1:50,x2:620,y2:210,stroke:INK,'stroke-width':wc});
+      el(svg,'line',{x1:620,y1:210,x2:70,y2:210,stroke:INK,'stroke-width':wc});
+      el(svg,'line',{x1:70,y1:210,x2:70,y2:146,stroke:INK,'stroke-width':wc});
+      // 电流标注
+      el(svg,'text',{x:150,y:42,'font-size':12,'font-weight':900,fill:RED}).textContent='I='+It.toFixed(2)+'A (处处相等)';
+      el(svg,'text',{x:300,y:82,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='U₁='+U1.toFixed(2)+'V';
+      el(svg,'text',{x:470,y:82,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='U₂='+U2.toFixed(2)+'V';
+      oB1.textContent='U₁='+U1.toFixed(2)+'V';oB2.textContent='U₂='+U2.toFixed(2)+'V';
+    }else{
+      // 并联:两支路
+      const wt=wireW(It),w1=wireW(I1),w2=wireW(I2);
+      el(svg,'line',{x1:70,y1:114,x2:70,y2:50,stroke:INK,'stroke-width':wt});
+      el(svg,'line',{x1:70,y1:50,x2:250,y2:50,stroke:INK,'stroke-width':wt});
+      // 上支路 R1
+      el(svg,'line',{x1:250,y1:50,x2:250,y2:80,stroke:INK,'stroke-width':w1});
+      el(svg,'line',{x1:250,y1:80,x2:274,y2:80,stroke:INK,'stroke-width':w1});
+      resistor(300,80,'R₁='+r1+'Ω',ORANGE);
+      el(svg,'line',{x1:326,y1:80,x2:520,y2:80,stroke:INK,'stroke-width':w1});
+      el(svg,'line',{x1:520,y1:80,x2:520,y2:50,stroke:INK,'stroke-width':w1});
+      // 下支路 R2
+      el(svg,'line',{x1:250,y1:50,x2:250,y2:170,stroke:INK,'stroke-width':w2});
+      el(svg,'line',{x1:250,y1:170,x2:274,y2:170,stroke:INK,'stroke-width':w2});
+      resistor(300,170,'R₂='+r2+'Ω',GREEN);
+      el(svg,'line',{x1:326,y1:170,x2:520,y2:170,stroke:INK,'stroke-width':w2});
+      el(svg,'line',{x1:520,y1:170,x2:520,y2:50,stroke:INK,'stroke-width':w2});
+      // 汇合回电池
+      el(svg,'line',{x1:520,y1:50,x2:620,y2:50,stroke:INK,'stroke-width':wt});
+      el(svg,'line',{x1:620,y1:50,x2:620,y2:210,stroke:INK,'stroke-width':wt});
+      el(svg,'line',{x1:620,y1:210,x2:70,y2:210,stroke:INK,'stroke-width':wt});
+      el(svg,'line',{x1:70,y1:210,x2:70,y2:146,stroke:INK,'stroke-width':wt});
+      el(svg,'text',{x:120,y:42,'font-size':12,'font-weight':900,fill:RED}).textContent='I='+It.toFixed(2)+'A';
+      el(svg,'text',{x:300,y:112,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='I₁='+I1.toFixed(2)+'A';
+      el(svg,'text',{x:300,y:202,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='I₂='+I2.toFixed(2)+'A';
+      el(svg,'text',{x:560,y:110,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='U相同';
+      oB1.textContent='I₁='+I1.toFixed(2)+'A';oB2.textContent='I₂='+I2.toFixed(2)+'A';
+    }
+    el(svg,'text',{x:70,y:245,'font-size':12.5,'font-weight':800,fill:INK}).textContent=(mode===0?'串联:分压 U₁:U₂=R₁:R₂':'并联:分流 I₁:I₂=R₂:R₁')+'　U电源='+u+'V';
+    oRt.textContent=Rt.toFixed(2);oIt.textContent=It.toFixed(2);
+  }
+  draw();
+})();
+
+/* ===== 互动2:分压/分流比例 ===== */
+(function(){
+  const svg=document.getElementById('ratioSvg');const note=document.getElementById('ratioNote');
+  let mode=0; //0 串分压,1 并分流
+  const bS=document.getElementById('rSer'),bP=document.getElementById('rPar'),Ra=document.getElementById('rRatio');
+  bS.onclick=()=>{mode=0;bS.classList.add('on');bP.classList.remove('on');draw();};
+  bP.onclick=()=>{mode=1;bP.classList.add('on');bS.classList.remove('on');draw();};
+  Ra.oninput=draw;
+  function draw(){
+    clr(svg);
+    const ratio=+Ra.value; // R1:R2 = ratio:1
+    const r1=ratio,r2=1;
+    const X0=60,W=580,yR=40,yV=130,h=40;
+    // 电阻条(表示 R1:R2)
+    const t=r1+r2;
+    const w1=W*r1/t,w2=W*r2/t;
+    el(svg,'text',{x:X0,y:yR-10,'font-size':13,'font-weight':900,fill:INK}).textContent='电阻比 R₁:R₂ = '+r1+':'+r2;
+    el(svg,'rect',{x:X0,y:yR,width:w1,height:h,fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:X0+w1,y:yR,width:w2,height:h,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+w1/2,y:yR+26,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='R₁';
+    el(svg,'text',{x:X0+w1+w2/2,y:yR+26,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='R₂';
+    // 结果条
+    let a1,a2,lab,c1,c2;
+    if(mode===0){ // 分压:U1:U2 = R1:R2
+      a1=r1;a2=r2;lab='电压分配 U₁:U₂ = R₁:R₂ = '+r1+':'+r2+'(分压跟电阻)';
+    }else{ // 分流:I1:I2 = R2:R1
+      a1=r2;a2=r1;lab='电流分配 I₁:I₂ = R₂:R₁ = '+r2+':'+r1+'(分流反电阻)';
+    }
+    const ts=a1+a2,ww1=W*a1/ts,ww2=W*a2/ts;
+    el(svg,'text',{x:X0,y:yV-10,'font-size':13,'font-weight':900,fill:INK}).textContent=(mode===0?'串联电压 U':'并联电流 I');
+    el(svg,'rect',{x:X0,y:yV,width:ww1,height:h,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:X0+ww1,y:yV,width:ww2,height:h,fill:VIO,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+ww1/2,y:yV+26,'font-size':12.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=mode===0?'U₁':'I₁';
+    el(svg,'text',{x:X0+ww1+ww2/2,y:yV+26,'font-size':12.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=mode===0?'U₂':'I₂';
+    note.textContent=lab;
+    note.style.borderColor=mode===0?ORANGE:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动3:伏安特性曲线 ===== */
+(function(){
+  const svg=document.getElementById('ivSvg');
+  let mode=0; //0 定值电阻, 1 灯泡
+  const bR=document.getElementById('ivRes'),bL=document.getElementById('ivLamp'),Us=document.getElementById('ivU');
+  const oU=document.getElementById('ivUv'),oI=document.getElementById('ivIv'),oR=document.getElementById('ivRv'),oT=document.getElementById('ivType');
+  bR.onclick=()=>{mode=0;bR.classList.add('on');bL.classList.remove('on');draw();};
+  bL.onclick=()=>{mode=1;bL.classList.add('on');bR.classList.remove('on');draw();};
+  Us.oninput=draw;
+  const Umax=10;
+  // 定值电阻 R0=4Ω -> I=U/4 ; 灯泡:I 随 U 增长变缓(R 增大)
+  function Ifun(u){
+    if(mode===0){return u/4;} // 线性
+    // 灯泡:I = k*sqrt(u) 型(温度升高 R 增大,曲线向 U 轴弯);标定使 Imax 合理
+    return 0.9*Math.sqrt(u);
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=220;
+    // 轴
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+10,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='I';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U';
+    el(svg,'text',{x:X0-8,y:Y0+H+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='O';
+    // 求 Imax 用于缩放
+    let Imax=0;for(let k=0;k<=100;k++){const u=k/100*Umax;Imax=Math.max(Imax,Ifun(u));}
+    Imax*=1.08;
+    function px(u){return X0+u/Umax*W;}
+    function py(i){return Y0+H-i/Imax*H;}
+    // 曲线
+    let d='';for(let k=0;k<=120;k++){const u=k/120*Umax;const i=Ifun(u);d+=(k===0?'M':'L')+px(u)+' '+py(i)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:mode===0?BLUE:RED,'stroke-width':4});
+    // 当前点
+    const u=+Us.value,i=Ifun(u);
+    const R = u>0.001? u/i : 0;
+    el(svg,'line',{x1:px(u),y1:Y0+H,x2:px(u),y2:py(i),stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'line',{x1:X0,y1:py(i),x2:px(u),y2:py(i),stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:px(u),cy:py(i),r:7,fill:YEL,stroke:INK,'stroke-width':3});
+    // R=U/I 割线(从原点到该点),说明 R 是该点 U/I
+    if(u>0.001){el(svg,'line',{x1:X0,y1:Y0+H,x2:px(u),y2:py(i),stroke:GREEN,'stroke-width':2,'stroke-dasharray':'2 3'});}
+    el(svg,'text',{x:X0+10,y:Y0+16,'font-size':12,'font-weight':900,fill:mode===0?BLUE:RED}).textContent=mode===0?'定值电阻:过原点直线,斜率=1/R 恒定':'白炽灯:向 U 轴弯,R=U/I 随温度增大';
+    el(svg,'text',{x:px(u)+8,y:py(i)-8,'font-size':11.5,'font-weight':900,fill:GREEN}).textContent='R=U/I(绿虚线斜率倒数)';
+    oU.textContent=u.toFixed(1);oI.textContent=i.toFixed(2);oR.textContent=u>0.001?R.toFixed(2)+'Ω':'—';oT.textContent=mode===0?'直线(线性)':'曲线(非线性)';
+  }
+  draw();
+})();
+
+/* ===== 互动4:电阻定律 R=ρL/S ===== */
+(function(){
+  const svg=document.getElementById('rhoSvg');
+  let rho=1.7;
+  const Ls=document.getElementById('rhoL'),Ss=document.getElementById('rhoS');
+  const oRho=document.getElementById('rhoRho'),oL=document.getElementById('rhoLv'),oS=document.getElementById('rhoSv'),oR=document.getElementById('rhoR');
+  document.querySelectorAll('.rmat').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.rmat').forEach(x=>x.classList.remove('on'));b.classList.add('on');rho=+b.dataset.r;draw();
+  });
+  Ls.oninput=Ss.oninput=draw;
+  function draw(){
+    clr(svg);
+    const L=+Ls.value,S=+Ss.value;
+    const R=rho*L/S; // 相对值
+    // 画导体:长度 ~ L, 粗细 ~ S
+    const cx=350,cy=120;
+    const len=60+L*90;      // 像素长度
+    const thick=14+S*22;    // 像素粗细
+    const x0=cx-len/2;
+    // 材料颜色
+    const matCol = rho<2?'#c87b3a':(rho<5?'#b8b0a0':'#5a5040');
+    el(svg,'rect',{x:x0,y:cy-thick/2,width:len,height:thick,fill:matCol,stroke:INK,'stroke-width':3,rx:4});
+    // 端子导线
+    el(svg,'line',{x1:x0-60,y1:cy,x2:x0,y2:cy,stroke:INK,'stroke-width':4});
+    el(svg,'line',{x1:x0+len,y1:cy,x2:x0+len+60,y2:cy,stroke:INK,'stroke-width':4});
+    // 标注长度
+    el(svg,'line',{x1:x0,y1:cy+thick/2+18,x2:x0+len,y2:cy+thick/2+18,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:x0,y1:cy+thick/2+12,x2:x0,y2:cy+thick/2+24,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:x0+len,y1:cy+thick/2+12,x2:x0+len,y2:cy+thick/2+24,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx,y:cy+thick/2+38,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='长度 L='+L;
+    // 标注面积(粗细)
+    el(svg,'text',{x:x0-14,y:cy+4,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='S='+S;
+    // 顶部公式
+    el(svg,'text',{x:cx,y:36,'font-size':15,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='R = ρ·L/S = '+rho+'×'+L+'/'+S+' = '+R.toFixed(2)+' (相对)';
+    // 直观提示
+    const hint = R>15?'很长很细→电阻大':R<3?'很短很粗→电阻小':'中等';
+    el(svg,'text',{x:cx,y:210,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=hint+'　(越长越细越阻,材料 ρ 越大越阻)';
+    oRho.textContent=rho;oL.textContent=L;oS.textContent=S;oR.textContent=R.toFixed(2);
+  }
+  draw();
+})();
+
+/* ===== 互动5:电功率计算器 ===== */
+(function(){
+  const svg=document.getElementById('powSvg');
+  const Us=document.getElementById('powU'),Rs=document.getElementById('powR');
+  const oI=document.getElementById('powI'),oP1=document.getElementById('powP1'),oP2=document.getElementById('powP2'),oP3=document.getElementById('powP3');
+  Us.oninput=Rs.oninput=draw;
+  function draw(){
+    clr(svg);
+    const U=+Us.value,R=+Rs.value;
+    const I=U/R;
+    const P1=U*I, P2=I*I*R, P3=U*U/R; // 三者应相等
+    const P=P1;
+    // 三根柱(高度相同,证明相等)
+    const labels=['P=U·I','P=I²·R','P=U²/R'];
+    const cols=[ORANGE,BLUE,GREEN];
+    const vals=[P1,P2,P3];
+    const baseY=160,maxH=120;
+    const Pmax=Math.max(1,20*20/1); // 上限保守
+    // 用当前 P 相对一个动态最大值缩放(以 U=20,R=1 时 400 为参考太大, 用局部缩放)
+    const scaleMax=Math.max(P*1.25,1);
+    const X0=120,gap=170,w=90;
+    for(let k=0;k<3;k++){
+      const h=Math.min(maxH, vals[k]/scaleMax*maxH);
+      const x=X0+k*gap;
+      el(svg,'rect',{x:x,y:baseY-h,width:w,height:h,fill:cols[k],stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+w/2,y:baseY-h-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=vals[k].toFixed(1)+'W';
+      el(svg,'text',{x:x+w/2,y:baseY+20,'font-size':12.5,'font-weight':900,fill:cols[k],'text-anchor':'middle'}).textContent=labels[k];
+    }
+    el(svg,'line',{x1:80,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:360,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='U='+U+'V, R='+R+'Ω → I=U/R='+I.toFixed(2)+'A;三式同高=同一功率(纯电阻)';
+    oI.textContent=I.toFixed(2);oP1.textContent=P1.toFixed(2)+'W';oP2.textContent=P2.toFixed(2)+'W';oP3.textContent=P3.toFixed(2)+'W';
+  }
+  draw();
+})();
+
+/* ===== 互动6:电路简化(等电位/去表) ===== */
+(function(){
+  const svg=document.getElementById('simpSvg');const note=document.getElementById('simpNote');
+  let step=0;const maxStep=3;
+  document.getElementById('simpStep').onclick=()=>{step=Math.min(maxStep,step+1);draw();};
+  document.getElementById('simpReset').onclick=()=>{step=0;draw();};
+  function wire(x1,y1,x2,y2,w){el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:INK,'stroke-width':w||4});}
+  function res(x,y,lab,col){el(svg,'rect',{x:x-24,y:y-11,width:48,height:22,fill:'#fff',stroke:INK,'stroke-width':3});el(svg,'text',{x:x,y:y+5,'font-size':11.5,'font-weight':900,fill:col||INK,'text-anchor':'middle'}).textContent=lab;}
+  function meter(x,y,letter,col){el(svg,'circle',{cx:x,cy:y,r:15,fill:'#fff',stroke:col,'stroke-width':3});el(svg,'text',{x:x,y:y+5,'font-size':14,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=letter;}
+  function draw(){
+    clr(svg);
+    // 场景:电源 - R1 串, 之后 R2 与 (理想电流表A) 并联, 再有理想电压表V跨接R3支路(该支路无电流)
+    // 顶部说明
+    const notes=[
+      '原图:R₂ 与理想电流表 A 并联(A=导线短接 R₂);V 是理想电压表接在 R₃ 支路(V=断路)。',
+      '第1步:理想电流表 A 内阻=0,相当于导线 → 把 R₂ 短接(R₂ 两端电压0,无电流,可去掉)。',
+      '第2步:理想电压表 V 内阻=∞,相当于断路 → R₃ 那条支路无电流,整条去掉。',
+      '第3步:只剩 R₁ 与电源。等效电阻 R = R₁。复杂电路坍缩成最简。'
+    ];
+    // 电源
+    el(svg,'line',{x1:60,y1:110,x2:60,y2:150,stroke:INK,'stroke-width':4});
+    el(svg,'line',{x1:69,y1:118,x2:69,y2:142,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:52,y:104,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='+';
+    wire(60,110,60,60);wire(60,60,150,60);
+    res(180,60,'R₁',ORANGE);
+    wire(210,60,300,60);
+    // 节点 P (300,60) -> 分两路: R2 支路 与 A 支路(并联)
+    const r2gone = step>=1;
+    const r3gone = step>=2;
+    if(!r2gone){
+      // R2 支路 (上)
+      wire(300,60,300,30);wire(300,30,380,30);res(410,30,'R₂',GREEN);wire(440,30,520,30);wire(520,30,520,60);
+    }
+    // 电流表 A 支路 (下, 与R2并联) — 在 step<2 时显示为导线短接
+    if(step<1){
+      wire(300,60,340,60);meter(360,60,'A',BLUE);wire(380,60,520,60);
+    }else{
+      // A 变导线
+      wire(300,60,520,60,6);
+      el(svg,'text',{x:410,y:80,'font-size':11,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='A→导线';
+    }
+    // 节点 Q (520,60)
+    wire(520,60,620,60);wire(620,60,620,190);
+    // R3 + 电压表V 支路(从 Q 下来)—— 表现为电压表跨接、支路无电流
+    if(!r3gone){
+      wire(520,60,520,120);res(520,150,'R₃',VIO);wire(520,178,520,190);
+      // 电压表 V 跨接 R3
+      meter(600,150,'V',RED);
+      el(svg,'line',{x1:520,y1:130,x2:585,y2:150,stroke:RED,'stroke-width':1.5,'stroke-dasharray':'4 3'});
+      el(svg,'line',{x1:520,y1:170,x2:585,y2:150,stroke:RED,'stroke-width':1.5,'stroke-dasharray':'4 3'});
+    }
+    // 底部回线
+    wire(620,190,60,190);wire(60,190,60,150);
+    // 缩点/去掉的标注
+    if(r2gone && step<3){el(svg,'text',{x:410,y:24,'font-size':11,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='R₂ 被短接,去掉';}
+    if(r3gone){el(svg,'text',{x:520,y:118,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='V断路,R₃支路去掉';}
+    if(step>=3){el(svg,'text',{x:350,y:230,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='最简等效:R = R₁';}
+    note.textContent=notes[step];
+    note.style.borderColor=step===0?INK:(step===1?BLUE:(step===2?RED:GREEN));
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 部分电路欧姆定律 I=U/R 对哪些元件成立?对哪些不成立?",a:"对金属导体、电解液这类线性元件成立(R 为常数,I 与 U 成正比,伏安曲线过原点直线)。对气体导电、二极管、气体放电管等非线性元件不成立;灯泡钨丝因温度升高电阻增大,也是非线性。"},
+ {q:"2. R=U/I 中,电阻 R 由 U 和 I 决定吗?",a:"不是。R=U/I 只是定义式/测量式。电阻由材料(ρ)、长度 L、横截面积 S 和温度决定(R=ρL/S),与是否通电、加多大电压无关。"},
+ {q:"3. 一根均匀电阻丝拉长为原来的 2 倍(体积不变),电阻变为原来的几倍?",a:"L→2L,体积不变则 S→S/2,R=ρL/S 变为 ρ(2L)/(S/2)=4ρL/S=4R,即变为原来的 4 倍。"},
+ {q:"4. 串联电路的电流、电压、总电阻、分压规律?",a:"电流处处相等 I=I₁=I₂;总电压等于各分压之和 U=U₁+U₂;总电阻 R=R₁+R₂(大于任一电阻);分压 U₁:U₂=R₁:R₂(电阻大分压大)。"},
+ {q:"5. 并联电路的电压、电流、总电阻、分流规律?",a:"各支路电压相等 U=U₁=U₂;干路电流等于各支路电流之和 I=I₁+I₂;总电阻 1/R=1/R₁+1/R₂(小于任一支路);分流 I₁:I₂=R₂:R₁(电阻小分流大)。"},
+ {q:"6. U=6V,R₁=2Ω 与 R₂=4Ω 串联,求 I、U₁、U₂;若改并联求 I₁、I₂、总电流。",a:"串联:R=6Ω,I=1A,U₁=IR₁=2V,U₂=4V。并联:I₁=6/2=3A,I₂=6/4=1.5A,总电流 I=4.5A;U₁=U₂=6V。"},
+ {q:"7. 电功率的三个公式?哪些只对纯电阻成立?",a:"P=UI 对任何电路成立。P=I²R 和 P=U²/R 只对纯电阻电路成立(电能全变热)。非纯电阻(电动机)只能用 P=UI 算总功率。"},
+ {q:"8. 电动机 U=220V、I=2A、线圈电阻 r=10Ω,求总功率、发热功率、输出机械功率。",a:"总功率 P=UI=440W;发热功率 P热=I²r=2²×10=40W;输出机械功率=UI−I²r=440−40=400W。不能用 U²/R 当总功率。"},
+ {q:"9. 焦耳定律 Q=I²Rt 何时等于电功 W=UIt?何时小于?",a:"纯电阻时 Q=W(电能全变热)。非纯电阻(如电动机)时 Q=I²Rt < W=UIt,差值 UIt−I²Rt 变成机械能等其他形式。发热永远用 I²R。"},
+ {q:"10. 灯泡的伏安特性曲线上某点 U=4V、I=0.5A,该点电阻是多少?能用切线斜率算吗?",a:"R=U/I=4/0.5=8Ω。不能用切线斜率!灯泡是非线性元件,某点电阻必须用「该点 U 除以该点 I」,切线斜率没有电阻的物理意义。"},
+ {q:"11. 在 I-U 图和 U-I 图上,直线斜率各代表什么?",a:"I-U 图(纵I横U):斜率=I/U=1/R(电阻的倒数)。U-I 图(纵U横I):斜率=U/I=R(电阻本身)。看图先分清纵横轴。"},
+ {q:"12. 简化电路时,理想电流表和理想电压表分别等效成什么?",a:"理想电流表内阻为0,等效成一根导线(短路,可把它两端缩为一点);理想电压表内阻无穷大,等效成断路(所在支路无电流,可去掉)。仅对理想电表成立。"},
+ {q:"13. 并联电路中,电阻小的支路和电阻大的支路,哪个发热功率大?",a:"并联电压相同,用 P=U²/R:电阻越小 P 越大,所以电阻小的支路发热更多、更亮。(串联则相反,用 P=I²R,电阻大的更亮。)"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
