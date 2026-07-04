@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理想变压器与远距离输电 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>理想变压器与远距离输电</h1>
+    <p class="lead">变压器题看似公式一堆(U、I、P、n),其实全靠一条主线:<b>「原制约副」</b>——先由匝数比定副压,再由负载定副流,再由功率守恒回推原流。远距离输电则是一道能量账:为什么要升压?因为线损 P损=I²R线,升压就是为了减小输电电流。这页把因果链、题型地图、动画一次给你拨清楚。</p>
+
+    <div class="say">🗣️ <b>变压器(人话版):</b> 变压器就是两组线圈缠在同一块铁芯上,<b>不发电、不储能、不改频率</b>,只把交流电压「换个大小」。匝数多的一边电压高(U₁/U₂=n₁/n₂),这是死规矩。谁说了算?<b>原边电压由电源硬定死</b>(插在插座上就是220V),副边电压跟着匝数比走。电流呢?反过来:匝数多的一边电流小(I₁/I₂=n₂/n₁)。因为理想变压器<b>不耗电</b>,进多少功率就出多少功率(P入=P出)。记住一句话:<b>「原制约副」——匝数定电压,负载定电流,功率守恒串起来。</b></div>
+
+    <div class="keybox"><b>四条铁律速记:</b> ① <b>电压比=匝数比</b> U₁/U₂=n₁/n₂(匝多压高);② <b>功率守恒</b> P入=P出(理想不损耗);③ <b>电流比=匝数反比</b> I₁/I₂=n₂/n₁(匝多流小);④ <b>频率不变</b>(变压器只变压不变频)。远距离输电:升压→减小输电电流 I→减小线损 P损=I²R线→到用户端再降压。</div>
+
+    <h2>① 理想变压器原理:铁芯互感 + 不计损耗</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>结构:</b> 原线圈(初级,n₁匝)、副线圈(次级,n₂匝)绕在<b>同一闭合铁芯</b>上。原线圈接交流电源,产生变化的磁通;铁芯把磁通「导」到副线圈,副线圈里<b>互感</b>出感应电动势——这就是能量从原边传到副边的通道。</p>
+      <p style="margin:6px 0"><b>「理想」两个假设:</b> ① 无漏磁(原副磁通完全相同,每匝磁通 ΔΦ/Δt 一样);② 无损耗(线圈电阻为零、铁芯无涡流/磁滞发热)→ 输入功率 = 输出功率。</p>
+      <div class="eq">每匝电动势相同 → U₁/n₁ = U₂/n₂ → U₁/U₂ = n₁/n₂</div>
+      <p class="trap">⚠ 变压器<b>只能变交流</b>!直流通过原线圈磁通不变化 → 副线圈无感应电动势 → 副边无电压(且直流会烧线圈)。这是必考概念题。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔌 互动 1 — 理想变压器模拟:调 n₁、n₂、负载R,实时看 U I P + 交流波形</div>
+      <svg id="tfSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>n₁ <input id="tfN1" type="range" min="100" max="1000" value="400" step="50"></label>
+        <label>n₂ <input id="tfN2" type="range" min="100" max="1000" value="200" step="50"></label>
+        <label>负载R(Ω) <input id="tfR" type="range" min="5" max="100" value="20" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>U₁ 原压(V)</b><span id="tfU1">220</span></div>
+        <div><b>U₂ 副压(V)</b><span id="tfU2">0</span></div>
+        <div><b>I₂ 副流(A)</b><span id="tfI2">0</span></div>
+        <div><b>I₁ 原流(A)</b><span id="tfI1">0</span></div>
+      </div>
+      <div class="live">
+        <div><b>P出=P入(W)</b><span id="tfP">0</span></div>
+        <div><b>类型</b><span id="tfType">—</span></div>
+        <div><b>n₁:n₂</b><span id="tfRatio">—</span></div>
+        <div><b>频率</b><span id="tfFreq">50Hz</span></div>
+      </div>
+      <p class="small">U₁固定220V(电源决定)。因果链:n定U₂ → R与U₂定I₂ → 功率守恒定I₁。波形示意原副同频、幅度按匝数比缩放。</p>
+    </div>
+
+    <h2 class="b">② 电压比与匝数比:U₁/U₂ = n₁/n₂</h2>
+    <div class="card">
+      <div class="eq">U₁/U₂ = n₁/n₂　(匝数多的一侧电压高)</div>
+      <p style="margin:8px 0"><b>升压 vs 降压:</b> n₂>n₁ → U₂>U₁,叫<b>升压变压器</b>;n₂&lt;n₁ → U₂&lt;U₁,叫<b>降压变压器</b>。判断只看哪边匝数多。</p>
+      <table>
+        <tr><th>比较项</th><th>匝数多的一侧</th><th>匝数少的一侧</th></tr>
+        <tr><td>电压 U</td><td><b>高</b></td><td>低</td></tr>
+        <tr><td>电流 I</td><td>小</td><td><b>大</b></td></tr>
+        <tr><td>导线粗细</td><td>细(电流小)</td><td>粗(电流大)</td></tr>
+      </table>
+      <p class="trap">⚠ 别只背「原大副小」!升压时副边反而电压高、匝数多。永远回到 U₁/U₂=n₁/n₂ 这条比例式,谁匝多谁压高。</p>
+    </div>
+
+    <h2 class="g">③ 功率守恒与电流比:P入=P出,I₁/I₂=n₂/n₁</h2>
+    <div class="card">
+      <div class="eq">P入 = P出　→　U₁I₁ = U₂I₂　→　I₁/I₂ = U₂/U₁ = n₂/n₁</div>
+      <p style="margin:8px 0"><b>推导逻辑:</b> 理想变压器不损耗能量,原边输入的电功率全部传到副边。由 U₁I₁=U₂I₂ 直接得电流比 = 电压反比 = 匝数反比。所以<b>匝数多的一侧电流反而小</b>。</p>
+      <div class="mono">口诀:电压跟匝数「同向」,电流跟匝数「反向」。匝多→压高流小;匝少→压低流大。</div>
+      <p class="trap">⚠ 功率守恒的方向:副边负载先「要」多少功率(P出=U₂²/R),原边就「供」多少(P入=P出)。是<b>负载决定功率</b>,原边被动供应,不是原边先给定一个功率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 2 — 功率守恒条形图:P入 = P出 可视(拖负载看两条永远相等)</div>
+      <svg id="pwSvg" viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>负载R(Ω) <input id="pwR" type="range" min="5" max="80" value="20" step="5"></label>
+        <label>匝数比 n₁:n₂ <input id="pwN" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <p class="small">左条=原边输入 U₁I₁,右条=副边输出 U₂I₂。改负载看两条一起变高变低,但<b>永远等高</b>——这就是功率守恒。</p>
+    </div>
+
+    <h2 class="o">④ 「原制约副」:因果链的正确顺序</h2>
+    <div class="card">
+      <div class="keybox" style="margin:6px 0"><b>因果链(务必记牢):</b> ① 原电压 U₁ <b>由电源决定</b>(定死);② 由匝数比定副压 U₂=U₁·n₂/n₁;③ 由负载R定副流 I₂=U₂/R(和副边功率 P₂=U₂²/R);④ 由功率守恒定原流 I₁=P₂/U₁=U₂I₂/U₁。<b>顺序不能反!</b></div>
+      <div class="mono">U₁(电源)→ U₂(匝数)→ I₂(负载)→ P(=U₂I₂)→ I₁(功率守恒)</div>
+      <p style="margin:8px 0"><b>为什么是「原制约副」?</b> 电源把原电压钉死了,副电压只能跟着匝数走(被原边制约)。而电流方向相反:副边负载「点单」多少功率,原边才「上菜」多少。所以电压是原→副单向决定,电流是副→原反向回推。</p>
+      <p class="trap">⚠ 最大误区:以为「副边电压由副边负载决定」。错!<b>副边电压只由 U₁ 和匝数比决定,和负载R无关</b>。改变R只改变副边电流I₂(和整个电路电流、功率),不改变U₂。</p>
+    </div>
+
+    <h2 class="v">⑤ 多副线圈:总功率守恒</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>一个原线圈带多个副线圈时:</b> 每个副线圈各自 U₂ᵢ/U₁=n₂ᵢ/n₁ 定电压;每个副边各自 I₂ᵢ=U₂ᵢ/Rᵢ 定电流;<b>原边输入功率 = 所有副边输出功率之和</b>。</p>
+      <div class="eq">U₁I₁ = U₂₁I₂₁ + U₂₂I₂₂ + … → I₁ = (ΣU₂ᵢI₂ᵢ)/U₁</div>
+      <p class="trap">⚠ 多副线圈不能只对一个副边用功率守恒!原电流由<b>所有副边功率之和</b>决定。漏掉一路 = 原电流算小。</p>
+    </div>
+
+    <h2 class="b">⑥ 动态分析:改匝数比 / 改负载,各量怎么变</h2>
+    <div class="card">
+      <h3>两种「动」的因果链</h3>
+      <p style="margin:6px 0"><b>A. 改变负载R(匝数不变):</b> U₁不变 → U₂不变 → R↓则 I₂↑(I₂=U₂/R)→ P₂↑ → I₁↑(功率守恒)。<b>只有电流和功率变,电压全不变。</b></p>
+      <p style="margin:6px 0"><b>B. 改变匝数比 n₂/n₁(R不变):</b> n₂↑ → U₂↑ → I₂↑(U₂/R,分子涨)→ P₂=U₂²/R 涨得更快(平方)→ I₁↑。<b>电压电流功率全变。</b></p>
+      <div class="mono">记法:动负载→只动流与功率;动匝数→连电压一起动。永远从 U₁不变 出发一步步推。</div>
+      <p class="trap">⚠ 陷阱:改R时误以为U₂也变。改n时忘了P是U₂的平方关系(涨/跌都更猛)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 3 — 动态分析器:改负载或匝数,看各量增减 + 「原制约副」因果链提示</div>
+      <div class="ctrl">
+        <button class="dynmode on" data-m="0">改变负载 R</button>
+        <button class="dynmode" data-m="1">改变副匝数 n₂</button>
+      </div>
+      <div class="ctrl">
+        <button id="dynDo">▶ 让它变(增大)</button><button id="dynReset">↺ 复位</button>
+      </div>
+      <div class="live">
+        <div><b>U₂ 副压</b><span id="dyU2">—</span></div>
+        <div><b>I₂ 副流</b><span id="dyI2">—</span></div>
+        <div><b>P 功率</b><span id="dyP">—</span></div>
+        <div><b>I₁ 原流</b><span id="dyI1">—</span></div>
+      </div>
+      <div class="verdict" id="dynChain">选一种「动」的方式,再点「让它变」,看因果链依次点亮。</div>
+      <p class="small">箭头 ↑↓ 表示该量增/减,— 表示不变。因果链从「U₁不变」出发。</p>
+    </div>
+
+    <h2 class="r">⑦ 远距离输电:为什么要升压?</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>输电全流程:</b> 发电站发电 → <b>升压变压器</b>升到高压 → 高压输电线远距离传输 → <b>降压变压器</b>降到安全电压 → 供给用户。</p>
+      <div class="eq">线损 P损 = I²·R线 = (P输/U输)²·R线</div>
+      <p style="margin:8px 0"><b>核心逻辑:</b> 要送的功率 P输 一定,输电线电阻 R线 一定。线损 P损=I²R线 只跟<b>输电电流 I</b> 有关。而 I=P输/U输,<b>把输电电压 U输 升高 → 输电电流 I 减小 → 线损 I²R线 大幅减小</b>(平方关系,U升到10倍,线损降到1/100)。这就是升压的唯一目的:减小输电电流,减小线路上的 I²R 发热损失。</p>
+      <div class="mono">升压 ≠ 给用户高压!升压只在「输电线上」,到用户端必须再降压到220V。升压是为了「路上少损耗」。</div>
+      <table>
+        <tr><th>量</th><th>公式</th><th>说明</th></tr>
+        <tr><td>输电电流 I</td><td>I = P输/U输</td><td>升压则减小</td></tr>
+        <tr><td>线损功率 P损</td><td>P损=I²R线=(P输/U输)²R线</td><td>随U输平方反比减小</td></tr>
+        <tr><td>线路电压降 U损</td><td>U损=I·R线</td><td>随I减小</td></tr>
+        <tr><td>用户电压</td><td>U用=U输−U损</td><td>输出电压减去线路压降</td></tr>
+      </table>
+      <p class="trap">⚠ R线 是<b>输电线的电阻</b>,不是负载电阻!P损=I²R线 用的是输电电流,不能用负载上的电流或电压。U损=IR线 是线上的压降,不是负载电压。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🏭 互动 4 — 远距离输电全流程动画:发电→升压→高压线(显示I²R损)→降压→用户</div>
+      <canvas id="gridCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button id="gridGo">▶ 通电</button><button id="gridStop">⏸ 暂停</button>
+        <label>输电电压 U输(kV) <input id="gridU" type="range" min="10" max="200" value="40" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>输电电流 I</b><span id="grI">—</span></div>
+        <div><b>线损 P损=I²R线</b><span id="grPloss">—</span></div>
+        <div><b>线损占比</b><span id="grFrac">—</span></div>
+        <div><b>到户功率</b><span id="grPuser">—</span></div>
+      </div>
+      <p class="small">P输、R线固定。拉高 U输 → 电流 I 变细、红色线损条变短。看线损如何随输电电压升高而急剧减小(平方关系)。</p>
+    </div>
+
+    <h2 class="o">⑧ 多副线圈功率分配(可视)</h2>
+    <div class="viz">
+      <div class="vlabel">🌿 互动 5 — 多副线圈:原边一份功率,按各副边负载分配(总和=原边输入)</div>
+      <svg id="multiSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>副1 负载R₁ <input id="mR1" type="range" min="10" max="60" value="20" step="5"></label>
+        <label>副2 负载R₂ <input id="mR2" type="range" min="10" max="60" value="40" step="5"></label>
+        <label>副3 负载R₃ <input id="mR3" type="range" min="10" max="60" value="30" step="5"></label>
+      </div>
+      <p class="small">三个副线圈匝数固定(U₂各不同)。改负载看各副边功率,原边输入=三者之和(P入=ΣP出)。</p>
+    </div>
+
+    <h2 class="v">⑨ 升压 vs 降压对比</h2>
+    <div class="viz">
+      <div class="vlabel">📊 互动 6 — 升压变压器 vs 降压变压器:一图看清 U、I 谁大谁小</div>
+      <svg id="cmpSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cmpmode on" data-m="0">升压(n₂&gt;n₁)</button>
+        <button class="cmpmode" data-m="1">降压(n₂&lt;n₁)</button>
+      </div>
+      <p class="small">同一功率下,升压侧电压高电流小、降压侧电压低电流大。功率守恒:两侧 U×I 相等(条形面积一样)。</p>
+    </div>
+
+    <h2 class="r">⑩ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 匝数 / 电压 / 电流基本计算</h3>
+      <p><b class="tag">触发信号:</b>给 n₁、n₂、U₁(或U₂)、负载R,求另一侧电压、电流或功率。</p>
+      <p><b class="tag">标准动作:</b>U₂=U₁·n₂/n₁ → I₂=U₂/R → P=U₂I₂ → I₁=P/U₁(即I₁=I₂·n₂/n₁)。走「原制约副」因果链。</p>
+      <p><b class="tag">示例(带解):</b>U₁=220V,n₁=1100匝,n₂=100匝,负载R=5Ω。U₂=220×100/1100=20V;I₂=20/5=4A;P=20×4=80W;I₁=80/220≈0.36A(=4×100/1100)。</p>
+      <p class="trap">陷阱:直接用I₁=U₁/R(错!R在副边);把匝数比用反(升降压搞反)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 多副线圈</h3>
+      <p><b class="tag">触发信号:</b>一个原线圈,两个及以上副线圈,各带不同负载。</p>
+      <p><b class="tag">标准动作:</b>各副边分别 U₂ᵢ=U₁·n₂ᵢ/n₁、I₂ᵢ=U₂ᵢ/Rᵢ、P₂ᵢ=U₂ᵢI₂ᵢ;原边功率=ΣP₂ᵢ → I₁=ΣP₂ᵢ/U₁。</p>
+      <p><b class="tag">示例(带解):</b>U₁=100V,副1得20V带R=10Ω(P₁=40W),副2得10V带R=5Ω(P₂=20W)。原边P=60W → I₁=60/100=0.6A。</p>
+      <p class="trap">陷阱:只用一路算原电流;漏掉某一副边功率。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 动态分析(改负载 / 改匝数)</h3>
+      <p><b class="tag">触发信号:</b>「若负载增大/减小」「若滑动变阻器R变化」「若副匝数增加」,问各量如何变。</p>
+      <p><b class="tag">标准动作:</b>先钉住「U₁不变」。改R:U₂不变,R↓→I₂↑→P↑→I₁↑。改n₂:U₂随n₂变,再顺推I₂、P(平方)、I₁。</p>
+      <p><b class="tag">示例(带解):</b>负载R减半,匝数不变:U₂不变,I₂加倍,P加倍,I₁加倍。原副电压都不变。</p>
+      <p class="trap">陷阱:改R时误判U₂变化;改n时忘了功率是U₂的平方关系。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 远距离输电:线损与电压关系</h3>
+      <p><b class="tag">触发信号:</b>发电站输送功率P,输电线电阻R线,问线损、线损占比、用户电压,或「升压后损耗减小几倍」。</p>
+      <p><b class="tag">标准动作:</b>I=P输/U输 → P损=I²R线 → U损=IR线 → U用=U输−U损。比较不同U输时线损按平方反比变化。</p>
+      <p><b class="tag">示例(带解):</b>P输=100kW,R线=10Ω。若U输=1kV:I=100A,P损=100²×10=100kW(全损光!)。若U输=10kV:I=10A,P损=10²×10=1kW(降到1/100)。升10倍电压,线损降100倍。</p>
+      <p class="trap">陷阱:P损用负载电流或负载电阻;把U损当成用户电压;忘了线损随U输平方反比。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 原副制约关系(概念/因果)</h3>
+      <p><b class="tag">触发信号:</b>「副边负载变化,原电压是否变」「哪个量决定哪个量」这类概念判断题。</p>
+      <p><b class="tag">标准动作:</b>背因果链:U₁由电源定(不变)→ U₂由匝数定 → I₂由负载定 → I₁由功率守恒定。负载只影响电流与功率,不影响电压。</p>
+      <p><b class="tag">示例(带解):</b>副边接入更多用电器(并联,总R减小):U₂不变,I₂增大,P增大,I₁增大,U₁仍不变。</p>
+      <p class="trap">陷阱:认为副边负载改变会改变原电压或副电压;把电压和电流的因果方向搞混。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 原电压由<b>电源</b>决定,不由副边负载决定;负载只改变电流和功率,不改变任何电压。</p>
+      <p class="trap">② 功率守恒方向:副边负载先「要」功率(P=U₂²/R),原边被动供应 P入=P出。不是原边先给功率。</p>
+      <p class="trap">③ 远距离输电升压是为了<b>减小输电电流</b>,从而减小线损 I²R线;升压不是为了给用户高压。</p>
+      <p class="trap">④ 变压器<b>不改变频率</b>;原副频率永远相同。也<b>不能变直流</b>。</p>
+      <p class="trap">⑤ 电压跟匝数同向,电流跟匝数反向:匝多→压高流小。别只背「原大副小」。</p>
+      <p class="trap">⑥ P损=I²R线 用的是<b>输电电流</b>和<b>输电线电阻</b>,不是负载的。</p>
+      <p class="trap">⑦ 多副线圈:原电流由<b>所有副边功率之和</b>决定,别漏路。</p>
+      <p class="trap">⑧ 改副匝数时,副边功率 P=U₂²/R 是U₂的<b>平方</b>关系,变化比电压更猛。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一条因果链统治全部题型:</b> U₁(电源)→U₂(匝数)→I₂(负载)→P(=U₂I₂)→I₁(功率守恒)。所有变压器题——基本计算、多副线圈、动态分析、概念判断——都是在这条链上「已知哪几环、求哪几环」。把链背成肌肉记忆,任何题一眼看穿走向。</p>
+      <p style="margin:8px 0"><b>② 电压「原定副」、电流「副定原」是一对镜像:</b> 电压是<b>原边单向决定副边</b>(电源钉死U₁,U₂跟匝数);电流是<b>副边反向决定原边</b>(负载要多少功率,原边供多少 → I₁被I₂拖着走)。理解这个「方向相反」,原副制约题再不会晕。</p>
+      <p style="margin:8px 0"><b>③ 远距离输电两组变压器、两组电流别混:</b> 升压变压器副边(=输电线)电流小、电压高;这是「输电电流I」,线损 P损=I²R线 只认它。到降压变压器再变回大电流低电压给用户。画图时把「输电段」单独框出来,I 和 U 只在这段用于算线损,绝不和发电端/用户端的量混用。</p>
+      <p style="margin:8px 0"><b>④ 线损的平方律是压轴题的杀手锏:</b> P损=(P输/U输)²·R线,对 U输 是平方反比。升压n倍→线损降n²倍;这也解释了为什么现代电网用几十万伏特超高压输电。会算「升压前后线损之比」和「线损占输送功率百分比」,压轴数据题稳拿。</p>
+      <p style="margin:8px 0"><b>⑤ 用「不变量」锁题:</b> 每道变压器题先问「什么被钉死了」——通常是 U₁(电源)和匝数比(结构)。抓住不变量,其余量顺着因果链一步步倒出来,不会被「负载一变全乱套」的假象带跑。这是复杂电路+变压器综合题不失分的定盘星。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包 / 电磁感应攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const U1_FIX=220;
+
+/* ===== 互动1:理想变压器模拟 ===== */
+(function(){
+  const svg=document.getElementById('tfSvg');
+  const N1=document.getElementById('tfN1'),N2=document.getElementById('tfN2'),R=document.getElementById('tfR');
+  const oU1=document.getElementById('tfU1'),oU2=document.getElementById('tfU2'),oI2=document.getElementById('tfI2'),oI1=document.getElementById('tfI1');
+  const oP=document.getElementById('tfP'),oType=document.getElementById('tfType'),oRatio=document.getElementById('tfRatio');
+  let ph=0,raf=null;
+  function vals(){
+    const n1=+N1.value,n2=+N2.value,r=+R.value;
+    const u2=U1_FIX*n2/n1;
+    const i2=u2/r;
+    const p=u2*i2;
+    const i1=p/U1_FIX;
+    return {n1,n2,r,u2,i2,p,i1};
+  }
+  function coil(x,turns,col){
+    // 画一组线圈:turns越多画的圈越密(示意)
+    const cnt=Math.max(4,Math.min(12,Math.round(turns/90)));
+    for(let i=0;i<cnt;i++){
+      const cy=90+i*(120/cnt);
+      el(svg,'ellipse',{cx:x,cy:cy+60/cnt,rx:22,ry:60/cnt/1.6,fill:'none',stroke:col,'stroke-width':3});
+    }
+    return cnt;
+  }
+  function draw(){
+    clr(svg);const v=vals();
+    // 铁芯(中间矩形框)
+    el(svg,'rect',{x:300,y:60,width:100,height:150,fill:'none',stroke:BROWN,'stroke-width':14});
+    el(svg,'text',{x:350,y:230,'font-size':12,'font-weight':900,fill:BROWN,'text-anchor':'middle'}).textContent='铁芯';
+    // 原线圈(左,贴铁芯左柱)
+    coil(300,v.n1,BLUE);
+    el(svg,'text',{x:300,y:48,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='原 n₁='+v.n1;
+    // 副线圈(右)
+    coil(400,v.n2,RED);
+    el(svg,'text',{x:400,y:48,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='副 n₂='+v.n2;
+    // 电源(左)
+    el(svg,'circle',{cx:120,cy:135,r:30,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:120,y:132,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='电源';
+    el(svg,'text',{x:120,y:148,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='220V';
+    el(svg,'line',{x1:150,y1:120,x2:278,y2:100,stroke:INK,'stroke-width':2.5});
+    el(svg,'line',{x1:150,y1:150,x2:278,y2:170,stroke:INK,'stroke-width':2.5});
+    // 负载(右)
+    el(svg,'rect',{x:560,y:110,width:60,height:50,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:590,y:132,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='R='+v.r;
+    el(svg,'text',{x:590,y:148,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='Ω';
+    el(svg,'line',{x1:422,y1:100,x2:560,y2:115,stroke:INK,'stroke-width':2.5});
+    el(svg,'line',{x1:422,y1:170,x2:560,y2:155,stroke:INK,'stroke-width':2.5});
+    // 交流波形示意(顶部小图):原(蓝)幅度∝U1, 副(红)幅度∝U2
+    const wy=30,wamp1=14,wamp2=14*Math.min(2.2,v.u2/U1_FIX);
+    let d1='',d2='';
+    for(let k=0;k<=80;k++){const wx=440+k*3.2;const a=(k/80)*Math.PI*4+ph;
+      d1+=(k===0?'M':'L')+wx+' '+(wy-Math.sin(a)*wamp1)+' ';
+      d2+=(k===0?'M':'L')+wx+' '+(wy-Math.sin(a)*wamp2)+' ';}
+    // 波形放到独立区域(右下)其实太挤,画在右上角空白
+    // 使用一个专门条带
+    el(svg,'text',{x:445,y:18,'font-size':10.5,'font-weight':800,fill:INK}).textContent='交流波形(同频):';
+    el(svg,'path',{d:d1,fill:'none',stroke:BLUE,'stroke-width':2});
+    el(svg,'path',{d:d2,fill:'none',stroke:RED,'stroke-width':2});
+    // 类型标注
+    const up=v.n2>v.n1;
+    el(svg,'text',{x:350,y:250,'font-size':12.5,'font-weight':900,fill:up?RED:BLUE,'text-anchor':'middle'}).textContent=up?'▲ 升压变压器 (U₂>U₁)':(v.n2<v.n1?'▼ 降压变压器 (U₂<U₁)':'原副相等');
+    // readout
+    oU1.textContent='220';oU2.textContent=v.u2.toFixed(1);oI2.textContent=v.i2.toFixed(2);oI1.textContent=v.i1.toFixed(2);
+    oP.textContent=v.p.toFixed(1);oType.textContent=up?'升压':(v.n2<v.n1?'降压':'1:1');oRatio.textContent=v.n1+':'+v.n2;
+  }
+  function loop(){ph+=0.15;draw();raf=requestAnimationFrame(loop);}
+  N1.oninput=N2.oninput=R.oninput=draw;
+  draw();loop();
+})();
+
+/* ===== 互动2:功率守恒条形 ===== */
+(function(){
+  const svg=document.getElementById('pwSvg');
+  const R=document.getElementById('pwR'),N=document.getElementById('pwN');
+  function draw(){
+    clr(svg);
+    const r=+R.value,ratio=+N.value;// n1:n2 = ratio:1
+    const u2=U1_FIX/ratio;
+    const i2=u2/r;
+    const p=u2*i2;
+    const i1=p/U1_FIX;
+    // 两条竖条:左原(U1*I1),右副(U2*I2),都等于P。高度按P缩放
+    const maxP=U1_FIX*(U1_FIX/1)/5;// 参考上限
+    const h=Math.min(120,p/maxP*120*2);
+    const baseY=150,bw=90;
+    // 左条 原边
+    el(svg,'rect',{x:160,y:baseY-h,width:bw,height:h,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:205,y:baseY+20,'font-size':12.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='P入=U₁I₁';
+    el(svg,'text',{x:205,y:baseY-h-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=p.toFixed(1)+' W';
+    el(svg,'text',{x:205,y:baseY-h/2,'font-size':11,'font-weight':800,fill:'#fff','text-anchor':'middle'}).textContent='I₁='+i1.toFixed(2)+'A';
+    // 右条 副边
+    el(svg,'rect',{x:450,y:baseY-h,width:bw,height:h,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:495,y:baseY+20,'font-size':12.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='P出=U₂I₂';
+    el(svg,'text',{x:495,y:baseY-h-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=p.toFixed(1)+' W';
+    el(svg,'text',{x:495,y:baseY-h/2,'font-size':11,'font-weight':800,fill:'#fff','text-anchor':'middle'}).textContent='I₂='+i2.toFixed(2)+'A';
+    // 等号
+    el(svg,'text',{x:350,y:baseY-h/2+6,'font-size':30,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='=';
+    el(svg,'line',{x1:120,y1:baseY,x2:600,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:20,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='两条永远等高 → P入 = P出(理想变压器不损耗)';
+  }
+  R.oninput=N.oninput=draw;draw();
+})();
+
+/* ===== 互动3:动态分析器 ===== */
+(function(){
+  let mode=0;// 0改R,1改n2
+  const oU2=document.getElementById('dyU2'),oI2=document.getElementById('dyI2'),oP=document.getElementById('dyP'),oI1=document.getElementById('dyI1');
+  const chain=document.getElementById('dynChain');
+  document.querySelectorAll('.dynmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.dynmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;reset();});
+  function reset(){oU2.textContent='—';oI2.textContent='—';oP.textContent='—';oI1.textContent='—';chain.textContent='点「让它变(增大)」看因果链。当前:'+(mode===0?'增大负载R':'增大副匝数n₂');}
+  function go(){
+    if(mode===0){
+      // R增大:U2不变,I2减小,P减小,I1减小
+      oU2.textContent='— 不变';oI2.textContent='↓ 减小';oP.textContent='↓ 减小';oI1.textContent='↓ 减小';
+      chain.innerHTML='因果链(R↑):U₁不变 → <b>U₂不变</b>(只由匝数定)→ I₂=U₂/R <b>减小</b> → P=U₂I₂ <b>减小</b> → 功率守恒 → I₁ <b>减小</b>。改负载只动电流与功率,电压全不变。';
+    }else{
+      // n2增大:U2增大,I2增大,P增大(平方),I1增大
+      oU2.textContent='↑ 增大';oI2.textContent='↑ 增大';oP.textContent='↑↑ 增大(平方)';oI1.textContent='↑ 增大';
+      chain.innerHTML='因果链(n₂↑):U₁不变 → <b>U₂增大</b>(U₂=U₁·n₂/n₁)→ I₂=U₂/R <b>增大</b> → P=U₂²/R <b>增大更快(平方)</b> → I₁ <b>增大</b>。改匝数连电压一起动。';
+    }
+  }
+  document.getElementById('dynDo').onclick=go;
+  document.getElementById('dynReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:远距离输电全流程 ===== */
+(function(){
+  const cv=document.getElementById('gridCv');const ctx=cv.getContext('2d');
+  const U=document.getElementById('gridU');
+  const oI=document.getElementById('grI'),oPl=document.getElementById('grPloss'),oFr=document.getElementById('grFrac'),oPu=document.getElementById('grPuser');
+  const P_TX=1e6;// 输送功率 1 MW
+  const R_LINE=8;// 输电线电阻 Ω
+  let ph=0,running=true,raf=null;
+  function calc(){
+    const uk=+U.value;const uV=uk*1000;
+    const I=P_TX/uV;
+    const Ploss=I*I*R_LINE;
+    const Puser=P_TX-Ploss;
+    const frac=Ploss/P_TX;
+    return {uk,I,Ploss,Puser,frac};
+  }
+  function box(x,y,w,h,col,label,sub){
+    ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(x,y,w,h);
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+    ctx.fillText(label,x+w/2,y+h/2-2);
+    if(sub){ctx.font='bold 10px sans-serif';ctx.fillText(sub,x+w/2,y+h/2+13);}
+    ctx.textAlign='left';
+  }
+  function draw(){
+    const v=calc();
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const y=70,h=60;
+    box(20,y,90,h,BROWN,'发电站','P=1MW');
+    box(150,y,80,h,BLUE,'升压器','↑高压');
+    // 输电线(中段) 粗细随电流,颜色随线损
+    const lineX0=230,lineX1=470;
+    // 线损比例决定红色多少
+    const lossFrac=Math.min(1,v.frac);
+    // 电流越大线越粗
+    const thick=Math.max(3,Math.min(22,v.I/6));
+    ctx.strokeStyle=INK;ctx.lineWidth=thick+4;ctx.beginPath();ctx.moveTo(lineX0,y+h/2);ctx.lineTo(lineX1,y+h/2);ctx.stroke();
+    // 内芯:绿=送达 红=损耗,按比例分段
+    const splitX=lineX0+(lineX1-lineX0)*(1-lossFrac);
+    ctx.strokeStyle=GREEN;ctx.lineWidth=thick;ctx.beginPath();ctx.moveTo(lineX0,y+h/2);ctx.lineTo(splitX,y+h/2);ctx.stroke();
+    ctx.strokeStyle=RED;ctx.lineWidth=thick;ctx.beginPath();ctx.moveTo(splitX,y+h/2);ctx.lineTo(lineX1,y+h/2);ctx.stroke();
+    // 电流点动画(沿线跑,数量∝电流)
+    const dots=Math.max(2,Math.min(14,Math.round(v.I/8)));
+    for(let i=0;i<dots;i++){
+      const t=((ph+i/dots)%1);
+      const dx=lineX0+(lineX1-lineX0)*t;
+      ctx.fillStyle=YEL;ctx.beginPath();ctx.arc(dx,y+h/2,3.2,0,2*Math.PI);ctx.fill();
+    }
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+    ctx.fillText('高压输电线 R线='+R_LINE+'Ω',(lineX0+lineX1)/2,y-8);
+    ctx.fillStyle=RED;ctx.fillText('红=线损 I²R线',(splitX+lineX1)/2,y+h+18);
+    ctx.textAlign='left';
+    box(470,y,80,h,BLUE,'降压器','↓民用');
+    box(580,y,100,h,GREEN,'用户',(v.Puser/1000).toFixed(0)+'kW');
+    // 电压标注
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+    ctx.fillText('U输='+v.uk+'kV, I='+v.I.toFixed(1)+'A',(lineX0+lineX1)/2,y+h/2+4);
+    ctx.textAlign='left';
+    ctx.font='bold 12.5px sans-serif';ctx.fillStyle=INK;
+    ctx.fillText('线损 P损 = I²R线 = '+(v.Ploss/1000).toFixed(2)+' kW  (占输送功率 '+(v.frac*100).toFixed(1)+'%)',20,200);
+    ctx.fillText('拉高 U输 → I 减小 → 线损随 U输² 反比急降',20,222);
+    // readout
+    oI.textContent=v.I.toFixed(1)+'A';oPl.textContent=(v.Ploss/1000).toFixed(2)+'kW';
+    oFr.textContent=(v.frac*100).toFixed(1)+'%';oPu.textContent=(v.Puser/1000).toFixed(1)+'kW';
+  }
+  function loop(){if(running){ph+=0.01;}draw();raf=requestAnimationFrame(loop);}
+  U.oninput=draw;
+  document.getElementById('gridGo').onclick=()=>{running=true;};
+  document.getElementById('gridStop').onclick=()=>{running=false;};
+  draw();loop();
+})();
+
+/* ===== 互动5:多副线圈功率分配 ===== */
+(function(){
+  const svg=document.getElementById('multiSvg');
+  const R1=document.getElementById('mR1'),R2=document.getElementById('mR2'),R3=document.getElementById('mR3');
+  const U2A=44,U2B=22,U2C=12;// 三个副边电压(匝数固定)
+  const cols=[GREEN,VIO,ORANGE];
+  function draw(){
+    clr(svg);
+    const rs=[+R1.value,+R2.value,+R3.value];
+    const us=[U2A,U2B,U2C];
+    const ps=us.map((u,i)=>u*u/rs[i]);
+    const total=ps.reduce((a,b)=>a+b,0);
+    // 原边总条(左)
+    const baseY=180,maxP=260;
+    // 原边输入条(堆叠三段)
+    let acc=0;const bx=120,bw=80;
+    ps.forEach((p,i)=>{
+      const hh=p/maxP*150;
+      el(svg,'rect',{x:bx,y:baseY-acc-hh,width:bw,height:hh,fill:cols[i],stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:bx+bw/2,y:baseY-acc-hh/2+4,'font-size':10.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='副'+(i+1);
+      acc+=hh;
+    });
+    el(svg,'text',{x:bx+bw/2,y:baseY-acc-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P入='+total.toFixed(1)+'W';
+    el(svg,'text',{x:bx+bw/2,y:baseY+20,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='原边输入';
+    el(svg,'text',{x:290,y:baseY-70,'font-size':26,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='=';
+    // 三个副边分条(右)
+    const sx0=360,sgap=100;
+    ps.forEach((p,i)=>{
+      const hh=p/maxP*150;const x=sx0+i*sgap;
+      el(svg,'rect',{x:x,y:baseY-hh,width:64,height:hh,fill:cols[i],stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:x+32,y:baseY-hh-6,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=p.toFixed(1)+'W';
+      el(svg,'text',{x:x+32,y:baseY+18,'font-size':10.5,'font-weight':900,fill:cols[i],'text-anchor':'middle'}).textContent='副'+(i+1)+' U='+us[i];
+      el(svg,'text',{x:x+32,y:baseY+33,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='R='+rs[i]+'Ω';
+    });
+    el(svg,'line',{x1:80,y1:baseY,x2:680,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:360,y:20,'font-size':12,'font-weight':900,fill:INK}).textContent='P入 = P副1 + P副2 + P副3(总功率守恒)';
+  }
+  R1.oninput=R2.oninput=R3.oninput=draw;draw();
+})();
+
+/* ===== 互动6:升压 vs 降压对比 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');
+  let mode=0;// 0升压 1降压
+  document.querySelectorAll('.cmpmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.cmpmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();});
+  function bar(x,label,U,I,cU,cI){
+    const baseY=200,bw=48;
+    // U 条
+    const hU=U*1.4,hI=I*20;
+    el(svg,'rect',{x:x,y:baseY-hU,width:bw,height:hU,fill:cU,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x+bw/2,y:baseY-hU-6,'font-size':11.5,'font-weight':900,fill:cU,'text-anchor':'middle'}).textContent='U='+U;
+    // I 条
+    el(svg,'rect',{x:x+bw+14,y:baseY-hI,width:bw,height:hI,fill:cI,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x+bw+14+bw/2,y:baseY-hI-6,'font-size':11.5,'font-weight':900,fill:cI,'text-anchor':'middle'}).textContent='I='+I;
+    el(svg,'text',{x:x+bw+7,y:baseY+18,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=label;
+    el(svg,'text',{x:x+bw+7,y:baseY+34,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='P=U×I='+(U*I)+'W';
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:40,y1:200,x2:660,y2:200,stroke:INK,'stroke-width':3});
+    // 保持 P=U*I 相等(=1200)
+    if(mode===0){// 升压:副边U高I小
+      el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='升压变压器 (n₂>n₁):副边电压高、电流小';
+      bar(90,'原边(匝少)',60,20,BLUE,ORANGE);
+      bar(400,'副边(匝多)',120,10,RED,ORANGE);
+    }else{// 降压:副边U低I大
+      el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='降压变压器 (n₂<n₁):副边电压低、电流大';
+      bar(90,'原边(匝多)',120,10,BLUE,ORANGE);
+      bar(400,'副边(匝少)',60,20,RED,ORANGE);
+    }
+    el(svg,'text',{x:350,y:225,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='两侧 P=U×I 相等(功率守恒);电压跟匝数同向,电流反向';
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 理想变压器的电压比公式?哪边电压高?",a:"U₁/U₂=n₁/n₂。匝数多的一侧电压高(升压侧匝多压高)。"},
+ {q:"2. 变压器能改变直流电压吗?为什么?",a:"不能。直流通过原线圈磁通不变化,副线圈无感应电动势,副边无电压;且直流会烧线圈。变压器只能变交流。"},
+ {q:"3. 变压器会改变电流的频率吗?",a:"不会。变压器只改变电压大小,不改变频率,原副频率永远相同。"},
+ {q:"4. 理想变压器的电流比公式?哪边电流大?",a:"I₁/I₂=n₂/n₁(由功率守恒U₁I₁=U₂I₂得)。匝数多的一侧电流小,匝数少的一侧电流大。"},
+ {q:"5. 副边电压由什么决定?改变负载R会改变副电压吗?",a:"副边电压只由U₁和匝数比决定(U₂=U₁·n₂/n₁),和负载无关。改变R只改变副边电流I₂和功率,不改变U₂。"},
+ {q:"6. 说出「原制约副」的完整因果链。",a:"U₁(电源定死)→U₂(匝数比定)→I₂(负载定,I₂=U₂/R)→P(=U₂I₂)→I₁(功率守恒定,I₁=P/U₁)。电压原→副单向定,电流副→原反向回推。"},
+ {q:"7. U₁=220V,n₁=1100,n₂=100,负载R=5Ω,求U₂、I₂、P、I₁。",a:"U₂=220×100/1100=20V;I₂=20/5=4A;P=20×4=80W;I₁=80/220≈0.36A(=4×100/1100)。"},
+ {q:"8. 一原带多副线圈,原电流由什么决定?",a:"由所有副边输出功率之和决定:U₁I₁=ΣU₂ᵢI₂ᵢ,I₁=ΣP₂ᵢ/U₁。不能只用一路算。"},
+ {q:"9. 匝数不变,负载R减半,各量如何变?",a:"U₁、U₂都不变;I₂=U₂/R加倍;P=U₂I₂加倍;I₁加倍。改负载只动电流与功率,电压全不变。"},
+ {q:"10. 远距离输电为什么要升压?升压减小了什么?",a:"为了减小输电电流I(I=P输/U输),从而减小输电线上的线损P损=I²R线。升压不是给用户高压,到用户端要再降压。"},
+ {q:"11. P输=100kW,R线=10Ω,U输从1kV升到10kV,线损如何变?",a:"1kV时I=100A,P损=100²×10=100kW;10kV时I=10A,P损=10²×10=1kW。电压升10倍,线损降到1/100(平方反比)。"},
+ {q:"12. 副边并联接入更多用电器(总R减小),原电压U₁如何变?",a:"U₁由电源决定,不变;U₂也不变;I₂增大、P增大、I₁增大。负载只影响电流和功率,不影响任何电压。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

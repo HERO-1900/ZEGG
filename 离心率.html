@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆锥曲线的离心率 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--blue);width:160px}
+  .pill{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 圆锥曲线攻坚包</div>
+    <h1>圆锥曲线的离心率</h1>
+    <p class="lead">选填题的高频送分/送命点。离心率 e 只有一件事:<b>找到一个只含 a、c 的关系,同除 a 就求出来了</b>。这一页把原理讲成人话,再用 6 个动画让你「看见」e 怎么决定曲线的胖瘦张扁。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 离心率 e 就是曲线的「<b>偏心程度</b>」——焦点偏离中心有多远。<b>e 越大,曲线越『扁』(椭圆)或越『张』(双曲线)</b>;e 越小越接近圆。椭圆 0&lt;e&lt;1,抛物线 e=1,双曲线 e&gt;1。求 e 的全部功夫,就是把题目条件榨出一个<b>只含 a 和 c 的等式或不等式</b>,再同除 a。</div>
+
+    <!-- ===================== 核心原理 ===================== -->
+    <h2 class="b">一、离心率是什么:e = c/a</h2>
+    <div class="say">🗣️ <b>定义:</b> 离心率 e = c/a,其中 <b>a</b> 是「长半轴 / 实半轴」,<b>c</b> 是「半焦距(中心到焦点的距离)」。它衡量焦点离中心有多偏——所以叫「离心」率。</div>
+    <div class="keybox"><b>三种曲线的 e:</b><br>• <b>椭圆:</b> 0 &lt; e &lt; 1(c &lt; a,焦点在内部)<br>• <b>抛物线:</b> e = 1(动点到焦点 = 到准线,恰好相等)<br>• <b>双曲线:</b> e &gt; 1(c &gt; a)<br>e 就是把「c 和 a 谁大」量化成一个数字。</div>
+    <p class="lead">拖动下面的滑块,亲眼看 e 从小到大时,椭圆怎样从圆变扁、双曲线怎样从窄开口张成大喇叭。</p>
+    <div class="viz">
+      <canvas id="cShape" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <span class="chips">
+          <span class="chip on" id="shpEll">椭圆模式</span>
+          <span class="chip" id="shpHyp">双曲线模式</span>
+        </span>
+      </div>
+      <div class="ctrls">
+        <label>离心率 e = <input id="sShape" type="range" min="5" max="95" value="60"> <span id="shapeE" class="pill">e</span></label>
+        <span class="info" id="shapeInfo"></span>
+      </div>
+      <p class="sub">椭圆:e→0 越接近正圆,e→1 越扁。双曲线:e→1 开口越窄,e 越大开口越张。红点是焦点。</p>
+    </div>
+
+    <h2 class="b">二、几何意义:e 决定「胖瘦张扁」</h2>
+    <div class="card">
+      <table>
+        <tr><th>曲线</th><th>e 的范围</th><th>e→小</th><th>e→大</th></tr>
+        <tr><td><b>椭圆</b></td><td>0 &lt; e &lt; 1</td><td>e→0 越接近<b>正圆</b>(c→0)</td><td>e→1 越<b>扁</b>(压瘪)</td></tr>
+        <tr><td><b>双曲线</b></td><td>e &gt; 1</td><td>e→1⁺ 开口越<b>窄</b>(渐近线接近实轴)</td><td>e 越大开口越<b>张</b>(接近垂直)</td></tr>
+        <tr><td><b>抛物线</b></td><td>e = 1</td><td colspan="2">恒等于 1,是椭圆与双曲线的「分界」</td></tr>
+      </table>
+    </div>
+
+    <h2 class="g">三、求 e 的核心思路(整页最重要)</h2>
+    <div class="keybox"><b>核心一句话:</b> 求 e 的本质,就是<b>找到一个只含 a、c 的齐次等式(或不等式),再同除 a</b>(或同除 a²),让它变成只含 e = c/a 的方程。<br>例:得到 <b>c² = 3ac − a²</b> → 同除 a² → e² = 3e − 1 → 解出 e。</div>
+    <div class="say">🗣️ <b>为什么能同除?</b> 因为 e、c、a 是「相对」关系,只关心 c 与 a 的<b>比例</b>,不关心具体大小。所以只要式子每一项关于 a、c 是「同次」(齐次)的,同除最高次的 a 就把 a 消掉,只剩 e。这叫「<b>齐次化</b>」,是全章的灵魂。</div>
+
+    <h3>求 e 的条件常从哪来?(常见来源)</h3>
+    <div class="card">
+      <table>
+        <tr><th>来源</th><th>能榨出什么关于 a、c 的关系</th></tr>
+        <tr><td><b>焦点三角形边角</b></td><td>|PF₁|+|PF₂|=2a(椭圆)或 ||PF₁|−|PF₂||=2a(双曲线),|F₁F₂|=2c;配合余弦定理/勾股</td></tr>
+        <tr><td><b>焦点弦 / 通径</b></td><td>通径长 = 2b²/a;弦长、焦半径公式里都含 a、c</td></tr>
+        <tr><td><b>垂直条件</b></td><td>如 PF₁⊥PF₂ → 勾股 |PF₁|²+|PF₂|²=4c²</td></tr>
+        <tr><td><b>渐近线斜率(双曲线)</b></td><td>渐近线 y=±(b/a)x,斜率 = b/a;而 e²=1+(b/a)²</td></tr>
+        <tr><td><b>点在曲线上 / 特殊点坐标</b></td><td>代入标准方程,配合 b²=a²−c²(椭圆)或 b²=c²−a²(双曲线)消 b</td></tr>
+        <tr><td><b>b 与 a、c 的桥</b></td><td>椭圆 b²=a²−c²,双曲线 b²=c²−a²(把 b 换成 a、c 就能齐次化)</td></tr>
+      </table>
+    </div>
+
+    <h3>双曲线专属公式:e² = 1 + (b/a)²</h3>
+    <div class="say">🗣️ 双曲线里 c²=a²+b²,同除 a²:<b>e² = 1 + (b/a)²</b>。所以只要知道<b>渐近线斜率 b/a</b>,e 立刻出来。这是双曲线离心率题最快的通道。</div>
+    <div class="viz">
+      <canvas id="cAsym" width="760" height="400"></canvas>
+      <div class="ctrls">
+        <label>渐近线斜率 b/a = <input id="sAsym" type="range" min="10" max="300" value="100"> <span id="asymBA" class="pill v">b/a</span></label>
+        <span class="info" id="asymInfo"></span>
+      </div>
+      <p class="sub">拖动改变渐近线斜率 b/a,实时算出 e=√(1+(b/a)²) 并画出双曲线与它的两条渐近线。b/a 越大,渐近线越陡、开口越张、e 越大。</p>
+    </div>
+
+    <h3>椭圆专属:焦点三角形与 e</h3>
+    <div class="say">🗣️ 椭圆上任一点 P 与两焦点 F₁、F₂ 构成「焦点三角形」。恒有 <b>|PF₁|+|PF₂|=2a</b>(定义)与 <b>|F₁F₂|=2c</b>。把三角形里的边角关系(余弦定理、面积、垂直)写出来,通常就能凑出只含 a、c 的式子。</div>
+    <div class="viz">
+      <canvas id="cFocus" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <label>P 的位置 = <input id="sFocus" type="range" min="0" max="100" value="20"> <span id="focusP" class="pill g">P</span></label>
+        <span class="info" id="focusInfo"></span>
+      </div>
+      <p class="sub">拖动 P 沿椭圆移动:两条焦半径 |PF₁|、|PF₂| 的长度实时变化,但它们的<b>和永远 = 2a</b>(定值),而 |F₁F₂|=2c 恒定。</p>
+    </div>
+
+    <h3>求 e 的取值范围:把几何约束转成含 e 的不等式</h3>
+    <div class="say">🗣️ 若题目条件不给死值而给「范围 / 存在 / 恒成立」,就把几何约束(某角在某区间、某点在某侧、判别式≥0 等)翻译成<b>含 e 的不等式</b>,解出 e 的区间。关键是想清楚<b>约束在端点处取什么值</b>,以及端点能否取到。</div>
+    <p class="lead">下面把「焦点三角形顶角 θ 的约束」直接映射成 e 的区间——拖动约束角,看 e 的可行区间怎样滑动。</p>
+    <div class="viz">
+      <canvas id="cRange" width="760" height="300"></canvas>
+      <div class="ctrls">
+        <label>顶角上限 θ₀ = <input id="sRange" type="range" min="20" max="170" value="90"> <span id="rangeTh" class="pill r">θ₀</span></label>
+        <span class="info" id="rangeInfo"></span>
+      </div>
+      <p class="sub">椭圆焦点三角形顶角最大值出现在短轴端点,记为 θₘ,满足 sin(θₘ/2)=e。若要求「存在 P 使顶角 ≥ θ₀」,则需 θₘ≥θ₀,即 <b>e ≥ sin(θ₀/2)</b>。数轴高亮出满足的 e 区间。</p>
+    </div>
+
+    <h3>齐次化步进器:亲手把条件化成 e 的方程</h3>
+    <p class="lead">这是全章最值钱的一招。看下面把一个含 a、b、c 的条件,一步步「同除 a」化成只含 e 的方程。点按钮逐步展开。</p>
+    <div class="viz">
+      <div class="mono" id="homoLine">点「下一步」开始齐次化演示</div>
+      <div class="stepbtns">
+        <button class="btn" id="homoNext">▶ 下一步</button>
+        <button class="btn" id="homoReset">重置</button>
+      </div>
+      <span class="info" id="homoInfo">目标:把「双曲线中 c = 2b」化成关于 e 的方程并解出 e。</span>
+    </div>
+
+    <h2 class="o">四、e 的三态总览:椭圆 / 抛物线 / 双曲线</h2>
+    <p class="lead">同一个焦点、同一条准线,只改离心率 e,曲线就在椭圆(e&lt;1)、抛物线(e=1)、双曲线(e&gt;1)之间连续变化。拖动 e 看三态切换。</p>
+    <div class="viz">
+      <canvas id="cTri" width="760" height="420"></canvas>
+      <div class="ctrls">
+        <label>离心率 e = <input id="sTri" type="range" min="20" max="220" value="60"> <span id="triE" class="pill o">e</span></label>
+        <span class="info" id="triInfo"></span>
+      </div>
+      <p class="sub">统一定义:动点到焦点(红点)的距离 ÷ 到准线(蓝线)的距离 = e。e&lt;1 椭圆、e=1 抛物线、e&gt;1 双曲线。</p>
+    </div>
+
+    <!-- ===================== 全题型地图 ===================== -->
+    <h2 class="b">五、全题型地图(触发信号 + 标准动作)</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型</th><th>触发信号</th><th>标准动作</th></tr>
+        <tr><td><b>① 直接由 a、c 求 e</b></td><td>给出 a、c 或方程系数</td><td>直接 e=c/a;或由 b²=a²∓c² 补出缺的量</td></tr>
+        <tr><td><b>② 由几何条件求 e</b></td><td>焦点三角形、垂直、焦点弦、面积</td><td>列边角关系 → 齐次化(用 b²=a²∓c² 消 b)→ 同除 a</td></tr>
+        <tr><td><b>③ 求 e 的取值范围</b></td><td>「范围」「存在」「恒成立」</td><td>约束转成含 e 的不等式,注意端点取舍</td></tr>
+        <tr><td><b>④ 渐近线与 e(双曲线)</b></td><td>给渐近线方程 / 斜率 b/a</td><td>e²=1+(b/a)² 直接算</td></tr>
+        <tr><td><b>⑤ 离心率与形状</b></td><td>「更圆」「更扁」「开口更张」比大小</td><td>回到 e 的几何意义定性判断</td></tr>
+      </table>
+    </div>
+
+    <h3>① 直接由 a、c 求 e(带解)</h3>
+    <div class="ex"><b>椭圆 x²/25 + y²/16 = 1 的离心率?</b><br>a²=25→a=5,b²=16,c²=a²−b²=9→c=3。<b>e = c/a = 3/5 = 0.6</b>。<span class="trap">⚠ 别把分母大的当 a²!椭圆里 a² 是<b>较大</b>的那个分母;若 x²、y² 分母哪个大要先判焦点在哪个轴。</span></div>
+
+    <h3>② 由几何条件求 e(带解)</h3>
+    <div class="ex"><b>椭圆的一个焦点为 F,短轴端点为 B,若 △OBF 中 ∠OFB=60°(O 为中心),求 e。</b><br>O 到 B 的距离 = b(半短轴),O 到 F = c,BF = a(短轴端点到焦点 = a)。直角三角形 △OBF 中 ∠BOF=90°,∠OFB=60° → cos60° = OF/BF = c/a。<b>e = c/a = cos60° = 1/2</b>。<span class="trap">⚠ 记牢「短轴端点到焦点距离 = a」,由 b²+c²=a² 得。</span></div>
+
+    <h3>③ 求 e 的取值范围(带解)</h3>
+    <div class="ex"><b>椭圆上存在一点 P 使 ∠F₁PF₂ = 90°,求 e 的范围。</b><br>顶角最大在短轴端点,记 θₘ,有 sin(θₘ/2)=c/a=e。存在直角(90°)需 θₘ ≥ 90° → sin(45°) ≤ e → e ≥ √2/2。又 e&lt;1。<b>结论:√2/2 ≤ e &lt; 1</b>。<span class="trap">⚠ 端点:θₘ=90° 时短轴端点恰为直角,取得到,所以是 ≥ √2/2(闭)。</span></div>
+
+    <h3>④ 渐近线与 e(带解)</h3>
+    <div class="ex"><b>双曲线的渐近线为 y = ±√3 x,求 e。</b><br>斜率 b/a = √3 → e² = 1 + (b/a)² = 1 + 3 = 4 → <b>e = 2</b>。<span class="trap">⚠ 若焦点在 y 轴上,渐近线是 y=±(a/b)x,斜率给的是 a/b,别套反!</span></div>
+
+    <h3>⑤ 离心率与曲线形状(带解)</h3>
+    <div class="ex"><b>下列椭圆哪个更「圆」:e₁=0.3 还是 e₂=0.8?</b><br>e 越小越接近圆 → <b>e₁=0.3 更圆</b>,e₂=0.8 更扁。<span class="trap">⚠ 双曲线相反方向:e 越大开口越张;比较开口大小直接比 e。</span></div>
+
+    <!-- ===================== 易错集 ===================== -->
+    <h2 class="r">六、易错集</h2>
+    <div class="card">
+      <p class="trap">⚠ ① 椭圆 0&lt;e&lt;1,双曲线 e&gt;1,抛物线 e=1 —— 范围记混直接判错。e=1 只属于抛物线。</p>
+      <p class="trap">⚠ ② 齐次化时忘记用 b²=a²−c²(椭圆)/ b²=c²−a²(双曲线)消掉 b,式子里还留着 b 就同除不了。</p>
+      <p class="trap">⚠ ③ 同除的是「a 的最高次」;若式子不是齐次的(有常数项混进来),先移项配成齐次或整体除 a²。</p>
+      <p class="trap">⚠ ④ 求范围时端点取舍搞错:约束是「≥」「&gt;」「存在」还是「恒成立」,决定 e 的区间是闭还是开。</p>
+      <p class="trap">⚠ ⑤ 双曲线渐近线:焦点在 x 轴 → y=±(b/a)x;焦点在 y 轴 → y=±(a/b)x。斜率对应关系别套反。</p>
+      <p class="trap">⚠ ⑥ 解出 e 的方程(如 e²=3e−1)后要<b>按曲线类型筛根</b>:椭圆只留 (0,1) 内的根,双曲线只留 &gt;1 的根,负根舍去。</p>
+      <p class="trap">⚠ ⑦ 「短轴端点到焦点 = a」「通径 = 2b²/a」这些小结论没背熟,几何条件就榨不出 a、c 关系。</p>
+    </div>
+
+    <!-- ===================== 拔高 ===================== -->
+    <h2 class="v">七、尖子生拔高:齐次式思想</h2>
+    <div class="card">
+      <p><b>① 离心率题 = 齐次方程题。</b> 一切求 e 的题目,最终都归结为「构造一个关于 a、c(或 e)的齐次式」。看到条件,第一反应就是:<b>怎么把它写成只含 a、c 的同次式?</b> 消 b、消坐标、消 y,都是为这个服务。</p>
+      <p><b>② 见 b 就换。</b> 椭圆 b²=a²−c²,双曲线 b²=c²−a²。把每个 b² 立刻换成 a、c 的组合,式子就只剩 a、c,一定能齐次化。</p>
+      <p><b>③ 见坐标点就代入 + 消元。</b> 若条件是「某点在曲线上」或「某向量关系」,代入标准方程,用 b²=a²∓c² 把 b 消掉,再同除 a² 化成 e² 的方程。</p>
+      <p><b>④ 范围题回到『极端位置』。</b> 焦点三角形顶角最大在短轴端点;点到焦点距离范围是 [a−c, a+c](椭圆)。把「极端值」代入约束,得到 e 的边界。</p>
+      <p><b>⑤ 一元二次要会解含 e 的方程。</b> 如 e²−3e+1=0、2e²−e−1=0。解完按曲线类型(椭圆 0&lt;e&lt;1 / 双曲线 e&gt;1)取舍,负根、超范围根一律舍。</p>
+      <p><b>⑥ 秒杀技:</b> 双曲线只要拿到渐近线斜率 k=b/a,e=√(1+k²) 直接出;椭圆只要拿到 c/a 的某个三角函数值(如 cosθ)就是 e。</p>
+    </div>
+
+    <!-- ===================== 自测 ===================== -->
+    <h2 class="o">八、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 圆锥曲线攻坚包 · 下一块:直线与圆锥曲线的位置关系 / 弦长与中点</p>
+  </div>
+
+<script>
+/* ---------- 通用画布工具 ---------- */
+function axes(ctx,W,H,ox,oy){
+  ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+}
+/* ---------- 1. 离心率与曲线形状(椭圆/双曲线) ---------- */
+(function(){
+  const c=document.getElementById('cShape'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const sl=document.getElementById('sShape');
+  const chipE=document.getElementById('shpEll'),chipH=document.getElementById('shpHyp');
+  let mode='ell';
+  function setMode(m){
+    mode=m;
+    chipE.classList.toggle('on',m==='ell');
+    chipH.classList.toggle('on',m==='hyp');
+    if(m==='ell'){sl.min=5;sl.max=95;if(sl.value>95)sl.value=60;}
+    else{sl.min=105;sl.max=260;if(sl.value<105)sl.value=140;}
+    draw();
+  }
+  chipE.onclick=()=>setMode('ell');
+  chipH.onclick=()=>setMode('hyp');
+  function draw(){
+    const e=parseFloat(sl.value)/100;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy);
+    if(mode==='ell'){
+      // fix a, derive b, c
+      const a=170, cc=a*e, b=Math.sqrt(a*a-cc*cc);
+      ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+      for(let i=0;i<=360;i++){const t=i*Math.PI/180;const x=ox+a*Math.cos(t);const y=oy-b*Math.sin(t);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+      ctx.closePath();ctx.stroke();
+      // foci
+      ctx.fillStyle='#E0382A';
+      [-cc,cc].forEach(fx=>{ctx.beginPath();ctx.arc(ox+fx,oy,6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();});
+      document.getElementById('shapeE').textContent='e = '+e.toFixed(2);
+      const shape=e<0.25?'几乎是正圆':e<0.6?'略扁的椭圆':e<0.85?'明显扁':'很扁,接近压瘪';
+      document.getElementById('shapeInfo').innerHTML='椭圆 e='+e.toFixed(2)+' → <b>'+shape+'</b>(e→0 圆,e→1 扁)';
+    }else{
+      const e2=parseFloat(sl.value)/100; // >1
+      const a=95, cc=a*e2, b=Math.sqrt(cc*cc-a*a);
+      ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;
+      // right branch and left branch
+      for(const sgn of [1,-1]){
+        ctx.beginPath();let first=true;
+        for(let ty=-2.2;ty<=2.2;ty+=0.02){
+          const x=sgn*a*Math.cosh(ty);const y=b*Math.sinh(ty);
+          const px=ox+x, py=oy-y;
+          if(px<-20||px>W+20||py<-20||py>H+20){first=true;continue;}
+          if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      // asymptotes
+      ctx.strokeStyle='#cdbf9a';ctx.lineWidth=2;ctx.setLineDash([7,6]);
+      const k=b/a;
+      for(const s of [1,-1]){ctx.beginPath();ctx.moveTo(0,oy-s*k*(0-ox)*-1);
+        ctx.moveTo(ox-300,oy-s*k*(-300));ctx.lineTo(ox+300,oy-s*k*(300));ctx.stroke();}
+      ctx.setLineDash([]);
+      ctx.fillStyle='#E0382A';
+      [-cc,cc].forEach(fx=>{ctx.beginPath();ctx.arc(ox+fx,oy,6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();});
+      document.getElementById('shapeE').textContent='e = '+e2.toFixed(2);
+      const shape=e2<1.2?'开口很窄':e2<1.6?'开口中等':e2<2.0?'开口张开':'开口很张(接近垂直)';
+      document.getElementById('shapeInfo').innerHTML='双曲线 e='+e2.toFixed(2)+' → <b>'+shape+'</b>(e→1 窄,e 越大越张)';
+    }
+  }
+  sl.addEventListener('input',draw);
+  setMode('ell');
+})();
+/* ---------- 2. 渐近线斜率 b/a 与 e ---------- */
+(function(){
+  const c=document.getElementById('cAsym'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const sl=document.getElementById('sAsym');
+  function draw(){
+    const ba=parseFloat(sl.value)/100; // b/a
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy);
+    const a=90, b=a*ba;
+    // asymptotes y = ± (b/a) x
+    ctx.strokeStyle='#cdbf9a';ctx.lineWidth=2.5;ctx.setLineDash([8,6]);
+    for(const s of [1,-1]){
+      ctx.beginPath();
+      ctx.moveTo(ox-320, oy - s*ba*(-320));
+      ctx.lineTo(ox+320, oy - s*ba*(320));
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    // hyperbola x²/a² - y²/b² =1
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;
+    for(const sgn of [1,-1]){
+      ctx.beginPath();let first=true;
+      for(let ty=-2.4;ty<=2.4;ty+=0.02){
+        const x=sgn*a*Math.cosh(ty), y=b*Math.sinh(ty);
+        const px=ox+x, py=oy-y;
+        if(px<-20||px>W+20||py<-20||py>H+20){first=true;continue;}
+        if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+    }
+    const e=Math.sqrt(1+ba*ba), cc=a*e;
+    ctx.fillStyle='#E0382A';
+    [-cc,cc].forEach(fx=>{if(Math.abs(fx)<W/2){ctx.beginPath();ctx.arc(ox+fx,oy,6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();}});
+    document.getElementById('asymBA').textContent='b/a = '+ba.toFixed(2);
+    document.getElementById('asymInfo').innerHTML='e = √(1+(b/a)²) = √(1+'+(ba*ba).toFixed(2)+') = <b>'+e.toFixed(3)+'</b>';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+/* ---------- 3. 椭圆焦点三角形 ---------- */
+(function(){
+  const c=document.getElementById('cFocus'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const sl=document.getElementById('sFocus');
+  const a=200, b=130; const cc=Math.sqrt(a*a-b*b); // c
+  function draw(){
+    const t=parseFloat(sl.value)/100*2*Math.PI;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy);
+    // ellipse
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=360;i++){const th=i*Math.PI/180;const x=ox+a*Math.cos(th);const y=oy-b*Math.sin(th);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+    ctx.closePath();ctx.stroke();
+    const Px=ox+a*Math.cos(t), Py=oy-b*Math.sin(t);
+    const F1x=ox-cc, F2x=ox+cc;
+    // focal radii
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(F1x,oy);ctx.lineTo(Px,Py);ctx.stroke();
+    ctx.strokeStyle='#E86A17';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(F2x,oy);ctx.lineTo(Px,Py);ctx.stroke();
+    // F1F2 base
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(F1x,oy);ctx.lineTo(F2x,oy);ctx.stroke();
+    // foci + P
+    ctx.fillStyle='#E0382A';[F1x,F2x].forEach(fx=>{ctx.beginPath();ctx.arc(fx,oy,6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();});
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';ctx.fillText('F₁',F1x-20,oy+20);ctx.fillText('F₂',F2x+8,oy+20);
+    ctx.fillStyle='#7A3FF2';ctx.beginPath();ctx.arc(Px,Py,7,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.fillText('P',Px+8,Py-8);
+    const r1=Math.hypot(Px-F1x,Py-oy)/a*a; // pixel; convert to math units
+    // compute in math units directly
+    const mx=(Px-ox), my=(oy-Py); // pixel coords -> but a,b are pixels here so units = pixels
+    const d1=Math.hypot(mx+cc,my), d2=Math.hypot(mx-cc,my);
+    document.getElementById('focusP').textContent='P';
+    document.getElementById('focusInfo').innerHTML='|PF₁|+|PF₂| = <b>'+d1.toFixed(0)+' + '+d2.toFixed(0)+' = '+(d1+d2).toFixed(0)+'</b> = 2a(定值)  ·  |F₁F₂| = 2c = '+(2*cc).toFixed(0)+'  ·  e=c/a='+(cc/a).toFixed(3);
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+/* ---------- 4. 求 e 范围的几何演示 ---------- */
+(function(){
+  const c=document.getElementById('cRange'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('sRange');
+  function draw(){
+    const th0=parseFloat(sl.value); // degrees, required min top angle
+    ctx.clearRect(0,0,W,H);
+    // number line for e in (0,1)
+    const y=170, x0=70, x1=W-70;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();
+    function ex(e){return x0+(x1-x0)*e;}
+    // ticks 0 and 1
+    ctx.font='bold 14px sans-serif';ctx.fillStyle='#16120A';
+    [[0,'0'],[0.5,'0.5'],[1,'1']].forEach(([e,lab])=>{ctx.beginPath();ctx.moveTo(ex(e),y-8);ctx.lineTo(ex(e),y+8);ctx.stroke();ctx.fillText(lab,ex(e)-6,y+28);});
+    // condition: exists P with top angle >= th0  <=> e >= sin(th0/2)
+    const eMin=Math.sin(th0*Math.PI/360);
+    // highlight [eMin, 1)
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(ex(Math.min(eMin,0.999)),y);ctx.lineTo(ex(0.999),y);ctx.stroke();
+    ctx.fillStyle='#E0382A';ctx.beginPath();ctx.arc(ex(eMin),y,7,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    // labels
+    ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+    ctx.fillText('e 轴(椭圆 0<e<1)',x0,y-40);
+    ctx.fillStyle='#E0382A';ctx.fillText('可行区间(红)',ex(eMin)+10,y-14);
+    document.getElementById('rangeTh').textContent='θ₀ = '+th0+'°';
+    document.getElementById('rangeInfo').innerHTML='要「存在 P 使顶角 ≥ '+th0+'°」→ 需短轴端点顶角 θₘ ≥ θ₀ → e ≥ sin('+th0+'°/2) = <b>'+eMin.toFixed(3)+'</b>,即 e ∈ ['+eMin.toFixed(3)+', 1)';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+/* ---------- 5. 齐次化步进器 ---------- */
+(function(){
+  const line=document.getElementById('homoLine'),info=document.getElementById('homoInfo');
+  const steps=[
+    {t:'条件:双曲线中 c = 2b(焦点在 x 轴)',i:'目标:化成关于 e=c/a 的方程。先把 b 用 a、c 表示。'},
+    {t:'双曲线里 b² = c² − a²,由 c=2b → b² = c²/4',i:'两个 b² 相等:c²/4 = c² − a²。'},
+    {t:'c²/4 = c² − a²  →  a² = c² − c²/4 = (3/4)c²',i:'移项,得到只含 a、c 的齐次式(都是二次)。'},
+    {t:'同除 a²:1 = (3/4)·(c/a)²  →  1 = (3/4)e²',i:'关键一步:同除 a²,c/a 变成 e。'},
+    {t:'e² = 4/3  →  e = 2/√3 = 2√3/3 ≈ 1.155',i:'e>1,符合双曲线,保留。齐次化完成!'}
+  ];
+  let k=-1;
+  function render(){
+    if(k<0){line.textContent='点「下一步」开始齐次化演示';info.textContent='目标:把「双曲线中 c = 2b」化成关于 e 的方程并解出 e。';return;}
+    line.textContent=steps[k].t;info.textContent=steps[k].i;
+  }
+  document.getElementById('homoNext').onclick=()=>{if(k<steps.length-1)k++;render();};
+  document.getElementById('homoReset').onclick=()=>{k=-1;render();};
+  render();
+})();
+/* ---------- 6. e 三态总览(统一焦点+准线定义) ---------- */
+(function(){
+  const c=document.getElementById('cTri'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('sTri');
+  // focus at Fx, directrix vertical line x = Dx. locus: dist to F = e * dist to directrix.
+  const Fx=W*0.62, oy=H/2, Dx=W*0.30;
+  function draw(){
+    const e=parseFloat(sl.value)/100;
+    ctx.clearRect(0,0,W,H);
+    // directrix
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.setLineDash([9,6]);
+    ctx.beginPath();ctx.moveTo(Dx,0);ctx.lineTo(Dx,H);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#1450C8';ctx.font='bold 13px sans-serif';ctx.fillText('准线',Dx-40,24);
+    // axis
+    ctx.strokeStyle='#cdbf9a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+    // conic: point M=(x,y), |MF| = e*|x - Dx|
+    // parametrize by y, solve for x. Distance to directrix = |x-Dx|.
+    // (x-Fx)² + y² = e²(x-Dx)²  -> quadratic in x
+    ctx.strokeStyle=(e<0.98?'#1E9E86':e>1.02?'#7A3FF2':'#E86A17');ctx.lineWidth=3;
+    const pts=[];
+    for(let y=-H;y<=H;y+=1){
+      // (x-Fx)^2 + y^2 = e^2 (x-Dx)^2
+      // (1-e^2)x^2 + (-2Fx + 2 e^2 Dx) x + (Fx^2 + y^2 - e^2 Dx^2) = 0
+      const A=1-e*e, B=-2*Fx+2*e*e*Dx, C=Fx*Fx+y*y-e*e*Dx*Dx;
+      if(Math.abs(A)<1e-6){
+        if(Math.abs(B)>1e-9){const x=-C/B;pts.push([x,y,0]);}
+      }else{
+        const disc=B*B-4*A*C;
+        if(disc>=0){const sq=Math.sqrt(disc);pts.push([(-B+sq)/(2*A),y,1]);pts.push([(-B-sq)/(2*A),y,2]);}
+      }
+    }
+    // draw as separate branches by grouping
+    const groups={0:[],1:[],2:[]};
+    pts.forEach(p=>{groups[p[2]].push(p);});
+    Object.values(groups).forEach(g=>{
+      g.sort((p,q)=>p[1]-q[1]);
+      ctx.beginPath();let first=true;
+      g.forEach(([x,y])=>{
+        const px=x, py=oy-y;
+        if(px<-40||px>W+40){first=true;return;}
+        if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+      });
+      ctx.stroke();
+    });
+    // focus
+    ctx.fillStyle='#E0382A';ctx.beginPath();ctx.arc(Fx,oy,6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#E0382A';ctx.font='bold 13px sans-serif';ctx.fillText('焦点',Fx+8,oy-10);
+    document.getElementById('triE').textContent='e = '+e.toFixed(2);
+    const type=e<0.98?'椭圆(e<1)':e>1.02?'双曲线(e>1)':'抛物线(e=1)';
+    const col=e<0.98?'绿':e>1.02?'紫':'橙';
+    document.getElementById('triInfo').innerHTML='e = '+e.toFixed(2)+' → <b>'+type+'</b>('+col+'色曲线)';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+/* ---------- 自测 ---------- */
+const qs=[
+ {q:"1. 椭圆 x²/25+y²/16=1 的离心率?",a:"a=5,b²=16,c²=25−16=9→c=3。e=c/a=3/5=0.6。"},
+ {q:"2. 双曲线渐近线为 y=±2x,求 e。",a:"b/a=2 → e²=1+4=5 → e=√5。"},
+ {q:"3. 三种曲线的 e 范围分别是?",a:"椭圆 0<e<1,抛物线 e=1,双曲线 e>1。"},
+ {q:"4. 椭圆越『圆』,e 越大还是越小?",a:"越小。e→0 接近正圆,e→1 越扁。"},
+ {q:"5. 双曲线 e² 与 b/a 的关系?",a:"e²=1+(b/a)²。渐近线斜率越大,e 越大,开口越张。"},
+ {q:"6. 椭圆短轴端点到焦点的距离等于?",a:"等于 a(长半轴)。由 b²+c²=a² 得。这是求 e 的常用桥。"},
+ {q:"7. 求 e 的核心思路一句话?",a:"找到一个只含 a、c 的齐次等式/不等式,同除 a(或 a²)化成关于 e 的方程。"},
+ {q:"8. 椭圆上存在 P 使 ∠F₁PF₂=90°,求 e 范围。",a:"短轴端点顶角 θₘ 满足 sin(θₘ/2)=e,需 θₘ≥90° → e≥√2/2,故 √2/2≤e<1。"},
+ {q:"9. 双曲线中 c=2b,求 e。",a:"b²=c²−a²,c=2b→b²=c²/4,得 a²=3c²/4,同除 a²:1=(3/4)e² → e=2√3/3。"},
+ {q:"10. 解出 e²=3e−1 后如何取舍(椭圆)?",a:"e²−3e+1=0 → e=(3±√5)/2。椭圆只留 (0,1) 内的根 e=(3−√5)/2≈0.38。"},
+ {q:"11. 焦点在 y 轴的双曲线,渐近线斜率给的是?",a:"是 a/b(不是 b/a),渐近线 y=±(a/b)x,别套反。"},
+ {q:"12. 椭圆焦点三角形里两条焦半径之和恒等于?",a:"恒等于 2a(椭圆定义),而 |F₁F₂|=2c,是列关系式的两大定值。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
