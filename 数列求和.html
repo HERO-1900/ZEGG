@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数列求和:错位相减 · 裂项 · 分组 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--blue);width:160px}
+  .pill{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 数列求和攻坚包</div>
+    <h1>数列求和:错位相减 · 裂项 · 分组</h1>
+    <p class="lead">数列求和不是靠背公式,而是「先看通项 aₙ 长什么样,再对号入座选方法」。这一页把每种方法讲成人话,用动画让你亲眼看见「错位怎么错」「裂项怎么消」「分组怎么拆」。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 求 Sₙ = a₁+a₂+…+aₙ,第一步永远是<b>认通项 aₙ 的长相</b>——是等差?等比?「等差×等比」?带 1/[n(n+1)] 这种分式?还是带 (−1)ⁿ?<br>认出长相后就<b>对号入座</b>:等差/等比 → 公式法;等差×等比 → 错位相减;分式能拆成两半 → 裂项相消;一半等差一半等比 → 分组求和;带 (−1)ⁿ → 并项。<b>方法是被通项「点名」的,不是猜的。</b></div>
+
+    <!-- ===================== 求和方法选择器 ===================== -->
+    <h2 class="b">一、先诊断:这道题该用哪种方法?</h2>
+    <p class="lead">点选下面「通项 aₙ 的长相」,系统立刻告诉你推荐方法和理由。求和题 90% 的分,都赢在这一步选对方法。</p>
+    <div class="viz">
+      <div class="chips" id="pickChips"></div>
+      <div class="verdict" id="pickVerdict">↑ 点一个通项形态试试</div>
+    </div>
+
+    <!-- ===================== 核心原理 ===================== -->
+    <h2 class="b">二、核心原理:七种方法一网打尽</h2>
+
+    <h3>① 公式法(等差 / 等比)</h3>
+    <div class="say">🗣️ <b>看长相:</b> aₙ 本身就是等差或等比,直接套求和公式。<br>等差:Sₙ = n·a₁ + n(n−1)/2·d = n(a₁+aₙ)/2。<br>等比(q≠1):Sₙ = a₁(1−qⁿ)/(1−q);<b>q=1 时 Sₙ = n·a₁</b>(必须单独讨论!)。</div>
+    <div class="keybox"><b>等比求和的命门:</b> 用 Sₙ=a₁(1−qⁿ)/(1−q) 前,一定先问「q 会不会等于 1」。含参数时 q=1 要单独成一类,漏了直接扣分。</div>
+
+    <h3>② 错位相减法(通项 = 等差 × 等比)</h3>
+    <div class="say">🗣️ <b>看长相:</b> aₙ = (等差)·(等比),例如 aₙ = n·2ⁿ、aₙ = (2n−1)·3ⁿ。这种「一个多项式乘一个指数」的结构,专用错位相减。</div>
+    <div class="keybox"><b>四步动作:</b> ① 写出 Sₙ;② 两边同乘公比 q 得 qSₙ;③ <b>错位对齐</b>后 Sₙ − qSₙ 相减(等比部分整齐消掉,变成一个新的等比数列求和);④ 提出 (1−q) 整理出 Sₙ。<b>关键:错开一位对齐,中间项自动凑成等比。</b></div>
+    <div class="ex"><b>完整例题:求 Sₙ = 1·2 + 2·2² + 3·2³ + … + n·2ⁿ。</b>(即 aₙ = n·2ⁿ,q=2)<br>
+    ① Sₙ = 1·2 + 2·2² + 3·2³ + … + n·2ⁿ<br>
+    ② 2Sₙ = &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1·2² + 2·2³ + … + (n−1)·2ⁿ + n·2ⁿ⁺¹ (每项右移一位)<br>
+    ③ 相减 Sₙ − 2Sₙ:<br>
+    &nbsp;&nbsp;−Sₙ = 2 + (2²+2³+…+2ⁿ) − n·2ⁿ⁺¹<br>
+    &nbsp;&nbsp;中间 2+2²+…+2ⁿ 是等比,和 = 2(2ⁿ−1)/(2−1) = 2ⁿ⁺¹ − 2<br>
+    &nbsp;&nbsp;−Sₙ = (2ⁿ⁺¹ − 2) − n·2ⁿ⁺¹ = (1−n)·2ⁿ⁺¹ − 2<br>
+    ④ 整理:<b>Sₙ = (n−1)·2ⁿ⁺¹ + 2</b>。(验 n=1:Sₙ=0·4+2=2=1·2 ✓)</div>
+
+    <h3>③ 裂项相消法(把一项拆成两半,首尾之外全抵消)</h3>
+    <div class="say">🗣️ <b>看长相:</b> aₙ 是分式,分母是「相邻两个因子相乘」或含根号差。把每一项拆成「前半 − 后半」,相邻项的后半和前半正负抵消,最后只剩<b>第一项的前半 + 最后一项的后半</b>。</div>
+    <div class="keybox"><b>三个必背裂项通式:</b><br>
+    • 1/[n(n+1)] = <b>1/n − 1/(n+1)</b><br>
+    • 1/[(2n−1)(2n+1)] = <b>½·[1/(2n−1) − 1/(2n+1)]</b>(注意系数 ½!)<br>
+    • 1/(√(n+1)+√n) = <b>√(n+1) − √n</b>(分母有理化)<br>
+    通式:1/[n(n+k)] = (1/k)·[1/n − 1/(n+k)]。<b>抵消规律:第 i 项的后半 = 第 i+1 项前半的相反数,层层对消。</b></div>
+    <div class="ex"><b>完整例题:求 Sₙ = 1/(1·3) + 1/(3·5) + … + 1/[(2n−1)(2n+1)]。</b><br>
+    裂项:1/[(2n−1)(2n+1)] = ½·[1/(2n−1) − 1/(2n+1)]。<br>
+    Sₙ = ½·[(1/1 − 1/3) + (1/3 − 1/5) + … + (1/(2n−1) − 1/(2n+1))]<br>
+    中间 −1/3、−1/5、… 全被下一项的 +1/3、+1/5 抵消,只剩首尾:<br>
+    Sₙ = ½·(1 − 1/(2n+1)) = <b>n/(2n+1)</b>。</div>
+
+    <h3>④ 分组求和(数列由两类拼起来)</h3>
+    <div class="say">🗣️ <b>看长相:</b> aₙ 是「一部分等差 + 一部分等比」,或奇数项一个规律、偶数项另一个规律,或周期数列。把它<b>拆成几组各自求和</b>,再相加。</div>
+    <div class="ex"><b>例:</b> aₙ = 2n + 3ⁿ,求 Sₙ。<br>
+    分成两组:Σ2n + Σ3ⁿ = 2·n(n+1)/2 + 3(3ⁿ−1)/(3−1) = n(n+1) + (3ⁿ⁺¹−3)/2。</div>
+
+    <h3>⑤ 倒序相加</h3>
+    <div class="say">🗣️ <b>看长相:</b> 首末对称、aₖ + aₙ₊₁₋ₖ 为定值(等差求和公式就是这么来的)。把 Sₙ 正着写一遍、倒着写一遍,上下相加每一对都相等。</div>
+
+    <h3>⑥ 并项求和((−1)ⁿ 型)</h3>
+    <div class="say">🗣️ <b>看长相:</b> aₙ 带 (−1)ⁿ,正负交替。把<b>相邻两项配成一对</b>(第 2k−1 项 + 第 2k 项),每对往往化简为常数或等差,再对「对数」求和。注意 <b>n 是奇是偶要分类</b>。</div>
+    <div class="ex"><b>例:</b> aₙ = (−1)ⁿ·n,求 Sₙ。<br>
+    配对:(−1+2) + (−3+4) + … 每对 = 1。<br>
+    n 为偶:共 n/2 对 → Sₙ = n/2;n 为奇:Sₙ = n/2(前 n−1 项) − n = <b>−(n+1)/2</b>。</div>
+
+    <h3>⑦ aₙ 与 Sₙ 的关系(由和求项)</h3>
+    <div class="say">🗣️ <b>核心公式:</b> aₙ = Sₙ − Sₙ₋₁ (n≥2),a₁ = S₁。<br>🗣️ <b>铁律:</b> Sₙ − Sₙ₋₁ 只在 <b>n≥2</b> 时成立(n=1 时没有 Sₙ₋₁=S₀),所以 <b>a₁ 必须用 S₁ 单独算</b>,再看它是否恰好满足通式——满足就合并写,不满足就分段写。</div>
+
+    <!-- ===================== 错位相减动画 ===================== -->
+    <h2 class="g">三、看见「错位相减」</h2>
+    <p class="lead">以 Sₙ = 1·2 + 2·2² + 3·2³ + 4·2⁴ 为例。点「乘 q 错位」把 2Sₙ 整体右移一位,再点「相减」高亮:等比部分对消,只剩<b>首项</b>和<b>末尾多出来的一项</b>。</p>
+    <div class="viz">
+      <canvas id="cShift" width="760" height="300"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="shiftStep">▶ 下一步</button>
+        <button class="btn" id="shiftReset">重置</button>
+      </div>
+      <span class="info" id="shiftInfo">Sₙ 与 2Sₙ 逐项对齐。乘公比后每项右移一位,相减时对齐的等比项成对消去。</span>
+    </div>
+
+    <!-- ===================== 裂项相消动画 ===================== -->
+    <h2 class="g">四、看见「裂项相消」</h2>
+    <p class="lead">以 Σ 1/[n(n+1)] = 1/n − 1/(n+1) 为例。点「裂项」把每项拆成蓝(前半)+ 红(后半);点「相消」看相邻的红半和蓝半互相抵消,最后只剩<b>第一个蓝半</b>和<b>最后一个红半</b>。</p>
+    <div class="viz">
+      <canvas id="cSplit" width="760" height="300"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="splitStep">▶ 下一步</button>
+        <button class="btn" id="splitReset">重置</button>
+      </div>
+      <span class="info" id="splitInfo">每项 1/[k(k+1)] = 1/k − 1/(k+1)。相邻项的 −1/(k+1) 与 +1/(k+1) 抵消。</span>
+    </div>
+
+    <!-- ===================== 分组求和动画 ===================== -->
+    <h2 class="g">五、看见「分组求和」</h2>
+    <p class="lead">以 aₙ = 2n + 3ⁿ 为例。绿色是等差部分 2n,紫色是等比部分 3ⁿ。拖动滑块选项数 n,看两组分别累加,再合并成 Sₙ。</p>
+    <div class="viz">
+      <canvas id="cGroup" width="760" height="320"></canvas>
+      <div class="ctrls">
+        <label>项数 n = <input id="sGroup" type="range" min="1" max="6" value="4"> <span id="groupN" class="pill g">n</span></label>
+        <span class="info" id="groupInfo"></span>
+      </div>
+      <p class="sub">绿色 Σ2n = n(n+1),紫色 Σ3ⁿ = (3ⁿ⁺¹−3)/2,总和 Sₙ = 两者相加。</p>
+    </div>
+
+    <!-- ===================== aₙ与Sₙ关系演示 ===================== -->
+    <h2 class="v">六、看见「aₙ = Sₙ − Sₙ₋₁」</h2>
+    <p class="lead">以 Sₙ = n² 为例。拖动滑块选 n,红色堆叠条是 Sₙ,绿色高亮是 Sₙ − Sₙ₋₁ 得到的 aₙ。注意 <b>n=1 处没有 Sₙ₋₁,必须单独用 a₁=S₁</b>。</p>
+    <div class="viz">
+      <canvas id="cAsn" width="760" height="320"></canvas>
+      <div class="ctrls">
+        <label>取第 n 项:n = <input id="sAsn" type="range" min="1" max="7" value="3"> <span id="asnN" class="pill v">n</span></label>
+        <span class="info" id="asnInfo"></span>
+      </div>
+      <p class="sub">Sₙ=n² → aₙ=Sₙ−Sₙ₋₁=n²−(n−1)²=2n−1 (n≥2);a₁=S₁=1,恰好满足 2·1−1=1,可合并为 aₙ=2n−1。</p>
+    </div>
+
+    <!-- ===================== 部分和堆叠条 ===================== -->
+    <h2 class="o">七、看见「部分和 Sₙ 的增长」</h2>
+    <p class="lead">每一项 aₙ 像一块砖,一块块往上叠就是部分和 Sₙ。拖动滑块换数列,看 Sₙ 随 n 增长的堆叠条形——直观感受等差(线性长)与等比(爆炸长)的差别。</p>
+    <div class="viz">
+      <canvas id="cStack" width="760" height="320"></canvas>
+      <div class="ctrls">
+        <label>数列:
+          <select id="stackSel" style="font-weight:800;padding:4px;border:3px solid var(--ink)">
+            <option value="arith">等差 aₙ = n</option>
+            <option value="geo">等比 aₙ = 2ⁿ⁻¹</option>
+            <option value="lie">裂项 aₙ = 1/[n(n+1)]</option>
+          </select>
+        </label>
+        <label>n = <input id="sStack" type="range" min="1" max="9" value="5"> <span id="stackN" class="pill o">n</span></label>
+      </div>
+      <span class="info" id="stackInfo"></span>
+    </div>
+
+    <!-- ===================== 倒序相加/并项 ===================== -->
+    <h2 class="v">八、看见「倒序相加 · 并项」</h2>
+    <p class="lead">左:倒序相加——Sₙ 正着一行、倒着一行,每一竖列相加都是同一个定值(等差求和的原理)。右:并项——(−1)ⁿ·n 把相邻两项配成一对,每对 =1。点按钮切换演示。</p>
+    <div class="viz">
+      <canvas id="cRev" width="760" height="280"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="revBtn">切到「倒序相加」</button>
+        <button class="btn" id="pairBtn">切到「并项 (−1)ⁿ」</button>
+      </div>
+      <span class="info" id="revInfo">倒序相加:1+2+…+n 与 n+…+2+1 上下对齐,每列都 = n+1,共 n 列,故 2Sₙ = n(n+1)。</span>
+    </div>
+
+    <!-- ===================== 全题型地图 ===================== -->
+    <h2 class="b">九、全题型地图(触发信号 → 标准动作 → 陷阱)</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型</th><th>触发信号(通项长相)</th><th>标准动作</th></tr>
+        <tr><td><b>判断用哪种</b></td><td>拿到 aₙ 先分类</td><td>等差/等比→公式;积→错位;分式→裂项;拼接→分组;(−1)ⁿ→并项</td></tr>
+        <tr><td><b>错位相减</b></td><td>aₙ=(等差)·(等比),如 n·2ⁿ</td><td>Sₙ 乘 q 错位对齐,相减凑等比,提 (1−q) 整理</td></tr>
+        <tr><td><b>裂项相消</b></td><td>1/[n(n+1)]、1/[(2n−1)(2n+1)]、根号差</td><td>拆成前半−后半,写出首尾,中间对消</td></tr>
+        <tr><td><b>分组求和</b></td><td>aₙ=2n+3ⁿ、奇偶不同、周期</td><td>按类型拆组各自求和再合并</td></tr>
+        <tr><td><b>含 (−1)ⁿ</b></td><td>正负交替</td><td>相邻两项并项;n 奇偶分类讨论</td></tr>
+        <tr><td><b>由 Sₙ 求 aₙ</b></td><td>给了 Sₙ 表达式求通项</td><td>aₙ=Sₙ−Sₙ₋₁ (n≥2),单独验 a₁=S₁</td></tr>
+      </table>
+    </div>
+
+    <h3>带解例题速览</h3>
+    <div class="ex"><b>错位相减:</b> 求 Σ (2n−1)·3ⁿ⁻¹。设 S,3S 错位相减:−2S = 1 + 2(3+3²+…+3ⁿ⁻¹) − (2n−1)·3ⁿ,算得 <b>S = (n−1)·3ⁿ + 1</b>。<span class="trap">⚠ 相减后中间一定是「等比」,项数别数错。</span></div>
+    <div class="ex"><b>裂项(根号):</b> Σ 1/(√(n+1)+√n) = Σ (√(n+1)−√n) = <b>√(n+1) − 1</b>。<span class="trap">⚠ 分母有理化后要写成「后−前」才能顺向对消。</span></div>
+    <div class="ex"><b>分组:</b> aₙ = n + (−1)ⁿ,求 S₁₀ = Σn + Σ(−1)ⁿ = 55 + 0 = <b>55</b>(10 项里 (−1)ⁿ 正负各半抵消)。</div>
+    <div class="ex"><b>含 (−1)ⁿ:</b> aₙ=(−1)ⁿ·(2n−1),求 S₂₀。并项:(−1+3)+(−5+7)+…=2×10=<b>20</b>。</div>
+    <div class="ex"><b>由 Sₙ 求 aₙ:</b> 已知 Sₙ=2ⁿ−1,则 n≥2 时 aₙ=Sₙ−Sₙ₋₁=2ⁿ⁻¹;a₁=S₁=1 也满足 → <b>aₙ=2ⁿ⁻¹</b>(等比)。若 Sₙ=n²+n,a₁=2,aₙ=2n (n≥2) 也满足 → aₙ=2n。</div>
+
+    <!-- ===================== 易错集 ===================== -->
+    <h2 class="r">十、易错集(丢分重灾区)</h2>
+    <div class="card">
+      <p class="trap">⚠ ① 错位相减:相减后中间那段等比的<b>项数容易数错</b>——不是 n 项,通常是 n−1 项;还要盯紧<b>符号</b>(减出来常带负号)。</p>
+      <p class="trap">⚠ ② 裂项系数漏乘:1/[(2n−1)(2n+1)] 前面有个 <b>½</b>,通式 1/[n(n+k)] 前面是 <b>1/k</b>,忘了系数结果差一半。</p>
+      <p class="trap">⚠ ③ 由 Sₙ 求 aₙ:必须<b>单独验 n=1</b>。a₁=S₁,再看是否满足 n≥2 的通式;满足才合并,不满足要分段写。</p>
+      <p class="trap">⚠ ④ aₙ=Sₙ−Sₙ₋₁ <b>只对 n≥2</b>。直接用它算 a₁ 会用到 S₀，是错的。</p>
+      <p class="trap">⚠ ⑤ 等比求和忘记讨论 <b>q=1</b>:含参时 q=1 单独一类,Sₙ=n·a₁。</p>
+      <p class="trap">⚠ ⑥ 裂项/并项写「…」时,首尾项要<b>写全</b>,阅卷看的就是首尾对消的那两项。</p>
+    </div>
+
+    <!-- ===================== 拔高 ===================== -->
+    <h2 class="v">十一、尖子生拔高视角</h2>
+    <div class="card">
+      <p><b>① 拿到 aₙ 先做「三连认」:</b> 是不是积(等差×等比)?是不是分式(能裂项)?是不是拼接/交替(分组/并项)?一秒定方法,不试错。</p>
+      <p><b>② 错位相减的「防错模板」:</b> 相减后立刻写「中间是首项 3、公比 q、共 n−1 项的等比」,套公式,不数格子。整理成 Sₙ=(An+B)·qⁿ+C 的标准形。</p>
+      <p><b>③ 裂项要「凑得出」:</b> 若分母不是标准形,先<b>配系数</b>让它变成 1/[n(n+k)] 或有理化。技巧:1/[n(n+2)] 也可裂,系数是 ½。</p>
+      <p><b>④ 复合题分层拆:</b> aₙ = n·2ⁿ + 1/[n(n+1)] 这种,<b>先分组</b>再对每组分别用错位相减 + 裂项,最后合并。压轴常这么套娃。</p>
+      <p><b>⑤ 由 Sₙ 找规律:</b> 若 Sₙ 与 aₙ 混在递推里(如 Sₙ=2aₙ−1),用 Sₙ−Sₙ₋₁ 消去 S,得到 aₙ 与 aₙ₋₁ 的递推,再判等比/等差。</p>
+    </div>
+
+    <!-- ===================== 自测 ===================== -->
+    <h2 class="o">十二、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学 · 数列求和攻坚包 · 下一块:数列递推与通项 / 新定义数列</p>
+  </div>
+
+<script>
+/* ---------- 1. 求和方法选择器 ---------- */
+(function(){
+  const items=[
+    {t:'aₙ = 3n − 1(等差)',m:'公式法',r:'aₙ 本身等差,直接 Sₙ = n(a₁+aₙ)/2。'},
+    {t:'aₙ = 2ⁿ⁻¹(等比)',m:'公式法',r:'等比,套 Sₙ = a₁(1−qⁿ)/(1−q);注意先看 q 是否为 1。'},
+    {t:'aₙ = n · 2ⁿ(等差×等比)',m:'错位相减法',r:'多项式乘指数 → 乘公比错位相减。'},
+    {t:'aₙ = (2n−1) · 3ⁿ',m:'错位相减法',r:'同为「等差×等比」结构,错位相减。'},
+    {t:'aₙ = 1/[n(n+1)]',m:'裂项相消法',r:'分母相邻因子相乘 → 拆成 1/n − 1/(n+1) 对消。'},
+    {t:'aₙ = 1/[(2n−1)(2n+1)]',m:'裂项相消法',r:'裂项系数 ½:½[1/(2n−1) − 1/(2n+1)]。'},
+    {t:'aₙ = 1/(√(n+1)+√n)',m:'裂项相消法',r:'分母有理化 → √(n+1) − √n,顺向对消。'},
+    {t:'aₙ = 2n + 3ⁿ',m:'分组求和',r:'等差 + 等比拼接 → 拆两组各自求和。'},
+    {t:'aₙ = (−1)ⁿ · n',m:'并项求和',r:'正负交替 → 相邻两项配对;注意 n 奇偶。'},
+    {t:'给 Sₙ = n² 求 aₙ',m:'aₙ = Sₙ − Sₙ₋₁',r:'由和求项:n≥2 用 Sₙ−Sₙ₋₁,单独验 a₁=S₁。'}
+  ];
+  const box=document.getElementById('pickChips');
+  const out=document.getElementById('pickVerdict');
+  items.forEach((it,i)=>{
+    const c=document.createElement('span');c.className='chip';c.textContent=it.t;
+    c.onclick=()=>{
+      [...box.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');
+      out.innerHTML='推荐方法:<span class="pill">'+it.m+'</span>　理由:'+it.r;
+    };
+    box.appendChild(c);
+  });
+})();
+
+/* ---------- 2. 错位相减步骤动画 ---------- */
+(function(){
+  const c=document.getElementById('cShift'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let step=0;
+  /* Sₙ = 1·2 + 2·2² + 3·2³ + 4·2⁴ ; 四项 */
+  const terms=['1·2','2·2²','3·2³','4·2⁴'];
+  const cw=150,x0=70,y1=90,y2=180;
+  function cell(x,y,txt,col,hl){
+    ctx.fillStyle=hl?col:'#fffdf6';ctx.fillRect(x,y,cw-14,48);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=hl?4:2.5;ctx.strokeRect(x,y,cw-14,48);
+    ctx.fillStyle=hl?'#fff':'#16120A';ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(txt,x+(cw-14)/2,y+24);
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);ctx.textAlign='left';
+    ctx.fillStyle='#16120A';ctx.font='bold 16px sans-serif';
+    ctx.fillText('Sₙ =',10,y1+24);
+    ctx.fillText('2Sₙ =',10,y2+24);
+    /* Sₙ 行 */
+    for(let i=0;i<4;i++) cell(x0+i*cw,y1,terms[i],'#1450C8',false);
+    if(step===0){
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('点「下一步」:两边乘公比 q=2,得 2Sₙ,并把每项右移一位对齐。',10,40);
+      return;
+    }
+    /* 2Sₙ 行,右移一位:1·2² 放在原 2·2² 的列下面 */
+    const shifted=['1·2²','2·2³','3·2⁴','4·2⁵'];
+    for(let i=0;i<4;i++){
+      const col=(step>=2)?'#7A3FF2':'#1E9E86';
+      cell(x0+(i+1)*cw,y2,shifted[i],col,step>=2 && i<3);
+    }
+    if(step===1){
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('① 错位对齐完成。再点「下一步」做 Sₙ − 2Sₙ:紫色竖列成对相消。',10,40);
+    }
+    if(step>=2){
+      /* 高亮对齐的中间列 (2·2²,2·2³,3·2³...) 实际相消的是同列的等比项 */
+      ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;ctx.setLineDash([6,5]);
+      for(let i=1;i<4;i++){ctx.strokeRect(x0+i*cw-3,y1-6,cw-8,H-y1-20);}
+      ctx.setLineDash([]);
+      /* 首项与末项标出 */
+      ctx.fillStyle='#E0382A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('剩:首项 1·2',x0,y1-14);
+      ctx.fillText('剩:末项 −4·2⁵',x0+4*cw,y2-14);
+      ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+      ctx.fillText('② Sₙ−2Sₙ = 2 + (2²+2³+2⁴) − 4·2⁵，中间括号是等比。',10,y2+90);
+      ctx.fillText('   整理得 Sₙ = (n−1)·2ⁿ⁺¹ + 2，此处 n=4 → S₄ = 3·32 + 2 = 98。',10,y2+112);
+    }
+  }
+  document.getElementById('shiftStep').onclick=()=>{step=Math.min(2,step+1);frame();};
+  document.getElementById('shiftReset').onclick=()=>{step=0;frame();};
+  frame();
+})();
+
+/* ---------- 3. 裂项相消可视化 ---------- */
+(function(){
+  const c=document.getElementById('cSplit'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let step=0;const N=4;
+  const cw=170,x0=40,y=110;
+  function half(x,y,txt,col){
+    ctx.fillStyle=col;ctx.fillRect(x,y,72,44);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x,y,72,44);
+    ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(txt,x+36,y+22);ctx.textAlign='left';
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+    if(step===0){
+      /* 原始项 1/[k(k+1)] */
+      for(let k=1;k<=N;k++){
+        const x=x0+(k-1)*cw;
+        ctx.fillStyle='#fffdf6';ctx.fillRect(x,y,150,44);
+        ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x,y,150,44);
+        ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText('1/['+k+'·'+(k+1)+']',x+75,y+22);ctx.textAlign='left';
+      }
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('原始:Σ 1/[k(k+1)]，前 4 项。点「下一步」裂项。',10,40);
+      return;
+    }
+    /* 裂项:每项 = 蓝(1/k) - 红(1/(k+1)) */
+    for(let k=1;k<=N;k++){
+      const x=x0+(k-1)*cw;
+      half(x,y,'1/'+k,'#1450C8');
+      ctx.fillStyle='#16120A';ctx.font='bold 20px sans-serif';ctx.fillText('−',x+76,y+28);
+      half(x+90,y,'1/'+(k+1),'#E0382A');
+    }
+    if(step===1){
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('① 每项拆成 蓝(1/k) − 红(1/(k+1))。再点「下一步」相消。',10,40);
+    }
+    if(step>=2){
+      /* 画对消:第k项的红 1/(k+1) 与第 k+1 项的蓝 1/(k+1) 抵消 */
+      for(let k=1;k<N;k++){
+        const xred=x0+(k-1)*cw+90;      /* 红半位置 */
+        const xblue=x0+k*cw;            /* 下一项蓝半 */
+        ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;
+        ctx.beginPath();ctx.moveTo(xred+36,y-6);
+        ctx.bezierCurveTo(xred+36,y-40,xblue+36,y-40,xblue+36,y-6);ctx.stroke();
+        /* 划掉 */
+        ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;
+        ctx.beginPath();ctx.moveTo(xred,y+44);ctx.lineTo(xred+72,y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(xblue,y+44);ctx.lineTo(xblue+72,y);ctx.stroke();
+      }
+      /* 圈出保留的首尾 */
+      ctx.strokeStyle='#1E9E86';ctx.lineWidth=4;
+      ctx.strokeRect(x0-4,y-4,80,52);                    /* 首蓝 1/1 */
+      ctx.strokeRect(x0+(N-1)*cw+86,y-4,80,52);          /* 末红 1/(N+1) */
+      ctx.fillStyle='#1E9E86';ctx.font='bold 15px sans-serif';
+      ctx.fillText('保留',x0,y-14);
+      ctx.fillText('保留',x0+(N-1)*cw+86,y-14);
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('② 相邻红半与蓝半抵消，只剩首项 1/1 与末项 −1/(n+1)。',10,y+90);
+      ctx.fillText('   Sₙ = 1 − 1/(n+1) = n/(n+1)。（此处 n=4 → 4/5）',10,y+114);
+    }
+  }
+  document.getElementById('splitStep').onclick=()=>{step=Math.min(2,step+1);frame();};
+  document.getElementById('splitReset').onclick=()=>{step=0;frame();};
+  frame();
+})();
+
+/* ---------- 4. 分组求和 ---------- */
+(function(){
+  const c=document.getElementById('cGroup'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('sGroup');
+  function draw(){
+    const n=parseInt(sl.value);
+    ctx.clearRect(0,0,W,H);
+    const baseY=250,cw=90,x0=60;
+    let sumArith=0,sumGeo=0;
+    for(let k=1;k<=n;k++){
+      const x=x0+(k-1)*cw;
+      const av=2*k, gv=Math.pow(3,k);
+      sumArith+=av;sumGeo+=gv;
+      /* 归一化高度 */
+      const ah=Math.min(av*7,120);
+      const gh=Math.min(Math.log(gv)*30,150);
+      /* 绿:等差 2n */
+      ctx.fillStyle='#1E9E86';ctx.fillRect(x,baseY-ah,34,ah);
+      ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x,baseY-ah,34,ah);
+      /* 紫:等比 3ⁿ */
+      ctx.fillStyle='#7A3FF2';ctx.fillRect(x+40,baseY-gh,34,gh);
+      ctx.strokeStyle='#16120A';ctx.strokeRect(x+40,baseY-gh,34,gh);
+      ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+      ctx.fillText('a'+k,x+37,baseY+18);
+      ctx.textAlign='left';
+    }
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(30,baseY);ctx.lineTo(W-20,baseY);ctx.stroke();
+    ctx.fillStyle='#1E9E86';ctx.fillRect(W-190,30,16,16);ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('等差 2n',W-168,43);
+    ctx.fillStyle='#7A3FF2';ctx.fillRect(W-190,52,16,16);ctx.fillStyle='#16120A';ctx.fillText('等比 3ⁿ',W-168,65);
+    document.getElementById('groupN').textContent='n = '+n;
+    document.getElementById('groupInfo').innerHTML='Σ2n = <b>'+sumArith+'</b>，Σ3ⁿ = <b>'+sumGeo+'</b>，Sₙ = <b>'+(sumArith+sumGeo)+'</b>。';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 5. aₙ ↔ Sₙ 关系 ---------- */
+(function(){
+  const c=document.getElementById('cAsn'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('sAsn');
+  const S=n=>n*n; /* Sₙ = n² */
+  function draw(){
+    const n=parseInt(sl.value);
+    ctx.clearRect(0,0,W,H);
+    const baseY=250,cw=95,x0=60,scale=4.4;
+    /* 画 S(n-1) 和 S(n) 两根堆叠条,差值高亮为 aₙ */
+    /* 左条: S(n-1) */
+    const sPrev=n>=2?S(n-1):0, sNow=S(n);
+    const hPrev=sPrev*scale, hNow=sNow*scale;
+    const xa=180,xb=420,bw=120;
+    /* S(n-1) */
+    ctx.fillStyle='#E0382A';ctx.fillRect(xa,baseY-hPrev,bw,hPrev);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(xa,baseY-hPrev,bw,hPrev);
+    ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';
+    if(hPrev>24)ctx.fillText('Sₙ₋₁='+sPrev,xa+bw/2,baseY-hPrev/2);
+    ctx.fillStyle='#16120A';ctx.fillText(n>=2?('S'+(n-1)):'（无 S₀）',xa+bw/2,baseY+22);
+    /* S(n): 下段红 + 上段绿(=aₙ) */
+    ctx.fillStyle='#E0382A';ctx.fillRect(xb,baseY-hPrev,bw,hPrev);
+    ctx.strokeStyle='#16120A';ctx.strokeRect(xb,baseY-hPrev,bw,hPrev);
+    ctx.fillStyle='#1E9E86';ctx.fillRect(xb,baseY-hNow,bw,hNow-hPrev);
+    ctx.strokeStyle='#16120A';ctx.strokeRect(xb,baseY-hNow,bw,hNow-hPrev);
+    ctx.fillStyle='#fff';ctx.textAlign='center';
+    if(hNow-hPrev>20)ctx.fillText('aₙ',xb+bw/2,baseY-hPrev-(hNow-hPrev)/2);
+    ctx.fillStyle='#16120A';ctx.fillText('S'+n+'='+sNow,xb+bw/2,baseY+22);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(40,baseY);ctx.lineTo(W-30,baseY);ctx.stroke();
+    ctx.textAlign='left';
+    document.getElementById('asnN').textContent='n = '+n;
+    let msg;
+    if(n===1){
+      msg='n=1 特殊：没有 S₀，<b>不能用 Sₙ−Sₙ₋₁</b>。必须 a₁ = S₁ = 1²= <b>1</b>。';
+    }else{
+      const a=sNow-sPrev;
+      msg='aₙ = Sₙ − Sₙ₋₁ = '+sNow+' − '+sPrev+' = <b>'+a+'</b>（= 2n−1 = '+(2*n-1)+' ✓，绿色块高）';
+    }
+    document.getElementById('asnInfo').innerHTML=msg;
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 6. 部分和堆叠条形 ---------- */
+(function(){
+  const c=document.getElementById('cStack'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sel=document.getElementById('stackSel'),sl=document.getElementById('sStack');
+  function aOf(kind,k){
+    if(kind==='arith')return k;
+    if(kind==='geo')return Math.pow(2,k-1);
+    return 1/(k*(k+1));
+  }
+  function draw(){
+    const kind=sel.value,n=parseInt(sl.value);
+    ctx.clearRect(0,0,W,H);
+    const baseY=270,cw=(W-100)/n,x0=60;
+    /* 计算最大部分和用于缩放 */
+    let cum=0,maxS=0,parts=[];
+    for(let k=1;k<=n;k++){cum+=aOf(kind,k);parts.push(cum);maxS=Math.max(maxS,cum);}
+    const scale=(baseY-40)/maxS;
+    const cols=['#1450C8','#1E9E86','#E86A17','#7A3FF2','#E0382A','#F3C00E'];
+    for(let k=1;k<=n;k++){
+      const x=x0+(k-1)*cw;
+      let below=0;
+      for(let j=1;j<=k;j++){
+        const av=aOf(kind,j);
+        const h=av*scale;
+        ctx.fillStyle=cols[(j-1)%cols.length];
+        ctx.fillRect(x,baseY-below-h,cw-16,h);
+        ctx.strokeStyle='#16120A';ctx.lineWidth=1.6;ctx.strokeRect(x,baseY-below-h,cw-16,h);
+        below+=h;
+      }
+      ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+      ctx.fillText('S'+k,x+(cw-16)/2,baseY+16);
+      const sval=parts[k-1];
+      ctx.fillText(kind==='lie'?sval.toFixed(2):String(Math.round(sval)),x+(cw-16)/2,baseY-below-8);
+      ctx.textAlign='left';
+    }
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(40,baseY);ctx.lineTo(W-20,baseY);ctx.stroke();
+    document.getElementById('stackN').textContent='n = '+n;
+    const sn=parts[n-1];
+    let f;
+    if(kind==='arith')f='Sₙ = n(n+1)/2 = '+(n*(n+1)/2);
+    else if(kind==='geo')f='Sₙ = 2ⁿ − 1 = '+(Math.pow(2,n)-1);
+    else f='Sₙ = 1 − 1/(n+1) = n/(n+1) ≈ '+sn.toFixed(3)+'（永远小于 1，收敛！）';
+    document.getElementById('stackInfo').innerHTML='每块 = 一项 aₖ，往上叠 = 部分和 Sₙ。当前 <b>'+f+'</b>';
+  }
+  sel.addEventListener('change',draw);sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 7. 倒序相加 / 并项 ---------- */
+(function(){
+  const c=document.getElementById('cRev'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let mode='rev';
+  function cell(x,y,txt,col){
+    ctx.fillStyle=col;ctx.fillRect(x,y,60,44);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x,y,60,44);
+    ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(txt,x+30,y+22);ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const n=5,cw=90,x0=60,y1=80,y2=150;
+    if(mode==='rev'){
+      /* 正序 1..5 与 倒序 5..1 上下对齐,每列和 = 6 */
+      for(let k=1;k<=n;k++){
+        const x=x0+(k-1)*cw;
+        cell(x,y1,String(k),'#1450C8');
+        cell(x,y2,String(n+1-k),'#1E9E86');
+        ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';ctx.textAlign='center';
+        ctx.fillText('= 6',x+30,y2+70);ctx.textAlign='left';
+      }
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('Sₙ (正序)',10,y1+26);ctx.fillText('Sₙ (倒序)',10,y2+26);
+      ctx.fillText('每列都相加为定值 n+1 = 6，共 n=5 列 → 2Sₙ = 5×6 = 30 → Sₙ = 15。',10,40);
+    }else{
+      /* 并项 (-1)^k · k : -1 +2 -3 +4 -5 -6 , 配对 */
+      const vals=[-1,2,-3,4,-5,6];const cw2=115;const x0b=40;
+      for(let i=0;i<6;i++){
+        const x=x0b+i*cw2;
+        cell(x,110,(vals[i]>0?'+':'')+vals[i],vals[i]>0?'#1E9E86':'#E0382A');
+      }
+      /* 配对括号 */
+      for(let p=0;p<3;p++){
+        const xL=x0b+(2*p)*cw2, xR=x0b+(2*p+1)*cw2+60;
+        ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;
+        ctx.beginPath();ctx.moveTo(xL-6,170);ctx.lineTo(xL-6,182);ctx.lineTo(xR+6,182);ctx.lineTo(xR+6,170);ctx.stroke();
+        ctx.fillStyle='#7A3FF2';ctx.font='bold 15px sans-serif';ctx.textAlign='center';
+        ctx.fillText('= 1',(xL+xR)/2,205);ctx.textAlign='left';
+      }
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('aₙ = (−1)ⁿ·n。相邻两项配对，每对 = 1（如 −1+2=1）。',10,40);
+      ctx.fillText('n=6（偶）：3 对 → S₆ = 3。n 为奇则再减最后一项，需分类。',10,230);
+    }
+  }
+  document.getElementById('revBtn').onclick=()=>{mode='rev';document.getElementById('revInfo').textContent='倒序相加:正序与倒序上下对齐，每竖列相加都是同一定值 n+1。';draw();};
+  document.getElementById('pairBtn').onclick=()=>{mode='pair';document.getElementById('revInfo').textContent='并项:(−1)ⁿ·n 相邻两项配对，每对化为常数 1，再按 n 奇偶讨论。';draw();};
+  draw();
+})();
+
+/* ---------- 自测 ---------- */
+const qs=[
+ {q:"1. 求 Sₙ = 1·2 + 2·2² + … + n·2ⁿ。",a:"错位相减:Sₙ−2Sₙ 后整理，Sₙ = (n−1)·2ⁿ⁺¹ + 2。"},
+ {q:"2. 求 Σ 1/[n(n+1)]（前 n 项）。",a:"裂项 1/n − 1/(n+1)，对消后 Sₙ = 1 − 1/(n+1) = n/(n+1)。"},
+ {q:"3. 求 Σ 1/[(2n−1)(2n+1)]。",a:"½[1/(2n−1) − 1/(2n+1)]，Sₙ = ½(1 − 1/(2n+1)) = n/(2n+1)。别漏系数 ½。"},
+ {q:"4. 求 Σ 1/(√(n+1)+√n)。",a:"有理化 = √(n+1) − √n，对消 → Sₙ = √(n+1) − 1。"},
+ {q:"5. aₙ = 2n + 3ⁿ，求 Sₙ。",a:"分组:Σ2n + Σ3ⁿ = n(n+1) + (3ⁿ⁺¹ − 3)/2。"},
+ {q:"6. aₙ = (−1)ⁿ·n，求 Sₙ。",a:"并项:每对=1。n 偶 Sₙ=n/2；n 奇 Sₙ=−(n+1)/2。"},
+ {q:"7. 已知 Sₙ = n²，求 aₙ。",a:"n≥2:aₙ=Sₙ−Sₙ₋₁=2n−1；a₁=S₁=1 满足，合并 aₙ=2n−1。"},
+ {q:"8. 已知 Sₙ = 2ⁿ − 1，求 aₙ。",a:"n≥2:aₙ=2ⁿ⁻¹；a₁=S₁=1 满足 → aₙ=2ⁿ⁻¹（等比）。"},
+ {q:"9. 等比 Sₙ=a₁(1−qⁿ)/(1−q) 何时要单独讨论?",a:"当 q=1 时公式分母为 0，此时 Sₙ = n·a₁，必须单独成一类。"},
+ {q:"10. 错位相减相减后中间是几项等比?",a:"通常是 n−1 项（不是 n 项），项数数错是最常见失分点。"},
+ {q:"11. 为什么 aₙ=Sₙ−Sₙ₋₁ 不能算 a₁?",a:"n=1 时会用到 S₀，而 S₀ 无定义；a₁ 必须用 S₁ 单独算。"},
+ {q:"12. aₙ = n·2ⁿ + 1/[n(n+1)]，怎么求 Sₙ?",a:"先分组:一组 n·2ⁿ 用错位相减，一组 1/[n(n+1)] 用裂项，最后相加。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

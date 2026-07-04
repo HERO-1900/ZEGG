@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动量守恒与碰撞 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>动量守恒与碰撞</h1>
+    <p class="lead">碰撞、爆炸、反冲、人船模型、子弹打木块——这一整块都靠一个万能守恒撑起来:系统动量守恒。难点从来不是公式,而是「方向符号」「守恒条件」和「碰后合理性」。这页把原理讲透,把每种题型的触发信号+标准动作给你,再用七个动画把物理拨到你眼前。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 动量 p=mv 是「运动的家底」,它是<b>有方向</b>的(矢量)。两个物体互相撞、互相推,只要外面没人插手(没有净外力),它们的<b>家底总和不变</b>——这就是动量守恒。碰撞看动能:不丢动能叫<b>弹性</b>,丢一点叫<b>非弹性</b>,粘在一起丢最多叫<b>完全非弹性</b>。做题铁律三句:<b>先定正方向</b>、<b>先列动量守恒</b>、<b>再检验碰后合不合理</b>(动能不能变多、后面的球不能追上前面的球)。</div>
+
+    <div class="keybox"><b>一页速记:</b> ① 动量 p=mv(矢量,先定正方向);② 冲量 I=Ft,动量定理 Ft=Δp=mv′−mv;③ 动量守恒条件:系统合外力为0,或碰撞/爆炸瞬间内力≫外力;④ 一维碰撞:动量都守恒,弹性连动能也守恒;⑤ 完全非弹性=共速、动能损失最大;⑥ 检验:碰后动能≤碰前、方向合理。</div>
+
+    <h2 class="b">① 核心原理:动量、冲量、动量定理、守恒</h2>
+    <div class="card">
+      <h3>动量 p=mv(矢量)</h3>
+      <p style="margin:8px 0">动量 p=mv,单位 kg·m/s,方向与速度<b>同向</b>。一维问题里,先规定一个正方向,与它同向为正、反向为负——这是全章不出错的地基。</p>
+      <h3>冲量 I=Ft 与动量定理</h3>
+      <div class="eq">冲量 I = F·t　　动量定理:Ft = Δp = mv′ − mv</div>
+      <p style="margin:8px 0">合外力的冲量 = 动量的变化量。<b>F 是合外力,方向与 Δp 同向</b>。求「平均作用力」「碰撞时间」时就用它:F = Δp / t。变力时用 I=面积(F-t 图线下面积)。</p>
+      <h3>动量守恒条件</h3>
+      <div class="eq">m₁v₁ + m₂v₂ = m₁v₁′ + m₂v₂′</div>
+      <p style="margin:8px 0"><b>成立条件:</b> 系统所受<b>合外力为零</b>(或某方向合外力为零→该方向动量守恒)。碰撞、爆炸「瞬间」:内力(冲击力)<b>远大于</b>外力(重力、摩擦),所以系统动量<b>近似守恒</b>——这是能在有摩擦/有重力时照样用动量守恒的理由。</p>
+      <p class="trap">⚠ 动量是矢量,不定正方向必错;反向速度一定代负号。「合外力为零」是内部相互作用(内力)不影响总动量,内力再大也守恒。</p>
+    </div>
+
+    <h2 class="o">② 一维碰撞分类:弹性 / 非弹性 / 完全非弹性</h2>
+    <div class="card">
+      <table>
+        <tr><th>类型</th><th>动量</th><th>动能</th><th>结果</th></tr>
+        <tr><td><b>弹性</b>碰撞</td><td>守恒</td><td><b>守恒</b>(不损失)</td><td>分开,各有速度</td></tr>
+        <tr><td><b>非弹性</b>碰撞</td><td>守恒</td><td>部分损失</td><td>分开,损失介于两者间</td></tr>
+        <tr><td><b>完全非弹性</b></td><td>守恒</td><td><b>损失最多</b></td><td>粘在一起共速</td></tr>
+      </table>
+      <h3>弹性碰撞末速度公式(m₂ 初静止,务必会推)</h3>
+      <div class="eq">v₁′ = (m₁−m₂)/(m₁+m₂) · v₀　,　v₂′ = 2m₁/(m₁+m₂) · v₀</div>
+      <p style="margin:8px 0"><b>三种特例(秒杀选择题):</b> ① m₁=m₂:<b>速度交换</b>(v₁′=0,v₂′=v₀);② m₁≫m₂:大球几乎不变,小球以≈2v₀弹出;③ m₁≪m₂:小球<b>原速反弹</b>(v₁′≈−v₀),大球几乎不动。</p>
+      <h3>完全非弹性:碰后共速、动能损失最大</h3>
+      <div class="eq">v共 = (m₁v₀)/(m₁+m₂)　,　损失动能 ΔEk = ½·(m₁m₂)/(m₁+m₂)·v₀²</div>
+      <p style="margin:8px 0">碰后两物粘在一起以 v共 运动,损失的动能变成内能/形变热,在三类碰撞里<b>损失最多</b>。</p>
+      <p class="trap">⚠ 三类碰撞动量都守恒,区别只在动能。别把完全非弹性(共速)当弹性,也别用错公式。</p>
+    </div>
+    <div class="card">
+      <h3>碰撞合理性判断(三道硬门槛)</h3>
+      <p style="margin:6px 0"><b>① 动量守恒:</b> 碰前总动量 = 碰后总动量(必须成立)。</p>
+      <p style="margin:6px 0"><b>② 动能不增:</b> 碰后总动能 ≤ 碰前总动能(碰撞不会凭空多出动能;爆炸才会增)。</p>
+      <p style="margin:6px 0"><b>③ 方向合理:</b> 同向碰撞后,前面的物体速度 ≥ 后面的物体速度(后球不能穿透追上前球);正碰后不能出现「反常追撞」。</p>
+      <p class="trap">⚠ 一个答案哪怕动量守恒,只要动能变多或后球追上前球,就是不合理,必须舍去。</p>
+    </div>
+
+    <h2 class="v">③ 爆炸与反冲、人船模型、动量与能量结合</h2>
+    <div class="card">
+      <h3>爆炸与反冲</h3>
+      <p style="margin:6px 0"><b>爆炸:</b> 内部释放能量炸成几块,动量守恒(常初动量为0),动能<b>增大</b>(化学能转入)。</p>
+      <p style="margin:6px 0"><b>反冲:</b> 一部分向后喷出,主体向前(发射、喷气、开枪)。动量守恒,反向取负:m₁v₁ = m₂v₂(大小)。</p>
+      <div class="eq">静止爆炸:0 = m₁v₁′ + m₂v₂′ → 两块动量等大反向</div>
+      <h3>人船模型(动量守恒 + 位移关系,质心不动)</h3>
+      <p style="margin:6px 0">人在静止的船上走动,系统初动量为0 → 全程动量守恒 → <b>质心位置不动</b>。人走距离 x人、船退距离 x船,满足:</p>
+      <div class="eq">m人·x人 = m船·x船　,　x人 + x船 = 相对位移 L</div>
+      <p style="margin:6px 0"><b>位移与质量成反比</b>:谁重谁动得少。这也是「反冲」的位移版本。</p>
+      <h3>动量与能量结合(子弹打木块、弹簧)</h3>
+      <p style="margin:6px 0"><b>子弹打木块:</b> 碰撞瞬间动量守恒求 v共 → 能量守恒 Q=½m₁v₀²−½(m₁+m₂)v共² → Q=f·s相对求钻入深度。</p>
+      <p style="margin:6px 0"><b>弹簧夹两物:</b> 弹簧最短=两端共速(动量守恒求 v共),此刻弹性势能最大(能量守恒求 Ep);弹开恢复自然长度像弹性碰撞。</p>
+      <p class="trap">⚠ 顺序:先动量后能量。动量定衔接速度,能量算损失/势能。反了往往卡死。</p>
+    </div>
+
+    <!-- ============ 互动区 ============ -->
+    <h2 class="r">④ 碰撞模拟器(调质量/速度/类型,看碰前碰后)</h2>
+    <div class="viz">
+      <div class="vlabel">💥 互动 1 — 碰撞模拟器:调 m₁ m₂ v₁ v₂ 与类型 → 动画演示 + 末速度 + 动能损失</div>
+      <canvas id="collCv" width="700" height="220"></canvas>
+      <div class="ctrl">
+        <button class="ctype on" data-t="0">弹性碰撞</button>
+        <button class="ctype" data-t="1">非弹性碰撞</button>
+        <button class="ctype" data-t="2">完全非弹性(粘一起)</button>
+      </div>
+      <div class="ctrl">
+        <button id="collGo">▶ 碰一次</button><button id="collReset">↺ 重置</button>
+        <label>m₁ <input id="collM1" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>m₂ <input id="collM2" type="range" min="1" max="5" value="3" step="1"></label>
+        <label>v₁ <input id="collV1" type="range" min="1" max="6" value="4" step="0.5"></label>
+        <label>v₂ <input id="collV2" type="range" min="-3" max="3" value="0" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>碰后 v₁′ (m/s)</b><span id="coV1p">0</span></div>
+        <div><b>碰后 v₂′ (m/s)</b><span id="coV2p">0</span></div>
+        <div><b>动能损失 ΔEk (J)</b><span id="coDE">0</span></div>
+        <div><b>动量 p 前=后</b><span id="coP">✓</span></div>
+      </div>
+      <div class="verdict" id="collNote" style="margin-top:10px"></div>
+      <p class="small">蓝球 m₁ 与红球 m₂ 相向或同向运动。物理精确:弹性用末速度公式、完全非弹性共速、非弹性取恢复系数 e=0.5。</p>
+    </div>
+
+    <h2 class="b">⑤ 动量守恒矢量条形图(碰前 = 碰后)</h2>
+    <div class="viz">
+      <div class="vlabel">📊 互动 2 — 把碰前、碰后每个物体的动量画成条形,看总和是否相等</div>
+      <svg id="barSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small">右向为正(蓝),左向为负(红)。上排=碰前 p₁+p₂,下排=碰后 p₁′+p₂′。两条「总动量」黑条一样长 → 守恒。跟着互动1的参数联动。</p>
+    </div>
+
+    <h2 class="g">⑥ 弹性碰撞三特例演示</h2>
+    <div class="viz">
+      <div class="vlabel">🎱 互动 3 — 弹性碰撞特例:等质量交换速度 / 大碰小 / 小碰大反弹</div>
+      <canvas id="elCv" width="700" height="180"></canvas>
+      <div class="ctrl">
+        <button class="eltype on" data-e="0">等质量(速度交换)</button>
+        <button class="eltype" data-e="1">大碰小(m₁≫m₂)</button>
+        <button class="eltype" data-e="2">小碰大(m₁≪m₂,反弹)</button>
+        <button id="elGo">▶ 演示</button>
+      </div>
+      <div class="verdict" id="elNote" style="margin-top:8px"></div>
+      <p class="small">全部按弹性碰撞末速度公式计算,看三种质量比下碰后谁快谁慢、谁反弹。</p>
+    </div>
+
+    <h2 class="o">⑦ 人船模型动画(人走船退,质心不动)</h2>
+    <div class="viz">
+      <div class="vlabel">🚣 互动 4 — 人船模型:人走一步船退一步,质心(虚线)始终不动,位移∝质量倒数</div>
+      <canvas id="boatCv" width="700" height="200"></canvas>
+      <div class="ctrl">
+        <button id="boatGo">▶ 走一趟</button><button id="boatReset">↺ 重置</button>
+        <label>人质量 m人 <input id="boatMp" type="range" min="40" max="90" value="60" step="10"></label>
+        <label>船质量 m船 <input id="boatMb" type="range" min="80" max="240" value="120" step="20"></label>
+      </div>
+      <div class="live">
+        <div><b>人位移 x人 (m)</b><span id="boXp">0</span></div>
+        <div><b>船位移 x船 (m)</b><span id="boXb">0</span></div>
+        <div><b>船长 L (m)</b><span id="boL">4</span></div>
+        <div><b>质心移动</b><span id="boCm">0</span></div>
+      </div>
+      <p class="small">m人·x人 = m船·x船,x人+x船=L(船长)。船越重退得越少。绿虚线=质心,始终纹丝不动。</p>
+    </div>
+
+    <h2 class="v">⑧ 冲量-动量关系(F-t 图面积 = 冲量 = Δp)</h2>
+    <div class="viz">
+      <div class="vlabel">📐 互动 5 — F-t 图:曲线下面积 = 冲量 I = Ft = Δp,动量随时间累积</div>
+      <svg id="ftSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ftGo">▶ 累积冲量</button><button id="ftReset">↺ 重置</button>
+        <label>力 F (N) <input id="ftF" type="range" min="2" max="10" value="6" step="1"></label>
+        <label>作用时间 t (s) <input id="ftT" type="range" min="1" max="5" value="3" step="1"></label>
+        <label>质量 m (kg) <input id="ftM" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>冲量 I=Ft (N·s)</b><span id="ftI">0</span></div>
+        <div><b>Δp (kg·m/s)</b><span id="ftDp">0</span></div>
+        <div><b>末速度 v′ (m/s)</b><span id="ftVp">0</span></div>
+        <div><b>已累积面积</b><span id="ftA">0</span></div>
+      </div>
+      <p class="small">阴影面积随播放长大 = 已获得的冲量 = 动量增量 Δp。恒力时是矩形面积 F×t。物体初速为0。</p>
+    </div>
+
+    <h2 class="r">⑨ 爆炸 / 反冲动画</h2>
+    <div class="viz">
+      <div class="vlabel">💣 互动 6 — 爆炸/反冲:静止物体炸成两块,动量等大反向(总动量守恒为0)</div>
+      <canvas id="expCv" width="700" height="180"></canvas>
+      <div class="ctrl">
+        <button id="expGo">▶ 引爆</button><button id="expReset">↺ 重置</button>
+        <label>左块 m₁ <input id="expM1" type="range" min="1" max="5" value="3" step="1"></label>
+        <label>右块 m₂ <input id="expM2" type="range" min="1" max="5" value="1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>左块 v₁ (m/s)</b><span id="exV1">0</span></div>
+        <div><b>右块 v₂ (m/s)</b><span id="exV2">0</span></div>
+        <div><b>|p₁| (kg·m/s)</b><span id="exP1">0</span></div>
+        <div><b>|p₂| (kg·m/s)</b><span id="exP2">0</span></div>
+      </div>
+      <p class="small">初动量为0 → m₁v₁ = m₂v₂(大小)。轻块飞得快、重块飞得慢,两块动量大小恒相等、方向相反。</p>
+    </div>
+
+    <h2 class="b">⑩ 碰撞合理性判别器(给碰后速度,判断是否可能)</h2>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 7 — 输入碰后速度 → 自动查三道门槛:动量守恒 / 动能不增 / 方向合理</div>
+      <div class="ctrl">
+        <label>m₁ <input id="jgM1" type="range" min="1" max="4" value="1" step="1"></label>
+        <label>m₂ <input id="jgM2" type="range" min="1" max="4" value="1" step="1"></label>
+        <label>v₁ <input id="jgV1" type="range" min="1" max="6" value="4" step="0.5"></label>
+      </div>
+      <div class="ctrl">
+        <label>碰后 v₁′ <input id="jgV1p" type="range" min="-6" max="6" value="0" step="0.5"></label>
+        <label>碰后 v₂′ <input id="jgV2p" type="range" min="-6" max="6" value="4" step="0.5"></label>
+      </div>
+      <svg id="jgSvg" viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="jgVerdict"></div>
+      <p class="small">m₂ 初始静止。拖动碰后速度,实时判定这组结果是否物理上可能(三个✓才合理)。试试让 v₂′>v₁ 又违反动能看看。</p>
+    </div>
+
+    <h2 class="r">⑪ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 动量定理求冲量 / 平均力</h3>
+      <p><b class="tag">触发信号:</b>给作用时间/碰撞时间,求平均力,或给力求速度变化(墙壁反弹、接球、缓冲)。</p>
+      <p><b class="tag">标准动作:</b>定正方向 → Ft=Δp=mv′−mv → 求 F=Δp/t;反弹类 Δp=m·v′−(−m·v)=m(v′+v)。</p>
+      <p><b class="tag">示例(带解):</b>质量 m=0.2kg 的球以 v=5m/s 撞墙原速率反弹,接触 t=0.02s。取离墙为正:Δp=0.2×5−0.2×(−5)=2 kg·m/s,F=Δp/t=2/0.02=100N。</p>
+      <p class="trap">陷阱:反弹忘了速度反向要变号(错算成 m(v′−v));F 是合外力方向 = Δp 方向。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断动量是否守恒</h3>
+      <p><b class="tag">触发信号:</b>问「此过程动量守不守恒」「哪个方向守恒」。</p>
+      <p><b class="tag">标准动作:</b>找系统受的外力 → 合外力是否为0?若某方向(如水平)合外力为0 → 该方向动量守恒;碰撞/爆炸瞬间内力≫外力 → 近似守恒。</p>
+      <p><b class="tag">示例(带解):</b>光滑水平面上两滑块相碰:水平合外力=0 → 水平动量守恒。斜面上小球碰撞:水平有重力分量,一般不守恒,但碰撞极短瞬间近似守恒。</p>
+      <p class="trap">陷阱:把「有内力」当成不守恒(内力不破坏守恒);漏掉「某方向守恒」这种部分守恒。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 弹性碰撞求末速度</h3>
+      <p><b class="tag">触发信号:</b>「弹性碰撞」「无动能损失」「光滑硬球相碰」。</p>
+      <p><b class="tag">标准动作:</b>m₂静止直接套 v₁′=(m₁−m₂)/(m₁+m₂)v₀、v₂′=2m₁/(m₁+m₂)v₀;认特例秒杀。一般情形动量+动能双守恒联立。</p>
+      <p><b class="tag">示例(带解):</b>m₁=1kg,v₀=6m/s,弹性碰静止 m₂=2kg。v₁′=(1−2)/3×6=−2m/s(反弹),v₂′=2×1/3×6=4m/s。验:p前=6,p后=1×(−2)+2×4=6 ✓;Ek前=18,Ek后=½×1×4+½×2×16=2+16=18 ✓。</p>
+      <p class="trap">陷阱:公式记反(分子分母、系数);忘了 v₁′ 可能为负(反弹)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 完全非弹性(共速)</h3>
+      <p><b class="tag">触发信号:</b>「碰后一起运动/粘在一起」「嵌入」「挂钩相连」。</p>
+      <p><b class="tag">标准动作:</b>动量守恒求 v共=(m₁v₁+m₂v₂)/(m₁+m₂);损失动能 ΔEk=½m₁v₁²+½m₂v₂²−½(m₁+m₂)v共²。</p>
+      <p><b class="tag">示例(带解):</b>m₁=2kg,v₁=6m/s 撞静止 m₂=4kg 并粘住。v共=2×6/6=2m/s。ΔEk=½×2×36−½×6×4=36−12=24J。</p>
+      <p class="trap">陷阱:损失动能算成「碰前动能」;把共速当各自不同速度。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 人船模型</h3>
+      <p><b class="tag">触发信号:</b>人在船/车上走动,冰面推物,气球上人爬绳——初动量为0的相对移动。</p>
+      <p><b class="tag">标准动作:</b>动量守恒(初=0)→ m人·x人=m船·x船,且 x人+x船=相对位移L,联立求各自对地位移。</p>
+      <p><b class="tag">示例(带解):</b>m人=60kg 在 m船=120kg 长 L=4m 的船上从一端走到另一端。60·x人=120·x船,x人+x船=4 → x人=2×x船,3x船=4,x船=4/3m,x人=8/3m。</p>
+      <p class="trap">陷阱:把「船长」当成人的对地位移;方向搞反(人和船位移相反)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 爆炸 / 反冲</h3>
+      <p><b class="tag">触发信号:</b>炸裂成几块、开枪后坐、火箭喷气、发射小球。</p>
+      <p><b class="tag">标准动作:</b>写初动量(常为0)守恒;反向取负;两块 m₁v₁=m₂v₂(大小),动能由化学能补充可增大。</p>
+      <p><b class="tag">示例(带解):</b>静止炮弹炸成 m₁=3kg 向左、m₂=1kg 向右。若 v₂=30m/s,则 3·v₁=1·30 → v₁=10m/s(向左)。总动量仍为0 ✓。</p>
+      <p class="trap">陷阱:忘了初动量为0;方向符号错;误以为动能也守恒(爆炸动能增大)。</p>
+    </div>
+    <div class="card">
+      <h3>题型G — 碰撞合理性判断</h3>
+      <p><b class="tag">触发信号:</b>给出「碰后速度」问是否可能,或多选题里排除不合理选项。</p>
+      <p><b class="tag">标准动作:</b>三道门槛依次查:① 动量守恒?② 碰后动能≤碰前?③ 方向合理(前物速度≥后物,不穿透)?三个都过才可能。</p>
+      <p><b class="tag">示例(带解):</b>m₁=m₂=1kg,v₀=6撞静止。若说碰后 v₁′=4、v₂′=2:p前=6,p后=6 ✓;Ek前=18,Ek后=½×16+½×4=10<18 ✓;但 v₁′=4>v₂′=2 → 后球追上前球,穿透,不合理 ✗。</p>
+      <p class="trap">陷阱:只查动量守恒就下结论;忘了动能不能增、后球不能超前球。</p>
+    </div>
+
+    <h2 class="r">⑫ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 动量是<b>矢量</b>!做题第一步先定正方向,反向速度代负号,否则符号全错。</p>
+      <p class="trap">② 动量守恒条件是<b>系统合外力为0</b>;碰撞/爆炸瞬间靠「内力≫外力」近似守恒。内力再大也不破坏守恒。</p>
+      <p class="trap">③ 三类碰撞<b>动量都守恒</b>,区别只在动能。完全非弹性(共速)损失动能<b>最多</b>,别和非弹性、弹性混。</p>
+      <p class="trap">④ 完全非弹性损失动能 = 碰前动能 − 碰后共速动能,<b>不是</b>碰前动能本身。</p>
+      <p class="trap">⑤ 碰后速度要<b>合理</b>:动能不能大于碰前(除非爆炸);同向碰后前物速度≥后物,后球不能追上/穿透前球。</p>
+      <p class="trap">⑥ 弹性碰撞末速度公式只在 m₂ 初静止时直接套;一般情形要动量+动能双守恒联立。</p>
+      <p class="trap">⑦ 人船模型位移与质量成<b>反比</b>,人和船位移方向相反,x人+x船=相对位移(常为船长)。</p>
+      <p class="trap">⑧ 动量定理 F 是<b>合外力</b>,方向与 Δp 同向;反弹类 Δp=m(v′+v),别漏符号。</p>
+    </div>
+
+    <h2 class="v">⑬ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 恢复系数 e 一把抓所有碰撞:</b> 定义 e = (v₂′−v₁′)/(v₁−v₂) = 碰后相对速度 / 碰前相对速度。弹性 e=1、完全非弹性 e=0、非弹性 0&lt;e&lt;1。弹性碰撞速度公式不用背——动量守恒 + e=1 两式联立直接推出「碰前相对速度大小 = 碰后相对速度大小、方向相反」。</p>
+      <p style="margin:8px 0"><b>② 动量守恒的本质是「内力成对抵消」:</b> 牛顿第三定律保证内力等大反向、冲量互相抵消,所以只要没有净外力冲量,系统总动量恒定。理解这一点,「为什么内力不破坏守恒」就再也不会疑惑。</p>
+      <p style="margin:8px 0"><b>③ 质心系是隐藏视角:</b> 系统总动量 = 总质量 × 质心速度。动量守恒 ⇔ 质心速度不变。人船模型「质心不动」正是初动量为0的直接推论。会用质心,很多爆炸/反冲/人船题一眼看穿。</p>
+      <p style="margin:8px 0"><b>④ 动量与动能是「两把不同的尺」:</b> 动量线性(∝v)、动能平方(∝v²)。同样动量下,质量大的动能小——这解释了为什么完全非弹性损失动能:动量被强制共享,而动能因平方关系「被压低」。列「动量守恒 + 动能账」两张表,压轴题不丢分。</p>
+      <p style="margin:8px 0"><b>⑤ 选锅顺序:先动量、后能量。</b> 综合题里碰撞段先用动量守恒求衔接速度(此刻不知道损失多少,能量段做不了),再用能量守恒算生热/势能。<b>动量定速度与方向,能量算损失与势能。</b>顺序反了往往卡死。</p>
+    </div>
+
+    <h2 class="b">⑭ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 全局:碰撞参数(互动1与互动2联动) */
+const collState={m1:2,m2:3,v1:4,v2:0,type:0,v1p:0,v2p:0};
+function computeColl(){
+  const m1=collState.m1,m2=collState.m2,v1=collState.v1,v2=collState.v2,type=collState.type;
+  let a,b;
+  if(type===2){const vc=(m1*v1+m2*v2)/(m1+m2);a=vc;b=vc;}
+  else if(type===0){a=((m1-m2)*v1+2*m2*v2)/(m1+m2);b=((m2-m1)*v2+2*m1*v1)/(m1+m2);}
+  else{const e=0.5;const vc=(m1*v1+m2*v2)/(m1+m2);a=vc-e*(m2/(m1+m2))*(v1-v2);b=vc+e*(m1/(m1+m2))*(v1-v2);}
+  collState.v1p=a;collState.v2p=b;
+  return [a,b];
+}
+
+/* ===== 互动1:碰撞模拟器 ===== */
+(function(){
+  const cv=document.getElementById('collCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('collNote');
+  const M1=document.getElementById('collM1'),M2=document.getElementById('collM2'),V1=document.getElementById('collV1'),V2=document.getElementById('collV2');
+  const oV1=document.getElementById('coV1p'),oV2=document.getElementById('coV2p'),oDE=document.getElementById('coDE'),oP=document.getElementById('coP');
+  let x1,x2,vv1,vv2,phase,running,collided;
+  function r(m){return 15+m*5;}
+  function sync(){collState.m1=+M1.value;collState.m2=+M2.value;collState.v1=+V1.value;collState.v2=+V2.value;}
+  document.querySelectorAll('.ctype').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.ctype').forEach(x=>x.classList.remove('on'));btn.classList.add('on');collState.type=+btn.dataset.t;setup();});
+  M1.oninput=M2.oninput=V1.oninput=V2.oninput=()=>{sync();setup();};
+  function setup(){
+    sync();computeColl();
+    x1=140;x2=440;vv1=collState.v1;vv2=collState.v2;phase=0;running=false;collided=false;
+    draw();updateLive(false);
+    note.textContent='点 ▶ 碰一次。蓝球 m₁ 与红球 m₂ 碰撞(右为正向)。';note.style.borderColor=INK;
+    if(window.drawBar)window.drawBar();
+  }
+  function updateLive(fin){
+    const m1=collState.m1,m2=collState.m2,v1=collState.v1,v2=collState.v2;
+    const a=collState.v1p,b=collState.v2p;
+    const ke0=0.5*m1*v1*v1+0.5*m2*v2*v2;
+    const ke1=0.5*m1*a*a+0.5*m2*b*b;
+    const loss=ke0-ke1;
+    oV1.textContent=a.toFixed(2);oV2.textContent=b.toFixed(2);
+    oDE.textContent=loss.toFixed(2);
+    const pBefore=m1*v1+m2*v2, pAfter=m1*a+m2*b;
+    oP.textContent=(Math.abs(pBefore-pAfter)<0.01?'✓ '+pBefore.toFixed(1):'✗');
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,170);ctx.lineTo(cv.width,170);ctx.stroke();
+    const m1=collState.m1,m2=collState.m2;
+    // ball1
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(x1,170-r(m1),r(m1),0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('m₁='+m1,x1,170-r(m1)+5);
+    // ball2
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(x2,170-r(m2),r(m2),0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.fillText('m₂='+m2,x2,170-r(m2)+5);
+    ctx.textAlign='left';
+    // velocity arrows
+    function arrow(x,y,v,col){if(Math.abs(v)<0.05)return;const len=v*14;ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+len,y);ctx.stroke();const s=len>0?1:-1;ctx.beginPath();ctx.moveTo(x+len,y);ctx.lineTo(x+len-8*s,y-5);ctx.lineTo(x+len-8*s,y+5);ctx.closePath();ctx.fillStyle=col;ctx.fill();}
+    arrow(x1,30,phase===0?vv1:collState.v1p,BLUE);
+    arrow(x2,50,phase===0?vv2:collState.v2p,RED);
+  }
+  function loop(){
+    if(!running){return;}
+    const m1=collState.m1,m2=collState.m2;
+    const sp=1.1;
+    if(phase===0){
+      x1+=vv1*sp;x2+=vv2*sp;
+      if(x1+r(m1)>=x2-r(m2) && (vv1-vv2)>0){
+        const p=computeColl();vv1=p[0];vv2=p[1];phase=1;collided=true;
+        updateLive(true);
+        let tn=collState.type===0?'弹性碰撞:动量守恒、动能也守恒(损失≈0)。':collState.type===2?'完全非弹性:粘一起共速,损失动能最多。':'非弹性碰撞:动量守恒,部分动能损失(取 e=0.5)。';
+        note.textContent=tn+' 碰后 v₁′='+vv1.toFixed(2)+', v₂′='+vv2.toFixed(2)+'。';
+        note.style.borderColor=collState.type===0?GREEN:collState.type===2?RED:ORANGE;
+        if(window.drawBar)window.drawBar();
+      }
+    }else{
+      x1+=vv1*sp;x2+=vv2*sp;
+      if(collState.type===2){x2=x1+r(m1)+r(m2)-1;}
+      if(x1<-40||x1>740||x2<-40||x2>740){running=false;}
+    }
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('collGo').onclick=()=>{setup();running=true;requestAnimationFrame(loop);};
+  document.getElementById('collReset').onclick=setup;
+  window.collSetup=setup;
+  setup();
+})();
+
+/* ===== 互动2:动量守恒矢量条形图 ===== */
+(function(){
+  const svg=document.getElementById('barSvg');
+  function drawBar(){
+    clr(svg);
+    computeColl();
+    const m1=collState.m1,m2=collState.m2,v1=collState.v1,v2=collState.v2,a=collState.v1p,b=collState.v2p;
+    const p1=m1*v1,p2=m2*v2,p1p=m1*a,p2p=m2*b;
+    const pTot=p1+p2;
+    const maxAbs=Math.max(Math.abs(p1),Math.abs(p2),Math.abs(p1p),Math.abs(p2p),Math.abs(pTot),1);
+    const CX=360,W=260;// half-width scale
+    const scale=W/maxAbs;
+    function bar(y,val,col,label){
+      const w=val*scale;
+      el(svg,'rect',{x:val>=0?CX:CX+w,y:y,width:Math.abs(w),height:22,fill:col,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:val>=0?CX+w+6:CX+w-6,y:y+16,'font-size':12,'font-weight':900,fill:INK,'text-anchor':val>=0?'start':'end'}).textContent=label+'='+val.toFixed(1);
+    }
+    // center axis
+    el(svg,'line',{x1:CX,y1:20,x2:CX,y2:280,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:CX,y:16,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='0';
+    el(svg,'text',{x:20,y:44,'font-size':13,'font-weight':900,fill:INK}).textContent='碰前';
+    bar(34,p1,p1>=0?BLUE:RED,'p₁');
+    bar(64,p2,p2>=0?BLUE:RED,'p₂');
+    bar(96,pTot,INK==='#16120A'?'#16120A':INK,'总p前');
+    el(svg,'line',{x1:20,y1:132,x2:680,y2:132,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:20,y:174,'font-size':13,'font-weight':900,fill:INK}).textContent='碰后';
+    bar(164,p1p,p1p>=0?BLUE:RED,'p₁′');
+    bar(194,p2p,p2p>=0?BLUE:RED,'p₂′');
+    bar(226,p1p+p2p,'#16120A','总p后');
+    el(svg,'text',{x:CX,y:270,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='两条黑「总动量」条等长 → 动量守恒 ✓';
+  }
+  window.drawBar=drawBar;
+  drawBar();
+})();
+
+/* ===== 互动3:弹性碰撞三特例 ===== */
+(function(){
+  const cv=document.getElementById('elCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('elNote');
+  let mode=0,running=false;
+  let m1,m2,v0,x1,x2,vv1,vv2,phase;
+  function config(){
+    if(mode===0){m1=2;m2=2;}
+    else if(mode===1){m1=6;m2=1;}
+    else{m1=1;m2=6;}
+    v0=4;
+  }
+  function r(m){return 12+Math.sqrt(m)*7;}
+  function setup(){
+    config();x1=120;x2=430;vv1=v0;vv2=0;phase=0;running=false;draw();
+    const noteText=mode===0?'等质量:碰后完全交换速度,v₁′=0(停),v₂′=v₀。':mode===1?'大碰小:大球 m₁ 几乎不减速继续前进,小球 m₂ 被弹到≈2v₀。':'小碰大:小球 m₁ 原速反弹(v₁′≈−v₀),大球 m₂ 几乎不动。';
+    note.textContent='弹性碰撞特例('+(mode===0?'m₁=m₂':mode===1?'m₁≫m₂':'m₁≪m₂')+'):'+noteText+' 点 ▶ 演示。';
+    note.style.borderColor=GREEN;
+  }
+  function post(){
+    const a=((m1-m2)/(m1+m2))*v0, b=(2*m1/(m1+m2))*v0;return [a,b];
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,140);ctx.lineTo(cv.width,140);ctx.stroke();
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(x1,140-r(m1),r(m1),0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('m₁='+m1,x1,140-r(m1)+4);
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(x2,140-r(m2),r(m2),0,2*Math.PI);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.fillText('m₂='+m2,x2,140-r(m2)+4);ctx.textAlign='left';
+  }
+  function loop(){
+    if(!running)return;const sp=1.2;
+    if(phase===0){
+      x1+=vv1*sp;x2+=vv2*sp;
+      if(x1+r(m1)>=x2-r(m2)){const p=post();vv1=p[0];vv2=p[1];phase=1;}
+    }else{x1+=vv1*sp;x2+=vv2*sp;if(x1<-40||x1>740||x2>740||x2<-40)running=false;}
+    draw();requestAnimationFrame(loop);
+  }
+  document.querySelectorAll('.eltype').forEach(b=>b.onclick=()=>{document.querySelectorAll('.eltype').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.e;setup();});
+  document.getElementById('elGo').onclick=()=>{setup();running=true;requestAnimationFrame(loop);};
+  setup();
+})();
+
+/* ===== 互动4:人船模型 ===== */
+(function(){
+  const cv=document.getElementById('boatCv');const ctx=cv.getContext('2d');
+  const Mp=document.getElementById('boatMp'),Mb=document.getElementById('boatMb');
+  const oXp=document.getElementById('boXp'),oXb=document.getElementById('boXb'),oL=document.getElementById('boL'),oCm=document.getElementById('boCm');
+  const L=4;// 船长(m)
+  let t=0,running=false;
+  function calc(){
+    const mp=+Mp.value,mb=+Mb.value;
+    // mp*xp = mb*xb, xp+xb=L
+    const xb=mp*L/(mp+mb), xp=mb*L/(mp+mb);
+    return {mp,mb,xp,xb};
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {mp,mb,xp,xb}=calc();
+    // water
+    ctx.fillStyle='#cfe6f5';ctx.fillRect(0,150,cv.width,30);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,150);ctx.lineTo(cv.width,150);ctx.stroke();
+    const scale=60;// px per meter
+    const boatLen=L*scale;
+    // progress 0..1
+    const pr=t;
+    // 人从船左端走到右端;船整体左移 xb*pr
+    const boatX0=200 - xb*scale*pr;
+    // boat
+    ctx.fillStyle=BROWN;ctx.beginPath();
+    ctx.moveTo(boatX0,120);ctx.lineTo(boatX0+boatLen,120);ctx.lineTo(boatX0+boatLen-18,150);ctx.lineTo(boatX0+18,150);ctx.closePath();ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('船 m='+mb+'kg',boatX0+boatLen/2,140);
+    // 人:相对船从左走到右(在船内 0..L),对地 = 船左端 + 相对位置
+    const relPos=L*pr;// 人相对船内位置
+    const manX=boatX0 + relPos*scale;
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(manX,105,9,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=RED;ctx.fillRect(manX-4,114,8,20);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText('人'+mp+'kg',manX,100);
+    // 质心(固定):初始质心对地位置 = boat内质心 ... 用不动的绿虚线表示
+    // 初始 t=0: 人在船左端(x=200), 船中心 200+boatLen/2
+    // 质心对地: (mp*manX0 + mb*boatCenter0)/(mp+mb) 恒定
+    const manX0=200, boatC0=200+boatLen/2;
+    const cmX=(mp*manX0+mb*boatC0)/(mp+mb);
+    ctx.strokeStyle=GREEN;ctx.lineWidth=3;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(cmX,40);ctx.lineTo(cmX,150);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=GREEN;ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('质心(不动)',cmX,34);
+    ctx.textAlign='left';
+    // readouts
+    oXp.textContent=(xp*pr).toFixed(2);oXb.textContent=(xb*pr).toFixed(2);oL.textContent=L;oCm.textContent='0.00';
+  }
+  function loop(){if(!running)return;t+=0.012;if(t>=1){t=1;running=false;}draw();requestAnimationFrame(loop);}
+  Mp.oninput=Mb.oninput=()=>{t=0;running=false;draw();};
+  document.getElementById('boatGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('boatReset').onclick=()=>{t=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动5:冲量-动量 F-t 图 ===== */
+(function(){
+  const svg=document.getElementById('ftSvg');
+  const F=document.getElementById('ftF'),T=document.getElementById('ftT'),M=document.getElementById('ftM');
+  const oI=document.getElementById('ftI'),oDp=document.getElementById('ftDp'),oVp=document.getElementById('ftVp'),oA=document.getElementById('ftA');
+  let prog=0,running=false;
+  function draw(){
+    clr(svg);
+    const f=+F.value,tt=+T.value,m=+M.value;
+    const X0=60,Y0=30,W=560,H=210;
+    const maxF=10,maxT=5;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='F';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // gridlines
+    for(let k=1;k<=maxF;k++){const y=Y0+H-k/maxF*H;el(svg,'line',{x1:X0,y1:y,x2:X0+W,y2:y,stroke:'#ddd6c2','stroke-width':1});}
+    const fx=X0+tt/maxT*W;const fy=Y0+H-f/maxF*H;
+    // filled area up to prog
+    const curT=tt*prog;const curX=X0+curT/maxT*W;
+    el(svg,'rect',{x:X0,y:fy,width:curX-X0,height:Y0+H-fy,fill:'rgba(20,80,200,0.25)',stroke:'none'});
+    // force line (top of rect)
+    el(svg,'line',{x1:X0,y1:fy,x2:fx,y2:fy,stroke:RED,'stroke-width':4});
+    el(svg,'line',{x1:fx,y1:fy,x2:fx,y2:Y0+H,stroke:RED,'stroke-width':4,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:X0+6,y:fy-6,'font-size':12,'font-weight':900,fill:RED}).textContent='F='+f+'N';
+    // moving edge
+    el(svg,'line',{x1:curX,y1:fy,x2:curX,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:(X0+curX)/2,y:(fy+Y0+H)/2,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent=prog>0.15?'冲量=面积':'';
+    // readouts
+    const I=f*curT;const dp=I;const vp=dp/m;
+    oI.textContent=(f*tt).toFixed(1);oDp.textContent=I.toFixed(1);oVp.textContent=vp.toFixed(2);oA.textContent=I.toFixed(1);
+  }
+  function loop(){if(!running)return;prog+=0.02;if(prog>=1){prog=1;running=false;}draw();requestAnimationFrame(loop);}
+  F.oninput=T.oninput=M.oninput=()=>{prog=1;draw();};
+  document.getElementById('ftGo').onclick=()=>{prog=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('ftReset').onclick=()=>{prog=0;running=false;draw();};
+  prog=1;draw();
+})();
+
+/* ===== 互动6:爆炸/反冲 ===== */
+(function(){
+  const cv=document.getElementById('expCv');const ctx=cv.getContext('2d');
+  const M1=document.getElementById('expM1'),M2=document.getElementById('expM2');
+  const oV1=document.getElementById('exV1'),oV2=document.getElementById('exV2'),oP1=document.getElementById('exP1'),oP2=document.getElementById('exP2');
+  let x1,x2,v1,v2,running,exploded,t;
+  const P0=5;// 每块动量大小(能量分配示意,固定动量幅度以便动量等大反向)
+  function calc(){
+    const m1=+M1.value,m2=+M2.value;
+    // 固定各块动量大小相等: p=常数 → v=p/m
+    const p=6;
+    v1=-p/m1;v2=p/m2;// 左块向左(负),右块向右(正)
+    return {m1,m2,p};
+  }
+  function r(m){return 14+m*6;}
+  function setup(){
+    const {m1,m2,p}=calc();
+    x1=350;x2=350;running=false;exploded=false;t=0;
+    draw(m1,m2,true);
+    oV1.textContent=Math.abs(v1).toFixed(2);oV2.textContent=Math.abs(v2).toFixed(2);
+    oP1.textContent=p.toFixed(1);oP2.textContent=p.toFixed(1);
+  }
+  function draw(m1,m2,together){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,140);ctx.lineTo(cv.width,140);ctx.stroke();
+    if(together){
+      ctx.fillStyle=VIO;ctx.beginPath();ctx.arc(350,140-24,24,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+      ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText('静止',350,140-20);ctx.textAlign='left';
+      return;
+    }
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(x1,140-r(m1),r(m1),0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('m₁='+m1,x1,140-r(m1)+4);
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(x2,140-r(m2),r(m2),0,2*Math.PI);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.fillText('m₂='+m2,x2,140-r(m2)+4);ctx.textAlign='left';
+  }
+  function loop(){
+    if(!running)return;const {m1,m2}=calc();const sp=10;
+    x1+=v1*sp*0.3;x2+=v2*sp*0.3;
+    draw(m1,m2,false);
+    if(x1<-40||x2>740)running=false;
+    requestAnimationFrame(loop);
+  }
+  M1.oninput=M2.oninput=setup;
+  document.getElementById('expGo').onclick=()=>{setup();exploded=true;running=true;requestAnimationFrame(loop);};
+  document.getElementById('expReset').onclick=setup;
+  setup();
+})();
+
+/* ===== 互动7:碰撞合理性判别器 ===== */
+(function(){
+  const svg=document.getElementById('jgSvg');const vd=document.getElementById('jgVerdict');
+  const M1=document.getElementById('jgM1'),M2=document.getElementById('jgM2'),V1=document.getElementById('jgV1'),V1p=document.getElementById('jgV1p'),V2p=document.getElementById('jgV2p');
+  function render(){
+    const m1=+M1.value,m2=+M2.value,v1=+V1.value,v2=0;
+    const a=+V1p.value,b=+V2p.value;
+    const pBefore=m1*v1+m2*v2, pAfter=m1*a+m2*b;
+    const keBefore=0.5*m1*v1*v1+0.5*m2*v2*v2, keAfter=0.5*m1*a*a+0.5*m2*b*b;
+    const c1=Math.abs(pBefore-pAfter)<0.06;// 动量守恒
+    const c2=keAfter<=keBefore+0.06;// 动能不增
+    // 方向合理:同向碰后前物(m2)速度 >= 后物(m1)速度,即 b>=a (不穿透)
+    const c3=(b>=a-0.06);
+    clr(svg);
+    function row(y,ok,label){
+      el(svg,'circle',{cx:30,cy:y,r:11,fill:ok?GREEN:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:30,y:y+4,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=ok?'✓':'✗';
+      el(svg,'text',{x:52,y:y+5,'font-size':13.5,'font-weight':800,fill:INK}).textContent=label;
+    }
+    row(24,c1,'① 动量守恒:碰前 p='+pBefore.toFixed(1)+',碰后 p='+pAfter.toFixed(1));
+    row(56,c2,'② 动能不增:碰前 Ek='+keBefore.toFixed(1)+',碰后 Ek='+keAfter.toFixed(1));
+    row(88,c3,'③ 方向合理:碰后前球 v₂′='+b.toFixed(1)+' ≥ 后球 v₁′='+a.toFixed(1)+'(不穿透)');
+    const all=c1&&c2&&c3;
+    vd.innerHTML=all?'✅ <b>这组碰后速度物理上<span style="background:#1E9E86;color:#fff;padding:0 5px">可能</span></b>——三道门槛全过。':'❌ <b>不可能</b>——违反了 '+([c1?null:'动量守恒',c2?null:'动能不增',c3?null:'方向合理'].filter(x=>x).join('、'))+'。';
+    vd.style.borderColor=all?GREEN:RED;
+  }
+  M1.oninput=M2.oninput=V1.oninput=V1p.oninput=V2p.oninput=render;
+  render();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 动量的定义、单位、是不是矢量?做题第一步该做什么?",a:"动量 p=mv,单位 kg·m/s,是矢量(方向与速度同向)。做题第一步:规定正方向,反向速度代负号。"},
+ {q:"2. 动量定理内容?一个 0.2kg 的球以 5m/s 撞墙原速率反弹,接触 0.02s,求平均力。",a:"Ft=Δp=mv′−mv。取离墙为正:Δp=0.2×5−0.2×(−5)=2 kg·m/s,F=Δp/t=2/0.02=100N。"},
+ {q:"3. 动量守恒的条件是什么?为什么碰撞瞬间即使有重力/摩擦也能用?",a:"系统合外力为零(或某方向合外力为零→该方向守恒)。碰撞瞬间内力(冲击力)远大于外力,所以动量近似守恒。"},
+ {q:"4. 三类碰撞的动量、动能各如何?哪种损失动能最多?",a:"三类动量都守恒。弹性:动能也守恒;非弹性:部分损失;完全非弹性(粘一起共速):损失最多。"},
+ {q:"5. 弹性碰撞 m₂ 初静止,末速度公式?",a:"v₁′=(m₁−m₂)/(m₁+m₂)·v₀,v₂′=2m₁/(m₁+m₂)·v₀。"},
+ {q:"6. 弹性碰撞三特例(m₂静止):等质量、大碰小、小碰大,各是什么结果?",a:"① m₁=m₂:速度交换(v₁′=0,v₂′=v₀);② m₁≫m₂:大球几乎不变,小球≈2v₀弹出;③ m₁≪m₂:小球原速反弹(≈−v₀),大球几乎不动。"},
+ {q:"7. m₁=2kg v₁=6m/s 撞静止 m₂=4kg 并粘住,求共速与损失动能。",a:"v共=2×6/6=2m/s;ΔEk=½×2×36−½×6×4=36−12=24J。"},
+ {q:"8. 完全非弹性碰撞的共速与损失动能公式(m₂静止)?",a:"v共=m₁v₀/(m₁+m₂);ΔEk=½·(m₁m₂)/(m₁+m₂)·v₀²,损失最大。"},
+ {q:"9. 判断碰后速度是否合理的三道门槛?",a:"① 动量守恒;② 碰后动能≤碰前动能;③ 方向合理(同向碰后前物速度≥后物,后球不能穿透前球)。"},
+ {q:"10. 静止炮弹炸成 m₁=3kg 与 m₂=1kg,若 v₂=30m/s,求 v₁。总动量?",a:"初动量为0 → 3·v₁=1·30 → v₁=10m/s(方向与 v₂ 相反)。总动量仍为0(守恒),但动能增大(化学能转入)。"},
+ {q:"11. 人船模型:m人=60kg 在 m船=120kg 长 4m 的船上从一端走到另一端,各自对地位移?",a:"60·x人=120·x船 且 x人+x船=4 → x人=2x船,3x船=4,x船=4/3m,x人=8/3m。质心不动。"},
+ {q:"12. 综合题里动量和能量该先用哪个?为什么?",a:"先动量后能量。碰撞段先用动量守恒求衔接速度(此时损失未知,能量段做不了),再用能量守恒算生热/势能。动量定速度与方向,能量算损失。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
