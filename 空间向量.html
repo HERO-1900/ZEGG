@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学:空间向量与立体几何 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink);touch-action:none}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--blue);width:160px}
+  .pill{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+  /* extra for 3D vectors page */
+  .grab3d{cursor:grab}.grab3d:active{cursor:grabbing}
+  .selrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .selrow .chip{padding:6px 11px;font-size:12.5px}
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.calc{grid-template-columns:1fr}}
+  .calc .fld{border:3px solid var(--ink);background:var(--card);padding:8px 10px}
+  .calc .fld b{display:block;font-size:12px;color:#6b5d3a;font-weight:800;margin-bottom:4px}
+  .calc input[type=number]{width:52px;border:2px solid var(--ink);padding:3px 4px;font-weight:800;font-family:"SF Mono",Consolas,monospace;font-size:14px}
+  .out{background:var(--ink);color:var(--paper);font-family:"SF Mono",Consolas,monospace;font-weight:700;padding:10px 14px;margin-top:10px;font-size:14px;box-shadow:3px 3px 0 var(--green);white-space:pre-line}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0;font-size:12.5px;font-weight:800}
+  .legend i{display:inline-block;width:16px;height:16px;border:2px solid var(--ink);margin-right:5px;vertical-align:-3px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 空间向量攻坚包</div>
+    <h1>空间向量与立体几何</h1>
+    <p class="lead">立体几何大题最稳的拿分方式:把「几何」翻译成「坐标算术」。会建系、会写点、会算向量、会套公式,这一题就是送分。这一页把每个公式讲成人话,再用可旋转的 3D 动画让你「看见」向量、法向量和各种角。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 空间向量就是把立体几何变成「<b>算坐标</b>」。四步走:① <b>建系</b>(找三条两两垂直的棱当 x、y、z 轴)→ ② <b>写点</b>(每个顶点读出坐标)→ ③ <b>算向量</b>(终点减起点)→ ④ <b>套公式</b>(线线角、线面角、二面角、点面距,全有现成公式)。只要坐标写对,后面就是纯计算,不用再靠空间想象力硬憋。</div>
+
+    <!-- ===================== 核心原理 ===================== -->
+    <h2 class="b">一、空间直角坐标系与建系技巧</h2>
+    <p class="lead">建系就是选一个原点 O 和三条两两垂直的方向当 x、y、z 轴。原点越接近多条互相垂直的棱交汇处,点的坐标越好写。拖动下面这个长方体转一转,先建立「坐标 ↔ 空间位置」的直觉。</p>
+    <div class="viz">
+      <canvas id="cBox" width="760" height="440" class="grab3d"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--red)"></i>x 轴</span>
+        <span><i style="background:var(--green)"></i>y 轴</span>
+        <span><i style="background:var(--blue)"></i>z 轴</span>
+        <span><i style="background:var(--orange)"></i>选中向量</span>
+        <span><i style="background:var(--violet)"></i>法向量 n</span>
+      </div>
+      <div class="ctrls">
+        <label>长 a = <input id="boxA" type="range" min="2" max="6" step="1" value="4"></label>
+        <label>宽 b = <input id="boxB" type="range" min="2" max="6" step="1" value="3"></label>
+        <label>高 c = <input id="boxC" type="range" min="2" max="6" step="1" value="3"></label>
+      </div>
+      <div class="selrow" id="boxSel"></div>
+      <span class="info" id="boxInfo">用鼠标 / 手指拖动旋转长方体。原点 O 在一角,三条棱正好当 x、y、z 轴。点一个向量按钮高亮它。</span>
+      <p class="sub">这是全页的核心演示:长方体 = 天然的「三垂直」结构,是建系的首选模型。可拖动旋转、可切换尺寸、可高亮任意一条向量或某面的法向量。</p>
+    </div>
+    <div class="keybox"><b>建系口诀:</b> 找「墙角」——三条从同一顶点出发、两两垂直的棱,就是现成的坐标轴。常见结构:长方体/正方体直接建;有一条棱垂直底面(如 PA⊥底面)就把它当 z 轴;底面有直角就用直角的两条边当 x、y 轴。<b>建不出正交系时,才退回传统几何法。</b></div>
+
+    <h2 class="b">二、空间向量的运算</h2>
+    <div class="say">🗣️ <b>坐标一出,运算全是算术。</b> 设 <b>a</b>=(x₁,y₁,z₁),<b>b</b>=(x₂,y₂,z₂):加减是对应分量加减,数乘是每个分量都乘,数量积是「对应分量乘完再相加」。方向减法记牢:<b>向量 AB = B 的坐标 − A 的坐标</b>(终点减起点)。</div>
+    <div class="card">
+      <div class="eq">a + b = (x₁+x₂, y₁+y₂, z₁+z₂)　　λa = (λx₁, λy₁, λz₁)</div>
+      <div class="eq">a · b = x₁x₂ + y₁y₂ + z₁z₂ = |a||b|cosθ</div>
+      <div class="eq">|a| = √(x₁² + y₁² + z₁²)　　cosθ = (a·b) / (|a||b|)</div>
+    </div>
+    <p class="lead">数量积 a·b 是所有角度公式的引擎。下面拖动两个向量,看 a·b 的正负、夹角 θ、以及 a 在 b 上的投影怎么随之变化。</p>
+    <div class="viz">
+      <canvas id="cDot" width="760" height="380" class="draggable"></canvas>
+      <span class="info" id="dotInfo"></span>
+      <p class="sub">拖动两个箭头端点。a·b &gt; 0 → 夹角为锐角;a·b = 0 → 垂直(θ=90°);a·b &lt; 0 → 钝角。灰色虚线是 a 在 b 方向上的投影 |a|cosθ。</p>
+    </div>
+
+    <h2 class="b">三、共线、共面向量</h2>
+    <div class="card">
+      <p><b>共线(平行):</b> a ∥ b ⟺ 存在实数 λ 使 <b>a = λb</b>(b≠0)。坐标上就是三个分量成同一比例:x₁/x₂ = y₁/y₂ = z₁/z₂。</p>
+      <p><b>共面:</b> 向量 p 与不共线的 a、b 共面 ⟺ 存在 x、y 使 <b>p = x·a + y·b</b>。四点 A、B、C、D 共面 ⟺ 向量 AD = x·AB + y·AC 有解。</p>
+      <p><b>用途:</b> 证明线面平行、点在平面内、三点共线,常转成「一个向量能否被另两个向量线性表示」。</p>
+    </div>
+
+    <h2 class="b">四、法向量的求法(最关键的一步)</h2>
+    <div class="say">🗣️ <b>法向量 n 就是「戳穿平面、与平面垂直」的那根针。</b> 求法:设 n=(x,y,z),它要和平面内<b>两条不共线的向量都垂直</b>,于是列两个方程 n·a=0、n·b=0;这是「两个方程三个未知数」,所以<b>随便令一个分量=1(或某个整数)</b>,解出另外两个即可。方向不唯一,取一个方便的就行。</div>
+    <p class="lead">下面点播放:给定一个平面(由两条橙色向量张成),动画演示如何解出与它们都垂直的法向量 n(紫色)。</p>
+    <div class="viz">
+      <canvas id="cNormal" width="760" height="420" class="grab3d"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="normPlay">▶ 演示求 n 的过程</button>
+        <button class="btn" id="normReset">重置</button>
+      </div>
+      <span class="info" id="normInfo">平面内两向量 a=(1,0,0)、b=(0,1,1)。设 n=(x,y,z):n·a=0 → x=0;n·b=0 → y+z=0 → 令 z=1 则 y=−1。故 n=(0,−1,1)。</span>
+      <p class="sub">可拖动旋转。紫色 n 与两条橙向量都成 90°,这就是「法向量垂直于平面内所有向量」。</p>
+    </div>
+    <div class="keybox"><b>求法向量四步:</b> ① 在平面内取两个不共线向量 a、b(用面上的点相减得到);② 设 n=(x,y,z);③ 列方程组 n·a=0、n·b=0;④ 令某分量为便于计算的整数,解出 n。<b>解完检验:n 与 a、b 数量积都为 0。</b></div>
+
+    <h2 class="b">五、用向量求三种角</h2>
+    <div class="card">
+      <div class="eq">线线角(异面直线):cosθ = |a·b| / (|a||b|)　　θ∈(0°,90°]</div>
+      <div class="eq">线面角:sinθ = |cos&lt;a, n&gt;| = |a·n| / (|a||n|)　　θ∈[0°,90°]</div>
+      <div class="eq">二面角:cosθ = ± cos&lt;n₁, n₂&gt; = ± (n₁·n₂)/(|n₁||n₂|)</div>
+    </div>
+    <div class="say">🗣️ <b>三条铁律记死:</b><br>• <b>线线角、线面角</b>都要<b>加绝对值</b>(角只取到 90° 以内),别管方向。<br>• <b>线面角用 sin</b>:方向向量 a 与法向量 n 的夹角的余弦,取绝对值后是 <b>sinθ</b>(因为 a 与 n 差 90°)。<br>• <b>二面角看图定正负</b>:算出两法向量夹角的 cos 后,要<b>结合图形判断二面角是锐角还是钝角</b>,再决定取 + 还是 −。</div>
+
+    <h3>线面角 / 点到面距离的 3D 演示</h3>
+    <p class="lead">线面角是斜线与它在平面上「影子」的夹角。拖动斜线的端点,看它的投影(影子)、垂线段和线面角 θ 一起变化。垂线段的长度就是点到面的距离。</p>
+    <div class="viz">
+      <canvas id="cLineFace" width="760" height="420" class="grab3d"></canvas>
+      <div class="ctrls">
+        <label>点高 h = <input id="lfH" type="range" min="1" max="6" step="1" value="4"></label>
+        <label>水平偏移 = <input id="lfX" type="range" min="1" max="6" step="1" value="3"></label>
+      </div>
+      <span class="info" id="lfInfo"></span>
+      <p class="sub">灰面是平面,紫线是点 P 到平面的垂线(长度 = 点到面距离 d),橙线是斜线 OP,它的影子在平面上。θ 就是斜线与影子的夹角。可旋转观察。</p>
+    </div>
+
+    <h2 class="b">六、二面角:正负号是最大陷阱</h2>
+    <p class="lead">二面角是「两个半平面绕公共棱张开」的角。两法向量的夹角要么等于二面角,要么是它的补角——取决于两个法向量是「同指向内」还是「一进一出」。转动下面两个半平面,观察两法向量夹角与真正的二面角之间的关系。</p>
+    <div class="viz">
+      <canvas id="cDihedral" width="760" height="420"></canvas>
+      <div class="ctrls">
+        <label>二面角 = <input id="dihA" type="range" min="20" max="160" step="1" value="70"> <span id="dihVal" class="pill v">θ</span></label>
+      </div>
+      <span class="info" id="dihInfo"></span>
+      <p class="sub">红蓝是两个半平面,紫箭头是各自法向量。当法向量都朝「外侧」时,它们的夹角是二面角的<b>补角</b>;此时 cos(二面角) = −cos&lt;n₁,n₂&gt;。所以务必看图判断符号。</p>
+    </div>
+    <div class="keybox"><b>定符号的稳妥办法:</b> 算出 cos&lt;n₁,n₂&gt; 后,<b>先看图</b>判断二面角是锐角还是钝角:锐角 → 结果取正(cos&gt;0);钝角 → 取负(cos&lt;0)。或用「在两半平面内各取一个指向棱外的向量,判断法向量朝向」来定。<b>绝不能直接把 cos&lt;n₁,n₂&gt; 当答案。</b></div>
+
+    <h2 class="b">七、点到面距离与异面直线距离</h2>
+    <div class="card">
+      <div class="eq">点 P 到平面距离:d = |AP · n| / |n|　　(A 是平面上任一点,n 是法向量)</div>
+      <div class="eq">异面直线 l₁、l₂ 距离:d = |AB · n| / |n|　　(A∈l₁, B∈l₂, n⊥a₁ 且 n⊥a₂)</div>
+    </div>
+    <div class="say">🗣️ <b>点面距一句话:</b> 从平面上随便找一点 A 连到 P 得向量 AP,把它「投影到法线方向」再取长度,就是垂直距离。公式 d=|AP·n|/|n| 里,AP·n 是投影(带正负),除以 |n| 归一化,加绝对值取长度。<br>🗣️ <b>异面距离一句话:</b> 找一条<b>同时垂直两条直线的公共法向量 n</b>(即 n⊥两方向),再把「连接两直线上各一点的向量 AB」投影到 n 上,就是最短距离。</div>
+    <div class="ex"><b>例:</b> 正方体棱长 1,建系 A(0,0,0)、平面 BDD₁B₁ 的法向量 n=(1,1,0),点 A 到该面距离?取面上一点 B(1,0,0),AB=(1,0,0),d=|AB·n|/|n| = |1|/√2 = √2/2。</div>
+
+    <!-- ===================== 全题型地图 ===================== -->
+    <h2 class="g">八、全题型地图(触发信号 + 标准动作)</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型</th><th>触发信号</th><th>标准动作</th></tr>
+        <tr><td><b>建系求线线角</b></td><td>「异面直线所成角」</td><td>写两方向向量 → cosθ=|a·b|/(|a||b|),取绝对值</td></tr>
+        <tr><td><b>建系求线面角</b></td><td>「直线与平面所成角」</td><td>方向向量 a + 面法向量 n → sinθ=|a·n|/(|a||n|)</td></tr>
+        <tr><td><b>建系求二面角</b></td><td>「二面角 A-BC-D 的大小 / 余弦」</td><td>求两半平面法向量 n₁,n₂ → cos=±(n₁·n₂)/(…),看图定号</td></tr>
+        <tr><td><b>点到面距离</b></td><td>「点 P 到平面…的距离」「体积反求高」</td><td>d=|AP·n|/|n|</td></tr>
+        <tr><td><b>求法向量</b></td><td>作为上面各题的中间步骤</td><td>设 n=(x,y,z),n·a=0、n·b=0,令一分量解出</td></tr>
+        <tr><td><b>探索性(存在点)</b></td><td>「是否存在点 E 使…」「λ 为何值时…」</td><td>设参数点(如 E=A+λ·AB),代入所求条件解 λ</td></tr>
+        <tr><td><b>证平行 / 垂直</b></td><td>「证 l∥面」「证 面⊥面」</td><td>平行:方向⊥法向量或=线性组合;垂直:法向量⊥或数量积=0</td></tr>
+        <tr><td><b>无法建系(传统法)</b></td><td>没有明显的三垂直结构</td><td>线面角作垂线找射影;二面角作棱的垂线找平面角</td></tr>
+      </table>
+    </div>
+
+    <h3>题型①:建系求二面角(带解 + 陷阱)</h3>
+    <div class="ex"><b>正方体 ABCD-A₁B₁C₁D₁ 棱长 1,求二面角 A₁-BD-A 的余弦。</b><br>① 建系:A(0,0,0)、B(1,0,0)、D(0,1,0)、A₁(0,0,1)。<br>② 面 ABD 即底面,法向量 n₁=(0,0,1)。<br>③ 面 A₁BD:取 BD=(−1,1,0)、BA₁=(−1,0,1),设 n₂=(x,y,z):−x+y=0、−x+z=0 → 令 x=1 得 n₂=(1,1,1)。<br>④ cos&lt;n₁,n₂&gt; = (0+0+1)/(1·√3) = 1/√3 = √3/3。<br>⑤ <b>看图:</b>该二面角是锐角 → 余弦取正 = <b>√3/3</b>。<span class="trap">⚠ 若图上是钝二面角,这里就要取 −√3/3。符号必须由图决定,不能照抄 cos&lt;n₁,n₂&gt;。</span></div>
+
+    <h3>题型②:线面角(带解)</h3>
+    <div class="ex"><b>同上正方体,求直线 A₁C 与底面 ABCD 所成角的正弦。</b><br>A₁(0,0,1)、C(1,1,0),方向 A₁C=(1,1,−1)。底面法向量 n=(0,0,1)。<br>sinθ = |A₁C·n|/(|A₁C||n|) = |−1|/(√3·1) = <b>√3/3</b>。<span class="trap">⚠ 线面角用 sin,不是 cos;而且要取绝对值。</span></div>
+
+    <h3>题型③:探索性问题「是否存在点」(带解)</h3>
+    <div class="ex"><b>正方体棱长 1,棱 CC₁ 上是否存在点 E,使 BE⊥平面 AB₁D₁?</b><br>① 设 E=(1,1,t)(C=(1,1,0),CC₁ 方向 (0,0,1),t∈[0,1])。<br>② BE = E−B = (0,1,t)。<br>③ 要 BE⊥面,只需 BE 平行于该面法向量;或直接令 BE 与面内两向量都垂直:AB₁=(1,0,1)、AD₁=(0,1,1)。<br>④ BE·AB₁ = 0+0+t = t;要 =0 → t=0;BE·AD₁ = 0+1+t;要=0 → t=−1。两者矛盾 → <b>不存在</b>这样的点 E。<span class="trap">⚠ 探索题结论可能是「存在」也可能是「不存在」,要老老实实解方程,别预设答案。</span></div>
+
+    <h3>题型④:无坐标时的传统法对照</h3>
+    <div class="card">
+      <p><b>线面角(传统):</b> 从斜线上一点向平面作垂线得垂足 → 连垂足与斜足得「射影」→ 斜线与射影的夹角就是线面角。核心是「找射影」。</p>
+      <p><b>二面角(传统):</b> 在棱上取一点,分别在两个半平面内作棱的垂线 → 两垂线的夹角就是二面角的平面角。核心是「作棱的双垂线」。</p>
+      <p><b>什么时候用传统法:</b> 找不到三条两两垂直的棱、坐标写起来含大量根号时,传统「作角」法反而更快。两手都要会。</p>
+    </div>
+
+    <h2 class="g">九、建系选择器 + 坐标运算器</h2>
+    <p class="lead">选一种几何体,看推荐的建系方案(原点选哪、三轴取哪);再用下面的运算器输入两个向量的坐标,自动算出 a·b、|a|、|b| 与夹角 θ。</p>
+    <div class="viz">
+      <div class="selrow" id="geoSel"></div>
+      <div class="out" id="geoOut"></div>
+    </div>
+    <div class="viz">
+      <h3 style="margin-top:0">向量坐标运算器</h3>
+      <div class="calc">
+        <div class="fld"><b>向量 a = (x, y, z)</b>
+          <input id="ax" type="number" value="1"> <input id="ay" type="number" value="1"> <input id="az" type="number" value="0">
+        </div>
+        <div class="fld"><b>向量 b = (x, y, z)</b>
+          <input id="bx" type="number" value="1"> <input id="by" type="number" value="0"> <input id="bz" type="number" value="1">
+        </div>
+      </div>
+      <div class="out" id="calcOut"></div>
+      <p class="sub">改任意一个数字即时重算。这就是考场上算数量积、模长、夹角余弦的全部机械流程。</p>
+    </div>
+
+    <!-- ===================== 易错集 ===================== -->
+    <h2 class="r">十、易错集</h2>
+    <div class="card">
+      <p class="trap">⚠ ① <b>二面角符号</b>:cos&lt;n₁,n₂&gt; 算出来后,必须看图判断二面角是锐是钝再决定正负,直接抄符号是压轴丢分第一名。</p>
+      <p class="trap">⚠ ② <b>线面角用 sin 不用 cos</b>:用方向向量与法向量夹角的余弦的绝对值,得到的是 sinθ。写成 cosθ 就全错。</p>
+      <p class="trap">⚠ ③ <b>线线角、线面角忘加绝对值</b>:这两个角只在 [0°,90°],数量积算出负数也要取绝对值。</p>
+      <p class="trap">⚠ ④ <b>法向量方向随意但要一致</b>:同一题里若要比较,注意方向;求角取绝对值可不管方向,但求带符号的量(如投影正负)要留意。</p>
+      <p class="trap">⚠ ⑤ <b>建系没验证垂直</b>:三条轴必须两两垂直才是正交系,斜的棱不能硬当坐标轴。</p>
+      <p class="trap">⚠ ⑥ <b>向量方向减反</b>:AB = B − A(终点减起点),写反了方向相反,虽然求角取绝对值不影响,但求坐标/参数时会错。</p>
+      <p class="trap">⚠ ⑦ <b>探索题不解方程直接下结论</b>:「是否存在」必须设参数、列方程、解出来,矛盾则不存在,有解则给出具体位置。</p>
+    </div>
+
+    <!-- ===================== 尖子生拔高 ===================== -->
+    <h2 class="v">十一、尖子生拔高视角</h2>
+    <div class="card">
+      <p><b>① 建系是「选择题」不是「必答题」:</b> 优先找三垂直墙角;没有现成的就制造——常把「某棱垂直底面」或「底面对角线互相垂直」的条件用起来。选到最省根号的系,后面计算量减半。</p>
+      <p><b>② 法向量可以「凑整」:</b> 令自由分量取合适的整数,让 n 的坐标全是整数,避免分数,减少算错。方向不影响求角。</p>
+      <p><b>③ 二面角符号的终极判据:</b> 让两个法向量都指向二面角的「同一侧」(比如都指向内部或都指向外部),此时它们的夹角与二面角互补;若一进一出则相等。判不准就退回「棱上双垂线」传统法验证。</p>
+      <p><b>④ 探索性问题=解方程:</b> 把待求点写成含参数 λ 的坐标(如 E = A + λ·AB),把「平行/垂直/距离/角度」条件翻译成关于 λ 的方程,能解出且落在范围内就存在。</p>
+      <p><b>⑤ 体积法反求距离:</b> 点到面距离也可用「V = ⅓·S底·h」反解 h,与向量法互相验算,考场上是防错利器。</p>
+      <p><b>⑥ 传统法与向量法双通道:</b> 顶尖学生两套都熟,遇到坐标丑就切传统作角,遇到关系乱就切坐标硬算,永远有 Plan B。</p>
+    </div>
+
+    <!-- ===================== 自测 ===================== -->
+    <h2 class="o">十二、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 空间向量与立体几何攻坚包 · 下一块:概率统计 / 圆锥曲线</p>
+  </div>
+
+<script>
+/* ================= 3D 投影通用工具 ================= */
+function rotY(p,a){const c=Math.cos(a),s=Math.sin(a);return[c*p[0]+s*p[2],p[1],-s*p[0]+c*p[2]];}
+function rotX(p,a){const c=Math.cos(a),s=Math.sin(a);return[p[0],c*p[1]-s*p[2],s*p[1]+c*p[2]];}
+/* 把 3D 点投影到 2D(等距近似 + 透视轻微) */
+function makeProject(W,H,scale,rotYA,rotXA,cx,cy){
+  cx=cx===undefined?W/2:cx; cy=cy===undefined?H/2:cy;
+  return function(p){
+    let q=rotY(p,rotYA); q=rotX(q,rotXA);
+    const d=6, z=q[2]+d, f=d/z*scale;
+    return [cx+q[0]*f, cy-q[1]*f, q[2]];
+  };
+}
+function drawArrow(ctx,x1,y1,x2,y2,col,w){
+  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w||3;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const ang=Math.atan2(y2-y1,x2-x1),h=11;
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-h*Math.cos(ang-0.4),y2-h*Math.sin(ang-0.4));
+  ctx.lineTo(x2-h*Math.cos(ang+0.4),y2-h*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+}
+function label(ctx,x,y,txt,col){ctx.fillStyle=col||'#16120A';ctx.font='bold 14px sans-serif';ctx.fillText(txt,x,y);}
+
+/* ================= 1. 可旋转 3D 长方体(中心演示) ================= */
+(function(){
+  const c=document.getElementById('cBox'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let ry=-0.6, rx=0.45;
+  let A=4,B=3,C=3;
+  let sel='none';
+  const sa=document.getElementById('boxA'),sb=document.getElementById('boxB'),sc=document.getElementById('boxC');
+  const info=document.getElementById('boxInfo');
+  // 顶点定义:O=原点,轴 x(A)、y(B)、z(C)
+  function verts(){
+    return {
+      O:[0,0,0], Ax:[A,0,0], By:[0,B,0], Cz:[0,0,C],
+      P1:[A,B,0], P2:[A,0,C], P3:[0,B,C], P4:[A,B,C]
+    };
+  }
+  const edges=[['O','Ax'],['O','By'],['O','Cz'],['Ax','P1'],['Ax','P2'],['By','P1'],['By','P3'],['Cz','P2'],['Cz','P3'],['P1','P4'],['P2','P4'],['P3','P4']];
+  // 可选高亮向量
+  const vecs=[
+    {id:'none',name:'无',from:null,to:null},
+    {id:'OP4',name:'OP₄ 体对角线',from:'O',to:'P4',col:'#E86A17'},
+    {id:'AxP3',name:'AₓP₃ 面对角线',from:'Ax',to:'P3',col:'#E86A17'},
+    {id:'OBy',name:'OBᵧ 棱向量',from:'O',to:'By',col:'#E86A17'},
+    {id:'nTop',name:'顶面法向量 n',from:null,to:null,col:'#7A3FF2',normal:'top'},
+    {id:'nFront',name:'前面法向量 n',from:null,to:null,col:'#7A3FF2',normal:'front'}
+  ];
+  // 建按钮
+  const selBox=document.getElementById('boxSel');
+  vecs.forEach(v=>{
+    const b=document.createElement('span');b.className='chip'+(v.id==='none'?' on':'');b.textContent=v.name;
+    b.onclick=()=>{sel=v.id;[...selBox.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');draw();};
+    selBox.appendChild(b);
+  });
+  function draw(){
+    A=+sa.value;B=+sb.value;C=+sc.value;
+    ctx.clearRect(0,0,W,H);
+    const maxd=Math.max(A,B,C);
+    const scale=170/maxd*1.4;
+    // 平移让原点略偏左下
+    const pr=makeProject(W,H,scale,ry,rx,W*0.42,H*0.62);
+    const v=verts();
+    const P={}; for(const k in v) P[k]=pr(v[k]);
+    // 画三条坐标轴(延长)
+    const axcol={x:'#E0382A',y:'#1E9E86',z:'#1450C8'};
+    function axis(dir,col,lab){
+      const o=pr([0,0,0]); const e=pr(dir);
+      drawArrow(ctx,o[0],o[1],e[0],e[1],col,3.5);
+      label(ctx,e[0]+4,e[1]+2,lab,col);
+    }
+    axis([maxd+1.2,0,0],axcol.x,'x');
+    axis([0,maxd+1.2,0],axcol.y,'y');
+    axis([0,0,maxd+1.2],axcol.z,'z');
+    // 棱
+    ctx.lineWidth=2.6;ctx.strokeStyle='#16120A';
+    edges.forEach(([a,b])=>{
+      ctx.beginPath();ctx.moveTo(P[a][0],P[a][1]);ctx.lineTo(P[b][0],P[b][1]);ctx.stroke();
+    });
+    // 顶点圆点 + 坐标标注
+    const coord={O:[0,0,0],Ax:[A,0,0],By:[0,B,0],Cz:[0,0,C],P1:[A,B,0],P2:[A,0,C],P3:[0,B,C],P4:[A,B,C]};
+    for(const k in P){
+      ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(P[k][0],P[k][1],4,0,7);ctx.fill();
+    }
+    // 只标几个关键点坐标以免拥挤
+    ctx.font='bold 12px sans-serif';ctx.fillStyle='#16120A';
+    const show=['O','Ax','By','Cz','P4'];
+    show.forEach(k=>{const cc=coord[k];label(ctx,P[k][0]+6,P[k][1]-4,'('+cc[0]+','+cc[1]+','+cc[2]+')');});
+    // 高亮向量
+    const vObj=vecs.find(x=>x.id===sel);
+    let msg='用鼠标 / 手指拖动旋转长方体。当前尺寸 a='+A+', b='+B+', c='+C+'。';
+    if(vObj && vObj.from){
+      const s=P[vObj.from], e=P[vObj.to];
+      drawArrow(ctx,s[0],s[1],e[0],e[1],vObj.col,5);
+      const fv=coord[vObj.from], tv=coord[vObj.to];
+      const vv=[tv[0]-fv[0],tv[1]-fv[1],tv[2]-fv[2]];
+      const len=Math.sqrt(vv[0]*vv[0]+vv[1]*vv[1]+vv[2]*vv[2]);
+      msg='高亮 '+vObj.name+' = ('+vv[0]+','+vv[1]+','+vv[2]+'),模长 = '+len.toFixed(3)+'。';
+    }else if(vObj && vObj.normal==='top'){
+      // 顶面 z=C,法向量沿 z
+      const s=pr([A/2,B/2,C]), e=pr([A/2,B/2,C+1.6]);
+      drawArrow(ctx,s[0],s[1],e[0],e[1],'#7A3FF2',5);
+      msg='顶面(z='+C+')的法向量 n=(0,0,1),垂直于该水平面。';
+    }else if(vObj && vObj.normal==='front'){
+      // 前面 y=0,法向量沿 -y
+      const s=pr([A/2,0,C/2]), e=pr([A/2,-1.6,C/2]);
+      drawArrow(ctx,s[0],s[1],e[0],e[1],'#7A3FF2',5);
+      msg='前面(y=0)的法向量 n=(0,1,0)(或 (0,−1,0)),垂直于该竖直面。';
+    }
+    info.innerHTML=msg;
+  }
+  // 拖动旋转
+  let dragging=false,lx=0,ly=0;
+  function down(x,y){dragging=true;lx=x;ly=y;}
+  function move(x,y){if(!dragging)return;ry+=(x-lx)*0.01;rx+=(y-ly)*0.01;rx=Math.max(-1.3,Math.min(1.3,rx));lx=x;ly=y;draw();}
+  function up(){dragging=false;}
+  c.addEventListener('mousedown',e=>{const r=c.getBoundingClientRect();down((e.clientX-r.left)*(W/r.width),(e.clientY-r.top)*(H/r.height));});
+  window.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();move((e.clientX-r.left)*(W/r.width),(e.clientY-r.top)*(H/r.height));});
+  window.addEventListener('mouseup',up);
+  c.addEventListener('touchstart',e=>{const r=c.getBoundingClientRect();down((e.touches[0].clientX-r.left)*(W/r.width),(e.touches[0].clientY-r.top)*(H/r.height));},{passive:true});
+  c.addEventListener('touchmove',e=>{e.preventDefault();const r=c.getBoundingClientRect();move((e.touches[0].clientX-r.left)*(W/r.width),(e.touches[0].clientY-r.top)*(H/r.height));},{passive:false});
+  c.addEventListener('touchend',up);
+  sa.addEventListener('input',draw);sb.addEventListener('input',draw);sc.addEventListener('input',draw);
+  draw();
+})();
+
+/* ================= 2. 数量积几何意义(2D 拖两向量) ================= */
+(function(){
+  const c=document.getElementById('cDot'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2,scale=1;
+  let A={x:150,y:-40}, B={x:60,y:120}; // 相对原点,y 向下为正在屏幕,存屏幕坐标增量
+  // 我们直接用屏幕坐标增量表示两向量端点相对原点
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // 网格
+    ctx.strokeStyle='#e5dcc2';ctx.lineWidth=1;
+    for(let x=ox%40;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=oy%40;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+    // 数学向量(y 取屏幕反向)
+    const ax=A.x, ay=-A.y, bx=B.x, by=-B.y;
+    const dot=(ax*bx+ay*by)/1600; // 缩放到合理数值(40px=1单位)
+    const la=Math.sqrt(ax*ax+ay*ay), lb=Math.sqrt(bx*bx+by*by);
+    let theta=Math.acos(Math.max(-1,Math.min(1,(ax*bx+ay*by)/(la*lb))));
+    // 投影(a 在 b 上)
+    const bux=bx/lb, buy=by/lb;
+    const projLen=(ax*bux+ay*buy); // 带符号,屏幕像素
+    const px=ox+projLen*bux, py=oy-projLen*buy;
+    // 画投影虚线
+    ctx.strokeStyle='#8a7d55';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(px,py);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox+A.x,oy+A.y);ctx.lineTo(px,py);ctx.stroke();
+    ctx.setLineDash([]);
+    // 夹角弧
+    ctx.strokeStyle='#F3C00E';ctx.lineWidth=4;
+    const a1=Math.atan2(A.y,A.x), a2=Math.atan2(B.y,B.x);
+    ctx.beginPath();ctx.arc(ox,oy,34,Math.min(a1,a2),Math.max(a1,a2),(Math.max(a1,a2)-Math.min(a1,a2))>Math.PI);ctx.stroke();
+    // 两向量
+    drawArrow(ctx,ox,oy,ox+A.x,oy+A.y,'#1450C8',4);
+    drawArrow(ctx,ox,oy,ox+B.x,oy+B.y,'#E0382A',4);
+    label(ctx,ox+A.x+6,oy+A.y,'a','#1450C8');
+    label(ctx,ox+B.x+6,oy+B.y,'b','#E0382A');
+    const sign=dot>0.05?'&gt; 0(锐角)':dot<-0.05?'&lt; 0(钝角)':'≈ 0(垂直)';
+    document.getElementById('dotInfo').innerHTML='a·b = '+dot.toFixed(2)+' '+sign+'　|　θ = '+(theta*180/Math.PI).toFixed(1)+'°　|　a 在 b 上的投影 = '+(projLen/40).toFixed(2);
+  }
+  let drag=null;
+  function hit(mx,my){
+    if(Math.hypot(mx-(ox+A.x),my-(oy+A.y))<22)return'A';
+    if(Math.hypot(mx-(ox+B.x),my-(oy+B.y))<22)return'B';
+    return null;
+  }
+  function pos(e){const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*(W/r.width),(t.clientY-r.top)*(H/r.height)];}
+  c.addEventListener('mousedown',e=>{const[mx,my]=pos(e);drag=hit(mx,my);});
+  window.addEventListener('mousemove',e=>{if(!drag)return;const[mx,my]=pos(e);const t=drag==='A'?A:B;t.x=mx-ox;t.y=my-oy;draw();});
+  window.addEventListener('mouseup',()=>drag=null);
+  c.addEventListener('touchstart',e=>{const[mx,my]=pos(e);drag=hit(mx,my);},{passive:true});
+  c.addEventListener('touchmove',e=>{if(!drag)return;e.preventDefault();const[mx,my]=pos(e);const t=drag==='A'?A:B;t.x=mx-ox;t.y=my-oy;draw();},{passive:false});
+  c.addEventListener('touchend',()=>drag=null);
+  draw();
+})();
+
+/* ================= 3. 法向量求解演示(3D 可旋转) ================= */
+(function(){
+  const c=document.getElementById('cNormal'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let ry=-0.7,rx=0.5,step=0,timer=null;
+  const info=document.getElementById('normInfo');
+  const a=[2,0,0], b=[0,2,2]; // 面内两向量(缩放显示)
+  const n=[0,-2,2]; // 求得法向量 n=(0,-1,1) 放大
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pr=makeProject(W,H,120,ry,rx,W/2,H*0.58);
+    const O=pr([0,0,0]);
+    // 画平面(由 a,b 张成的平行四边形)
+    const p1=pr(a),p2=pr([a[0]+b[0],a[1]+b[1],a[2]+b[2]]),p3=pr(b);
+    ctx.fillStyle='rgba(232,106,23,0.14)';ctx.strokeStyle='#E86A17';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(O[0],O[1]);ctx.lineTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.lineTo(p3[0],p3[1]);ctx.closePath();ctx.fill();ctx.stroke();
+    // 两条面内向量
+    drawArrow(ctx,O[0],O[1],p1[0],p1[1],'#E86A17',4);
+    drawArrow(ctx,O[0],O[1],p3[0],p3[1],'#E86A17',4);
+    label(ctx,p1[0]+4,p1[1],'a','#E86A17');label(ctx,p3[0]+4,p3[1],'b','#E86A17');
+    // 法向量(step>=2 显示)
+    if(step>=3){
+      const pn=pr(n);
+      drawArrow(ctx,O[0],O[1],pn[0],pn[1],'#7A3FF2',5);
+      label(ctx,pn[0]+6,pn[1],'n','#7A3FF2');
+      // 直角标记(小方块示意 n⊥a)
+    }
+    const msgs=[
+      '平面内取两向量 a=(1,0,0)、b=(0,1,1)。点「演示」开始。',
+      '① 设法向量 n=(x,y,z),要求 n⊥a 且 n⊥b。',
+      '② 列方程:n·a = x = 0;n·b = y+z = 0。',
+      '③ 令 z=1 → y=−1,x=0。得 n=(0,−1,1)(紫色),与 a、b 都垂直。'
+    ];
+    info.textContent=msgs[Math.min(step,3)];
+  }
+  document.getElementById('normPlay').onclick=()=>{
+    if(timer)clearInterval(timer);step=0;draw();
+    timer=setInterval(()=>{step++;draw();if(step>=3)clearInterval(timer);},1100);
+  };
+  document.getElementById('normReset').onclick=()=>{if(timer)clearInterval(timer);step=0;draw();};
+  // 拖动旋转
+  let dragging=false,lx=0,ly=0;
+  function ppos(e){const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*(W/r.width),(t.clientY-r.top)*(H/r.height)];}
+  c.addEventListener('mousedown',e=>{dragging=true;const[x,y]=ppos(e);lx=x;ly=y;});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;const[x,y]=ppos(e);ry+=(x-lx)*0.01;rx+=(y-ly)*0.01;rx=Math.max(-1.3,Math.min(1.3,rx));lx=x;ly=y;draw();});
+  window.addEventListener('mouseup',()=>dragging=false);
+  c.addEventListener('touchstart',e=>{dragging=true;const[x,y]=ppos(e);lx=x;ly=y;},{passive:true});
+  c.addEventListener('touchmove',e=>{if(!dragging)return;e.preventDefault();const[x,y]=ppos(e);ry+=(x-lx)*0.01;rx+=(y-ly)*0.01;rx=Math.max(-1.3,Math.min(1.3,rx));lx=x;ly=y;draw();},{passive:false});
+  c.addEventListener('touchend',()=>dragging=false);
+  draw();
+})();
+
+/* ================= 4. 线面角 / 点到面距离(3D 可旋转) ================= */
+(function(){
+  const c=document.getElementById('cLineFace'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let ry=-0.75,rx=0.5;
+  const sH=document.getElementById('lfH'),sX=document.getElementById('lfX');
+  const info=document.getElementById('lfInfo');
+  function draw(){
+    const h=+sH.value, xoff=+sX.value;
+    ctx.clearRect(0,0,W,H);
+    const pr=makeProject(W,H,52,ry,rx,W/2,H*0.6);
+    // 平面 z=0 的一个方块
+    const S=4;
+    const c1=pr([-S,-S,0]),c2=pr([S,-S,0]),c3=pr([S,S,0]),c4=pr([-S,S,0]);
+    ctx.fillStyle='rgba(22,18,10,0.10)';ctx.strokeStyle='#8a7d55';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(c1[0],c1[1]);ctx.lineTo(c2[0],c2[1]);ctx.lineTo(c3[0],c3[1]);ctx.lineTo(c4[0],c4[1]);ctx.closePath();ctx.fill();ctx.stroke();
+    // 点 O 原点、斜足 = 投影 F=(xoff,0,0)、点 P=(xoff,0,h)
+    const O=[0,0,0], F=[xoff,0,0], P=[xoff,0,h];
+    const pO=pr(O),pF=pr(F),pP=pr(P);
+    // 影子 OF(平面上)
+    drawArrow(ctx,pO[0],pO[1],pF[0],pF[1],'#8a7d55',3);
+    label(ctx,pF[0]+4,pF[1]+14,'影子(射影)','#8a7d55');
+    // 斜线 OP(橙)
+    drawArrow(ctx,pO[0],pO[1],pP[0],pP[1],'#E86A17',5);
+    label(ctx,pP[0]+6,pP[1],'斜线 OP','#E86A17');
+    // 垂线 PF(紫,点到面距离)
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=4;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.moveTo(pP[0],pP[1]);ctx.lineTo(pF[0],pF[1]);ctx.stroke();ctx.setLineDash([]);
+    label(ctx,(pP[0]+pF[0])/2+6,(pP[1]+pF[1])/2,'d','#7A3FF2');
+    // 点
+    [[pO,'O'],[pF,'F'],[pP,'P']].forEach(([p,t])=>{ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(p[0],p[1],4,0,7);ctx.fill();label(ctx,p[0]+5,p[1]-5,t);});
+    // 线面角 θ:OP 与 OF(影子)的夹角
+    const theta=Math.atan2(h,xoff)*180/Math.PI;
+    const d=h; // 点到面距离就是 z 高度 h
+    info.innerHTML='斜线 OP 与平面的夹角 θ = <b>'+theta.toFixed(1)+'°</b>(= arctan(h / 水平距))　|　点 P 到平面距离 d = <b>'+d+'</b>(= 高 h)。';
+  }
+  let dragging=false,lx=0,ly=0;
+  function ppos(e){const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*(W/r.width),(t.clientY-r.top)*(H/r.height)];}
+  c.addEventListener('mousedown',e=>{dragging=true;const[x,y]=ppos(e);lx=x;ly=y;});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;const[x,y]=ppos(e);ry+=(x-lx)*0.01;rx+=(y-ly)*0.01;rx=Math.max(-1.3,Math.min(1.3,rx));lx=x;ly=y;draw();});
+  window.addEventListener('mouseup',()=>dragging=false);
+  c.addEventListener('touchstart',e=>{dragging=true;const[x,y]=ppos(e);lx=x;ly=y;},{passive:true});
+  c.addEventListener('touchmove',e=>{if(!dragging)return;e.preventDefault();const[x,y]=ppos(e);ry+=(x-lx)*0.01;rx+=(y-ly)*0.01;rx=Math.max(-1.3,Math.min(1.3,rx));lx=x;ly=y;draw();},{passive:false});
+  c.addEventListener('touchend',()=>dragging=false);
+  sH.addEventListener('input',draw);sX.addEventListener('input',draw);
+  draw();
+})();
+
+/* ================= 5. 二面角可视化 ================= */
+(function(){
+  const c=document.getElementById('cDihedral'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('dihA');
+  const info=document.getElementById('dihInfo');
+  function draw(){
+    const deg=+sl.value, th=deg*Math.PI/180;
+    ctx.clearRect(0,0,W,H);
+    // 棱在屏幕水平中线;两个半平面从棱向上张开,用侧视(正对棱)呈现为两条从棱端点出发的射线
+    // 侧视:棱看作一个点(屏幕中心 ox),两半平面看作两条从该点出发的射线
+    const ox=W/2, oy=H*0.62, L=170;
+    // 半平面1固定水平向右;半平面2按二面角张开
+    const a1=0; // 红:水平
+    const a2=-th; // 蓝:向上张开 th(屏幕 y 向下,取负向上)
+    // 画棱(点)
+    ctx.fillStyle='#16120A';ctx.beginPath();ctx.arc(ox,oy,6,0,7);ctx.fill();
+    label(ctx,ox-30,oy+24,'棱(垂直纸面)');
+    // 半平面1(红)
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+L*Math.cos(a1),oy+L*Math.sin(a1));ctx.stroke();
+    // 半平面2(蓝)
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+L*Math.cos(a2),oy+L*Math.sin(a2));ctx.stroke();
+    // 二面角弧
+    ctx.strokeStyle='#F3C00E';ctx.lineWidth=4;ctx.beginPath();ctx.arc(ox,oy,48,a2,a1);ctx.stroke();
+    label(ctx,ox+56,oy-14,'二面角 '+deg+'°','#16120A');
+    // 法向量:每个半平面的法向量垂直于自身,朝「外侧」(远离二面角内部)
+    // 半平面1沿 a1 方向,法向量 = a1 旋转 -90(向下,外侧)
+    const n1a=a1+Math.PI/2; // 红法向量朝下(外)
+    const n2a=a2-Math.PI/2; // 蓝法向量朝上(外)
+    const nL=90;
+    const m1x=ox+L*0.55*Math.cos(a1), m1y=oy+L*0.55*Math.sin(a1);
+    const m2x=ox+L*0.55*Math.cos(a2), m2y=oy+L*0.55*Math.sin(a2);
+    drawArrow(ctx,m1x,m1y,m1x+nL*Math.cos(n1a),m1y+nL*Math.sin(n1a),'#7A3FF2',4);
+    drawArrow(ctx,m2x,m2y,m2x+nL*Math.cos(n2a),m2y+nL*Math.sin(n2a),'#7A3FF2',4);
+    label(ctx,m1x+nL*Math.cos(n1a)+4,m1y+nL*Math.sin(n1a),'n₁','#7A3FF2');
+    label(ctx,m2x+nL*Math.cos(n2a)+4,m2y+nL*Math.sin(n2a),'n₂','#7A3FF2');
+    // 两法向量夹角
+    let dn=n1a-n2a; while(dn<0)dn+=2*Math.PI; while(dn>2*Math.PI)dn-=2*Math.PI;
+    let angN=dn*180/Math.PI; if(angN>180)angN=360-angN;
+    document.getElementById('dihVal').textContent='θ = '+deg+'°';
+    const cosDih=Math.cos(th).toFixed(3);
+    const cosN=Math.cos(angN*Math.PI/180).toFixed(3);
+    const kind=deg<90?'锐角 → cos&gt;0,取 +':deg>90?'钝角 → cos&lt;0,取 −':'直角 → cos=0';
+    info.innerHTML='两法向量(都朝外)夹角 = <b>'+angN.toFixed(0)+'°</b>,是二面角的补角。cos(二面角)=<b>'+cosDih+'</b>,cos&lt;n₁,n₂&gt;=<b>'+cosN+'</b> → 二者互为相反数。此二面角为 '+kind+'。';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ================= 6. 建系选择器 ================= */
+(function(){
+  const geos=[
+    {n:'长方体 / 正方体',t:'原点取一个顶点 O,三条从 O 出发的棱直接当 x、y、z 轴(天然两两垂直)。所有顶点坐标一眼可读。'},
+    {n:'正四棱锥 P-ABCD',t:'底面正方形对角线交点为原点 O,两条对角线(或两条中线)当 x、y 轴,顶点 P 到 O 的连线(高)当 z 轴。'},
+    {n:'一条侧棱⊥底面(如 PA⊥底面)',t:'把 PA 当 z 轴,原点取 A;底面里再找两条互相垂直的边当 x、y 轴。这是最常见的建系触发点。'},
+    {n:'直三棱柱 / 底面有直角',t:'把底面直角的顶点当原点,直角的两条边当 x、y 轴,竖直的侧棱当 z 轴。'},
+    {n:'正三棱柱(底面正三角形)',t:'取底面某边中点或某顶点为原点,用「一边 + 该边上的高」构造互相垂直的 x、y 轴,侧棱当 z 轴(会带 √3)。'}
+  ];
+  const sel=document.getElementById('geoSel'),out=document.getElementById('geoOut');
+  geos.forEach((g,i)=>{
+    const b=document.createElement('span');b.className='chip'+(i===0?' on':'');b.textContent=g.n;
+    b.onclick=()=>{[...sel.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');out.textContent='【'+g.n+'】建系推荐:\n'+g.t;};
+    sel.appendChild(b);
+  });
+  out.textContent='【'+geos[0].n+'】建系推荐:\n'+geos[0].t;
+})();
+
+/* ================= 7. 向量坐标运算器 ================= */
+(function(){
+  const ids=['ax','ay','az','bx','by','bz'].map(id=>document.getElementById(id));
+  const out=document.getElementById('calcOut');
+  function calc(){
+    const[ax,ay,az,bx,by,bz]=ids.map(i=>parseFloat(i.value)||0);
+    const dot=ax*bx+ay*by+az*bz;
+    const la=Math.sqrt(ax*ax+ay*ay+az*az), lb=Math.sqrt(bx*bx+by*by+bz*bz);
+    let cos= (la>0&&lb>0)? dot/(la*lb) : 0;
+    cos=Math.max(-1,Math.min(1,cos));
+    const th=Math.acos(cos)*180/Math.PI;
+    const perp = Math.abs(dot)<1e-9 ? '  →  a⊥b(垂直)' : '';
+    out.textContent =
+      'a·b = '+ax+'×'+bx+' + '+ay+'×'+by+' + '+az+'×'+bz+' = '+dot+perp+'\n'+
+      '|a| = √('+(ax*ax)+'+'+(ay*ay)+'+'+(az*az)+') = '+la.toFixed(4)+'\n'+
+      '|b| = √('+(bx*bx)+'+'+(by*by)+'+'+(bz*bz)+') = '+lb.toFixed(4)+'\n'+
+      'cosθ = a·b/(|a||b|) = '+((la>0&&lb>0)?cos.toFixed(4):'—')+'\n'+
+      'θ = '+((la>0&&lb>0)?th.toFixed(2)+'°':'—');
+  }
+  ids.forEach(i=>i.addEventListener('input',calc));
+  calc();
+})();
+
+/* ================= 自测 ================= */
+const qs=[
+ {q:"1. 空间向量法解立体几何的四个步骤是什么?",a:"① 建系(找三条两两垂直的棱当轴)② 写出各点坐标 ③ 由点相减得向量 ④ 套角/距离公式。"},
+ {q:"2. 已知 a=(1,−2,2),求 |a|。",a:"|a| = √(1+4+4) = √9 = 3。"},
+ {q:"3. a=(1,0,1),b=(0,1,1),求 a·b 和夹角余弦。",a:"a·b = 0+0+1 = 1;|a|=|b|=√2;cosθ = 1/2,θ=60°。"},
+ {q:"4. 怎样求平面的法向量?",a:"设 n=(x,y,z),取面内两不共线向量 a、b,令 n·a=0、n·b=0,再令某分量为整数解出。"},
+ {q:"5. 线面角用 sin 还是 cos?公式是?",a:"用 sin。sinθ = |a·n|/(|a||n|),a 是直线方向向量,n 是平面法向量,取绝对值。"},
+ {q:"6. 线线角公式?范围?",a:"cosθ = |a·b|/(|a||b|),必须加绝对值,θ∈(0°,90°]。"},
+ {q:"7. 求二面角时算出 cos<n₁,n₂> 就是答案吗?",a:"不是!要看图判断二面角是锐是钝,锐角取正、钝角取负,cos(二面角)=±cos<n₁,n₂>。"},
+ {q:"8. 点 P 到平面的距离公式?",a:"d = |AP·n|/|n|,A 是平面上任一点,n 是法向量。"},
+ {q:"9. 正方体棱长1,A(0,0,0)、C₁(1,1,1),求 AC₁ 与底面所成角的正弦。",a:"AC₁=(1,1,1),底面法向量 n=(0,0,1),sinθ=|1|/(√3·1)=√3/3。"},
+ {q:"10. 探索性「是否存在点」题怎么做?",a:"把待求点写成含参数 λ 的坐标(如 E=A+λ·AB),把条件翻成关于 λ 的方程,解出且在范围内则存在,否则不存在。"},
+ {q:"11. 建系的首选结构是什么?什么时候用传统法?",a:"首选有三条两两垂直棱的『墙角』(长方体、PA⊥底面等);找不到正交结构或坐标含大量根号时改用传统作角法。"},
+ {q:"12. 判断 a=(2,−4,4) 与 b=(1,−2,2) 是否共线。",a:"2/1=−4/−2=4/2=2,三分量成同一比例,故 a=2b,共线(平行)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

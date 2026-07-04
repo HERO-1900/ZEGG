@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导数应用:单调性 · 极值 · 最值 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--blue);width:160px}
+  .pill{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 导数基础攻坚包</div>
+    <h1>导数与函数的单调性、极值、最值</h1>
+    <p class="lead">这是导数的「基本功」页——先把「导数正负 = 上坡下坡」这件事彻底看懂,再稳稳拿下单调区间、极值、最值这些送分与中档题。学完这页,再去挑战「导数压轴」就不虚了。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 导数 f′(x) 就是函数在每一点的「<b>瞬时坡度</b>」。坡度为正(f′(x)&gt;0)→ 在<b>上坡</b>(递增);坡度为负(f′(x)&lt;0)→ 在<b>下坡</b>(递减);坡度由正变负是<b>山顶(极大)</b>,由负变正是<b>山谷(极小)</b>。求单调、求极值、求最值,全都是在读这条「坡度」的正负号。<br>🗣️ <b>做题永远第一步:先写定义域!</b> 单调区间、极值都不能越过定义域。</div>
+
+    <!-- ===================== 一、几何意义与切线 ===================== -->
+    <h2 class="b">一、导数的几何意义:导数就是切线斜率</h2>
+    <p class="lead">把曲线想成一条山路。你站在横坐标 x 处,脚下那一瞬间的「陡不陡、朝上还是朝下」,就是导数 f′(x)。它等于曲线在该点<b>切线的斜率 k</b>。拖动竖线,看切线随位置倾斜——斜率数值实时跟着变。</p>
+    <div class="viz">
+      <canvas id="cTangent" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <label>切点 x = <input id="sTan" type="range" min="-30" max="30" value="-14"> <span id="tanX" class="pill">x</span></label>
+        <span class="info" id="tanInfo"></span>
+      </div>
+      <p class="sub">曲线 f(x)=0.06x³−0.6x(缩放显示)。切线上扬(斜率&gt;0)→ 该处递增;下压(斜率&lt;0)→ 递减;斜率=0 处正是极值点。</p>
+    </div>
+    <div class="keybox"><b>切线方程(在点 vs 过点,超高频易错):</b><br>• 「<b>在点</b> P(x₀, f(x₀)) 处」的切线:切点就是 P,直接 <b>y − f(x₀) = f′(x₀)(x − x₀)</b>。<br>• 「<b>过点</b> Q(a, b)」的切线:Q <b>不一定</b>在曲线上!要<b>设切点为 (t, f(t))</b>,让切线经过 Q,解出 t(可能多解 → 多条切线)。</div>
+    <div class="ex"><b>例(在点):</b> 求 f(x)=x²+1 在 x=1 处的切线。<br>f′(x)=2x,f′(1)=2,切点 (1,2) → y−2=2(x−1) → <b>y=2x</b>。<br><b>例(过点):</b> 求过原点 (0,0) 且与 y=x²+1 相切的直线。<br>设切点 (t, t²+1),斜率 2t,切线 y−(t²+1)=2t(x−t)。代入 (0,0):−(t²+1)=−2t² → t²=1 → t=±1 → 两条切线 <b>y=2x 与 y=−2x</b>。<span class="trap">⚠ 原点不在曲线上,直接套「在点」公式会错。</span></div>
+
+    <h2 class="o">二、切线『在点』与『过点』的区别(可切换演示)</h2>
+    <p class="lead">这是导数入门最大的坑。切换下面的按钮,看清楚:「在点」时给定点必是切点;「过点」时给定点常在曲线外,切点要另设,还可能有<b>两条</b>切线。</p>
+    <div class="viz">
+      <canvas id="cTP" width="760" height="400"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="tpIn">切线『在点』(1,2)</button>
+        <button class="btn" id="tpOut">切线『过点』原点 (0,0)</button>
+      </div>
+      <span class="info" id="tpInfo"></span>
+      <p class="sub">曲线 y=x²+1。橙点=给定点,绿点=切点。「在点」时二者重合;「过点」时给定点在曲线外,切点另设,得到两条切线。</p>
+    </div>
+
+    <!-- ===================== 三、求导法则 ===================== -->
+    <h2 class="b">三、常见函数求导 + 四则 / 复合法则</h2>
+    <div class="say">🗣️ <b>求导是导数题的地基。</b> 常见函数导数背熟,四则与复合法则用熟,后面全靠它。复合函数口诀:<b>由外到内,层层相乘</b>(链式法则)。</div>
+    <div class="card">
+      <table>
+        <tr><th>基本函数</th><th>导数 f′(x)</th><th>基本函数</th><th>导数 f′(x)</th></tr>
+        <tr><td>C(常数)</td><td>0</td><td>xⁿ</td><td>n·xⁿ⁻¹</td></tr>
+        <tr><td>eˣ</td><td>eˣ</td><td>aˣ</td><td>aˣ·ln a</td></tr>
+        <tr><td>ln x</td><td>1/x</td><td>logₐx</td><td>1/(x·ln a)</td></tr>
+        <tr><td>sin x</td><td>cos x</td><td>cos x</td><td>−sin x</td></tr>
+      </table>
+    </div>
+    <div class="keybox"><b>四则法则:</b><br>• 和差:(u±v)′ = u′±v′<br>• 积:(u·v)′ = u′v + u·v′<br>• 商:(u/v)′ = (u′v − u·v′)/v²<br><b>复合(链式):</b> 若 y=f(g(x)),则 y′ = f′(g(x))·g′(x) —— 先对外层求导(内层当整体),再乘内层导数。</div>
+    <div class="ex"><b>例1(积):</b> (x·eˣ)′ = 1·eˣ + x·eˣ = <b>(x+1)eˣ</b>。<br><b>例2(商):</b> ((ln x)/x)′ = (1/x·x − ln x·1)/x² = <b>(1−ln x)/x²</b>。<br><b>例3(复合):</b> (e^{2x})′ = e^{2x}·(2x)′ = <b>2e^{2x}</b>;(sin(3x))′ = cos(3x)·3 = <b>3cos(3x)</b>;(ln(x²+1))′ = 1/(x²+1)·2x = <b>2x/(x²+1)</b>。</div>
+
+    <!-- ===================== 四、单调区间 ===================== -->
+    <h2 class="b">四、用 f′(x) 求单调区间(先定义域!)</h2>
+    <div class="say">🗣️ <b>标准动作:</b> ① <b>先写定义域</b>;② 求 f′(x);③ 解 f′(x)=0 找临界点;④ 在数轴上排临界点、判 f′ 的正负;⑤ <b>f′(x)&gt;0 的区间递增,f′(x)&lt;0 的区间递减</b>。区间必须落在定义域内。</div>
+    <p class="lead">下面的图:上方是 f(x),下方是它的导数 f′(x)。<b>拖动竖线</b>,读出该点导数值(=切线斜率);看 f′ 在横轴上方(&gt;0)对应 f 上坡、f′ 在横轴下方(&lt;0)对应 f 下坡,颜色同步标注。</p>
+    <div class="viz">
+      <canvas id="cLink" width="760" height="470"></canvas>
+      <div class="ctrls">
+        <label>竖线 x = <input id="sLink" type="range" min="-30" max="30" value="-20"> <span id="linkX" class="pill">x</span></label>
+        <span class="info" id="linkInfo"></span>
+      </div>
+      <p class="sub">上:f(x)=x³−3x;下:f′(x)=3x²−3。绿色=f′&gt;0(f 递增),红色=f′&lt;0(f 递减)。f′ 与横轴的两个交点 x=±1,正是 f 的极值点。</p>
+    </div>
+    <div class="ex"><b>例:</b> 求 f(x)=x³−3x 的单调区间。<br>① 定义域 R。② f′(x)=3x²−3=3(x−1)(x+1)。③ f′=0 → x=±1。④ 符号:x&lt;−1 时 f′&gt;0(增);−1&lt;x&lt;1 时 f′&lt;0(减);x&gt;1 时 f′&gt;0(增)。<br>⑤ <b>增区间 (−∞,−1) 和 (1,+∞),减区间 (−1,1)。</b></div>
+
+    <h2 class="g">五、给 f′(x) 判 f 的升降(区间染色)</h2>
+    <p class="lead">只要能给 f′(x) 的正负画对,f 的升降就出来了。切换下面的例子,看 f′&gt;0 / f′&lt;0 的区间被自动染成绿 / 红,对应 f 递增 / 递减。</p>
+    <div class="viz">
+      <canvas id="cSign" width="760" height="300"></canvas>
+      <div class="stepbtns">
+        <button class="btn signb on" data-i="0">f′=3x²−3</button>
+        <button class="btn signb" data-i="1">f′=−2x+4</button>
+        <button class="btn signb" data-i="2">f′=x²−4x+3</button>
+      </div>
+      <span class="info" id="signInfo"></span>
+      <p class="sub">上条:f′(x) 的图像(高于横轴=正,低于=负);下条:据此把 x 轴染成绿(f 增)/ 红(f 减)。</p>
+    </div>
+
+    <!-- ===================== 六、极值 ===================== -->
+    <h2 class="b">六、极值的定义与判定(f′ 必须变号)</h2>
+    <div class="say">🗣️ <b>极值 = 局部的山顶或山谷。</b> 判定靠 f′(x) <b>变号</b>:在 x₀ 左右,f′ 由 <b>+ 变 −</b> → x₀ 是<b>极大值点</b>(先上坡后下坡,山顶);由 <b>− 变 +</b> → <b>极小值点</b>(先下坡后上坡,山谷)。<br>🗣️ <b>致命提醒:f′(x₀)=0 不一定是极值!</b> 必须两侧变号才算。比如 y=x³ 在 x=0 处 f′=0,但两侧都是 + 号(不变号)→ 不是极值。</div>
+    <p class="lead">动画演示:小球在 f′(x₀) 的左右取样,显示号 +/−。<b>+→− 判极大,−→+ 判极小</b>,不变号则不是极值。点按钮切换三种情形。</p>
+    <div class="viz">
+      <canvas id="cExtr" width="760" height="360"></canvas>
+      <div class="stepbtns">
+        <button class="btn extrb on" data-i="0">+ → − (极大)</button>
+        <button class="btn extrb" data-i="1">− → + (极小)</button>
+        <button class="btn extrb" data-i="2">不变号 (非极值)</button>
+      </div>
+      <span class="info" id="extrInfo"></span>
+      <p class="sub">红箭头=f′&gt;0(上坡),蓝箭头=f′&lt;0(下坡)。看 f′ 过 x₀ 时号是否翻转。</p>
+    </div>
+    <div class="ex"><b>例:</b> 求 f(x)=x³−3x 的极值。<br>f′=3(x−1)(x+1)。x=−1:左 f′&gt;0、右 f′&lt;0(+→−)→ <b>极大值 f(−1)=2</b>;x=1:左 f′&lt;0、右 f′&gt;0(−→+)→ <b>极小值 f(1)=−2</b>。<br><b>反例:</b> f(x)=x³,f′=3x²≥0,x=0 处 f′=0 但不变号 → <b>x=0 不是极值点</b>。</div>
+
+    <!-- ===================== 七、最值 ===================== -->
+    <h2 class="b">七、闭区间最值(极值 vs 端点大比拼)</h2>
+    <div class="say">🗣️ <b>套路:</b> 求闭区间 [a,b] 上的最值 = ① 求出区间内所有<b>极值</b>(f′=0 且在 (a,b) 内的点的函数值);② 算<b>两端点</b> f(a)、f(b);③ 把这些值<b>全部比大小</b>,最大的是最大值、最小的是最小值。<b>最值一定在极值点或端点处取到。</b></div>
+    <p class="lead">拖动改变区间右端点 b,看比较器如何在「极大、极小、左端、右端」四个候选值中挑出全区间的最大 / 最小值。</p>
+    <div class="viz">
+      <canvas id="cMax" width="760" height="400"></canvas>
+      <div class="ctrls">
+        <label>右端点 b = <input id="sMax" type="range" min="5" max="30" value="20"> <span id="maxB" class="pill o">b</span></label>
+        <span class="info" id="maxInfo"></span>
+      </div>
+      <p class="sub">f(x)=x³−3x,固定左端 a=−2。候选:左端 f(−2)、极大 f(−1)=2、极小 f(1)=−2、右端 f(b)。金色⭐=最大值,青色⭐=最小值。</p>
+    </div>
+    <div class="ex"><b>例:</b> 求 f(x)=x³−3x 在 [−2,3] 上的最值。<br>f′=3x²−3,极值点 x=±1 都在区间内。候选值:f(−2)=−2,f(−1)=2,f(1)=−2,f(3)=18。<br>比较 → <b>最大值 18(在 x=3),最小值 −2(在 x=−2 与 x=1 处并列)</b>。</div>
+
+    <!-- ===================== 八、含参讨论入门 ===================== -->
+    <h2 class="v">八、含参单调性讨论入门</h2>
+    <p class="lead">题里带个参数 a,f′(x) 的正负就不固定了。核心思路:<b>让 f′(x) 定号,就要对 a 分类</b>。分界点来自「f′ 能否变号 / 二次的判别式 / 二次项系数正负」。拖动参数 a,看 f′ 的根移动、单调性在临界处翻脸。</p>
+    <div class="viz">
+      <canvas id="cParam" width="760" height="400"></canvas>
+      <div class="ctrls">
+        <label>参数 a = <input id="sParam" type="range" min="-30" max="30" value="-15"> <span id="paramA" class="pill v">a</span></label>
+        <span class="info" id="paramInfo"></span>
+      </div>
+      <p class="sub">f(x)=x³−a·x,f′(x)=3x²−a。当 a≤0:f′≥0 恒成立,全程单调增(无极值);当 a&gt;0:两个极值点 x=±√(a/3)。分界就在 a=0。</p>
+    </div>
+    <div class="ex"><b>分类模板</b>(以 f′(x)=3x²−a 为例):<br>• <b>当 a≤0</b>:f′(x)=3x²−a≥0 恒成立 → f(x) 在 R 上单调递增,无极值。<br>• <b>当 a&gt;0</b>:f′(x)=0 → x=±√(a/3),两侧变号 → x=−√(a/3) 极大,x=+√(a/3) 极小。<br><b>另一常见型 f′(x)=x−a/x=(x²−a)/x(定义域 x&gt;0):</b> a≤0 时 f′&gt;0 恒增;a&gt;0 时 x=√a 是分界,(0,√a) 减、(√a,+∞) 增。<span class="trap">⚠ 分类别漏「分界值本身」(a=0);带 ln 的题先看定义域 x&gt;0。</span></div>
+
+    <!-- ===================== 九、导数与不等式/零点 ===================== -->
+    <h2 class="b">九、导数与不等式 / 零点的基础应用</h2>
+    <div class="say">🗣️ <b>零点 / 根个数 = 数形结合:</b> 「方程 f(x)=k 有几个根?」= 「曲线 y=f(x) 与水平线 y=k 有几个交点?」。上下拖动 k,数交点。临界值恰是极大值、极小值。</div>
+    <div class="viz">
+      <canvas id="cRoot" width="760" height="400"></canvas>
+      <div class="ctrls">
+        <label>水平线 k = <input id="sRoot" type="range" min="-30" max="30" value="0"> <span id="rootK" class="pill o">k</span></label>
+        <span class="info" id="rootInfo"></span>
+      </div>
+      <p class="sub">f(x)=x³−3x,极大值 2、极小值 −2。当 k&gt;2 或 k&lt;−2:1 个根;k=2 或 k=−2:2 个根(相切);−2&lt;k&lt;2:3 个根。</p>
+    </div>
+    <div class="ex"><b>不等式基础用法:</b> 证 A(x)&gt;B(x),令 <b>h(x)=A−B</b>,求导求 h 的最小值,证 h(x)&gt;0。<br><b>例:</b> 证 x&gt;0 时 e^x&gt;x+1。令 h(x)=e^x−x−1,h′=e^x−1,x&gt;0 时 h′&gt;0(增),h(0)=0 → x&gt;0 时 h&gt;0 → <b>e^x&gt;x+1</b>。</div>
+
+    <!-- ===================== 十、恒成立分离参数 ===================== -->
+    <h2 class="b">十、恒成立:分离参数入门</h2>
+    <div class="say">🗣️ <b>口诀:</b> 恒成立 = 对「所有 x」都满足 → 取最不利的那个。<br>• 要 <b>a ≥ g(x) 恒成立</b> → <b>a ≥ g(x) 的最大值</b>;<br>• 要 <b>a ≤ g(x) 恒成立</b> → <b>a ≤ g(x) 的最小值</b>。<br>把 a 分离到一边,另一边用导数求最值即可。</div>
+    <div class="ex"><b>例:</b> 对任意 x&gt;0,a ≥ (ln x)/x 恒成立,求 a 范围。<br>令 g(x)=(ln x)/x,g′(x)=(1−ln x)/x²,令 g′=0 → x=e,g(e)=1/e 是最大值。<br>恒成立要 a ≥ g(x) 的最大值 → <b>a ≥ 1/e</b>。</div>
+    <div class="keybox"><b>分离参数四步:</b> ① 把 a 单独移到一边;② 另一边记为 g(x);③ 用导数求 g(x) 的最值;④ 恒成立看最值方向取等。<b>注意定义域 + 端点能否取到(影响 ≥ 还是 &gt;)。</b></div>
+
+    <!-- ===================== 十一、全题型地图 ===================== -->
+    <h2 class="g">十一、全题型地图(触发信号 + 标准动作)</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型</th><th>触发信号</th><th>标准动作</th></tr>
+        <tr><td><b>求切线</b></td><td>「在…处切线」「过…点切线」</td><td>在点:直接 y−f(x₀)=f′(x₀)(x−x₀);过点:设切点 (t,f(t)) 解 t</td></tr>
+        <tr><td><b>求单调区间</b></td><td>「单调递增/递减区间」</td><td>先定义域 → f′ → 解 f′=0 → 排号,f′&gt;0 增、f′&lt;0 减</td></tr>
+        <tr><td><b>求极值/最值</b></td><td>「极大/极小值」「最大/最小值」</td><td>极值看 f′ 变号;闭区间最值比较极值与端点</td></tr>
+        <tr><td><b>已知单调性求参数</b></td><td>「在…上单调递增,求 a」</td><td>转成 f′(x)≥0 在区间恒成立 → 分离参数求最值</td></tr>
+        <tr><td><b>简单含参讨论</b></td><td>f′ 中带 a,正负不定</td><td>按 f′ 能否变号/判别式/系数正负,对 a 分类讨论</td></tr>
+        <tr><td><b>零点/根个数</b></td><td>「几个零点」「f(x)=k 几个根」</td><td>数形结合:y=f(x) 与 y=k 交点数,临界值是极值</td></tr>
+        <tr><td><b>不等式证明</b></td><td>「证明 A&gt;B」</td><td>令 h=A−B 求导,证 h 的最小值≥0(或&gt;0)</td></tr>
+      </table>
+    </div>
+
+    <h3>带解例题:已知单调性求参数范围</h3>
+    <div class="ex"><b>已知 f(x)=x³+ax 在 R 上单调递增,求 a 的范围。</b><br>f′(x)=3x²+a。在 R 上递增 ⇔ f′(x)=3x²+a ≥ 0 <b>对所有 x 恒成立</b>。<br>3x² 的最小值为 0(在 x=0),故需 <b>a ≥ 0</b>。<br><b>变式:</b> 若 f(x)=x³+ax 在区间 [1,+∞) 上递增,则需 3x²+a≥0 在 [1,+∞) 恒成立,3x² 在此区间最小值为 3(在 x=1),故 <b>a ≥ −3</b>。<span class="trap">⚠ 区间不同,「最不利点」也不同——恒成立要盯住区间内的最小值。</span></div>
+
+    <h3>带解例题:含参单调性讨论</h3>
+    <div class="ex"><b>讨论 f(x)=ln x − a·x(x&gt;0)的单调性。</b><br>定义域 x&gt;0。f′(x)=1/x − a = (1−ax)/x。<br>• <b>a≤0</b>:1−ax&gt;0(因 x&gt;0),f′&gt;0 → 在 (0,+∞) 递增。<br>• <b>a&gt;0</b>:f′=0 → x=1/a。(0,1/a) 上 f′&gt;0 递增,(1/a,+∞) 上 f′&lt;0 递减。<br>结论:a≤0 时全程递增;a&gt;0 时在 x=1/a 处取极大值。</div>
+
+    <!-- ===================== 十二、易错集 ===================== -->
+    <h2 class="r">十二、易错集</h2>
+    <div class="card">
+      <p class="trap">⚠ ① <b>定义域优先!</b> 单调区间、极值都不能超出定义域。带 ln、分式、根号的题,先把定义域写出来。</p>
+      <p class="trap">⚠ ② <b>极值点 ≠ 所有 f′=0 的点。</b> f′(x₀)=0 必须验「两侧变号」才是极值(如 y=x³ 在 0 处不是)。</p>
+      <p class="trap">⚠ ③ <b>切线『在点』与『过点』分不清。</b> 「过点」时给定点常在曲线外,切点要另设,可能有多条切线。</p>
+      <p class="trap">⚠ ④ <b>闭区间最值忘算端点。</b> 最值只在「极值点或端点」取到,漏比端点会错。</p>
+      <p class="trap">⚠ ⑤ <b>写单调区间别用「并集∪」连不连续的两段。</b> 增区间 (−∞,−1) 和 (1,+∞) 要分开写,不能写成 (−∞,−1)∪(1,+∞) 作为一个「递增」的整区间。</p>
+      <p class="trap">⚠ ⑥ <b>含参讨论漏掉分界值。</b> a=0、判别式=0 这些临界情况要单独列,分类不完整直接扣分。</p>
+      <p class="trap">⚠ ⑦ <b>恒成立取等号。</b> 「在区间上递增」通常允许 f′(x)=0 于个别点,故用 ≥ 而非 &gt;;分离参数后端点能否取到影响 ≥ / &gt;。</p>
+    </div>
+
+    <!-- ===================== 十三、尖子生拔高 ===================== -->
+    <h2 class="v">十三、尖子生拔高视角</h2>
+    <div class="card">
+      <p><b>① 单调 ⇔ f′ 恒定号,是「桥」。</b> 「在区间上单调递增」= 「f′(x)≥0 在该区间恒成立」= 分离参数求最值。所有「已知单调求参数」都从这座桥过。</p>
+      <p><b>② f′ 是二次时,善用「根与图象」而非死解。</b> 讨论 f′=ax²+bx+c 的符号,优先看开口方向 + 判别式 + 对称轴 / 根是否落在定义域内,比硬解根快且不漏情况。</p>
+      <p><b>③ 极值点数量 = f′ 变号次数。</b> 想知道函数有几个极值,先数 f′(x)=0 的「变号根」个数(重根不变号,不算)。</p>
+      <p><b>④ 数形结合是导数题的灵魂。</b> 「根的个数」「恒成立」「比较大小」优先画图,把代数翻译成「曲线与直线的位置关系」。</p>
+      <p><b>⑤ 恒成立与能成立要分清方向。</b> 恒成立取最值的「最不利端」;能成立(存在)取「最有利端」——方向反了全错。这是通往「导数压轴」的关键一步。</p>
+      <p><b>⑥ 切线放缩预热:</b> ln x ≤ x−1、e^x ≥ x+1(都在切点处相切)。压轴题里把陌生的 ln、e^x 换成多项式,基础页先记住这两条「母不等式」。</p>
+    </div>
+
+    <!-- ===================== 十四、自测 ===================== -->
+    <h2 class="o">十四、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 导数基础攻坚包 · 学完这页 → 进阶去「数学压轴 · 导数应用 / 排列组合」</p>
+  </div>
+
+<script>
+/* ---------- 通用画布工具 ---------- */
+function axes(ctx,W,H,ox,oy,sx,sy){
+  ctx.strokeStyle='#cdbf9a';ctx.lineWidth=1;
+  for(let gx=ox%sx; gx<W; gx+=sx){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+  for(let gy=oy%sy; gy<H; gy+=sy){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+  ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+}
+function plot(ctx,f,W,ox,oy,sx,sy,col,lw){
+  ctx.strokeStyle=col;ctx.lineWidth=lw||3;ctx.beginPath();let first=true;
+  for(let px=0;px<=W;px++){const x=(px-ox)/sx;const y=oy-f(x)*sy;if(y<-80||y>ctx.canvas.height+80){first=true;continue;}if(first){ctx.moveTo(px,y);first=false;}else ctx.lineTo(px,y);}
+  ctx.stroke();
+}
+function dot(ctx,cx,cy,col,r){ctx.fillStyle=col;ctx.beginPath();ctx.arc(cx,cy,r||6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();}
+
+/* ---------- 1. 切线动画(几何意义) ---------- */
+(function(){
+  const c=document.getElementById('cTangent'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2,sx=14,sy=14;
+  const f=x=>0.06*x*x*x-0.6*x, df=x=>0.18*x*x-0.6;
+  const sl=document.getElementById('sTan');
+  function draw(){
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    plot(ctx,f,W,ox,oy,sx,sy,'#1450C8',3);
+    const X=parseFloat(sl.value)/2.5;
+    const k=df(X), y0=f(X);
+    const cx=ox+X*sx, cy=oy-y0*sy;
+    ctx.strokeStyle=k>=0?'#1E9E86':'#E0382A';ctx.lineWidth=3;
+    const x1=X-9,x2=X+9;
+    ctx.beginPath();
+    ctx.moveTo(ox+x1*sx,oy-(y0+k*(x1-X))*sy);
+    ctx.lineTo(ox+x2*sx,oy-(y0+k*(x2-X))*sy);
+    ctx.stroke();
+    dot(ctx,cx,cy,'#E86A17',6);
+    document.getElementById('tanX').textContent='x = '+X.toFixed(1);
+    const trend=k>0.02?'上坡(递增)':k<-0.02?'下坡(递减)':'坡度≈0(极值点)';
+    document.getElementById('tanInfo').innerHTML='切线斜率 f′(x) = <b>'+k.toFixed(2)+'</b> → '+trend;
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 2. 在点 vs 过点 ---------- */
+(function(){
+  const c=document.getElementById('cTP'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H*0.78,sx=90,sy=42;
+  const f=x=>x*x+1, df=x=>2*x;
+  let mode='in';
+  function line(k,x0,y0,col){
+    ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();
+    ctx.moveTo(0,oy-(y0+k*((0-ox)/sx-x0))*sy);
+    ctx.lineTo(W,oy-(y0+k*((W-ox)/sx-x0))*sy);
+    ctx.stroke();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    plot(ctx,f,W,ox,oy,sx,sy,'#1450C8',3);
+    if(mode==='in'){
+      const x0=1,y0=f(x0),k=df(x0);
+      line(k,x0,y0,'#1E9E86');
+      dot(ctx,ox+x0*sx,oy-y0*sy,'#1E9E86',7);   // 切点
+      dot(ctx,ox+x0*sx,oy-y0*sy,'#E86A17',4);   // 给定点(重合)
+      document.getElementById('tpInfo').innerHTML='『在点』(1,2):给定点<b>就是</b>切点。f′(1)=2 → 切线 <b>y=2x</b>。橙点与绿点重合。';
+    }else{
+      // 过原点:切点 t=±1,切线 y=2x 与 y=-2x
+      [[1,'#1E9E86'],[-1,'#7A3FF2']].forEach(([t,col])=>{
+        const y0=f(t),k=df(t);
+        line(k,t,y0,col);
+        dot(ctx,ox+t*sx,oy-y0*sy,col,7); // 切点
+      });
+      dot(ctx,ox,oy,'#E86A17',7);        // 给定点(原点,在曲线外)
+      document.getElementById('tpInfo').innerHTML='『过点』(0,0):橙点在曲线<b>外</b>!设切点 (t,t²+1),解得 t=±1 → <b>两条</b>切线 y=2x 与 y=−2x。绿、紫点是切点。';
+    }
+  }
+  document.getElementById('tpIn').onclick=()=>{mode='in';draw();};
+  document.getElementById('tpOut').onclick=()=>{mode='out';draw();};
+  draw();
+})();
+
+/* ---------- 3. 函数与导数联动图 ---------- */
+(function(){
+  const c=document.getElementById('cLink'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const oxT=W/2, oyT=115, sxT=42, syT=13;   // 上:f(x)
+  const oxB=W/2, oyB=350, sxB=42, syB=13;    // 下:f'(x)
+  const f=x=>x*x*x-3*x, df=x=>3*x*x-3;
+  const sl=document.getElementById('sLink');
+  function subaxes(ox,oy,sx,sy,y0,y1){
+    ctx.strokeStyle='#cdbf9a';ctx.lineWidth=1;
+    for(let gx=ox%sx; gx<W; gx+=sx){ctx.beginPath();ctx.moveTo(gx,y0);ctx.lineTo(gx,y1);ctx.stroke();}
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,y0);ctx.lineTo(ox,y1);ctx.stroke();
+  }
+  function curve(f,ox,oy,sx,sy,y0,y1,colUp,colDn){
+    // 分段按 df 号着色
+    let px0=0;
+    ctx.lineWidth=3.5;
+    for(let px=1;px<=W;px++){
+      const xa=(px-1-ox)/sx, xb=(px-ox)/sx;
+      const ya=oy-f(xa)*sy, yb=oy-f(xb)*sy;
+      if(ya<y0-40||ya>y1+40||yb<y0-40||yb>y1+40)continue;
+      ctx.strokeStyle=df((xa+xb)/2)>=0?colUp:colDn;
+      ctx.beginPath();ctx.moveTo(px-1,ya);ctx.lineTo(px,yb);ctx.stroke();
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    subaxes(oxT,oyT,sxT,syT,10,215);
+    subaxes(oxB,oyB,sxB,syB,240,H-6);
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+    ctx.fillText('上:f(x)=x³−3x',10,24);
+    ctx.fillText('下:f′(x)=3x²−3',10,254);
+    // f 曲线(按导数号着色)
+    curve(f,oxT,oyT,sxT,syT,10,215,'#1E9E86','#E0382A');
+    // f' 曲线(高于横轴=绿,低=红)
+    ctx.lineWidth=3.5;
+    for(let px=1;px<=W;px++){
+      const xa=(px-1-oxB)/sxB, xb=(px-oxB)/sxB;
+      const ya=oyB-df(xa)*syB, yb=oyB-df(xb)*syB;
+      if(ya<240||ya>H-6||yb<240||yb>H-6)continue;
+      ctx.strokeStyle=df((xa+xb)/2)>=0?'#1E9E86':'#E0382A';
+      ctx.beginPath();ctx.moveTo(px-1,ya);ctx.lineTo(px,yb);ctx.stroke();
+    }
+    const X=parseFloat(sl.value)/10;
+    const k=df(X), y0=f(X);
+    // 竖线贯穿上下
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(oxT+X*sxT,10);ctx.lineTo(oxT+X*sxT,H-6);ctx.stroke();ctx.setLineDash([]);
+    // 上:切点 + 切线
+    const cxT=oxT+X*sxT, cyT=oyT-y0*syT;
+    ctx.strokeStyle=k>=0?'#1E9E86':'#E0382A';ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.moveTo(oxT+(X-2)*sxT,oyT-(y0+k*(-2))*syT);
+    ctx.lineTo(oxT+(X+2)*sxT,oyT-(y0+k*(2))*syT);
+    ctx.stroke();
+    dot(ctx,cxT,cyT,'#E86A17',6);
+    // 下:f' 上对应点
+    dot(ctx,oxB+X*sxB,oyB-k*syB,'#E86A17',6);
+    document.getElementById('linkX').textContent='x = '+X.toFixed(1);
+    const trend=k>0.05?'<b style="color:#1E9E86">f 递增</b>':k<-0.05?'<b style="color:#E0382A">f 递减</b>':'<b style="color:#7A3FF2">极值点</b>';
+    document.getElementById('linkInfo').innerHTML='f′('+X.toFixed(1)+') = <b>'+k.toFixed(2)+'</b> = 切线斜率 → '+trend;
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 4. 给 f' 判 f 升降(区间染色) ---------- */
+(function(){
+  const c=document.getElementById('cSign'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=140,sx=42,sy=18;
+  const cases=[
+    {df:x=>3*x*x-3, txt:'f′=3x²−3=3(x−1)(x+1):x&lt;−1 增,−1&lt;x&lt;1 减,x&gt;1 增。'},
+    {df:x=>-2*x+4, txt:'f′=−2x+4:x&lt;2 时 f′&gt;0(增),x&gt;2 时 f′&lt;0(减);x=2 是极大值点。'},
+    {df:x=>x*x-4*x+3, txt:'f′=x²−4x+3=(x−1)(x−3):x&lt;1 增,1&lt;x&lt;3 减,x&gt;3 增。'}
+  ];
+  let idx=0;
+  function draw(){
+    const df=cases[idx].df;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('f′(x) 图像',10,20);
+    // f' 曲线,按号着色
+    ctx.lineWidth=3.5;
+    for(let px=1;px<=W;px++){
+      const xa=(px-1-ox)/sx, xb=(px-ox)/sx;
+      const ya=oy-df(xa)*sy, yb=oy-df(xb)*sy;
+      if(ya<8||ya>H-40||yb<8||yb>H-40)continue;
+      ctx.strokeStyle=df((xa+xb)/2)>=0?'#1E9E86':'#E0382A';
+      ctx.beginPath();ctx.moveTo(px-1,ya);ctx.lineTo(px,yb);ctx.stroke();
+    }
+    // 底部染色条
+    const bandY=H-24, bh=16;
+    for(let px=0;px<W;px++){
+      const x=(px-ox)/sx;
+      ctx.fillStyle=df(x)>=0?'#1E9E86':'#E0382A';
+      ctx.fillRect(px,bandY,1,bh);
+    }
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.strokeRect(0,bandY,W,bh);
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';
+    ctx.fillText('绿=f′>0→f 增   红=f′<0→f 减',12,bandY+12);
+    document.getElementById('signInfo').innerHTML=cases[idx].txt;
+  }
+  document.querySelectorAll('.signb').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.signb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');idx=parseInt(b.dataset.i);draw();
+  });
+  draw();
+})();
+
+/* ---------- 5. 极值判定(f' 变号) ---------- */
+(function(){
+  const c=document.getElementById('cExtr'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2,sx=90,sy=48;
+  // 三种局部函数与其导数
+  const cases=[
+    {f:x=>-x*x+2, df:x=>-2*x, x0:0, label:'+ → − :极大值', col:'#E0382A'},
+    {f:x=>x*x-2, df:x=>2*x, x0:0, label:'− → + :极小值', col:'#1E9E86'},
+    {f:x=>x*x*x*0.6, df:x=>1.8*x*x, x0:0, label:'不变号(+→+):非极值', col:'#7A3FF2'}
+  ];
+  let idx=0;
+  function arrow(x,up){
+    const px=ox+x*sx, py=oy-cases[idx].f(x)*sy;
+    ctx.strokeStyle=up?'#E0382A':'#1450C8';ctx.lineWidth=3;
+    const dx=22,dy=up?-16:16;
+    ctx.beginPath();ctx.moveTo(px-dx,py-dy*0);ctx.lineTo(px-dx+30,py+dy);ctx.stroke();
+    // 箭头头
+    ctx.beginPath();ctx.moveTo(px-dx+30,py+dy);ctx.lineTo(px-dx+22,py+dy-(up?-6:6));ctx.lineTo(px-dx+24,py+dy+(up?-8:8));ctx.closePath();ctx.fillStyle=up?'#E0382A':'#1450C8';ctx.fill();
+  }
+  function draw(){
+    const cs=cases[idx];
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    plot(ctx,cs.f,W,ox,oy,sx,sy,'#1450C8',3.5);
+    // 取样两侧的号
+    const xl=cs.x0-0.7, xr=cs.x0+0.7;
+    const sl=cs.df(xl), sr=cs.df(xr);
+    // 左右取样点 + 号标注
+    [[xl,sl],[xr,sr]].forEach(([xx,s])=>{
+      const px=ox+xx*sx, py=oy-cs.f(xx)*sy;
+      dot(ctx,px,py, s>=0?'#E0382A':'#1450C8',6);
+      ctx.fillStyle=s>=0?'#E0382A':'#1450C8';ctx.font='bold 26px sans-serif';
+      ctx.fillText(s>=0?'+':'−', px-8, py- (cs.f(xx)>=0? 18: -30));
+    });
+    // 临界点
+    dot(ctx,ox+cs.x0*sx,oy-cs.f(cs.x0)*sy,'#F3C00E',7);
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+    ctx.fillText('x₀ (f′=0)',ox+cs.x0*sx-24,oy-cs.f(cs.x0)*sy+ (idx===0? 30 : -14));
+    let msg;
+    if(idx===0)msg='x₀ 左侧 f′&gt;0(+),右侧 f′&lt;0(−):先上坡后下坡 → <b style="color:#E0382A">极大值点</b>。';
+    else if(idx===1)msg='x₀ 左侧 f′&lt;0(−),右侧 f′&gt;0(+):先下坡后上坡 → <b style="color:#1E9E86">极小值点</b>。';
+    else msg='x₀ 两侧 f′ 都&gt;0(+→+),<b style="color:#7A3FF2">号不翻转 → 不是极值</b>(如 y=x³ 在 0 处)。';
+    document.getElementById('extrInfo').innerHTML=msg;
+  }
+  document.querySelectorAll('.extrb').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.extrb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');idx=parseInt(b.dataset.i);draw();
+  });
+  draw();
+})();
+
+/* ---------- 6. 闭区间最值比较器 ---------- */
+(function(){
+  const c=document.getElementById('cMax'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W*0.5,oy=H*0.62,sx=44,sy=13;
+  const f=x=>x*x*x-3*x;
+  const A=-2;
+  const sl=document.getElementById('sMax');
+  function draw(){
+    const b=parseFloat(sl.value)/10;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    // 全曲线淡
+    plot(ctx,f,W,ox,oy,sx,sy,'#c9bfa0',2);
+    // 区间 [A,b] 内曲线加粗
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=4;ctx.beginPath();let first=true;
+    for(let px=0;px<=W;px++){const x=(px-ox)/sx;if(x<A||x>b){first=true;continue;}const y=oy-f(x)*sy;if(first){ctx.moveTo(px,y);first=false;}else ctx.lineTo(px,y);}
+    ctx.stroke();
+    // 候选点
+    const cand=[[A,f(A),'左端'],[-1,f(-1),'极大'],[1,f(1),'极小'],[b,f(b),'右端']].filter(p=>p[0]>=A-0.001&&p[0]<=b+0.001);
+    let mx=cand[0],mn=cand[0];
+    cand.forEach(p=>{if(p[1]>mx[1])mx=p;if(p[1]<mn[1])mn=p;});
+    cand.forEach(p=>{
+      const px=ox+p[0]*sx, py=oy-p[1]*sy;
+      dot(ctx,px,py,'#E86A17',6);
+      ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+      ctx.fillText(p[2]+' '+p[1].toFixed(1),px+8,py-8);
+    });
+    // 标最大最小
+    function star(p,col){const px=ox+p[0]*sx,py=oy-p[1]*sy;ctx.fillStyle=col;ctx.font='bold 24px sans-serif';ctx.fillText('★',px-9,py+9);}
+    star(mx,'#F3C00E');star(mn,'#1E9E86');
+    document.getElementById('maxB').textContent='b = '+b.toFixed(1);
+    document.getElementById('maxInfo').innerHTML='区间 [−2, '+b.toFixed(1)+']:<b style="color:#B8860B">最大值 '+mx[1].toFixed(2)+'(在 '+mx[2]+')</b>,<b style="color:#1E9E86">最小值 '+mn[1].toFixed(2)+'(在 '+mn[2]+')</b>。';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 7. 含参分类讨论 ---------- */
+(function(){
+  const c=document.getElementById('cParam'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2,sx=22,sy=10;
+  const sl=document.getElementById('sParam');
+  function draw(){
+    const a=parseFloat(sl.value)/5;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    const f=x=>x*x*x-a*x;
+    plot(ctx,f,W,ox,oy,sx,sy,'#7A3FF2',3);
+    let msg;
+    if(a<=0){
+      msg='a = '+a.toFixed(1)+' ≤ 0 → f′=3x²−a ≥ 0,<b>全程单调递增,无极值</b>。';
+    }else{
+      const xe=Math.sqrt(a/3);
+      [[-xe,'#E0382A'],[xe,'#1E9E86']].forEach(([xx,col])=>{
+        dot(ctx,ox+xx*sx,oy-f(xx)*sy,col,6);
+      });
+      msg='a = '+a.toFixed(1)+' &gt; 0 → 两个极值点 x = ±√(a/3) = ±'+xe.toFixed(2)+',<b>红=极大,绿=极小</b>。';
+    }
+    document.getElementById('paramA').textContent='a = '+a.toFixed(1);
+    document.getElementById('paramInfo').innerHTML=msg;
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 8. 零点 / 根个数 ---------- */
+(function(){
+  const c=document.getElementById('cRoot'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2,sx=42,sy=26;
+  const sl=document.getElementById('sRoot');
+  const f=x=>x*x*x-3*x;
+  function roots(k){let cnt=0,prev=null,N=4000;for(let i=0;i<=N;i++){const x=-4+8*i/N;const v=f(x)-k;if(prev!==null&&(prev<=0)!==(v<=0))cnt++;prev=v;}return cnt;}
+  function draw(){
+    const k=parseFloat(sl.value)/10;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    plot(ctx,f,W,ox,oy,sx,sy,'#1450C8',3);
+    ctx.strokeStyle='#E86A17';ctx.lineWidth=3;ctx.setLineDash([8,6]);
+    ctx.beginPath();ctx.moveTo(0,oy-k*sy);ctx.lineTo(W,oy-k*sy);ctx.stroke();ctx.setLineDash([]);
+    let prev=null;
+    for(let px=0;px<=W;px++){const x=(px-ox)/sx;const v=f(x)-k;if(prev!==null&&(prev<=0)!==(v<=0)){dot(ctx,px,oy-k*sy,'#E0382A',6);}prev=v;}
+    const n=roots(k);
+    document.getElementById('rootK').textContent='k = '+k.toFixed(1);
+    document.getElementById('rootInfo').innerHTML='直线 y='+k.toFixed(1)+' 与曲线交点 = <b>'+n+' 个</b> → 方程 x³−3x = '+k.toFixed(1)+' 有 <b>'+n+' 个根</b>。';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 自测 ---------- */
+const qs=[
+ {q:"1. 求 f(x)=x²+1 在 x=1 处的切线方程。",a:"f′=2x,f′(1)=2,切点 (1,2) → y−2=2(x−1),即 y=2x。"},
+ {q:"2. 过原点作 y=x²+1 的切线,共几条?方程?",a:"设切点 (t,t²+1),斜率 2t,过原点得 t²=1 → t=±1,两条:y=2x 与 y=−2x。"},
+ {q:"3. 求 (ln x)/x 的导数。",a:"商法则:((1/x)·x − ln x·1)/x² = (1−ln x)/x²。"},
+ {q:"4. 求 f(x)=x³−3x 的单调递增区间。",a:"f′=3(x−1)(x+1)。增区间 (−∞,−1) 和 (1,+∞);减区间 (−1,1)。"},
+ {q:"5. f′(x₀)=0 一定是极值点吗?",a:"不一定!必须两侧变号才是。如 y=x³ 在 0 处 f′=0 但不变号,不是极值。"},
+ {q:"6. 求 f(x)=x³−3x 的极值。",a:"x=−1 处 f′由+变−,极大值 f(−1)=2;x=1 处由−变+,极小值 f(1)=−2。"},
+ {q:"7. 求 f(x)=x³−3x 在 [−2,3] 上的最值。",a:"候选 f(−2)=−2,f(−1)=2,f(1)=−2,f(3)=18。最大 18(x=3),最小 −2(x=−2 与 x=1)。"},
+ {q:"8. f(x)=x³+ax 在 R 上单调递增,求 a。",a:"f′=3x²+a≥0 恒成立,3x² 最小为 0 → a≥0。"},
+ {q:"9. 讨论 f(x)=ln x − a x(x>0)的单调性。",a:"f′=(1−ax)/x。a≤0 全程增;a>0 时 (0,1/a) 增、(1/a,+∞) 减,x=1/a 取极大。"},
+ {q:"10. 方程 x³−3x=k 何时有 3 个根?",a:"当 −2 < k < 2(极小值与极大值之间)有 3 个根;k=±2 时 2 个根;|k|>2 时 1 个根。"},
+ {q:"11. 对任意 x>0,a≥(ln x)/x 恒成立,求 a。",a:"g(x)=(ln x)/x 最大值在 x=e 取 1/e → a≥1/e。"},
+ {q:"12. 求 (e^{2x})′ 与 (ln(x²+1))′。",a:"链式法则:(e^{2x})′=2e^{2x};(ln(x²+1))′=2x/(x²+1)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

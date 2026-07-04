@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数列求通项公式 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--blue);width:160px}
+  input[type=number]{width:70px;border:3px solid var(--ink);padding:5px 7px;font-weight:800;font-size:14px;font-family:"SF Mono",Consolas,monospace}
+  .pill{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+  .selrow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  select{border:3px solid var(--ink);padding:6px 8px;font-weight:800;font-size:13.5px;background:#fff;font-family:inherit}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 数列攻坚包</div>
+    <h1>数列求通项公式</h1>
+    <p class="lead">数列大题的第一步、也是命根子:先求出通项 aₙ。这一页把「看到什么递推、就用哪套路」讲成人话,再用动画让你「看见」累加、累乘、构造等比是怎么把递推关系拆开的。</p>
+
+    <div class="say">🗣️ <b>一句话:</b> 求通项就是<b>找到 aₙ 关于 n 的表达式</b>(一个只含 n 的公式,代进去能算出第几项)。方法不用背死,关键是<b>对号入座</b>:先看递推关系长什么样,再选对应套路。递推形态 → 方法,是一一对应的。</div>
+
+    <!-- ===================== 递推形态识别器 ===================== -->
+    <h2 class="b">一、先学会「认形态」:递推识别器</h2>
+    <p class="lead">求通项的第一步永远是:<b>这条递推关系是哪一类?</b>选下面的形态,识别器会告诉你该用什么方法、为什么。这是全章最重要的能力——认对形态,方法自然浮现。</p>
+    <div class="viz">
+      <div class="selrow">
+        <select id="recSel">
+          <option value="ari">aₙ₊₁ = aₙ + d（差是常数）</option>
+          <option value="geo">aₙ₊₁ = q·aₙ（比是常数）</option>
+          <option value="add">aₙ₊₁ = aₙ + f(n)（差随 n 变，如 aₙ₊₁ = aₙ + 2n）</option>
+          <option value="mul">aₙ₊₁ = f(n)·aₙ（比随 n 变，如 aₙ₊₁ = (n/(n+1))·aₙ）</option>
+          <option value="lin">aₙ₊₁ = p·aₙ + q（p≠1，如 aₙ₊₁ = 2aₙ + 1）</option>
+          <option value="linp">aₙ₊₁ = p·aₙ + q·pⁿ（如 aₙ₊₁ = 2aₙ + 2ⁿ）</option>
+          <option value="frac">aₙ₊₁ = paₙ/(qaₙ + p)（分式，如 aₙ₊₁ = aₙ/(aₙ+1)）</option>
+          <option value="sn">含 Sₙ（如 Sₙ = 2aₙ − 1，或 aₙ = 2Sₙ₋₁）</option>
+        </select>
+      </div>
+      <div class="verdict" id="recVerdict"></div>
+      <p class="sub">诀窍:先看两项之间是「差」还是「比」;差/比是常数就直接公式,随 n 变就累加/累乘;带 +q 常数就构造等比;出现 Sₙ 就作差。</p>
+    </div>
+
+    <!-- ===================== 核心原理 ===================== -->
+    <h2 class="b">二、核心原理:七大套路</h2>
+    <div class="say">🗣️ 把下面七种当成<b>工具箱</b>。每种都对应一类递推形态。看完识别器再看这里,你会发现它们是「一把钥匙开一把锁」。</div>
+    <div class="card">
+      <h3>① 等差 / 等比 —— 直接套公式</h3>
+      <p class="lead">差是常数 d → 等差,aₙ = a₁ + (n−1)d;比是常数 q → 等比,aₙ = a₁·qⁿ⁻¹。这是地基,其它套路最终都想把数列「变回」等差或等比。</p>
+      <h3>② 累加法 —— aₙ₊₁ − aₙ = f(n)</h3>
+      <p class="lead">差不是常数、而是随 n 变的 f(n)。把 a₂−a₁, a₃−a₂, …, aₙ−aₙ₋₁ 这 (n−1) 个式子<b>全部相加</b>,中间项两两抵消,只剩 aₙ − a₁ = f(1)+f(2)+…+f(n−1)。</p>
+      <h3>③ 累乘法 —— aₙ₊₁ / aₙ = f(n)</h3>
+      <p class="lead">比不是常数、而是随 n 变的 f(n)。把 a₂/a₁, a₃/a₂, …, aₙ/aₙ₋₁ 这 (n−1) 个比<b>全部相乘</b>,连环约分后 aₙ/a₁ = f(1)·f(2)·…·f(n−1)。</p>
+      <h3>④ 由 Sₙ 求 aₙ —— 作差法</h3>
+      <p class="lead">关键公式:<b>aₙ = Sₙ − Sₙ₋₁ (n≥2)</b>,而 a₁ = S₁ 要<b>单独求、单独验</b>。若题目给的是「Sₙ 与 aₙ 混在一起的递推」(如 Sₙ=2aₙ−1),先用这公式消掉 Sₙ,变成纯 aₙ 的递推,再对号入座。</p>
+      <h3>⑤ 构造等比 —— aₙ₊₁ = paₙ + q（p≠1）</h3>
+      <p class="lead">两边同加一个常数 k,凑成 aₙ₊₁ + k = p(aₙ + k)。于是新数列 {aₙ + k} 是公比 p 的等比数列!其中 <b>k = q/(p−1)</b>(由 k = pk − ... 解出,或用不动点)。</p>
+      <h3>⑥ 构造等比 —— aₙ₊₁ = paₙ + q·pⁿ 型</h3>
+      <p class="lead">两边同除 pⁿ⁺¹:aₙ₊₁/pⁿ⁺¹ = aₙ/pⁿ + q/p。令 bₙ = aₙ/pⁿ,则 {bₙ} 变成<b>等差</b>数列(公差 q/p)!先求 bₙ 再乘回 pⁿ。</p>
+      <h3>⑦ 取倒数构造 —— aₙ₊₁ = paₙ/(qaₙ + p)</h3>
+      <p class="lead">两边取倒数:1/aₙ₊₁ = (qaₙ+p)/(paₙ) = q/p + (1/aₙ)。令 bₙ = 1/aₙ,则 {bₙ} 是<b>等差</b>(公差 q/p)!求出 bₙ 再取倒数还原。</p>
+      <p class="trap">⚙ 统一视角(拔高):以上 ⑤⑦ 都是「不动点法 / 待定系数法」的特例——找到递推的不动点 x*(满足 x*=f(x*)),再研究 aₙ−x* 或 1/(aₙ−x*)。见第六节。</p>
+    </div>
+
+    <!-- ===================== 累加法可视化 ===================== -->
+    <h2 class="g">三、累加法「看得见」:把差叠起来相加</h2>
+    <p class="lead">累加法的灵魂是<b>望远镜求和</b>(telescoping):相邻项两两抵消。点播放,看 a₂−a₁、a₃−a₂、… 一层层叠上去,中间全消,只剩 aₙ − a₁。</p>
+    <div class="viz">
+      <canvas id="cAdd" width="760" height="360"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="addPlay">▶ 播放叠加</button>
+        <button class="btn" id="addReset">重置</button>
+      </div>
+      <span class="info" id="addInfo">例:a₁=1,aₙ₊₁=aₙ+2n。差 aₖ₊₁−aₖ=2k,累加得 aₙ−a₁ = 2(1+2+…+(n−1)) = (n−1)n,故 aₙ = n²−n+1。</span>
+    </div>
+    <div class="ex"><b>累加例题(带解):</b> a₁=1,aₙ₊₁ = aₙ + 2n,求 aₙ。<br>① 写出差:aₖ₊₁ − aₖ = 2k(k=1,2,…,n−1),共 (n−1) 个式子。<br>② 全部相加(左边望远镜相消):aₙ − a₁ = 2(1+2+…+(n−1)) = 2·(n−1)n/2 = n²−n。<br>③ aₙ = 1 + n²−n = <b>n²−n+1</b>。验:a₁=1 ✓,a₂=3(=a₁+2)✓,a₃=7(=a₂+4)✓。</div>
+
+    <!-- ===================== 累乘法可视化 ===================== -->
+    <h2 class="g">四、累乘法「看得见」:比值连乘大约分</h2>
+    <p class="lead">累乘法把一串比 a₂/a₁ · a₃/a₂ · … 首尾相接,分子分母连环约掉,只剩 aₙ/a₁。点播放看约分过程。</p>
+    <div class="viz">
+      <canvas id="cMul" width="760" height="320"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="mulPlay">▶ 播放约分</button>
+        <button class="btn" id="mulReset">重置</button>
+      </div>
+      <span class="info" id="mulInfo">例:a₁=1,aₙ₊₁/aₙ = (n+1)/n。连乘 (2/1)(3/2)(4/3)…(n/(n−1)) 约分后 = n,故 aₙ/a₁ = n → aₙ = n。</span>
+    </div>
+    <div class="ex"><b>累乘例题(带解):</b> a₁=1,aₙ₊₁ = ((n+1)/n)·aₙ,求 aₙ。<br>① 写出比:aₖ₊₁/aₖ = (k+1)/k(k=1,…,n−1)。<br>② 全部相乘:aₙ/a₁ = (2/1)(3/2)(4/3)…(n/(n−1)),连环约分 = n/1 = n。<br>③ aₙ = a₁·n = <b>n</b>。验:a₁=1,a₂=2,a₃=3 ✓。</div>
+
+    <!-- ===================== 构造等比演示 ===================== -->
+    <h2 class="v">五、构造等比「看得见」:两边加常数</h2>
+    <p class="lead">最经典的 aₙ₊₁ = 2aₙ + 1。它<b>不是</b>等比(因为有那个 +1),但两边同时加 1 后:aₙ₊₁+1 = 2(aₙ+1),新数列 {aₙ+1} 就是公比 2 的等比!点播放看常数 k 是怎么被「凑」出来的。</p>
+    <div class="viz">
+      <canvas id="cCon" width="760" height="360"></canvas>
+      <div class="stepbtns">
+        <button class="btn" id="conPlay">▶ 播放构造</button>
+        <button class="btn" id="conReset">重置</button>
+      </div>
+      <span class="info" id="conInfo">a₁=1,aₙ₊₁=2aₙ+1。设 aₙ₊₁+k=2(aₙ+k) → k=1。{aₙ+1} 首项 2、公比 2,故 aₙ+1=2ⁿ → aₙ=2ⁿ−1。</span>
+    </div>
+    <div class="ex"><b>构造例题(带解):</b> a₁=1,aₙ₊₁ = 2aₙ + 1,求 aₙ。<br>① 设 aₙ₊₁ + k = 2(aₙ + k),展开 aₙ₊₁ = 2aₙ + k,对比原式 k=1(即 k=q/(p−1)=1/(2−1)=1)。<br>② {aₙ+1} 首项 a₁+1=2,公比 2 → aₙ+1 = 2·2ⁿ⁻¹ = 2ⁿ。<br>③ aₙ = <b>2ⁿ − 1</b>。验:a₁=1,a₂=3,a₃=7 ✓。</div>
+
+    <!-- ===================== Sn 与 an 转换 ===================== -->
+    <h2 class="o">六、Sₙ ↔ aₙ:作差得 aₙ,n=1 单独验</h2>
+    <p class="lead">题目给的是前 n 项和 Sₙ 的关系时,用 <b>aₙ = Sₙ − Sₙ₋₁ (n≥2)</b> 作差,同时 <b>a₁ = S₁</b> 单独求。下面输入一个 Sₙ,看它自动作差生成 aₙ 并验 n=1。</p>
+    <div class="viz">
+      <div class="selrow">
+        <select id="snSel">
+          <option value="quad">Sₙ = n²</option>
+          <option value="quad2">Sₙ = n² + n</option>
+          <option value="geoS">Sₙ = 2ⁿ − 1</option>
+          <option value="geoS2">Sₙ = 2·3ⁿ − 2</option>
+        </select>
+      </div>
+      <canvas id="cSn" width="760" height="300"></canvas>
+      <div class="verdict" id="snVerdict"></div>
+      <p class="sub">红条 = Sₙ,蓝条 = aₙ = Sₙ−Sₙ₋₁。看 n=1 时用作差公式对不对——若 a₁(作差)≠S₁,通项就要<b>分段写</b>。</p>
+    </div>
+    <div class="ex"><b>含 Sₙ 与 aₙ 的递推(带解):</b> Sₙ = 2aₙ − 1,求 aₙ。<br>① n=1:S₁=a₁=2a₁−1 → a₁=1。<br>② n≥2:Sₙ₋₁ = 2aₙ₋₁ − 1。相减 Sₙ−Sₙ₋₁ = 2aₙ − 2aₙ₋₁,即 aₙ = 2aₙ − 2aₙ₋₁ → aₙ = 2aₙ₋₁。<br>③ 故 {aₙ} 公比 2、首项 1 → aₙ = <b>2ⁿ⁻¹</b>。</div>
+
+    <!-- ===================== 前几项验证表 ===================== -->
+    <h2 class="b">七、通项自检:前几项对照表</h2>
+    <p class="lead">求完通项后,<b>务必</b>用它代 n=1,2,3 算前几项,看是否和递推吻合。选一个模型、填参数,自动列出 a₁…a₆ 并对照递推验证。</p>
+    <div class="viz">
+      <div class="ctrls">
+        <label>模型
+          <select id="chkSel">
+            <option value="lin">aₙ₊₁=p·aₙ+q</option>
+            <option value="add">aₙ₊₁=aₙ+2n（累加）</option>
+            <option value="mul">aₙ₊₁=((n+1)/n)aₙ（累乘）</option>
+          </select>
+        </label>
+        <label id="labP">p = <input id="chkP" type="number" value="2" step="1"></label>
+        <label id="labQ">q = <input id="chkQ" type="number" value="1" step="1"></label>
+        <label>a₁ = <input id="chkA1" type="number" value="1" step="1"></label>
+      </div>
+      <div id="chkOut"></div>
+      <p class="sub">左列由递推逐项算出,右列由求得的通项公式算出,两列相等 = 通项正确。</p>
+    </div>
+
+    <!-- ===================== 不动点法图解 ===================== -->
+    <h2 class="v">八、尖子生拔高:不动点法统一构造</h2>
+    <p class="lead">对 aₙ₊₁ = paₙ + q,画两条线 <b>y = px + q</b> 与 <b>y = x</b>,交点横坐标 x* 就是<b>不动点</b>(满足 x*=px*+q)。构造用的常数其实就是 −x*——{aₙ − x*} 才是等比。拖滑块看不动点位置。</p>
+    <div class="viz">
+      <canvas id="cFix" width="760" height="400"></canvas>
+      <div class="ctrls">
+        <label>p = <input id="sFixP" type="range" min="-30" max="30" value="20"> <span id="fixP" class="pill v">p</span></label>
+        <label>q = <input id="sFixQ" type="range" min="-30" max="30" value="10"> <span id="fixQ" class="pill o">q</span></label>
+        <span class="info" id="fixInfo"></span>
+      </div>
+      <p class="sub">紫线 y=px+q,黑线 y=x,红点是不动点 x*=q/(1−p)(需 p≠1)。构造:aₙ₊₁−x* = p(aₙ−x*),{aₙ−x*} 等比、公比 p。</p>
+    </div>
+    <div class="keybox"><b>不动点统一口诀:</b> 一次递推 aₙ₊₁=paₙ+q(p≠1)→ 解 x*=px*+q 得 x*,则 aₙ = x* + (a₁−x*)·pⁿ⁻¹。分式递推 aₙ₊₁=(paₙ+b)/(caₙ+d)→ 解不动点方程 x=(px+b)/(cx+d),两个不动点则 (aₙ−x₁)/(aₙ−x₂) 成等比,一个不动点则 1/(aₙ−x*) 成等差。</div>
+
+    <!-- ===================== 全题型地图 ===================== -->
+    <h2 class="b">九、全题型地图(触发信号 → 标准动作)</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型 / 形态</th><th>触发信号</th><th>标准动作</th></tr>
+        <tr><td><b>等差/等比直接</b></td><td>差为常数 / 比为常数</td><td>套 aₙ=a₁+(n−1)d 或 aₙ=a₁qⁿ⁻¹</td></tr>
+        <tr><td><b>累加法</b></td><td>aₙ₊₁−aₙ=f(n),差随 n 变</td><td>逐差相加,望远镜相消,得 aₙ−a₁=Σf</td></tr>
+        <tr><td><b>累乘法</b></td><td>aₙ₊₁/aₙ=f(n),比随 n 变</td><td>逐比相乘,连环约分,得 aₙ/a₁=Πf</td></tr>
+        <tr><td><b>Sₙ 求 aₙ</b></td><td>题目给 Sₙ 或含 Sₙ 递推</td><td>aₙ=Sₙ−Sₙ₋₁(n≥2),a₁=S₁ 单独验</td></tr>
+        <tr><td><b>构造等比(+q)</b></td><td>aₙ₊₁=paₙ+q,p≠1</td><td>加常数 k=q/(p−1),{aₙ+k} 等比</td></tr>
+        <tr><td><b>构造(+q·pⁿ)</b></td><td>aₙ₊₁=paₙ+q·pⁿ</td><td>两边÷pⁿ⁺¹,令 bₙ=aₙ/pⁿ 变等差</td></tr>
+        <tr><td><b>取倒数</b></td><td>aₙ₊₁=paₙ/(qaₙ+p) 分式</td><td>取倒数,令 bₙ=1/aₙ 变等差</td></tr>
+        <tr><td><b>不动点(拔高)</b></td><td>任意一次/分式递推</td><td>解 x*=f(x*),研究 aₙ−x*</td></tr>
+      </table>
+    </div>
+
+    <h3>形态识别 → 方法(带解速览)</h3>
+    <div class="ex"><b>认递推形态选方法:</b><br>• 看到 aₙ₊₁ = aₙ + 2ⁿ → 差随 n 变 → <b>累加法</b>,aₙ−a₁=Σ2ᵏ。<br>• 看到 aₙ₊₁ = (n/(n+2))aₙ → 比随 n 变 → <b>累乘法</b>。<br>• 看到 aₙ₊₁ = 3aₙ − 4 → 有常数项 → <b>构造等比</b>,k=−4/(3−1)=−2,{aₙ−2} 等比。<br>• 看到 aₙ₊₁ = 2aₙ + 3·2ⁿ → +q·pⁿ 型 → <b>两边÷2ⁿ⁺¹</b> 变等差。<br>• 看到 Sₙ + aₙ = 1 → 含 Sₙ → <b>作差</b> 消 Sₙ。</div>
+
+    <!-- ===================== 易错集 ===================== -->
+    <h2 class="r">十、易错集</h2>
+    <div class="card">
+      <p class="trap">⚠ ① 用 aₙ=Sₙ−Sₙ₋₁ 时那个 <b>(n≥2)</b> 千万别丢!这式子 n=1 时不成立(没有 S₀)。求完必须<b>单独算 a₁=S₁</b> 并检验:若 a₁ 恰好符合通项就合并写,否则<b>分段写</b> aₙ = { a₁ ; 通项(n≥2) }。</p>
+      <p class="trap">⚠ ② 累加/累乘的<b>项数</b>要数清:从 a₂−a₁ 到 aₙ−aₙ₋₁ 是 <b>(n−1) 个</b>式子,不是 n 个。求和/求积上限写成 n−1,别写 n。</p>
+      <p class="trap">⚠ ③ 累加得到的通项默认 n≥2(因用了 n−1 个式子),要<b>回代 n=1 检验</b>是否也成立,能成立才可写「对所有 n」。</p>
+      <p class="trap">⚠ ④ 构造等比时常数 k <b>不要背错方向</b>:由 aₙ₊₁+k=p(aₙ+k) 展开对比,k=q/(p−1)。带负号的题(如 aₙ₊₁=2aₙ−3)要 k=−3/(2−1)=−3,构造 {aₙ−3}。算错正负全盘皆错。</p>
+      <p class="trap">⚠ ⑤ +q·pⁿ 型别硬套加常数!必须<b>÷pⁿ⁺¹</b> 转等差;若误当 aₙ₊₁=paₙ+常数 处理会算不出来。</p>
+      <p class="trap">⚠ ⑥ 累乘时若某个比里出现 <b>(k−1) 会等于 0</b>(如 f(k)含 (k−1) 在分母),要检查是否漏掉 n=1、n=2 的特殊情形。</p>
+    </div>
+
+    <!-- ===================== 自测 ===================== -->
+    <h2 class="o">十一、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数列攻坚包 · 下一块:数列求和(错位相减 / 裂项)</p>
+  </div>
+
+<script>
+/* ---------- 通用画布工具 ---------- */
+function axes(ctx,W,H,ox,oy,sx,sy){
+  ctx.strokeStyle='#cdbf9a';ctx.lineWidth=1;
+  for(let gx=ox%sx; gx<W; gx+=sx){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+  for(let gy=oy%sy; gy<H; gy+=sy){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+  ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+}
+
+/* ---------- 1. 递推形态识别器 ---------- */
+(function(){
+  const sel=document.getElementById('recSel'),out=document.getElementById('recVerdict');
+  const map={
+    ari:{m:'等差公式直接法',why:'相邻两项差是常数 d → 这就是等差数列,直接套 aₙ = a₁ + (n−1)d。'},
+    geo:{m:'等比公式直接法',why:'相邻两项比是常数 q → 等比数列,直接套 aₙ = a₁·qⁿ⁻¹。'},
+    add:{m:'累加法',why:'差 aₙ₊₁−aₙ = f(n) 随 n 变化。把 n−1 个差式相加,望远镜相消得 aₙ−a₁ = Σf(k)。'},
+    mul:{m:'累乘法',why:'比 aₙ₊₁/aₙ = f(n) 随 n 变化。把 n−1 个比式相乘,连环约分得 aₙ/a₁ = Πf(k)。'},
+    lin:{m:'构造等比数列(加常数)',why:'形如 aₙ₊₁=paₙ+q(p≠1)。两边加 k=q/(p−1),使 {aₙ+k} 成公比 p 的等比。'},
+    linp:{m:'构造等差(两边÷pⁿ⁺¹)',why:'形如 aₙ₊₁=paₙ+q·pⁿ。两边同除 pⁿ⁺¹,令 bₙ=aₙ/pⁿ,则 {bₙ} 是公差 q/p 的等差。'},
+    frac:{m:'取倒数构造',why:'分式 aₙ₊₁=paₙ/(qaₙ+p)。两边取倒数,令 bₙ=1/aₙ,则 {bₙ} 成等差(公差 q/p)。'},
+    sn:{m:'由 Sₙ 求 aₙ(作差法)',why:'出现前 n 项和 Sₙ。用 aₙ=Sₙ−Sₙ₋₁ (n≥2) 消 Sₙ,并单独求 a₁=S₁ 检验。'}
+  };
+  function upd(){
+    const o=map[sel.value];
+    out.innerHTML='推荐方法:<span class="pill v">'+o.m+'</span><br><span style="font-weight:700;font-size:14px">理由:'+o.why+'</span>';
+  }
+  sel.addEventListener('change',upd);upd();
+})();
+
+/* ---------- 2. 累加法叠加动画 ---------- */
+(function(){
+  const c=document.getElementById('cAdd'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const n=6; // 展示到 a6
+  // a1=1, a_{k+1}=a_k+2k -> a_k = k^2-k+1
+  const a=[]; for(let k=1;k<=n;k++)a[k]=k*k-k+1;
+  const diffs=[]; for(let k=1;k<n;k++)diffs[k]=a[k+1]-a[k]; // = 2k
+  let shown=0,timer=null;
+  const baseY=H-50, unit=(H-100)/(a[n]-1||1);
+  function bar(x,yTop,h,col,txt){
+    ctx.fillStyle=col;ctx.fillRect(x,yTop,58,h);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x,yTop,58,h);
+    if(txt){ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText(txt,x+4,yTop-6);}
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(30,baseY);ctx.lineTo(W-20,baseY);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+    ctx.fillText('把差一层层叠在 a₁ 上:aₙ = a₁ + Σ差',30,28);
+    // base a1
+    const x0=60;
+    const h1=(a[1]-0)*unit;
+    bar(x0,baseY-h1,h1,'#1450C8','a₁='+a[1]);
+    // stacked diffs to form a_{shown+1}
+    let cumTop=baseY-h1;
+    for(let k=1;k<=shown && k<n;k++){
+      const dh=diffs[k]*unit;
+      cumTop-=dh;
+      bar(x0,cumTop,dh,'#1E9E86','+'+diffs[k]);
+    }
+    // the resulting a value on the right as reference bar
+    const idx=Math.min(shown+1,n);
+    const xR=W-120;
+    const hR=(a[idx]-0)*unit;
+    bar(xR,baseY-hR,hR,'#E86A17','a'+sub(idx)+'='+a[idx]);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+    ctx.fillText('叠了 '+shown+' 个差 → 得到 a'+sub(idx),W/2-70,baseY+34);
+  }
+  function sub(m){const s='₀₁₂₃₄₅₆₇₈₉';return String(m).split('').map(d=>s[+d]).join('');}
+  document.getElementById('addPlay').onclick=()=>{
+    if(timer)clearInterval(timer);shown=0;frame();
+    timer=setInterval(()=>{shown++;frame();if(shown>=n-1)clearInterval(timer);},700);
+  };
+  document.getElementById('addReset').onclick=()=>{if(timer)clearInterval(timer);shown=0;frame();};
+  frame();
+})();
+
+/* ---------- 3. 累乘法约分动画 ---------- */
+(function(){
+  const c=document.getElementById('cMul'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const n=6; // a1=1, a_{k+1}/a_k=(k+1)/k -> a_k=k
+  let step=0,timer=null;
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+    ctx.fillText('aₙ/a₁ = (2/1)·(3/2)·(4/3)·…·(n/(n−1)) 连环约分',30,28);
+    // draw fractions in a row
+    const startX=60, y=120, fw=110;
+    for(let k=1;k<n;k++){
+      const num=k+1, den=k;
+      const x=startX+(k-1)*fw;
+      const active=k<=step;
+      // numerator
+      ctx.fillStyle=active?'#1E9E86':'#999';ctx.font='bold 30px sans-serif';
+      ctx.fillText(String(num),x+18,y-8);
+      // fraction bar
+      ctx.strokeStyle=active?'#16120A':'#bbb';ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(x,y+6);ctx.lineTo(x+60,y+6);ctx.stroke();
+      // denominator
+      ctx.fillStyle=active?'#1450C8':'#999';
+      ctx.fillText(String(den),x+18,y+44);
+      // dot
+      if(k<n-1){ctx.fillStyle='#16120A';ctx.font='bold 26px sans-serif';ctx.fillText('·',x+78,y+16);}
+      // cancellation strike: numerator k+1 cancels with next denom (k+1)
+      if(active && k<step && k<n-1){
+        ctx.strokeStyle='#E0382A';ctx.lineWidth=3;
+        // strike this numerator
+        ctx.beginPath();ctx.moveTo(x+12,y-30);ctx.lineTo(x+40,y+2);ctx.stroke();
+        // strike next denominator
+        const nx=startX+k*fw;
+        ctx.beginPath();ctx.moveTo(nx+12,y+16);ctx.lineTo(nx+40,y+50);ctx.stroke();
+      }
+    }
+    // result
+    if(step>=n-1){
+      ctx.fillStyle='#E86A17';ctx.font='bold 22px sans-serif';
+      ctx.fillText('= n/1 = n  → aₙ = a₁·n = n',60,y+110);
+      ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+      ctx.fillText('前 6 项:1, 2, 3, 4, 5, 6 ✓',60,y+140);
+    }else{
+      ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+      ctx.fillText('已约掉 '+Math.max(0,step-1)+' 组,红斜线=分子分母抵消',60,y+110);
+    }
+  }
+  document.getElementById('mulPlay').onclick=()=>{
+    if(timer)clearInterval(timer);step=0;frame();
+    timer=setInterval(()=>{step++;frame();if(step>=n-1)clearInterval(timer);},650);
+  };
+  document.getElementById('mulReset').onclick=()=>{if(timer)clearInterval(timer);step=0;frame();};
+  frame();
+})();
+
+/* ---------- 4. 构造等比动画 ---------- */
+(function(){
+  const c=document.getElementById('cCon'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let phase=0,timer=null;
+  // a1=1, a_{n+1}=2a_n+1 -> a_n=2^n-1, a_n+1=2^n
+  const a=[null,1,3,7,15,31];
+  function box(x,y,txt,col,w){w=w||120;ctx.fillStyle=col;ctx.fillRect(x,y,w,44);ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(x,y,w,44);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.fillText(txt,x+10,y+28);}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+    if(phase>=0){
+      ctx.fillText('① 原递推(不是等比,因为有 +1):',30,32);
+      box(30,44,'aₙ₊₁ = 2·aₙ + 1',ctx.fillStyle='#E0382A',220);
+    }
+    if(phase>=1){
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('② 两边同加 k,凑成 aₙ₊₁+k = 2(aₙ+k) → 展开对比得 k=1:',30,118);
+      box(30,130,'aₙ₊₁+1 = 2·(aₙ+1)',ctx.fillStyle='#7A3FF2',240);
+    }
+    if(phase>=2){
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('③ 令 bₙ=aₙ+1,则 {bₙ} 是等比!首项 b₁=2、公比 2:',30,204);
+      // show b_n=a_n+1 sequence as geometric
+      const bs=[2,4,8,16,32];const x0=30;
+      for(let i=0;i<5;i++){
+        box(x0+i*140,216,'b'+sub(i+1)+'='+bs[i],'#1E9E86',120);
+      }
+    }
+    if(phase>=3){
+      ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';
+      ctx.fillText('④ bₙ=2ⁿ → aₙ = bₙ−1 =',30,300);
+      box(220,286,'aₙ = 2ⁿ − 1',ctx.fillStyle='#E86A17',160);
+      ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+      ctx.fillText('验:1,3,7,15,31 ✓',400,314);
+    }
+  }
+  function sub(m){const s='₀₁₂₃₄₅₆₇₈₉';return String(m).split('').map(d=>s[+d]).join('');}
+  document.getElementById('conPlay').onclick=()=>{
+    if(timer)clearInterval(timer);phase=0;frame();
+    timer=setInterval(()=>{phase++;frame();if(phase>=3)clearInterval(timer);},1000);
+  };
+  document.getElementById('conReset').onclick=()=>{if(timer)clearInterval(timer);phase=0;frame();};
+  frame();
+})();
+
+/* ---------- 5. Sn -> an 作差 ---------- */
+(function(){
+  const c=document.getElementById('cSn'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sel=document.getElementById('snSel'),ver=document.getElementById('snVerdict');
+  const models={
+    quad:{S:n=>n*n, label:'Sₙ=n²'},
+    quad2:{S:n=>n*n+n, label:'Sₙ=n²+n'},
+    geoS:{S:n=>Math.pow(2,n)-1, label:'Sₙ=2ⁿ−1'},
+    geoS2:{S:n=>2*Math.pow(3,n)-2, label:'Sₙ=2·3ⁿ−2'}
+  };
+  function sub(m){const s='₀₁₂₃₄₅₆₇₈₉';return String(m).split('').map(d=>s[+d]).join('');}
+  function draw(){
+    const m=models[sel.value];const N=6;
+    const S=[];for(let i=1;i<=N;i++)S[i]=m.S(i);
+    const a=[];a[1]=S[1];for(let i=2;i<=N;i++)a[i]=S[i]-S[i-1];
+    const aDiff1=S[1]-0; // a1 via diff formula treating S0=0
+    ctx.clearRect(0,0,W,H);
+    const baseY=H-46, maxV=Math.max(S[N],1), unit=(H-90)/maxV;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(30,baseY);ctx.lineTo(W-20,baseY);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+    ctx.fillText(m.label+'  →  红=Sₙ,蓝=aₙ=Sₙ−Sₙ₋₁',30,24);
+    const gw=(W-90)/N;
+    for(let i=1;i<=N;i++){
+      const x=40+(i-1)*gw;
+      const hS=S[i]*unit, hA=Math.abs(a[i])*unit;
+      // Sn red (back)
+      ctx.fillStyle='#E0382A';ctx.fillRect(x,baseY-hS,gw*0.34,hS);
+      ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.strokeRect(x,baseY-hS,gw*0.34,hS);
+      // an blue (front)
+      ctx.fillStyle='#1450C8';ctx.fillRect(x+gw*0.4,baseY-hA,gw*0.34,hA);
+      ctx.strokeRect(x+gw*0.4,baseY-hA,gw*0.34,hA);
+      ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+      ctx.fillText('n='+i,x+4,baseY+18);
+      ctx.fillStyle='#1450C8';ctx.font='bold 11px sans-serif';
+      ctx.fillText(''+a[i],x+gw*0.4,baseY-hA-4);
+    }
+    const consistent=(aDiff1===a[1]); // whether S1 matches diff-with-S0 form (always true here since a1=S1)
+    // But real check: does the n>=2 formula, extended to n=1, give a1? compute general an for n=1
+    const gen1 = S[1]-m.S(0); // f(1)-f(0)
+    const ok = (gen1===a[1]);
+    ver.innerHTML='n≥2 作差公式 aₙ=Sₙ−Sₙ₋₁ 若强行代 n=1 得 <b>'+gen1+'</b>,而真正 a₁=S₁=<b>'+a[1]+'</b>。'+
+      (ok? '<span class="pill g">两者相等 → 通项可合并为一个式子</span>' : '<span class="pill r">两者不等 → 通项必须分段写:a₁ 单列</span>');
+  }
+  sel.addEventListener('change',draw);draw();
+})();
+
+/* ---------- 6. 前几项验证表 ---------- */
+(function(){
+  const sel=document.getElementById('chkSel');
+  const pIn=document.getElementById('chkP'),qIn=document.getElementById('chkQ'),a1In=document.getElementById('chkA1');
+  const out=document.getElementById('chkOut');
+  const labP=document.getElementById('labP'),labQ=document.getElementById('labQ');
+  function sub(m){const s='₀₁₂₃₄₅₆₇₈₉';return String(m).split('').map(d=>s[+d]).join('');}
+  function build(){
+    const mode=sel.value;
+    labP.style.display = mode==='lin' ? '' : 'none';
+    labQ.style.display = mode==='lin' ? '' : 'none';
+    const p=parseFloat(pIn.value)||0, q=parseFloat(qIn.value)||0, a1=parseFloat(a1In.value)||0;
+    const N=6;
+    // recurrence values
+    const rec=[]; rec[1]=a1;
+    for(let n=1;n<N;n++){
+      if(mode==='lin') rec[n+1]=p*rec[n]+q;
+      else if(mode==='add') rec[n+1]=rec[n]+2*n;
+      else if(mode==='mul') rec[n+1]=((n+1)/n)*rec[n];
+    }
+    // closed form
+    let formula='', closed=(n)=>0;
+    if(mode==='lin'){
+      if(p===1){ formula='aₙ = a₁ + (n−1)·q（p=1 退化为等差）'; closed=n=>a1+(n-1)*q; }
+      else { const k=q/(p-1); formula='aₙ = (a₁+k)·pⁿ⁻¹ − k,  k=q/(p−1)='+round(k); closed=n=>(a1+k)*Math.pow(p,n-1)-k; }
+    }else if(mode==='add'){
+      formula='aₙ = a₁ + (n²−n)  （因 aₖ₊₁−aₖ=2k 累加）'; closed=n=>a1+(n*n-n);
+    }else if(mode==='mul'){
+      formula='aₙ = a₁·n  （因 aₖ₊₁/aₖ=(k+1)/k 累乘）'; closed=n=>a1*n;
+    }
+    let rows='';
+    let allok=true;
+    for(let n=1;n<=N;n++){
+      const rv=rec[n], cv=closed(n);
+      const ok=Math.abs(rv-cv)<1e-6;
+      if(!ok)allok=false;
+      rows+='<tr><td><b>a'+sub(n)+'</b></td><td>'+round(rv)+'</td><td>'+round(cv)+'</td><td>'+(ok?'<span class="pill g">✓</span>':'<span class="pill r">✗</span>')+'</td></tr>';
+    }
+    out.innerHTML='<div class="mono">通项公式:'+formula+'</div>'+
+      '<table><tr><th>项</th><th>递推逐项</th><th>通项公式</th><th>一致?</th></tr>'+rows+'</table>'+
+      '<div class="verdict">'+(allok?'<span class="pill g">全部一致 → 通项正确 ✓</span>':'<span class="pill r">出现不一致,检查参数或分段情形</span>')+'</div>';
+  }
+  function round(x){ if(Math.abs(x-Math.round(x))<1e-9)return String(Math.round(x)); return x.toFixed(3); }
+  [sel,pIn,qIn,a1In].forEach(el=>el.addEventListener('input',build));
+  sel.addEventListener('change',build);
+  build();
+})();
+
+/* ---------- 7. 不动点法图解 ---------- */
+(function(){
+  const c=document.getElementById('cFix'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2,sx=26,sy=26;
+  const sP=document.getElementById('sFixP'),sQ=document.getElementById('sFixQ');
+  function draw(){
+    const p=parseFloat(sP.value)/10, q=parseFloat(sQ.value)/10;
+    ctx.clearRect(0,0,W,H);axes(ctx,W,H,ox,oy,sx,sy);
+    // y=x (black)
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.beginPath();
+    ctx.moveTo(0,oy-((0-ox)/sx)*sy);ctx.lineTo(W,oy-((W-ox)/sx)*sy);ctx.stroke();
+    // y=px+q (violet)
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;ctx.beginPath();
+    const yL=p*((0-ox)/sx)+q, yR=p*((W-ox)/sx)+q;
+    ctx.moveTo(0,oy-yL*sy);ctx.lineTo(W,oy-yR*sy);ctx.stroke();
+    // labels
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';
+    ctx.fillText('y=x',W-70,oy-((W-ox)/sx)*sy-8);
+    ctx.fillStyle='#7A3FF2';
+    ctx.fillText('y=px+q',W-90,oy-yR*sy+ (p<1?-8:18));
+    let info;
+    if(Math.abs(p-1)<0.05){
+      info='p≈1:两线平行(或重合),<b>无唯一不动点</b>,此时不能用加常数构造(退化为等差)。';
+    }else{
+      const xstar=q/(1-p), ystar=xstar;
+      const cx=ox+xstar*sx, cy=oy-ystar*sy;
+      if(cx>=0&&cx<=W&&cy>=0&&cy<=H){
+        ctx.fillStyle='#E0382A';ctx.beginPath();ctx.arc(cx,cy,7,0,7);ctx.fill();
+        ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+        ctx.fillStyle='#E0382A';ctx.font='bold 13px sans-serif';
+        ctx.fillText('不动点 x*='+xstar.toFixed(2),cx+10,cy-8);
+      }
+      info='p='+p.toFixed(1)+', q='+q.toFixed(1)+' → 不动点 x*=q/(1−p)=<b>'+xstar.toFixed(2)+'</b>。构造 {aₙ−x*} 为公比 p 的等比。';
+    }
+    document.getElementById('fixP').textContent='p='+p.toFixed(1);
+    document.getElementById('fixQ').textContent='q='+q.toFixed(1);
+    document.getElementById('fixInfo').innerHTML=info;
+  }
+  sP.addEventListener('input',draw);sQ.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 自测 ---------- */
+const qs=[
+ {q:"1. aₙ₊₁=aₙ+3n,a₁=2,求 aₙ。",a:"累加法:aₖ₊₁−aₖ=3k,相加得 aₙ−a₁=3(1+…+(n−1))=3n(n−1)/2,故 aₙ=2+3n(n−1)/2。"},
+ {q:"2. aₙ₊₁=((n+2)/n)·aₙ,a₁=1,求 aₙ。",a:"累乘法:aₙ/a₁=∏(k+2)/k=(3·4·…·(n+1))/(1·2·…·(n−1))=n(n+1)/2,故 aₙ=n(n+1)/2。"},
+ {q:"3. aₙ₊₁=3aₙ+2,a₁=1,求 aₙ。",a:"构造等比:k=q/(p−1)=2/(3−1)=1,{aₙ+1} 首项2、公比3,aₙ+1=2·3ⁿ⁻¹,故 aₙ=2·3ⁿ⁻¹−1。"},
+ {q:"4. aₙ₊₁=2aₙ−3,a₁=4,求 aₙ。",a:"k=−3/(2−1)=−3,{aₙ−3} 首项1、公比2,aₙ−3=2ⁿ⁻¹,故 aₙ=2ⁿ⁻¹+3。"},
+ {q:"5. Sₙ=n²+2n,求 aₙ。",a:"n≥2:aₙ=Sₙ−Sₙ₋₁=(n²+2n)−((n−1)²+2(n−1))=2n+1;n=1:a₁=S₁=3,恰合 2·1+1=3,故 aₙ=2n+1(对所有 n)。"},
+ {q:"6. Sₙ=2ⁿ⁺¹−2,求 aₙ。",a:"n≥2:aₙ=Sₙ−Sₙ₋₁=(2ⁿ⁺¹−2)−(2ⁿ−2)=2ⁿ;n=1:a₁=S₁=2,恰合,故 aₙ=2ⁿ。"},
+ {q:"7. Sₙ=3aₙ−2,求 aₙ。",a:"n=1:a₁=3a₁−2→a₁=1;n≥2:作差 aₙ=3aₙ−3aₙ₋₁→2aₙ=3aₙ₋₁→aₙ=(3/2)aₙ₋₁,等比,aₙ=(3/2)ⁿ⁻¹。"},
+ {q:"8. aₙ₊₁=2aₙ+2ⁿ,a₁=1,求 aₙ。",a:"+q·pⁿ 型:两边÷2ⁿ⁺¹,令 bₙ=aₙ/2ⁿ 得 bₙ₊₁=bₙ+1/2,等差,b₁=1/2,bₙ=n/2,故 aₙ=n·2ⁿ⁻¹。"},
+ {q:"9. aₙ₊₁=aₙ/(aₙ+1),a₁=1,求 aₙ。",a:"取倒数:1/aₙ₊₁=(aₙ+1)/aₙ=1+1/aₙ,令 bₙ=1/aₙ,bₙ₊₁=bₙ+1 等差,b₁=1,bₙ=n,故 aₙ=1/n。"},
+ {q:"10. 为什么用 aₙ=Sₙ−Sₙ₋₁ 要单独验 n=1?",a:"该式仅在 n≥2 成立(n=1 时没有 S₀/Sₙ₋₁)。a₁ 须由 S₁ 单独求;若 a₁ 恰合通项则合并写,否则分段。"},
+ {q:"11. aₙ₊₁=aₙ+2ⁿ,a₁=1,求 aₙ。",a:"累加:aₙ−a₁=2¹+2²+…+2ⁿ⁻¹=2ⁿ−2,故 aₙ=2ⁿ−1。验 1,3,7,15 ✓。"},
+ {q:"12. 递推 aₙ₊₁=4aₙ−3 该用什么方法?常数 k 是多少?",a:"构造等比。k=q/(p−1)=−3/(4−1)=−1,{aₙ−1} 公比4等比。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>带电粒子在电场中的运动(加速与偏转) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+  .twin{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.twin{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>带电粒子在电场中的运动(加速与偏转)</h1>
+    <p class="lead">先被一把「电子枪」加速打出去,再冲进一对平行偏转板走一条抛物线,最后打在荧光屏上——这就是示波管的核心,也是高考电场里最爱考的一条主线。它和你熟到骨子里的「平抛运动」一模一样。这页把加速、偏转、打屏三段拆给你看,再用七个动画把每一步拨到你眼前。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 带电粒子在电场里干两件事:<b>先加速,后偏转</b>。① 加速段:两块板中间有个高电压 U加,像一把枪,把粒子沿直线越推越快,从静止推到 v₀,靠的是电场做的功 qU加 全变成动能(动能定理)。② 偏转段:粒子横着冲进另一对板中间,板上加个横向电压 U偏,给它一个垂直的推力,于是它一边匀速前进、一边被推着往旁边偏——<b>这就是平抛!</b> 只不过把重力换成了电场力。看懂平抛,就看懂了这一整章。</div>
+
+    <div class="keybox"><b>三步主线速记:</b> ① <b>加速</b>:qU加 = ½mv₀² → v₀ = √(2qU加/m)(动能定理,从静止出发);② <b>偏转</b>:类平抛,横向匀速 v₀、纵向匀加速 a = qE/m = qU偏/(md),侧移 y = ½at² = U偏L²/(4dU加);③ <b>打屏</b>:可等效为「从偏转板正中央沿直线射出」,轻松求屏上总偏移。</div>
+
+    <h2 class="b">① 加速过程:电子枪把它打出去</h2>
+    <div class="card">
+      <p style="margin:6px 0">粒子(电荷 q、质量 m)从静止在加速电压 U加 下由一块板飞到另一块板。电场对它做正功 W = qU加,全部变成动能:</p>
+      <div class="eq">qU加 = ½mv₀² − 0　⟹　v₀ = √(2qU加/m)</div>
+      <p style="margin:8px 0"><b>关键点:</b> ① 出射速度 v₀ 只由 U加 决定(与板间距、电荷正负无关,正负只决定往哪块板加速);② 加速段是<b>直线匀加速</b>,不是抛物线;③ 通常题目里粒子很轻很快,<b>重力常忽略</b>(下文专门讲何时不能忽略)。</p>
+      <div class="mono">动能定理:合外力做的功 = 动能变化。加速段只有电场力做功,W = qU加。</div>
+      <p class="trap">⚠ 加速用的是<b>动能定理</b>(qU加=½mv₀²),不是类平抛!很多人一上来就套抛物线,错。加速段是一条直线。</p>
+    </div>
+
+    <h2 class="o">② 偏转过程:一模一样的平抛</h2>
+    <div class="card">
+      <p style="margin:6px 0">粒子以 v₀ 水平射入长为 L、间距为 d 的平行偏转板,板上加电压 U偏,板内匀强电场 E = U偏/d。把运动分解成两个方向:</p>
+      <div class="eq">水平(沿 v₀ 方向):匀速 → x = v₀·t　　　t = L/v₀</div>
+      <div class="eq">竖直(沿电场方向):匀加速 → a = qE/m = qU偏/(md),初速为 0</div>
+      <p style="margin:8px 0"><b>板内侧移(离开偏转板时偏离中线的距离):</b></p>
+      <div class="eq">y = ½at² = ½ · qU偏/(md) · (L/v₀)²</div>
+      <p style="margin:8px 0">把 v₀² = 2qU加/m 代进去,神奇地把 q、m 全消掉:</p>
+      <div class="eq">y = U偏·L² / (4·d·U加)</div>
+      <p style="margin:8px 0"><b>偏转角(离开板时速度方向与 v₀ 的夹角):</b></p>
+      <div class="eq">tanθ = v_y / v₀ = a·t / v₀ = qU偏L / (md·v₀²) = U偏·L / (2·d·U加)</div>
+      <p class="trap">⚠ 侧移公式 y = U偏L²/(4dU加):注意 y 与 U偏 成正比、与 U加 成<b>反比</b>(加速越猛,飞得越快,偏转板里待得越短,偏得越少)!公式里 q、m 都消掉了——这是选择题秒杀点。</p>
+    </div>
+
+    <h2 class="g">③ 打在屏上:等效从板中央射出</h2>
+    <div class="card">
+      <p style="margin:6px 0">粒子离开偏转板后不再受力,沿离板瞬间的速度方向<b>做直线运动</b>,直到打在距板(右端)为 D 的荧光屏上。屏上总偏移 = 板内侧移 y + 出板后直线段的偏移。</p>
+      <div class="eq">Y总 = y + (D)·tanθ</div>
+      <p style="margin:8px 0"><b>尖子生等效技巧:</b> 出板速度方向的反向延长线,恰好交在<b>偏转板的正中央</b>(纵坐标 0 处)。于是可把整个偏转+直线段,等效成「粒子从偏转板中点、以出板方向沿直线射出」。设板中点到屏的距离为 (L/2 + D):</p>
+      <div class="eq">Y总 = (L/2 + D) · tanθ = (L/2 + D) · U偏L/(2dU加)</div>
+      <p class="trap">⚠ 这个「反向延长过板中央」是普适结论(只要板内是匀强电场、初速沿中线),证明:直线交点横坐标 = L − y/tanθ = L − (½at²)/(at/v₀) = L − t·v₀/2 = L − L/2 = L/2,即板中点。记住它,打屏题一步到位。</p>
+    </div>
+
+    <h2 class="v">④ 示波管原理 · 圆周与平衡 · 电场做功</h2>
+    <div class="card">
+      <h3>示波管:偏转电压 → 屏上图形</h3>
+      <p style="margin:6px 0">阴极射线管(CRT/示波管):电子枪加速电子 → 水平偏转板加<b>锯齿波</b>(让亮点匀速横扫,当作时间轴)→ 竖直偏转板加<b>被测信号</b> → 屏上就画出信号随时间的波形。核心就是「侧移 ∝ 偏转电压」,电压变,亮点位置就变。</p>
+      <h3>带电粒子在匀强电场中的圆周 / 平衡</h3>
+      <p style="margin:6px 0">若粒子在电场中<b>受力平衡</b>(如密立根油滴、带电小球悬浮):电场力 qE 与重力 mg 平衡 → qE = mg,由此可测电荷量。若做圆周运动,则电场力(或电场力与重力的合力)提供向心力,列 F向 = mv²/r。</p>
+      <h3>电场力做功 W = qU,与路径无关</h3>
+      <p style="margin:6px 0">电场力做功只与<b>起点、终点的电势差</b>有关,与路径无关:W = qU_AB = q(φ_A − φ_B)。沿等势面移动电荷,电场力<b>不做功</b>。电场线总是垂直于等势面、由高电势指向低电势。</p>
+      <div class="mono">W_电 = qU (U为两点电势差) = qEd (匀强场,d为沿场方向位移) = ΔEk (只有电场力做功时)</div>
+      <p class="trap">⚠ 判断做正功还是负功:正电荷沿电场线方向移动 → 正功(电势能减小);沿等势面移动 → 不做功。别只盯位移大小,要看沿场方向的分量。</p>
+    </div>
+
+    <h2 class="r">⑤ 要不要算重力?一句话判断</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>看题目给的是什么粒子:</b></p>
+      <table>
+        <tr><th>粒子 / 情形</th><th>重力处理</th></tr>
+        <tr><td>基本粒子:电子、质子、α粒子、离子(题目未给质量或强调『微观』)</td><td><b>忽略重力</b>(电场力 ≫ 重力)</td></tr>
+        <tr><td>带电小球、油滴、尘埃、液滴(宏观、给了质量 m)</td><td><b>必须算重力</b> mg</td></tr>
+        <tr><td>题目明说『不计重力』或『重力不计』</td><td>忽略</td></tr>
+        <tr><td>题目说『带电小球平衡/悬浮』『油滴静止』</td><td>一定算重力(否则无法平衡)</td></tr>
+      </table>
+      <p class="trap">⚠ 见到「电子/质子/离子」默认不计重力;见到「小球/油滴/液滴」且给了质量,必须把 mg 加进去,常与电场力合成或平衡。判断不清就看:题目要不要用到 m 和 g,若给了 g 十有八九要算重力。</p>
+    </div>
+
+    <h2 class="b">⑥ 加速+偏转全过程动画(centerpiece)</h2>
+    <div class="viz">
+      <div class="vlabel">🚀 互动 1 — 电子枪加速 → 偏转板抛物线 → 打荧光屏(参数全可调)</div>
+      <canvas id="mainCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="mainGo">▶ 发射</button><button id="mainReset">↺ 重置</button>
+        <label>U加 <input id="mUa" type="range" min="200" max="2000" value="1000" step="50"></label>
+        <label>U偏 <input id="mUd" type="range" min="0" max="600" value="300" step="20"></label>
+        <label>板长L <input id="mL" type="range" min="60" max="200" value="140" step="10"></label>
+        <label>板间距d <input id="mD" type="range" min="30" max="90" value="60" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>出射速度 v₀ (相对)</b><span id="mV0">0</span></div>
+        <div><b>板内侧移 y (px)</b><span id="mY">0</span></div>
+        <div><b>偏转角 θ</b><span id="mTheta">0</span></div>
+        <div><b>是否打出板外</b><span id="mHit">—</span></div>
+      </div>
+      <p class="small">红点=带电粒子。左边加速电场(竖条纹)把它打快;中间平行偏转板里走抛物线;虚线=出板方向反向延长,恰过板中央;右边荧光屏亮点即打屏位置。调 U加↑ 侧移↓、U偏↑ 侧移↑,亲手验证 y = U偏L²/(4dU加)。</p>
+    </div>
+
+    <h2 class="o">⑦ 偏转 vs 平抛:并排类比</h2>
+    <div class="viz">
+      <div class="vlabel">🪂 互动 2 — 左:重力平抛　右:电场偏转(完全同构)</div>
+      <canvas id="anaCv" width="700" height="260"></canvas>
+      <div class="ctrl"><button id="anaGo">▶ 同时释放</button><button id="anaReset">↺ 重置</button>
+        <label>初速v₀ <input id="anaV" type="range" min="2" max="8" value="5" step="1"></label>
+      </div>
+      <p class="small">左边小球:水平匀速 + 竖直被重力 g 加速;右边粒子:水平匀速 + 竖直被电场 a=qE/m 加速。两条轨迹形状一致——偏转就是「把重力换成电场力」的平抛。</p>
+    </div>
+
+    <h2 class="v">⑧ 电场线与等势面(平行板匀强场)</h2>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 3 — 平行板匀强电场:电场线(蓝)⊥ 等势面(紫虚线)</div>
+      <svg id="fieldSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="fmode on" data-m="0">显示电场线</button>
+        <button class="fmode" data-m="1">显示等势面</button>
+        <button class="fmode" data-m="2">两者叠加</button>
+      </div>
+      <p class="small">平行板间是匀强电场:电场线均匀平行,由正极板指向负极板;等势面是一族与板平行的平面,处处垂直电场线。沿等势面移动电荷电场力不做功。E = U/d,处处相等。</p>
+    </div>
+
+    <h2 class="g">⑨ 侧移随 U加 / U偏 变化的关系图</h2>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 侧移 y 怎么随电压变(拖动看曲线)</div>
+      <svg id="relSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rmode on" data-m="0">y ~ U偏(正比,直线)</button>
+        <button class="rmode" data-m="1">y ~ U加(反比,双曲线)</button>
+      </div>
+      <div class="ctrl">
+        <label>当前 U偏 <input id="relUd" type="range" min="50" max="600" value="300" step="10"></label>
+        <label>当前 U加 <input id="relUa" type="range" min="200" max="2000" value="1000" step="50"></label>
+      </div>
+      <div class="verdict" id="relNote"></div>
+      <p class="small">y = U偏·L²/(4d·U加)。固定 U加 看 y∝U偏(过原点直线);固定 U偏 看 y∝1/U加(双曲线,加速电压越大偏得越少)。红点=当前工作点。</p>
+    </div>
+
+    <h2 class="r">⑩ 示波管扫描原理</h2>
+    <div class="viz">
+      <div class="vlabel">📺 互动 5 — 竖直加正弦信号,亮点在屏上画出波形</div>
+      <canvas id="scopeCv" width="700" height="240"></canvas>
+      <div class="ctrl"><button id="scGo">▶ 扫描</button><button id="scReset">↺ 清屏</button>
+        <label>信号频率 <input id="scF" type="range" min="1" max="6" value="2" step="1"></label>
+        <label>信号幅度 <input id="scA" type="range" min="20" max="90" value="60" step="10"></label>
+      </div>
+      <p class="small">水平偏转板加锯齿波→亮点匀速横扫(时间轴);竖直偏转板加被测正弦信号→亮点上下偏。二者合成,屏上就画出信号波形。这就是老式示波器/CRT的工作原理。</p>
+    </div>
+
+    <h2 class="o">⑪ 是否飞出偏转板判定</h2>
+    <div class="viz">
+      <div class="vlabel">🚪 互动 6 — 粒子会不会撞到偏转板上?(临界侧移 = d/2)</div>
+      <canvas id="escCv" width="700" height="220"></canvas>
+      <div class="ctrl"><button id="escGo">▶ 发射</button>
+        <label>U偏 <input id="escUd" type="range" min="0" max="900" value="300" step="30"></label>
+      </div>
+      <div class="verdict" id="escNote"></div>
+      <p class="small">粒子只要在板长 L 内侧移 y 达到 d/2,就会撞上极板飞不出去。判据:y = U偏L²/(4dU加) 与 d/2 比较。U偏 调大到某临界值,粒子就被吸到板上——试试看。</p>
+    </div>
+
+    <h2 class="v">⑫ 计重力 vs 不计重力对比</h2>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 7 — 同一粒子:忽略重力(蓝)vs 计入重力(红)</div>
+      <canvas id="gravCv" width="700" height="240"></canvas>
+      <div class="ctrl"><button id="gvGo">▶ 释放</button><button id="gvReset">↺ 重置</button>
+        <label>重力占比 <input id="gvG" type="range" min="0" max="100" value="40" step="10"></label>
+      </div>
+      <p class="small">电场力向上给侧移,重力向下拉。电子/质子:重力占比≈0,两条几乎重合;带电小球/油滴:重力占比大,红线明显下坠——这时必须把 mg 合进去算合力。</p>
+    </div>
+
+    <h2 class="r">⑬ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 加速求出射速度</h3>
+      <p><b class="tag">触发信号:</b>粒子从静止经电压 U加 加速,求到达时速度/动能。</p>
+      <p><b class="tag">标准动作:</b>动能定理 qU加 = ½mv₀² − 0 → v₀ = √(2qU加/m)。若非从静止,写全 ½mv²−½mv₀²。</p>
+      <p><b class="tag">示例(带解):</b>电子 q=1.6×10⁻¹⁹C,m=9.1×10⁻³¹kg,经 U加=200V 加速。v₀=√(2×1.6e-19×200/9.1e-31)≈8.4×10⁶ m/s。</p>
+      <p class="trap">陷阱:套成类平抛;非静止起步漏掉初动能;正负电荷只影响朝哪块板加速,不影响速率大小。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 偏转求侧移 / 偏转角</h3>
+      <p><b class="tag">触发信号:</b>粒子以 v₀ 射入偏转板,求离板时的侧移 y、偏转角 θ、末速度。</p>
+      <p><b class="tag">标准动作:</b>分解:横向 t=L/v₀,纵向 a=qU偏/(md);y=½at²=U偏L²/(4dU加);tanθ=at/v₀=U偏L/(2dU加);末速 v=√(v₀²+v_y²)。</p>
+      <p><b class="tag">示例(带解):</b>接题型A,U偏=100V,d=0.02m,L=0.05m。y=100×0.05²/(4×0.02×200)=0.25/16≈0.0156m=1.56cm。tanθ=100×0.05/(2×0.02×200)=5/8=0.625。</p>
+      <p class="trap">陷阱:y 公式里用了 U加 别写成别的电压;t 用板长/水平速度,不是斜线长。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 打屏位置</h3>
+      <p><b class="tag">触发信号:</b>板右端到屏距离 D,求屏上光点偏离中心的总距离 Y总。</p>
+      <p><b class="tag">标准动作:</b>等效从板中央射出:Y总=(L/2+D)·tanθ。或分段:Y总 = y + D·tanθ。</p>
+      <p><b class="tag">示例(带解):</b>接上,D=0.20m。Y总=(0.05/2+0.20)×0.625=0.225×0.625≈0.141m=14.1cm。</p>
+      <p class="trap">陷阱:忘了板内那段 y(或没用等效法);把 D 当成板中点到屏,应是板右端到屏。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 是否飞出偏转板</h3>
+      <p><b class="tag">触发信号:</b>问粒子能否射出偏转板,或求恰好射出/打到板上的临界电压。</p>
+      <p><b class="tag">标准动作:</b>算板内侧移 y=U偏L²/(4dU加),与 d/2 比:y<d/2 飞出;y≥d/2 打在板上。临界 U偏 由 y=d/2 反解。</p>
+      <p><b class="tag">示例(带解):</b>求恰好射出的最大 U偏:d/2=U偏L²/(4dU加)→U偏=2d²U加/L²。数值代入即得临界值。</p>
+      <p class="trap">陷阱:用 d 而不是 d/2(粒子从中线进,只需偏 d/2 就撞板);打在板上的粒子横向位移 x<L,别再用 x=L。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 示波管综合</h3>
+      <p><b class="tag">触发信号:</b>示波管/CRT,给加速电压、偏转电压、几何尺寸,求屏上偏移或所需电压。</p>
+      <p><b class="tag">标准动作:</b>先加速求 v₀(或直接用 y=U偏L²/(4dU加) 消去 v₀),再等效从板中央求屏上偏移 Y=(L/2+D)tanθ。</p>
+      <p><b class="tag">示例(带解):</b>已知 Y总、L、d、D、U加,反求所需 U偏:U偏=2dU加·Y总/[L(L/2+D)]。代数题,先列后代。</p>
+      <p class="trap">陷阱:混淆加速电压与偏转电压;几何量单位不统一(cm/m 要换算)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 结合重力的平衡 / 悬浮</h3>
+      <p><b class="tag">触发信号:</b>带电小球/油滴在电场中静止、悬浮或匀速,求电荷量、场强或质量。</p>
+      <p><b class="tag">标准动作:</b>受力平衡:qE=mg(竖直场)或矢量合成为零;由 qU/d=mg 解 q 或 U。做圆周则电场力(或与重力合力)=向心力。</p>
+      <p><b class="tag">示例(带解):</b>油滴 m=2×10⁻¹⁵kg 悬浮于 U=100V、d=0.01m 的板间。qU/d=mg → q=mgd/U=2e-15×10×0.01/100=2×10⁻¹⁸C。</p>
+      <p class="trap">陷阱:漏掉重力(小球/油滴必算);电场力方向与电荷正负、板极性有关,判错方向平衡列反。</p>
+    </div>
+
+    <h2 class="r">⑭ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 加速段用<b>动能定理</b> qU加=½mv₀²,不是类平抛!加速是直线,偏转才是抛物线。</p>
+      <p class="trap">② 偏转段是<b>类平抛</b>:横向匀速、纵向匀加速 a=qU偏/(md)。别当成匀速直线。</p>
+      <p class="trap">③ 侧移 y=U偏L²/(4dU加):与 U偏 <b>成正比</b>、与 U加 <b>成反比</b>。q、m 全消掉。</p>
+      <p class="trap">④ 电子/质子/离子<b>不计重力</b>;小球/油滴/液滴给了 m 就<b>必须算重力</b>。</p>
+      <p class="trap">⑤ 打屏总偏移 = 板内 y + 出板直线段,或等效「从板中央射出」Y=(L/2+D)tanθ。别只算 y。</p>
+      <p class="trap">⑥ 是否飞出:临界侧移是 <b>d/2</b>(从中线进),不是 d。</p>
+      <p class="trap">⑦ 偏转时间 t=L/v₀,用板长和水平速度,不是斜线;末速要合成 v=√(v₀²+v_y²)。</p>
+      <p class="trap">⑧ 电场力做功 W=qU 与路径无关;沿等势面移动不做功。</p>
+    </div>
+
+    <h2 class="v">⑮ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 等效从中央射出——一步秒杀打屏题:</b> 只要偏转板内是匀强场、粒子沿中线射入,出板速度的反向延长线必过板的正中点。于是不管板后直线多长,总偏移 Y=(L/2+D)tanθ。证明只用 y=½at²、v_y=at 两式相除即得交点在 L/2 处。这一招把两段合成一段,省掉板内 y 的单独计算。</p>
+      <p style="margin:8px 0"><b>② 侧移与加速电压成反比——反直觉但极常考:</b> y=U偏L²/(4dU加)。加速电压 U加 越大,你以为打得越狠偏得越多?恰恰相反——加速越猛,粒子水平飞得越快,在偏转板里停留时间 t=L/v₀ 越短,被横向推的时间少,反而偏得<b>少</b>。抓住「停留时间」这个中介,反比关系就顺理成章。</p>
+      <p style="margin:8px 0"><b>③ q、m 为什么会消失?</b> 侧移公式里电荷、质量全约掉,说明只要是同一 U加 加速、同一 U偏 偏转,不同粒子(电子、质子、离子)打在屏上的位置<b>竟然相同</b>(不计重力时)。这背后是「加速给的动能 ∝ q,偏转给的力也 ∝ q」——q 在分子分母同时出现,自然抵消。理解这点,一类比较题瞬间清空。</p>
+      <p style="margin:8px 0"><b>④ 偏转段的能量视角:</b> 偏转时电场力做正功,粒子动能增大(末速 v>v₀),但水平分速度 v₀ 始终不变,增加的动能全在纵向 ½mv_y²。这与平抛中「水平动能不变、竖直动能增加」完全一致。用能量法可验算末速,双保险。</p>
+      <p style="margin:8px 0"><b>⑤ 把两把『枪』看成一条流水线:</b> 加速板管『速度』(定 v₀),偏转板管『方向』(定 θ)。示波管、质谱仪、电子显微镜都是这条流水线的变体。抓住『先定速率、再定偏向』的分工,再复杂的器件题也能拆成加速段+偏转段两块标准积木。</p>
+    </div>
+
+    <h2 class="b">⑯ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:加速+偏转全过程(centerpiece) ===== */
+(function(){
+  const cv=document.getElementById('mainCv');const ctx=cv.getContext('2d');
+  const Ua=document.getElementById('mUa'),Ud=document.getElementById('mUd'),Ll=document.getElementById('mL'),Dd=document.getElementById('mD');
+  const oV0=document.getElementById('mV0'),oY=document.getElementById('mY'),oTh=document.getElementById('mTheta'),oHit=document.getElementById('mHit');
+  // 布局坐标(px)
+  const accX0=40,accX1=160;      // 加速区
+  const platX0=230;              // 偏转板左端
+  const midY=150;                // 中线
+  const screenX=650;             // 荧光屏
+  let ua,ud,L,d,v0,a,tPlate,y,theta,hitPlate;
+  let running=false,tt=0,traj=[];
+  function compute(){
+    ua=+Ua.value;ud=+Ud.value;L=+Ll.value;d=+Dd.value;
+    // 出射速度(相对单位):v0 ∝ sqrt(Ua)
+    v0=Math.sqrt(ua)*0.14;                 // px/frame 尺度
+    // 纵向加速度 a ∝ Ud/d (类平抛)
+    a=(ud/d)*0.010;
+    tPlate=L/v0;                           // 在板内的帧数
+    y=0.5*a*tPlate*tPlate;                 // 板内侧移(px)
+    theta=Math.atan((a*tPlate)/v0);
+    hitPlate=(y>=d/2);
+    oV0.textContent=(v0*10).toFixed(0);
+    oY.textContent=y.toFixed(1);
+    oTh.textContent=(theta*180/Math.PI).toFixed(1)+'°';
+    oHit.textContent=hitPlate?'撞板!':'飞出';
+    oHit.style.color=hitPlate?RED:GREEN;
+  }
+  function drawStatic(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 中线
+    ctx.strokeStyle="#ccc";ctx.setLineDash([6,6]);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(accX0,midY);ctx.lineTo(screenX,midY);ctx.stroke();ctx.setLineDash([]);
+    // 加速区:两块极板 + 竖条纹场
+    ctx.strokeStyle=INK;ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(accX0,midY-46);ctx.lineTo(accX1,midY-46);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(accX0,midY+46);ctx.lineTo(accX1,midY+46);ctx.stroke();
+    ctx.strokeStyle="rgba(20,80,200,0.35)";ctx.lineWidth=2;
+    for(let x=accX0+12;x<accX1;x+=16){ctx.beginPath();ctx.moveTo(x,midY-42);ctx.lineTo(x,midY+42);ctx.stroke();}
+    ctx.fillStyle=INK;ctx.font="bold 12px sans-serif";ctx.fillText("加速区 U加",accX0,midY-54);
+    // 偏转板
+    const platX1=platX0+L;
+    ctx.strokeStyle=RED;ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(platX0,midY-d/2);ctx.lineTo(platX1,midY-d/2);ctx.stroke();
+    ctx.strokeStyle=BLUE;
+    ctx.beginPath();ctx.moveTo(platX0,midY+d/2);ctx.lineTo(platX1,midY+d/2);ctx.stroke();
+    ctx.fillStyle=INK;ctx.fillText("偏转板 U偏",platX0,midY-d/2-8);
+    // 荧光屏
+    ctx.fillStyle="#0a2a0a";ctx.fillRect(screenX,midY-90,10,180);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(screenX,midY-90,10,180);
+    ctx.save();ctx.translate(screenX+22,midY+40);ctx.rotate(-Math.PI/2);ctx.fillStyle=GREEN;ctx.font="bold 12px sans-serif";ctx.fillText("荧光屏",0,0);ctx.restore();
+  }
+  // 位置函数(帧 tt),返回 {x,y,phase}
+  function posAt(f){
+    // 阶段0:加速区匀加速直线(简化为匀速进入更直观 → 用匀加速)
+    const accLen=accX1-accX0;
+    const accFrames=accLen/(v0*0.6+0.001); // 粗略帧数
+    if(f<accFrames){
+      // 匀加速:从0到v0
+      const frac=f/accFrames;
+      return {x:accX0+accLen*frac*frac, y:midY, ph:0, vy:0};
+    }
+    let f2=f-accFrames;
+    // 阶段1:自由飞行到偏转板左端(匀速)
+    const gap1=platX0-accX1;
+    const g1f=gap1/v0;
+    if(f2<g1f){return {x:accX1+v0*f2, y:midY, ph:1, vy:0};}
+    f2-=g1f;
+    // 阶段2:偏转板内(类平抛)
+    const platX1=platX0+L;
+    if(f2<tPlate){
+      const yy=0.5*a*f2*f2;
+      // 撞板检测
+      if(yy>=d/2){return {x:platX0+v0*f2, y:midY-d/2, ph:3, vy:a*f2};}
+      return {x:platX0+v0*f2, y:midY-yy, ph:2, vy:a*f2};
+    }
+    // 阶段3:出板后直线
+    f2-=tPlate;
+    const vy=a*tPlate;
+    const x3=platX1+v0*f2;
+    const y3=midY-y-vy*f2;
+    return {x:x3, y:y3, ph:4, vy:vy};
+  }
+  function draw(){
+    drawStatic();
+    // 已走轨迹
+    ctx.strokeStyle="rgba(224,56,42,0.35)";ctx.lineWidth=2.5;ctx.beginPath();
+    traj.forEach((p,i)=>{i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});ctx.stroke();
+    // 等效中央射出虚线(反向延长)
+    if(y>0.5){
+      const platX1=platX0+L;
+      const vy=a*tPlate;
+      // 从板中点(platX0+L/2, midY)沿出板方向
+      ctx.strokeStyle="rgba(122,63,242,0.85)";ctx.setLineDash([5,5]);ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(platX0+L/2,midY);
+      const dx=screenX-(platX0+L/2);
+      ctx.lineTo(platX0+L/2+dx, midY - (vy/v0)*dx);
+      ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=VIO;ctx.font="bold 11px sans-serif";ctx.fillText("反向延长过板中央",platX0+L/2-10,midY+22);
+    }
+    // 当前粒子
+    if(traj.length){const p=traj[traj.length-1];
+      ctx.fillStyle=RED;ctx.beginPath();ctx.arc(p.x,p.y,6,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      // 屏上亮点
+      if(p.x>=screenX-2){ctx.fillStyle=YEL;ctx.beginPath();ctx.arc(screenX+5,p.y,7,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+    }
+  }
+  function loop(){
+    if(!running){return;}
+    tt+=1.4;
+    const p=posAt(tt);
+    traj.push(p);
+    if(p.x>=screenX-2 || p.ph===3){running=false;}
+    draw();
+    if(running)requestAnimationFrame(loop);else draw();
+  }
+  function reset(){compute();tt=0;traj=[];drawStatic();draw();running=false;}
+  Ua.oninput=Ud.oninput=Ll.oninput=Dd.oninput=reset;
+  document.getElementById('mainGo').onclick=()=>{compute();tt=0;traj=[];running=true;requestAnimationFrame(loop);};
+  document.getElementById('mainReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动2:偏转 vs 平抛并排 ===== */
+(function(){
+  const cv=document.getElementById('anaCv');const ctx=cv.getContext('2d');
+  const Vs=document.getElementById('anaV');
+  let v0=5,t=0,running=false;
+  const gGrav=0.045, aElec=0.045; // 同构:同样的"加速度"
+  function reset(){v0=+Vs.value;t=0;running=false;draw();}
+  Vs.oninput=reset;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 分隔线
+    ctx.strokeStyle="#ccc";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(350,10);ctx.lineTo(350,250);ctx.stroke();
+    // 标题
+    ctx.fillStyle=INK;ctx.font="bold 13px sans-serif";
+    ctx.fillText("重力平抛(g)",30,26);ctx.fillText("电场偏转(a=qE/m)",380,26);
+    // 左:平抛(重力向下)
+    drawSide(20,40, gGrav, RED, "小球");
+    // 右:偏转,画两块板 + 电场箭头(向下),同构
+    // 板
+    ctx.strokeStyle=RED;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(370,55);ctx.lineTo(670,55);ctx.stroke();
+    ctx.strokeStyle=BLUE;ctx.beginPath();ctx.moveTo(370,230);ctx.lineTo(670,230);ctx.stroke();
+    drawSide(380,55, aElec, VIO, "粒子");
+  }
+  function drawSide(x0,y0,acc,col,lab){
+    // 轨迹
+    ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();
+    const tmax=Math.min(t,90);
+    for(let f=0;f<=tmax;f++){const px=x0+v0*f*0.6;const py=y0+0.5*acc*f*f;
+      if(f===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+    ctx.stroke();
+    // 当前点
+    const f=Math.min(t,90);const px=x0+v0*f*0.6;const py=y0+0.5*acc*f*f;
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(px,py,7,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+  }
+  function loop(){if(!running)return;t+=1;if(t>90){t=90;running=false;}draw();if(running)requestAnimationFrame(loop);}
+  document.getElementById('anaGo').onclick=()=>{v0=+Vs.value;t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('anaReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动3:电场线与等势面 ===== */
+(function(){
+  const svg=document.getElementById('fieldSvg');let mode=0;
+  function draw(){
+    clr(svg);
+    const topY=50,botY=250,x0=90,x1=610;
+    // 极板
+    el(svg,'rect',{x:x0,y:topY-14,width:x1-x0,height:14,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:x0,y:botY,width:x1-x0,height:14,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x0-6,y:topY-2,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='+ 正极板';
+    el(svg,'text',{x:x0-6,y:botY+12,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'end'}).textContent='− 负极板';
+    // 电场线(向下,由正到负)
+    if(mode===0||mode===2){
+      for(let x=x0+40;x<x1;x+=48){
+        el(svg,'line',{x1:x,y1:topY,x2:x,y2:botY,stroke:BLUE,'stroke-width':2.5});
+        // 箭头
+        el(svg,'path',{d:'M '+(x-5)+' '+(botY-14)+' L '+x+' '+(botY-4)+' L '+(x+5)+' '+(botY-14),fill:'none',stroke:BLUE,'stroke-width':2.5});
+        el(svg,'path',{d:'M '+(x-5)+' '+((topY+botY)/2-6)+' L '+x+' '+((topY+botY)/2+4)+' L '+(x+5)+' '+((topY+botY)/2-6),fill:'none',stroke:BLUE,'stroke-width':2.5});
+      }
+      el(svg,'text',{x:x1-4,y:topY+22,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'end'}).textContent='电场线 E (匀强,平行)';
+    }
+    // 等势面(水平虚线)
+    if(mode===1||mode===2){
+      for(let yy=topY+30;yy<botY;yy+=44){
+        el(svg,'line',{x1:x0,y1:yy,x2:x1,y2:yy,stroke:VIO,'stroke-width':2.5,'stroke-dasharray':'8 6'});
+        el(svg,'text',{x:x1+4,y:yy+4,'font-size':11,'font-weight':900,fill:VIO}).textContent='φ';
+      }
+      el(svg,'text',{x:x0+4,y:botY-8,'font-size':12,'font-weight':900,fill:VIO}).textContent='等势面 ⊥ 电场线';
+    }
+    el(svg,'text',{x:(x0+x1)/2,y:botY+40,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='E = U/d,板间处处相等;沿等势面移动电荷,电场力不做功';
+  }
+  document.querySelectorAll('.fmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.fmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();});
+  draw();
+})();
+
+/* ===== 互动4:侧移关系图 ===== */
+(function(){
+  const svg=document.getElementById('relSvg');const note=document.getElementById('relNote');
+  const Ud=document.getElementById('relUd'),Ua=document.getElementById('relUa');
+  let mode=0;
+  const Lc=140, dc=0.02; // 常数(示意)
+  function yval(ud,ua){return ud*Lc*Lc/(4*dc*ua)*1e-5;} // 缩放到 px 级别
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=560,H=210;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    const ua=+Ua.value, ud=+Ud.value;
+    let d='',maxY=0.001,px,py,curX,curY;
+    if(mode===0){ // y ~ U偏, U加固定
+      el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U偏 →';
+      // 找最大值缩放
+      maxY=yval(600,ua);
+      for(let k=0;k<=100;k++){const u=50+k/100*550;const yy=yval(u,ua);
+        px=X0+ (u-50)/550*W; py=Y0+H - yy/maxY*H*0.9;
+        d+=(k===0?'M':'L')+px+' '+py+' ';}
+      curX=X0+(ud-50)/550*W; curY=Y0+H - yval(ud,ua)/maxY*H*0.9;
+      note.innerHTML='固定 U加='+ua+'V:y ∝ U偏,过原点的<b>直线</b>。当前 U偏='+ud+'V → y='+yval(ud,ua).toFixed(1)+' (相对)';
+    }else{ // y ~ U加, U偏固定
+      el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U加 →';
+      maxY=yval(ud,200);
+      for(let k=0;k<=100;k++){const u=200+k/100*1800;const yy=yval(ud,u);
+        px=X0+ (u-200)/1800*W; py=Y0+H - yy/maxY*H*0.9;
+        d+=(k===0?'M':'L')+px+' '+py+' ';}
+      curX=X0+(ua-200)/1800*W; curY=Y0+H - yval(ud,ua)/maxY*H*0.9;
+      note.innerHTML='固定 U偏='+ud+'V:y ∝ 1/U加,<b>双曲线</b>(加速越大偏得越少)。当前 U加='+ua+'V → y='+yval(ud,ua).toFixed(1)+' (相对)';
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':4});
+    // 当前工作点
+    if(curX>=X0&&curX<=X0+W&&curY>=Y0&&curY<=Y0+H){
+      el(svg,'circle',{cx:curX,cy:curY,r:7,fill:RED,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:curX,y1:curY,x2:curX,y2:Y0+H,stroke:RED,'stroke-width':1.5,'stroke-dasharray':'4 4'});
+    }
+    note.style.borderColor=BLUE;
+  }
+  document.querySelectorAll('.rmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.rmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();});
+  Ud.oninput=Ua.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:示波管扫描 ===== */
+(function(){
+  const cv=document.getElementById('scopeCv');const ctx=cv.getContext('2d');
+  const Ff=document.getElementById('scF'),Aa=document.getElementById('scA');
+  let running=false,sweep=0,pts=[];
+  const x0=50,x1=650,midY=120;
+  function grid(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle="#06180a";ctx.fillRect(x0,20,x1-x0,200);
+    ctx.strokeStyle="rgba(30,158,134,0.35)";ctx.lineWidth=1;
+    for(let x=x0;x<=x1;x+=50){ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,220);ctx.stroke();}
+    for(let y=20;y<=220;y+=40){ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();}
+    ctx.strokeStyle="rgba(30,158,134,0.7)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x0,midY);ctx.lineTo(x1,midY);ctx.stroke();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(x0,20,x1-x0,200);
+    ctx.fillStyle=GREEN;ctx.font="bold 12px sans-serif";ctx.fillText("荧光屏(时间轴→,信号↑↓)",x0+8,38);
+  }
+  function draw(){
+    grid();
+    const f=+Ff.value, amp=+Aa.value;
+    // 已画波形
+    ctx.strokeStyle=GREEN;ctx.lineWidth=2.5;ctx.beginPath();
+    pts.forEach((p,i)=>{i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});ctx.stroke();
+    // 亮点
+    if(pts.length){const p=pts[pts.length-1];
+      ctx.fillStyle=YEL;ctx.beginPath();ctx.arc(p.x,p.y,5,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();}
+  }
+  function loop(){
+    if(!running)return;
+    const f=+Ff.value, amp=+Aa.value;
+    sweep+=4;
+    const x=x0+sweep;
+    const phase=(sweep/(x1-x0))*f*2*Math.PI;
+    const y=midY - amp*Math.sin(phase);
+    pts.push({x:x,y:y});
+    if(x>=x1){running=false;}
+    draw();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('scGo').onclick=()=>{sweep=0;pts=[];running=true;requestAnimationFrame(loop);};
+  document.getElementById('scReset').onclick=()=>{running=false;sweep=0;pts=[];grid();};
+  Ff.oninput=Aa.oninput=()=>{};
+  grid();
+})();
+
+/* ===== 互动6:是否飞出偏转板 ===== */
+(function(){
+  const cv=document.getElementById('escCv');const ctx=cv.getContext('2d');
+  const Ud=document.getElementById('escUd');const note=document.getElementById('escNote');
+  const platX0=120, L=360, d=110, midY=110;
+  const Ua=1000; // 固定加速电压
+  let running=false,tt=0,ud=300,a,v0,y,hit,tHitFrac;
+  function compute(){
+    ud=+Ud.value;
+    v0=Math.sqrt(Ua)*0.06;
+    a=(ud/d)*0.02;
+    const tPlate=L/v0;
+    y=0.5*a*tPlate*tPlate;
+    hit=(y>=d/2);
+    // 撞板时刻(帧比例)
+    if(hit){tHitFrac=Math.sqrt((d/2)/(0.5*a))/tPlate;}else{tHitFrac=1;}
+    const critUd=2*d*d*Ua/(L*L)/0.02*0.02; // 反解(示意)
+    note.innerHTML=hit?'⚠ y='+y.toFixed(0)+'px ≥ d/2='+(d/2)+'px:<b>撞在偏转板上,飞不出去!</b>':'✓ y='+y.toFixed(0)+'px < d/2='+(d/2)+'px:<b>安全飞出偏转板。</b>';
+    note.style.borderColor=hit?RED:GREEN;
+  }
+  function drawStatic(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle="#ccc";ctx.setLineDash([6,6]);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(20,midY);ctx.lineTo(680,midY);ctx.stroke();ctx.setLineDash([]);
+    // 板
+    ctx.strokeStyle=RED;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(platX0,midY-d/2);ctx.lineTo(platX0+L,midY-d/2);ctx.stroke();
+    ctx.strokeStyle=BLUE;ctx.beginPath();ctx.moveTo(platX0,midY+d/2);ctx.lineTo(platX0+L,midY+d/2);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font="bold 12px sans-serif";
+    ctx.fillText("+U偏",platX0-2,midY-d/2-8);ctx.fillText("临界侧移 = d/2",platX0+L+6,midY-d/2+4);
+    // d/2 标注线
+    ctx.strokeStyle="rgba(224,56,42,0.5)";ctx.setLineDash([3,3]);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(platX0,midY-d/2);ctx.lineTo(platX0+L,midY-d/2);ctx.stroke();ctx.setLineDash([]);
+  }
+  function draw(){
+    drawStatic();
+    // 轨迹
+    const tPlate=L/v0;
+    const fmax=Math.min(tt,tPlate*tHitFrac);
+    ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.beginPath();
+    for(let f=0;f<=fmax;f++){const px=platX0+v0*f;const py=midY-0.5*a*f*f;
+      if(f===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+    // 出板后直线(未撞时)
+    if(!hit && tt>tPlate){
+      const vy=a*tPlate;const yEnd=0.5*a*tPlate*tPlate;
+      for(let f=tPlate;f<=tt;f++){const px=platX0+v0*f;const py=midY-yEnd-vy*(f-tPlate);ctx.lineTo(px,py);}
+    }
+    ctx.stroke();
+    // 粒子
+    let pf=Math.min(tt,hit?tPlate*tHitFrac:tPlate*1.5);
+    let px,py;
+    if(pf<=tPlate){px=platX0+v0*pf;py=midY-0.5*a*pf*pf;}
+    else{const vy=a*tPlate;const yEnd=0.5*a*tPlate*tPlate;px=platX0+v0*pf;py=midY-yEnd-vy*(pf-tPlate);}
+    ctx.fillStyle=hit&&tt>=tPlate*tHitFrac?"#000":RED;
+    ctx.beginPath();ctx.arc(px,py,6,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    if(hit&&tt>=tPlate*tHitFrac){ctx.fillStyle=RED;ctx.font="bold 13px sans-serif";ctx.fillText("💥 撞板",px+10,py);}
+  }
+  function loop(){
+    if(!running)return;
+    tt+=1.2;
+    const tPlate=L/v0;
+    const lim=hit?tPlate*tHitFrac:tPlate*1.5;
+    if(tt>=lim){tt=lim;running=false;}
+    draw();
+    if(running)requestAnimationFrame(loop);
+  }
+  Ud.oninput=()=>{compute();tt=0;drawStatic();};
+  document.getElementById('escGo').onclick=()=>{compute();tt=0;running=true;requestAnimationFrame(loop);};
+  compute();drawStatic();
+})();
+
+/* ===== 互动7:计重力 vs 不计重力 ===== */
+(function(){
+  const cv=document.getElementById('gravCv');const ctx=cv.getContext('2d');
+  const Gg=document.getElementById('gvG');
+  let running=false,t=0;
+  const x0=80,y0=120,v0=4;
+  const aElec=0.05; // 电场力向上(减 y)
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 板
+    ctx.strokeStyle=RED;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(60,30);ctx.lineTo(660,30);ctx.stroke();
+    ctx.strokeStyle=BLUE;ctx.beginPath();ctx.moveTo(60,210);ctx.lineTo(660,210);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font="bold 12px sans-serif";ctx.fillText("电场力 ↑",70,24);ctx.fillText("重力 ↓",70,206);
+    const gFrac=+Gg.value/100;
+    const aG=aElec*gFrac*1.6; // 重力向下
+    // 蓝:忽略重力
+    trace(aElec,0,BLUE);
+    // 红:计入重力(净向上加速度 = 电场 - 重力)
+    trace(aElec,aG,RED);
+    // 图例
+    ctx.fillStyle=BLUE;ctx.fillRect(500,44,14,14);ctx.fillStyle=INK;ctx.fillText("忽略重力(电子/质子)",520,56);
+    ctx.fillStyle=RED;ctx.fillRect(500,66,14,14);ctx.fillStyle=INK;ctx.fillText("计入重力(小球/油滴)",520,78);
+  }
+  function trace(aUp,aDown,col){
+    const aNet=aUp-aDown; // 向上为正,y减小
+    ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();
+    const tm=Math.min(t,110);
+    for(let f=0;f<=tm;f++){const px=x0+v0*f*0.6*0.8;const py=y0-0.5*aNet*f*f;
+      if(f===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+    ctx.stroke();
+    const f=Math.min(t,110);const px=x0+v0*f*0.6*0.8;const py=y0-0.5*aNet*f*f;
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(px,py,6,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();
+  }
+  function loop(){if(!running)return;t+=1;if(t>110){t=110;running=false;}draw();if(running)requestAnimationFrame(loop);}
+  document.getElementById('gvGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('gvReset').onclick=()=>{running=false;t=0;draw();};
+  Gg.oninput=()=>{draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 加速过程用什么规律?出射速度公式?",a:"用动能定理:qU加=½mv₀²−0(从静止)。v₀=√(2qU加/m)。加速段是直线匀加速,不是类平抛。"},
+ {q:"2. 偏转过程为什么说和平抛一模一样?",a:"横向(v₀方向)不受力做匀速直线,纵向(电场方向)受恒力做初速为0的匀加速。这与平抛(水平匀速+竖直重力加速)完全同构,只是把重力换成电场力 a=qE/m=qU偏/(md)。"},
+ {q:"3. 板内侧移 y 的公式?它与 U加、U偏 各成什么关系?",a:"y=½at²=U偏L²/(4dU加)。与 U偏 成正比、与 U加 成反比。q、m 全消掉。"},
+ {q:"4. 偏转角 θ 怎么求?",a:"tanθ=v_y/v₀=at/v₀=U偏L/(2dU加)。t=L/v₀。"},
+ {q:"5. 为什么 U加 越大反而偏得越少?",a:"U加大→出射速度 v₀大→在偏转板内停留时间 t=L/v₀ 短→被横向电场力推的时间少→侧移小。所以 y∝1/U加。"},
+ {q:"6. 打屏总偏移怎么快速求(等效法)?",a:"出板速度反向延长线过偏转板正中央。故 Y总=(L/2+D)tanθ,D为板右端到屏距离。等价于粒子从板中点沿出板方向直线射出。"},
+ {q:"7. 什么时候要计重力,什么时候忽略?",a:"电子、质子、离子等微观粒子忽略重力(电场力≫重力);带电小球、油滴、液滴(给了质量m)必须算重力,常用于平衡/悬浮题。"},
+ {q:"8. 电子经 U加=200V 加速(q=1.6×10⁻¹⁹C,m=9.1×10⁻³¹kg),求 v₀。",a:"v₀=√(2qU加/m)=√(2×1.6e-19×200/9.1e-31)≈8.4×10⁶ m/s。"},
+ {q:"9. 判断粒子能否飞出偏转板的判据?",a:"算板内侧移 y=U偏L²/(4dU加),与 d/2 比较:y<d/2 飞出;y≥d/2 撞在板上。临界:d/2=U偏L²/(4dU加),反解得临界 U偏=2d²U加/L²。"},
+ {q:"10. 示波管为什么能显示波形?",a:"水平偏转板加锯齿波使亮点匀速横扫作时间轴,竖直偏转板加被测信号使亮点上下偏,二者合成即在屏上画出信号随时间的波形。核心是侧移∝偏转电压。"},
+ {q:"11. 油滴 m=2×10⁻¹⁵kg 悬浮在 U=100V、d=0.01m 板间,求电荷量(g=10)。",a:"平衡:qU/d=mg → q=mgd/U=2e-15×10×0.01/100=2×10⁻¹⁸C。带电小球/油滴必须算重力。"},
+ {q:"12. 不同粒子(电子、质子)用相同 U加、U偏,打在屏上位置一样吗(不计重力)?",a:"一样!因为 y=U偏L²/(4dU加) 与 q、m 无关(q在加速动能与偏转力中同时出现被约掉)。这是侧移公式消去 q、m 的直接推论。"},
+ {q:"13. 电场力做功有什么特点?",a:"W=qU_AB,只与起终点电势差有关,与路径无关。沿等势面移动电荷电场力不做功;匀强场 W=qEd(d为沿场方向位移)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
