@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆锥曲线 · 深研 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:900px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .crosslinks{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .clink{display:inline-block;font-weight:800;font-size:13.5px;border:3px solid var(--ink);padding:5px 13px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink)}
+  .clink.g{background:var(--green);color:#fff}.clink.v{background:var(--violet);color:#fff}
+  .kicker{display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:33px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:44px 0 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  h2::before{content:"";width:24px;height:24px;background:var(--orange);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:760px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--orange);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .insight{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--violet);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:15.5px;font-weight:600}.insight b{font-weight:900;background:#e8ddff;padding:0 4px}
+  .diverge{background:#fff;border:4px dashed var(--green);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:15px;font-weight:600}.diverge b{font-weight:900;color:var(--green)}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--orange);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .viz h4{margin:0 0 10px;font-size:15px;font-weight:900;display:flex;align-items:center;gap:8px}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--orange);width:150px}
+  .pill{display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}.pill.b{background:var(--blue)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+  .tier{display:inline-block;background:var(--card);border:3px solid var(--ink);font-weight:900;font-size:11px;padding:2px 8px;box-shadow:2px 2px 0 var(--ink)}
+  .tier.jc{background:#d7ecff}.tier.zd{background:#d7ffe6}.tier.bg{background:#ffe6d0}.tier.cy{background:#e8ddff}
+  .layout2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.layout2{grid-template-columns:1fr}}
+  .toc{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 20px;margin:18px 0;font-size:14px;font-weight:700}
+  .toc a{color:var(--ink);text-decoration:none;display:inline-block;margin:3px 10px 3px 0;border-bottom:2px solid var(--orange)}
+  .minibtn{background:var(--card);border:3px solid var(--ink);font-weight:800;font-size:12.5px;padding:5px 11px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .minibtn.on{background:var(--orange);color:#fff}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a><a href="题型地图.html">题型地图</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="crosslinks">
+      <a class="clink g" href="圆锥曲线.html">考试速练版 → 圆锥曲线.html</a>
+      <a class="clink v" href="离心率.html">离心率专题 → 离心率.html</a>
+    </div>
+    <div class="kicker">数学 · 镇站之宝 · 圆锥曲线深研</div>
+    <h1>圆锥曲线:一个圆锥,一族曲线,一个宇宙</h1>
+    <p class="lead">这是全站最深的一页。我们不只讲怎么做题——我们要讲清楚:椭圆、双曲线、抛物线、圆,<b>本来就是同一个东西</b>,由一个旋钮(离心率 e)控制。切一个圆锥能切出它们;一个「焦点—准线」定义能统一它们;而它们又悄悄支配着行星轨道、卫星锅、GPS、碎石机与耳语廊。看懂这一页,你对圆锥曲线的理解会高出同龄人一整个维度。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 忘掉三个独立的公式表吧。圆锥曲线是<b>一家人</b>,由<b>一个旋钮</b>控制——离心率 e。<br>把 e 从 0 慢慢拧大:<b>e=0 是圆</b>(最圆满)→ <b>0&lt;e&lt;1 是椭圆</b>(被捏扁)→ <b>e=1 是抛物线</b>(扁到一端跑向无穷)→ <b>e&gt;1 是双曲线</b>(彻底张开成两瓣)。<br>这一个旋钮的故事,同时也是:🌍 行星为什么走椭圆、📡 卫星锅为什么是抛物面、🛰️ GPS 怎么靠双曲线给你定位、🩺 碎石机怎么隔空震碎肾结石、🏛️ 耳语廊里为什么对面能听见你的悄悄话——<b>全是同一个故事</b>。</div>
+
+    <div class="toc"><b>本页地图:</b>
+      <a href="#s1">①一锥四曲线+Dandelin球</a>
+      <a href="#s2">②统一定义 e 一统天下</a>
+      <a href="#s3">③椭圆</a>
+      <a href="#s4">④双曲线</a>
+      <a href="#s5">⑤抛物线</a>
+      <a href="#s6">⑥光学与生活应用</a>
+      <a href="#s7">⑦行星轨道</a>
+      <a href="#s8">⑧直线与圆锥曲线</a>
+      <a href="#s9">⑨超越:融会贯通</a>
+      <a href="#s10">⑩易错大全</a>
+      <a href="#s11">⑪自测12题</a>
+    </div>
+
+    <!-- ==================== 1 ==================== -->
+    <h2 class="o" id="s1">一个圆锥,四条曲线 <span class="tier bg">基础</span><span class="tier cy">拔高</span></h2>
+    <p class="lead">「圆锥曲线」这四个字,字面意思就是<b>用平面去切圆锥,切口的那条曲线</b>。同一个圆锥,只是换一个切的角度,就能得到四种截然不同的曲线。这不是巧合,而是它们同宗同源的第一个证据。</p>
+
+    <div class="say">🗣️ <b>拿个冰淇淋蛋筒想象:</b> 其实是<b>两个尖对尖的蛋筒</b>(数学上的「双圆锥」,像个沙漏)。拿一把刀去切:<br>• 水平切一刀 → 切口是<b>圆</b>。<br>• 稍微斜一点切 → 切口被拉长成<b>椭圆</b>。<br>• 斜到正好和圆锥的一条「母线」平行 → 切口的一端永远合不拢,变成<b>抛物线</b>。<br>• 再陡一点,刀同时切到上下两个蛋筒 → 得到两瓣的<b>双曲线</b>。<br>切的「陡峭程度」越大,离心率 e 就越大。这就是那个旋钮的物理来源。</div>
+
+    <div class="viz">
+      <h4><span class="pill">VIZ 1</span> coneSlice · 切一个圆锥,旋钮就是切面的倾角</h4>
+      <canvas id="cv1" width="900" height="480"></canvas>
+      <div class="ctrls">
+        <label>切面倾角 = <input id="v1tilt" type="range" min="0" max="100" value="18"> <span id="v1val" class="pill">tilt</span></label>
+      </div>
+      <span class="info" id="v1info"></span>
+      <p class="sub">左:沙漏形双圆锥(棕)+ 可旋转的切面(橙线)。右:当前倾角切出的实际曲线,用极坐标 r=l/(1+e·cosθ) 画出。倾角↑ ⇒ e 单调↑ ⇒ 圆→椭圆→抛物线→双曲线。</p>
+    </div>
+
+    <h3>切面角度 → 曲线类型的对应关系</h3>
+    <div class="card">
+      <table>
+        <tr><th>切面相对圆锥轴的姿态</th><th>切口曲线</th><th>离心率 e</th></tr>
+        <tr><td>垂直于轴(水平切)</td><td><b>圆</b></td><td>e = 0</td></tr>
+        <tr><td>倾斜,但比母线缓(只切一个锥面且封闭)</td><td><b>椭圆</b></td><td>0 &lt; e &lt; 1</td></tr>
+        <tr><td>恰好平行于一条母线</td><td><b>抛物线</b></td><td>e = 1</td></tr>
+        <tr><td>比母线更陡(切到上下两个锥面)</td><td><b>双曲线</b>(两瓣)</td><td>e &gt; 1</td></tr>
+      </table>
+      <p class="sub">记忆:切得越「陡」,曲线越「张开」,e 越大。母线倾角是那道临界线(e=1)。</p>
+    </div>
+
+    <h3>Dandelin 双球:椭圆的「灵魂证明」在哪,焦点从哪来 <span class="tier cy">拔高</span></h3>
+    <p class="lead">古希腊人早就知道斜切圆锥得到的曲线像椭圆,但一直有个致命疑问:凭什么这条「圆锥切口」和「用绳子拴两个钉画出来的椭圆」是同一条曲线?凭什么它有两个焦点?焦点又在哪?这个悬案直到 <b>1822 年</b>才被比利时数学家 <b>Germinal Dandelin</b> 用一个惊艳的构造彻底解决。</p>
+
+    <div class="viz">
+      <h4><span class="pill v">VIZ 2</span> dandelin · 内切双球告诉你焦点在哪</h4>
+      <canvas id="cv2" width="900" height="520"></canvas>
+      <div class="ctrls">
+        <button class="minibtn" id="v2play">⏸ 暂停/播放 动点 P</button>
+      </div>
+      <span class="info" id="v2info"></span>
+      <p class="sub">上半:圆锥的边视图(两条母线)+ 斜切面(切成一条弦=椭圆长轴)+ 两个内切球(Dandelin 球),它们各自与切面相切于一点,那两点正好是 F₁、F₂。下半:切出来的真实椭圆 + 动点 P + PF₁、PF₂,读出 PF₁+PF₂=2a 恒定。</p>
+    </div>
+
+    <div class="insight">💡 <b>真知灼见 · Dandelin 的魔法:</b> 在圆锥里塞两个球,让它们既贴着圆锥的内壁(与所有母线相切)、又恰好顶到那张斜切面。两球与切面的<b>接触点</b>,就是椭圆的两个焦点 F₁、F₂。<br>为什么 PF₁+PF₂ 恒定?对椭圆上任意一点 P,从锥顶经过 P 画一条母线,它同时与上球、下球相切。关键定理:<b>从同一个外点向一个球引的两条切线段等长</b>。于是「P 到上球接触点的切线段」=「P 沿母线到上球切点的段」,「P 到下球接触点的切线段」=「P 沿母线到下球切点的段」。两段相加 = 母线上被两球夹住的那一整段,而这段长度<b>对每一点 P 都一样</b>(等于两球间那圈的母线距离)。所以 <b>PF₁+PF₂ = 常数 = 2a</b>。定义得证,焦点找到。这就是那个「啊哈」时刻——切口不是「像」椭圆,它<b>就是</b>椭圆,连焦点都精确对上了。</div>
+
+    <div class="diverge">🌀 <b>发散思考:</b> ① 如果只塞得下<b>一个</b>球(切面平行母线),另一个焦点去哪了?(提示:它跑到无穷远——这正是抛物线只有一个焦点的原因。)② 双曲线的 Dandelin 球该怎么放?(提示:一个在上锥、一个在下锥,给出的是<b>距离差</b>恒定。)</div>
+
+    <!-- ==================== 2 ==================== -->
+    <h2 class="o" id="s2">统一定义:一个离心率 e 一统天下 <span class="tier bg">基础</span><span class="tier zd">中等</span></h2>
+    <p class="lead">除了「切圆锥」和「拴绳子」,圆锥曲线还有第三种、也是最深刻的一种定义方式,它一口气把四条曲线装进同一个句子里——<b>焦点—准线定义</b>。</p>
+
+    <div class="keybox"><b>统一定义(第二定义):</b> 给一个定点 F(焦点)和一条定直线 l(准线)。平面上到 F 的距离与到 l 的距离之<b>比值恒为常数 e</b> 的所有点,构成的曲线就是圆锥曲线。<div class="eq">|PF| ÷ (P到准线l的距离) = e (常数)</div>这个比值 e 就是<b>离心率</b>,而它的大小唯一决定了曲线的种类。</div>
+
+    <div class="card">
+      <table>
+        <tr><th>离心率 e</th><th>曲线</th><th>直观</th></tr>
+        <tr><td>e = 0</td><td><b>圆</b></td><td>焦点与圆心重合,准线退到无穷远(极限情形)</td></tr>
+        <tr><td>0 &lt; e &lt; 1</td><td><b>椭圆</b></td><td>被压扁的圈,e 越大越扁</td></tr>
+        <tr><td>e = 1</td><td><b>抛物线</b></td><td>到点=到线,开口一端奔向无穷</td></tr>
+        <tr><td>e &gt; 1</td><td><b>双曲线</b></td><td>张开成两瓣,e 越大张口越大</td></tr>
+      </table>
+    </div>
+
+    <div class="viz">
+      <h4><span class="pill">VIZ 3</span> eKnob · 拧动 e,曲线连续变形</h4>
+      <canvas id="cv3" width="900" height="480"></canvas>
+      <div class="ctrls">
+        <label>离心率 e = <input id="v3e" type="range" min="5" max="220" value="60"> <span id="v3val" class="pill">e</span></label>
+      </div>
+      <span class="info" id="v3info"></span>
+      <p class="sub">红点=焦点 F,紫线=准线 l。曲线 = 满足 |PF| = e·(P到l距离) 的所有点。动点 P 上标出 |PF| 与到准线的垂距,比值恒为 e。e 从 0.05 滑到 2.2,亲眼看圆→椭圆→抛物线→双曲线。</p>
+    </div>
+
+    <div class="insight">💡 <b>真知灼见 · 两个极限:</b> <br>① <b>圆是 e→0 的极限。</b> 当 e→0,要维持 |PF|=e·d(准线距离)有意义,准线必须退到<b>无穷远</b>,焦点则缩回圆心。所以圆没有「像样」的准线和偏心焦点——它太对称了,是椭圆的完美退化。<br>② <b>抛物线是「另一个焦点跑到无穷远」的椭圆。</b> 椭圆有两个焦点;把其中一个焦点无限远推,椭圆的一端就永远合不拢,变成抛物线。所以抛物线可以看成「一半的、无限长的椭圆」。同理,双曲线的两支,可以看成「焦点穿过无穷远又从另一侧回来」的椭圆。<b>四条曲线,一根 e 轴,连续过渡。</b></div>
+
+    <div class="diverge">🌀 <b>发散思考:</b> 既然 e 可以是任意非负实数,能不能有 e 恰好等于黄金比例 φ≈0.618 的椭圆?它有什么特别的几何性质吗?(留给你去构造。)</div>
+
+    <!-- ==================== 3 ==================== -->
+    <h2 class="o" id="s3">椭圆:定义、方程、性质 <span class="tier bg">基础</span><span class="tier zd">中等</span><span class="tier cy">拔高</span></h2>
+    <p class="lead">从这里开始,我们逐条把三种曲线的「身份证」办齐。先讲最亲切的椭圆——它就是被压扁的圆。</p>
+
+    <div class="say">🗣️ <b>说人话:</b> 拿一根固定长度的绳子,两端各钉一颗图钉,用铅笔把绳子撑直、绕一圈,画出来的就是<b>椭圆</b>。为什么?因为铅笔无论走到哪,「铅笔到两钉的距离之和」永远等于绳长——绳子就那么长,没得商量。这就是椭圆的<b>第一定义</b>:到两个焦点(两颗钉)的距离之和是常数。园丁在草坪上画椭圆花坛,用的就是这招,人称「园丁绳法」。</div>
+
+    <div class="viz">
+      <h4><span class="pill">VIZ 4</span> stringEllipse · 园丁绳法:绳长恒定画出椭圆</h4>
+      <canvas id="cv4" width="900" height="460"></canvas>
+      <div class="ctrls">
+        <label>半长轴 a = <input id="v4a" type="range" min="120" max="230" value="200"> <span id="v4va" class="pill">a</span></label>
+        <label>半焦距 c = <input id="v4c" type="range" min="20" max="170" value="120"> <span id="v4vc" class="pill r">c</span></label>
+        <button class="minibtn" id="v4play">⏸ 暂停/播放</button>
+      </div>
+      <div class="readout">
+        <div><b>a (半长轴)</b><span id="v4a2">-</span></div>
+        <div><b>b=√(a²−c²)</b><span id="v4b2">-</span></div>
+        <div><b>c (半焦距)</b><span id="v4c2">-</span></div>
+        <div><b>e=c/a</b><span id="v4e2">-</span></div>
+      </div>
+      <span class="info" id="v4info"></span>
+      <p class="sub">两颗红钉=焦点 F₁F₂。绿色折线 F₁—P—F₂ 是「绳子」,总长恒 =2a。铅笔 P 自动绕行描出椭圆。要求 a&gt;c(绳子要比两钉间距长)。</p>
+    </div>
+
+    <div class="keybox"><b>椭圆(焦点在 x 轴)的身份证:</b>
+      <div class="eq">x²/a² + y²/b² = 1 &nbsp;(a &gt; b &gt; 0)</div>
+      • 第一定义:|PF₁| + |PF₂| = <b>2a</b> &gt; 2c = |F₁F₂|<br>
+      • 关系:<b>c² = a² − b²</b>(a 最大,是斜边)<br>
+      • 离心率:<b>e = c/a</b>,且 0 &lt; e &lt; 1<br>
+      • 准线:<b>x = ±a²/c</b>;焦点到准线距离与 e 挂钩<br>
+      • 通径(过焦点垂直长轴的弦):长 = <b>2b²/a</b><br>
+      • 焦半径:P(x₀,y₀) 到左焦 r₁ = <b>a + ex₀</b>,到右焦 r₂ = <b>a − ex₀</b>
+    </div>
+
+    <h3>拔高结论(尖子生该背的) <span class="tier cy">拔高</span></h3>
+    <div class="card">
+      <p><b>① 焦点三角形面积:</b> 设 ∠F₁PF₂ = θ,则 △F₁PF₂ 的面积 S = <b>b²·tan(θ/2)</b>。<br><span class="sub">推导:由 r₁+r₂=2a、r₁²+r₂²−2r₁r₂cosθ=4c²(余弦定理)解出 r₁r₂=2b²/(1+cosθ),再 S=½r₁r₂sinθ 化简即得。角越大,S 越大(P 越靠短轴端点)。</span></p>
+      <p><b>② 参数方程:</b> x=a·cosφ, y=b·sinφ(φ 为离心角,不是极角!),做面积/最值极方便。</p>
+      <p><b>③ 中点弦斜率积:</b> 弦 AB 中点 M,则 k_OM · k_AB = <b>−b²/a²</b>(点差法,VIZ 11 会演示)。</p>
+      <p><b>④ 焦点弦调和性:</b> 过焦点弦两段焦半径 r₁、r₂,有 1/r₁ + 1/r₂ = 2a/b²(定值)。</p>
+    </div>
+
+    <div class="insight">💡 <b>真知灼见:</b> 短半轴 b、半长轴 a、半焦距 c 构成一个直角三角形,<b>a 是斜边</b>(a²=b²+c²)。这个三角形的一个顶点就在短轴端点上——此时它到两焦点距离都是 a,和正好 2a。所以「短轴端点到焦点的距离恰为 a」是秒验 b²=a²−c² 的心像。</div>
+
+    <!-- ==================== 4 ==================== -->
+    <h2 class="o" id="s4">双曲线:定义、方程、渐近线 <span class="tier bg">基础</span><span class="tier zd">中等</span><span class="tier cy">拔高</span></h2>
+    <p class="lead">把椭圆的「距离之和」换成「距离之差」,就得到双曲线。一个字之差,曲线从封闭的圈裂成张开的两瓣。</p>
+
+    <div class="say">🗣️ <b>说人话:</b> 椭圆是「到两钉距离之<b>和</b>不变」;双曲线是「到两钉距离之<b>差</b>(的绝对值)不变」。想象你站的位置,到左边灯塔总比到右边灯塔远固定的 100 米——所有这样的点连起来,就是双曲线的一支。差为正还是负,决定你在左瓣还是右瓣。而距离差要小于两钉间距(2a&lt;2c),否则画不出来。</div>
+
+    <div class="viz">
+      <h4><span class="pill">VIZ 5</span> hyperbolaDiff · 距离差恒定的两瓣曲线 + 渐近线</h4>
+      <canvas id="cv5" width="900" height="480"></canvas>
+      <div class="ctrls">
+        <label>半实轴 a = <input id="v5a" type="range" min="30" max="150" value="90"> <span id="v5va" class="pill">a</span></label>
+        <button class="minibtn" id="v5play">⏸ 暂停/播放 动点</button>
+      </div>
+      <div class="readout">
+        <div><b>a (半实轴)</b><span id="v5a2">-</span></div>
+        <div><b>b=√(c²−a²)</b><span id="v5b2">-</span></div>
+        <div><b>c (半焦距,固定)</b><span id="v5c2">-</span></div>
+        <div><b>e=c/a</b><span id="v5e2">-</span></div>
+      </div>
+      <span class="info" id="v5info"></span>
+      <p class="sub">焦点 c 固定,拖 a。两瓣蓝曲线 = { ||PF₁|−|PF₂|| = 2a }。紫虚线=渐近线 y=±(b/a)x。动点 P 读出恒定的距离差。要求 a&lt;c。</p>
+    </div>
+
+    <div class="keybox"><b>双曲线(焦点在 x 轴)的身份证:</b>
+      <div class="eq">x²/a² − y²/b² = 1 &nbsp;(a &gt; 0, b &gt; 0)</div>
+      • 定义:||PF₁| − |PF₂|| = <b>2a</b> &lt; 2c<br>
+      • 关系:<b>c² = a² + b²</b>(c 最大,是斜边——和椭圆<b>相反</b>!)<br>
+      • 离心率:<b>e = c/a &gt; 1</b><br>
+      • 渐近线:<b>y = ±(b/a)x</b>;通径 = <b>2b²/a</b><br>
+      • 焦半径(右支):到右焦 r = |ex₀ − a|,到左焦 r = |ex₀ + a|<br>
+      • <b>等轴双曲线</b>(a=b):渐近线 y=±x 互相垂直,<b>e=√2</b>
+    </div>
+
+    <div class="insight">💡 <b>真知灼见 · 渐近线是无穷远处的切线:</b> 双曲线越往外走,越贴近渐近线却永不相交——渐近线是曲线在<b>无穷远处的切线方向</b>。而张口的宽窄完全由 e 定:由 c²=a²+b² 得 b/a=√(e²−1)。所以 <b>e 越大 ⇒ b/a 越大 ⇒ 渐近线越陡 ⇒ 张口越大</b>。e→1⁺ 时两瓣几乎贴合(退化成一条射线);e→∞ 时张口趋近于两条竖直平行线。等轴双曲线 e=√2 恰是「张口 90°」的对称临界。</div>
+
+    <div class="diverge">🌀 <b>发散思考:</b> 椭圆 c²=a²−b²、双曲线 c²=a²+b²,一个减一个加。能不能把它们统一写成 c²=a²−ε·b²,其中椭圆 ε=+1、双曲线 ε=−1?这个 ε 和 e 有什么隐藏联系?</div>
+
+    <!-- ==================== 5 ==================== -->
+    <h2 class="o" id="s5">抛物线:定义、方程、焦点弦 <span class="tier bg">基础</span><span class="tier zd">中等</span><span class="tier cy">拔高</span></h2>
+    <p class="lead">抛物线是 e=1 的临界曲线:到焦点的距离,恰好等于到准线的距离。它只有一个焦点,却在工程界身价最高。</p>
+
+    <div class="say">🗣️ <b>说人话:</b> 抛物线上每一点,都在玩一个「公平游戏」:<b>到那个焦点有多远,到那条准线就有多远</b>,分毫不差(e=1)。正因为这种「等距」,从焦点射出的光反射后会变成一束平行光(反之亦然)——这就是手电筒、卫星锅、太阳灶背后的秘密。</div>
+
+    <div class="viz">
+      <h4><span class="pill">VIZ 6</span> parabolaFocusDir · 定义模式 + 折纸包络模式</h4>
+      <canvas id="cv6" width="900" height="480"></canvas>
+      <div class="ctrls">
+        <button class="minibtn on" id="v6mA">定义模式(等距)</button>
+        <button class="minibtn" id="v6mB">折纸包络模式</button>
+        <label>p = <input id="v6p" type="range" min="20" max="90" value="55"> <span id="v6vp" class="pill">p</span></label>
+      </div>
+      <span class="info" id="v6info"></span>
+      <p class="sub">顶点在原点,y²=2px,焦点 F(p/2,0),准线 x=−p/2。定义模式:动点 P 上高亮 |PF| 与到准线的水平距离(两段永远等长)。折纸模式:画约 30 条切线(F 与准线上各点连线的中垂线),它们的包络自动浮现出抛物线。</p>
+    </div>
+
+    <div class="keybox"><b>抛物线(开口向右)的身份证:</b>
+      <div class="eq">y² = 2px &nbsp;(p &gt; 0)</div>
+      • 定义:|PF| = P 到准线的距离,离心率 <b>e = 1</b><br>
+      • 焦点:<b>(p/2, 0)</b>;准线:<b>x = −p/2</b>;通径 = <b>2p</b><br>
+      • 焦半径:P(x₀,y₀) 到焦点 r = <b>x₀ + p/2</b><br>
+      • <b>焦点弦性质(过焦点弦 AB,极常用):</b>
+    </div>
+    <div class="card">
+      <p><b>过焦点弦 AB(y²=2px)必背四条:</b></p>
+      <p>• x₁·x₂ = <b>p²/4</b> &nbsp;&nbsp; • y₁·y₂ = <b>−p²</b></p>
+      <p>• 通径(θ=90°)是<b>最短</b>焦点弦,长 = <b>2p</b></p>
+      <p>• 1/r₁ + 1/r₂ = <b>2/p</b>(定值,与倾角无关!)—— 秒杀神器</p>
+      <p class="sub">推导要点:焦点弦长 |AB|=x₁+x₂+p;由联立与韦达可得 x₁x₂=p²/4;调和关系 1/r₁+1/r₂ 中 r=x+p/2,代入化简为常数 2/p。</p>
+    </div>
+
+    <div class="insight">💡 <b>真知灼见:</b> 「1/r₁+1/r₂=2/p 为定值」意味着:无论焦点弦怎么转,两段焦半径的<b>调和平均</b>恒定 = p。所以焦点弦最短(=通径 2p)时,两段相等 r₁=r₂=p;越倾斜,一长一短,但调和平均不变。这条性质把很多「求 |AF|+|BF| 最小」的题一句话解决。</div>
+
+    <!-- ==================== 6 ==================== -->
+    <h2 class="o" id="s6">光学反射性质 + 生活应用 <span class="tier zd">中等</span><span class="tier cy">拔高</span></h2>
+    <p class="lead">圆锥曲线的焦点不只是数学符号——它们是真实世界里光、声、冲击波的<b>汇聚点</b>。这一节把课本公式接回你能看见、听见、甚至躺进去被治疗的现实。</p>
+
+    <h3>椭圆的反射:从一个焦点出发,必回到另一个焦点</h3>
+    <div class="viz">
+      <h4><span class="pill">VIZ 7</span> ellipseReflect · 一焦发出,另一焦汇聚</h4>
+      <canvas id="cv7" width="900" height="470"></canvas>
+      <div class="ctrls">
+        <button class="minibtn on" id="v7a">🏛️ 耳语廊</button>
+        <button class="minibtn" id="v7b">🩺 体外碎石机</button>
+      </div>
+      <span class="info" id="v7info"></span>
+      <p class="sub">从 F₁ 射出 9 条光/声线,每条打到椭圆壁后按法线反射,全部精确汇聚到 F₂。法线由梯度 ∇(x²/a²+y²/b²) 算出。光子沿 F₁→壁→F₂ 运动。</p>
+    </div>
+    <div class="card">
+      <p><b>🏛️ 耳语廊(Whispering Gallery):</b> 伦敦<b>圣保罗大教堂</b>的圆顶回廊、美国<b>国会大厦雕像厅(Statuary Hall)</b>,都是近似椭圆的空间。你站在一个焦点对墙轻声说话,声波沿椭圆壁反射后<b>全部汇聚到另一个焦点</b>——几十米外的人贴着那一点,能清清楚楚听见你的悄悄话。传说约翰·昆西·亚当斯就利用雕像厅这一特性偷听政敌。</p>
+      <p><b>🩺 体外冲击波碎石机(ESWL):</b> 现代泌尿外科的救命设备。病人躺进一个<b>半椭球形水囊</b>,冲击波发生器放在<b>一个焦点</b>,把病人的<b>肾结石对准另一个焦点</b>。发生器发出的冲击波经椭球壁反射后<b>精确聚焦到结石上</b>,能量集中把石头震碎成沙粒随尿排出——全程不开刀。这就是椭圆反射性质的直接工程化。</p>
+      <p><b>🎱 椭圆台球:</b> 球从一个焦点出发,无论朝哪个方向击打,一次反弹后必经过另一个焦点。</p>
+    </div>
+
+    <h3>抛物线的反射:平行光 ⇄ 焦点</h3>
+    <div class="viz">
+      <h4><span class="pill">VIZ 8</span> parabolaReflect · 收集平行光 / 发射平行光</h4>
+      <canvas id="cv8" width="900" height="470"></canvas>
+      <div class="ctrls">
+        <button class="minibtn on" id="v8a">📡 收集模式(卫星锅/望远镜)</button>
+        <button class="minibtn" id="v8b">🔦 发射模式(车灯/手电)</button>
+      </div>
+      <span class="info" id="v8info"></span>
+      <p class="sub">收集:一束平行于轴的光(远方星光/卫星信号)打到抛物面,全部反射汇聚到焦点。发射:焦点处的点光源发出的光,反射后变成一束平行光。</p>
+    </div>
+    <div class="card">
+      <p><b>📡 收集平行 → 焦点:</b> 卫星电视<b>锅盖天线</b>、<b>射电望远镜</b>(如中国 FAST 天眼)、<b>抛物面话筒</b>(体育转播捕捉远处声音)、<b>太阳灶</b>与<b>奥运圣火采集凹面镜</b>——都把来自远方的近似平行的能量精确聚到焦点上的接收器/锅里。</p>
+      <p><b>🔦 焦点 → 发射平行:</b> 把光源放在焦点,反射出平行光束。<b>汽车前大灯</b>、<b>手电筒</b>、<b>探照灯</b>都用抛物面反光碗,让灯泡在焦点上,射出笔直不发散的光柱。</p>
+    </div>
+
+    <h3>双曲线的应用:定位、望远镜、冷却塔</h3>
+    <div class="viz">
+      <h4><span class="pill">VIZ 9</span> loran · 双曲线定位(GPS 的几何核心)</h4>
+      <canvas id="cv9" width="900" height="470"></canvas>
+      <div class="ctrls">
+        <label>到两站距离差 Δ = <input id="v9d" type="range" min="-150" max="150" value="70"> <span id="v9val" class="pill">Δ</span></label>
+      </div>
+      <span class="info" id="v9info"></span>
+      <p class="sub">两个电台 A、B。测得信号<b>时间差</b>⇒到两站<b>距离差</b>为常数 Δ ⇒ 你必在一条<b>双曲线</b>上。再用另一对台站得第二条双曲线,两条<b>交点</b>=你的位置。这正是 LORAN 与 GPS 定位的几何本质。</p>
+    </div>
+    <div class="card">
+      <p><b>🛰️ 双曲线定位(LORAN / GPS):</b> 你收到两个已知台站的信号,测出<b>到达时间差</b>。时间差 × 光速 = <b>到两站的距离差</b>,这是个常数 ⇒ 你落在以两站为焦点的<b>一条双曲线</b>上。换一对台站,又得一条双曲线,两条曲线的<b>交点</b>就锁定了你。GPS 用四颗卫星做同样的事(多一维处理钟差),几何内核就是「距离差 → 双曲面」的交会。</p>
+      <p><b>🔭 卡塞格林望远镜(Cassegrain):</b> 主镜是<b>抛物面</b>(把平行星光聚向焦点),副镜是<b>双曲面</b>,利用双曲线「一个焦点 ↔ 另一个焦点」的性质把光再折回,穿过主镜中心孔成像,大幅缩短镜筒并<b>校正球差</b>。哈勃、绝大多数大型天文望远镜都是这种结构。</p>
+      <p><b>🏭 双曲面冷却塔:</b> 电厂那些「细腰」大烟囱是<b>单叶双曲面</b>。它是<b>直纹面</b>(可以用一根根<b>直钢梁</b>斜着交叉搭出来),施工省料;又是<b>负高斯曲率</b>曲面,自带刚性、极其抗风抗压;细腰还能加速气流上升带走热量。数学之美直接变成工程之利。</p>
+    </div>
+
+    <!-- ==================== 7 ==================== -->
+    <h2 class="o" id="s7">宇宙尺度:行星为什么走椭圆 <span class="tier zd">中等</span><span class="tier cy">拔高</span></h2>
+    <p class="lead">最震撼的应用在头顶。开普勒发现、牛顿证明:天体在引力下的轨道,<b>正是圆锥曲线</b>。而太阳,不在椭圆的中心,而在它的一个<b>焦点</b>上。</p>
+
+    <div class="viz">
+      <h4><span class="pill">VIZ 10</span> orbit · 太阳在焦点 · 等面积等时间</h4>
+      <canvas id="cv10" width="900" height="480"></canvas>
+      <div class="ctrls">
+        <label>离心率 e = <input id="v10e" type="range" min="0" max="97" value="40"> <span id="v10val" class="pill">e</span></label>
+        <button class="minibtn" data-e="1.7">地球 0.017</button>
+        <button class="minibtn" data-e="20.6">水星 0.206</button>
+        <button class="minibtn" data-e="96.7">哈雷 0.967</button>
+      </div>
+      <span class="info" id="v10info"></span>
+      <p class="sub">太阳(橙,大)固定在<b>焦点</b>处,行星按 r(θ)=a(1−e²)/(1+e·cosθ) 绕行,角动量守恒 ⇒ dθ/dt∝1/r² ⇒ <b>近日点飞快、远日点慢吞吞</b>。绿色扇形演示「相同时间扫过相同面积」(开普勒第二定律)。</p>
+    </div>
+
+    <div class="keybox"><b>开普勒三定律:</b><br>
+      <b>①(轨道)</b> 行星沿椭圆运行,太阳位于其中<b>一个焦点</b>(不是中心!)。<br>
+      <b>②(面积)</b> 行星与太阳的连线,在<b>相等时间内扫过相等面积</b> ⇒ 近日点快、远日点慢。<br>
+      <b>③(周期)</b> 轨道周期的平方 ∝ 半长轴的立方:<b>T² ∝ a³</b>。
+    </div>
+
+    <div class="card">
+      <p><b>各天体的离心率(感受一下 e 的威力):</b></p>
+      <table>
+        <tr><th>天体</th><th>离心率 e</th><th>轨道形状</th></tr>
+        <tr><td>金星</td><td>0.0068</td><td>几乎正圆</td></tr>
+        <tr><td>地球</td><td><b>0.0167</b></td><td>非常接近圆(所以四季主因是地轴倾角,不是远近)</td></tr>
+        <tr><td>火星</td><td>0.0934</td><td>略扁</td></tr>
+        <tr><td>水星</td><td><b>0.2056</b></td><td>八大行星里最扁</td></tr>
+        <tr><td>哈雷彗星</td><td><b>0.967</b></td><td>极扁的长椭圆,近日点仅 0.59 AU,远日点却飞出海王星外</td></tr>
+      </table>
+      <p><b>e ≥ 1 的天体一去不返:</b> 如果某个天体速度够大,轨道会是抛物线(e=1)或双曲线(e&gt;1)——它绕太阳一圈后<b>飞离太阳系,永不回头</b>(如星际访客 ʻOumuamua、2I/Borisov)。</p>
+      <p><b>牛顿的证明:</b> 牛顿由<b>万有引力平方反比</b>(F∝1/r²)出发,数学推出轨道必是圆锥曲线,总能量决定是椭圆(束缚)、抛物线(临界)还是双曲线(逃逸)。费曼在一次著名讲座里用<b>纯几何</b>重证了这一结论,讲稿一度遗失,后被整理成《费曼失落的讲义》(Feynman's Lost Lecture)。</p>
+    </div>
+
+    <div class="insight">💡 <b>真知灼见:</b> 行星「掉不进」太阳,是因为它有<b>横向速度</b>(角动量)。引力把它往里拽,但横向速度让它「一直错过」太阳——每一刻都在朝太阳掉,却因为同时在侧移而永远落空,合成一条闭合椭圆。这正是牛顿「苹果与月亮是同一回事」的洞见:月亮也在不停地朝地球掉,只是掉的速度刚好配上它的横移。</div>
+
+    <div class="diverge">🌀 <b>发散思考:</b> ① 如果引力不是 1/r² 而是 1/r³,轨道还是闭合的椭圆吗?(提示:只有 1/r² 和 r 这两种力律能给出闭合轨道——伯特兰定理。)② 地球轨道 e=0.0167 这么小,为什么近日点(1月初)反而是北半球的冬天?</div>
+
+    <!-- ==================== 8 ==================== -->
+    <h2 class="o" id="s8">考试拔高:直线与圆锥曲线 <span class="tier cy">拔高</span></h2>
+    <p class="lead">回到考场。压轴大题第二问,八成是「直线与圆锥曲线」。它的招式其实高度模式化,核心就四个字:<b>设而不求</b>。</p>
+
+    <div class="keybox"><b>联立「设而不求」总流程:</b> ① 设直线 y=kx+m 代入曲线,消 y 得 <b>Ax²+Bx+C=0</b>;② 先看 A 是否为 0,再写 <b>Δ&gt;0</b>;③ 韦达:<b>x₁+x₂=−B/A,x₁x₂=C/A</b>;④ 目标量(弦长/中点/斜率和积/数量积)全用这两个对称式表达,<b>永不真解交点</b>。</div>
+
+    <h3>弦长公式</h3>
+    <div class="mono">|AB| = √(1+k²) · |x₁−x₂| = √(1+k²) · √((x₁+x₂)²−4x₁x₂)</div>
+    <div class="ex"><b>触发信号:</b>「求 |AB|」「弦长」。<b>标准动作:</b>联立→韦达→代入上式。<b>心法:</b>√(1+k²) 里是 k²,别写成 k;若消 x 保留 y,则用 √(1+1/k²)·|y₁−y₂|。</div>
+
+    <h3>点差法(中点弦利器)</h3>
+    <div class="viz">
+      <h4><span class="pill">VIZ 11</span> chordPointDiff · 拖动 A、B,验证 k_OM·k_AB=−b²/a²</h4>
+      <canvas id="cv11" width="900" height="480"></canvas>
+      <div class="ctrls">
+        <label>点 A 角 = <input id="v11a" type="range" min="0" max="360" value="55"> <span id="v11va" class="pill">A</span></label>
+        <label>点 B 角 = <input id="v11b" type="range" min="0" max="360" value="200"> <span id="v11vb" class="pill g">B</span></label>
+      </div>
+      <div class="readout">
+        <div><b>k_AB</b><span id="v11kab">-</span></div>
+        <div><b>k_OM</b><span id="v11kom">-</span></div>
+        <div><b>k_OM·k_AB</b><span id="v11prod">-</span></div>
+        <div><b>目标 −b²/a²</b><span id="v11tgt">-</span></div>
+      </div>
+      <span class="info" id="v11info"></span>
+      <p class="sub">固定椭圆。A、B 在椭圆上,弦 AB、中点 M、连线 OM。乘积 k_OM·k_AB 恒 =−b²/a²(点差法结论),匹配时显示 ✓。</p>
+    </div>
+    <div class="ex"><b>触发:</b>「弦中点是…」。<b>动作:</b>两点代入相减 → k_AB=−(b²x₀)/(a²y₀)。<b>三条口诀:</b>椭圆 k_OM·k_AB=<b>−b²/a²</b>;双曲线 =<b>+b²/a²</b>;抛物线 y²=2px 时中点弦斜率 k=<b>p/y₀</b>。<span class="trap">⚠ 用完必验中点在曲线内部,否则弦不存在。</span></div>
+
+    <h3>定点 / 定值</h3>
+    <div class="ex"><b>触发:</b>「恒过定点」「求证为定值」。<b>动作:</b>引参(k 或 m)→ 韦达表出目标 → 发现参数被消掉。<b>心法:</b>先用特殊位置(如两条垂直弦)猜出定点坐标,再一般化验证——又快又稳。</div>
+
+    <h3>范围与最值</h3>
+    <div class="ex"><b>触发:</b>「面积最大/最小」「求…范围」。<b>动作:</b>S=½·弦长·点到直线距离,写成参数的函数 → 基本不等式或求导。<b>心法:</b>椭圆内接 △OAB 最大面积 = ab(A、B 离心角相差 π/2 时取到)。</div>
+
+    <h3>离心率求法</h3>
+    <div class="viz">
+      <h4><span class="pill">VIZ 12</span> eccentricityShape · e 决定「扁的程度」</h4>
+      <canvas id="cv12" width="900" height="470"></canvas>
+      <div class="ctrls">
+        <label>离心率 e = <input id="v12e" type="range" min="0" max="99" value="60"> <span id="v12val" class="pill">e</span></label>
+      </div>
+      <span class="info" id="v12info"></span>
+      <p class="sub">上:椭圆从 e=0(正圆)morph 到 e→1(压扁),焦点(红)滑向两端。下:对应双曲线,渐近线张角随 e 变(b/a=√(e²−1))。</p>
+    </div>
+    <div class="ex"><b>触发:</b>「求 e」「e 的范围」。<b>动作:</b>把条件挤成只含 a、c(或 a,b,c)的<b>齐次式</b> → 用 b²=a²−c²(椭圆)/ b²=c²−a²(双曲线)消 b → 同除 aⁿ → 关于 e 的方程/不等式。<b>心法:</b>求出后按范围取舍——椭圆 0&lt;e&lt;1,双曲线 e&gt;1。</div>
+
+    <!-- ==================== 9 ==================== -->
+    <h2 class="o" id="s9">超越:融会贯通 <span class="tier cy">超越</span></h2>
+    <p class="lead">最后一层,把整页拉到「高观点」——从这里回望,四条曲线彻底融为一体。</p>
+
+    <div class="card">
+      <p><b>① 五点确定一条二次曲线。</b> 一般二次曲线 Ax²+Bxy+Cy²+Dx+Ey+F=0 有 6 个系数、5 个独立比值,所以<b>平面上任意 5 个点(无三点共线)唯一确定一条圆锥曲线</b>。这是它作为「二次曲线」的代数身份。</p>
+      <p><b>② 射影几何里,四条曲线本是同一条。</b> 在射影平面上,圆、椭圆、抛物线、双曲线只是同一条二次曲线与「无穷远直线」相交方式不同的结果:不相交→椭圆(含圆),相切→抛物线,相交两点→双曲线。换个视角(投影),圆的「影子」可以是任意一种圆锥曲线——拿手电照一个圆环,墙上的光斑就能是椭圆、抛物线或双曲线。</p>
+      <p><b>③ 焦点—准线故事在 e 轴上滑动。</b> 固定焦点与准线,只把 e 从 0 连续调到 ∞,曲线就从圆平滑地变成椭圆、抛物线、双曲线——<b>一根旋钮,一族曲线</b>,本页从头到尾都在讲这件事。</p>
+      <p><b>④ 极坐标统一式。</b> 以焦点为极点,四条曲线可以写成同一个方程:
+      <div class="eq">r = l / (1 + e·cosθ)</div>
+      其中 l 是半通径(半正焦弦)。e=0 得圆,0&lt;e&lt;1 椭圆,e=1 抛物线,e&gt;1 双曲线。开普勒轨道、VIZ 1 与 VIZ 10 用的都是它。<b>一个公式,统治全族。</b></p>
+    </div>
+
+    <div class="insight">💡 <b>一句话真知灼见集:</b><br>
+      • 圆是「太完美」的椭圆(e=0),抛物线是「一个焦点逃到无穷」的椭圆(e=1)。<br>
+      • 椭圆 a 是斜边,双曲线 c 是斜边——一减一加,记反全盘皆输。<br>
+      • 渐近线 = 双曲线在无穷远的切线;准线退到无穷远 = 圆。<br>
+      • 焦点是能量的汇聚点:光、声、冲击波、引力,全在焦点上讲故事。<br>
+      • 「设而不求」是考场灵魂:要的只是对称式,就永远别解交点。<br>
+      • 通径是三曲线共同的「最短过焦弦」:椭圆/双曲线 2b²/a,抛物线 2p。</div>
+
+    <div class="diverge">🌀 <b>发散命题集(留给你想,课本不会给答案):</b><br>
+      <b>1.</b> 用射影变换能把任意椭圆变成圆吗?能的话,「椭圆内接最大三角形」问题是否可以先变成圆里的等边三角形再变回去?<br>
+      <b>2.</b> 焦点三角形面积 b²tan(θ/2) 对双曲线该改成什么?(提示:tan 变 cot。)<br>
+      <b>3.</b> 抛物线没有第二个焦点,那它的「离心率恰为 1」在极坐标式里是如何让分母 1+cosθ 在 θ=π 处发散(奔向无穷)的?<br>
+      <b>4.</b> 冷却塔用直梁就能盖出弯曲的双曲面,说明双曲面是直纹面。椭球面也是直纹面吗?哪些二次曲面是?<br>
+      <b>5.</b> GPS 用「距离差=双曲面」定位。如果改用「距离和=椭球面」,需要知道什么信息才可行?为什么现实里没这么用?<br>
+      <b>6.</b> 开普勒第二定律等价于角动量守恒。那第一定律(轨道是椭圆)本质上等价于哪条守恒律?(提示:Laplace–Runge–Lenz 向量。)<br>
+      <b>7.</b> 如果一条光线在椭圆内从非焦点出发反复反射,它的轨迹会填满整个椭圆,还是被某条「焦散曲线」围住?<br>
+      <b>8.</b> 把离心率 e 看成复数,让它在复平面上转一圈,曲线会怎样连续变形?这有意义吗?</div>
+
+    <!-- ==================== 10 ==================== -->
+    <h2 class="r" id="s10">易错大全 · 逐条歼灭</h2>
+    <div class="say"><b>这一节是照着你自己列的错题清单逐条建的</b>,七大类一条不落,还额外补了几处高频坑。每条格式统一:<b>⚠ 错在哪 → ✅ 正确做法</b>。做题前扫一遍,做完对着查,专治"会而不对、对而不全"。</div>
+
+    <h3>一、定义类</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>椭圆/双曲线忽略 2a 与 2c 的大小</b> → ✅ 椭圆必须 <b>2a&gt;2c</b>(=2c 是线段,&lt;2c 无轨迹);双曲线必须 <b>2a&lt;2c</b>(=2c 是两条射线,&gt;2c 无轨迹)。先比 2a 与 2c 再下结论。</p>
+      <p class="trap">⚠ <b>双曲线定义漏绝对值</b> → ✅ 是 <b>‖PF₁|−|PF₂‖=2a</b>;不加绝对值只得靠近某焦点的<b>一支</b>。要两支就得带绝对值。</p>
+      <p class="trap">⚠ <b>抛物线忽略"定点不在定直线上"</b> → ✅ 焦点 F <b>不能</b>落在准线 l 上,否则退化成过 F 垂直于 l 的一条直线,不是抛物线。</p>
+      <p class="trap">⚠ <b>记错三类曲线离心率范围</b> → ✅ 圆 e=0;椭圆 <b>0&lt;e&lt;1</b>;抛物线 <b>e=1</b>;双曲线 <b>e&gt;1</b>。一根数轴串起来记:0—1—∞。</p>
+    </div>
+
+    <h3>二、标准方程类</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>不比分母大小误判焦点轴</b> → ✅ <b>椭圆</b>:焦点在<b>分母大</b>的那个轴上;<b>双曲线</b>:焦点在<b>系数为正</b>那一项的轴上(x²为正→焦点在 x 轴),与分母大小<b>无关</b>。</p>
+      <p class="trap">⚠ <b>一般式没标准化就取 a²、b²</b> → ✅ 先化成右边=1 的标准形再读。形如 mx²+ny²=1 时 a²=1/m、b²=1/n,别把 m、n 当成 a²、b²。</p>
+      <p class="trap">⚠ <b>抛物线四种方程焦点/准线符号混</b> → ✅ y²=2px:焦(p/2,0)、准 x=−p/2;y²=−2px:焦(−p/2,0)、准 x=p/2;x²=2py:焦(0,p/2)、准 y=−p/2;x²=−2py 反之。<b>口诀:开口朝哪,焦点就在哪半轴;准线在开口反侧。</b></p>
+      <p class="trap">⚠ <b>把 a²、b² 直接当 a、b 代入</b> → ✅ a=√(a²)。通径、焦半径、顶点/焦点坐标都用 <b>a、b、c 本身</b>,别拿平方值硬塞。</p>
+    </div>
+
+    <h3>三、直线联立(韦达定理)类</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>设 y=kx+m 漏了斜率不存在(x=t)</b> → ✅ 竖直线单独讨论;或直接设 <b>x=ty+n</b>(除水平线外全包含),一网打尽。</p>
+      <p class="trap">⚠ <b>联立后忘检验 Δ&gt;0</b> → ✅ 有两个交点才成立,先亮 <b>Δ&gt;0</b> 再用韦达,否则整段作废、直接扣分。</p>
+      <p class="trap">⚠ <b>韦达漏掉 x₁+x₂ 前的负号</b> → ✅ ax²+bx+c=0 ⇒ x₁+x₂=<b>−b/a</b>(负号!)、x₁x₂=c/a。</p>
+      <p class="trap">⚠ <b>弦长公式漏开根号</b> → ✅ |AB|=<b>√(1+k²)·√((x₁+x₂)²−4x₁x₂)</b>,两个根号都不能漏。</p>
+      <p class="trap">⚠ <b>斜率不存在时不会换纵坐标算弦长</b> → ✅ 竖直弦用 |AB|=<b>√(1+1/k²)·|y₁−y₂|</b>,或干脆 |AB|=|y₁−y₂|。</p>
+      <p class="trap">⚠ <b>点差法求中点弦后不验判别式</b> → ✅ 求出斜率务必回代验 <b>Δ&gt;0</b>(中点在曲线内),否则弦不存在。</p>
+      <p class="trap">⚠ <b>双曲线中点弦不判断中点位置直接写直线</b> → ✅ 双曲线中点弦<b>可能不存在</b>,中点须落在"能作弦"的区域,必须验证后再写。</p>
+    </div>
+
+    <h3>四、几何性质类</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>不分左右焦点乱套椭圆焦半径</b> → ✅ 椭圆焦半径 r=a±ex₀:<b>左焦 r=a+ex₀,右焦 r=a−ex₀</b>(x₀为点横坐标)。记"离哪个焦点近,那条半径就短"。</p>
+      <p class="trap">⚠ <b>双曲线焦半径正负混淆</b> → ✅ 分支+焦点分类:右支到右焦 r=ex₀−a、到左焦 r=ex₀+a;左支取相反。别硬套椭圆的 a±ex₀。</p>
+      <p class="trap">⚠ <b>双曲线两类渐近线 a、b 颠倒</b> → ✅ x²/a²−y²/b²=1 ⇒ y=±(b/a)x;y²/a²−x²/b²=1 ⇒ y=±(a/b)x。<b>万能法:把 =1 换成 =0 解出即得渐近线</b>,永不记错。</p>
+      <p class="trap">⚠ <b>通径 2b²/a 分子分母写反</b> → ✅ 椭圆/双曲线通径=<b>2b²/a</b>(b²在上、a在下);抛物线通径=<b>2p</b>。</p>
+      <p class="trap">⚠ <b>焦点三角形面积公式混用</b> → ✅ 椭圆 S=<b>b²·tan(θ/2)</b>;双曲线 S=<b>b²·cot(θ/2)=b²/tan(θ/2)</b>(θ 为两焦半径夹角)。一个 tan、一个 cot,别互换。</p>
+      <p class="trap">⚠ <b>各种准线记忆混淆</b> → ✅ 椭圆/双曲线准线 <b>x=±a²/c</b>;抛物线 y²=2px 准线 <b>x=−p/2</b>。</p>
+    </div>
+
+    <h3>五、审题转化类</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>不判点在曲线内外就写切线数量</b> → ✅ 先定位:点在椭圆<b>外 2 条、上 1 条、内 0 条</b>;抛物线/双曲线还有"与对称轴/渐近线平行只 1 条"的特例。</p>
+      <p class="trap">⚠ <b>忽略横纵坐标范围保留增根</b> → ✅ 椭圆 |x|≤a、双曲线 |x|≥a、抛物线 x≥0;解出的点或参数必须落在范围内,<b>增根要舍</b>。</p>
+      <p class="trap">⚠ <b>向量起点终点颠倒、坐标翻译错</b> → ✅ <b>AB=B−A</b>(终点减起点);数量积、共线、定比分点代入前先摆对方向。</p>
+      <p class="trap">⚠ <b>三角形面积漏 1/2</b> → ✅ S=<b>½|x₁y₂−x₂y₁|</b> 或 ½·底·高;那个 ½ 最常被吞。</p>
+      <p class="trap">⚠ <b>"过点切线"与"在点切线"不熟</b> → ✅ <b>在点 P</b>(P 在曲线上)切线只 1 条;<b>过点 P</b> 要分 P 在曲线上/外,可能 2 条,别混。</p>
+    </div>
+
+    <h3>六、答题规范类</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>求轨迹方程不标 x、y 取值范围</b> → ✅ 轨迹题末尾必须写清自变量范围,<b>挖去</b>不满足的点(如去掉某端点)。</p>
+      <p class="trap">⚠ <b>化简忽略分母不为零的限制</b> → ✅ 每步分母≠0、斜率存在性都要保留,别悄悄丢条件。</p>
+      <p class="trap">⚠ <b>离心率分式/根式化简不彻底</b> → ✅ e 化到最简:如 e=√(1−b²/a²)、双曲线 e=√(1+b²/a²);分母有理化、约分到底。</p>
+      <p class="trap">⚠ <b>参数范围未联立 Δ&gt;0 取交集</b> → ✅ 最终范围 = <b>Δ&gt;0 ∩ 定义域 ∩ 题设</b>,几个约束取交集。</p>
+      <p class="trap">⚠ <b>字母混用、x/y 代换出错</b> → ✅ 换元统一符号,代回时逐个核对,别串行。</p>
+    </div>
+
+    <h3>七、题型专属易错</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>定点定值没化简完就主观判定</b> → ✅ 必须把表达式化到"<b>与参数无关</b>"才能断定定点/定值,不能看一眼就猜。</p>
+      <p class="trap">⚠ <b>最值忽略自变量定义域</b> → ✅ 先写自变量范围,<b>端点/边界单独验</b>,别只对导数=0的点下结论。</p>
+      <p class="trap">⚠ <b>切线方程漏斜率不存在的切线</b> → ✅ 设 k 会漏竖直切线 x=x₀,单独补上讨论。</p>
+      <p class="trap">⚠ <b>存在性问题未检验解符合曲线范围</b> → ✅ "是否存在"要把解<b>回代验证</b>落在曲线/定义域内,不符则判"不存在"。</p>
+    </div>
+
+    <h3>八、额外补漏(超额覆盖)</h3>
+    <div class="card">
+      <p class="trap">⚠ <b>c 的关系记反(全站最高频)</b> → ✅ 椭圆 <b>c²=a²−b²</b>(a 是斜边、最大);双曲线 <b>c²=a²+b²</b>(c 是斜边、最大)。</p>
+      <p class="trap">⚠ <b>椭圆没先分长短轴就套公式</b> → ✅ 标准椭圆要 a&gt;b&gt;0;拿到 x²/m+y²/n=1 先比 m、n 定谁是 a²,再谈焦点与 c。</p>
+      <p class="trap">⚠ <b>抛物线焦点弦长记混</b> → ✅ 焦点弦 |AB|=<b>x₁+x₂+p</b>(y²=2px);还有 y₁y₂=−p²、x₁x₂=p²/4、1/r₁+1/r₂=2/p。</p>
+      <p class="trap">⚠ <b>参数方程的角当极角</b> → ✅ 椭圆 x=acosφ、y=bsinφ 里 φ 是<b>离心角</b>,不是点与原点连线的极角,算面积/弧长别代错。</p>
+      <p class="trap">⚠ <b>把太阳/焦点当成中心</b> → ✅ 行星椭圆里太阳在<b>焦点</b>不在中心;近日点=a−c、远日点=a+c 由此而来。</p>
+    </div>
+
+    <!-- ==================== 11 ==================== -->
+    <h2 class="o" id="s11">自测 12 题(基础 → 拔高)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 圆锥曲线深研(镇站之宝) · 配套:<a href="圆锥曲线.html" style="color:var(--ink)">考试速练版</a> · <a href="离心率.html" style="color:var(--ink)">离心率专题</a> · <a href="题型地图.html" style="color:var(--ink)">题型地图</a></p>
+  </div>
+
+<script>
+/* =========================================================
+   通用工具
+========================================================= */
+function fitDPR(c){
+  const ctx=c.getContext('2d');
+  return ctx;
+}
+function dot(ctx,x,y,col,r){r=r||6;ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();}
+function grid(ctx,W,H,ox,oy,s){
+  ctx.strokeStyle='#e5dcc4';ctx.lineWidth=1;
+  for(let gx=ox%s; gx<W; gx+=s){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+  for(let gy=oy%s; gy<H; gy+=s){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+  ctx.strokeStyle='#16120A';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+}
+function label(ctx,txt,x,y,col){ctx.fillStyle=col||'#16120A';ctx.font='bold 14px sans-serif';ctx.fillText(txt,x,y);}
+
+/* =========================================================
+   VIZ 1 coneSlice
+========================================================= */
+(function(){
+  const c=document.getElementById('cv1'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('v1tilt');
+  function draw(){
+    const t=parseFloat(sl.value)/100; // 0..1
+    // map tilt -> e monotonically: 0->0, ~0.4->1, >0.4-> up to 2.2
+    let e;
+    if(t<0.4){ e = t/0.4*1.0; }
+    else { e = 1.0 + (t-0.4)/0.6*1.3; }
+    ctx.clearRect(0,0,W,H);
+    // LEFT: double cone hourglass
+    const cx=250, cy=H/2, apexGap=0; // apex at center
+    const halfAng=0.62; // slant
+    const coneH=200;
+    const rad=coneH*Math.tan(halfAng);
+    ctx.strokeStyle='#8a5a2b';ctx.lineWidth=3;ctx.fillStyle='rgba(200,150,90,0.18)';
+    // upper cone
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx-rad,cy-coneH);ctx.lineTo(cx+rad,cy-coneH);ctx.closePath();ctx.fill();ctx.stroke();
+    // lower cone
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx-rad,cy+coneH);ctx.lineTo(cx+rad,cy+coneH);ctx.closePath();ctx.fill();ctx.stroke();
+    // ellipse rims (top & bottom)
+    ctx.strokeStyle='#8a5a2b';ctx.lineWidth=2;
+    ctx.beginPath();ctx.ellipse(cx,cy-coneH,rad,rad*0.22,0,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.ellipse(cx,cy+coneH,rad,rad*0.22,0,0,Math.PI*2);ctx.stroke();
+    // cutting plane (edge-on line) tilt: angle from horizontal grows with t
+    const planeAng = t*0.85; // radians tilt
+    const L=190;
+    const dx=Math.cos(planeAng), dy=Math.sin(planeAng);
+    const pyc=cy-30; // pivot
+    ctx.strokeStyle='#E86A17';ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(cx-L*dx, pyc+L*dy);ctx.lineTo(cx+L*dx, pyc-L*dy);ctx.stroke();
+    // slant reference line (母线) to show critical angle
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(cx-70, pyc+70*Math.tan(halfAng)*0);ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'切面(橙)',cx-L*dx-4,pyc+L*dy+18,'#E86A17');
+    label(ctx,'双圆锥',cx-30,cy-coneH-20,'#8a5a2b');
+
+    // RIGHT: resulting conic via polar r=l/(1+e cos th)
+    const rx=680, ry=H/2, l=110;
+    grid(ctx,W,H,rx,ry,40);
+    // erase left overlap of grid: redraw white panel behind right? keep simple: draw curve
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;
+    let type='圆',col='#1450C8';
+    if(e<0.02)type='圆'; else if(e<1-1e-6)type='椭圆'; else if(Math.abs(e-1)<0.03)type='抛物线'; else type='双曲线';
+    ctx.beginPath();
+    let started=false;
+    for(let deg=0;deg<=360;deg+=0.5){
+      const th=deg*Math.PI/180;
+      const denom=1+e*Math.cos(th);
+      if(denom<=0.02){started=false;continue;}
+      const r=l/denom;
+      if(r>620){started=false;continue;}
+      const X=rx - r*Math.cos(th); // put focus at right side, open toward left for pretty
+      const Y=ry - r*Math.sin(th);
+      if(!started){ctx.moveTo(X,Y);started=true;}else ctx.lineTo(X,Y);
+    }
+    ctx.stroke();
+    dot(ctx,rx,ry,'#E0382A',5); // focus
+    label(ctx,'焦点',rx+8,ry+18,'#E0382A');
+    // labels
+    ctx.fillStyle='#16120A';ctx.font='900 22px sans-serif';
+    ctx.fillText(type, rx-40, 44);
+    document.getElementById('v1val').textContent='e = '+e.toFixed(2);
+    document.getElementById('v1info').innerHTML='切面倾角 → 离心率 e = <b>'+e.toFixed(2)+'</b> → 曲线类型:<b>'+type+'</b>。水平切(e=0)得圆,平行母线(e=1)得抛物线,更陡(e&gt;1)切到两个锥面得双曲线。';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* =========================================================
+   VIZ 2 dandelin
+========================================================= */
+(function(){
+  const c=document.getElementById('cv2'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let playing=true, tP=0.0, raf=null;
+  const btn=document.getElementById('v2play');
+  btn.onclick=()=>{playing=!playing; if(playing)loop();};
+  // Geometry (edge-on cross-section):
+  // apex at top, two slant lines going down. cutting chord tilted.
+  const apex={x:W/2, y:60};
+  const slantAng=0.42; // half angle of cone (from vertical)
+  // slant lines param: point = apex + s*(±sin, cos)
+  function slantPt(side,s){return {x:apex.x+side*Math.sin(slantAng)*s, y:apex.y+Math.cos(slantAng)*s};}
+  // cutting plane line: choose two intersection params on the two slants -> major axis endpoints
+  const sL=150, sR=330; // param on left slant & right slant for the two vertices
+  const Vleft=slantPt(-1,sL), Vright=slantPt(1,sR);
+  // ellipse major axis = segment Vleft..Vright ; center C
+  const C={x:(Vleft.x+Vright.x)/2, y:(Vleft.y+Vright.y)/2};
+  const aMaj=Math.hypot(Vright.x-Vleft.x,Vright.y-Vleft.y)/2;
+  const axDir={x:(Vright.x-Vleft.x)/(2*aMaj), y:(Vright.y-Vleft.y)/(2*aMaj)};
+  // Dandelin spheres in cross-section are circles tangent to both slant lines and tangent to cutting line.
+  // We'll compute circles inscribed between the two slants (centers on the cone axis = vertical through apex)
+  // tangent to cutting line too. Cone axis is vertical x=apex.x.
+  // A circle center (apex.x, yc), radius R. Tangent to slant line distance = R.
+  // Distance from (apex.x,yc) to left slant line:
+  // left slant direction d=(-sin, cos), point apex. Normal n=(cos, sin) (rotate d by -90? )
+  // line through apex with dir d: distance of point Q = |(Q-apex) x d|
+  function distToSlant(Q,side){
+    const dxu=side*Math.sin(slantAng), dyu=Math.cos(slantAng);
+    const vx=Q.x-apex.x, vy=Q.y-apex.y;
+    return Math.abs(vx*dyu - vy*dxu);
+  }
+  // For a center on axis (apex.x, yc): dist to both slants equal = (yc-apex.y)*sin(slantAng)
+  // tangent to cutting line at param: cutting line passes Vleft with dir axDir; distance:
+  function distToCut(Q){
+    const vx=Q.x-Vleft.x, vy=Q.y-Vleft.y;
+    return Math.abs(vx*axDir.y - vy*axDir.x);
+  }
+  // Solve yc so that dist-to-slant == dist-to-cut. Two solutions (upper & lower sphere).
+  function sphereFor(range){
+    let best=null,bestErr=1e9;
+    for(let yc=range[0];yc<=range[1];yc+=0.5){
+      const Q={x:apex.x,y:yc};
+      const rs=(yc-apex.y)*Math.sin(slantAng);
+      if(rs<=2)continue;
+      const rc=distToCut(Q);
+      const err=Math.abs(rs-rc);
+      if(err<bestErr){bestErr=err;best={x:apex.x,y:yc,R:rs};}
+    }
+    return best;
+  }
+  const upper=sphereFor([apex.y+40, C.y-2]);
+  const lower=sphereFor([C.y+2, apex.y+520]);
+  // foci = tangent point of each sphere on the cutting line = projection of sphere center onto cutting line
+  function projOnCut(P){
+    const vx=P.x-Vleft.x, vy=P.y-Vleft.y;
+    const tt=vx*axDir.x+vy*axDir.y;
+    return {x:Vleft.x+tt*axDir.x, y:Vleft.y+tt*axDir.y};
+  }
+  const F1=upper?projOnCut(upper):C, F2=lower?projOnCut(lower):C;
+  const focDist=Math.hypot(F2.x-F1.x,F2.y-F1.y);
+  const cMaj=focDist/2;
+  const bMaj=Math.sqrt(Math.max(1,aMaj*aMaj-cMaj*cMaj));
+  const eMaj=cMaj/aMaj;
+
+  // lower panel: draw the actual ellipse "unrolled" flat for clarity
+  const eCx=W/2, eCy=430, eA=210, eB=eA*Math.sqrt(Math.max(0.02,1-eMaj*eMaj)), eC=eA*eMaj;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // ---- upper cross-section ----
+    // cone slants
+    ctx.strokeStyle='#8a5a2b';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(apex.x,apex.y);const eL=slantPt(-1,520);ctx.lineTo(eL.x,eL.y);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(apex.x,apex.y);const eR=slantPt(1,520);ctx.lineTo(eR.x,eR.y);ctx.stroke();
+    dot(ctx,apex.x,apex.y,'#8a5a2b',5);label(ctx,'锥顶',apex.x+8,apex.y-6,'#8a5a2b');
+    // Dandelin spheres (circles)
+    for(const S of [upper,lower]){ if(!S)continue;
+      ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2.5;ctx.fillStyle='rgba(122,63,242,0.10)';
+      ctx.beginPath();ctx.arc(S.x,S.y,S.R,0,Math.PI*2);ctx.fill();ctx.stroke();
+    }
+    // cutting line (extended)
+    ctx.strokeStyle='#E86A17';ctx.lineWidth=3.5;
+    const ext=210;
+    ctx.beginPath();ctx.moveTo(C.x-axDir.x*ext, C.y-axDir.y*ext);ctx.lineTo(C.x+axDir.x*ext, C.y+axDir.y*ext);ctx.stroke();
+    label(ctx,'切面(边视图)',C.x+axDir.x*ext-90,C.y+axDir.y*ext+18,'#E86A17');
+    // vertices
+    dot(ctx,Vleft.x,Vleft.y,'#16120A',4);dot(ctx,Vright.x,Vright.y,'#16120A',4);
+    // foci as tangent points
+    dot(ctx,F1.x,F1.y,'#E0382A',6);dot(ctx,F2.x,F2.y,'#E0382A',6);
+    label(ctx,'F₁',F1.x-22,F1.y-6,'#E0382A');label(ctx,'F₂',F2.x+8,F2.y+16,'#E0382A');
+
+    // ---- lower panel: real ellipse ----
+    ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(eCx-eA-20,eCy);ctx.lineTo(eCx+eA+20,eCy);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=360;i++){const th=i*Math.PI/180;const X=eCx+eA*Math.cos(th),Y=eCy-eB*Math.sin(th);if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}
+    ctx.closePath();ctx.stroke();
+    const f1={x:eCx-eC,y:eCy}, f2={x:eCx+eC,y:eCy};
+    dot(ctx,f1.x,f1.y,'#E0382A',5);dot(ctx,f2.x,f2.y,'#E0382A',5);
+    label(ctx,'F₁',f1.x-18,eCy+22,'#E0382A');label(ctx,'F₂',f2.x+6,eCy+22,'#E0382A');
+    // moving point P
+    const th=tP;
+    const P={x:eCx+eA*Math.cos(th), y:eCy-eB*Math.sin(th)};
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(f1.x,f1.y);ctx.lineTo(P.x,P.y);ctx.lineTo(f2.x,f2.y);ctx.stroke();
+    dot(ctx,P.x,P.y,'#F3C00E',6);label(ctx,'P',P.x+6,P.y-6);
+    const d1=Math.hypot(P.x-f1.x,P.y-f1.y), d2=Math.hypot(P.x-f2.x,P.y-f2.y);
+    label(ctx,'椭圆(切口的真实形状)',eCx-90,eCy-eB-16,'#1450C8');
+
+    document.getElementById('v2info').innerHTML='内切双球与切面相切于 <b>F₁、F₂</b>(即椭圆两焦点)。动点 P:|PF₁|+|PF₂| = <b>'+((d1+d2)/eA*100/100*(2)).toFixed(0)+'</b> 像素 ≈ 2a <b>恒定</b>(误差来自离散作图)。等切线长定理 ⇒ 和为常数,证毕。e≈'+eMaj.toFixed(2)+'。';
+  }
+  function loop(){
+    if(playing){ tP+=0.02; if(tP>Math.PI*2)tP-=Math.PI*2; }
+    draw();
+    if(playing)raf=requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* =========================================================
+   VIZ 3 eKnob
+========================================================= */
+(function(){
+  const c=document.getElementById('cv3'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W*0.62,oy=H/2;
+  const sl=document.getElementById('v3e');
+  let tP=0,raf;
+  const dPix=150; // directrix at x = ox + dPix (world focus at ox)
+  function draw(){
+    const e=parseFloat(sl.value)/100;
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    // directrix vertical line at x = ox + dPix (to the right of focus)
+    const dx=ox+dPix;
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(dx,0);ctx.lineTo(dx,H);ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'准线 l',dx+6,24,'#7A3FF2');
+    // focus
+    dot(ctx,ox,oy,'#E0382A',6);label(ctx,'F',ox-6,oy+22,'#E0382A');
+    // curve: r(th)=e*d/(1+e cos th), focus at origin, directrix to +x
+    const dWorld=dPix; // distance focus->directrix in px (l = e*d ... use l=e*d)
+    const l=e*dWorld;
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;
+    let type=e<0.02?'圆':(e<1-1e-6?'椭圆':(Math.abs(e-1)<0.03?'抛物线':'双曲线'));
+    function drawBranch(sign){
+      ctx.beginPath();let started=false;
+      for(let deg=0;deg<=360;deg+=0.4){
+        const th=deg*Math.PI/180;
+        const denom=1+e*Math.cos(th);
+        if(sign>0 && denom<=0.02){started=false;continue;}
+        if(sign<0){ // other branch for hyperbola uses denom<0
+          if(denom>=-0.02){started=false;continue;}
+        } else if(denom<=0.02){started=false;continue;}
+        const r=l/denom;
+        const X=ox + r*Math.cos(th); // directrix to +x, curve opens toward -x (left)
+        const Y=oy - r*Math.sin(th);
+        if(Math.abs(X)>4000||Math.abs(Y)>4000){started=false;continue;}
+        if(X<-50||X>W+50||Y<-50||Y>H+50){started=false;continue;}
+        if(!started){ctx.moveTo(X,Y);started=true;}else ctx.lineTo(X,Y);
+      }
+      ctx.stroke();
+    }
+    drawBranch(1);
+    if(e>1) drawBranch(-1);
+    // moving point P
+    let denomP=1+e*Math.cos(tP);
+    if(denomP>0.05){
+      const rP=l/denomP;
+      const P={x:ox+rP*Math.cos(tP), y:oy-rP*Math.sin(tP)};
+      // |PF|
+      ctx.strokeStyle='#E0382A';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(P.x,P.y);ctx.stroke();
+      // perpendicular to directrix
+      ctx.strokeStyle='#1E9E86';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(dx,P.y);ctx.stroke();
+      dot(ctx,P.x,P.y,'#F3C00E',6);
+      const pf=Math.hypot(P.x-ox,P.y-oy), pl=Math.abs(dx-P.x);
+      document.getElementById('v3info').innerHTML='曲线:<b>'+type+'</b>。动点 P:|PF|/(P到准线) = '+pf.toFixed(0)+'/'+pl.toFixed(0)+' = <b>'+(pf/pl).toFixed(2)+'</b> = e(恒定)。';
+    }else{
+      document.getElementById('v3info').innerHTML='曲线:<b>'+type+'</b>。|PF| ÷ (P到准线) = e = <b>'+e.toFixed(2)+'</b> 恒定。';
+    }
+    document.getElementById('v3val').textContent='e = '+e.toFixed(2);
+  }
+  function loop(){ tP+=0.02; if(tP>Math.PI*2)tP-=Math.PI*2; draw(); raf=requestAnimationFrame(loop);}
+  sl.addEventListener('input',draw);
+  loop();
+})();
+
+/* =========================================================
+   VIZ 4 stringEllipse
+========================================================= */
+(function(){
+  const c=document.getElementById('cv4'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const sA=document.getElementById('v4a'),sC=document.getElementById('v4c');
+  const btn=document.getElementById('v4play');
+  let playing=true,phi=0,raf;
+  btn.onclick=()=>{playing=!playing; if(playing)loop();};
+  function draw(){
+    let a=parseFloat(sA.value), cc=parseFloat(sC.value);
+    if(cc>=a-8) cc=a-8; // enforce a>c
+    const b=Math.sqrt(a*a-cc*cc);
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    // ellipse
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=360;i++){const t=i*Math.PI/180;const X=ox+a*Math.cos(t),Y=oy-b*Math.sin(t);if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}
+    ctx.closePath();ctx.stroke();
+    const F1={x:ox-cc,y:oy},F2={x:ox+cc,y:oy};
+    dot(ctx,F1.x,F1.y,'#E0382A',6);dot(ctx,F2.x,F2.y,'#E0382A',6);
+    label(ctx,'F₁',F1.x-20,oy+22,'#E0382A');label(ctx,'F₂',F2.x+6,oy+22,'#E0382A');
+    // pencil P
+    const P={x:ox+a*Math.cos(phi), y:oy-b*Math.sin(phi)};
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(F1.x,F1.y);ctx.lineTo(P.x,P.y);ctx.lineTo(F2.x,F2.y);ctx.stroke();
+    dot(ctx,P.x,P.y,'#F3C00E',6);label(ctx,'铅笔 P',P.x+6,P.y-8);
+    const d1=Math.hypot(P.x-F1.x,P.y-F1.y),d2=Math.hypot(P.x-F2.x,P.y-F2.y);
+    document.getElementById('v4a2').textContent=a.toFixed(0);
+    document.getElementById('v4b2').textContent=b.toFixed(0);
+    document.getElementById('v4c2').textContent=cc.toFixed(0);
+    document.getElementById('v4e2').textContent=(cc/a).toFixed(3);
+    document.getElementById('v4va').textContent='a = '+a.toFixed(0);
+    document.getElementById('v4vc').textContent='c = '+cc.toFixed(0);
+    document.getElementById('v4info').innerHTML='绳长 = |F₁P|+|PF₂| = '+d1.toFixed(0)+'+'+d2.toFixed(0)+' = <b>'+(d1+d2).toFixed(0)+'</b> ≈ 2a = '+(2*a).toFixed(0)+'(<b>恒定</b>,这就是椭圆第一定义)。';
+  }
+  function loop(){ if(playing){phi+=0.02;if(phi>Math.PI*2)phi-=Math.PI*2;} draw(); if(playing)raf=requestAnimationFrame(loop);}
+  sA.addEventListener('input',draw);sC.addEventListener('input',draw);
+  loop();
+})();
+
+/* =========================================================
+   VIZ 5 hyperbolaDiff
+========================================================= */
+(function(){
+  const c=document.getElementById('cv5'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const sA=document.getElementById('v5a');
+  const btn=document.getElementById('v5play');
+  const cc=200; // fixed foci half-dist
+  let playing=true,tP=-1.4,raf;
+  btn.onclick=()=>{playing=!playing;if(playing)loop();};
+  function draw(){
+    let a=parseFloat(sA.value);
+    if(a>=cc-6)a=cc-6;
+    const b=Math.sqrt(cc*cc-a*a);
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    // asymptotes
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(ox-W/2,oy+(b/a)*(W/2));ctx.lineTo(ox+W/2,oy-(b/a)*(W/2));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox-W/2,oy-(b/a)*(W/2));ctx.lineTo(ox+W/2,oy+(b/a)*(W/2));ctx.stroke();ctx.setLineDash([]);
+    // branches
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;
+    for(const s of [1,-1]){
+      ctx.beginPath();let first=true;
+      for(let t=-2.4;t<=2.4;t+=0.02){const X=ox+s*a*Math.cosh(t),Y=oy-b*Math.sinh(t);if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);}
+      ctx.stroke();
+    }
+    const F1={x:ox-cc,y:oy},F2={x:ox+cc,y:oy};
+    dot(ctx,F1.x,F1.y,'#E0382A',6);dot(ctx,F2.x,F2.y,'#E0382A',6);
+    label(ctx,'F₁',F1.x-20,oy+22,'#E0382A');label(ctx,'F₂',F2.x+6,oy+22,'#E0382A');
+    // moving point on right branch
+    const P={x:ox+a*Math.cosh(tP), y:oy-b*Math.sinh(tP)};
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(F1.x,F1.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(F2.x,F2.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+    dot(ctx,P.x,P.y,'#F3C00E',6);
+    const d1=Math.hypot(P.x-F1.x,P.y-F1.y),d2=Math.hypot(P.x-F2.x,P.y-F2.y);
+    document.getElementById('v5a2').textContent=a.toFixed(0);
+    document.getElementById('v5b2').textContent=b.toFixed(0);
+    document.getElementById('v5c2').textContent=cc.toFixed(0);
+    document.getElementById('v5e2').textContent=(cc/a).toFixed(3);
+    document.getElementById('v5va').textContent='a = '+a.toFixed(0);
+    document.getElementById('v5info').innerHTML='动点 P:||PF₁|−|PF₂|| = |'+d1.toFixed(0)+'−'+d2.toFixed(0)+'| = <b>'+Math.abs(d1-d2).toFixed(0)+'</b> ≈ 2a = '+(2*a).toFixed(0)+'(<b>恒定</b>)。e='+(cc/a).toFixed(2)+',渐近线 y=±(b/a)x。';
+  }
+  function loop(){ if(playing){tP+=0.015;if(tP>1.5)tP=-1.5;} draw(); if(playing)raf=requestAnimationFrame(loop);}
+  sA.addEventListener('input',draw);
+  loop();
+})();
+
+/* =========================================================
+   VIZ 6 parabolaFocusDir
+========================================================= */
+(function(){
+  const c=document.getElementById('cv6'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W*0.42,oy=H/2;
+  const sP=document.getElementById('v6p');
+  const bA=document.getElementById('v6mA'),bB=document.getElementById('v6mB');
+  let mode='A',tP=0,raf;
+  bA.onclick=()=>{mode='A';bA.classList.add('on');bB.classList.remove('on');};
+  bB.onclick=()=>{mode='B';bB.classList.add('on');bA.classList.remove('on');};
+  // y^2 = 2 p x ; use scale factor to px
+  function draw(){
+    const p=parseFloat(sP.value)/10; // world p
+    const sc=20; // px per world unit
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    const F={x:ox+(p/2)*sc, y:oy};
+    const dirX=ox-(p/2)*sc;
+    // directrix
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=3;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(dirX,0);ctx.lineTo(dirX,H);ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'准线 x=−p/2',dirX-140,24,'#7A3FF2');
+    if(mode==='A'){
+      // parabola
+      ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();let first=true;
+      for(let yv=-11;yv<=11;yv+=0.05){const xv=yv*yv/(2*p);const X=ox+xv*sc,Y=oy-yv*sc;if(X>W)continue;if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);}
+      ctx.stroke();
+      dot(ctx,F.x,F.y,'#E0382A',6);label(ctx,'F(p/2,0)',F.x+8,F.y+22,'#E0382A');
+      // moving P
+      const yv=8*Math.sin(tP);
+      const xv=yv*yv/(2*p);
+      const P={x:ox+xv*sc,y:oy-yv*sc};
+      // |PF|
+      ctx.strokeStyle='#E0382A';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(F.x,F.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+      // horizontal to directrix
+      ctx.strokeStyle='#1E9E86';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(dirX,P.y);ctx.stroke();
+      dot(ctx,P.x,P.y,'#F3C00E',6);label(ctx,'P',P.x+6,P.y-8);
+      const pf=Math.hypot(P.x-F.x,P.y-F.y),pd=Math.abs(P.x-dirX);
+      document.getElementById('v6info').innerHTML='定义模式:|PF| = '+pf.toFixed(0)+',P 到准线 = '+pd.toFixed(0)+' → <b>两段永远相等</b>(e=1)。红=到焦点,绿=到准线。';
+    }else{
+      // envelope: tangent lines are perpendicular bisectors of F and points D on directrix
+      ctx.strokeStyle='#c9a3f0';ctx.lineWidth=1.4;
+      for(let yv=-13;yv<=13;yv+=0.9){
+        const D={x:dirX, y:oy-yv*sc};
+        // perpendicular bisector of F,D
+        const mid={x:(F.x+D.x)/2,y:(F.y+D.y)/2};
+        const dirv={x:D.y-F.y, y:-(D.x-F.x)}; // perpendicular to FD
+        const nrm=Math.hypot(dirv.x,dirv.y);
+        const u={x:dirv.x/nrm,y:dirv.y/nrm};
+        const LEN=520;
+        ctx.beginPath();ctx.moveTo(mid.x-u.x*LEN,mid.y-u.y*LEN);ctx.lineTo(mid.x+u.x*LEN,mid.y+u.y*LEN);ctx.stroke();
+      }
+      // overlay actual parabola faint
+      ctx.strokeStyle='#1450C8';ctx.lineWidth=2.5;ctx.beginPath();let first=true;
+      for(let yv=-11;yv<=11;yv+=0.05){const xv=yv*yv/(2*p);const X=ox+xv*sc,Y=oy-yv*sc;if(X>W)continue;if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);}
+      ctx.stroke();
+      dot(ctx,F.x,F.y,'#E0382A',6);label(ctx,'F',F.x+8,F.y+22,'#E0382A');
+      document.getElementById('v6info').innerHTML='折纸包络模式:每条紫线 = F 与准线上某点 D 的<b>中垂线</b>(把纸上 D 折向 F 的折痕)。约 30 条折痕的<b>包络</b>正好是抛物线(蓝)。';
+    }
+    document.getElementById('v6vp').textContent='p = '+p.toFixed(1);
+  }
+  function loop(){ tP+=0.02;if(tP>Math.PI*2)tP-=Math.PI*2; draw(); raf=requestAnimationFrame(loop);}
+  sP.addEventListener('input',draw);
+  loop();
+})();
+
+/* =========================================================
+   VIZ 7 ellipseReflect
+========================================================= */
+(function(){
+  const c=document.getElementById('cv7'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const a=320,b=180,cc=Math.sqrt(a*a-b*b);
+  const bA=document.getElementById('v7a'),bB=document.getElementById('v7b');
+  let scene='gallery',t=0,raf;
+  bA.onclick=()=>{scene='gallery';bA.classList.add('on');bB.classList.remove('on');};
+  bB.onclick=()=>{scene='lith';bB.classList.add('on');bA.classList.remove('on');};
+  const F1={x:ox-cc,y:oy},F2={x:ox+cc,y:oy};
+  // ray from F1 at angle -> intersect ellipse -> reflect -> should hit F2
+  function rayHit(ang){
+    // param line: F1 + s*(cos,sin) world (x right, y up). We'll work in world coords centered at ox,oy, y up.
+    const dx=Math.cos(ang), dy=Math.sin(ang);
+    const fx=-cc, fy=0;
+    // (fx+s dx)^2/a^2 + (fy+s dy)^2/b^2 =1
+    const A=dx*dx/(a*a)+dy*dy/(b*b);
+    const B=2*(fx*dx/(a*a)+fy*dy/(b*b));
+    const C=fx*fx/(a*a)+fy*fy/(b*b)-1;
+    const disc=B*B-4*A*C;if(disc<0)return null;
+    const s=(-B+Math.sqrt(disc))/(2*A);
+    const px=fx+s*dx, py=fy+s*dy;
+    // reflect: normal ~ (px/a^2, py/b^2)
+    const nx=px/(a*a), ny=py/(b*b);
+    const nn=Math.hypot(nx,ny);const ux=nx/nn,uy=ny/nn;
+    const dot=dx*ux+dy*uy;
+    const rx=dx-2*dot*ux, ry=dy-2*dot*uy;
+    return {hit:{x:ox+px,y:oy-py}, refl:{x:rx,y:ry}, s:s};
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=360;i++){const th=i*Math.PI/180;const X=ox+a*Math.cos(th),Y=oy-b*Math.sin(th);if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}
+    ctx.closePath();ctx.stroke();
+    dot(ctx,F1.x,F1.y,'#E0382A',7);dot(ctx,F2.x,F2.y,'#E0382A',7);
+    if(scene==='gallery'){label(ctx,'说话者',F1.x-30,oy+26,'#E0382A');label(ctx,'聆听者',F2.x-20,oy+26,'#E0382A');}
+    else{label(ctx,'冲击波源',F1.x-30,oy+26,'#E0382A');label(ctx,'结石',F2.x-10,oy+26,'#E0382A');}
+    const N=9;
+    for(let i=0;i<N;i++){
+      const ang=(-0.9+1.8*i/(N-1)); // spread of directions
+      const r=rayHit(ang);if(!r)continue;
+      // incoming F1->hit
+      ctx.strokeStyle=scene==='gallery'?'#1E9E86':'#E86A17';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(F1.x,F1.y);ctx.lineTo(r.hit.x,r.hit.y);
+      // reflected hit->F2 (draw toward F2)
+      ctx.lineTo(F2.x,F2.y);ctx.stroke();
+    }
+    // animated photon on one ray
+    const ang=(-0.9+1.8*((t*0.15)%1));
+    const r=rayHit(ang);
+    if(r){
+      const phase=(t*0.5)%2;
+      let pt;
+      if(phase<1){pt={x:F1.x+(r.hit.x-F1.x)*phase,y:F1.y+(r.hit.y-F1.y)*phase};}
+      else{const ph=phase-1;pt={x:r.hit.x+(F2.x-r.hit.x)*ph,y:r.hit.y+(F2.y-r.hit.y)*ph};}
+      dot(ctx,pt.x,pt.y,'#F3C00E',6);
+    }
+    document.getElementById('v7info').innerHTML=(scene==='gallery'
+      ? '🏛️ 耳语廊:从 F₁ 发出的 9 条声线,反射后<b>全部汇聚到 F₂</b>。对面贴着 F₂ 的人能听清你的悄悄话。'
+      : '🩺 碎石机:冲击波从 F₁ 发出,经椭球壁反射<b>精确聚焦到 F₂ 的结石</b>,集中能量将其震碎。');
+  }
+  function loop(){t+=0.03;draw();raf=requestAnimationFrame(loop);}
+  loop();
+})();
+
+/* =========================================================
+   VIZ 8 parabolaReflect
+========================================================= */
+(function(){
+  const c=document.getElementById('cv8'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,oy=H/2;
+  const bA=document.getElementById('v8a'),bB=document.getElementById('v8b');
+  let mode='collect',t=0,raf;
+  bA.onclick=()=>{mode='collect';bA.classList.add('on');bB.classList.remove('on');};
+  bB.onclick=()=>{mode='emit';bB.classList.add('on');bA.classList.remove('on');};
+  // parabola opening right: y^2 = 4 f x  (focus at (f,0)); vertex at left
+  const vx=170, f=150; // focus x offset from vertex
+  const sc=1;
+  // world: x measured from vertex. point on parabola: for y, x = y^2/(4f)
+  function px(y){return vx + y*y/(4*f);}
+  const Fx=vx+f, Fy=oy;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // parabola
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();let first=true;
+    for(let y=-210;y<=210;y+=1){const X=px(y),Y=oy-y;if(X>W-20)continue;if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);}
+    ctx.stroke();
+    dot(ctx,Fx,Fy,'#E0382A',7);label(ctx,'焦点',Fx+8,Fy+24,'#E0382A');
+    const ys=[-170,-120,-70,-25,25,70,120,170];
+    if(mode==='collect'){
+      for(const y of ys){
+        const X=px(y);
+        // incoming parallel ray from right (x large) to point (X, oy-y)
+        ctx.strokeStyle='#E86A17';ctx.lineWidth=1.8;
+        ctx.beginPath();ctx.moveTo(W-10,oy-y);ctx.lineTo(X,oy-y);
+        // reflect to focus
+        ctx.lineTo(Fx,Fy);ctx.stroke();
+      }
+      // photon
+      const y=ys[Math.floor((t*0.1)%ys.length)];
+      const X=px(y);
+      const phase=(t*0.4)%2;
+      let pt;
+      if(phase<1){pt={x:W-10+(X-(W-10))*phase, y:oy-y};}
+      else{const ph=phase-1;pt={x:X+(Fx-X)*ph, y:(oy-y)+((Fy)-(oy-y))*ph};}
+      dot(ctx,pt.x,pt.y,'#F3C00E',6);
+      document.getElementById('v8info').innerHTML='📡 收集模式:平行于轴的入射光(远方信号/星光)反射后<b>全部汇聚到焦点</b>。卫星锅、射电望远镜、太阳灶就是这样工作的。';
+    }else{
+      for(const y of ys){
+        const X=px(y);
+        // ray from focus to point, then reflect to parallel (rightward)
+        ctx.strokeStyle='#1450C8';ctx.lineWidth=1.8;
+        ctx.beginPath();ctx.moveTo(Fx,Fy);ctx.lineTo(X,oy-y);
+        ctx.lineTo(W-10,oy-y);ctx.stroke();
+      }
+      const y=ys[Math.floor((t*0.1)%ys.length)];
+      const X=px(y);
+      const phase=(t*0.4)%2;
+      let pt;
+      if(phase<1){pt={x:Fx+(X-Fx)*phase, y:Fy+((oy-y)-Fy)*phase};}
+      else{const ph=phase-1;pt={x:X+(W-10-X)*ph, y:oy-y};}
+      dot(ctx,pt.x,pt.y,'#F3C00E',6);
+      document.getElementById('v8info').innerHTML='🔦 发射模式:焦点处点光源发出的光,反射后变成一束<b>平行光</b>。车灯、手电、探照灯的反光碗正是抛物面。';
+    }
+  }
+  function loop(){t+=0.05;draw();raf=requestAnimationFrame(loop);}
+  loop();
+})();
+
+/* =========================================================
+   VIZ 9 loran
+========================================================= */
+(function(){
+  const c=document.getElementById('cv9'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const sD=document.getElementById('v9d');
+  const cc=220; // half distance between stations
+  const A={x:ox-cc,y:oy},B={x:ox+cc,y:oy};
+  let t=0,raf;
+  function draw(){
+    let Delta=parseFloat(sD.value); // distance difference PA-PB target (px)
+    const maxD=2*cc-20;
+    if(Delta> (maxD)) Delta=maxD; if(Delta<-(maxD))Delta=-maxD;
+    const a=Math.abs(Delta)/2;
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    dot(ctx,A.x,A.y,'#1450C8',7);dot(ctx,B.x,B.y,'#E86A17',7);
+    label(ctx,'电台 A',A.x-30,oy+26,'#1450C8');label(ctx,'电台 B',B.x-10,oy+26,'#E86A17');
+    if(a>2 && a<cc-2){
+      const b=Math.sqrt(cc*cc-a*a);
+      // hyperbola x^2/a^2 - y^2/b^2 =1 ; PA-PB=+2a means closer to B => right branch if Delta>0? PA-PB>0 means P farther from A, closer to B => right branch (near B)
+      const branchSign = Delta>0 ? 1 : -1;
+      ctx.strokeStyle='#1E9E86';ctx.lineWidth=3;
+      ctx.beginPath();let first=true;
+      for(let tt=-2.2;tt<=2.2;tt+=0.02){const X=ox+branchSign*a*Math.cosh(tt),Y=oy-b*Math.sinh(tt);if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);}
+      ctx.stroke();
+      // ship marker on branch
+      const tt=1.1*Math.sin(t*0.4);
+      const ship={x:ox+branchSign*a*Math.cosh(tt),y:oy-b*Math.sinh(tt)};
+      ctx.strokeStyle='#7A3FF2';ctx.lineWidth=1.6;ctx.setLineDash([4,4]);
+      ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(ship.x,ship.y);ctx.lineTo(B.x,B.y);ctx.stroke();ctx.setLineDash([]);
+      dot(ctx,ship.x,ship.y,'#E0382A',7);label(ctx,'🚢 你在这条线上',ship.x+8,ship.y-8,'#E0382A');
+      const pa=Math.hypot(ship.x-A.x,ship.y-A.y),pb=Math.hypot(ship.x-B.x,ship.y-B.y);
+      document.getElementById('v9info').innerHTML='时间差 → 距离差 |PA−PB| = <b>'+Math.abs(pa-pb).toFixed(0)+'</b>(≈2a='+(2*a).toFixed(0)+',恒定)⇒ 你落在这条<b>双曲线</b>上。再用另一对台站得第二条,<b>交点</b>=你的位置(GPS 原理)。';
+    }else{
+      document.getElementById('v9info').innerHTML='距离差需满足 0&lt;|Δ|&lt;|AB|,才有双曲线解。';
+    }
+    document.getElementById('v9val').textContent='Δ = '+Delta.toFixed(0);
+  }
+  function loop(){t+=0.03;draw();raf=requestAnimationFrame(loop);}
+  sD.addEventListener('input',draw);
+  loop();
+})();
+
+/* =========================================================
+   VIZ 10 orbit
+========================================================= */
+(function(){
+  const c=document.getElementById('cv10'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sE=document.getElementById('v10e');
+  const sunx=W*0.62, suny=H/2; // sun at focus
+  let theta=0,raf;
+  let sweeps=[]; // store recent (theta) for area sector
+  document.querySelectorAll('#cv10 ~ .ctrls .minibtn[data-e]').forEach(b=>{
+    b.onclick=()=>{sE.value=parseFloat(b.dataset.e);};
+  });
+  function draw(){
+    const e=parseFloat(sE.value)/100;
+    const a=200;
+    const l=a*(1-e*e); // semi-latus rectum
+    ctx.clearRect(0,0,W,H);
+    // orbit ellipse (focus at sun). r=l/(1+e cos th). center offset:
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();let first=true;
+    for(let deg=0;deg<=360;deg+=0.5){
+      const th=deg*Math.PI/180;const r=l/(1+e*Math.cos(th));
+      const X=sunx - r*Math.cos(th), Y=suny - r*Math.sin(th);
+      if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);
+    }
+    ctx.closePath();ctx.stroke();
+    // sun at focus
+    dot(ctx,sunx,suny,'#E86A17',12);label(ctx,'太阳(焦点,非中心)',sunx-70,suny-20,'#E86A17');
+    // center marker to show sun is NOT center
+    const cx = sunx + a*e; // center offset (since perihelion at th=0 to -x)
+    // perihelion at th=0 => X=sunx-l/(1+e). center is midpoint of major axis.
+    const rPeri=l/(1+e), rApo=l/(1-e);
+    const periX=sunx - rPeri, apoX=sunx + rApo;
+    const centerX=(periX+apoX)/2;
+    ctx.strokeStyle='#999';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(centerX,suny-6);ctx.lineTo(centerX,suny+6);ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'几何中心',centerX-24,suny+30,'#999');
+    // planet
+    const r=l/(1+e*Math.cos(theta));
+    const P={x:sunx - r*Math.cos(theta), y:suny - r*Math.sin(theta)};
+    // swept sector (last ~ few steps)
+    if(sweeps.length>1){
+      ctx.fillStyle='rgba(30,158,134,0.35)';
+      ctx.beginPath();ctx.moveTo(sunx,suny);
+      for(const s of sweeps){const rr=l/(1+e*Math.cos(s));ctx.lineTo(sunx-rr*Math.cos(s),suny-rr*Math.sin(s));}
+      ctx.closePath();ctx.fill();
+    }
+    dot(ctx,P.x,P.y,'#1450C8',8);label(ctx,'行星',P.x+8,P.y-8,'#1450C8');
+    const speed=1/(r*r);
+    document.getElementById('v10val').textContent='e = '+e.toFixed(3);
+    document.getElementById('v10info').innerHTML='e='+e.toFixed(3)+',太阳在<b>焦点</b>(不在几何中心)。近日点飞快、远日点慢(dθ/dt∝1/r²)。绿扇形:<b>相同时间扫过相同面积</b>(开普勒第二定律)。当前速度∝'+(speed*10000).toFixed(1)+'。';
+  }
+  function loop(){
+    const e=parseFloat(sE.value)/100;
+    const a=200,l=a*(1-e*e);
+    const r=l/(1+e*Math.cos(theta));
+    // dtheta ∝ 1/r^2 (angular momentum const). scale so it moves nicely
+    const dth = 900/(r*r);
+    theta+=dth; if(theta>Math.PI*2)theta-=Math.PI*2;
+    // record sweep window of fixed TIME (fixed number of frames) to visualize equal area
+    sweeps.push(theta); if(sweeps.length>14)sweeps.shift();
+    draw();
+    raf=requestAnimationFrame(loop);
+  }
+  sE.addEventListener('input',()=>{sweeps=[];});
+  loop();
+})();
+
+/* =========================================================
+   VIZ 11 chordPointDiff
+========================================================= */
+(function(){
+  const c=document.getElementById('cv11'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,ox=W/2,oy=H/2;
+  const a=290,b=170;
+  const sA=document.getElementById('v11a'),sB=document.getElementById('v11b');
+  function draw(){
+    const angA=parseFloat(sA.value)*Math.PI/180, angB=parseFloat(sB.value)*Math.PI/180;
+    ctx.clearRect(0,0,W,H);grid(ctx,W,H,ox,oy,40);
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=360;i++){const th=i*Math.PI/180;const X=ox+a*Math.cos(th),Y=oy-b*Math.sin(th);if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}
+    ctx.closePath();ctx.stroke();
+    // world points (y up)
+    const Aw={x:a*Math.cos(angA), y:b*Math.sin(angA)};
+    const Bw={x:a*Math.cos(angB), y:b*Math.sin(angB)};
+    const Ap={x:ox+Aw.x,y:oy-Aw.y}, Bp={x:ox+Bw.x,y:oy-Bw.y};
+    const M={x:(Aw.x+Bw.x)/2, y:(Aw.y+Bw.y)/2};
+    const Mp={x:ox+M.x, y:oy-M.y};
+    // chord
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(Ap.x,Ap.y);ctx.lineTo(Bp.x,Bp.y);ctx.stroke();
+    // OM
+    ctx.strokeStyle='#E86A17';ctx.lineWidth=2.5;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(Mp.x,Mp.y);ctx.stroke();ctx.setLineDash([]);
+    dot(ctx,ox,oy,'#16120A',5);label(ctx,'O',ox-16,oy+16);
+    dot(ctx,Ap.x,Ap.y,'#1450C8',6);label(ctx,'A',Ap.x+6,Ap.y-6,'#1450C8');
+    dot(ctx,Bp.x,Bp.y,'#1E9E86',6);label(ctx,'B',Bp.x+6,Bp.y-6,'#1E9E86');
+    dot(ctx,Mp.x,Mp.y,'#E86A17',6);label(ctx,'M',Mp.x+6,Mp.y+14,'#E86A17');
+    const dxAB=Bw.x-Aw.x, dyAB=Bw.y-Aw.y;
+    let kAB = Math.abs(dxAB)<1e-6 ? Infinity : dyAB/dxAB;
+    let kOM = Math.abs(M.x)<1e-6 ? Infinity : M.y/M.x;
+    const target=-(b*b)/(a*a);
+    let prod = (isFinite(kAB)&&isFinite(kOM)) ? kAB*kOM : NaN;
+    document.getElementById('v11kab').textContent=isFinite(kAB)?kAB.toFixed(3):'∞';
+    document.getElementById('v11kom').textContent=isFinite(kOM)?kOM.toFixed(3):'∞';
+    document.getElementById('v11prod').textContent=isFinite(prod)?prod.toFixed(3):'—';
+    document.getElementById('v11tgt').textContent=target.toFixed(3);
+    document.getElementById('v11va').textContent='A = '+sA.value+'°';
+    document.getElementById('v11vb').textContent='B = '+sB.value+'°';
+    let ok = isFinite(prod) && Math.abs(prod-target)<0.03;
+    document.getElementById('v11info').innerHTML = ok
+      ? '✓ <b>点差法验证成立</b>:k_OM·k_AB = '+prod.toFixed(3)+' = −b²/a² = '+target.toFixed(3)+'(理论上对<b>任意</b>弦都恒等,数值小差来自作图)。'
+      : (isFinite(prod)? 'k_OM·k_AB = <b>'+prod.toFixed(3)+'</b>,目标 −b²/a² = '+target.toFixed(3)+'。理论恒等,微调 A、B 让数值贴近。' : 'A、B 太靠近或竖直,换个角度。');
+  }
+  sA.addEventListener('input',draw);sB.addEventListener('input',draw);draw();
+})();
+
+/* =========================================================
+   VIZ 12 eccentricityShape
+========================================================= */
+(function(){
+  const c=document.getElementById('cv12'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sE=document.getElementById('v12e');
+  function draw(){
+    const e=parseFloat(sE.value)/100;
+    ctx.clearRect(0,0,W,H);
+    // top: ellipse
+    const cx=W/2, cyT=140, a=300;
+    const b=a*Math.sqrt(1-e*e), cc=a*e;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(cx-a-10,cyT);ctx.lineTo(cx+a+10,cyT);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=360;i++){const th=i*Math.PI/180;const X=cx+a*Math.cos(th),Y=cyT-b*Math.sin(th);if(i===0)ctx.moveTo(X,Y);else ctx.lineTo(X,Y);}
+    ctx.closePath();ctx.stroke();
+    dot(ctx,cx-cc,cyT,'#E0382A',6);dot(ctx,cx+cc,cyT,'#E0382A',6);
+    label(ctx,'椭圆:e=0 正圆 → e→1 压扁,焦点滑向两端',cx-190,cyT-b-16,'#1450C8');
+    // bottom: hyperbola with e' = 1 + e (so it varies 1..2)
+    const cyB=360, ah=90;
+    const eh=1.05+e*1.1; // hyperbola eccentricity 1.05..2.15
+    const bh=ah*Math.sqrt(eh*eh-1), ch=ah*eh;
+    ctx.strokeStyle='#7A3FF2';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(cx-W/2,cyB+(bh/ah)*(W/2));ctx.lineTo(cx+W/2,cyB-(bh/ah)*(W/2));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-W/2,cyB-(bh/ah)*(W/2));ctx.lineTo(cx+W/2,cyB+(bh/ah)*(W/2));ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=3;
+    for(const s of [1,-1]){ctx.beginPath();let first=true;for(let t=-1.7;t<=1.7;t+=0.02){const X=cx+s*ah*Math.cosh(t),Y=cyB-bh*Math.sinh(t);if(first){ctx.moveTo(X,Y);first=false;}else ctx.lineTo(X,Y);}ctx.stroke();}
+    label(ctx,'双曲线:e>1,渐近线张角随 e 变(b/a=√(e²−1))',cx-200,cyB+H*0-140,'#1E9E86');
+    document.getElementById('v12val').textContent='e = '+e.toFixed(2);
+    document.getElementById('v12info').innerHTML='椭圆 e='+e.toFixed(2)+':扁的程度 = c/a。上图焦点(红)间距=2c 随 e 增大而外扩,b=a√(1−e²) 缩小 ⇒ 越扁。下图双曲线(e'+' ='+eh.toFixed(2)+')张口随 e 增大。';
+  }
+  sE.addEventListener('input',draw);draw();
+})();
+
+/* =========================================================
+   自测 12 题
+========================================================= */
+const qs=[
+ {q:"1.(基础) 椭圆的第一定义是什么?约束条件是?",a:"到两焦点距离之和为常数 2a,且 2a>2c(即和大于焦距),否则画不出。"},
+ {q:"2.(基础) 椭圆 c²=? 双曲线 c²=? 哪个 a 是斜边?",a:"椭圆 c²=a²−b²(a 是斜边,最大);双曲线 c²=a²+b²(c 是斜边,最大)。一减一加,最高频混淆点。"},
+ {q:"3.(基础) 抛物线 y²=8x 的焦点、准线、通径?",a:"2p=8→p=4。焦点 (p/2,0)=(2,0),准线 x=−2,通径 2p=8。"},
+ {q:"4.(基础) 圆锥曲线的统一(第二)定义?e 如何区分四类?",a:"到焦点距离÷到准线距离=e(常数)。e=0 圆,0<e<1 椭圆,e=1 抛物线,e>1 双曲线。"},
+ {q:"5.(中等) 双曲线渐近线 y=±2x,求离心率。",a:"b/a=2→b²=4a²,c²=a²+b²=5a²,e=c/a=√5。"},
+ {q:"6.(中等) 椭圆焦点三角形面积公式?θ=∠F₁PF₂。",a:"S=b²·tan(θ/2)。由 r₁+r₂=2a 与余弦定理解出 r₁r₂,再 S=½r₁r₂sinθ 化简。"},
+ {q:"7.(中等) 抛物线 y²=4x 过焦点弦 AB,求 1/|AF|+1/|BF|。",a:"焦点弦定值 1/r₁+1/r₂=2/p。此处 2p=4→p=2,故值=2/2=1(与倾角无关)。"},
+ {q:"8.(中等) Dandelin 球如何证明椭圆两焦点存在?",a:"圆锥内塞两个内切球,各与切面相切于一点即 F₁、F₂;由『同一外点到球的切线段等长』得 PF₁+PF₂=两球间母线段长=常数=2a。"},
+ {q:"9.(拔高) 直线 y=x−1 交椭圆 x²/4+y²=1 于 A、B,求 |AB|。",a:"代入:x²/4+(x−1)²=1→5x²−8x=0,x₁+x₂=8/5,x₁x₂=0。|AB|=√(1+1²)·√((8/5)²−0)=√2·8/5=8√2/5。"},
+ {q:"10.(拔高) 椭圆 x²/4+y²=1 弦 AB 中点 M(1,½),求弦斜率;为何要验证?",a:"点差法 k=−b²x₀/(a²y₀)=−(1·1)/(4·½)=−1/2。必须验中点 (1,1/2) 在椭圆内部(1/4+1/4=1/2<1,成立),否则弦不存在。"},
+ {q:"11.(拔高) 为什么行星走椭圆而太阳在焦点?行星为何不掉进太阳?",a:"牛顿由引力 F∝1/r² 推出束缚轨道是椭圆,太阳位于焦点(开普勒第一定律)。行星有横向速度(角动量),一直朝太阳掉却又一直侧移错过,合成闭合椭圆。"},
+ {q:"12.(拔高) 圆锥曲线的极坐标统一式?各 e 对应什么?",a:"以焦点为极点 r=l/(1+e·cosθ),l 为半通径。e=0 圆,0<e<1 椭圆,e=1 抛物线(θ=π 处 r→∞),e>1 双曲线。一个公式统治全族。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
