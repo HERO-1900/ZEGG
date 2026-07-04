@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pH 计算(酸碱 pH 与 Kw) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1E9E86;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .ctrl input[type=number]{width:74px;border:3px solid var(--ink);padding:5px 7px;font-weight:800;font-size:13.5px;font-family:"SF Mono",Consolas,monospace}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--blue)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:560px){.fields{grid-template-columns:1fr}}
+  .fbox{border:3px solid var(--ink);padding:10px 12px;background:var(--card)}
+  .fbox h4{margin:0 0 6px;font-size:13.5px;font-weight:900}
+  .frow{display:flex;align-items:center;gap:6px;margin:4px 0;font-size:12.5px;font-weight:800}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>pH 计算(酸碱 pH 与 Kw)</h1>
+    <p class="lead">pH 是选择与填空里最"稳"的送分点,但也是最容易翻车的地方——稀释、混合、温度一变,套路就换。这一包把每种题型拆成"触发信号 → 标准动作 → 例题 → 陷阱",配上可拨动的换算尺、稀释曲线、混合计算器与突跃图,把 pH 彻底算明白。</p>
+
+    <div class="say">🗣️ <b>pH 就是给酸碱强度量体温:</b> 温度计读数越低越"烧"(越酸),越高越"凉"(越碱),7 是"正常体温"(中性)。<br>体温计的原理是 <b>pH = −lg c(H⁺)</b>:c(H⁺) 每涨 10 倍,pH 就降 1 个刻度。而 H⁺ 和 OH⁻ 像跷跷板两端,乘积永远被锁死在 <b>Kw</b> 上(常温 10⁻¹⁴)——按住一端,另一端必然翘起。抓住"<b>先定谁过量、再算余下浓度、最后取对数</b>"这条主线,pH 题就没有意外。</div>
+
+    <div class="keybox"><b>本包主线:</b> ① Kw 与 pH 的定义 → ② 单一强酸/强碱直接算 → ③ 稀释规律(强酸每 10 倍 ±1,弱酸更"扛") → ④ 强酸强碱混合(先判过量再算) → ⑤ pH↔c 互算 → ⑥ 温度对 Kw 与中性的影响。每节都配可拨动的可视化,先看懂再动手。</div>
+
+    <!-- ========================= 1 核心原理 ========================= -->
+    <h2 class="g">① 核心原理:Kw 与 pH 的定义</h2>
+    <div class="card">
+      <div class="eq">Kw = c(H⁺)·c(OH⁻)　　　pH = −lg c(H⁺)</div>
+      <p class="step">常温(25℃)下 <b>Kw = 1×10⁻¹⁴</b>,纯水 c(H⁺)=c(OH⁻)=10⁻⁷ mol/L。水的电离吸热,<b>升温 Kw 增大</b>(如 100℃ 时 Kw≈10⁻¹²)。Kw 只与温度有关,加酸加碱都不改变它。</p>
+      <p class="step"><b>pH 的范围:</b> 稀溶液常温 pH 在 0~14 之间。pH&lt;7 酸性、=7 中性、&gt;7 碱性。c(H⁺) 越大 pH 越小(<b>反着走</b>);每稀释 10 倍(酸)pH 加 1。</p>
+      <h3>常温三性判据</h3>
+      <table>
+        <tr><th>性质</th><th>c(H⁺) 与 c(OH⁻)</th><th>常温 pH</th></tr>
+        <tr><td>酸性</td><td>c(H⁺) &gt; c(OH⁻)</td><td>&lt; 7</td></tr>
+        <tr><td>中性</td><td>c(H⁺) = c(OH⁻)</td><td>= 7</td></tr>
+        <tr><td>碱性</td><td>c(H⁺) &lt; c(OH⁻)</td><td>&gt; 7</td></tr>
+      </table>
+      <p class="trap">⚠ 判酸碱性的<b>本质</b>是比较 c(H⁺) 与 c(OH⁻),而不是死记 pH=7。温度不是 25℃ 时,中性溶液的 pH 不等于 7(见第 ⑥ 节)。</p>
+      <h3>强酸 / 强碱直接算 pH(核心动作)</h3>
+      <p class="step">① <b>强酸</b>:c(H⁺) = 酸浓度 × 元数,直接 pH = −lg c(H⁺)。例:0.05 mol/L H₂SO₄ → c(H⁺)=0.1 → pH=1。</p>
+      <p class="step">② <b>强碱</b>:先算 c(OH⁻) = 碱浓度 × 元数,用 Kw 换 c(H⁺) = Kw/c(OH⁻),再取对数;或直接 pH = 14 − pOH。例:0.01 mol/L Ba(OH)₂ → c(OH⁻)=0.02 → pOH≈1.7 → pH≈12.3。</p>
+      <h3>稀释规律(常考结论)</h3>
+      <table>
+        <tr><th>溶液</th><th>稀释 10ⁿ 倍后 pH</th></tr>
+        <tr><td>强酸(pH=a)</td><td>pH = a+n(精确加 n,但始终 &lt;7)</td></tr>
+        <tr><td>弱酸(pH=a)</td><td>pH 增大但 &lt; a+n(电离补偿,变化更小)</td></tr>
+        <tr><td>强碱(pH=b)</td><td>pH = b−n(但始终 &gt;7)</td></tr>
+        <tr><td>弱碱(pH=b)</td><td>pH 减小但 &gt; b−n</td></tr>
+      </table>
+      <p class="trap">⚠ <b>无限稀释</b>时,任何酸碱的 pH 都只能<b>无限接近 7</b>,绝不会越过 7(酸再稀也是酸性)。弱酸稀释<b>不能</b>简单"×10 倍 pH 加 1",因为稀释促进了电离、不断补充 H⁺。</p>
+    </div>
+
+    <div class="card">
+      <h3>强酸强碱混合:三步法(最高频)</h3>
+      <div class="mono">第一步:分别算 n(H⁺) = c酸·V酸·元数,n(OH⁻) = c碱·V碱·元数</div>
+      <div class="mono">第二步:判过量。H⁺ 与 OH⁻ 1:1 中和,比较 n(H⁺) 与 n(OH⁻) 谁大</div>
+      <div class="mono">第三步:酸过量算余下 c(H⁺)=Δn/V总 → pH;碱过量算余下 c(OH⁻) → 换 c(H⁺) → pH;恰好中和 pH=7</div>
+      <p class="step"><b>特别提醒总体积:</b> 混合后 V总 = V酸 + V碱(近似加和),别忘了用总体积算余下浓度。</p>
+      <h3>pH 之和为 14 的两溶液等体积混合(经典判断)</h3>
+      <p class="step">常温下,pH₁ + pH₂ = 14 意味着 c(H⁺)酸 = c(OH⁻)碱。等体积混合后:</p>
+      <table>
+        <tr><th>组合</th><th>结果</th></tr>
+        <tr><td>强酸 + 强碱</td><td>恰好中和,<b>pH = 7</b>(中性)</td></tr>
+        <tr><td>强酸 + 弱碱(pH 之和 14)</td><td>弱碱实际浓度大、有储备 → 碱过量,<b>pH &gt; 7</b></td></tr>
+        <tr><td>弱酸 + 强碱(pH 之和 14)</td><td>弱酸实际浓度大 → 酸过量,<b>pH &lt; 7</b></td></tr>
+      </table>
+      <p class="trap">⚠ 口诀:"<b>谁弱谁过量,混合显谁性</b>"。因为弱的一方在相同 pH 下真实浓度更大,中和后自己有剩。</p>
+    </div>
+
+    <!-- ========================= 交互1 换算尺 ========================= -->
+    <div class="viz">
+      <div class="pill">交互 1 · pH ↔ c(H⁺) ↔ c(OH⁻) 联动换算尺</div>
+      <p class="step">拖动 pH 滑块,实时看三者联动:c(H⁺) 与 c(OH⁻) 是跷跷板两端(乘积恒为 Kw),pH 是给 c(H⁺) 取的对数刻度。</p>
+      <div class="readbig"><span id="rsPH">7.0</span></div>
+      <div class="ctrl"><span>pH</span><input id="rsSlide" type="range" min="0" max="14" step="0.1" value="7"></div>
+      <svg id="rsBar" viewBox="0 0 760 160"></svg>
+      <div class="readout">
+        <div><b>c(H⁺) mol/L</b><span id="rsH">—</span></div>
+        <div><b>c(OH⁻) mol/L</b><span id="rsOH">—</span></div>
+        <div><b>性质</b><span id="rsState">—</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 交互6 温度计/数轴 ========================= -->
+    <div class="viz">
+      <div class="pill">交互 2 · pH 温度计 · 酸碱数轴</div>
+      <p class="step">同一个 pH,配上"温度计"和"数轴"两种可视化。看它落在酸区还是碱区,离中性 7 有多远。</p>
+      <svg id="thermo" viewBox="0 0 760 200"></svg>
+      <div class="ctrl"><span>pH</span><input id="thSlide" type="range" min="0" max="14" step="0.1" value="3"></div>
+    </div>
+
+    <!-- ========================= 交互4 Kw温度 ========================= -->
+    <h2 class="o">② Kw 随温度变化 · 中性 ≠ pH 7</h2>
+    <div class="card">
+      <p class="step">水的电离是<b>吸热</b>的:升温平衡正向移动,Kw 增大。这直接改变"中性"的 pH:中性时 c(H⁺)=c(OH⁻),所以 <b>中性 pH = −½·lg Kw</b>。</p>
+      <table>
+        <tr><th>温度</th><th>Kw(近似)</th><th>中性 pH = −½·lg Kw</th></tr>
+        <tr><td>25℃</td><td>1×10⁻¹⁴</td><td>7.0</td></tr>
+        <tr><td>60℃</td><td>≈1×10⁻¹³</td><td>≈6.5</td></tr>
+        <tr><td>100℃</td><td>≈1×10⁻¹²</td><td>≈6.0</td></tr>
+      </table>
+      <p class="trap">⚠ 高温下纯水 pH&lt;7 却<b>仍是中性</b>(c(H⁺)=c(OH⁻))!判酸碱性看 c(H⁺) 与 c(OH⁻) 谁大,不是死盯 pH=7。同时 pH+pOH=14 只在常温成立。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · Kw 随温度变化图</div>
+      <p class="step">拖动温度滑块,看 Kw 沿曲线上升,以及"中性点"的 pH 从 7 往下滑。理解为什么高温中性水的 pH 会小于 7。</p>
+      <canvas id="cKw" width="760" height="300"></canvas>
+      <div class="ctrl"><span>温度:<b id="kwT">25</b> ℃</span><input id="kwSlide" type="range" min="0" max="100" step="1" value="25"></div>
+      <div class="readout">
+        <div><b>Kw</b><span id="kwVal">—</span></div>
+        <div><b>中性 c(H⁺)=c(OH⁻)</b><span id="kwC">—</span></div>
+        <div><b>中性 pH</b><span id="kwPH">—</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 交互2 稀释对比 ========================= -->
+    <h2 class="b">③ 稀释:强酸 vs 弱酸,谁更"扛"</h2>
+    <div class="card">
+      <p class="step">相同起点 pH 的强酸与弱酸,同时加水稀释。强酸 pH 沿直线爬升(每 10 倍 +1),弱酸因为不断补充电离,曲线更"平缓"、变化更小——这是图像题的命门。两者都只能无限逼近 7。</p>
+      <p class="trap">⚠ 若是相同"浓度"(不是相同 pH)对比,弱酸起点 pH 本就更高;题目一定要看清"同浓度"还是"同 pH"两套前提。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 稀释 pH 变化动画(可调倍数)</div>
+      <p class="step">同为 pH=3 起点,点"开始稀释"看两条曲线趋近中性线 pH=7。强酸(红)直线上升,弱酸(蓝)上凸更慢。</p>
+      <canvas id="cDil" width="760" height="320"></canvas>
+      <div class="ctrl"><button class="vbtn" id="dilPlay">▶ 开始稀释</button><button class="vbtn dark" id="dilReset">重置</button><span>稀释倍数:<b id="dilFac">1×</b></span></div>
+      <div class="legend"><span style="color:var(--red)"><span style="background:var(--red)"></span>强酸(HCl)</span><span style="color:var(--blue)"><span style="background:var(--blue)"></span>弱酸(HAc)</span><span><span style="background:#999"></span>中性线 pH=7</span></div>
+    </div>
+
+    <!-- ========================= 交互3 混合计算器 ========================= -->
+    <h2 class="v">④ 强酸强碱混合计算器</h2>
+    <div class="card">
+      <p class="step">下面这个计算器帮你把"三步法"走一遍:输入两溶液的浓度、体积与元数,它自动算 n(H⁺)、n(OH⁻),判谁过量,给出余下浓度与 pH,并在数轴上标出结果位置。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 混合计算器(自动判过量 → pH → 数轴)</div>
+      <div class="fields">
+        <div class="fbox">
+          <h4 style="color:var(--red)">酸溶液</h4>
+          <div class="frow">c(酸)/mol·L⁻¹ <input id="mCa" type="number" value="0.1" step="0.01" min="0"></div>
+          <div class="frow">V(酸)/mL <input id="mVa" type="number" value="20" step="1" min="0"></div>
+          <div class="frow">元数(H⁺ 数)<input id="mNa" type="number" value="1" step="1" min="1"></div>
+        </div>
+        <div class="fbox">
+          <h4 style="color:var(--blue)">碱溶液</h4>
+          <div class="frow">c(碱)/mol·L⁻¹ <input id="mCb" type="number" value="0.1" step="0.01" min="0"></div>
+          <div class="frow">V(碱)/mL <input id="mVb" type="number" value="20" step="1" min="0"></div>
+          <div class="frow">元数(OH⁻ 数)<input id="mNb" type="number" value="1" step="1" min="1"></div>
+        </div>
+      </div>
+      <div class="ctrl"><button class="vbtn" id="mCalc">计算 pH</button></div>
+      <div class="verdict" id="mVerdict">输入数据后点"计算 pH"。</div>
+      <svg id="mAxis" viewBox="0 0 760 130"></svg>
+      <div class="readout">
+        <div><b>n(H⁺)/mol</b><span id="mnH">—</span></div>
+        <div><b>n(OH⁻)/mol</b><span id="mnOH">—</span></div>
+        <div><b>结果 pH</b><span id="mPH">—</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 交互5 突跃曲线 ========================= -->
+    <h2 class="r">⑤ 中和 pH 突跃曲线</h2>
+    <div class="card">
+      <p class="step">向定量的酸中逐滴加碱(反之亦然),恰好中和(等当点)附近 pH 会发生<b>突跃</b>:一滴之内 pH 大幅跳变。突跃越宽,越好选指示剂。强强突跃最宽、终点≈7;强碱滴弱酸终点偏碱、突跃变窄。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 滴入体积 → pH 突跃曲线</div>
+      <p class="step">选滴定体系,拖动"已滴入体积"滑块,看 pH 沿曲线爬升,在等当点 25 mL 附近陡然突跃。红点是当前状态。</p>
+      <div class="chips" id="titChips"></div>
+      <canvas id="cTit" width="760" height="340"></canvas>
+      <div class="ctrl"><span>已滴入:<b id="titV">0.0</b> mL</span><input id="titSlide" type="range" min="0" max="50" step="0.1" value="0"></div>
+      <div class="verdict" id="titNote"></div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑥ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑦ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. <b>弱酸稀释</b>不能简单"×10 倍 pH 加 1"。弱酸稀释促进电离、补充 H⁺,pH 变化小于 1;强酸才是精确 +1。</p>
+      <p class="trap">2. <b>混合先中和、再算过量</b>。别把两溶液 c(H⁺) 直接加加减减;必须先用物质的量判谁过量。</p>
+      <p class="trap">3. <b>温度非 25℃ 时 Kw 变、中性 ≠ pH 7</b>。高温纯水 pH&lt;7 仍是中性;pH+pOH=14 只在常温成立。</p>
+      <p class="trap">4. 算余下浓度<b>忘用总体积</b> V总=V酸+V碱。这是混合题最常见的低级失分。</p>
+      <p class="trap">5. 强碱算 pH 时<b>直接对 c(碱)取对数</b>——错!要先算 c(OH⁻),再用 Kw 换 c(H⁺) 或用 pH=14−pOH。</p>
+      <p class="trap">6. <b>元数漏乘</b>:H₂SO₄、Ba(OH)₂ 提供 2 份 H⁺/OH⁻,c(H⁺)/c(OH⁻) 要乘 2。</p>
+      <p class="trap">7. <b>无限稀释越过 7</b>——不可能。酸稀到极限也只逼近 7,方向不变。</p>
+      <p class="trap">8. pH 之和为 14 等体积混合,盲判 pH=7——只有<b>强+强</b>才是 7;含弱的一方,弱者过量、显弱者性。</p>
+    </div>
+
+    <!-- ========================= 尖子生拔高 ========================= -->
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>一切换算都绕着 Kw 转:</b> 记住 pH+pOH=−lg Kw(常温=14)。给你 pOH、给你 c(OH⁻),先在心里换成 c(H⁺) 或直接用 −lg Kw 减,一步到位。</p>
+      <p class="step">▸ <b>混合题用"物质的量"而非"浓度"思考:</b> n(H⁺)、n(OH⁻) 才是可加减的守恒量,过量的 Δn 除以 V总 就是余下浓度。把浓度题翻译成"数格子"永远不出错。</p>
+      <p class="step">▸ <b>稀释曲线是对数几何:</b> 强酸 pH-lg(稀释倍数)是斜率 1 的直线;弱酸"上凸"是因为电离度随稀释增大、补偿了 H⁺——这就是图像题里判强弱的几何依据。</p>
+      <p class="step">▸ <b>"同 pH"与"同浓度"是两套世界:</b> 同 pH 的强酸弱酸,弱酸真实浓度更大(有储备),稀释后弱酸 pH 变化更小、和强碱中和时弱酸更"经打"。看清前提再下结论。</p>
+      <p class="step">▸ <b>突跃宽窄反映强弱:</b> 强强突跃跨越最大(约 pH 4→10),终点≈7;一强一弱突跃变窄、终点偏向弱者对应的性,指示剂随之改选(酚酞 / 甲基橙)。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:水溶液离子平衡 / 化学平衡</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function fmt(x){if(x===0)return '0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(2)+'×10'+sup(e);}
+function sup(n){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>map[c]||c).join('');}
+
+/* ============ 交互1 换算尺 pH↔c(H⁺)↔c(OH⁻) ============ */
+(function(){
+  const svg=document.getElementById('rsBar');
+  function draw(ph){
+    const h=Math.pow(10,-ph),oh=Math.pow(10,-(14-ph));
+    document.getElementById('rsPH').textContent=ph.toFixed(1);
+    document.getElementById('rsH').textContent=fmt(h);
+    document.getElementById('rsOH').textContent=fmt(oh);
+    let st='中性',col='#1E9E86';if(ph<6.95){st='酸性';col='#E0382A';}else if(ph>7.05){st='碱性';col='#1450C8';}
+    document.getElementById('rsState').textContent=st;
+    document.getElementById('rsPH').style.color=col;
+    const hH=14-ph,hOH=ph;const scale=8;
+    svg.innerHTML='<rect x="70" y="'+(130-hH*scale)+'" width="120" height="'+(hH*scale)+'" fill="#E0382A" stroke="#16120A" stroke-width="3"/>'
+      +'<rect x="570" y="'+(130-hOH*scale)+'" width="120" height="'+(hOH*scale)+'" fill="#1450C8" stroke="#16120A" stroke-width="3"/>'
+      +'<line x1="0" y1="130" x2="760" y2="130" stroke="#16120A" stroke-width="3"/>'
+      +'<text x="130" y="148" text-anchor="middle" font-size="13" font-weight="800" fill="#E0382A">c(H⁺) 高</text>'
+      +'<text x="630" y="148" text-anchor="middle" font-size="13" font-weight="800" fill="#1450C8">c(OH⁻) 高</text>'
+      +'<text x="380" y="34" text-anchor="middle" font-size="16" font-weight="900" fill="'+col+'">'+st+'　pH='+ph.toFixed(1)+'</text>'
+      +'<text x="380" y="60" text-anchor="middle" font-size="12" font-weight="700">跷跷板:一端 c(H⁺)、一端 c(OH⁻),乘积恒为 Kw=10⁻¹⁴</text>';
+  }
+  document.getElementById('rsSlide').oninput=function(e){draw(+e.target.value);};draw(7);
+})();
+
+/* ============ 交互2 温度计 + 数轴 ============ */
+(function(){
+  const svg=document.getElementById('thermo');
+  function colFor(ph){if(ph<6.95)return '#E0382A';if(ph>7.05)return '#1450C8';return '#1E9E86';}
+  function draw(ph){
+    const col=colFor(ph);
+    let st='中性';if(ph<6.95)st='酸性';else if(ph>7.05)st='碱性';
+    /* 温度计:左侧竖管,球在底,液柱高度随 pH */
+    const bx=90,btop=30,bbot=150,bh=bbot-btop;
+    const fillY=bbot-(ph/14)*bh;
+    /* 数轴:横向 0~14 */
+    const ax0=200,ax1=720,ay=110;
+    const px=ax0+(ph/14)*(ax1-ax0);
+    let s='';
+    /* 温度计外管 */
+    s+='<rect x="'+(bx-13)+'" y="'+btop+'" width="26" height="'+bh+'" rx="13" fill="#fff" stroke="#16120A" stroke-width="3"/>';
+    s+='<circle cx="'+bx+'" cy="'+(bbot+16)+'" r="22" fill="'+col+'" stroke="#16120A" stroke-width="3"/>';
+    s+='<rect x="'+(bx-9)+'" y="'+fillY+'" width="18" height="'+(bbot-fillY)+'" fill="'+col+'"/>';
+    s+='<circle cx="'+bx+'" cy="'+(bbot+16)+'" r="15" fill="'+col+'"/>';
+    s+='<text x="'+bx+'" y="'+(bbot+55)+'" text-anchor="middle" font-size="14" font-weight="900" fill="'+col+'">'+st+'</text>';
+    s+='<text x="'+bx+'" y="24" text-anchor="middle" font-size="12" font-weight="800">pH 计</text>';
+    /* 数轴 */
+    s+='<line x1="'+ax0+'" y1="'+ay+'" x2="'+ax1+'" y2="'+ay+'" stroke="#16120A" stroke-width="4"/>';
+    for(let t=0;t<=14;t+=2){const xx=ax0+(t/14)*(ax1-ax0);s+='<line x1="'+xx+'" y1="'+(ay-7)+'" x2="'+xx+'" y2="'+(ay+7)+'" stroke="#16120A" stroke-width="3"/>';s+='<text x="'+xx+'" y="'+(ay+26)+'" text-anchor="middle" font-size="12" font-weight="800">'+t+'</text>';}
+    /* 区间底色标签 */
+    s+='<text x="'+(ax0+(3.5/14)*(ax1-ax0))+'" y="'+(ay-20)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#E0382A">酸性</text>';
+    s+='<text x="'+(ax0+(7/14)*(ax1-ax0))+'" y="'+(ay-38)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#1E9E86">中性 7</text>';
+    s+='<text x="'+(ax0+(10.5/14)*(ax1-ax0))+'" y="'+(ay-20)+'" text-anchor="middle" font-size="12" font-weight="900" fill="#1450C8">碱性</text>';
+    /* 指针 */
+    s+='<polygon points="'+px+','+(ay-13)+' '+(px-9)+','+(ay-30)+' '+(px+9)+','+(ay-30)+'" fill="'+col+'" stroke="#16120A" stroke-width="2"/>';
+    s+='<circle cx="'+px+'" cy="'+ay+'" r="7" fill="'+col+'" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+px+'" y="'+(ay-40)+'" text-anchor="middle" font-size="14" font-weight="900" fill="'+col+'">pH '+ph.toFixed(1)+'</text>';
+    svg.innerHTML=s;
+  }
+  document.getElementById('thSlide').oninput=function(e){draw(+e.target.value);};draw(3);
+})();
+
+/* ============ 交互3 Kw 随温度变化 ============ */
+(function(){
+  const cv=document.getElementById('cKw'),ctx=cv.getContext('2d');
+  const W=760,H=300,padL=64,padB=48,padT=20,padR=20;
+  /* pKw 近似:25℃→14, 100℃→12, 0℃→14.9;用平滑近似曲线 */
+  function pKw(T){return 14.94 - 0.0405*T + 0.0000841*T*T;} /* 经验拟合,0℃≈14.94,25℃≈14.0,100℃≈12.0 */
+  function Kw(T){return Math.pow(10,-pKw(T));}
+  function x(T){return padL+(T/100)*(W-padL-padR);}
+  function y(pk){return H-padB-((pk-11.5)/(15.5-11.5))*(H-padB-padT);}
+  function draw(T){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('pKw = −lg Kw',padL-8,padT-4);ctx.fillText('温度 / ℃',W-90,H-padB+34);
+    for(let pk=12;pk<=15;pk++){const yy=y(pk);ctx.strokeStyle='#e3d9b8';ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();ctx.fillStyle='#6b5d3a';ctx.fillText(pk,padL-34,yy+4);}
+    for(let t=0;t<=100;t+=20){const xx=x(t);ctx.fillStyle='#6b5d3a';ctx.fillText(t,xx-7,H-padB+18);}
+    /* 曲线(注意 pKw 随 T 减小,即 Kw 增大;y 越小越靠下) */
+    ctx.strokeStyle='#E86A17';ctx.lineWidth=4;ctx.beginPath();
+    for(let t=0;t<=100;t+=1){const yy=y(pKw(t));t===0?ctx.moveTo(x(t),yy):ctx.lineTo(x(t),yy);}ctx.stroke();
+    /* 当前点 */
+    const cx=x(T),cy=y(pKw(T));
+    ctx.setLineDash([4,4]);ctx.strokeStyle='#7A3FF2';ctx.beginPath();ctx.moveTo(cx,padT);ctx.lineTo(cx,H-padB);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#7A3FF2';ctx.beginPath();ctx.arc(cx,cy,7,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('升温 → Kw 增大(曲线下行)',padL+16,padT+30);
+  }
+  function update(){
+    const T=+document.getElementById('kwSlide').value;
+    const kw=Kw(T),c=Math.sqrt(kw),ph=-Math.log10(c);
+    document.getElementById('kwT').textContent=T;
+    document.getElementById('kwVal').textContent=fmt(kw);
+    document.getElementById('kwC').textContent=fmt(c);
+    document.getElementById('kwPH').textContent=ph.toFixed(2);
+    draw(T);
+  }
+  document.getElementById('kwSlide').oninput=update;update();
+})();
+
+/* ============ 交互4 强弱酸稀释对比动画 ============ */
+(function(){
+  const cv=document.getElementById('cDil'),ctx=cv.getContext('2d');
+  const W=760,H=320,padL=60,padB=50,padT=20,padR=20;
+  const Ka=1.8e-5;
+  /* 起点 pH=3:强酸 c(H⁺)=1e-3;弱酸配成起点也 pH=3 */
+  const cStrong0=1e-3;
+  const h0=1e-3;const Cw0=h0*h0/Ka+h0; /* 弱酸初始总浓度,使 h=1e-3 */
+  function strongPH(fac){const c=cStrong0/fac;const h=(c+Math.sqrt(c*c+4e-14))/2;return -Math.log10(h);}
+  function weakPH(fac){const C=Cw0/fac;const h=(-Ka+Math.sqrt(Ka*Ka+4*Ka*C))/2;return -Math.log10(h);}
+  const maxLogFac=5;
+  function x(logf){return padL+(logf/maxLogFac)*(W-padL-padR);}
+  function y(ph){return H-padB-((ph-2)/(7.5-2))*(H-padB-padT);}
+  let prog=0,raf=null;
+  function frame(){prog+=0.01;if(prog>=1){prog=1;cancelAnimationFrame(raf);raf=null;}draw();if(raf!==null)raf=requestAnimationFrame(frame);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('pH',padL-46,padT+30);ctx.fillText('稀释倍数(对数)→',W-190,H-padB+34);
+    for(let p=2;p<=7;p++){const yy=y(p);ctx.strokeStyle='#d9cfae';ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();ctx.fillStyle='#6b5d3a';ctx.fillText(p,padL-28,yy+4);}
+    for(let lf=0;lf<=maxLogFac;lf++){const xx=x(lf);ctx.fillStyle='#6b5d3a';ctx.fillText('10'+sup(lf)+'×',xx-14,H-padB+18);}
+    ctx.setLineDash([6,6]);ctx.strokeStyle='#999';ctx.beginPath();ctx.moveTo(padL,y(7));ctx.lineTo(W-padR,y(7));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#666';ctx.fillText('中性线 pH=7(无限稀释只能逼近,不能越过)',padL+16,y(7)-6);
+    const lfMax=maxLogFac*prog;
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=4;ctx.beginPath();
+    for(let lf=0;lf<=lfMax+0.001;lf+=0.05){const ph=strongPH(Math.pow(10,lf));lf===0?ctx.moveTo(x(lf),y(ph)):ctx.lineTo(x(lf),y(ph));}ctx.stroke();
+    ctx.strokeStyle='#1450C8';ctx.lineWidth=4;ctx.beginPath();
+    for(let lf=0;lf<=lfMax+0.001;lf+=0.05){const ph=weakPH(Math.pow(10,lf));lf===0?ctx.moveTo(x(lf),y(ph)):ctx.lineTo(x(lf),y(ph));}ctx.stroke();
+    const fac=Math.pow(10,lfMax);
+    const sp=strongPH(fac),wp=weakPH(fac);
+    [['#E0382A',sp],['#1450C8',wp]].forEach(function(pr){ctx.fillStyle=pr[0];ctx.beginPath();ctx.arc(x(lfMax),y(pr[1]),6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();});
+    document.getElementById('dilFac').textContent='10'+sup(Math.round(lfMax))+'×';
+  }
+  document.getElementById('dilPlay').onclick=function(){if(raf)return;if(prog>=1)prog=0;raf=requestAnimationFrame(frame);};
+  document.getElementById('dilReset').onclick=function(){if(raf){cancelAnimationFrame(raf);raf=null;}prog=0;draw();};
+  draw();
+})();
+
+/* ============ 交互5 混合计算器 ============ */
+(function(){
+  const svg=document.getElementById('mAxis');
+  function drawAxis(ph,col,label){
+    const ax0=40,ax1=720,ay=70;
+    let s='<line x1="'+ax0+'" y1="'+ay+'" x2="'+ax1+'" y2="'+ay+'" stroke="#16120A" stroke-width="4"/>';
+    for(let t=0;t<=14;t+=1){const xx=ax0+(t/14)*(ax1-ax0);const big=(t%2===0);s+='<line x1="'+xx+'" y1="'+(ay-(big?8:5))+'" x2="'+xx+'" y2="'+(ay+(big?8:5))+'" stroke="#16120A" stroke-width="'+(big?3:2)+'"/>';if(big)s+='<text x="'+xx+'" y="'+(ay+26)+'" text-anchor="middle" font-size="12" font-weight="800">'+t+'</text>';}
+    s+='<line x1="'+(ax0+(7/14)*(ax1-ax0))+'" y1="'+(ay-24)+'" x2="'+(ax0+(7/14)*(ax1-ax0))+'" y2="'+(ay+14)+'" stroke="#1E9E86" stroke-width="2" stroke-dasharray="4 4"/>';
+    if(ph!==null){const px=ax0+(Math.max(0,Math.min(14,ph))/14)*(ax1-ax0);
+      s+='<polygon points="'+px+','+(ay-11)+' '+(px-9)+','+(ay-30)+' '+(px+9)+','+(ay-30)+'" fill="'+col+'" stroke="#16120A" stroke-width="2"/>';
+      s+='<text x="'+px+'" y="'+(ay-38)+'" text-anchor="middle" font-size="14" font-weight="900" fill="'+col+'">'+label+'</text>';}
+    svg.innerHTML=s;
+  }
+  function calc(){
+    const Ca=+document.getElementById('mCa').value,Va=+document.getElementById('mVa').value,Na=+document.getElementById('mNa').value;
+    const Cb=+document.getElementById('mCb').value,Vb=+document.getElementById('mVb').value,Nb=+document.getElementById('mNb').value;
+    const nH=Ca*(Va/1000)*Na, nOH=Cb*(Vb/1000)*Nb;
+    const Vtot=(Va+Vb)/1000;
+    document.getElementById('mnH').textContent=nH.toExponential(2);
+    document.getElementById('mnOH').textContent=nOH.toExponential(2);
+    const V=document.getElementById('mVerdict');
+    if(Vtot<=0){V.textContent='请输入正的体积。';document.getElementById('mPH').textContent='—';drawAxis(null);return;}
+    let ph,txt,col;
+    const diff=nH-nOH;
+    if(Math.abs(diff)<1e-12){ph=7;txt='恰好中和:n(H⁺)=n(OH⁻),生成强酸强碱盐,常温 pH=7(中性)。';col='#1E9E86';}
+    else if(diff>0){const h=diff/Vtot;ph=-Math.log10(h);txt='酸过量:余下 c(H⁺)=Δn/V总='+fmt(h)+' mol/L → pH='+ph.toFixed(2)+'(酸性)。';col='#E0382A';}
+    else{const oh=(-diff)/Vtot;const h=1e-14/oh;ph=-Math.log10(h);txt='碱过量:余下 c(OH⁻)='+fmt(oh)+' → c(H⁺)=Kw/c(OH⁻)='+fmt(h)+' → pH='+ph.toFixed(2)+'(碱性)。';col='#1450C8';}
+    V.textContent=txt;V.style.borderColor=col;
+    document.getElementById('mPH').textContent=ph.toFixed(2);
+    drawAxis(ph,col,'pH '+ph.toFixed(2));
+  }
+  document.getElementById('mCalc').onclick=calc;
+  ['mCa','mVa','mNa','mCb','mVb','mNb'].forEach(function(id){document.getElementById(id).oninput=calc;});
+  drawAxis(null);calc();
+})();
+
+/* ============ 交互6 中和突跃曲线 ============ */
+(function(){
+  const cv=document.getElementById('cTit'),ctx=cv.getContext('2d');
+  const W=760,H=340,padL=55,padB=46,padT=18,padR=20;
+  const systems=[
+    {k:'强碱滴强酸(NaOH→HCl)',type:'sa_sb',end:'终点≈7,酚酞/甲基橙均可,突跃最宽',band:[4.3,9.7]},
+    {k:'强碱滴弱酸(NaOH→HAc)',type:'wa',end:'终点偏碱(pH>7),选酚酞,突跃变窄',band:[7.7,9.7]},
+    {k:'强酸滴弱碱(HCl→NH₃·H₂O)',type:'wb',end:'终点偏酸(pH<7),选甲基橙',band:[4.3,6.3]}
+  ];
+  const Vt=25,Ca=0.1,Cb=0.1,Ka=1.8e-5,Kb=1.8e-5,Kw=1e-14;
+  function pH(type,V){
+    if(type==='sa_sb'){
+      const nA=Ca*Vt/1000,nB=Cb*V/1000,tot=(Vt+V)/1000;
+      if(nB<nA)return -Math.log10((nA-nB)/tot);
+      if(nB>nA)return 14+Math.log10((nB-nA)/tot);
+      return 7;
+    }
+    if(type==='wa'){
+      const nA=Ca*Vt/1000,nB=Cb*V/1000,tot=(Vt+V)/1000;
+      if(V===0)return -Math.log10(Math.sqrt(Ka*Ca));
+      if(nB<nA){const cAc=nB/tot,cHA=(nA-nB)/tot;return -Math.log10(Ka*cHA/cAc);}
+      if(Math.abs(nB-nA)<1e-12){const cAc=nA/tot;return 14+Math.log10(Math.sqrt(Kw/Ka*cAc));}
+      return 14+Math.log10((nB-nA)/tot);
+    }
+    if(type==='wb'){
+      const nB=Cb*Vt/1000,nA=Ca*V/1000,tot=(Vt+V)/1000;
+      if(V===0)return 14+Math.log10(Math.sqrt(Kb*Cb));
+      if(nA<nB){const cB=nA/tot,cOH=(nB-nA)/tot;return 14+Math.log10(Kb*cOH/cB);}
+      if(Math.abs(nA-nB)<1e-12){const cNH4=nB/tot;return -Math.log10(Math.sqrt(Kw/Kb*cNH4));}
+      return -Math.log10((nA-nB)/tot);
+    }
+  }
+  const Vmax=50;
+  function x(v){return padL+(v/Vmax)*(W-padL-padR);}
+  function y(p){return H-padB-(p/14)*(H-padB-padT);}
+  let cur=0,V=0;
+  const chips=document.getElementById('titChips');
+  systems.forEach(function(s,i){const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=s.k;b.onclick=function(){[...chips.children].forEach(function(x){x.classList.remove('on');});b.classList.add('on');cur=i;draw();info();};chips.appendChild(b);});
+  function draw(){
+    const s=systems[cur];ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('pH',padL-44,padT+28);ctx.fillText('V(滴入)/mL',W-140,H-padB+32);
+    for(let p=0;p<=14;p+=2){const yy=y(p);ctx.strokeStyle='#d9cfae';ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();ctx.fillStyle='#6b5d3a';ctx.fillText(p,padL-26,yy+4);}
+    for(let v=0;v<=50;v+=10){ctx.fillStyle='#6b5d3a';ctx.fillText(v,x(v)-6,H-padB+18);}
+    /* 指示剂变色/突跃区 */
+    const yA=y(s.band[1]),yB=y(s.band[0]);ctx.fillStyle='rgba(243,192,14,0.30)';ctx.fillRect(padL,yA,W-padL-padR,yB-yA);ctx.fillStyle='#8a6d00';ctx.fillText('突跃 / 指示剂变色区',W-280,yA+14);
+    /* 等当点线 */
+    ctx.setLineDash([5,5]);ctx.strokeStyle='#7A3FF2';ctx.beginPath();ctx.moveTo(x(25),padT);ctx.lineTo(x(25),H-padB);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#7A3FF2';ctx.fillText('等当点 25mL',x(25)+4,padT+12);
+    /* 曲线 */
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=4;ctx.beginPath();let started=false;
+    for(let v=0;v<=V+0.001;v+=0.1){const p=pH(s.type,v);const yy=y(Math.max(0,Math.min(14,p)));if(!started){ctx.moveTo(x(v),yy);started=true;}else ctx.lineTo(x(v),yy);}
+    ctx.stroke();
+    const cp=pH(s.type,V);ctx.fillStyle='#E0382A';ctx.beginPath();ctx.arc(x(V),y(Math.max(0,Math.min(14,cp))),6,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    document.getElementById('titV').textContent=V.toFixed(1);
+  }
+  function info(){const s=systems[cur];const cp=pH(s.type,V);document.getElementById('titNote').textContent='【'+s.k+'】'+s.end+'。当前 V='+V.toFixed(1)+' mL,pH='+cp.toFixed(2)+'。等当点(25mL)附近一滴之内 pH 突跃。';}
+  document.getElementById('titSlide').oninput=function(e){V=+e.target.value;draw();info();};
+  draw();info();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'单一强酸 / 强碱求 pH',sig:'给出强酸或强碱的浓度(含元数),直接问 pH。',act:'强酸:c(H⁺)=c·元数 → pH=−lg c(H⁺);强碱:c(OH⁻)=c·元数 → pH=14−pOH。',ex:'0.005mol/L Ba(OH)₂ → c(OH⁻)=0.01 → pOH=2 → pH=12。',trap:'元数漏乘;强碱别直接对 c(碱)取对数,要走 OH⁻。'},
+    {t:'强酸 / 强碱稀释后 pH',sig:'把已知 pH 的酸碱稀释若干倍问 pH。',act:'强酸每稀释 10 倍 pH+1(仍<7);强碱每 10 倍 pH−1(仍>7);无限稀释逼近 7。',ex:'pH=2 的强酸稀释 1000 倍 → pH=5(<7)。',trap:'无限稀释想越过 7——不行;强酸稀到 pH 只能逼近 7。'},
+    {t:'弱酸 / 弱碱稀释(强弱对比)',sig:'稀释弱酸问 pH 变化;或同 pH 强弱酸稀释相同倍数比 pH。',act:'弱酸稀释促进电离、补充 H⁺ → pH 变化小于 1;同起点稀释后弱酸 pH 更小(酸性更强残留)。',ex:'pH=3 强酸与弱酸各稀释 100 倍:强酸 pH=5,弱酸 pH<5。',trap:'弱酸盲套"×10 加 1";看清"同浓度"还是"同 pH"。'},
+    {t:'强酸强碱等体积混合',sig:'两溶液等体积混合求 pH,或给两 pH 混合。',act:'三步法:算 n(H⁺)、n(OH⁻);判过量;余下浓度÷V总取对数。',ex:'pH=1 强酸与 pH=13 强碱等体积混合 → 恰好中和 pH=7。',trap:'别把两 c(H⁺) 直接相加减;先物质的量判过量。'},
+    {t:'不等体积混合求 pH',sig:'给不同体积、不同浓度的酸碱混合。',act:'同三步法,重点是 V总=V酸+V碱,余下 Δn÷V总。',ex:'20mL 0.1 HCl + 30mL 0.1 NaOH:n(H⁺)=0.002、n(OH⁻)=0.003,碱余 0.001mol,V总=50mL,c(OH⁻)=0.001/0.05=0.02 → pH≈12.3。',trap:'忘用总体积;元数没乘。'},
+    {t:'pH 之和为 14 等体积混合判断',sig:'pH₁+pH₂=14 的两溶液等体积混合,问混合后酸碱性。',act:'强+强=中性(7);含弱的一方浓度大、过量 → 显弱者性("谁弱谁过量")。',ex:'pH=3 弱酸 + pH=11 强碱等体积 → 弱酸过量,pH<7(酸性)。',trap:'盲判 pH=7;只有强+强才是 7。'},
+    {t:'已知 pH 求浓度 / pH↔c 互算',sig:'给 pH 反求 c(H⁺)、c(OH⁻) 或原酸碱浓度。',act:'c(H⁺)=10⁻ᵖᴴ;c(OH⁻)=Kw/c(H⁺)=10⁻⁽¹⁴⁻ᵖᴴ⁾;强酸 c(酸)=c(H⁺)/元数。',ex:'pH=12 的 NaOH:c(H⁺)=10⁻¹² → c(OH⁻)=10⁻² → c(NaOH)=0.01mol/L。',trap:'弱酸不能由 pH 直接反推浓度(还有未电离部分)。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(function(m){const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 常温下 0.05mol/L H₂SO₄ 的 pH 是多少?',a:'c(H⁺)=0.05×2=0.1mol/L → pH=−lg0.1=1。'},
+    {q:'2. 常温下 0.005mol/L Ba(OH)₂ 的 pH 是多少?',a:'c(OH⁻)=0.005×2=0.01 → pOH=2 → pH=14−2=12。'},
+    {q:'3. pH=2 的盐酸稀释 1000 倍后 pH 约为多少?',a:'强酸每稀释 10 倍 pH+1,稀释 10³ 倍 → pH≈5(仍<7,酸性)。'},
+    {q:'4. pH=3 的盐酸与 pH=3 的醋酸各稀释 100 倍,谁 pH 更大?',a:'盐酸更大(=5)。醋酸稀释促进电离、补充 H⁺,c(H⁺) 仍较高,pH<5。'},
+    {q:'5. 无限稀释一瓶稀盐酸,pH 会不会超过 7?',a:'不会。任何酸无限稀释 pH 只能无限逼近 7,永远是酸性,不越过 7。'},
+    {q:'6. 20mL 0.1mol/L HCl 与 20mL 0.1mol/L NaOH 混合,pH 是多少?',a:'n(H⁺)=n(OH⁻)=0.002mol,恰好中和,常温 pH=7。'},
+    {q:'7. 10mL 0.1mol/L HCl 与 30mL 0.1mol/L NaOH 混合,pH 约为多少?',a:'n(OH⁻)=0.003,n(H⁺)=0.001,碱过量 0.002mol;V总=40mL;c(OH⁻)=0.002/0.04=0.05 → pOH≈1.3 → pH≈12.7。'},
+    {q:'8. pH=13 的强碱与 pH=1 的强酸等体积混合,溶液显什么性?',a:'c(OH⁻)碱=0.1=c(H⁺)酸=0.1,恰好中和,pH=7(中性)。'},
+    {q:'9. pH=3 的弱酸与 pH=11 的强碱等体积混合,pH 大于还是小于 7?',a:'小于 7。弱酸真实浓度大、有储备,中和后弱酸过量,溶液显酸性(谁弱谁过量)。'},
+    {q:'10. 已知某 NaOH 溶液 pH=12,求其浓度。',a:'c(H⁺)=10⁻¹² → c(OH⁻)=Kw/c(H⁺)=10⁻² → c(NaOH)=0.01mol/L。'},
+    {q:'11. 100℃ 时纯水 pH≈6,它是酸性吗?',a:'不是。此时 Kw≈10⁻¹²,c(H⁺)=c(OH⁻)=10⁻⁶,仍是中性;温度非 25℃ 中性 pH≠7。'},
+    {q:'12. 常温下由水电离的 c(H⁺)=10⁻¹² 的溶液,可能的 pH 是多少?',a:'水电离被抑制。若为酸溶液:pH=2;若为碱溶液:c(OH⁻)水=10⁻¹² 对应溶液 pH=12。故 pH=2 或 12。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(function(o){const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

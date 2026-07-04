@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>盐类水解 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1E9E86;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--blue)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .seesaw-wrap{position:relative;height:170px;margin:6px 0}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .tree-node{border:3px solid var(--ink);background:var(--card);padding:8px 12px;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);margin:4px}
+  .tree-node.on{background:var(--accent);color:#fff}
+  .tree-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+  .prod{font-family:"SF Mono",Consolas,monospace;font-size:16px;font-weight:900}
+  .rankslot{display:inline-flex;align-items:center;justify-content:center;min-width:70px;height:44px;border:3px dashed var(--ink);background:var(--card);font-family:"SF Mono",Consolas,monospace;font-weight:900;font-size:15px;margin:3px;cursor:grab}
+  .rankslot.filled{border-style:solid;background:#fff}
+  .rankpool{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .rankitem{padding:8px 12px;border:3px solid var(--ink);background:var(--yellow);font-family:"SF Mono",Consolas,monospace;font-weight:900;font-size:15px;cursor:grab;box-shadow:2px 2px 0 var(--ink);user-select:none}
+  .rankitem.used{opacity:.28;cursor:default}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>盐类水解</h1>
+    <p class="lead">盐溶到水里,为什么有的显酸、有的显碱、有的还会"打起来"彻底分解?一句"谁弱谁水解、谁强显谁性"背后,是弱离子悄悄抢走水电离出的 H⁺/OH⁻。把这条链拨明白,酸碱判断、方程书写、蒸干产物、浓度比较就都通了。</p>
+
+    <div class="say">🗣️ <b>把盐溶液想成一场"抢水"游戏:</b> 水自己会电离出极少的 H⁺ 和 OH⁻(手拉手的一对)。盐溶进去后拆成阴阳离子——如果某个离子来自<b>弱酸或弱碱</b>,它就"贪心"地把水里的 H⁺(或 OH⁻)抢过去结合成弱电解质分子。<br>被抢走一方就"落单"变多:抢走 H⁺ → 剩 OH⁻ 多 → <b>显碱性</b>;抢走 OH⁻ → 剩 H⁺ 多 → <b>显酸性</b>。抢的过程<b>促进了水继续电离</b>。记住三句口诀:<b>有弱才水解、越弱越水解、谁强显谁性</b>,再加"升温、稀释都促进水解",这一章的骨架就立起来了。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 水解本质 → ② 谁弱谁水解·谁强显谁性 → ③ 越弱越水解 → ④ 水解方程书写 → ⑤ 影响因素(温度/浓度/酸碱) → ⑥ 双水解 → ⑦ 电离与水解竞争 → ⑧ 离子浓度大小比较 → ⑨ 全题型地图 → ⑩ 易错集 → ⑪ 尖子生视角 → ⑫ 自测。每节都配可拨动的可视化。</div>
+
+    <!-- ========================= 1 本质 ========================= -->
+    <h2 class="g">① 盐类水解的本质</h2>
+    <div class="card">
+      <p class="step"><b>定义:</b> 盐电离出的<b>弱离子</b>(弱酸的酸根 / 弱碱的阳离子)与<b>水电离出的 H⁺/OH⁻</b> 结合生成弱电解质,从而<b>破坏了水的电离平衡、促进水继续电离</b>,使溶液显酸或碱性。</p>
+      <div class="eq">Ac⁻ + H₂O <span class="arrow">⇌</span> HAc + OH⁻　　(抢走 H⁺、剩 OH⁻ → 碱性)</div>
+      <div class="eq">NH₄⁺ + H₂O <span class="arrow">⇌</span> NH₃·H₂O + H⁺　　(抢走 OH⁻、剩 H⁺ → 酸性)</div>
+      <h3>三个"本质"要点</h3>
+      <p class="step">① 水解是<b>中和反应的逆反应</b>:酸+碱⇌盐+水,倒过来就是盐+水⇌酸+碱,故水解<b>吸热</b>。</p>
+      <p class="step">② 水解<b>促进</b>水的电离(与加酸加碱"抑制"正相反),盐溶液中由水电离出的 c(H⁺) 或 c(OH⁻) 大于 10⁻⁷。</p>
+      <p class="step">③ 水解程度一般<b>很微弱</b>:c(盐)远大于水解产物,方程用可逆号 ⇌、不标 ↑↓。</p>
+      <p class="trap">⚠ 只有含<b>弱</b>离子的盐才水解。强酸强碱盐(NaCl、KNO₃、Na₂SO₄)全是"强"离子,不水解,显中性。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 水解平衡粒子动画</div>
+      <p class="step">选一种弱离子,看它不断从水分子那里"抢"H⁺/OH⁻,结合成弱电解质;落单的另一半离子逐渐变多,溶液显色。这是一个动态平衡:表面不变,底下一直在换人。</p>
+      <div class="chips" id="hydChips"></div>
+      <canvas id="cHyd" width="760" height="280"></canvas>
+      <div class="verdict" id="hydNote"></div>
+    </div>
+
+    <!-- ========================= 2 谁弱谁水解 ========================= -->
+    <h2 class="b">② 谁弱谁水解 · 谁强显谁性</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--blue)">🗣️ 把盐拆成"阳离子"和"阴离子"两半,分别看它们的"出身":来自<b>强</b>酸/强碱的离子老实,不抢水;来自<b>弱</b>酸/弱碱的离子会水解。最后<b>谁强就显谁的性质</b>。</div>
+      <h3>四类盐速判表</h3>
+      <table>
+        <tr><th>盐的类型</th><th>例子</th><th>谁水解</th><th>溶液性质</th></tr>
+        <tr><td>强酸强碱盐</td><td>NaCl、KNO₃、Na₂SO₄</td><td>都不水解</td><td>中性</td></tr>
+        <tr><td>强碱弱酸盐</td><td>NaAc、Na₂CO₃、NaF</td><td>阴离子水解</td><td><b>碱性</b>(显强碱的性)</td></tr>
+        <tr><td>强酸弱碱盐</td><td>NH₄Cl、AlCl₃、FeCl₃、CuSO₄</td><td>阳离子水解</td><td><b>酸性</b>(显强酸的性)</td></tr>
+        <tr><td>弱酸弱碱盐</td><td>NH₄Ac、(NH₄)₂CO₃</td><td>双水解(阴阳都水解)</td><td>看 Ka、Kb 谁大</td></tr>
+      </table>
+      <p class="trap">⚠ "谁强显谁性"针对强弱搭配的盐:强碱弱酸盐显碱性,强酸弱碱盐显酸性。弱酸弱碱盐两边都弱,要比 Ka 与 Kb:如 NH₄Ac 中 Ka(HAc)≈Kb(NH₃·H₂O),故近中性。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 谁弱谁水解判别器</div>
+      <p class="step">点一种盐,自动判定它由什么强弱搭配组成、哪个离子水解、溶液酸碱性,并给出对应水解离子方程。</p>
+      <div class="chips" id="saltChips"></div>
+      <div class="readout" style="grid-template-columns:1fr 1fr 1fr">
+        <div><b>阳离子</b><span id="cCation">—</span></div>
+        <div><b>阴离子</b><span id="cAnion">—</span></div>
+        <div><b>溶液性质</b><span id="cProp">—</span></div>
+      </div>
+      <div class="mono" id="saltEq" style="margin-top:8px">选一种盐查看水解方程</div>
+      <div class="verdict" id="saltNote"></div>
+    </div>
+
+    <!-- ========================= 3 越弱越水解 ========================= -->
+    <h2 class="v">③ 越弱越水解(强弱定量)</h2>
+    <div class="card">
+      <p class="step">同浓度的钠盐,对应的酸<b>越弱</b>(Ka 越小),其酸根<b>水解程度越大</b>,溶液<b>碱性越强</b>、pH 越高。</p>
+      <div class="mono">水解常数 Kh = Kw / Ka　→　Ka 越小,Kh 越大,水解越彻底</div>
+      <h3>典型强弱顺序(酸性由强到弱)</h3>
+      <p class="step">H₂SO₃ &gt; H₃PO₄ &gt; HF &gt; HAc &gt; H₂CO₃ &gt; HClO &gt; HCO₃⁻ &gt; HSiO₃⁻ ……对应钠盐碱性反过来:<b>酸越弱、盐越碱</b>。</p>
+      <table>
+        <tr><th>同浓度钠盐</th><th>对应弱酸 Ka</th><th>水解程度</th><th>碱性</th></tr>
+        <tr><td>NaAc</td><td>Ka≈1.8×10⁻⁵(较大)</td><td>小</td><td>弱碱</td></tr>
+        <tr><td>NaHCO₃</td><td>Ka₂(H₂CO₃)≈4.7×10⁻¹¹</td><td>较大</td><td>较碱</td></tr>
+        <tr><td>NaClO</td><td>Ka(HClO)≈3×10⁻⁸</td><td>较大</td><td>较碱</td></tr>
+        <tr><td>Na₂CO₃</td><td>Ka₂ 很小</td><td>大</td><td>强碱</td></tr>
+      </table>
+      <p class="trap">⚠ 判"同浓度盐溶液谁碱性强":先找对应的酸,酸越弱盐越碱。这是比较 pH 大小题的核心工具。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 温度 / 浓度滑块 → 水解程度实时条</div>
+      <p class="step">对 0.1 mol/L 的强碱弱酸盐(以 NaAc 为原型),拖动温度、浓度两个滑块,看水解程度(水解率 h)和溶液 pH 实时变化。口诀:<b>升温促进、越稀越水解</b>。</p>
+      <div class="ctrl"><span>温度 <b id="tVal">25℃</b></span><input id="tSlide" type="range" min="0" max="100" value="25"></div>
+      <div class="ctrl"><span>稀释倍数 <b id="dVal">1×</b></span><input id="dSlide" type="range" min="0" max="100" value="0"></div>
+      <svg id="hBar" viewBox="0 0 760 130"></svg>
+      <div class="readout">
+        <div><b>水解率 h</b><span id="hRate">—</span></div>
+        <div><b>c(OH⁻) mol/L</b><span id="hOH">—</span></div>
+        <div><b>pH</b><span id="hPH">—</span></div>
+      </div>
+      <p class="trap" id="hNote" style="margin-top:6px"></p>
+    </div>
+
+    <!-- ========================= 4 方程书写 ========================= -->
+    <h2 class="o">④ 水解离子方程式书写</h2>
+    <div class="card">
+      <h3>四条铁律</h3>
+      <p class="step">① 一般水解程度小,用<b>可逆号 ⇌</b>,一般<b>不标 ↑ ↓</b>(产物量太少不足以逸出或沉淀)。</p>
+      <p class="step">② <b>多元弱酸根分步</b>水解,以第一步为主,分步写:</p>
+      <div class="mono">CO₃²⁻ + H₂O ⇌ HCO₃⁻ + OH⁻　(主)　；　HCO₃⁻ + H₂O ⇌ H₂CO₃ + OH⁻(次)</div>
+      <p class="step">③ <b>多元弱碱阳离子</b>(如 Fe³⁺、Al³⁺)水解一步写到底:</p>
+      <div class="mono">Fe³⁺ + 3H₂O ⇌ Fe(OH)₃ + 3H⁺</div>
+      <p class="step">④ <b>双水解(彻底)</b>用 <b>=</b> 且标 <b>↑ ↓</b>(互相促进、进行到底):</p>
+      <div class="mono">2Al³⁺ + 3CO₃²⁻ + 3H₂O = 2Al(OH)₃↓ + 3CO₂↑</div>
+      <p class="trap">⚠ 别把水解写成电离:HCO₃⁻ 水解是 HCO₃⁻+H₂O⇌H₂CO₃+OH⁻;HCO₃⁻ 电离是 HCO₃⁻⇌H⁺+CO₃²⁻。两个方向别写反。别把一般水解标 ↑↓,也别把双水解写成可逆。</p>
+    </div>
+
+    <!-- ========================= 5 影响因素 ========================= -->
+    <h2 class="r">⑤ 影响水解的因素</h2>
+    <div class="card">
+      <p class="step">水解平衡也遵守勒夏特列原理。以 Ac⁻+H₂O⇌HAc+OH⁻ 为例:</p>
+      <table>
+        <tr><th>操作</th><th>水解平衡</th><th>水解程度</th><th>说明</th></tr>
+        <tr><td>升高温度</td><td>正向(促进)</td><td>增大 ↑</td><td>水解吸热,升温永远促进水解</td></tr>
+        <tr><td>加水稀释</td><td>正向(促进)</td><td>增大 ↑</td><td>越稀越水解,但离子浓度都变小</td></tr>
+        <tr><td>加酸(H⁺)</td><td>逆向(抑制)对碱性盐</td><td>抑制阴离子水解</td><td>H⁺ 中和 OH⁻;但会促进阳离子盐? 见下</td></tr>
+        <tr><td>加碱(OH⁻)</td><td>抑制阳离子水解、促进阴离子水解</td><td>视情况</td><td>OH⁻ 中和 H⁺</td></tr>
+        <tr><td>加同种可水解盐</td><td>看是否互促</td><td>—</td><td>互促盐一起加会加剧双水解</td></tr>
+      </table>
+      <p class="step"><b>口诀:</b> 升温、稀释一律<b>促进</b>水解;加"抑制离子"(酸性盐加酸、碱性盐加碱)则<b>抑制</b>水解;加"能中和产物"的物质则<b>促进</b>水解。</p>
+      <p class="trap">⚠ 配 FeCl₃、AlCl₃、SnCl₂ 等易水解盐溶液时,要加<b>对应的酸</b>(盐酸)抑制水解防浑浊;稀释虽促进程度,但离子浓度总体下降。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 盐溶液蒸干灼烧产物 决策树</div>
+      <p class="step">"蒸干+灼烧"是水解的经典应用陷阱。点一种盐,沿决策树看:阴离子挥发性?阳离子是否水解?最终得到什么产物。</p>
+      <div class="tree-row"><span style="font-weight:900;font-size:13px">选盐:</span><span id="evapChips" style="display:contents"></span></div>
+      <svg id="evapTree" viewBox="0 0 760 260"></svg>
+      <div class="verdict" id="evapNote">点一种盐,查看蒸干灼烧后的产物与原因。</div>
+    </div>
+
+    <!-- ========================= 6 双水解 ========================= -->
+    <h2 class="v">⑥ 双水解:彻底 vs 部分</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--violet)">🗣️ 一般水解各玩各的、彼此不理;<b>双水解</b>是阳离子水解生 H⁺、阴离子水解生 OH⁻,两者<b>互相中和、互相促进</b>,像两个人拆台越拆越狠,直到<b>彻底</b>分解。</div>
+      <h3>能发生"彻底双水解"的组合(必记)</h3>
+      <p class="step"><b>Al³⁺</b> 与 CO₃²⁻ / HCO₃⁻ / AlO₂⁻ / S²⁻ / HS⁻ / ClO⁻；<b>Fe³⁺</b> 与 CO₃²⁻ / HCO₃⁻ / AlO₂⁻。</p>
+      <div class="mono">2Al³⁺ + 3S²⁻ + 6H₂O = 2Al(OH)₃↓ + 3H₂S↑</div>
+      <div class="mono">Al³⁺ + 3HCO₃⁻ = Al(OH)₃↓ + 3CO₂↑　(泡沫灭火器原理)</div>
+      <p class="step"><b>应用:</b> ① 明矾 KAl(SO₄)₂ 净水:Al³⁺ 水解生成 Al(OH)₃ 胶体吸附杂质;② 泡沫灭火器:Al₂(SO₄)₃ 与 NaHCO₃ 双水解快速放 CO₂。</p>
+      <p class="trap">⚠ 不是所有阴阳离子相遇都双水解到底。NH₄⁺ 与 CO₃²⁻ 只是相互促进但<b>不彻底</b>(仍写可逆);Al³⁺ 与 HCO₃⁻ 才彻底(用=并标↑↓)。判断关键:是否生成气体/沉淀离开体系。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 双水解 vs 部分水解 对比动画</div>
+      <p class="step">左边"部分水解"(如 Na₂CO₃):水解一点点就停,离子仍大量存在。右边"彻底双水解"(如 Al³⁺+CO₃²⁻):互相促进,反应物几乎全部转化,冒气泡、生沉淀。点按钮开始对比。</p>
+      <canvas id="cDouble" width="760" height="300"></canvas>
+      <div class="ctrl"><button class="vbtn" id="dbPlay">▶ 开始对比</button><button class="vbtn dark" id="dbReset">重置</button></div>
+      <div class="legend"><span style="color:var(--green)"><span style="background:var(--green)"></span>阴离子</span><span style="color:var(--violet)"><span style="background:var(--violet)"></span>阳离子/Al³⁺</span><span><span style="background:#fff"></span>沉淀/气体</span></div>
+    </div>
+
+    <!-- ========================= 7 电离水解竞争 ========================= -->
+    <h2 class="b">⑦ 电离 ⚖ 水解 的竞争</h2>
+    <div class="card">
+      <p class="step">对<b>酸式盐的酸根</b>(如 HCO₃⁻、HSO₃⁻、H₂PO₄⁻),它既能<b>电离</b>(HCO₃⁻⇌H⁺+CO₃²⁻,显酸)又能<b>水解</b>(HCO₃⁻+H₂O⇌H₂CO₃+OH⁻,显碱)。谁强就显谁性。</p>
+      <table>
+        <tr><th>酸式酸根</th><th>电离 vs 水解</th><th>溶液性质</th></tr>
+        <tr><td>HCO₃⁻</td><td>水解 &gt; 电离</td><td><b>碱性</b></td></tr>
+        <tr><td>HS⁻</td><td>水解 &gt; 电离</td><td><b>碱性</b></td></tr>
+        <tr><td>HSO₃⁻</td><td>电离 &gt; 水解</td><td><b>酸性</b></td></tr>
+        <tr><td>H₂PO₄⁻</td><td>电离 &gt; 水解</td><td><b>酸性</b></td></tr>
+        <tr><td>HPO₄²⁻</td><td>水解 &gt; 电离</td><td><b>碱性</b></td></tr>
+      </table>
+      <p class="trap">⚠ NaHCO₃ 显碱性(水解占优),NaHSO₃ 显酸性(电离占优)——这是经典对比考点,别背反了。判据:看该酸根对应弱酸的 Ka 与 Kh 谁大。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 电离 ⚖ 水解 竞争跷跷板</div>
+      <p class="step">点一种酸式盐,看它的电离(显酸)与水解(显碱)哪边更重,跷跷板往那边倒,溶液显对应性质。</p>
+      <div class="chips" id="cmpChips"></div>
+      <div class="seesaw-wrap"><svg id="cmpSaw" viewBox="0 0 760 170"></svg></div>
+      <div class="verdict" id="cmpVerdict"></div>
+    </div>
+
+    <!-- ========================= 8 浓度比较 ========================= -->
+    <h2 class="v">⑧ 盐溶液离子浓度大小比较</h2>
+    <div class="card">
+      <p class="step"><b>三步法:</b> ① 先定溶液酸碱性(定 H⁺/OH⁻ 谁多);② 判主要离子:未水解的"完整"离子最多,水解产物次之,深度水解最少;③ 用三大守恒收尾验证。</p>
+      <h3>典型排序(牢记)</h3>
+      <div class="mono">0.1mol/L NaAc:c(Na⁺) &gt; c(Ac⁻) &gt; c(OH⁻) &gt; c(H⁺)</div>
+      <div class="mono">0.1mol/L NH₄Cl:c(Cl⁻) &gt; c(NH₄⁺) &gt; c(H⁺) &gt; c(OH⁻)</div>
+      <div class="mono">0.1mol/L Na₂CO₃:c(Na⁺) &gt; c(CO₃²⁻) &gt; c(OH⁻) &gt; c(HCO₃⁻) &gt; c(H⁺)</div>
+      <p class="step"><b>三大守恒(以 NaHCO₃ 为例):</b><br>电荷守恒:c(Na⁺)+c(H⁺)=c(HCO₃⁻)+c(OH⁻)+2c(CO₃²⁻)<br>物料守恒:c(Na⁺)=c(HCO₃⁻)+c(CO₃²⁻)+c(H₂CO₃)<br>质子守恒:c(H⁺)+c(H₂CO₃)=c(OH⁻)+c(CO₃²⁻)</p>
+      <p class="trap">⚠ 写电荷守恒别漏乘电荷数(CO₃²⁻ 前面 ×2);比较不同盐时先判酸碱性再排序。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 7 · 离子浓度大小排序器(拖动验证)</div>
+      <p class="step">选一种溶液,把下方离子卡片拖进上方由大到小的槽位。点"检查"看是否排对。</p>
+      <div class="chips" id="rankChips"></div>
+      <div style="font-size:12px;font-weight:800;color:#6b5d3a;margin:4px 0">从大到小 →</div>
+      <div class="rankpool" id="rankSlots"></div>
+      <div style="font-size:12px;font-weight:800;color:#6b5d3a;margin:8px 0 2px">离子卡片(拖到上方):</div>
+      <div class="rankpool" id="rankPool"></div>
+      <div class="ctrl"><button class="vbtn" id="rankCheck">检查</button><button class="vbtn dark" id="rankReset">重排</button></div>
+      <div class="verdict" id="rankNote">选溶液后开始拖动排序。</div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑨ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑩ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. 把水解方程标 ↑↓ 或写"="。一般水解微弱,用 ⇌、不标 ↑↓;只有双水解彻底才用=并标↑↓。</p>
+      <p class="trap">2. 多元弱酸根一步写完。CO₃²⁻ 水解必须分步,以第一步为主,不能写成 CO₃²⁻+2H₂O⇌H₂CO₃+2OH⁻。</p>
+      <p class="trap">3. 把 NaHSO₃ 当碱性、NaHCO₃ 当酸性——记反了。NaHCO₃ 水解占优显碱性,NaHSO₃ 电离占优显酸性。</p>
+      <p class="trap">4. 蒸干 AlCl₃、FeCl₃、MgCl₂ 溶液以为得原盐。挥发性酸的弱碱盐蒸干灼烧得<b>氧化物</b>(Al₂O₃、Fe₂O₃、MgO)。</p>
+      <p class="trap">5. 认为所有阴阳离子相遇都双水解。只有 Al³⁺/Fe³⁺ 与 CO₃²⁻/HCO₃⁻/AlO₂⁻/S²⁻ 等才彻底;NH₄⁺ 与 CO₃²⁻ 不彻底。</p>
+      <p class="trap">6. 电荷守恒漏乘电荷数:CO₃²⁻、SO₄²⁻、Ca²⁺ 等二价离子系数要 ×2。</p>
+      <p class="trap">7. 误以为水解使盐溶液离子总数减少。水解程度小,主体仍是原盐离子,c(盐)≫c(水解产物)。</p>
+      <p class="trap">8. 把"升温促进水解"和"升温使溶液更碱/更酸"搞混:碱性盐升温更碱,酸性盐升温更酸,方向随盐而定。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>统一用 K 量化:</b> Kh=Kw/Ka(阴离子水解)或 Kw/Kb(阳离子水解)。"越弱越水解"= Ka 越小 → Kh 越大。判酸式酸根显性:比较 Ka(电离常数)与 Kh(水解常数),Kh&gt;Ka 显碱性。</p>
+      <p class="step">▸ <b>守恒是不变量:</b> 无论怎样水解、混合,电荷守恒与物料守恒永远成立。压轴浓度比较先写守恒,把未知消去,常能秒杀。质子守恒=电荷守恒−物料守恒。</p>
+      <p class="step">▸ <b>水解 vs 电离的对称美:</b> 加酸加碱"抑制"水的电离;可水解盐"促进"水的电离。两者是同一 Kw 平衡被推的两个方向。</p>
+      <p class="step">▸ <b>双水解的判据在"离开体系":</b> 只要生成难溶物或气体离开平衡,反应就被拉到底。这也解释了泡沫灭火器为何反应快而彻底。</p>
+      <p class="step">▸ <b>蒸干产物统一逻辑:</b> 阴离子挥发(Cl⁻源自 HCl、NO₃⁻)+ 阳离子水解 → 得氧化物;阴离子不挥发(SO₄²⁻)→ 得原盐。抓"酸挥不挥发"这一条即可秒判。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:水溶液离子平衡 / 化学平衡</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function fmt(x){if(x===0)return '0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(2)+'×10'+sup(e);}
+function sup(n){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>map[c]||c).join('');}
+
+/* ============ 交互1 水解平衡粒子动画 ============ */
+(function(){
+  const cv=document.getElementById('cHyd'),ctx=cv.getContext('2d');
+  const data=[
+    {k:'Ac⁻(醋酸根)',ion:'Ac⁻',prod:'HAc',free:'OH⁻',prop:'碱性',pc:'#1E9E86',note:'Ac⁻ + H₂O ⇌ HAc + OH⁻。醋酸根抢走水里的 H⁺,剩下 OH⁻ 变多 → 显碱性。'},
+    {k:'NH₄⁺(铵根)',ion:'NH₄⁺',prod:'NH₃·H₂O',free:'H⁺',prop:'酸性',pc:'#E0382A',note:'NH₄⁺ + H₂O ⇌ NH₃·H₂O + H⁺。铵根抢走水里的 OH⁻,剩下 H⁺ 变多 → 显酸性。'},
+    {k:'CO₃²⁻(碳酸根)',ion:'CO₃²⁻',prod:'HCO₃⁻',free:'OH⁻',prop:'强碱性',pc:'#1450C8',note:'CO₃²⁻ + H₂O ⇌ HCO₃⁻ + OH⁻(第一步为主)。碳酸很弱,水解较强 → 强碱性。'},
+    {k:'Cl⁻(强酸根)',ion:'Cl⁻',prod:'—',free:'—',prop:'中性',pc:'#6b5d3a',note:'Cl⁻ 来自强酸 HCl,不水解。溶液保持中性,粒子不发生结合。'}
+  ];
+  const chips=document.getElementById('hydChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;setup();};chips.appendChild(b);});
+  let ions=[],waters=[],free=[];
+  function setup(){
+    ions=[];waters=[];free=[];
+    for(let i=0;i<16;i++)ions.push({x:60+Math.random()*640,y:30+Math.random()*220,vx:(Math.random()-.5)*1.4,vy:(Math.random()-.5)*1.4,bound:false,t:0});
+    for(let i=0;i<10;i++)waters.push({x:60+Math.random()*640,y:30+Math.random()*220,vx:(Math.random()-.5)*1.2,vy:(Math.random()-.5)*1.2});
+    document.getElementById('hydNote').textContent=data[cur].note;
+    document.getElementById('hydNote').style.borderColor=data[cur].pc;
+  }
+  function move(p){p.x+=p.vx;p.y+=p.vy;if(p.x<50||p.x>710){p.vx*=-1;p.x=Math.max(50,Math.min(710,p.x));}if(p.y<25||p.y>255){p.vy*=-1;p.y=Math.max(25,Math.min(255,p.y));}}
+  function circle(x,y,r,fill,label,lc){
+    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#16120A';ctx.stroke();
+    ctx.fillStyle=lc||'#fff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText(label,x,y+3);ctx.textAlign='left';
+  }
+  function frame(){
+    const d=data[cur];ctx.clearRect(0,0,760,280);
+    ctx.fillStyle='rgba(30,158,134,0.06)';ctx.fillRect(40,20,680,240);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(40,20,680,240);
+    const noHyd=d.ion==='Cl⁻';
+    ions.forEach(function(p){
+      move(p);
+      if(!noHyd&&!p.bound&&Math.random()<0.006){p.bound=true;p.t=0;free.push({x:p.x+18,y:p.y,vx:(Math.random()-.5)*1.4,vy:(Math.random()-.5)*1.4,t:0});}
+      if(p.bound){p.t++;if(p.t>140){p.bound=false;}}
+      circle(p.x,p.y,13,p.bound?'#F3C00E':'#7A3FF2',p.bound?d.prod:d.ion,p.bound?'#16120A':'#fff');
+    });
+    waters.forEach(function(w){move(w);circle(w.x,w.y,9,'#cfe6ff','H₂O','#16120A');});
+    free.forEach(function(f){move(f);f.t++;circle(f.x,f.y,10,d.pc,d.free,'#fff');});
+    while(free.length>22)free.shift();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+    ctx.fillText('紫=盐的弱离子  浅蓝=水分子  黄=结合成的弱电解质  '+(noHyd?'(不水解)':'彩点='+d.free+' 落单变多'),50,16);
+    ctx.fillStyle=d.pc;ctx.font='bold 14px sans-serif';ctx.fillText('溶液显 '+d.prop,600,275);
+    requestAnimationFrame(frame);
+  }
+  setup();frame();
+})();
+
+/* ============ 交互2 谁弱谁水解判别器 ============ */
+(function(){
+  const salts=[
+    {k:'NaCl',cat:'Na⁺(强碱)',an:'Cl⁻(强酸)',prop:'中性',col:'#6b5d3a',eq:'不水解:Na⁺、Cl⁻ 均来自强碱强酸,溶液中性。',note:'强酸强碱盐,两离子都不水解 → 中性。'},
+    {k:'NaAc',cat:'Na⁺(强碱)',an:'Ac⁻(弱酸)',prop:'碱性',col:'#1E9E86',eq:'Ac⁻ + H₂O ⇌ HAc + OH⁻',note:'强碱弱酸盐,阴离子 Ac⁻ 水解 → 显碱性(谁强显谁性)。'},
+    {k:'Na₂CO₃',cat:'Na⁺(强碱)',an:'CO₃²⁻(弱酸)',prop:'强碱性',col:'#1450C8',eq:'CO₃²⁻ + H₂O ⇌ HCO₃⁻ + OH⁻(第一步为主)',note:'强碱弱酸盐,碳酸很弱,阴离子水解较强 → 强碱性。'},
+    {k:'NH₄Cl',cat:'NH₄⁺(弱碱)',an:'Cl⁻(强酸)',prop:'酸性',col:'#E0382A',eq:'NH₄⁺ + H₂O ⇌ NH₃·H₂O + H⁺',note:'强酸弱碱盐,阳离子 NH₄⁺ 水解 → 显酸性。'},
+    {k:'AlCl₃',cat:'Al³⁺(弱碱)',an:'Cl⁻(强酸)',prop:'酸性',col:'#E0382A',eq:'Al³⁺ + 3H₂O ⇌ Al(OH)₃ + 3H⁺',note:'强酸弱碱盐,Al³⁺ 水解程度大 → 明显酸性。'},
+    {k:'FeCl₃',cat:'Fe³⁺(弱碱)',an:'Cl⁻(强酸)',prop:'酸性',col:'#E0382A',eq:'Fe³⁺ + 3H₂O ⇌ Fe(OH)₃ + 3H⁺',note:'强酸弱碱盐,Fe³⁺ 水解 → 酸性,溶液常显黄色。'},
+    {k:'NH₄Ac',cat:'NH₄⁺(弱碱)',an:'Ac⁻(弱酸)',prop:'近中性',col:'#7A3FF2',eq:'NH₄⁺ + Ac⁻ + H₂O ⇌ NH₃·H₂O + HAc(相互促进)',note:'弱酸弱碱盐,双水解;因 Ka(HAc)≈Kb(NH₃·H₂O),故近中性。'}
+  ];
+  const chips=document.getElementById('saltChips');let cur=0;
+  salts.forEach((s,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=s.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  function render(){
+    const s=salts[cur];
+    document.getElementById('cCation').textContent=s.cat;
+    document.getElementById('cAnion').textContent=s.an;
+    const pe=document.getElementById('cProp');pe.textContent=s.prop;pe.style.color=s.col;
+    document.getElementById('saltEq').textContent=s.eq;
+    const n=document.getElementById('saltNote');n.textContent=s.note;n.style.borderColor=s.col;
+  }
+  render();
+})();
+
+/* ============ 交互3 温度浓度 → 水解程度条 ============ */
+(function(){
+  const svg=document.getElementById('hBar');
+  const Kw25=1e-14,Ka25=1.8e-5,C0=0.1;
+  function compute(tv,dv){
+    const T=tv;
+    const Kw=Kw25*Math.pow(10,(T-25)/25*0.9);
+    const Ka=Ka25;
+    const Kh=Kw/Ka;
+    const C=C0/Math.pow(10,dv/50);
+    const oh=(-Kh+Math.sqrt(Kh*Kh+4*Kh*C))/2;
+    const h=C>0?oh/C:0;
+    const H=Kw/oh;
+    const pH=-Math.log10(H);
+    return {h:h,oh:oh,pH:pH};
+  }
+  function update(){
+    const tv=+document.getElementById('tSlide').value;
+    const dv=+document.getElementById('dSlide').value;
+    const fac=Math.pow(10,dv/50);
+    document.getElementById('tVal').textContent=tv+'℃';
+    document.getElementById('dVal').textContent=fac.toFixed(fac<10?1:0)+'×';
+    const r=compute(tv,dv);
+    document.getElementById('hRate').textContent=(r.h*100).toFixed(3)+'%';
+    document.getElementById('hOH').textContent=fmt(r.oh);
+    document.getElementById('hPH').textContent=r.pH.toFixed(2);
+    const w=Math.min(680,Math.max(6,r.h/0.02*680));
+    svg.innerHTML='<rect x="40" y="35" width="680" height="46" fill="#EBE4D2" stroke="#16120A" stroke-width="3"/>'
+      +'<rect x="40" y="35" width="'+w+'" height="46" fill="#1E9E86" stroke="#16120A" stroke-width="3"/>'
+      +'<text x="380" y="24" text-anchor="middle" font-size="13" font-weight="800">水解程度(水解率 h)</text>'
+      +'<text x="'+(40+w+8)+'" y="65" font-size="13" font-weight="900" fill="#16120A">'+(r.h*100).toFixed(3)+'%</text>'
+      +'<text x="40" y="105" font-size="12" font-weight="700" fill="#6b5d3a">升温 → 条变长；稀释 → 条变长(越稀越水解),但 c(OH⁻) 反而下降</text>';
+    let note='';
+    if(tv>25&&fac>1)note='⚠ 既升温又稀释:水解率 h 大幅上升(条最长);但离子浓度被稀释,c(OH⁻) 未必增大。';
+    else if(tv>25)note='⚠ 升温促进水解:h 增大、碱性增强、pH 升高(水解吸热)。';
+    else if(fac>1)note='⚠ 越稀越水解:h 增大,但 c(OH⁻) 减小、pH 向 7 靠拢(程度变大、浓度变小)。';
+    else note='⚠ 常温未稀释的基准态:水解微弱,h 很小,溶液弱碱性。';
+    document.getElementById('hNote').textContent=note;
+  }
+  document.getElementById('tSlide').oninput=update;
+  document.getElementById('dSlide').oninput=update;
+  update();
+})();
+
+/* ============ 交互4 蒸干灼烧决策树 ============ */
+(function(){
+  const salts=[
+    {k:'NaCl',volAcid:false,catHyd:false,prod:'NaCl',reason:'强酸强碱盐,阳离子不水解 → 蒸干得原盐 NaCl。',steps:['阴离子 Cl⁻(挥发性酸)','阳离子 Na⁺ 不水解','→ 得原盐']},
+    {k:'AlCl₃',volAcid:true,catHyd:true,prod:'Al₂O₃',reason:'Al³⁺ 水解生 Al(OH)₃,HCl 挥发促水解到底,灼烧 Al(OH)₃ → Al₂O₃。',steps:['阴离子 Cl⁻(挥发性酸 HCl)','阳离子 Al³⁺ 水解生 Al(OH)₃','灼烧 → Al₂O₃']},
+    {k:'FeCl₃',volAcid:true,catHyd:true,prod:'Fe₂O₃',reason:'Fe³⁺ 水解生 Fe(OH)₃,HCl 挥发使水解彻底,灼烧 → Fe₂O₃。',steps:['阴离子 Cl⁻(挥发性酸 HCl)','阳离子 Fe³⁺ 水解生 Fe(OH)₃','灼烧 → Fe₂O₃']},
+    {k:'MgCl₂',volAcid:true,catHyd:true,prod:'MgO',reason:'Mg²⁺ 水解,HCl 挥发,灼烧 Mg(OH)₂ → MgO。',steps:['阴离子 Cl⁻(挥发性酸 HCl)','阳离子 Mg²⁺ 水解生 Mg(OH)₂','灼烧 → MgO']},
+    {k:'Al₂(SO₄)₃',volAcid:false,catHyd:true,prod:'Al₂(SO₄)₃',reason:'H₂SO₄ 难挥发,抑制水解 → 蒸干得原盐 Al₂(SO₄)₃。',steps:['阴离子 SO₄²⁻(难挥发酸)','H₂SO₄ 抑制水解','→ 得原盐']},
+    {k:'Na₂CO₃',volAcid:false,catHyd:false,prod:'Na₂CO₃',reason:'阳离子 Na⁺ 不水解 → 蒸干得原盐 Na₂CO₃。',steps:['阴离子 CO₃²⁻(弱酸根)','阳离子 Na⁺ 不水解','→ 得原盐']},
+    {k:'NaHCO₃',volAcid:false,catHyd:false,prod:'Na₂CO₃',reason:'特例:NaHCO₃ 受热分解 2NaHCO₃→Na₂CO₃+H₂O+CO₂↑,得 Na₂CO₃。',steps:['Na⁺ 不水解','但 NaHCO₃ 受热易分解','→ 得 Na₂CO₃']},
+    {k:'KMnO₄',volAcid:false,catHyd:false,prod:'K₂MnO₄+MnO₂',reason:'特例:KMnO₄ 受热分解 → K₂MnO₄+MnO₂+O₂↑(不稳定盐)。',steps:['不涉及水解','受热分解','→ 分解产物']}
+  ];
+  const box=document.getElementById('evapChips');let cur=-1;
+  salts.forEach((s,i)=>{const b=document.createElement('span');b.className='tree-node';b.textContent=s.k;b.onclick=()=>{[...box.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};box.appendChild(b);});
+  const svg=document.getElementById('evapTree');
+  function render(){
+    if(cur<0)return;const s=salts[cur];
+    let g='';
+    const ys=[40,120,200];
+    g+='<rect x="280" y="10" width="200" height="40" fill="#F3C00E" stroke="#16120A" stroke-width="3"/>';
+    g+='<text x="380" y="35" text-anchor="middle" font-size="15" font-weight="900">'+s.k+' 溶液蒸干灼烧</text>';
+    s.steps.forEach(function(st,i){
+      const y=70+i*58;
+      g+='<line x1="380" y1="'+(y-18)+'" x2="380" y2="'+y+'" stroke="#16120A" stroke-width="2"/>';
+      const isLast=i===s.steps.length-1;
+      g+='<rect x="150" y="'+y+'" width="460" height="42" fill="'+(isLast?'#1E9E86':'#F4EFE2')+'" stroke="#16120A" stroke-width="3"/>';
+      g+='<text x="380" y="'+(y+26)+'" text-anchor="middle" font-size="13" font-weight="800" fill="'+(isLast?'#fff':'#16120A')+'">'+st+'</text>';
+    });
+    svg.innerHTML=g;
+    const n=document.getElementById('evapNote');
+    n.innerHTML='<b>产物:</b> <span class="prod">'+s.prod+'</span> ｜ '+s.reason;
+    n.style.borderColor='#1E9E86';
+  }
+})();
+
+/* ============ 交互5 双水解 vs 部分水解 对比 ============ */
+(function(){
+  const cv=document.getElementById('cDouble'),ctx=cv.getContext('2d');
+  let L=[],R=[],bubbles=[],precip=[],prog=0,raf=null;
+  function setup(){
+    L=[];R=[];bubbles=[];precip=[];prog=0;
+    for(let i=0;i<10;i++)L.push({x:60+Math.random()*280,y:60+Math.random()*180,vx:(Math.random()-.5)*1.2,vy:(Math.random()-.5)*1.2,alive:true,type:'an'});
+    for(let i=0;i<7;i++)R.push({x:430+Math.random()*260,y:60+Math.random()*180,vx:(Math.random()-.5)*1.2,vy:(Math.random()-.5)*1.2,alive:true,type:'an'});
+    for(let i=0;i<7;i++)R.push({x:430+Math.random()*260,y:60+Math.random()*180,vx:(Math.random()-.5)*1.2,vy:(Math.random()-.5)*1.2,alive:true,type:'cat'});
+    draw();
+  }
+  function move(p,x0,x1){p.x+=p.vx;p.y+=p.vy;if(p.x<x0||p.x>x1){p.vx*=-1;p.x=Math.max(x0,Math.min(x1,p.x));}if(p.y<45||p.y>250){p.vy*=-1;p.y=Math.max(45,Math.min(250,p.y));}}
+  function draw(){
+    ctx.clearRect(0,0,760,300);
+    ctx.fillStyle='rgba(20,80,200,0.05)';ctx.fillRect(30,30,340,255);ctx.fillRect(390,30,340,255);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(30,30,340,255);ctx.strokeRect(390,30,340,255);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('部分水解:Na₂CO₃',200,22);ctx.fillText('彻底双水解:Al³⁺ + CO₃²⁻',560,22);ctx.textAlign='left';
+    L.forEach(function(p){move(p,40,360);ctx.beginPath();ctx.arc(p.x,p.y,11,0,7);ctx.fillStyle='#1E9E86';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#16120A';ctx.stroke();});
+    R.forEach(function(p){if(!p.alive)return;move(p,400,720);ctx.beginPath();ctx.arc(p.x,p.y,11,0,7);ctx.fillStyle=p.type==='cat'?'#7A3FF2':'#1E9E86';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#16120A';ctx.stroke();});
+    precip.forEach(function(p){ctx.beginPath();ctx.arc(p.x,p.y,6,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=1.5;ctx.strokeStyle='#16120A';ctx.stroke();});
+    bubbles.forEach(function(b){ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.strokeStyle='#16120A';ctx.lineWidth=1.5;ctx.fillStyle='rgba(255,255,255,0.7)';ctx.fill();ctx.stroke();});
+    ctx.fillStyle='#16120A';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+    ctx.fillText('水解一点点就停,离子仍大量存在',200,278);
+    ctx.fillText('互相促进→几乎全部转化,冒气+沉淀',560,278);ctx.textAlign='left';
+  }
+  function anim(){
+    prog+=0.008;
+    if(prog>0.15){R.forEach(function(p){if(p.alive&&Math.random()<0.02){p.alive=false;if(p.type==='cat'){precip.push({x:430+Math.random()*260,y:250});}else{bubbles.push({x:430+Math.random()*260,y:250,r:3+Math.random()*4});}}});}
+    bubbles.forEach(function(b){b.y-=1.5;});bubbles=bubbles.filter(function(b){return b.y>35;});
+    while(precip.length>18)precip.shift();
+    draw();
+    if(prog<1)raf=requestAnimationFrame(anim);else raf=null;
+  }
+  document.getElementById('dbPlay').onclick=function(){if(raf)return;if(prog>=1)setup();raf=requestAnimationFrame(anim);};
+  document.getElementById('dbReset').onclick=function(){if(raf){cancelAnimationFrame(raf);raf=null;}setup();};
+  setup();
+})();
+
+/* ============ 交互6 电离水解竞争跷跷板 ============ */
+(function(){
+  const data=[
+    {k:'NaHCO₃',tilt:0.8,note:'HCO₃⁻ 水解(显碱) 强于 电离(显酸) → 溶液显碱性(右沉)。',c:'#1450C8'},
+    {k:'NaHS',tilt:0.9,note:'HS⁻ 水解强于电离 → 显碱性(右沉)。',c:'#1450C8'},
+    {k:'NaHSO₃',tilt:-0.9,note:'HSO₃⁻ 电离(显酸) 强于 水解(显碱) → 溶液显酸性(左沉)。与 NaHCO₃ 正相反!',c:'#E0382A'},
+    {k:'NaH₂PO₄',tilt:-0.7,note:'H₂PO₄⁻ 电离强于水解 → 显酸性(左沉)。',c:'#E0382A'},
+    {k:'Na₂HPO₄',tilt:0.6,note:'HPO₄²⁻ 水解强于电离 → 显碱性(右沉)。',c:'#1450C8'}
+  ];
+  const chips=document.getElementById('cmpChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('cmpSaw');let target=0,now=0,raf=null;
+  function render(){const d=data[cur];target=d.tilt;const v=document.getElementById('cmpVerdict');v.textContent=d.note;v.style.borderColor=d.c;if(!raf)raf=requestAnimationFrame(anim);}
+  function anim(){now+=(target-now)*0.15;if(Math.abs(target-now)<0.01){now=target;raf=null;}else raf=requestAnimationFrame(anim);draw();}
+  function draw(){
+    const cx=380,cy=95,Lb=250,ang=-now*0.16;
+    const x1=cx-Lb*Math.cos(ang),y1=cy+Lb*Math.sin(ang);
+    const x2=cx+Lb*Math.cos(ang),y2=cy-Lb*Math.sin(ang);
+    svg.innerHTML='<polygon points="'+(cx-22)+',150 '+(cx+22)+',150 '+cx+',105" fill="#16120A"/>'
+      +'<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#16120A" stroke-width="8" stroke-linecap="round"/>'
+      +'<circle cx="'+x1+'" cy="'+y1+'" r="36" fill="#E0382A" stroke="#16120A" stroke-width="3"/>'
+      +'<text x="'+x1+'" y="'+(y1-46)+'" text-anchor="middle" font-size="12" font-weight="800">电离</text>'
+      +'<text x="'+x1+'" y="'+(y1+4)+'" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">显酸 H⁺</text>'
+      +'<circle cx="'+x2+'" cy="'+y2+'" r="36" fill="#1450C8" stroke="#16120A" stroke-width="3"/>'
+      +'<text x="'+x2+'" y="'+(y2-46)+'" text-anchor="middle" font-size="12" font-weight="800">水解</text>'
+      +'<text x="'+x2+'" y="'+(y2+4)+'" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">显碱 OH⁻</text>';
+  }
+  render();draw();
+})();
+
+/* ============ 交互7 离子浓度大小排序器 ============ */
+(function(){
+  const sets=[
+    {k:'0.1mol/L NaAc',order:['c(Na⁺)','c(Ac⁻)','c(OH⁻)','c(H⁺)'],note:'碱性:先 Na⁺ 后 Ac⁻(水解略减),再 OH⁻ 大于 H⁺。'},
+    {k:'0.1mol/L NH₄Cl',order:['c(Cl⁻)','c(NH₄⁺)','c(H⁺)','c(OH⁻)'],note:'酸性:Cl⁻ 不变最多,NH₄⁺ 水解略减,H⁺ 大于 OH⁻。'},
+    {k:'0.1mol/L Na₂CO₃',order:['c(Na⁺)','c(CO₃²⁻)','c(OH⁻)','c(HCO₃⁻)','c(H⁺)'],note:'强碱性:Na⁺ 最多,CO₃²⁻ 次之,OH⁻ 大于水解产物 HCO₃⁻,H⁺ 最少。'},
+    {k:'0.1mol/L NaHCO₃',order:['c(Na⁺)','c(HCO₃⁻)','c(OH⁻)','c(H⁺)','c(CO₃²⁻)'],note:'碱性:Na⁺、HCO₃⁻ 最多;水解占优 OH⁻ 大于 H⁺;CO₃²⁻ 极少。'}
+  ];
+  const chips=document.getElementById('rankChips');
+  const slotsBox=document.getElementById('rankSlots');
+  const poolBox=document.getElementById('rankPool');
+  let cur=0,drag=null;
+  sets.forEach((s,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=s.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;build();};chips.appendChild(b);});
+  function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function build(){
+    const s=sets[cur];slotsBox.innerHTML='';poolBox.innerHTML='';
+    s.order.forEach(function(_,i){const sl=document.createElement('div');sl.className='rankslot';sl.dataset.idx=i;sl.textContent=(i+1);
+      sl.ondragover=function(e){e.preventDefault();};
+      sl.ondrop=function(e){e.preventDefault();drop(sl);};
+      sl.onclick=function(){if(sl.classList.contains('filled')){const v=sl.dataset.val;sl.classList.remove('filled');sl.textContent=(+sl.dataset.idx+1);delete sl.dataset.val;markPool(v,false);}};
+      slotsBox.appendChild(sl);});
+    shuffle(s.order).forEach(function(ion){const it=document.createElement('div');it.className='rankitem';it.textContent=ion;it.draggable=true;it.dataset.val=ion;
+      it.ondragstart=function(){drag=ion;};
+      it.onclick=function(){if(it.classList.contains('used'))return;const empty=[...slotsBox.children].find(function(sl){return !sl.classList.contains('filled');});if(empty)fill(empty,ion);};
+      poolBox.appendChild(it);});
+    document.getElementById('rankNote').textContent=s.k+':把离子从大到小拖入槽位,再点检查。';
+    document.getElementById('rankNote').style.borderColor='#16120A';
+  }
+  function markPool(ion,used){[...poolBox.children].forEach(function(it){if(it.dataset.val===ion)it.classList.toggle('used',used);});}
+  function fill(sl,ion){sl.classList.add('filled');sl.textContent=ion;sl.dataset.val=ion;markPool(ion,true);}
+  function drop(sl){if(!drag||sl.classList.contains('filled'))return;fill(sl,drag);drag=null;}
+  document.getElementById('rankCheck').onclick=function(){
+    const s=sets[cur];const cur2=[...slotsBox.children].map(function(sl){return sl.dataset.val||'';});
+    if(cur2.some(function(v){return v==='';})){setNote('还有槽位没填满哦。','#E86A17');return;}
+    const ok=cur2.every(function(v,i){return v===s.order[i];});
+    if(ok)setNote('✔ 正确!'+s.note,'#1E9E86');else setNote('✘ 顺序不对。提示:'+s.note+' 点槽位可取回重排。','#E0382A');
+  };
+  document.getElementById('rankReset').onclick=build;
+  function setNote(t,c){const n=document.getElementById('rankNote');n.textContent=t;n.style.borderColor=c;}
+  build();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'盐溶液酸碱性判断',sig:'给一种盐,问溶液显酸/碱/中性;或比较几种盐 pH 大小。',act:'拆阴阳离子看强弱:谁弱谁水解、谁强显谁性;强酸强碱盐中性。',ex:'判 NaAc、NH₄Cl、NaCl:分别碱性、酸性、中性。',trap:'强酸弱碱盐显酸性、强碱弱酸盐显碱性,别记反。'},
+    {t:'比较同浓度盐水解程度 / pH',sig:'几种同浓度钠盐比碱性强弱,或几种铵盐比酸性。',act:'越弱越水解:对应酸越弱,盐碱性越强(找对应弱酸 Ka 比大小)。',ex:'同浓度 NaClO 与 NaAc 谁碱性强?→ NaClO(HClO 比 HAc 弱)。',trap:'要找对应的酸/碱比强弱,不是直接看盐。'},
+    {t:'水解离子方程式书写',sig:'写某盐水解的离子方程式。',act:'一般用 ⇌ 不标 ↑↓;多元弱酸根分步(第一步为主);双水解用=并标↑↓。',ex:'CO₃²⁻+H₂O⇌HCO₃⁻+OH⁻(第一步);Al³⁺+3H₂O⇌Al(OH)₃+3H⁺。',trap:'多元弱酸根不能一步写完;别把水解写成电离。'},
+    {t:'盐溶液蒸干灼烧产物',sig:'把某盐溶液蒸干、灼烧,问最终固体是什么。',act:'看阴离子对应酸是否挥发:挥发(HCl)+阳离子水解→氧化物;难挥发(H₂SO₄)→原盐;不稳定盐受热分解。',ex:'蒸干灼烧 AlCl₃ 得 Al₂O₃;蒸干 Al₂(SO₄)₃ 得原盐;蒸 NaHCO₃ 得 Na₂CO₃。',trap:'FeCl₃/AlCl₃ 得氧化物而非原盐;KMnO₄、NaHCO₃ 等自身分解要单列。'},
+    {t:'双水解及其应用',sig:'两种盐混合放气/生沉淀;明矾净水、泡沫灭火器、化肥不能混用。',act:'识别 Al³⁺/Fe³⁺ 与 CO₃²⁻/HCO₃⁻/AlO₂⁻/S²⁻ → 彻底双水解,=并标↑↓。',ex:'泡沫灭火器:Al³⁺+3HCO₃⁻=Al(OH)₃↓+3CO₂↑。明矾:Al³⁺水解生 Al(OH)₃ 胶体净水。',trap:'NH₄⁺ 与 CO₃²⁻ 相互促进但不彻底,仍写可逆。'},
+    {t:'水解的抑制与促进 / 溶液配制',sig:'配 FeCl₃、AlCl₃ 溶液防浑浊;某操作使水解增强或减弱。',act:'加对应酸抑制阳离子水解;升温、稀释、加能中和产物的物质则促进。',ex:'配 FeCl₃ 溶液加少量盐酸抑制 Fe³⁺ 水解;NaAc 中加 NaOH 抑制水解。',trap:'稀释虽促进水解程度,但离子浓度整体下降。'},
+    {t:'离子共存',sig:'判几种离子能否大量共存(常涉及双水解、酸碱).',act:'发生彻底双水解、生成沉淀气体或发生氧化还原的不能共存。',ex:'Al³⁺ 与 CO₃²⁻/HCO₃⁻/AlO₂⁻/S²⁻ 因双水解不能大量共存。',trap:'弱酸根与弱碱阳离子相遇先想双水解;别漏酸碱环境限制。'},
+    {t:'离子浓度大小比较 / 三大守恒',sig:'排某盐溶液离子浓度大小;判守恒等式正误;求某粒子浓度。',act:'先定酸碱性→排主次(完整离子最多,水解产物次之)→用电荷/物料/质子守恒收尾。',ex:'NaAc:c(Na⁺)>c(Ac⁻)>c(OH⁻)>c(H⁺)。',trap:'电荷守恒漏乘电荷数;混合液先反应再套守恒。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(m=>{const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 判断下列盐溶液酸碱性:NaCl、NaAc、NH₄Cl、Na₂CO₃。',a:'NaCl 中性;NaAc 碱性(Ac⁻水解);NH₄Cl 酸性(NH₄⁺水解);Na₂CO₃ 强碱性(CO₃²⁻水解)。'},
+    {q:'2. 写出 Na₂CO₃ 水解的主要离子方程式,并说明为什么显碱性。',a:'CO₃²⁻+H₂O⇌HCO₃⁻+OH⁻(第一步为主)。碳酸是弱酸,CO₃²⁻ 水解抢走 H⁺,剩 OH⁻ 增多 → 碱性。用可逆号、不标↑↓。'},
+    {q:'3. 同浓度的 NaAc 与 NaClO,哪个溶液碱性更强?为什么?',a:'NaClO 碱性更强。HClO 比 HAc 弱(Ka 更小),越弱越水解,故 ClO⁻ 水解程度大、碱性强。'},
+    {q:'4. NaHCO₃ 与 NaHSO₃ 溶液酸碱性为何相反?',a:'HCO₃⁻ 水解大于电离 → NaHCO₃ 显碱性;HSO₃⁻ 电离大于水解 → NaHSO₃ 显酸性。看酸式酸根电离与水解谁占优。'},
+    {q:'5. 把 AlCl₃ 溶液蒸干并灼烧,得到什么固体?为什么?',a:'得 Al₂O₃。Al³⁺ 水解生 Al(OH)₃,HCl 挥发促水解到底,灼烧 Al(OH)₃ 分解为 Al₂O₃。'},
+    {q:'6. 把 Al₂(SO₄)₃ 溶液蒸干,得到什么?与 AlCl₃ 有何不同?',a:'得原盐 Al₂(SO₄)₃。因 H₂SO₄ 难挥发,抑制水解;而 AlCl₃ 因 HCl 挥发水解到底得氧化物。'},
+    {q:'7. 写出泡沫灭火器工作的双水解离子方程式。',a:'Al³⁺+3HCO₃⁻=Al(OH)₃↓+3CO₂↑。彻底双水解用=并标↑↓,快速放出 CO₂ 灭火。'},
+    {q:'8. 配制 FeCl₃ 溶液时为什么要加少量盐酸?',a:'Fe³⁺ 易水解生成 Fe(OH)₃ 使溶液浑浊;加盐酸提供 H⁺ 抑制水解,保持澄清。'},
+    {q:'9. 说明为什么升温和加水稀释都能促进盐的水解。',a:'水解吸热,升温平衡正移(促进);加水降低离子浓度,平衡向水解方向移动(越稀越水解)。但稀释后离子浓度整体下降。'},
+    {q:'10. 排出 0.1mol/L NaAc 溶液中离子浓度大小顺序。',a:'c(Na⁺)>c(Ac⁻)>c(OH⁻)>c(H⁺)。碱性,Na⁺ 不变最多,Ac⁻ 水解略减,OH⁻ 大于 H⁺。'},
+    {q:'11. 写出 0.1mol/L Na₂CO₃ 溶液的电荷守恒式。',a:'c(Na⁺)+c(H⁺)=c(HCO₃⁻)+c(OH⁻)+2c(CO₃²⁻)。注意 CO₃²⁻ 系数×2。'},
+    {q:'12. Al³⁺ 与哪些离子不能大量共存(因双水解)?举三个。',a:'与 CO₃²⁻、HCO₃⁻、AlO₂⁻(还有 S²⁻、HS⁻、ClO⁻)等发生彻底双水解,不能大量共存。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>
