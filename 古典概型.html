@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古典概型与几何概型 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>古典概型与几何概型</h1>
+    <p class="lead">概率问题永远先问一句:「基本事件是<b>有限个</b>还是<b>无限个</b>?」——有限个、机会均等,走<b>古典概型</b>,数清 m、n 就赢;无限个但仍然均等(连续的线段/区域/时间),走<b>几何概型</b>,比的是<b>测度</b>(长度/面积/体积)而不是个数。两套工具、一套核心思想:<b>概率 = 「好」占「全部」的比例</b>。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 古典概型就是「数数」——把所有等可能的结果一个不漏、一个不重地摆出来,数出总数 n,再数出符合条件的 m,P=m/n。几何概型是「数不清就量」——结果多到数不完(连续),但你可以画个图、量出「好」的那块地盘占全部地盘的<b>比例</b>(长度比、面积比),概率就是这个比例。遇到"至少"就反着想:算对立事件往往一步到位。</div>
+
+    <div class="keybox"><b>一句话公式:</b> 古典概型 <b>P(A) = m/n</b>(m=A包含的基本事件数,n=基本事件总数,均为有限个且等可能);几何概型 <b>P(A) = 构成A的区域测度 / 全部结果区域测度</b>(长度、面积或体积之比,与位置形状有关、与量的大小无关)。</div>
+
+    <h2>① 古典概型的两大特征</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>特征一:有限性</b> —— 一次试验的所有可能结果只有<b>有限个</b>(可以一个一个数完)。</p>
+      <p style="margin:6px 0"><b>特征二:等可能性</b> —— 每个基本事件发生的可能性<b>相等</b>(掷一枚均匀骰子,1~6点各 1/6;不均匀的骰子就不是古典概型)。</p>
+      <div class="eq">P(A) = m / n　　（n=基本事件总数,m=事件A包含的基本事件数）</div>
+      <p style="margin:8px 0">两个特征<b>缺一不可</b>。「从含2红3黑共5个球中摸1个,摸到红球的概率」——5个基本事件,等可能,是古典概型,P=2/5。但若"5个球大小不同、摸到大球概率更高",就<b>不是</b>等可能,不能直接套 m/n。</p>
+      <p class="trap">⚠ 判断古典概型前必须先确认「等可能」!很多陷阱题把不等可能的结果偷换成表面像是"平分秋色"的选项(例如"抽到的和是2""抽到的和是7"表面看是两个结果,但和为7的组合数远多于和为2的,不能当成等可能的两个基本事件)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎲 互动1 — 古典概型样本空间:掷两枚骰子,列表找基本事件,高亮"点数和=7"</div>
+      <svg id="tableSvg" viewBox="0 0 700 430" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>目标点数和 <input id="sumTarget" type="range" min="2" max="12" value="7" step="1"></label>
+        <button id="sumGo">高亮该事件</button>
+      </div>
+      <div class="live">
+        <div><b>总数 n</b><span id="sumN">36</span></div>
+        <div><b>有利 m</b><span id="sumM">0</span></div>
+        <div><b>概率 P=m/n</b><span id="sumP">0</span></div>
+        <div><b>约分</b><span id="sumR">-</span></div>
+      </div>
+      <p class="small">6×6=36个格子=36个等可能基本事件(每个骰子1~6点,两骰子分先后、有序)。拖动滑块选点数和,红色格子=符合条件的基本事件,数出 m 格,P=m/36。注意"和=7"对角线最长(m=6),两端"和=2""和=12"只有1格——并非等可能!</p>
+    </div>
+
+    <h2 class="b">② 基本事件的列举:不重不漏</h2>
+    <div class="card">
+      <h3>三种列举工具</h3>
+      <table>
+        <tr><th>方法</th><th>适用场景</th></tr>
+        <tr><td><b>列举法</b></td><td>结果少、直接写出:{1,2,3,4,5,6}</td></tr>
+        <tr><td><b>树状图</b></td><td>分步试验(先…再…),一层层分叉,天然不重不漏</td></tr>
+        <tr><td><b>列表法</b></td><td>两步试验(如掷两骰子、摸两次球),画行×列表格,最直观</td></tr>
+      </table>
+      <h3>"有序 vs 无序"、"有放回 vs 无放回"——决定样本空间大小</h3>
+      <p style="margin:6px 0"><b>有放回抽取:</b> 每次都是从原始的全部对象中抽,前后独立,总数按<b>乘法原理</b>算(如连续掷两次骰子:6×6=36)。</p>
+      <p style="margin:6px 0"><b>无放回抽取:</b> 抽出不放回,下一次的对象变少(如从5个球中不放回摸2个:5×4=20种有序,或 C(5,2)=10种无序)。</p>
+      <p style="margin:6px 0"><b>有序 vs 无序:</b> "先摸到A后摸到B"与"先B后A"若<b>算作不同结果</b>就是有序(用排列数);若<b>算作同一个结果</b>(只关心摸出哪两个球,不管顺序)就是无序(用组合数)。<b>关键:</b> m 和 n 必须用<b>同一种</b>计数口径(同为有序，或同为无序),否则比例会错。</p>
+      <p class="trap">⚠ 头号陷阱:m 用组合数(不分顺序)、n 却用排列数(分顺序)混着算,比值就错了。做题前先明确"这次列举,顺序算不算数",从头到尾保持一致。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动2 — 有放回 vs 无放回:摸球两次,对比样本空间大小与列举方式</div>
+      <svg id="replaceSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="repmode on" data-m="0">有放回</button>
+        <button class="repmode" data-m="1">无放回(有序)</button>
+        <button class="repmode" data-m="2">无放回(无序,组合)</button>
+      </div>
+      <div class="verdict" id="repNote"></div>
+      <p class="small">袋中2红球(A、B)+2白球(C、D)。同一个"摸两次"动作,记法不同 → 样本空间总数 n 不同。看清题目问的是"顺序有关"还是"只看结果",才能选对 n。</p>
+    </div>
+
+    <h2 class="g">③ 与排列组合结合:数清 m 和 n</h2>
+    <div class="card">
+      <p style="margin:6px 0">古典概型的难点常常不在概率公式本身,而在<b>数清 m 和 n</b>——这时候排列 A、组合 C、分步分类计数原理就要上场。</p>
+      <table>
+        <tr><th>场景</th><th>怎么数</th></tr>
+        <tr><td>摸球(不放回、不关心顺序)</td><td>用组合数 C，n=C(总数,抽取数)，m=C(符合条件的)×C(其余的)</td></tr>
+        <tr><td>抽签(每人抽一根,关心是谁抽到)</td><td>常转化为等可能的排列,或用"对称性"简化(每人中签概率相等)</td></tr>
+        <tr><td>分组、分配</td><td>先分组(组合)再考虑组是否区分(是否再乘排列数)</td></tr>
+      </table>
+      <div class="eq">例:5张卡片(3张写"中"、2张写"谢")随机排成一列,求相邻两张都是"中"的概率的一种数法</div>
+      <p style="margin:8px 0">n = 把5张卡片排成一列的所有等可能结果数(若卡片视为不同个体，n=5!=120；若只关心"中/谢"的排列模式，n=C(5,3)=10，两种数法只要前后一致，结果相同)。m 按同一口径数出"中中中谢谢"这类满足条件的排列/组合数即可。</p>
+      <p class="trap">⚠ 抽签问题最容易被"抽的顺序"迷惑:其实无论第几个抽,每个人中奖的概率都相等(对称性),不必对每个人单独列举全部排列——但列举时也要保证 m、n 口径一致。</p>
+    </div>
+
+    <h2 class="o">④ 概率的基本性质与"至少"问题——用对立事件</h2>
+    <div class="card">
+      <div class="eq">互斥事件加法:若 A、B 互斥(不能同时发生),则 P(A∪B)=P(A)+P(B)</div>
+      <div class="eq">对立事件:P(A) + P(¬A) = 1　⟺　P(A) = 1 − P(¬A)</div>
+      <p style="margin:8px 0"><b>正难则反:</b> 遇到"至少一个""至多""不全是"这类字眼,直接算往往要分好几种情况相加,容易漏算;而它的<b>对立事件</b>(如"至少一个"的对立是"一个都没有")通常只有<b>一种</b>情况,算起来干净利落。P(至少一个)=1−P(一个都没有)。</p>
+      <table>
+        <tr><th>正面描述</th><th>对立事件(常更好算)</th></tr>
+        <tr><td>至少1个次品</td><td>0个次品(全是正品)</td></tr>
+        <tr><td>至少2人排在一起</td><td>比较复杂,不一定用对立(视具体条件而定)</td></tr>
+        <tr><td>至少命中1次</td><td>全部未命中</td></tr>
+        <tr><td>三人中至少1人及格</td><td>三人都不及格</td></tr>
+      </table>
+      <p class="trap">⚠ 互斥（不能同时发生）≠ 对立（不能同时发生 且 必有一个发生）。对立事件一定互斥,但互斥事件不一定对立(不一定"非此即彼"，可能都不发生)。加法公式 P(A∪B)=P(A)+P(B) 只对互斥事件成立,若 A、B 不互斥要减去交集,防止重复计数。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动3 — "至少"用对立事件简化:直接枚举 vs 对立事件秒杀</div>
+      <svg id="oppositeSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>每次命中率 p <input id="oppP" type="range" min="0.1" max="0.9" value="0.6" step="0.1"></label>
+        <label>试验次数 n <input id="oppN" type="range" min="2" max="5" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>全部未命中 P(¬A全)</b><span id="oppQ">0</span></div>
+        <div><b>至少1次命中 P</b><span id="oppP1">0</span></div>
+        <div><b>直接枚举情形数</b><span id="oppCnt">0</span></div>
+        <div><b>对立事件情形数</b><span id="oppCnt2">1</span></div>
+      </div>
+      <p class="small">左侧展开"直接枚举"要列出的所有"至少1次命中"的分支(命中1次、命中2次…);右侧对立事件只需算"全部不中"这<b>一种</b>情形，再用 1 减。n 越大，直接枚举的分支越多，对立事件的优势越明显。</p>
+    </div>
+
+    <h2 class="v">⑤ 几何概型:从"数个数"到"量地盘"</h2>
+    <div class="card">
+      <p style="margin:6px 0">当基本事件有<b>无限多个</b>(比如"在区间[0,10]上随机取一点"),没法一个个数,但如果每一点被取到的"机会"仍然是<b>均匀</b>的,就用<b>几何概型</b>:把"可能性"换算成<b>测度</b>(长度、面积、体积)。</p>
+      <div class="eq">P(A) = 构成事件A的区域测度 / 试验全部结果所构成的区域测度</div>
+      <table>
+        <tr><th>类型</th><th>测度</th><th>典型场景</th></tr>
+        <tr><td>线段/区间型</td><td>长度</td><td>在线段上随机取一点/随机剪断绳子</td></tr>
+        <tr><td>平面区域型</td><td>面积</td><td>向平面区域随机投点、靶盘、会面问题</td></tr>
+        <tr><td>空间型</td><td>体积</td><td>向立体区域随机投点(较少见,了解即可)</td></tr>
+        <tr><td>时间型</td><td>时间长度(本质是线段型)</td><td>等车、等人、随机时刻发生的事件</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>几何概型的两个特征</b>(与古典概型对照):①基本事件有<b>无限个</b>(不可数);②每个基本事件出现的可能性仍然<b>相等</b>(均匀分布，不能有的地方"更容易"被选中)。</p>
+      <p class="trap">⚠ 几何概型的概率与图形的<b>位置、形状无关</b>，只与测度的<b>大小</b>有关——这是几何概型的"平移不变性"。但选错测度维度(该用面积却用长度，或反之)是最常见的失分点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动4 — 几何概型·长度型:区间上随机取点,阴影长度比=概率</div>
+      <svg id="lenSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="lenGo">▶ 随机取一点</button><button id="lenReset">↺ 清空轨迹</button>
+        <label>区间上限 L <input id="lenL" type="range" min="6" max="12" value="10" step="1"></label>
+        <label>事件区间 [a,b] 右端 b <input id="lenB" type="range" min="1" max="12" value="4" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>全长 L</b><span id="lenLv">10</span></div>
+        <div><b>事件区间长 [0,b]</b><span id="lenBv">4</span></div>
+        <div><b>P=b/L</b><span id="lenP">0.4</span></div>
+        <div><b>已投点/命中</b><span id="lenHit">0/0</span></div>
+      </div>
+      <p class="small">在 [0,L] 上等可能取点，黄色阴影 [0,b] 是"事件发生"的区域。多次点击"随机取一点"，命中黄色区域的频率会逐渐逼近 P=b/L——用频率验证概率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动5 — 几何概型·面积型:蒙特卡洛投点估计面积比(rAF动画撒点)</div>
+      <canvas id="mcCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <button id="mcGo">▶ 开始投点</button><button id="mcStop">⏸ 暂停</button><button id="mcReset">↺ 重置</button>
+        <label>形状 <input id="mcShape" type="range" min="0" max="1" value="0" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>总投点数</b><span id="mcN">0</span></div>
+        <div><b>落入阴影区</b><span id="mcM">0</span></div>
+        <div><b>估计概率 m/n</b><span id="mcEst">0</span></div>
+        <div><b>理论值</b><span id="mcTrue">0.785</span></div>
+      </div>
+      <p class="small">正方形边长2的靶内随机撒点(蒙特卡洛法)。滑块=0时阴影为内切圆(理论面积比=π/4≈0.785)，=1时阴影为对角线分出的三角形(理论比=0.5)。点数越多，估计概率越接近理论值——这就是几何概型"用频率估计概率"的直观演示。</p>
+    </div>
+
+    <h2 class="r">⑥ 会面问题:平面区域里的不等式</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>经典模型:</b> 甲、乙两人约定在 0~T 时间内的某个时刻到达约会地点，各自到达时间设为 x、y，均在 [0,T] 上等可能。若约定"先到者最多等待 t 分钟，超过则离开"，求两人能会面的概率。</p>
+      <div class="eq">会面条件:|x − y| ≤ t　（在正方形 [0,T]×[0,T] 中画出该不等式对应的带状区域）</div>
+      <p style="margin:8px 0"><b>建模三步:</b> ①以 x、y 为坐标轴，全部结果对应边长 T 的正方形(面积 T²);②"会面成功"对应 |x−y|≤t 这条带状区域,写成两条直线 y=x+t 和 y=x−t 之间的部分;③正方形去掉两个直角三角形(each 直角边为 T−t)就是带状区域面积。</p>
+      <div class="mono">P(会面) = [T² − (T−t)²] / T² = 1 − [(T−t)/T]²</div>
+      <p class="trap">⚠ 会面问题的核心是把"文字条件"翻译成"平面区域的不等式"，再求面积比。常见错误:漏掉正方形本身的边界，或算三角形直角边时忘了是 T−t 而不是 t。画图是唯一靠谱的办法，不要死记公式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🤝 互动6 — 会面问题:|x−y|≤t 阴影带状区域,拖动t看会面概率变化</div>
+      <svg id="meetSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>总时段 T (分钟) <input id="meetT" type="range" min="20" max="60" value="60" step="5"></label>
+        <label>可等待时间 t (分钟) <input id="meett" type="range" min="0" max="30" value="15" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>正方形总面积 T²</b><span id="meetTot">0</span></div>
+        <div><b>带状区域面积</b><span id="meetBand">0</span></div>
+        <div><b>会面概率 P</b><span id="meetP">0</span></div>
+        <div><b>1−[(T−t)/T]²</b><span id="meetChk">0</span></div>
+      </div>
+      <p class="small">正方形内蓝色带状区域 |x−y|≤t 表示"两人相遇"。拖大 t(愿意多等)带状区域变宽，会面概率上升；拖大 T(约定时段变长而等待时间不变)带状区域相对变窄，会面概率下降。</p>
+    </div>
+
+    <h2 class="b">⑦ 古典概型 vs 几何概型:怎么一眼分清</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>古典概型</th><th>几何概型</th></tr>
+        <tr><td>基本事件个数</td><td><b>有限</b>(可数完)</td><td><b>无限</b>(连续，数不完)</td></tr>
+        <tr><td>概率公式</td><td>P=m/n(个数之比)</td><td>P=测度之比(长度/面积/体积)</td></tr>
+        <tr><td>典型触发词</td><td>"掷骰子""摸球""抽签""排队"</td><td>"随机取一点""随机时刻""投针/投点""区间内任取"</td></tr>
+        <tr><td>等可能性</td><td>每个基本事件概率相等(都是1/n)</td><td>每一点被取到的"概率密度"均匀，单点概率为0</td></tr>
+        <tr><td>易错点</td><td>m、n 数错(重复或遗漏)</td><td>测度维度选错(长度当面积，或反之)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>判断口诀:</b> 先看结果能不能<b>一个个数完</b>——数得完、machine 数量有限 → 古典概型；数不完、结果连续分布在一段区间/一块区域上 → 几何概型。两者共同的灵魂都是「等可能」，只是"数个数"还是"量地盘"的区别。</p>
+      <p class="trap">⚠ 看到"任取一个实数""任意时刻""随机投掷到区域内"这类连续型描述，第一反应就该是几何概型，而不是硬套 P=m/n(此时 n 是无穷大，m/n 没有意义)。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 古典概型·直接列举求概率</h3>
+      <p><b class="tag">触发信号:</b>「掷骰子」「摸球」「抛硬币」等有限次、有限结果的试验，问某事件概率。</p>
+      <p><b class="tag">标准动作:</b>用列举法/树状图/列表法把所有等可能基本事件写全 → 数出总数 n → 数出符合条件的 m → P=m/n，能约分就约分。</p>
+      <p><b class="tag">示例(带解):</b>同时掷两枚骰子，求点数和为8的概率。列表得36个等可能基本事件；和为8的有(2,6)(3,5)(4,4)(5,3)(6,2)共5种，P=5/36。</p>
+      <p class="trap">陷阱:漏列组合(比如漏掉(6,2)只写(2,6))；把"和为8"误当成跟"和为2"等可能。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 古典概型·结合排列组合数 m、n</h3>
+      <p><b class="tag">触发信号:</b>「从…个球中摸出…个」「抽签」「分组/派人」，元素较多不便直接列举。</p>
+      <p><b class="tag">标准动作:</b>先确定"有序还是无序"、"有放回还是无放回"，统一口径用组合数 C 或排列数 A 分别数出 n 和 m。</p>
+      <p><b class="tag">示例(带解):</b>袋中5个球(3红2白)，不放回摸2个，求恰好摸到1红1白的概率。n=C(5,2)=10(无序)，m=C(3,1)×C(2,1)=6，P=6/10=3/5。</p>
+      <p class="trap">陷阱:m 与 n 一个用组合一个用排列，口径不一致导致比值错误；漏乘或重复计数。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — "至少/至多"用对立事件</h3>
+      <p><b class="tag">触发信号:</b>题目出现「至少」「至多」「不全」「不都」等字眼。</p>
+      <p><b class="tag">标准动作:</b>先想对立事件是什么(通常是"一个都不发生"或"全部都发生")，算对立事件概率，再用 P(A)=1−P(¬A)。</p>
+      <p><b class="tag">示例(带解):</b>3人各自独立解出某题的概率都是0.6，求至少1人解出的概率。对立事件"3人都解不出"：P(¬A)=0.4³=0.064，P(至少1人)=1−0.064=0.936。</p>
+      <p class="trap">陷阱:直接枚举"恰好1人""恰好2人""恰好3人"再相加，计算量大且容易漏项或算错组合数；混淆"互斥"与"对立"。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 几何概型·长度型(区间取点)</h3>
+      <p><b class="tag">触发信号:</b>「在区间[a,b]上随机取一个数/一点」「随机时刻」「随机剪断一根绳子」。</p>
+      <p><b class="tag">标准动作:</b>画数轴，标出全部结果对应的总长度，再标出事件对应的子区间长度，P=子区间长度/总长度。</p>
+      <p><b class="tag">示例(带解):</b>在[0,10]上随机取一点x，求x²−5x+6&lt;0(即2&lt;x&lt;3)的概率。事件区间长度为1，总长度10，P=1/10。</p>
+      <p class="trap">陷阱:先解不等式再定区间时，忘了与[0,10]取交集；把不等式解错方向导致区间搞反。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 几何概型·面积型(平面区域投点)</h3>
+      <p><b class="tag">触发信号:</b>「向正方形/圆形/三角形区域内随机投掷一点」「会面问题」「二维随机变量落在某区域」。</p>
+      <p><b class="tag">标准动作:</b>建立坐标系，画出全部结果区域和事件区域，P=事件区域面积/全部区域面积。会面类问题要把文字条件翻译成 |x−y|≤t 一类不等式。</p>
+      <p><b class="tag">示例(带解):</b>甲乙两人在0~30分钟内随机到达，先到者最多等10分钟。P(会面)=1−[(30−10)/30]²=1−4/9=5/9。</p>
+      <p class="trap">陷阱:三角形直角边算成 t 而不是 T−t；漏了取值范围的边界(如 t&gt;T 时公式不再适用)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 古典 vs 几何 的辨别与选型</h3>
+      <p><b class="tag">触发信号:</b>题目没有明说是哪种概型，需要先判断基本事件是有限还是无限。</p>
+      <p><b class="tag">标准动作:</b>问自己"结果能不能一个个数完"。能数完(骰子点数、球的个数、人数)→古典概型，P=m/n；数不完、连续分布在区间/区域上→几何概型，P=测度之比。</p>
+      <p><b class="tag">示例(带解):</b>"抛一枚骰子出现的点数"是古典概型(6个结果)；"往返于A、B两地的汽车在某个随机时刻抛锚，抛锚地点到A地的距离"是几何概型(距离连续取值)。</p>
+      <p class="trap">陷阱:把连续型问题错误套用 P=m/n(n为无穷大无意义)；把有限但个数很大的问题误判为几何概型而去算测度(其实仍应枚举/组合计数)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 用 P=m/n 前必须先确认基本事件<b>等可能</b>，"看起来只有两种结果"不代表这两种结果概率相等。</p>
+      <p class="trap">② m、n 计数口径要<b>一致</b>：同为排列(有序)或同为组合(无序)，不能一个用A一个用C。</p>
+      <p class="trap">③ 有放回 vs 无放回、有序 vs 无序会改变样本空间总数 n，动手列举前先想清楚题目的抽取方式。</p>
+      <p class="trap">④ 列举基本事件要<b>不重不漏</b>，两步试验优先用列表法(表格)而不是脑内硬数，减小出错率。</p>
+      <p class="trap">⑤ 遇到"至少""至多"优先想<b>对立事件</b>，别急着分情况罗列相加。</p>
+      <p class="trap">⑥ 互斥 ≠ 对立：对立事件一定互斥，但互斥事件未必对立(可能都不发生)；A、B不互斥时加法要减去交集。</p>
+      <p class="trap">⑦ 几何概型选<b>测度维度</b>要对：一维问题(取点、剪绳子)用长度；二维问题(投点、会面)用面积；不要混用。</p>
+      <p class="trap">⑧ 几何概型中单点的概率为0，但"不可能"和"概率为0"是两回事——这是几何概型区别于古典概型的重要概念点。</p>
+      <p class="trap">⑨ 会面问题中直角三角形的直角边是 T−t（等待剩余时间对应的边），不是 t 本身，画图核对最保险。</p>
+      <p class="trap">⑩ 见到"随机取一个实数/任意时刻/连续区域"等描述，立刻反应是几何概型，不要用有限枚举的思路硬凑。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 概率的本质是"测度归一化":</b> 无论古典还是几何概型，P(A)本质都是"A的测度 / 全空间的测度"——古典概型的"测度"是"计数"(每个基本事件权重相等，测度=1/n)，几何概型的"测度"是长度/面积/体积。理解这一点，你会发现两者不是两套孤立的公式，而是同一思想在离散和连续两种情形下的体现。</p>
+      <p style="margin:8px 0"><b>② 列举法的本质是给样本空间"建坐标":</b> 列表法之所以好用，是因为它把两步试验映射成平面上的格点，横纵坐标各自独立取值。以后遇到更复杂的多步试验，可以把"树状图"看成是这种坐标思想的推广——每加一步试验，就是维度加一。</p>
+      <p style="margin:8px 0"><b>③ 对立事件的本质是"补集测度=1−原集测度":</b> 无论古典还是几何概型，P(A)+P(¬A)=1 都成立。"正难则反"不只是技巧，而是概率归一化的必然推论——尤其当A的情形数随n指数增长(比如"至少1次"要枚举1到n次)而¬A只有1种情形时，用对立事件是唯一理性的选择。</p>
+      <p style="margin:8px 0"><b>④ 几何概型的"平移/伸缩不变性"：</b> P只依赖于测度的<b>比值</b>，与图形摆在哪里、多大无关——把区间[0,10]换成[5,15]，只要事件区间跟着整体平移，概率不变。这解释了为什么会面问题的答案只跟"t/T"这个<b>比值</b>有关，而不单独依赖T或t的绝对大小。</p>
+      <p style="margin:8px 0"><b>⑤ 从有限走向无限：概型的"连续化"是后续学习的伏笔:</b> 古典概型(有限、离散)→几何概型(无限、连续但仍均匀)是走向后续"随机变量与分布"(尤其是连续型随机变量、均匀分布、概率密度函数)的第一步。几何概型里"P=长度比"其实就是均匀分布的雏形——提前建立这个直觉，学选修阶段的连续分布会顺畅很多。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 古典概型讲"数个数"，几何概型讲"量地盘"，核心都是等可能</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t;}return a||1;}
+
+/* ===== 互动1: 掷两骰子列表，高亮点数和 ===== */
+(function(){
+  const svg=document.getElementById('tableSvg');
+  const Ts=document.getElementById('sumTarget');
+  const oN=document.getElementById('sumN'),oM=document.getElementById('sumM'),oP=document.getElementById('sumP'),oR=document.getElementById('sumR');
+  function draw(){
+    clr(svg);
+    const target=+Ts.value;
+    const X0=90,Y0=50,cell=48;
+    el(svg,'text',{x:X0+3*6*cell/6,y:24,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='骰子乙的点数 →';
+    el(svg,'text',{x:26,y:Y0+3*cell,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle',transform:'rotate(-90 26 '+(Y0+3*cell)+')'}).textContent='骰子甲的点数 →';
+    let m=0;
+    for(let i=1;i<=6;i++){
+      el(svg,'text',{x:X0+(i-0.5)*cell,y:Y0-8,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=i;
+      el(svg,'text',{x:X0-10,y:Y0+(i-0.5)*cell+5,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent=i;
+      for(let j=1;j<=6;j++){
+        const sum=i+j;
+        const hit=(sum===target);
+        if(hit)m++;
+        el(svg,'rect',{x:X0+(j-1)*cell,y:Y0+(i-1)*cell,width:cell,height:cell,fill:hit?'rgba(224,56,42,0.55)':'#fff',stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:X0+(j-0.5)*cell,y:Y0+(i-0.5)*cell+5,'font-size':12.5,'font-weight':800,fill:hit?'#fff':INK,'text-anchor':'middle'}).textContent=sum;
+      }
+    }
+    const n=36;
+    oN.textContent=n;oM.textContent=m;oP.textContent=(m/n).toFixed(4);
+    const g=gcd(m,n);
+    oR.textContent=m===0?'0':(m/g)+'/'+(n/g);
+    el(svg,'text',{x:X0+3*cell,y:Y0+6*cell+30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='点数和 = '+target+'　的基本事件共 '+m+' 个（红色格）　　P='+m+'/36';
+  }
+  Ts.oninput=draw;
+  document.getElementById('sumGo').onclick=draw;
+  draw();
+})();
+
+/* ===== 互动2: 有放回 vs 无放回样本空间 ===== */
+(function(){
+  const svg=document.getElementById('replaceSvg');const note=document.getElementById('repNote');
+  const balls=['A(红)','B(红)','C(白)','D(白)'];
+  let mode=0;
+  document.querySelectorAll('.repmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.repmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    let pairs=[],desc,n;
+    if(mode===0){
+      // with replacement, ordered: 4*4=16
+      for(let i=0;i<4;i++)for(let j=0;j<4;j++)pairs.push([i,j]);
+      n=16;
+      desc='有放回，摸出后放回再摸第二次：每次都从4个球里选，第一次×第二次 = 4×4 = 16 种（有序，允许同一个球摸两次）。';
+    } else if(mode===1){
+      // without replacement, ordered: 4*3=12
+      for(let i=0;i<4;i++)for(let j=0;j<4;j++)if(i!==j)pairs.push([i,j]);
+      n=12;
+      desc='无放回，按先后顺序记录：第一次4选1，第二次剩3选1 = 4×3 = 12 种（有序，"先A后B"与"先B后A"算不同结果）。';
+    } else {
+      // without replacement, unordered: C(4,2)=6
+      const seen=new Set();
+      for(let i=0;i<4;i++)for(let j=0;j<4;j++){
+        if(i===j)continue;
+        const key=[Math.min(i,j),Math.max(i,j)].join('-');
+        if(!seen.has(key)){seen.add(key);pairs.push([Math.min(i,j),Math.max(i,j)]);}
+      }
+      n=6;
+      desc='无放回，只关心摸出哪两个球（不分先后）：C(4,2)=6 种（无序，"A和B"与"B和A"算同一种结果）。';
+    }
+    // draw grid of outcomes as small chips
+    const cols=6;
+    const cw=100,ch=42,startX=30,startY=30;
+    pairs.forEach((p,idx)=>{
+      const cx=idx%cols, ry=Math.floor(idx/cols);
+      const x=startX+cx*cw, y=startY+ry*(ch+10);
+      const isRedPair = (balls[p[0]][2]==='红') && (balls[p[1]][2]==='红');
+      el(svg,'rect',{x:x,y:y,width:cw-10,height:ch,fill:isRedPair?'rgba(232,106,23,0.25)':'#fff',stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x+(cw-10)/2,y:y+ch/2+5,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=balls[p[0]][0]+','+balls[p[1]][0];
+    });
+    el(svg,'text',{x:350,y:startY+Math.ceil(pairs.length/cols)*(ch+10)+22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='样本空间总数 n = '+n;
+    note.innerHTML='👉 '+desc;
+    note.style.borderColor=mode===0?BLUE:mode===1?ORANGE:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动3: 至少1次命中，对立事件对比 ===== */
+(function(){
+  const svg=document.getElementById('oppositeSvg');
+  const Ps=document.getElementById('oppP'),Ns=document.getElementById('oppN');
+  const oQ=document.getElementById('oppQ'),oP1=document.getElementById('oppP1'),oCnt=document.getElementById('oppCnt'),oCnt2=document.getElementById('oppCnt2');
+  function draw(){
+    clr(svg);
+    const p=+Ps.value, n=+Ns.value;
+    const q=Math.pow(1-p,n);
+    const p1=1-q;
+    oQ.textContent=q.toFixed(4);oP1.textContent=p1.toFixed(4);oCnt2.textContent='1';
+    // count branches for direct enumeration: sum_{k=1}^{n} C(n,k) = 2^n - 1
+    function C(n,k){let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);}
+    let branches=0;for(let k=1;k<=n;k++)branches+=1; // k=1..n distinct "at least k successes count" groupings shown as branches
+    oCnt.textContent=(Math.pow(2,n)-1)+' 种具体结果组合（'+n+'个分支：恰好1次...恰好'+n+'次）';
+    // left: direct enumeration tree-ish bars, one per "exactly k hits" case
+    el(svg,'text',{x:175,y:22,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='直接枚举："至少1次"要分情况';
+    let y=44;
+    for(let k=1;k<=n;k++){
+      const ck=C(n,k);
+      const prob=ck*Math.pow(p,k)*Math.pow(1-p,n-k);
+      el(svg,'rect',{x:40,y:y,width:270,height:26,fill:'rgba(224,56,42,0.15)',stroke:RED,'stroke-width':2});
+      el(svg,'text',{x:50,y:y+18,'font-size':12,'font-weight':800,fill:INK}).textContent='恰好'+k+'次命中：C('+n+','+k+')·p^'+k+'·(1-p)^'+(n-k)+' = '+prob.toFixed(4);
+      y+=32;
+    }
+    el(svg,'text',{x:40,y:y+14,'font-size':12.5,'font-weight':900,fill:RED}).textContent='需要相加 '+n+' 项 →  P='+p1.toFixed(4);
+    // right: opposite event single box
+    el(svg,'text',{x:525,y:22,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='对立事件："全部未命中"只1种';
+    el(svg,'rect',{x:420,y:60,width:210,height:60,fill:'rgba(30,158,134,0.2)',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:525,y:88,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='P(全不中)=(1-p)^'+n;
+    el(svg,'text',{x:525,y:108,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='= '+q.toFixed(4);
+    el(svg,'text',{x:525,y:150,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='P(至少1次)=1−'+q.toFixed(4);
+    el(svg,'text',{x:525,y:172,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='= '+p1.toFixed(4);
+    el(svg,'line',{x1:350,y1:20,x2:350,y2:260,stroke:INK,'stroke-width':3,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:350,y:290,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='两种算法结果一致，但对立事件只需算1项，n越大优势越大';
+  }
+  Ps.oninput=Ns.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4: 几何概型 长度型 ===== */
+(function(){
+  const svg=document.getElementById('lenSvg');
+  const Ls=document.getElementById('lenL'),Bs=document.getElementById('lenB');
+  const oL=document.getElementById('lenLv'),oB=document.getElementById('lenBv'),oP=document.getElementById('lenP'),oHit=document.getElementById('lenHit');
+  let hits=0,total=0,lastX=null;
+  function sync(){
+    const L=+Ls.value;
+    if(+Bs.max!==L)Bs.max=L;
+    if(+Bs.value>L)Bs.value=L;
+    draw();
+  }
+  Ls.oninput=sync;Bs.oninput=draw;
+  function draw(){
+    clr(svg);
+    const L=+Ls.value, b=+Bs.value;
+    const X0=50,X1=650,Y=100;
+    const sc=(X1-X0)/L;
+    el(svg,'line',{x1:X0,y1:Y,x2:X1,y2:Y,stroke:INK,'stroke-width':4});
+    // shaded event region [0,b]
+    el(svg,'rect',{x:X0,y:Y-14,width:b*sc,height:28,fill:'rgba(243,192,14,0.55)',stroke:YEL,'stroke-width':3});
+    el(svg,'text',{x:X0,y:Y-24,'font-size':12,'font-weight':800,fill:INK}).textContent='0';
+    el(svg,'text',{x:X1,y:Y-24,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='L='+L;
+    el(svg,'line',{x1:X0+b*sc,y1:Y-20,x2:X0+b*sc,y2:Y+20,stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:X0+b*sc,y:Y+38,'font-size':12.5,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='b='+b;
+    el(svg,'text',{x:(X0+X1)/2,y:Y+70,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='事件区间 [0,b] 长度 '+b+'　／　全长 '+L+'　→ P=b/L='+(b/L).toFixed(3);
+    if(lastX!==null){
+      el(svg,'circle',{cx:lastX,cy:Y,r:8,fill:(lastX<=X0+b*sc)?GREEN:RED,stroke:INK,'stroke-width':2});
+    }
+    oL.textContent=L;oB.textContent=b;oP.textContent=(b/L).toFixed(3);
+    oHit.textContent=hits+'/'+total;
+  }
+  document.getElementById('lenGo').onclick=()=>{
+    const L=+Ls.value,b=+Bs.value;
+    const x=Math.random()*L;
+    total++; if(x<=b)hits++;
+    const X0=50,X1=650;const sc=(X1-X0)/L;
+    lastX=X0+x*sc;
+    draw();
+  };
+  document.getElementById('lenReset').onclick=()=>{hits=0;total=0;lastX=null;draw();};
+  sync();
+})();
+
+/* ===== 互动5: 蒙特卡洛 面积型 ===== */
+(function(){
+  const cv=document.getElementById('mcCv');const ctx=cv.getContext('2d');
+  const shapeS=document.getElementById('mcShape');
+  const oN=document.getElementById('mcN'),oM=document.getElementById('mcM'),oEst=document.getElementById('mcEst'),oTrue=document.getElementById('mcTrue');
+  let n=0,m=0,running=false,pts=[];
+  const side=280, ox=210, oy=30; // square top-left at (ox,oy), size side x side (canvas coords)
+  function inShape(px,py){
+    // px,py in [0,side] local coords, square [0,side]x[0,side]
+    const shape=+shapeS.value;
+    if(shape===0){
+      const cx=side/2, cy=side/2, r=side/2;
+      return (px-cx)*(px-cx)+(py-cy)*(py-cy) <= r*r;
+    } else {
+      // triangle: half of square via diagonal (below diagonal y > x*? ) use y >= px  (lower-left triangle)
+      return py >= px;
+    }
+  }
+  function trueP(){return (+shapeS.value===0)? (Math.PI/4) : 0.5;}
+  function drawBase(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#fff';ctx.fillRect(ox,oy,side,side);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(ox,oy,side,side);
+    const shape=+shapeS.value;
+    ctx.fillStyle='rgba(122,63,242,0.18)';ctx.strokeStyle=VIO;ctx.lineWidth=3;
+    if(shape===0){
+      ctx.beginPath();ctx.arc(ox+side/2,oy+side/2,side/2,0,2*Math.PI);ctx.fill();ctx.stroke();
+    } else {
+      ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy+side);ctx.lineTo(ox+side,oy+side);ctx.closePath();ctx.fill();ctx.stroke();
+    }
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText(shape===0?'阴影=内切圆 (理论比 π/4≈0.785)':'阴影=对角线三角形 (理论比 0.5)',ox-5,oy+side+26);
+    // redraw all accumulated points
+    pts.forEach(p=>{
+      ctx.fillStyle=p.hit?'rgba(30,158,134,0.9)':'rgba(224,56,42,0.65)';
+      ctx.beginPath();ctx.arc(ox+p.x,oy+p.y,2.2,0,2*Math.PI);ctx.fill();
+    });
+  }
+  function addPoint(){
+    const px=Math.random()*side, py=Math.random()*side;
+    const hit=inShape(px,py);
+    pts.push({x:px,y:py,hit:hit});
+    if(pts.length>4000)pts.shift();
+    n++; if(hit)m++;
+  }
+  function updateStats(){
+    oN.textContent=n;oM.textContent=m;oEst.textContent=(n>0?(m/n).toFixed(4):'0');oTrue.textContent=trueP().toFixed(4);
+  }
+  function loop(){
+    if(!running)return;
+    for(let i=0;i<8;i++)addPoint();
+    drawBase();updateStats();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('mcGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('mcStop').onclick=()=>{running=false;};
+  document.getElementById('mcReset').onclick=()=>{running=false;n=0;m=0;pts=[];drawBase();updateStats();};
+  shapeS.oninput=()=>{n=0;m=0;pts=[];drawBase();updateStats();};
+  drawBase();updateStats();
+})();
+
+/* ===== 互动6: 会面问题 ===== */
+(function(){
+  const svg=document.getElementById('meetSvg');
+  const Ts=document.getElementById('meetT'),ts=document.getElementById('meett');
+  const oTot=document.getElementById('meetTot'),oBand=document.getElementById('meetBand'),oP=document.getElementById('meetP'),oChk=document.getElementById('meetChk');
+  function sync(){
+    const T=+Ts.value;
+    if(+ts.max!==T)ts.max=T;
+    if(+ts.value>T)ts.value=T;
+    draw();
+  }
+  Ts.oninput=sync; ts.oninput=draw;
+  function draw(){
+    clr(svg);
+    const T=+Ts.value, t=+ts.value;
+    const X0=70,Y0=30,S=300; // square size in px
+    const sc=S/T;
+    // axes square
+    el(svg,'rect',{x:X0,y:Y0,width:S,height:S,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+S/2,y:Y0+S+26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='甲到达时刻 x (分钟，0~'+T+')';
+    el(svg,'text',{x:X0-45,y:Y0+S/2,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle',transform:'rotate(-90 '+(X0-45)+' '+(Y0+S/2)+')'}).textContent='乙到达时刻 y (分钟，0~'+T+')';
+    // band region |x-y|<=t : polygon clipped to square. Build as square minus two corner triangles.
+    // corner triangle 1: x - y > t  (bottom-right corner region), vertices: (t,0)-(T,0)-(T,T-t)
+    // corner triangle 2: y - x > t  (top-left corner), vertices: (0,t)-(0,T)-(T-t,T)
+    function pt(vx,vy){ return (X0+vx*sc)+','+(Y0+S-vy*sc); } // y-axis inverted (up = larger y value)
+    // draw full square as band base color then two white triangles on top
+    el(svg,'rect',{x:X0,y:Y0,width:S,height:S,fill:'rgba(20,80,200,0.28)',stroke:'none'});
+    if(t<T){
+      const tri1=pt(t,0)+' '+pt(T,0)+' '+pt(T,T-t);
+      const tri2=pt(0,t)+' '+pt(0,T)+' '+pt(T-t,T);
+      el(svg,'polygon',{points:tri1,fill:'#fff',stroke:INK,'stroke-width':2});
+      el(svg,'polygon',{points:tri2,fill:'#fff',stroke:INK,'stroke-width':2});
+    }
+    // border of square on top
+    el(svg,'rect',{x:X0,y:Y0,width:S,height:S,fill:'none',stroke:INK,'stroke-width':3});
+    // diagonal reference line x=y
+    el(svg,'line',{x1:X0,y1:Y0+S,x2:X0+S,y2:Y0,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // labels
+    el(svg,'text',{x:X0+S/2,y:Y0+S/2-6,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='|x−y|≤'+t+' （会面成功区域）';
+    const tot=T*T;
+    const corner = t<T ? (T-t)*(T-t) : 0;
+    const band = tot - 2*corner;
+    const p=band/tot;
+    const chk=1-Math.pow((T-t)/T,2);
+    oTot.textContent=tot.toFixed(0);oBand.textContent=band.toFixed(1);oP.textContent=p.toFixed(4);oChk.textContent=chk.toFixed(4);
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 古典概型的两大特征是什么？P(A)怎么算？",a:"①基本事件有限个（有限性）；②每个基本事件发生的可能性相等（等可能性）。P(A)=m/n，m为事件A包含的基本事件数，n为基本事件总数。"},
+ {q:"2. 判断古典概型时最容易忽略的前提是什么？",a:"必须先确认各基本事件是否真的等可能——表面上「只有两种结果」不代表这两种结果概率相等（如「和为2」与「和为7」不等可能）。"},
+ {q:"3. 列举基本事件常用哪三种方法？两步试验最适合用哪种？",a:"列举法、树状图、列表法。两步试验（如掷两枚骰子）最适合用列表法（行×列表格），直观且不易遗漏。"},
+ {q:"4. 有放回和无放回抽取，对样本空间总数n有什么影响？举例说明。",a:"有放回：每次都从全部对象中选，总数按乘法原理独立相乘（如摸两次每次4选1，放回则4×4=16）。无放回：每次抽后对象变少（如4选1不放回，第二次3选1，4×3=12，若不分顺序则C(4,2)=6）。"},
+ {q:"5. 为什么m和n的计数口径必须一致？举一个容易出错的场景。",a:"若m用组合数（不分顺序）而n用排列数（分顺序），或反之，比值m/n就不代表正确的概率。常见错误：摸球问题里n按排列数算，m却按组合数算符合条件的情形。"},
+ {q:"6. 遇到「至少1个次品」这类问题，为什么优先用对立事件？",a:"直接枚举「恰好1个、恰好2个…」需要分好几种情况分别计算再相加，容易漏项且计算量大；对立事件「一个次品都没有」通常只有一种情形，P(至少1个)=1−P(0个)，又快又准（正难则反）。"},
+ {q:"7. 互斥事件和对立事件有什么区别？",a:"互斥事件是不能同时发生，但可能都不发生；对立事件是不能同时发生且必有一个发生（非此即彼）。对立事件一定互斥，互斥事件不一定对立。"},
+ {q:"8. 几何概型的概率公式是什么？与古典概型的核心区别是什么？",a:"P(A)=构成事件A的区域测度/全部结果区域测度（长度、面积或体积之比）。核心区别：古典概型基本事件有限可数，几何概型基本事件无限连续，不能用「数个数」，要用测度之比。"},
+ {q:"9. 几何概型常见有哪几种类型？各自对应什么测度？",a:"线段/区间型（在一段上取点）→长度；平面区域型（投点、会面问题）→面积；空间型→体积；时间型本质也是长度（等待时间、随机时刻）。"},
+ {q:"10. 会面问题里，「两人到达时间x、y均在[0,T]、可等待t分钟」，会面的条件和概率公式是什么？",a:"会面条件：|x−y|≤t。以x、y为坐标轴画边长T的正方形，会面区域是去掉两个直角边为(T−t)的三角形后剩下的带状区域。P(会面)=1−[(T−t)/T]²。"},
+ {q:"11. 几何概型中，单点的概率是多少？这说明什么？",a:"单点概率为0（因为长度/面积为0）。这说明「概率为0」不等于「不可能发生」——几何概型中任何单个具体结果的概率都是0，但试验结果必然落在某一点上，这是几何概型区别于古典概型的重要概念。"},
+ {q:"12. 怎样快速判断一道题该用古典概型还是几何概型？",a:"问自己：基本事件能不能一个个数完？能数完（骰子、球、人数等有限个）→古典概型，P=m/n；数不完、结果连续分布在区间/区域上（随机取一点、随机时刻等）→几何概型，P=测度之比。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

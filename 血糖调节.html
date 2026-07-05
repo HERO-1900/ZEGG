@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>血糖平衡的调节 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>血糖平衡的调节</h1>
+    <p class="lead">血糖浓度看起来风平浪静(正常人稳稳落在 <b>3.9~6.1 mmol/L</b>),背后其实是「来源」和「去路」两支队伍在拔河,再加上胰岛素、胰高血糖素、肾上腺素三个「裁判」实时调价。这一页把「一顿饭之后血糖为什么没有飙上天」讲透——来源去路怎么算账、两种胰岛激素怎么拮抗、反馈调节怎么闭环、糖尿病的「三多一少」到底卡在哪一步。</p>
+
+    <div class="say">🗣️ <b>血糖调节(人话版):</b> 血糖是个「水位」,食物消化、肝糖原分解、蛋白质脂肪转化是<b>进水管</b>;细胞氧化供能、合成糖原、转成脂肪是<b>出水管</b>。水位一高,胰岛B细胞就分泌<b>胰岛素</b>去把水往外抽、往仓库存(还顺手关掉「转化进水管」);水位一低,胰岛A细胞就分泌<b>胰高血糖素</b>去开仓放粮(肝糖原分解)、开辟新水源(非糖物质转化)。两个激素<b>拮抗</b>着干,谁也不让水位失控——这就是典型的<b>负反馈调节</b>。</div>
+
+    <div class="keybox"><b>一句话记牢:</b> 血糖正常值 <b>3.9~6.1 mmol/L</b>;<b>胰岛素是体内唯一的降血糖激素</b>,由胰岛<b>B细胞</b>分泌;胰高血糖素(胰岛<b>A细胞</b>分泌)和肾上腺素都<b>升血糖</b>;胰岛素与胰高血糖素是<b>拮抗</b>关系;整个调节是<b>神经—体液调节</b>,核心机制是<b>(负)反馈调节</b>。</div>
+
+    <h2>① 血糖的来源与去路:一进一出的账本</h2>
+    <div class="card">
+      <div class="eq">正常血糖浓度:3.9 ~ 6.1 mmol/L</div>
+      <p style="margin:8px 0">血糖不是一成不变的,而是「来源」和「去路」动态平衡的结果——两边流量相等,水位(浓度)就稳。</p>
+      <table>
+        <tr><th>三大来源(进)</th><th>三大去路(出)</th></tr>
+        <tr><td>① 食物中糖类的消化吸收</td><td>① 氧化分解,为生命活动供能</td></tr>
+        <tr><td>② 肝糖原分解</td><td>② 合成肝糖原、肌糖原</td></tr>
+        <tr><td>③ 脂肪等非糖物质转化</td><td>③ 转化为脂肪、某些氨基酸等非糖物质</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键不对称:</b> 肝糖原<b>能</b>分解为葡萄糖补充血糖(来源之一);但<b>肌糖原不能直接分解为葡萄糖入血</b>——肌糖原分解只能在肌肉细胞内被氧化供能,不会补充血糖。这是最容易被出题人利用的一条不对称规则。</p>
+      <p class="trap">⚠ 肌糖原≠肝糖原:肌糖原分解不能补充血糖!能补充血糖的糖原分解只有<b>肝糖原</b>分解这一条路。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动1 — 血糖来源/去路流向图:点箭头看物质怎么流动</div>
+      <svg id="flowSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="flowReset">↺ 全部收起</button>
+      </div>
+      <div class="vlabel" id="flowNote">点击任意一条箭头,查看它代表的具体过程说明。</div>
+      <p class="small">中央蓝色方块=血糖池(3.9~6.1 mmol/L)。左侧三条箭头是「进」,右侧三条箭头是「出」。点击箭头查看该过程的说明与人教版表述。</p>
+    </div>
+
+    <h2 class="b">② 胰岛素:唯一的降血糖激素</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>分泌部位:</b> 胰岛 <b>B细胞</b>(记忆技巧:B比A靠前,B细胞管「Below/降」)。</p>
+      <p style="margin:6px 0"><b>降血糖的四条渠道(缺一不可,务必背全):</b></p>
+      <table>
+        <tr><th>作用对象</th><th>具体效果</th></tr>
+        <tr><td>促进组织细胞</td><td><b>摄取、利用、储存</b>葡萄糖(三个动词都要写)</td></tr>
+        <tr><td>促进合成</td><td>加速肝糖原、肌糖原的<b>合成</b></td></tr>
+        <tr><td>促进氧化</td><td>加速葡萄糖的<b>氧化分解</b></td></tr>
+        <tr><td>促进转化</td><td>促进葡萄糖<b>转化为脂肪</b>等非糖物质</td></tr>
+        <tr><td>抑制</td><td><b>抑制</b>肝糖原分解、<b>抑制</b>非糖物质转化为葡萄糖</td></tr>
+      </table>
+      <p style="margin:8px 0">胰岛素是「一手促进消耗/储存,一手抑制生成」双管齐下——这也是它效果最强、被称为<b>唯一</b>降血糖激素的原因:没有其他激素兼具这两方面作用。</p>
+      <p class="trap">⚠ 高频判断题「胰岛素是唯一能降低血糖的激素」——<b>正确</b>。但升血糖激素不止一种(胰高血糖素、肾上腺素等),别对称地以为「升糖也只有一种」。</p>
+    </div>
+
+    <h2 class="g">③ 胰高血糖素与肾上腺素:升血糖的两条腿</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>胰高血糖素分泌部位:</b> 胰岛 <b>A细胞</b>。</p>
+      <table>
+        <tr><th>激素</th><th>分泌部位</th><th>升糖途径</th></tr>
+        <tr><td>胰高血糖素</td><td>胰岛A细胞</td><td>促进<b>肝糖原分解</b>;促进<b>非糖物质转化为葡萄糖</b></td></tr>
+        <tr><td>肾上腺素</td><td>肾上腺</td><td>促进肝糖原分解(应急时与胰高血糖素<b>协同</b>升糖)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>胰高血糖素 vs 胰岛素:</b> 两者作用<b>完全相反</b>(一个促进肝糖原分解,一个抑制;一个促进非糖物质转化为葡萄糖,一个抑制非糖物质由葡萄糖转化而来)——这就是<b>拮抗作用</b>的教科书范例。</p>
+      <p style="margin:8px 0"><b>胰高血糖素 与 肾上腺素:</b> 两者都升血糖,作用方向<b>相同</b>——这是<b>协同作用</b>,常见于剧烈运动、寒冷、应激等场景,肾上腺素快速动员、胰高血糖素持续供应。</p>
+      <p class="trap">⚠ 别把 A/B 细胞记反!口诀:「A 打头,A 升糖(胰高血糖素);B 排后,B 降糖(胰岛素)」。也可记「A→高(胰高血糖素)」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧫 互动2 — 胰岛A/B细胞与激素对应:点细胞看它分泌什么、作用是什么</div>
+      <svg id="cellSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cellA">点击 A细胞</button><button id="cellB">点击 B细胞</button><button id="cellReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="cellNote">点击上方按钮或图中细胞,查看该细胞分泌的激素及作用效果。</div>
+    </div>
+
+    <h2 class="o">④ 拮抗与协同:两股力量的对台戏</h2>
+    <div class="card">
+      <p style="margin:6px 0">血糖每一次波动,都是<b>降糖力量</b>(胰岛素)与<b>升糖力量</b>(胰高血糖素、肾上腺素)此消彼长的结果。</p>
+      <div class="chips">
+        <span class="chip">胰岛素 ↔ 胰高血糖素 = 拮抗</span>
+        <span class="chip">胰高血糖素 + 肾上腺素 = 协同</span>
+      </div>
+      <p style="margin:6px 0"><b>拮抗作用:</b> 两种激素对同一生理过程的作用<b>相反</b>,一升一降,共同把血糖钉在正常范围附近微调,类似跷跷板。</p>
+      <p style="margin:6px 0"><b>协同作用:</b> 两种激素对同一生理过程的作用<b>方向相同</b>,叠加增强效果(如肾上腺素和胰高血糖素都升血糖)。</p>
+      <p class="trap">⚠ 别混淆「拮抗」与「协同」的适用对象:胰岛素—胰高血糖素之间只能说<b>拮抗</b>;胰高血糖素—肾上腺素之间只能说<b>协同</b>,不能反过来用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动3 — 胰岛素 vs 胰高血糖素拮抗对比:拖动血糖水平,看两激素此消彼长</div>
+      <svg id="antSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>血糖水平(mmol/L) <input id="antG" type="range" min="30" max="90" value="55" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>血糖浓度</b><span id="antGv">0</span></div>
+        <div><b>胰岛素分泌水平</b><span id="antIns">0</span></div>
+        <div><b>胰高血糖素分泌水平</b><span id="antGlu">0</span></div>
+        <div><b>状态判断</b><span id="antState">—</span></div>
+      </div>
+      <p class="small">拖动滑块模拟不同的血糖浓度:血糖越高,胰岛素(蓝柱)分泌越多、胰高血糖素(橙柱)越少;血糖越低则反过来——两条曲线互为镜像,正是拮抗关系的直观体现。</p>
+    </div>
+
+    <h2 class="v">⑤ 反馈调节:血糖如何被拉回正常</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>调节方式:</b> 血糖平衡的调节是<b>神经—体液调节</b>——下丘脑中的相关中枢通过神经传导影响胰岛细胞的分泌活动;同时,血糖浓度的变化也能<b>直接刺激</b>胰岛B细胞、胰岛A细胞(体液调节,不需要神经中转),这是血糖调节比较特殊的一点。</p>
+      <div class="mono">血糖升高 → 胰岛素分泌增多 → 摄取/氧化/储存↑,肝糖原分解↓ → 血糖回落</div>
+      <div class="mono">血糖降低 → 胰高血糖素(及肾上腺素)分泌增多 → 肝糖原分解↑,非糖物质转化↑ → 血糖回升</div>
+      <p style="margin:8px 0"><b>这是典型的(负)反馈调节:</b> 血糖变化(偏离正常值)作为「信号」,反过来调整激素分泌,激素分泌的效果又把血糖拉回正常值——效果与原变化方向<b>相反</b>,所以叫「负」反馈。正是这个负反馈闭环,让血糖能在饭前饭后维持相对稳定。</p>
+      <p class="trap">⚠ 血糖调节里,「血糖浓度变化」既可以直接刺激胰岛细胞(体液),也可以通过神经影响胰岛分泌——不要把它简化成纯粹的体液调节,人教版明确是<b>神经—体液调节</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动4 — 血糖调节反馈动画:进食/运动 → 血糖变化 → 激素分泌 → 血糖回落,负反馈闭环</div>
+      <svg id="feedbackSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fbEat">🍚 模拟进食</button><button id="fbExercise">🏃 模拟运动</button><button id="fbReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>血糖 (mmol/L)</b><span id="fbGv">4.8</span></div>
+        <div><b>胰岛素水平</b><span id="fbIns">低</span></div>
+        <div><b>胰高血糖素水平</b><span id="fbGlu">低</span></div>
+        <div><b>阶段</b><span id="fbPhase">静息</span></div>
+      </div>
+      <p class="small">点「模拟进食」:血糖先升高,触发胰岛素分泌增多,再把血糖压回正常范围——闭环回到基线。点「模拟运动」:血糖被消耗而降低,触发胰高血糖素分泌增多,把血糖顶回正常范围。这就是负反馈:偏多少,就被反向拉多少。</p>
+    </div>
+
+    <h2 class="r">⑥ 血糖浓度曲线:三种情形对比</h2>
+    <div class="card">
+      <p style="margin:6px 0">同样是「一天」,正常人、运动后、糖尿病人的血糖曲线形状完全不同——曲线形状直接反映激素调节是否正常工作。</p>
+      <table>
+        <tr><th>情形</th><th>曲线特征</th></tr>
+        <tr><td>正常人餐后</td><td>餐后小幅升高,1~2小时内被胰岛素拉回 3.9~6.1 区间</td></tr>
+        <tr><td>运动后</td><td>先小幅下降(消耗糖原供能),胰高血糖素分泌增多后逐渐回升到正常</td></tr>
+        <tr><td>糖尿病人</td><td>空腹血糖就<b>持续高于正常上限</b>,餐后升得更高、回落缓慢甚至回不到正常区间</td></tr>
+      </table>
+      <p class="trap">⚠ 糖尿病人不是「血糖曲线更陡」,而是整条曲线<b>系统性上移且难以回落</b>——根源在胰岛素分泌不足或组织细胞对胰岛素不敏感,不是「吃得更多」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动5 — 血糖浓度-时间曲线:切换餐后/运动/糖尿病三种情形</div>
+      <svg id="curveSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="curvemode on" data-c="0">正常人餐后</button>
+        <button class="curvemode" data-c="1">运动后</button>
+        <button class="curvemode" data-c="2">糖尿病人</button>
+      </div>
+      <div class="verdict" id="curveNote"></div>
+    </div>
+
+    <h2 class="b">⑦ 糖尿病:胰岛素这道闸门出了问题</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>病因:</b> 胰岛B细胞受损导致<b>胰岛素分泌不足</b>,或组织细胞对胰岛素<b>不敏感(作用障碍)</b>,使得血糖不能被有效摄取、利用、储存。</p>
+      <p style="margin:6px 0"><b>"三多一少":</b></p>
+      <table>
+        <tr><th>症状</th><th>机理</th></tr>
+        <tr><td>多尿</td><td>血糖过高超过肾小管重吸收能力 → 渗透压升高 → 带走大量水分随尿排出</td></tr>
+        <tr><td>多饮</td><td>多尿导致失水 → 细胞外液渗透压升高 → 刺激渴觉中枢 → 口渴喝水多</td></tr>
+        <tr><td>多食</td><td>细胞不能有效利用葡萄糖供能,能量供应不足 → 饥饿感增强,摄食增多</td></tr>
+        <tr><td>体重减少(消瘦)</td><td>葡萄糖利用障碍 → 机体被迫大量分解脂肪、蛋白质供能 → 体重下降</td></tr>
+      </table>
+      <p style="margin:6px 0"><b>检测:</b> 糖尿病患者尿液中含糖,可用<b>斐林试剂(班氏试剂)</b>检测尿糖——加热后出现砖红色沉淀说明尿中含还原糖。这是实验室常考的检测方法。</p>
+      <p style="margin:6px 0"><b>低血糖:</b> 血糖浓度低于正常范围下限,会出现<b>心慌、手抖、出冷汗、饥饿感、头晕</b>甚至昏迷,严重时需及时补糖。</p>
+      <p class="trap">⚠ 糖尿病的根本不是「尿里有糖」,而是<b>血糖调节失衡在先</b>,尿糖只是血糖过高的「溢出」结果——因果顺序别写反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🩺 互动6 — 糖尿病"三多一少"机理图:点击每个症状看背后的因果链</div>
+      <svg id="dmSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="dmReset">↺ 收起全部</button>
+      </div>
+      <div class="vlabel" id="dmNote">点击图中任意一个症状气泡,查看它的产生机理。</div>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 血糖来源/去路辨析</h3>
+      <p><b class="tag">触发信号:</b>「血糖的来源有哪些」「肌糖原能否补充血糖」「哪些途径能升高/降低血糖」。</p>
+      <p><b class="tag">标准动作:</b>来源三条(食物消化吸收、肝糖原分解、非糖物质转化)、去路三条(氧化分解、合成糖原、转化脂肪)逐条对照;特别留意<b>肌糖原不能直接变回血糖</b>。</p>
+      <p><b class="tag">示例(带解):</b>「运动时肌肉消耗的能量主要来自肌糖原分解,该过程是否会使血糖升高?」——不会。肌糖原只能在肌肉细胞内氧化分解供能,不能分解为葡萄糖释放入血,因此不属于血糖的来源。</p>
+      <p class="trap">陷阱:把肌糖原和肝糖原混为一谈;漏掉「非糖物质转化」这条不显眼的来源。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 胰岛素/胰高血糖素作用机理默写</h3>
+      <p><b class="tag">触发信号:</b>「胰岛素降低血糖的具体途径」「胰高血糖素升高血糖的具体途径」「写出XX激素的作用」。</p>
+      <p><b class="tag">标准动作:</b>胰岛素四条:促进摄取利用储存、促进糖原合成、促进氧化分解、促进转化脂肪,同时抑制肝糖原分解和非糖物质转化。胰高血糖素两条:促进肝糖原分解、促进非糖物质转化为葡萄糖。逐条写全,不能只写一半。</p>
+      <p><b class="tag">示例(带解):</b>「饥饿状态下,体内哪种激素分泌增多,通过什么途径使血糖回升?」——胰高血糖素分泌增多,一方面促进肝糖原分解为葡萄糖释放入血,另一方面促进脂肪、氨基酸等非糖物质转化为葡萄糖,使血糖回升。</p>
+      <p class="trap">陷阱:只写「促进糖原分解」漏掉「促进非糖物质转化」;把胰岛素的抑制作用漏掉,只写促进作用。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — A/B细胞与激素对应判断</h3>
+      <p><b class="tag">触发信号:</b>给出「胰岛X细胞」「分泌某激素的细胞」,要求判断是A还是B,或判断激素名称。</p>
+      <p><b class="tag">标准动作:</b>A细胞→胰高血糖素→升血糖;B细胞→胰岛素→降血糖。看到「分泌量增多使血糖降低」立刻锁定B细胞/胰岛素;看到「使血糖升高」锁定A细胞/胰高血糖素。</p>
+      <p><b class="tag">示例(带解):</b>「某人血糖持续偏低,推测其哪种胰岛细胞活动增强?」——胰岛A细胞,分泌胰高血糖素增多以促使血糖回升。</p>
+      <p class="trap">陷阱:A、B细胞记反;把「胰岛」和「胰腺外分泌部」混淆(胰腺还分泌消化酶,与血糖调节无关)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 拮抗/协同关系判断</h3>
+      <p><b class="tag">触发信号:</b>给出两种激素对血糖的作用,问二者关系是「拮抗」还是「协同」。</p>
+      <p><b class="tag">标准动作:</b>看两激素对同一过程的作用方向:相反→拮抗(胰岛素 vs 胰高血糖素);相同→协同(胰高血糖素 vs 肾上腺素)。</p>
+      <p><b class="tag">示例(带解):</b>「剧烈运动时,胰高血糖素与肾上腺素分泌都增多,二者是什么关系?」——协同关系,两者都促进肝糖原分解,作用方向相同,共同快速提升血糖以满足运动供能需求。</p>
+      <p class="trap">陷阱:凡是「两种激素都参与血糖调节」就不假思索答「拮抗」——要先看作用方向是否相反。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 反馈调节模型分析</h3>
+      <p><b class="tag">触发信号:</b>给出血糖变化的过程图或曲线,要求分析调节机制、判断是否为负反馈。</p>
+      <p><b class="tag">标准动作:</b>找到「刺激(血糖变化)→感受/分泌→效应→血糖恢复」这条链条,判断效应方向与原刺激方向相反即为负反馈;同时点明这是神经—体液调节(既有神经中枢参与,也有血糖直接刺激胰岛细胞的体液途径)。</p>
+      <p><b class="tag">示例(带解):</b>「进食后血糖升高,胰岛素分泌增多使血糖回落到正常水平,这属于什么调节?」——负反馈调节:血糖升高这一变化,最终引发了使血糖降低的效应,效应与最初变化方向相反,达到了稳态。</p>
+      <p class="trap">陷阱:只答「体液调节」而漏掉「神经」参与;把「负反馈」误写成单纯的「反馈」而不说明方向相反。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 糖尿病机理与检测</h3>
+      <p><b class="tag">触发信号:</b>给出「三多一少」症状或尿糖检测情境,要求解释机理或写出检测方法。</p>
+      <p><b class="tag">标准动作:</b>先定位病因(胰岛素分泌不足/作用障碍)→ 血糖过高 → 逐条对应多尿(渗透性利尿)、多饮(失水后口渴)、多食(细胞供能不足饥饿感强)、消瘦(被迫分解脂肪蛋白质)。检测尿糖用斐林试剂/班氏试剂,加热出现砖红色沉淀。</p>
+      <p><b class="tag">示例(带解):</b>「糖尿病患者为什么会消瘦?」——因为组织细胞不能有效利用葡萄糖,机体被迫加速分解脂肪和蛋白质来供能,导致体重下降。</p>
+      <p class="trap">陷阱:把「多尿」原因简单答成「糖多了随尿排出」,漏掉渗透压升高、带水排出这一机制环节;检测试剂写错(不能用双缩脲试剂测糖)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 血糖正常值是 <b>3.9~6.1 mmol/L</b>,不是整数好记的「4~6」——考试常给临界值判断题,数值必须记准。</p>
+      <p class="trap">② <b>胰岛素是唯一的降血糖激素</b>,但升血糖激素不止一种(胰高血糖素、肾上腺素等)。别把这句话对称理解反。</p>
+      <p class="trap">③ 胰岛<b>A细胞→胰高血糖素→升血糖</b>;胰岛<b>B细胞→胰岛素→降血糖</b>。A、B 对应关系是失分重灾区。</p>
+      <p class="trap">④ <b>肌糖原不能直接分解为葡萄糖补充血糖</b>,只有肝糖原分解才能;肌糖原只能在肌细胞内被氧化利用。</p>
+      <p class="trap">⑤ 胰岛素的作用不能只写「促进」——它同时<b>抑制</b>肝糖原分解和非糖物质转化,两方面缺一不可。</p>
+      <p class="trap">⑥ 胰岛素与胰高血糖素是<b>拮抗</b>;胰高血糖素与肾上腺素是<b>协同</b>——两组关系不能混用。</p>
+      <p class="trap">⑦ 血糖调节是<b>神经—体液调节</b>,血糖本身也能直接刺激胰岛细胞(不完全依赖神经),这一点是命题人常设的「体液调节 vs 神经—体液调节」陷阱。</p>
+      <p class="trap">⑧ 这是<b>负</b>反馈调节:效应方向与刺激方向相反,才能把血糖拉回正常范围,别漏写「负」字或说反方向。</p>
+      <p class="trap">⑨ 糖尿病的根本病因是<b>胰岛素分泌不足或作用障碍</b>,尿糖只是血糖过高的结果,不是病因本身。</p>
+      <p class="trap">⑩ 检测尿糖用<b>斐林试剂/班氏试剂</b>(加热变砖红色),不要和检测蛋白质的双缩脲试剂搞混。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 血糖调节的本质是「一个池子,六条水管」:</b> 把血糖想成一个容量固定范围的水池,三条进水管(消化吸收、肝糖原分解、非糖转化)、三条出水管(氧化供能、合成糖原、转化脂肪)。任何题目本质都是问「这道题动了哪条管子,流量怎么变」——先定位管子,答案自然清晰,不用死记结论。</p>
+      <p style="margin:8px 0"><b>② 胰岛素「降糖」的力度之所以最强,是因为它双向下手:</b> 别的激素大多只在「开源」上做文章(促进肝糖原分解、促进非糖转化),而胰岛素同时管「开源」(抑制)和「节流」(促进摄取利用储存)——两头一起使劲,这也是它被称为唯一降糖激素、且分泌异常最容易导致严重代谢病的原因。</p>
+      <p style="margin:8px 0"><b>③ 血糖调节是「体液调节走在神经前面」的特例:</b> 大多数内分泌激素受神经中枢间接调控,但血糖浓度变化本身就能直接作用于胰岛A、B细胞(不经神经)。这也是为什么切断相关神经后,血糖调节仍能部分维持——体液这条「快速通道」独立存在。</p>
+      <p style="margin:8px 0"><b>④ 拮抗与协同不是激素的固定标签,而是「看对象」的相对关系:</b> 胰高血糖素对胰岛素是拮抗,对肾上腺素却是协同——同一种激素在不同的比较对象下关系不同。做题时先问「跟谁比、比什么效果」,再下结论。</p>
+      <p style="margin:8px 0"><b>⑤ 糖尿病的「三多一少」是一条因果链,不是四个孤立症状:</b> 胰岛素不足→血糖过高→渗透性利尿(多尿)→失水口渴(多饮)→细胞供能不足(多食)→被迫分解脂肪蛋白质(消瘦)。把链条画出来,任何一个症状都能顺着推理写出机理,不需要死记硬背四个词。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 血糖平衡的调节</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:血糖来源/去路流向图 ===== */
+(function(){
+  const svg=document.getElementById('flowSvg');
+  const note=document.getElementById('flowNote');
+  const sources=[
+    {label:"食物消化吸收",desc:"食物中的淀粉等糖类经消化道分解为葡萄糖并被小肠吸收入血——这是血糖最主要、最直接的来源。",y:70},
+    {label:"肝糖原分解",desc:"肝脏中储存的肝糖原在胰高血糖素/肾上腺素作用下分解为葡萄糖释放入血,补充血糖(注意:肌糖原没有这个能力)。",y:150},
+    {label:"非糖物质转化",desc:"脂肪、某些氨基酸等非糖物质可以转化为葡萄糖,是血糖的第三条来源,饥饿时尤其重要。",y:230}
+  ];
+  const sinks=[
+    {label:"氧化分解供能",desc:"葡萄糖在细胞内氧化分解,释放能量供生命活动利用——这是血糖最主要的去路。",y:70},
+    {label:"合成糖原储存",desc:"多余的葡萄糖被合成为肝糖原、肌糖原储存起来,备用能源仓库。",y:150},
+    {label:"转化为脂肪等",desc:"葡萄糖过多时可转化为脂肪、某些非必需氨基酸等物质储存起来。",y:230}
+  ];
+  let openIdx=-1,openSide='';
+  function draw(){
+    clr(svg);
+    // central pool
+    el(svg,'rect',{x:280,y:130,width:140,height:80,fill:BLUE,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:350,y:165,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='血糖池';
+    el(svg,'text',{x:350,y:185,'font-size':11.5,'font-weight':800,fill:'#fff','text-anchor':'middle'}).textContent='3.9~6.1 mmol/L';
+    el(svg,'text',{x:100,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='三大来源（进）';
+    el(svg,'text',{x:600,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='三大去路（出）';
+    sources.forEach((s,i)=>{
+      const on=(openIdx===i&&openSide==='src');
+      el(svg,'rect',{x:20,y:s.y,width:170,height:44,fill:on?YEL:'#fff',stroke:INK,'stroke-width':3,style:'cursor:pointer'}).addEventListener('click',()=>{openIdx=i;openSide='src';note.textContent=s.desc;draw();});
+      el(svg,'text',{x:105,y:s.y+27,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=s.label;
+      // arrow to pool
+      const ay=s.y+22;
+      const line=el(svg,'line',{x1:190,y1:ay,x2:275,y2:170,stroke:on?RED:INK,'stroke-width':on?5:3,style:'cursor:pointer'});
+      line.addEventListener('click',()=>{openIdx=i;openSide='src';note.textContent=s.desc;draw();});
+      el(svg,'polygon',{points:'275,170 262,164 262,176',fill:on?RED:INK});
+    });
+    sinks.forEach((s,i)=>{
+      const on=(openIdx===i&&openSide==='snk');
+      el(svg,'rect',{x:510,y:s.y,width:170,height:44,fill:on?YEL:'#fff',stroke:INK,'stroke-width':3,style:'cursor:pointer'}).addEventListener('click',()=>{openIdx=i;openSide='snk';note.textContent=s.desc;draw();});
+      el(svg,'text',{x:595,y:s.y+27,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=s.label;
+      const ay=s.y+22;
+      const line=el(svg,'line',{x1:425,y1:170,x2:505,y2:ay,stroke:on?RED:INK,'stroke-width':on?5:3,style:'cursor:pointer'});
+      line.addEventListener('click',()=>{openIdx=i;openSide='snk';note.textContent=s.desc;draw();});
+      el(svg,'polygon',{points:'505,'+ay+' 492,'+(ay-6)+' 492,'+(ay+6),fill:on?RED:INK});
+    });
+    el(svg,'text',{x:350,y:300,'font-size':12,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点击任一方块或箭头查看该过程说明';
+  }
+  document.getElementById('flowReset').onclick=()=>{openIdx=-1;openSide='';note.textContent='点击任意一条箭头,查看它代表的具体过程说明。';draw();};
+  draw();
+})();
+
+/* ===== 互动2:胰岛A/B细胞 ===== */
+(function(){
+  const svg=document.getElementById('cellSvg');
+  const note=document.getElementById('cellNote');
+  function draw(sel){
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='胰岛（胰腺中的内分泌细胞团）';
+    // islet outline
+    el(svg,'ellipse',{cx:350,cy:150,rx:280,ry:95,fill:'#fff','fill-opacity':'0.4',stroke:INK,'stroke-width':3,'stroke-dasharray':'8 6'});
+    // A cell
+    const aOn=sel==='A';
+    const gA=el(svg,'g',{style:'cursor:pointer'});
+    el(gA,'circle',{cx:210,cy:150,r:70,fill:aOn?ORANGE:'#fff',stroke:INK,'stroke-width':4});
+    el(gA,'text',{x:210,y:145,'font-size':22,'font-weight':900,fill:aOn?'#fff':INK,'text-anchor':'middle'}).textContent='A细胞';
+    el(gA,'text',{x:210,y:168,'font-size':12,'font-weight':800,fill:aOn?'#fff':'#6b5d3a','text-anchor':'middle'}).textContent='分泌胰高血糖素';
+    gA.addEventListener('click',()=>show('A'));
+    // B cell
+    const bOn=sel==='B';
+    const gB=el(svg,'g',{style:'cursor:pointer'});
+    el(gB,'circle',{cx:490,cy:150,r:70,fill:bOn?BLUE:'#fff',stroke:INK,'stroke-width':4});
+    el(gB,'text',{x:490,y:145,'font-size':22,'font-weight':900,fill:bOn?'#fff':INK,'text-anchor':'middle'}).textContent='B细胞';
+    el(gB,'text',{x:490,y:168,'font-size':12,'font-weight':800,fill:bOn?'#fff':'#6b5d3a','text-anchor':'middle'}).textContent='分泌胰岛素';
+    gB.addEventListener('click',()=>show('B'));
+  }
+  function show(which){
+    draw(which);
+    if(which==='A'){
+      note.textContent='胰岛A细胞 → 分泌胰高血糖素 → 促进肝糖原分解、促进非糖物质转化为葡萄糖 → 血糖升高。';
+      note.style.borderColor=ORANGE;
+    }else{
+      note.textContent='胰岛B细胞 → 分泌胰岛素 → 促进组织细胞摄取/利用/储存葡萄糖，抑制肝糖原分解和非糖物质转化 → 血糖降低（唯一降血糖激素）。';
+      note.style.borderColor=BLUE;
+    }
+  }
+  document.getElementById('cellA').onclick=()=>show('A');
+  document.getElementById('cellB').onclick=()=>show('B');
+  document.getElementById('cellReset').onclick=()=>{draw('');note.textContent='点击上方按钮或图中细胞,查看该细胞分泌的激素及作用效果。';note.style.borderColor=INK;};
+  draw('');
+})();
+
+/* ===== 互动3:胰岛素 vs 胰高血糖素拮抗 ===== */
+(function(){
+  const svg=document.getElementById('antSvg');
+  const Gs=document.getElementById('antG');
+  const oGv=document.getElementById('antGv'),oIns=document.getElementById('antIns'),oGlu=document.getElementById('antGlu'),oState=document.getElementById('antState');
+  function draw(){
+    const g=+Gs.value/10; // mmol/L, range 3.0~9.0
+    // normal center ~5.0; insulin rises with g, glucagon falls with g
+    const insLevel=Math.max(0,Math.min(100,(g-3.0)/6.0*100));
+    const gluLevel=100-insLevel;
+    oGv.textContent=g.toFixed(1);
+    oIns.textContent=insLevel.toFixed(0)+'%';
+    oGlu.textContent=gluLevel.toFixed(0)+'%';
+    let state,col;
+    if(g>6.1){state='偏高→胰岛素主导';col=BLUE;}
+    else if(g<3.9){state='偏低→胰高血糖素主导';col=ORANGE;}
+    else{state='正常范围';col=GREEN;}
+    oState.textContent=state;
+    clr(svg);
+    const baseY=250,maxH=180;
+    // insulin bar
+    const ih=insLevel/100*maxH;
+    el(svg,'rect',{x:180,y:baseY-ih,width:100,height:ih,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:230,y:baseY+24,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='胰岛素';
+    el(svg,'text',{x:230,y:baseY-ih-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=insLevel.toFixed(0)+'%';
+    // glucagon bar
+    const gh=gluLevel/100*maxH;
+    el(svg,'rect',{x:420,y:baseY-gh,width:100,height:gh,fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:470,y:baseY+24,'font-size':13,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='胰高血糖素';
+    el(svg,'text',{x:470,y:baseY-gh-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=gluLevel.toFixed(0)+'%';
+    el(svg,'line',{x1:140,y1:baseY,x2:560,y2:baseY,stroke:INK,'stroke-width':3});
+    // normal range marker
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='血糖 = '+g.toFixed(1)+' mmol/L　('+state+')';
+    el(svg,'text',{x:350,y:52,'font-size':12,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='正常范围 3.9~6.1：两激素此消彼长，拮抗对抗把血糖拉回区间';
+  }
+  Gs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:反馈调节动画 ===== */
+(function(){
+  const svg=document.getElementById('feedbackSvg');
+  const oGv=document.getElementById('fbGv'),oIns=document.getElementById('fbIns'),oGlu=document.getElementById('fbGlu'),oPhase=document.getElementById('fbPhase');
+  let g=4.8,mode='idle',t=0,running=false;
+  const BASE=4.8;
+  function draw(){
+    clr(svg);
+    // axis: glucose level bar (vertical thermometer style)
+    const x0=100,y0=30,h=200;
+    el(svg,'rect',{x:x0,y:y0,width:40,height:h,fill:'#fff',stroke:INK,'stroke-width':3});
+    // normal band 3.9-6.1 mapped to range 2-9 for display
+    const lo=2,hi=9;
+    function yFor(v){return y0+h-(v-lo)/(hi-lo)*h;}
+    const bandTop=yFor(6.1),bandBot=yFor(3.9);
+    el(svg,'rect',{x:x0,y:bandTop,width:40,height:bandBot-bandTop,fill:'rgba(30,158,134,0.25)'});
+    const gy=yFor(g);
+    el(svg,'rect',{x:x0,y:gy,width:40,height:y0+h-gy,fill:g>6.1?RED:(g<3.9?ORANGE:GREEN),stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x0+20,y:y0-10,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='血糖水位';
+    el(svg,'text',{x:x0+20,y:y0+h+20,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent=g.toFixed(1);
+    // flow arrow to gland
+    el(svg,'line',{x1:x0+50,y1:y0+h/2,x2:280,y2:y0+h/2,stroke:INK,'stroke-width':3,'marker-end':'url(#fbArrow)'});
+    el(svg,'polygon',{points:'280,'+(y0+h/2)+' 266,'+(y0+h/2-7)+' 266,'+(y0+h/2+7),fill:INK});
+    el(svg,'text',{x:165,y:y0+h/2-10,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='刺激';
+    // gland box (islet)
+    const insL=g>6.1?Math.min(100,(g-6.1)*80):0;
+    const gluL=g<3.9?Math.min(100,(3.9-g)*80):0;
+    el(svg,'rect',{x:290,y:60,width:180,height:150,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:380,y:50,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='胰岛（内分泌）';
+    el(svg,'rect',{x:305,y:170-insL*0.9,width:60,height:insL*0.9,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:335,y:190,'font-size':11,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='胰岛素';
+    el(svg,'rect',{x:395,y:170-gluL*0.9,width:60,height:gluL*0.9,fill:ORANGE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:425,y:190,'font-size':11,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='胰高血糖素';
+    // arrow back to glucose (effect)
+    el(svg,'line',{x1:470,y1:y0+h/2,x2:600,y2:y0+h/2,stroke:RED,'stroke-width':3});
+    el(svg,'polygon',{points:'600,'+(y0+h/2)+' 586,'+(y0+h/2-7)+' 586,'+(y0+h/2+7),fill:RED});
+    el(svg,'text',{x:535,y:y0+h/2-10,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='效应';
+    el(svg,'text',{x:600,y:y0+h/2+24,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(g>6.1?'降血糖':(g<3.9?'升血糖':'维持'));
+    el(svg,'text',{x:350,y:280,'font-size':12,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='负反馈闭环：偏离方向 与 效应方向 相反，血糖被拉回正常区间';
+    oGv.textContent=g.toFixed(1);
+    oIns.textContent=insL>40?'高':(insL>5?'中':'低');
+    oGlu.textContent=gluL>40?'高':(gluL>5?'中':'低');
+  }
+  function loop(){
+    if(!running)return;
+    t+=1;
+    if(mode==='eat'){
+      if(t<40){g=BASE+ (t/40)*2.6;oPhase.textContent='进食中·血糖上升';}
+      else if(t<100){g=BASE+2.6-((t-40)/60)*2.6;oPhase.textContent='胰岛素分泌↑·血糖回落';}
+      else{g=BASE;running=false;oPhase.textContent='恢复基线';}
+    }else if(mode==='ex'){
+      if(t<40){g=BASE-(t/40)*1.6;oPhase.textContent='运动消耗·血糖下降';}
+      else if(t<100){g=BASE-1.6+((t-40)/60)*1.6;oPhase.textContent='胰高血糖素分泌↑·血糖回升';}
+      else{g=BASE;running=false;oPhase.textContent='恢复基线';}
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('fbEat').onclick=()=>{mode='eat';t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('fbExercise').onclick=()=>{mode='ex';t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('fbReset').onclick=()=>{mode='idle';t=0;running=false;g=BASE;oPhase.textContent='静息';draw();};
+  draw();
+})();
+
+/* ===== 互动5:血糖浓度曲线三情形 ===== */
+(function(){
+  const svg=document.getElementById('curveSvg');
+  const note=document.getElementById('curveNote');
+  let c=0;
+  document.querySelectorAll('.curvemode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.curvemode').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=600,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='血糖';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='时间';
+    const lo=2,hi=14;
+    function yFor(v){return Y0+H-(v-lo)/(hi-lo)*H;}
+    // normal band
+    const bandTop=yFor(6.1),bandBot=yFor(3.9);
+    el(svg,'rect',{x:X0,y:bandTop,width:W,height:bandBot-bandTop,fill:'rgba(30,158,134,0.18)'});
+    el(svg,'text',{x:X0+8,y:bandTop-4,'font-size':10.5,'font-weight':800,fill:GREEN}).textContent='正常范围 3.9~6.1';
+    let pts,desc,col;
+    if(c===0){
+      pts=[[0,4.8],[0.15,7.2],[0.3,7.8],[0.5,6.5],[0.7,5.3],[1,4.8]];
+      col=BLUE;
+      desc='正常人餐后：进食后血糖快速升高（峰值约7.8），胰岛素分泌增多，1~2小时内被拉回3.9~6.1正常范围。';
+    }else if(c===1){
+      pts=[[0,4.8],[0.2,3.9],[0.4,3.6],[0.6,4.2],[0.8,4.7],[1,4.9]];
+      col=GREEN;
+      desc='运动后：血糖因消耗而下降（可能短暂低于4），胰高血糖素分泌增多促进肝糖原分解，逐渐回升到正常水平。';
+    }else{
+      pts=[[0,7.5],[0.2,10.5],[0.4,12.5],[0.6,12.0],[0.8,10.8],[1,9.5]];
+      col=RED;
+      desc='糖尿病人：空腹血糖已高于正常上限，餐后升得更高（可超12），回落缓慢且回不到3.9~6.1正常区间——根源是胰岛素分泌不足或作用障碍。';
+    }
+    let d='';
+    pts.forEach((p,i)=>{const x=X0+p[0]*W,y=yFor(p[1]);d+=(i===0?'M':'L')+x+','+y+' ';});
+    el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':4});
+    pts.forEach(p=>{el(svg,'circle',{cx:X0+p[0]*W,cy:yFor(p[1]),r:5,fill:col,stroke:INK,'stroke-width':2});});
+    note.innerHTML=desc;
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 互动6:三多一少机理图 ===== */
+(function(){
+  const svg=document.getElementById('dmSvg');
+  const note=document.getElementById('dmNote');
+  const items=[
+    {label:"多尿",x:150,y:80,desc:"血糖过高，超过肾小管重吸收能力→原尿中葡萄糖增多→渗透压升高→带走大量水分→尿量增多（多尿）。"},
+    {label:"多饮",x:550,y:80,desc:"多尿导致体内水分大量流失→细胞外液渗透压升高→刺激渴觉中枢→口渴感增强→饮水量增多（多饮）。"},
+    {label:"多食",x:150,y:220,desc:"组织细胞不能有效摄取利用葡萄糖供能→细胞能量供应不足→产生强烈饥饿感→摄食量增多（多食）。"},
+    {label:"体重减少",x:550,y:220,desc:"葡萄糖不能被有效利用→机体被迫加速分解脂肪、蛋白质来供能→体重下降、消瘦（一少）。"}
+  ];
+  let openI=-1;
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='胰岛素分泌不足/作用障碍 → 血糖持续过高';
+    // center node
+    el(svg,'rect',{x:280,y:130,width:140,height:50,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:160,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='血糖过高';
+    items.forEach((it,i)=>{
+      const on=openI===i;
+      el(svg,'line',{x1:350,y1:155,x2:it.x,y2:it.y,stroke:on?RED:INK,'stroke-width':on?4:2,'stroke-dasharray':'5 4'});
+      const g=el(svg,'g',{style:'cursor:pointer'});
+      el(g,'circle',{cx:it.x,cy:it.y,r:55,fill:on?YEL:'#fff',stroke:INK,'stroke-width':3});
+      el(g,'text',{x:it.x,y:it.y+6,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.label;
+      g.addEventListener('click',()=>{openI=i;note.textContent=it.desc;draw();});
+    });
+  }
+  document.getElementById('dmReset').onclick=()=>{openI=-1;note.textContent='点击图中任意一个症状气泡,查看它的产生机理。';draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 正常人血糖浓度的范围是多少？",a:"3.9~6.1 mmol/L。"},
+ {q:"2. 血糖的三大来源和三大去路分别是什么？",a:"来源：①食物中糖类的消化吸收 ②肝糖原分解 ③脂肪等非糖物质转化。去路：①氧化分解供能 ②合成肝糖原/肌糖原 ③转化为脂肪和某些氨基酸。"},
+ {q:"3. 肌糖原分解能否补充血糖？为什么？",a:"不能。肌糖原只能在肌肉细胞内被氧化分解供能，不能分解为葡萄糖释放入血；只有肝糖原分解才能补充血糖。"},
+ {q:"4. 胰岛素由哪种细胞分泌？它降低血糖的具体途径有哪些？",a:"胰岛B细胞分泌。途径：促进组织细胞摄取、利用、储存葡萄糖（促进糖原合成、加速氧化分解、促进转化为脂肪），同时抑制肝糖原分解和非糖物质转化为葡萄糖。"},
+ {q:"5. 胰高血糖素由哪种细胞分泌？升高血糖的具体途径是什么？",a:"胰岛A细胞分泌。途径：促进肝糖原分解为葡萄糖释放入血；促进非糖物质（如脂肪、氨基酸）转化为葡萄糖。"},
+ {q:"6. 胰岛素和胰高血糖素是什么关系？胰高血糖素和肾上腺素呢？",a:"胰岛素与胰高血糖素是拮抗关系（作用相反）；胰高血糖素与肾上腺素是协同关系（都升血糖，作用方向相同）。"},
+ {q:"7. 血糖平衡的调节方式是什么？血糖变化只能通过神经起作用吗？",a:"神经—体液调节。血糖浓度的变化除了通过神经中枢影响胰岛细胞外，还能直接刺激胰岛A、B细胞分泌激素（体液途径），不完全依赖神经。"},
+ {q:"8. 为什么说血糖调节是负反馈调节？",a:"血糖变化（如升高）作为刺激，最终引发的效应（胰岛素增多、血糖降低）方向与最初变化相反，把血糖重新拉回正常范围，这种效应与刺激方向相反的调节就是负反馈调节。"},
+ {q:"9. 糖尿病的根本病因是什么？",a:"胰岛素分泌不足，或组织细胞对胰岛素作用不敏感（作用障碍），导致血糖不能被有效摄取、利用、储存，血糖持续偏高。"},
+ {q:"10. 解释糖尿病“三多一少”中“多尿”和“多饮”的机理。",a:"多尿：血糖过高超过肾小管重吸收能力，渗透压升高带走大量水分随尿排出。多饮：多尿导致失水，细胞外液渗透压升高，刺激渴觉中枢，导致饮水量增多。"},
+ {q:"11. 糖尿病人为什么会“多食”和体重减少？",a:"多食：细胞不能有效利用葡萄糖供能，能量不足，饥饿感增强。体重减少：机体被迫加速分解脂肪和蛋白质来供能，导致消瘦。"},
+ {q:"12. 检测尿糖常用什么试剂？现象是什么？",a:"斐林试剂（或班氏试剂）。与还原糖反应后加热出现砖红色沉淀，说明尿液中含糖。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

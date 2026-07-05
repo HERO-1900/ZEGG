@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>弹簧类问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>弹簧类问题</h1>
+    <p class="lead">弹簧题的难点从来不是公式,而是<b>两条命门</b>:① F=kx 里的 x 是<b>形变量</b>,不是弹簧长度;② 弹簧的弹力<b>不能突变</b>——这跟绳子、支持力「说变就变」根本不同。抓住这两条,连接体、临界、剪断瞬间、能量守恒,全都迎刃而解。</p>
+
+    <div class="say">🗣️ <b>弹簧(人话版):</b> 弹簧就像一个「有记忆的弹力提供者」——你拉它多长(或压它多短),它就用 F=kx 的力气把你往回拽(或往回顶)。但它的「记性」是渐变的:要改变弹力,必须先改变形变量,而形变量的改变需要<b>时间</b>(弹簧要一点点伸缩)。所以你一刀剪断旁边的绳子,绳的张力<b>说没就没</b>(0.000...1秒内归零),但弹簧的弹力还<b>保持原样</b>,一点没变——这是弹簧题里最容易送分也最容易送命的一条。</div>
+
+    <div class="keybox"><b>两条命门:</b> ① <b>F=kx,x是形变量</b>(伸长量或压缩量,不是弹簧的自然长度或总长度!)。② <b>弹簧弹力不能突变</b>(缓变),而<b>绳的张力、杆的作用力、接触面的支持力可以突变</b>(可在一瞬间从某值跳到0或反之)。解题先问自己:这道题在考"求形变量"还是在考"剪断瞬间谁变谁不变"。</div>
+
+    <h2>① 胡克定律:F=kx,拉压皆有力</h2>
+    <div class="card">
+      <div class="eq">F = kx　(k:劲度系数,单位 N/m；x:形变量,单位 m)</div>
+      <p style="margin:8px 0">弹簧<b>既能拉伸也能压缩</b>,两种情况都产生弹力。<b>x 是形变量</b> = |弹簧现在的长度 − 弹簧自然长度 L₀|,绝不是弹簧的实际长度本身。方向:弹力<b>总是指向弹簧恢复原长的方向</b>——伸长时弹力向内拉(阻止继续伸长),压缩时弹力向外顶(阻止继续压缩)。</p>
+      <table>
+        <tr><th>状态</th><th>形变量 x</th><th>弹力方向</th></tr>
+        <tr><td>伸长(拉伸)</td><td>x = L现 − L₀ &gt; 0</td><td>指向弹簧内部(拉回原长)</td></tr>
+        <tr><td>压缩</td><td>x = L₀ − L现 &gt; 0</td><td>指向弹簧外部(顶回原长)</td></tr>
+        <tr><td>自然长度</td><td>x = 0</td><td>弹力 = 0</td></tr>
+      </table>
+      <p class="trap">⚠ 最常见的丢分:题目给"弹簧长度为 15cm,自然长度 10cm",很多人直接拿 15 代入 F=kx——错!必须先算 x = 15−10 = 5cm,再代入 F=kx。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔩 互动 1 — 胡克定律:拖动滑块拉伸/压缩弹簧,看 F=kx 的线性关系与方向</div>
+      <svg id="hookeSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>形变量 x (cm，负=压缩) <input id="hkX" type="range" min="-10" max="10" value="4" step="1"></label>
+        <label>劲度系数 k (N/m) <input id="hkK" type="range" min="20" max="100" value="50" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>形变量 x (m)</b><span id="hkXo">0</span></div>
+        <div><b>弹力 F=kx (N)</b><span id="hkFo">0</span></div>
+        <div><b>状态</b><span id="hkSt">—</span></div>
+        <div><b>弹力方向</b><span id="hkDir">—</span></div>
+      </div>
+      <p class="small">左图:弹簧实物,红色箭头=弹力方向,总指向"恢复原长"。右图:F-x 关系图,过原点的直线,斜率=k。x&gt;0 拉伸(弹力向左拽),x&lt;0 压缩(弹力向右顶)。</p>
+    </div>
+
+    <h2 class="b">② 弹力的"缓变" vs 绳/支持力的"突变"</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是弹簧题的<b>灵魂考点</b>。弹簧的弹力大小由形变量 x 决定,而 x 的改变需要弹簧<b>真实地伸缩一段过程</b>,这需要时间。所以在某一瞬间(比如"剪断"发生的那一刻),弹簧的形变量还来不及变化,弹力也就<b>保持原值不变</b>。</p>
+      <p style="margin:6px 0">而绳的张力、杆的作用力、接触面的弹力(支持力)不同:它们不是靠"形变量"提供力的(形变极其微小、瞬间完成),而是靠约束条件"瞬时满足力平衡"提供的。一旦约束被剪断/撤去,这个力可以在<b>无穷小时间内跳变为 0</b>。</p>
+      <table>
+        <tr><th>力的种类</th><th>剪断/撤去瞬间</th><th>原因</th></tr>
+        <tr><td><b>弹簧的弹力</b></td><td>保持剪断前一瞬的数值<b>不变</b></td><td>形变量 x 不能突变,需要时间伸缩</td></tr>
+        <tr><td>绳的张力</td><td>瞬间变为 <b>0</b></td><td>绳被剪断,失去张力来源</td></tr>
+        <tr><td>轻杆的作用力</td><td>可瞬间变化(甚至变向)</td><td>杆不形变,靠约束瞬时满足</td></tr>
+        <tr><td>接触面支持力/摩擦力</td><td>可瞬间突变</td><td>接触瞬间由新的受力平衡决定</td></tr>
+      </table>
+      <p class="trap">⚠ 反复考的陷阱:"剪断细线的瞬间,弹簧的弹力立即变为0"——错!弹簧弹力不变,只有绳的张力才会突变为0。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 2 — 剪断瞬间对比:弹簧 vs 绳,谁的力"说变就变"</div>
+      <svg id="cutSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cutGo">▶ 剪断!</button><button id="cutReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>剪断前 弹簧力</b><span id="cuF1">0</span></div>
+        <div><b>剪断后 弹簧力</b><span id="cuF2">0</span></div>
+        <div><b>剪断前 绳张力</b><span id="cuT1">0</span></div>
+        <div><b>剪断后 绳张力</b><span id="cuT2">0</span></div>
+      </div>
+      <p class="small">左侧:物体由上方<b>弹簧</b>悬挂并静止;右侧:物体由上方<b>绳</b>悬挂并静止(初始受力相同)。剪断中间的连接后:左边弹簧力<b>不变</b>(物体瞬时加速度≠g);右边绳张力瞬间归零(物体瞬时加速度=g,自由落体)。</p>
+    </div>
+
+    <h2 class="g">③ 弹性势能 Ep=½kx²:只看形变量,不看路径</h2>
+    <div class="card">
+      <div class="eq">Ep = ½ k x²　(x越大,Ep越大;定性或已知量,高中不要求推导)</div>
+      <p style="margin:8px 0">弹性势能储存在弹簧的形变里,<b>只由形变量 x 决定</b>,与弹簧怎么被拉伸/压缩到这个状态<b>无关</b>(与路径无关)。x 增大一倍,Ep 变为 4 倍(平方关系,不是正比!)。</p>
+      <p style="margin:8px 0"><b>弹簧弹力做的功</b> = 弹性势能变化量的<b>负值</b>:W弹 = −ΔEp = −(Ep末−Ep初)。弹簧伸长/压缩(x增大)时弹力做<b>负功</b>,Ep增大;弹簧恢复(x减小)时弹力做<b>正功</b>,Ep减小、转化为其他能量。</p>
+      <p class="trap">⚠ 常见错误:以为 Ep 与 x 成<b>正比</b>——错!是与 x² 成正比。x 从 2cm 变到 4cm,Ep 变为原来的 4 倍,不是 2 倍。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 弹性势能 Ep=½kx² 曲线:拖动 x 看抛物线</div>
+      <svg id="epSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>形变量 x (cm) <input id="epX" type="range" min="0" max="12" value="4" step="1"></label>
+        <label>劲度系数 k (N/m) <input id="epK" type="range" min="20" max="100" value="50" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>形变量 x (m)</b><span id="epXo">0</span></div>
+        <div><b>弹性势能 Ep (J)</b><span id="epEo">0</span></div>
+        <div><b>x 翻倍则 Ep</b><span id="epRatio">×4</span></div>
+        <div><b>曲线类型</b><span>抛物线</span></div>
+      </div>
+      <p class="small">红点沿抛物线 Ep=½kx² 移动。注意曲线越往右越陡——形变量越大,继续拉伸所需做的功增加得越快,这就是为什么"压缩到底"最费力。</p>
+    </div>
+
+    <h2 class="o">④ 平衡与临界:连接体中的弹簧形变量</h2>
+    <div class="card">
+      <h3>解题三步(适用于叠放、悬挂等一切连接体)</h3>
+      <div class="mono">第1步:对每个物体单独隔离,画受力图(重力、弹簧力、接触力……)。</div>
+      <div class="mono">第2步:对每个物体分别列平衡方程(或牛顿第二定律),含弹簧的用 F=kx。</div>
+      <div class="mono">第3步:解出弹簧力 F,再反推形变量 x=F/k(或反过来由 x 求 F)。</div>
+      <h3>叠放模型(两物体+一根弹簧,弹簧连接下方物体与地面)</h3>
+      <p style="margin:6px 0">物体A叠放在物体B上,B下方连弹簧接地。隔离A:A所受支持力由B提供,与A重力平衡。隔离B:B受重力、A对B的压力(=A重力)、地面弹簧的弹力,三者平衡 → 弹簧要顶起 A+B 的总重力 → F弹=(mA+mB)g,压缩量 x=(mA+mB)g/k。</p>
+      <h3>悬挂模型(弹簧上端固定,下面挂物体,物体间还有细线)</h3>
+      <p style="margin:6px 0">弹簧下挂物体A,A下用细线挂物体B。隔离B:线的张力=mBg。隔离A:弹簧的拉力=A的重力+线对A向下的拉力(牛顿第三定律,线拉A向下)=mAg+mBg,即弹簧要拉起A、B的总重,x=(mA+mB)g/k。</p>
+      <p class="trap">⚠ 连接体问题一定要<b>逐个隔离</b>,不能笼统地"整体看"就直接把弹簧力算错;内力(线的张力)在隔离单个物体时是外力,必须带入。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🏗️ 互动 5 — 连接体弹簧形变量计算:悬挂/叠放,拖动质量看弹簧被拉伸/压缩多少</div>
+      <svg id="connSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="connmode on" data-m="0">悬挂模型(弹簧上+线下)</button>
+        <button class="connmode" data-m="1">叠放模型(弹簧接地)</button>
+        <label>mA (kg) <input id="cnA" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>mB (kg) <input id="cnB" type="range" min="1" max="5" value="1" step="1"></label>
+        <label>k (N/m) <input id="cnK" type="range" min="20" max="100" value="50" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>弹簧受力 F (N)</b><span id="cnF">0</span></div>
+        <div><b>形变量 x (m)</b><span id="cnX">0</span></div>
+        <div><b>线/接触力 (N)</b><span id="cnT">0</span></div>
+        <div><b>状态</b><span id="cnS">拉伸</span></div>
+      </div>
+      <p class="small">悬挂模型:弹簧要拉起A、B总重,x=(mA+mB)g/k。叠放模型:弹簧要顶起A、B总重,x=(mA+mB)g/k,数值同理但弹簧处于<b>压缩</b>状态。</p>
+    </div>
+
+    <h2 class="v">⑤ 弹簧振子:回复力 F=−kx,简谐运动</h2>
+    <div class="card">
+      <div class="eq">F = −kx　(负号表示力总指向平衡位置,与位移方向相反)</div>
+      <p style="margin:8px 0">物体连接弹簧在光滑水平面上振动,偏离平衡位置的位移为 x 时,弹簧给它的<b>回复力</b>大小为 kx,方向<b>总指向平衡位置</b>(与位移方向相反,故加负号)。这就是<b>简谐运动</b>的动力学特征:回复力与位移成正比、方向相反。</p>
+      <p style="margin:8px 0"><b>运动特点:</b> 在最大位移处(振幅处)速度为0、弹力最大、回复力最大;在平衡位置处速度最大、弹力为0、回复力为0。振动过程中弹性势能与动能<b>周期性相互转化</b>,机械能守恒(不计摩擦时)。</p>
+      <p class="trap">⚠ 弹簧振子不是匀变速运动——回复力随 x 变化,加速度也随之变化,只有在初始瞬间或特定位置才能直接套用恒力公式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌊 互动 4 — 弹簧振子简谐运动:F=−kx,动能↔弹性势能周期转化</div>
+      <svg id="shmSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="shmGo">▶ 开始振动</button><button id="shmReset">↺ 重置</button>
+        <label>振幅 A (cm) <input id="shmA" type="range" min="2" max="10" value="6" step="1"></label>
+        <label>劲度系数 k (N/m) <input id="shmK" type="range" min="20" max="100" value="50" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>位移 x (m)</b><span id="shX">0</span></div>
+        <div><b>回复力 F=−kx (N)</b><span id="shF">0</span></div>
+        <div><b>弹性势能 Ep (J)</b><span id="shEp">0</span></div>
+        <div><b>动能 Ek (J)</b><span id="shEk">0</span></div>
+      </div>
+      <p class="small">小球在弹簧牵引下往复运动。下方条形图:黄=弹性势能,绿=动能,两者此消彼长、总和(机械能)保持不变。经过平衡位置时动能最大,到达最大位移时弹性势能最大。</p>
+    </div>
+
+    <h2 class="b">⑥ 能量守恒:弹性势能 ↔ 动能 ↔ 重力势能</h2>
+    <div class="card">
+      <p style="margin:6px 0">弹簧参与的系统,只要<b>没有摩擦和其他能量损耗</b>,机械能(动能+重力势能+弹性势能)总量守恒。常见三种转化链条:</p>
+      <table>
+        <tr><th>情景</th><th>能量转化</th></tr>
+        <tr><td>水平面弹簧振子(光滑)</td><td>弹性势能 ⇌ 动能</td></tr>
+        <tr><td>竖直弹簧振子(挂重物释放)</td><td>弹性势能 ⇌ 动能 ⇌ 重力势能(三者互转)</td></tr>
+        <tr><td>物块压缩弹簧后弹射</td><td>弹性势能 → 动能(全部释放为速度)</td></tr>
+      </table>
+      <div class="eq">Ep初 + Ek初 + Epg初 = Ep末 + Ek末 + Epg末</div>
+      <p class="trap">⚠ 求解这类题不需要知道 k 的具体数值——只要知道"弹性势能变化了多少",就能直接代入能量守恒方程,不必先求 x 再算 Ep。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔋 互动 6 — 能量守恒条形图:弹簧参与的三种能量互转(拖动进度看变化)</div>
+      <svg id="enSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>过程进度 <input id="enP" type="range" min="0" max="100" value="0" step="1"></label>
+        <button id="enPlay">▶ 自动播放</button>
+      </div>
+      <div class="live">
+        <div><b>弹性势能 Ep (J)</b><span id="enEp">0</span></div>
+        <div><b>动能 Ek (J)</b><span id="enEk">0</span></div>
+        <div><b>重力势能 Epg (J)</b><span id="enEg">0</span></div>
+        <div><b>总机械能 (J)</b><span id="enTot">0</span></div>
+      </div>
+      <p class="small">情景:竖直弹簧下挂物体,从压缩状态释放后向上运动一段再落下。拖动进度条,看弹性势能→动能→重力势能之间此消彼长,总机械能(黑色虚线)始终不变。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求弹簧的形变量或弹力(平衡类)</h3>
+      <p><b class="tag">触发信号:</b>「弹簧秤示数」「弹簧长度为…」「物体静止在弹簧上/下」,给了质量、k,求弹力或形变量。</p>
+      <p><b class="tag">标准动作:</b>隔离物体,列平衡方程求出弹簧力F,再用 x=F/k 求形变量;或已知长度先算 x=|L现−L₀|,再F=kx。</p>
+      <p><b class="tag">示例(带解):</b>质量2kg物体静止挂在弹簧下,k=100N/m,求形变量。弹簧拉力=重力=2×10=20N,x=F/k=20/100=0.2m=20cm。</p>
+      <p class="trap">陷阱:把弹簧总长度当形变量代入;漏掉物体所受的其他外力(如还有斜面支持力时需分解)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 剪断/撤去瞬间的加速度(突变 vs 缓变)</h3>
+      <p><b class="tag">触发信号:</b>「剪断细线的瞬间」「撤去外力的瞬间」，同时出现弹簧和绳(或杆),问瞬时加速度。</p>
+      <p><b class="tag">标准动作:</b>先判断谁是弹簧(力不变)、谁是绳/杆/支持力(力可突变为0)。分别对物体在这一瞬间重新列牛顿第二定律,弹簧力仍取剪断前的数值,绳力/支持力取0(如果被剪断/撤去的是它)。</p>
+      <p><b class="tag">示例(带解):</b>物体用細线挂在弹簧下方并保持静止,弹簧下另有一根线系住地面（下线被剪断瞬间求物体加速度）。剪断瞬间弹簧弹力不变（=剪前弹簧对物体的拉力，仍等于mg，因上端弹簧没变化）。若剪断的是弹簧上方的连线导致弹簧失效——不对，需按题意具体分析:核心原则是"剪谁,谁的力才变"，未被剪断的弹簧其弹力在这一瞬间保持不变。</p>
+      <p class="trap">陷阱:认为剪断后弹簧力也立即消失或变为mg以外的新平衡值;混淆"哪根被剪断""哪根保持原值"。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 弹性势能大小比较/计算</h3>
+      <p><b class="tag">触发信号:</b>「弹簧的弹性势能」「压缩量增大到原来几倍」，给了形变量变化或k的相对关系。</p>
+      <p><b class="tag">标准动作:</b>用 Ep=½kx² 定性/定量分析,注意 x 的平方关系;若只定性比较，抓住"x 越大 Ep 越大"且是<b>非线性</b>增长。</p>
+      <p><b class="tag">示例(带解):</b>弹簧压缩量从2cm增加到6cm(变为3倍),k不变，弹性势能变为原来的 3²=9 倍。</p>
+      <p class="trap">陷阱:误认为形变量3倍则Ep也3倍(线性)；忽视Ep与x的平方关系。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 连接体中弹簧形变量(悬挂/叠放)</h3>
+      <p><b class="tag">触发信号:</b>两个或以上物体通过弹簧、细线相连(叠放或悬挂)，求弹簧形变量或某接触力。</p>
+      <p><b class="tag">标准动作:</b>逐个隔离物体列平衡方程，弹簧要承担的力=其上(下)所有相关物体的总重力(视具体连接方式)，再 x=F/k。</p>
+      <p><b class="tag">示例(带解):</b>弹簧上端固定，下挂物体A(2kg)，A下用细线挂物体B(1kg)，k=100N/m。隔离B:线张力=1×10=10N。隔离A:弹簧拉力=A重力+线向下拉力=2×10+10=30N，x=30/100=0.3m。</p>
+      <p class="trap">陷阱:漏算下方物体通过细线施加的内力；把整个系统的重力想当然地全部算在弹簧头上而不做隔离分析(结果凑巧一致时更容易掩盖方法错误)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 弹簧振子与简谐运动分析</h3>
+      <p><b class="tag">触发信号:</b>「弹簧振子」「在光滑水平面上振动」「回复力」「振幅」等关键词。</p>
+      <p><b class="tag">标准动作:</b>回复力 F=−kx，在平衡位置(x=0)速度最大、加速度为0；在振幅处(x=±A)速度为0、加速度(回复力)最大；能量在弹性势能与动能间周期转化。</p>
+      <p><b class="tag">示例(带解):</b>振幅A=0.1m，k=50N/m的振子，求最大回复力和最大弹性势能。F最大=kA=50×0.1=5N；Ep最大=½kA²=½×50×0.01=0.25J(全部由动能转化而来，此处动能为0)。</p>
+      <p class="trap">陷阱:把弹簧振子当匀变速运动处理，直接套用恒力公式v=at；混淆振幅处与平衡位置处的物理量最大/最小关系。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 弹簧参与的能量守恒综合</h3>
+      <p><b class="tag">触发信号:</b>「弹簧被压缩后弹出物体」「物体沿弹簧上升/下降后又反弹」等，涉及弹性势能、动能、重力势能之间转化。</p>
+      <p><b class="tag">标准动作:</b>圈定研究过程的始末状态，列 Ep初+Ek初+Epg初=Ep末+Ek末+Epg末，未知弹性势能变化量可直接作为一个整体量代入，不必单独求k和x。</p>
+      <p><b class="tag">示例(带解):</b>物体压缩弹簧后由静止释放，弹簧恢复原长时物体获得动能8J、同时上升了0.2m(m=1kg)。弹性势能全部转化:Ep=Ek+mgh=8+1×10×0.2=10J。</p>
+      <p class="trap">陷阱:遗漏重力势能的变化（弹簧恢复过程中如果物体还在升高或下降）；把弹簧恢复原长时误当成弹性势能未完全释放或过度释放。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① F=kx 中的 x 是<b>形变量</b>(伸长量或压缩量),绝不是弹簧的实际长度或自然长度。</p>
+      <p class="trap">② 弹簧既能拉伸也能压缩,<b>压缩时也有弹力</b>,方向指向恢复原长(向外顶),别以为只有拉伸才有力。</p>
+      <p class="trap">③ 弹簧的弹力<b>不能突变</b>(需要时间伸缩),而轻绳的张力、轻杆的作用力、接触面的支持力<b>可以突变</b>(瞬间变为0或跳变)。</p>
+      <p class="trap">④ 剪断弹簧上方的绳,瞬间:绳消失的张力=0，弹簧的弹力还是剪断前那个值,不会瞬间调整为新的平衡值。</p>
+      <p class="trap">⑤ Ep=½kx² 是<b>平方关系</b>,不是正比关系。x翻倍,Ep变4倍。</p>
+      <p class="trap">⑥ 弹簧弹力做的功 = −ΔEp,只由<b>初末形变量</b>决定,与中间怎么变化的路径无关。</p>
+      <p class="trap">⑦ 连接体问题必须<b>逐个隔离</b>受力分析，不能笼统地整体代入，尤其要留意细线/接触力是"内力还是外力"随隔离对象变化。</p>
+      <p class="trap">⑧ 弹簧振子的运动<b>不是匀变速</b>，回复力F=−kx随位移变化，只有恒力模型才能直接套用匀变速公式。</p>
+      <p class="trap">⑨ 竖直弹簧的平衡位置<b>不是自然长度处</b>，而是弹力=重力处，形变量x=mg/k，题目里"自然长度"与"平衡位置"是两个不同的点，别混淆。</p>
+      <p class="trap">⑩ 弹簧振子的振幅处速度为0、回复力和加速度最大；平衡位置处速度最大、回复力和加速度为0——两处状态刚好相反，别记反。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① "缓变"的本质是形变需要时间,这是连续介质的必然:</b> 弹簧的弹力来自内部微观形变(分子间键的拉伸/压缩),这个过程是连续传播的(以弹性波速度传播),不可能瞬间完成。而理想化的绳、杆、支持力模型里，我们把它们当作"无形变的刚性约束"处理，约束一旦解除，力可以瞬间消失。理解这层物理图像，"缓变 vs 突变"就不再是死记硬背的结论，而是自然推出的结果。</p>
+      <p style="margin:8px 0"><b>② 剪断瞬间题的通用解法：只对"被剪断的那个"重新画受力图:</b> 剪断哪根线/杆，就把哪个力立即改为新值(通常为0)，其余所有力(包括弹簧力、重力、其他绳的张力)在这一瞬间维持原值不变，然后对物体重新用牛顿第二定律求瞬时加速度。不要试图"重新找平衡"，剪断瞬间物体还来不及运动，受力图是"旧受力图减去被剪断的那个力"。</p>
+      <p style="margin:8px 0"><b>③ 弹性势能与路径无关，本质是弹簧力属于"保守力":</b> 正如重力做功只与高度差有关，弹簧弹力做的功也只与初末形变量有关，这就是为什么可以定义"弹性势能"这个态函数。做能量守恒题时，不需要关心弹簧怎样一步步被压缩，只需要知道初末状态的形变量(或直接给出的Ep数值)。</p>
+      <p style="margin:8px 0"><b>④ 竖直弹簧振子的平衡位置=新的"零点"，可等效为不受重力的水平振子:</b> 竖直挂one物体在弹簧下振动时，可以把坐标原点设在"弹力=重力"的平衡位置，此时回复力恰好等于 −k·x'(x'为偏离平衡位置的位移)，重力被弹簧在该点的"预压缩/预拉伸"抵消，运动完全等效于水平弹簧振子的简谐运动，这是竖直弹簧振子问题的降维打击技巧。</p>
+      <p style="margin:8px 0"><b>⑤ 剪断弹簧本身 vs 剪断弹簧旁边的绳，是两类不同的题:</b> 如果被剪断的正是弹簧本体（弹簧断裂），那么弹簧对外的作用力才会瞬间归零，如同绳被剪断一样；如果剪断的是弹簧之外的另一根绳（弹簧完好），那么弹簧的力不受影响，仍维持剪断前一瞬的值。读题务必看清"剪的是哪一个元件"，这是命题人爱设的文字陷阱。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 弹簧类问题:胡克定律·弹性势能·突变与缓变·连接体</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:胡克定律 ===== */
+(function(){
+  const svg=document.getElementById('hookeSvg');
+  const Xs=document.getElementById('hkX'),Ks=document.getElementById('hkK');
+  const oX=document.getElementById('hkXo'),oF=document.getElementById('hkFo'),oSt=document.getElementById('hkSt'),oDir=document.getElementById('hkDir');
+  let xcm=4,k=50;
+  function sync(){xcm=+Xs.value;k=+Ks.value;draw();}
+  Xs.oninput=Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    const x=xcm/100; // m
+    const F=k*x;
+    oX.textContent=x.toFixed(2);
+    oF.textContent=F.toFixed(1);
+    oSt.textContent=xcm>0?'拉伸':xcm<0?'压缩':'自然长度';
+    oDir.textContent=xcm>0?'向左(拉回)':xcm<0?'向右(顶回)':'无';
+    // left: spring drawing, area x:20..340,y:0..170
+    const wallX=40, baseLen=180, cy=90;
+    const curLen=baseLen + xcm*6; // visual scale
+    const endX=wallX+curLen;
+    // wall
+    el(svg,'rect',{x:wallX-14,y:cy-50,width:14,height:100,fill:INK});
+    // spring coils
+    const coilN=10; let pts='';
+    for(let i=0;i<=coilN;i++){
+      const px=wallX + (curLen)*(i/coilN);
+      const py=cy + (i%2===0?-18:18);
+      pts+=px+','+py+' ';
+    }
+    el(svg,'polyline',{points:pts,fill:'none',stroke:BLUE,'stroke-width':4,'stroke-linejoin':'round'});
+    // block at end
+    el(svg,'rect',{x:endX,y:cy-22,width:44,height:44,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:endX+22,y:cy+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='m';
+    // natural length marker (dashed)
+    const natX=wallX+baseLen;
+    el(svg,'line',{x1:natX,y1:cy-45,x2:natX,y2:cy+45,stroke:'#999','stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:natX,y:cy-52,'font-size':11,'font-weight':800,fill:'#777','text-anchor':'middle'}).textContent='自然长度处';
+    // force arrow on block
+    if(Math.abs(xcm)>0.3){
+      const dir=xcm>0?-1:1; // stretched: force points left(inward); compressed: force points right(outward)
+      const ax=endX+22;
+      el(svg,'line',{x1:ax,y1:cy+40,x2:ax+dir*50,y2:cy+40,stroke:RED,'stroke-width':5});
+      el(svg,'polygon',{points:(ax+dir*50)+','+(cy+34)+' '+(ax+dir*62)+','+(cy+40)+' '+(ax+dir*50)+','+(cy+46),fill:RED});
+      el(svg,'text',{x:ax+dir*30,y:cy+58,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='F='+F.toFixed(1)+'N';
+    }
+    el(svg,'text',{x:180,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='弹簧实物示意(红箭=弹力方向)';
+    // right: F-x graph
+    const gx0=420,gy0=30,gw=240,gh=190,gcy=gy0+gh/2;
+    el(svg,'line',{x1:gx0,y1:gcy,x2:gx0+gw,y2:gcy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:gx0+gw/2,y1:gy0,x2:gx0+gw/2,y2:gy0+gh,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:gx0+gw+5,y:gcy+4,'font-size':12,'font-weight':900,fill:INK}).textContent='x';
+    el(svg,'text',{x:gx0+gw/2-4,y:gy0-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='F';
+    // line F=kx over range
+    const xmax=0.10, Fmax=100*0.10;
+    const sx=(gw/2)/xmax, sy=(gh/2)/Fmax;
+    el(svg,'line',{x1:gx0+gw/2-xmax*sx,y1:gcy+xmax*100*sy*0,x2:gx0+gw/2+xmax*sx,y2:gcy,stroke:'#ccc','stroke-width':1});
+    const kScaledSy=(gh/2)/(100*0.10);
+    el(svg,'line',{x1:gx0+gw/2 - xmax*sx, y1:gcy + k*xmax*kScaledSy, x2:gx0+gw/2 + xmax*sx, y2:gcy - k*xmax*kScaledSy, stroke:VIO,'stroke-width':3});
+    // point
+    const px2=gx0+gw/2 + x*sx, py2=gcy - F*kScaledSy;
+    el(svg,'circle',{cx:px2,cy:py2,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:gx0+gw/2,y:gy0-20,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='F-x 图(斜率=k='+k+')';
+  }
+  sync();
+})();
+
+/* ===== 互动2:剪断瞬间对比 ===== */
+(function(){
+  const svg=document.getElementById('cutSvg');
+  const oF1=document.getElementById('cuF1'),oF2=document.getElementById('cuF2'),oT1=document.getElementById('cuT1'),oT2=document.getElementById('cuT2');
+  const m=1, g=10;
+  let cut=false,running=false,t=0;
+  let y1=0,v1=0,y2=0,v2=0; // displacement from start, after cut
+  function reset(){cut=false;running=false;t=0;y1=0;v1=0;y2=0;v2=0;
+    oF1.textContent=(m*g).toFixed(1)+'N';oF2.textContent=(m*g).toFixed(1)+'N';
+    oT1.textContent=(m*g).toFixed(1)+'N';oT2.textContent='0N';
+    draw();}
+  function draw(){
+    clr(svg);
+    // left: spring-held block
+    drawScene(svg,120,'弹簧悬挂',BLUE, cut, y1);
+    // right: rope-held block
+    drawScene(svg,480,'绳悬挂',ORANGE, cut, y2, true);
+    el(svg,'text',{x:350,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=cut?'已剪断中间连接（弹簧力不变 / 绳张力=0，物体开始运动）':'剪断前：两物体都静止，各自受力平衡';
+  }
+  function drawScene(svg,cx,label,col,isCut,dy,isRope){
+    const topY=40,fixY=40,objY=150+dy*4;
+    el(svg,'text',{x:cx,y:topY-14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=label;
+    // ceiling
+    el(svg,'rect',{x:cx-60,y:topY-6,width:120,height:10,fill:INK});
+    if(!isRope){
+      // spring coils from ceiling to a fixed midpoint (not cut), representing spring segment above the object always
+      let pts='';const coilN=8;const springTop=topY+4,springBot=springTop+70;
+      for(let i=0;i<=coilN;i++){const py=springTop+(springBot-springTop)*(i/coilN);const px=cx+(i%2===0?-14:14);pts+=px+','+py+' ';}
+      el(svg,'polyline',{points:pts,fill:'none',stroke:col,'stroke-width':4,'stroke-linejoin':'round'});
+      // cut mark shown below spring (a separate string that gets cut connecting spring to block, always drawn as cuttable joint)
+      el(svg,'line',{x1:cx,y1:springBot,x2:cx,y2:springBot+18,stroke:isCut?'#ccc':INK,'stroke-width':3,'stroke-dasharray':isCut?'4 4':'0'});
+    } else {
+      const ropeTop=topY+4,ropeBot=ropeTop+88;
+      el(svg,'line',{x1:cx,y1:ropeTop,x2:cx,y2:isCut?ropeTop+10:ropeBot,stroke:isCut?'#ccc':col,'stroke-width':4,'stroke-dasharray':isCut?'4 4':'0'});
+    }
+    // block
+    el(svg,'rect',{x:cx-24,y:objY,width:48,height:48,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:objY+30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='m';
+    if(isCut){
+      el(svg,'text',{x:cx,y:objY+70,'font-size':12,'font-weight':800,fill:col,'text-anchor':'middle'}).textContent=isRope?'a=g（自由落体）':'a='+((m*g-m*g)/m).toFixed(1)+'（仍平衡，瞬时a=0）';
+    }
+  }
+  function loop(){
+    if(!running)return;
+    t+=1/60;
+    // spring side: force unchanged = mg, net force = mg(down) - mg(up, spring still pulling)=0 => stays still momentarily then real physics is complex; for illustration keep a=0 briefly
+    // rope side: tension=0 immediately => free fall
+    v2+=g*(1/60);y2+=v2*(1/60);
+    if(y2>18)y2=18; // clamp visual
+    draw();
+    if(t<1.2)requestAnimationFrame(loop);else running=false;
+  }
+  document.getElementById('cutGo').onclick=()=>{cut=true;running=true;t=0;
+    oF1.textContent=(m*g).toFixed(1)+'N (不变)';oF2.textContent=(m*g).toFixed(1)+'N (不变)';
+    oT1.textContent=(m*g).toFixed(1)+'N';oT2.textContent='0N (瞬间归零)';
+    requestAnimationFrame(loop);};
+  document.getElementById('cutReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动3:弹性势能曲线 ===== */
+(function(){
+  const svg=document.getElementById('epSvg');
+  const Xs=document.getElementById('epX'),Ks=document.getElementById('epK');
+  const oX=document.getElementById('epXo'),oE=document.getElementById('epEo'),oR=document.getElementById('epRatio');
+  let xcm=4,k=50;
+  function sync(){xcm=+Xs.value;k=+Ks.value;draw();}
+  Xs.oninput=Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    const x=xcm/100;
+    const Ep=0.5*k*x*x;
+    oX.textContent=x.toFixed(2);oE.textContent=Ep.toFixed(3);
+    const doubleEp=0.5*k*(x*2)*(x*2);
+    oR.textContent='×'+(x>0?(doubleEp/Ep).toFixed(1):'4.0');
+    const X0=60,Y0=20,W=580,H=230;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='Ep';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    const xmax=0.12,Epmax=0.5*100*0.12*0.12;
+    const sx=W/xmax, sy=H/Epmax;
+    // parabola
+    let pts='';
+    for(let i=0;i<=60;i++){
+      const xi=xmax*i/60;
+      const ei=0.5*k*xi*xi;
+      const px=X0+xi*sx, py=Y0+H-ei*sy;
+      pts+=px+','+py+' ';
+    }
+    el(svg,'polyline',{points:pts,fill:'none',stroke:VIO,'stroke-width':4});
+    // point
+    const px2=X0+x*sx, py2=Y0+H-Ep*sy;
+    el(svg,'circle',{cx:px2,cy:py2,r:8,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px2,y1:py2,x2:px2,y2:Y0+H,stroke:'#999','stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:px2,y1:py2,x2:X0,y2:py2,stroke:'#999','stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:X0+W/2,y:Y0-4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Ep = ½kx²（抛物线，k='+k+'N/m）';
+    el(svg,'text',{x:px2+10,y:py2-10,'font-size':12,'font-weight':900,fill:RED}).textContent='Ep='+Ep.toFixed(3)+'J';
+  }
+  sync();
+})();
+
+/* ===== 互动4:弹簧振子简谐运动 ===== */
+(function(){
+  const svg=document.getElementById('shmSvg');
+  const As=document.getElementById('shmA'),Ks=document.getElementById('shmK');
+  const oX=document.getElementById('shX'),oF=document.getElementById('shF'),oEp=document.getElementById('shEp'),oEk=document.getElementById('shEk');
+  const m=1;
+  let Acm=6,k=50,phase=0,running=false;
+  function sync(){Acm=+As.value;k=+Ks.value;draw();}
+  As.oninput=Ks.oninput=sync;
+  function state(){
+    const A=Acm/100;
+    const omega=Math.sqrt(k/m);
+    const x=A*Math.sin(phase);
+    const v=A*omega*Math.cos(phase);
+    const F=-k*x;
+    const Ep=0.5*k*x*x;
+    const Ek=0.5*m*v*v;
+    return {A,x,v,F,Ep,Ek};
+  }
+  function draw(){
+    clr(svg);
+    const s=state();
+    oX.textContent=s.x.toFixed(3);oF.textContent=s.F.toFixed(1);oEp.textContent=s.Ep.toFixed(3);oEk.textContent=s.Ek.toFixed(3);
+    // top: horizontal spring-mass on track
+    const cx0=350, cy=70, scale=1200;
+    const wallX=40;
+    const objX=cx0+s.x*scale;
+    // wall
+    el(svg,'rect',{x:wallX-14,y:cy-40,width:14,height:80,fill:INK});
+    // track
+    el(svg,'line',{x1:wallX,y1:cy+40,x2:660,y2:cy+40,stroke:'#999','stroke-width':2});
+    // spring coils
+    let pts='';const coilN=12;
+    for(let i=0;i<=coilN;i++){const px=wallX+(objX-24-wallX)*(i/coilN);const py=cy+(i%2===0?-14:14);pts+=px+','+py+' ';}
+    el(svg,'polyline',{points:pts,fill:'none',stroke:BLUE,'stroke-width':4,'stroke-linejoin':'round'});
+    // equilibrium marker
+    el(svg,'line',{x1:cx0,y1:cy-30,x2:cx0,y2:cy+55,stroke:'#999','stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:cx0,y:cy-36,'font-size':11,'font-weight':800,fill:'#777','text-anchor':'middle'}).textContent='平衡位置';
+    // block
+    el(svg,'rect',{x:objX-20,y:cy-20,width:40,height:40,fill:YEL,stroke:INK,'stroke-width':3});
+    // energy bars
+    const by=230,bw=50,es=180/Math.max(0.001,0.5*k*s.A*s.A);
+    el(svg,'rect',{x:220,y:by-s.Ep*es,width:bw,height:s.Ep*es,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:245,y:by+16,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Ep';
+    el(svg,'rect',{x:430,y:by-s.Ek*es,width:bw,height:s.Ek*es,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:455,y:by+16,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Ek';
+    el(svg,'line',{x1:180,y1:by,x2:520,y2:by,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:350,y:by+34,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='Ep+Ek 总和守恒（机械能不变）';
+  }
+  function loop(){
+    if(!running)return;
+    const omega=Math.sqrt(k/m);
+    phase+=omega*0.02;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('shmGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('shmReset').onclick=()=>{running=false;phase=0;draw();};
+  sync();
+})();
+
+/* ===== 互动5:连接体形变量 ===== */
+(function(){
+  const svg=document.getElementById('connSvg');
+  const As=document.getElementById('cnA'),Bs=document.getElementById('cnB'),Ks=document.getElementById('cnK');
+  const oF=document.getElementById('cnF'),oX=document.getElementById('cnX'),oT=document.getElementById('cnT'),oS=document.getElementById('cnS');
+  let mode=0,mA=2,mB=1,k=50;
+  const g=10;
+  document.querySelectorAll('.connmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.connmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function sync(){mA=+As.value;mB=+Bs.value;k=+Ks.value;draw();}
+  As.oninput=Bs.oninput=Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    const Ftotal=(mA+mB)*g;
+    const x=Ftotal/k;
+    oF.textContent=Ftotal.toFixed(1);oX.textContent=x.toFixed(3);
+    const Tline=mB*g;
+    oT.textContent=Tline.toFixed(1);
+    oS.textContent=mode===0?'拉伸':'压缩';
+    if(mode===0){
+      // hanging model: spring top fixed, A hangs from spring, B hangs from A via string
+      const cx=350;
+      el(svg,'rect',{x:cx-60,y:20,width:120,height:10,fill:INK});
+      const springTop=30, springLen=60+x*300;
+      let pts='';const coilN=10;
+      for(let i=0;i<=coilN;i++){const py=springTop+springLen*(i/coilN);const px=cx+(i%2===0?-16:16);pts+=px+','+py+' ';}
+      el(svg,'polyline',{points:pts,fill:'none',stroke:BLUE,'stroke-width':4,'stroke-linejoin':'round'});
+      const Ay=springTop+springLen;
+      el(svg,'rect',{x:cx-30,y:Ay,width:60,height:40,fill:YEL,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:Ay+26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='A ('+mA+'kg)';
+      const lineLen=40;
+      el(svg,'line',{x1:cx,y1:Ay+40,x2:cx,y2:Ay+40+lineLen,stroke:ORANGE,'stroke-width':3});
+      const By=Ay+40+lineLen;
+      el(svg,'rect',{x:cx-25,y:By,width:50,height:36,fill:GREEN,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:By+23,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='B ('+mB+'kg)';
+      el(svg,'text',{x:cx,y:270,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='弹簧拉力=A+B总重='+Ftotal.toFixed(1)+'N，x='+x.toFixed(3)+'m　|　线张力=B重='+Tline.toFixed(1)+'N';
+    } else {
+      // stacking model: B on ground with spring below B(to ground), A on top of B
+      const cx=350, groundY=250;
+      el(svg,'rect',{x:cx-100,y:groundY,width:200,height:14,fill:'#7a7a7a'});
+      const springLen=60-x*250>15?60-x*250:15;
+      const Btop=groundY-40-springLen;
+      let pts='';const coilN=8;
+      for(let i=0;i<=coilN;i++){const py=groundY - springLen*(i/coilN); const px=cx+(i%2===0?-16:16);pts+=px+','+py+' ';}
+      el(svg,'polyline',{points:pts,fill:'none',stroke:BLUE,'stroke-width':4,'stroke-linejoin':'round'});
+      el(svg,'rect',{x:cx-35,y:Btop,width:70,height:40,fill:GREEN,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:Btop+26,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='B ('+mB+'kg)';
+      const Atop=Btop-38;
+      el(svg,'rect',{x:cx-28,y:Atop,width:56,height:38,fill:YEL,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:Atop+24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='A ('+mA+'kg)';
+      el(svg,'text',{x:cx,y:34,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='弹簧压缩，顶起A+B总重='+Ftotal.toFixed(1)+'N，x='+x.toFixed(3)+'m';
+      el(svg,'text',{x:cx,y:54,'font-size':12,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='B对A的支持力='+ (mA*g).toFixed(1)+'N（隔离A即得）';
+    }
+  }
+  sync();
+})();
+
+/* ===== 互动6:能量守恒条形图 ===== */
+(function(){
+  const svg=document.getElementById('enSvg');
+  const Ps=document.getElementById('enP');
+  const oEp=document.getElementById('enEp'),oEk=document.getElementById('enEk'),oEg=document.getElementById('enEg'),oTot=document.getElementById('enTot');
+  const totalE=20; // J, fixed total mechanical energy for illustration
+  let playing=false;
+  function valuesAt(p){
+    // p in [0,100]: 0=max compression(all Ep), 50=passing equilibrium rising(mix Ek+Epg), 100=highest point(all Epg)
+    const t=p/100;
+    let Ep,Ek,Eg;
+    if(t<=0.5){
+      const u=t/0.5; // 0..1
+      Ep=totalE*(1-u);
+      Eg=totalE*u*0.3;
+      Ek=totalE-Ep-Eg;
+    } else {
+      const u=(t-0.5)/0.5;
+      Eg=totalE*0.3 + totalE*0.7*u;
+      Ep=0;
+      Ek=totalE-Ep-Eg;
+    }
+    if(Ek<0)Ek=0;
+    return {Ep,Ek,Eg};
+  }
+  function draw(){
+    clr(svg);
+    const p=+Ps.value;
+    const v=valuesAt(p);
+    oEp.textContent=v.Ep.toFixed(2);oEk.textContent=v.Ek.toFixed(2);oEg.textContent=v.Eg.toFixed(2);oTot.textContent=(v.Ep+v.Ek+v.Eg).toFixed(2);
+    const baseY=230,maxH=180,es=maxH/totalE;
+    const bars=[{lab:'Ep',val:v.Ep,x:120,col:YEL},{lab:'Ek',val:v.Ek,x:300,col:GREEN},{lab:'Epg',val:v.Eg,x:480,col:VIO}];
+    bars.forEach(b=>{
+      const h=b.val*es;
+      el(svg,'rect',{x:b.x,y:baseY-h,width:80,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+40,y:baseY+22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+40,y:baseY-h-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.val.toFixed(1);
+    });
+    // total line (dashed)
+    const totalH=totalE*es;
+    el(svg,'line',{x1:80,y1:baseY-totalH,x2:600,y2:baseY-totalH,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:600,y:baseY-totalH-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='总机械能='+totalE+'J（不变）';
+    el(svg,'line',{x1:80,y1:baseY,x2:600,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='弹簧释放 → 上升过程：弹性势能→动能→重力势能';
+  }
+  Ps.oninput=draw;
+  document.getElementById('enPlay').onclick=()=>{
+    if(playing)return;
+    playing=true;
+    let p=0;Ps.value=0;
+    function step(){
+      p+=1;
+      if(p>100){playing=false;return;}
+      Ps.value=p;draw();
+      requestAnimationFrame(()=>setTimeout(step,20));
+    }
+    step();
+  };
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. F=kx中的x到底是什么？常见的代入错误是什么？",a:"x是弹簧的形变量（伸长量或压缩量），即|弹簧现长-自然长度|，不是弹簧的实际长度。常见错误是直接把弹簧总长度代入F=kx。"},
+ {q:"2. 弹簧压缩时有没有弹力？方向怎样？",a:"有。压缩时弹力方向指向弹簧外侧（顶开），伸长时弹力方向指向弹簧内侧（拉回），核心原则：弹力总指向恢复原长的方向。"},
+ {q:"3. 剪断弹簧旁边的一根绳，弹簧的弹力会立即变化吗？为什么？",a:"不会。弹簧的弹力由形变量决定，形变量的改变需要时间（弹簧要真实地伸缩），所以剪断瞬间弹簧弹力保持剪断前的数值不变。"},
+ {q:"4. 绳的张力在被剪断瞬间会怎样变化？和弹簧有何本质不同？",a:"绳被剪断瞬间张力立即变为0（突变）。绳本身几乎不形变，靠约束条件瞬时满足平衡提供张力，约束一撤，力瞬间消失；弹簧靠实际形变提供力，形变不能瞬间改变，所以力是缓变的。"},
+ {q:"5. 弹性势能Ep与形变量x是什么关系？x变为原来2倍，Ep变为几倍？",a:"Ep=½kx²，是平方关系。x变为2倍，Ep变为4倍，不是2倍。"},
+ {q:"6. 弹簧弹力做的功与什么有关？与路径有关吗？",a:"弹簧弹力做的功W=−ΔEp，只由初末形变量决定，与中间怎样变化的路径无关（弹力是保守力）。"},
+ {q:"7. 弹簧上端固定，下挂物体A，A下再用细线挂物体B。弹簧的拉力等于多少？",a:"隔离B得线张力=mBg；隔离A得弹簧拉力=A重力+线对A的拉力=mAg+mBg，即弹簧要拉起A、B的总重。"},
+ {q:"8. 弹簧振子的回复力公式是什么？在平衡位置和最大位移处，速度、回复力各是什么情况？",a:"F=−kx。平衡位置(x=0)：速度最大，回复力为0；最大位移(振幅处)：速度为0，回复力(和加速度)最大。"},
+ {q:"9. 弹簧振子振动过程中，能量是怎样转化的？总机械能变化吗？",a:"弹性势能与动能周期性相互转化（此消彼长），不计摩擦时总机械能守恒不变。"},
+ {q:"10. 经典对比题：物体分别用弹簧和用绳悬挂静止。剪断上方连接瞬间，两者的加速度各是多少？",a:"绳悬挂：张力瞬间变0，物体只受重力，a=g（自由落体）。弹簧悬挂：弹簧弹力瞬间不变（仍等于mg），合力仍为0，物体瞬时加速度a=0（仍处于平衡状态，之后才逐渐变化）。"},
+ {q:"11. 竖直弹簧振子的平衡位置在哪里？和自然长度处一样吗？",a:"不一样。平衡位置是弹力=重力处，此处形变量x=mg/k；自然长度处弹力=0。两者是不同的两个点，容易混淆。"},
+ {q:"12. 物体压缩弹簧后由静止释放，弹簧恢复原长时物体获得动能8J、同时上升了0.2m（m=1kg，g=10）。弹簧释放的弹性势能是多少？",a:"由能量守恒：弹性势能全部转化为动能和重力势能之和。Ep=Ek+mgh=8+1×10×0.2=10J。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

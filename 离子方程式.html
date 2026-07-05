@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>离子方程式的书写与正误判断 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>离子方程式的书写与正误判断</h1>
+    <p class="lead">离子方程式的本质是「只写真正参加反应的粒子」。会不会写,拼的是<b>拆分判断力</b>——强酸强碱可溶盐才拆成离子,弱电解质、气体、沉淀、氧化物、水一律保留化学式。正误判断的雷区集中在:拆错了、电荷不守恒、产物不符合事实、比例被忽略、"量"变了产物就变。这一页把「写拆删查」四步、拆分判断标准、和"过量/少量"专题一次讲透。</p>
+
+    <div class="say">🗣️ <b>离子方程式(人话版):</b> 化学方程式是"全体演员表",离子方程式是"真正上场打戏的演员名单"。凡是在溶液里已经拆成自由离子的强电解质(强酸、强碱、可溶性盐),就把它们拆开写;凡是没拆(弱酸弱碱、水、气体、沉淀、氧化物、单质),就<b>老老实实写化学式</b>,因为它们在溶液里根本没解离(或没参与反应)。写完了别忘了检查两件事:<b>原子有没有守恒、电荷有没有守恒</b>。</div>
+
+    <div class="keybox"><b>一句话流程:</b> <b>写</b>(写出正确的化学方程式)→<b>拆</b>(强酸、强碱、可溶性盐拆成离子;其余一律保留化学式)→<b>删</b>(方程式两边都出现、没有真正参加反应的离子,等比例删去)→<b>查</b>(查原子个数守恒 + 查电荷总数守恒)。四步一步都不能省。</div>
+
+    <h2>① 书写四步:写 → 拆 → 删 → 查</h2>
+    <div class="card">
+      <div class="eq">写(化学方程式) → 拆(可拆的物质拆成离子) → 删(两边相同的"旁观离子") → 查(原子守恒 + 电荷守恒)</div>
+      <table>
+        <tr><th>步骤</th><th>要做什么</th><th>常见坑</th></tr>
+        <tr><td><b>① 写</b></td><td>先写出配平的化学方程式(不会这步,后面全错)</td><td>化学方程式本身没配平、产物写错</td></tr>
+        <tr><td><b>② 拆</b></td><td>强酸、强碱、可溶性盐拆成对应离子;弱电解质/气体/沉淀/氧化物/水/单质保留化学式</td><td>把弱酸也拆了;把沉淀拆了;微溶物没按"溶液浓度"判断</td></tr>
+        <tr><td><b>③ 删</b></td><td>方程式两边都存在、系数相同的离子(旁观离子)约去</td><td>只删了一部分,系数没有先等比例对齐就删</td></tr>
+        <tr><td><b>④ 查</b></td><td>检查方程式两边:各元素原子个数是否相等;两边电荷代数和是否相等</td><td>只查原子守恒忘了查电荷守恒(这是离子方程式独有的检验!)</td></tr>
+      </table>
+      <p class="trap">⚠ 离子方程式必须同时满足<b>质量守恒</b>(原子个数两边相等)和<b>电荷守恒</b>(两边电荷代数和相等)。少查电荷守恒是判断题最容易漏的一步。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪜 互动 1 — "写拆删查"四步动画:逐步演示 CaCO₃ + 盐酸 如何变成离子方程式</div>
+      <svg id="stepSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="stepNext">▶ 下一步</button><button id="stepReset">↺ 重来</button>
+      </div>
+      <div class="live">
+        <div><b>当前阶段</b><span id="stStage">写</span></div>
+        <div><b>CaCO₃ 是否拆?</b><span id="stCa">—</span></div>
+        <div><b>HCl 是否拆?</b><span id="stHCl">—</span></div>
+        <div><b>Cl⁻ 是否保留?</b><span id="stCl">—</span></div>
+      </div>
+      <p class="small">例子:CaCO₃(难溶物,不拆) + 2HCl(强酸,拆) → CaCl₂(拆) + H₂O(不拆) + CO₂↑(不拆)。点"下一步"逐帧看化学方程式如何一步步变成最终离子方程式 <b>CaCO₃ + 2H⁺ = Ca²⁺ + H₂O + CO₂↑</b>。</p>
+    </div>
+
+    <h2 class="b">② 到底哪些能拆?——拆分判断器</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>能拆成离子的(强电解质,且要在水溶液中):</b></p>
+      <table>
+        <tr><th>类别</th><th>举例</th></tr>
+        <tr><td>强酸</td><td>HCl、H₂SO₄、HNO₃(还有 HBr、HI、HClO₄等)</td></tr>
+        <tr><td>强碱</td><td>NaOH、KOH、Ba(OH)₂(可溶部分)</td></tr>
+        <tr><td>可溶性盐</td><td>NaCl、Na₂CO₃、CuSO₄、KNO₃ 等绝大多数钠钾铵盐及可溶盐</td></tr>
+      </table>
+      <p style="margin:10px 0 6px"><b>不能拆、必须写化学式的:</b></p>
+      <table>
+        <tr><th>类别</th><th>举例</th></tr>
+        <tr><td>弱酸</td><td>CH₃COOH(醋酸)、H₂CO₃(碳酸)、H₂SO₃(亚硫酸)、H₂S、HF、H₂SiO₃</td></tr>
+        <tr><td>弱碱</td><td>NH₃·H₂O(一水合氨)</td></tr>
+        <tr><td>难溶物(沉淀)</td><td>BaSO₄、CaCO₃、AgCl、Fe(OH)₃、Cu(OH)₂ 等</td></tr>
+        <tr><td>气体</td><td>CO₂、SO₂、NH₃、H₂S(在离子方程式里写化学式,气体产物加↑)</td></tr>
+        <tr><td>水</td><td>H₂O(极弱电解质)</td></tr>
+        <tr><td>氧化物</td><td>CaO、Na₂O、Fe₂O₃、SiO₂ 等(不是电解质本身溶于水才拆,是固体氧化物参与反应一律写化学式)</td></tr>
+        <tr><td>单质</td><td>Na、Fe、Cl₂、H₂ 等(不是离子化合物,不拆)</td></tr>
+      </table>
+      <p class="trap">⚠ 判断能否拆,不是看"是不是离子化合物",而是看"在题目条件下是否已经变成自由移动的离子且真正参加了反应"。沉淀虽然本身也是离子化合物,但它不溶于水、以整体形式存在,所以<b>写化学式</b>,不拆。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 2 — 拆分判断器:点一种物质,看能否拆成离子 + 理由</div>
+      <svg id="splitSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="chips" id="splitChips"></div>
+      <div class="verdict" id="splitNote">👆 点击上方任意物质,查看判断结果</div>
+      <p class="small">覆盖强酸、强碱、可溶盐、弱酸、弱碱、沉淀、气体、水、氧化物、单质、微溶物共 14 种代表性物质。</p>
+    </div>
+
+    <h2 class="g">③ 微溶物:拆不拆,看"溶液"还是"浊液"</h2>
+    <div class="card">
+      <p style="margin:6px 0">微溶物(如 Ca(OH)₂、CaSO₄、Ag₂SO₄)是拆分判断的高频陷阱,因为它们"半溶半不溶",<b>要看具体状态</b>:</p>
+      <table>
+        <tr><th>情形</th><th>怎么处理</th><th>举例</th></tr>
+        <tr><td>写成"<b>澄清</b>石灰水""稀溶液"(浓度低,已溶解的部分)</td><td>按可溶强碱处理,<b>拆</b>成 Ca²⁺ + 2OH⁻</td><td>澄清石灰水 + CO₂</td></tr>
+        <tr><td>写成"<b>石灰乳</b>""悬浊液"(大量固体没溶解,以浊液形式存在)</td><td>按难溶物处理,<b>不拆</b>,写化学式 Ca(OH)₂</td><td>石灰乳 + Na₂CO₃ 溶液</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>判断口诀:</b> 看到"澄清""稀"→ 已溶解为主 → 拆;看到"乳""悬浊""浊液"→ 大量固体未溶 → 不拆。同一种物质,状态不同,拆分方式完全相反,这是命题人最爱设的坑。</p>
+      <p class="trap">⚠ 不要死记"Ca(OH)₂ 微溶就一律不拆"或"一律拆"——必须看题目描述的到底是澄清溶液还是浑浊悬浊液。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🥛 互动 3 — 微溶物拆分决策:拖动"溶解程度"滑块,看 Ca(OH)₂ 该拆还是不拆</div>
+      <svg id="microSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>溶解状态 <input id="microS" type="range" min="0" max="100" value="80" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前描述</b><span id="miDesc">澄清石灰水</span></div>
+        <div><b>是否拆分</b><span id="miSplit">拆</span></div>
+        <div><b>正确写法</b><span id="miForm">Ca²⁺+2OH⁻</span></div>
+        <div><b>类比情形</b><span id="miEx">石灰水吸CO₂</span></div>
+      </div>
+      <p class="small">滑块靠右=澄清、溶解充分(拆成离子);滑块靠左=浑浊、大量固体悬浮(石灰乳,写化学式不拆)。</p>
+    </div>
+
+    <h2 class="o">④ 电荷守恒检验:离子方程式的"专属体检"</h2>
+    <div class="card">
+      <div class="eq">左边电荷代数和 = 右边电荷代数和</div>
+      <p style="margin:8px 0">离子方程式除了要满足<b>原子守恒</b>(质量守恒),还必须满足<b>电荷守恒</b>——这是判断一个离子方程式对错的"金标准"之一,也是化学方程式没有的独有检验。方法:把每个离子的"个数 × 电荷数"加总,正负分开算,两边应相等。</p>
+      <div class="mono">例:Fe³⁺ + 3OH⁻ = Fe(OH)₃↓　左边电荷 = (+3)+3×(−1)=0;右边 Fe(OH)₃ 不带电,电荷=0。✓ 守恒</div>
+      <div class="mono">反例:Fe³⁺ + 2OH⁻ = Fe(OH)₃↓　左边 = (+3)+2×(−1)=+1 ≠ 右边 0。✗ 电荷不守恒,系数错!</div>
+      <p class="trap">⚠ 电荷守恒不代表原子一定守恒,两者要<b>分别检查</b>,缺一不可。只查了原子个数、没查电荷,是判断题最容易漏检的一步。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 4 — 电荷守恒检验天平:输入离子方程式系数,天平自动判断两边电荷是否平衡</div>
+      <svg id="chargeSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="chgcase on" data-c="0">Fe³⁺+3OH⁻=Fe(OH)₃↓(对)</button>
+        <button class="chgcase" data-c="1">Fe³⁺+2OH⁻=Fe(OH)₃↓(错)</button>
+        <button class="chgcase" data-c="2">Ba²⁺+SO₄²⁻=BaSO₄↓(对)</button>
+        <button class="chgcase" data-c="3">Al³⁺+3OH⁻=AlO₂⁻+2H₂O(缺H⁺,错)</button>
+      </div>
+      <div class="verdict" id="chargeNote"></div>
+      <p class="small">天平左盘=方程式左边电荷代数和,右盘=右边电荷代数和。天平倾斜说明电荷不守恒,该离子方程式一定是错的。</p>
+    </div>
+
+    <h2 class="v">⑤ "与量有关"的离子方程式:少量 vs 过量</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多反应中,<b>"少量"物质先被消耗完</b>,产物由"少量"那个物质的化学计量比决定;"过量"物质保证"少量"物质充分反应,还可能引发进一步反应。这是离子方程式最容易failed的专题,核心心法:<b>"少量"的物质写成整份参与,按它自身内部的原子个数比分配</b>。</p>
+      <h3>专题一:CO₂ 通入 NaOH 溶液</h3>
+      <table>
+        <tr><th>情形</th><th>离子方程式</th><th>原因</th></tr>
+        <tr><td>NaOH<b>过量</b>(CO₂ 少量)</td><td>CO₂ + 2OH⁻ = CO₃²⁻ + H₂O</td><td>OH⁻ 足量,CO₂ 被完全转化为 CO₃²⁻</td></tr>
+        <tr><td>CO₂<b>过量</b>(NaOH 少量)</td><td>CO₂ + OH⁻ = HCO₃⁻</td><td>OH⁻ 不足,只能生成 HCO₃⁻,不能进一步生成 CO₃²⁻</td></tr>
+      </table>
+      <h3>专题二:NaOH 滴入 Ca(HCO₃)₂ 溶液</h3>
+      <table>
+        <tr><th>情形</th><th>离子方程式</th><th>原因</th></tr>
+        <tr><td>NaOH<b>少量</b></td><td>Ca²⁺ + HCO₃⁻ + OH⁻ = CaCO₃↓ + H₂O</td><td>OH⁻ 是限量,按 1:1:1 消耗,Ca²⁺、HCO₃⁻ 都过量剩余</td></tr>
+        <tr><td>NaOH<b>过量</b></td><td>Ca²⁺ + 2HCO₃⁻ + 2OH⁻ = CaCO₃↓ + CO₃²⁻ + 2H₂O</td><td>HCO₃⁻ 全部转化,Ca(HCO₃)₂ 中 Ca²⁺:HCO₃⁻=1:2 恰好决定了这个比例</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>判断技巧:</b> 先确定谁是"少量"的那个,把"少量"物质<b>按自身化学式的离子比列出</b>,再让"过量"物质与它恰好完全反应,由此确定各离子的系数比。</p>
+      <p class="trap">⚠ 千万别死记结论就套用——一旦换成"Ca(OH)₂ 滴入 NaHCO₃"或"CO₂ 通入 Ca(OH)₂"等情形,比例完全不同,必须重新按"少量者定比例"现推一遍。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 5 — 过量/少量对比:拖动滑块看 CO₂ 通入 NaOH、NaOH 滴入 Ca(HCO₃)₂ 的产物如何反转</div>
+      <svg id="excessSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="excMode on" data-m="0">CO₂ 通入 NaOH</button>
+        <button class="excMode" data-m="1">NaOH 滴入 Ca(HCO₃)₂</button>
+        <label>比例(左:少量 → 右:过量) <input id="excR" type="range" min="0" max="100" value="20" step="1"></label>
+      </div>
+      <div class="verdict" id="excNote"></div>
+      <p class="small">滑块越靠左=加入的"变量物质"越少;越靠右=越过量。观察方程式和产物如何在中间发生突变。</p>
+    </div>
+
+    <h2 class="b">⑥ 正误判断闯关:常见错点大盘点</h2>
+    <div class="card">
+      <p style="margin:6px 0">离子方程式正误判断,五大高频错因:</p>
+      <table>
+        <tr><th>错因</th><th>说明</th><th>典型例子</th></tr>
+        <tr><td>① 拆分错误</td><td>把弱电解质/沉淀/气体/水拆成离子,或该拆的没拆</td><td>CH₃COOH 写成 CH₃COO⁻+H⁺(醋酸是弱酸,不能拆)</td></tr>
+        <tr><td>② 电荷不守恒</td><td>系数配错导致两边电荷代数和不相等</td><td>Fe³⁺+2OH⁻=Fe(OH)₃↓(应为3OH⁻)</td></tr>
+        <tr><td>③ 不符合客观事实</td><td>产物写错,违背真实反应规律</td><td>Cu与稀盐酸反应写出H₂(Cu不与非氧化性酸反应)</td></tr>
+        <tr><td>④ 漏写或多写离子</td><td>该保留的旁观离子被误删,或不该出现的离子被保留</td><td>把没有参加反应的Na⁺也写进方程式里</td></tr>
+        <tr><td>⑤ 忽略"量"的影响</td><td>过量/少量导致产物不同,却按固定套路生搬硬套</td><td>不管CO₂多少一律写CO₂+2OH⁻=CO₃²⁻+H₂O</td></tr>
+        <tr><td>⑥ 忽略比例关系</td><td>没有按物质化学式中离子的个数比来配平</td><td>Ca(HCO₃)₂中Ca²⁺:HCO₃⁻必须是1:2,不能随意写1:1</td></tr>
+      </table>
+      <p class="trap">⚠ 做正误判断题,请按"四步反查":先看拆分对不对 → 再数电荷是否守恒 → 再想产物是否符合事实 → 最后看比例/过量少量是否处理正确。四关全过才算真的对。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎮 互动 6 — 正误判断闯关:逐题判断离子方程式对错 + 揭示错因</div>
+      <svg id="judgeSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="jTrue">✓ 判对</button><button id="jFalse">✗ 判错</button><button id="jNext">下一题 →</button>
+      </div>
+      <div class="verdict" id="judgeNote">点击"判对"或"判错"开始闯关</div>
+      <div class="live">
+        <div><b>题号</b><span id="jNum">1</span>/<span id="jTotal">8</span></div>
+        <div><b>答对</b><span id="jRight">0</span></div>
+        <div><b>答错</b><span id="jWrong">0</span></div>
+        <div><b>正确率</b><span id="jAcc">—</span></div>
+      </div>
+      <p class="small">8道题涵盖拆分错误、电荷不守恒、事实错误、比例忽略、量的影响五大类型,判断后立即显示正确答案与错因解析。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 书写离子方程式(常规反应)</h3>
+      <p><b class="tag">触发信号:</b>「写出下列反应的离子方程式」,给出化学方程式或文字描述的反应。</p>
+      <p><b class="tag">标准动作:</b>写→拆→删→查四步走。先写对化学方程式并配平,再逐一判断每种物质能否拆,最后删旁观离子、查两种守恒。</p>
+      <p><b class="tag">示例(带解):</b>碳酸钙与稀盐酸反应。化学方程式:CaCO₃+2HCl=CaCl₂+H₂O+CO₂↑。CaCO₃难溶不拆,HCl强酸拆,CaCl₂可溶盐拆,H₂O、CO₂不拆。离子方程式:CaCO₃+2H⁺=Ca²⁺+H₂O+CO₂↑。</p>
+      <p class="trap">陷阱:把CaCO₃错误拆成Ca²⁺+CO₃²⁻;漏写CO₂↑的箭头;Cl⁻作为旁观离子被错误保留。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 正误判断(找错因)</h3>
+      <p><b class="tag">触发信号:</b>给出一个已写好的离子方程式,问"下列离子方程式书写正确的是"。</p>
+      <p><b class="tag">标准动作:</b>按拆分→电荷守恒→客观事实→比例/量四关依次排查,找到第一个不满足的关卡即可判错。</p>
+      <p><b class="tag">示例(带解):</b>判断"Fe+Cu²⁺=Fe²⁺+Cu"是否正确。拆分:Fe是单质不拆(对),Cu²⁺是可溶盐离子(对);电荷:左边+2,右边+2,守恒;事实:铁确实能置换铜,符合金属活动性顺序。四关全过,该式<b>正确</b>。</p>
+      <p class="trap">陷阱:只查一两关就下结论;忽视电荷守恒这一独有检验步骤。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 微溶物/特殊物质拆分</h3>
+      <p><b class="tag">触发信号:</b>题目出现"石灰乳""澄清石灰水""浊液""微溶"等字眼。</p>
+      <p><b class="tag">标准动作:</b>看关键词判断溶解状态:"澄清""稀"→按可溶物拆;"乳""浊液""悬浊"→按难溶物不拆,写化学式。</p>
+      <p><b class="tag">示例(带解):</b>石灰乳与Na₂CO₃溶液反应制烧碱。石灰乳中Ca(OH)₂大量未溶,写化学式:Ca(OH)₂+CO₃²⁻=CaCO₃↓+2OH⁻(Ca(OH)₂不拆,Na₂CO₃可溶盐拆)。若是"澄清石灰水"则要拆成Ca²⁺+2OH⁻。</p>
+      <p class="trap">陷阱:见到Ca(OH)₂就死记"微溶不拆"或死记"要拆",没有根据题目描述的溶解状态具体判断。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — "过量/少量"专题</h3>
+      <p><b class="tag">触发信号:</b>题目出现"少量""过量""逐滴加入""缓慢通入"等表述,同一对反应物有两种可能产物。</p>
+      <p><b class="tag">标准动作:</b>先判断谁是"少量"，把"少量"物质的化学式内部离子比列出，"过量"物质按恰好反应完少量物质来配平系数。</p>
+      <p><b class="tag">示例(带解):</b>向NaOH溶液中通入少量CO₂:NaOH过量，CO₂完全转化为CO₃²⁻，方程式为CO₂+2OH⁻=CO₃²⁻+H₂O。若改为通入过量CO₂:OH⁻不足，只能生成HCO₃⁻，方程式为CO₂+OH⁻=HCO₃⁻。</p>
+      <p class="trap">陷阱:不判断谁过量就直接套用固定方程式;混淆"通入少量CO₂"(NaOH过量)与"通入过量CO₂"(CO₂过量)这两种完全相反的表述。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 电荷守恒法配平/查错</h3>
+      <p><b class="tag">触发信号:</b>题目要求"配平离子方程式"或"判断系数是否正确",需要用电荷守恒反查。</p>
+      <p><b class="tag">标准动作:</b>把方程式两边各离子的"个数×电荷数"分别加总,正负分开算,两边代数和必须相等;若不相等,说明系数配错。</p>
+      <p><b class="tag">示例(带解):</b>判断"Al³⁺+3OH⁻=AlO₂⁻+2H₂O"电荷是否守恒。左边:(+3)+3×(−1)=0;右边:AlO₂⁻带−1电荷,H₂O不带电,右边=−1。0≠−1,电荷不守恒,该式<b>错误</b>(缺少H⁺参与,正确应为Al³⁺+4OH⁻=AlO₂⁻+2H₂O)。</p>
+      <p class="trap">陷阱:只对了原子个数就以为方程式正确,漏查电荷这一关键步骤。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 比例关系类(化学式内部比例)</h3>
+      <p><b class="tag">触发信号:</b>反应物本身是"多离子"化合物(如Ca(HCO₃)₂、NaHSO₄、Mg(OH)Cl 等),要求写出与其反应的离子方程式。</p>
+      <p><b class="tag">标准动作:</b>先明确该化合物内部各离子的个数比(由化学式决定,不能随意改动),再按这个固定比例结合外部反应物列式。</p>
+      <p><b class="tag">示例(带解):</b>Ca(HCO₃)₂中Ca²⁺:HCO₃⁻固定为1:2。与过量NaOH反应时，1份Ca²⁺配2份HCO₃⁻，需要2份OH⁻才能让HCO₃⁻全部转化，方程式为Ca²⁺+2HCO₃⁻+2OH⁻=CaCO₃↓+CO₃²⁻+2H₂O，系数比与原化学式的1:2完全对应。</p>
+      <p class="trap">陷阱:把Ca(HCO₃)₂中Ca²⁺与HCO₃⁻的比例写成1:1,破坏了物质原本的组成比例。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 弱酸、弱碱<b>不能拆</b>!醋酸CH₃COOH、碳酸H₂CO₃、一水合氨NH₃·H₂O都要写化学式,不能拆成离子。</p>
+      <p class="trap">② 难溶物(沉淀)<b>不能拆</b>!BaSO₄、CaCO₃、AgCl、Fe(OH)₃等要写化学式,即使它们本身是离子化合物。</p>
+      <p class="trap">③ 气体、水、氧化物、单质<b>一律不拆</b>,写化学式(气体做产物时记得加↑)。</p>
+      <p class="trap">④ 离子方程式必须同时满足<b>原子守恒</b>和<b>电荷守恒</b>,两者要分别检查,查了原子个数不代表电荷就守恒。</p>
+      <p class="trap">⑤ 微溶物(如Ca(OH)₂)要看题目描述:"澄清""稀"→拆;"乳""浊液"→不拆。不能死记一种处理方式。</p>
+      <p class="trap">⑥ "少量""过量"决定产物!同一对反应物,谁过量、谁不足,离子方程式往往完全不同,不能死记结论要现推。</p>
+      <p class="trap">⑦ 化学式内部的离子比例是<b>固定的</b>(如Ca(HCO₃)₂中Ca²⁺:HCO₃⁻=1:2),写离子方程式时不能破坏这个比例。</p>
+      <p class="trap">⑧ 不符合客观事实的反应写不出离子方程式,例如Cu不与稀盐酸反应产生H₂,弱酸不能把强酸从盐中置换出来。</p>
+      <p class="trap">⑨ 拆分要看<b>是否在水溶液中反应</b>,固体之间的反应(如实验室加热NH₄Cl和Ca(OH)₂制氨气)一般不写离子方程式,而写化学方程式。</p>
+      <p class="trap">⑩ 微溶物作为<b>反应物且以固体/浊液形式存在</b>时不拆,但生成物如果是微溶物且是从溶液中刚析出的沉淀,通常按沉淀处理,写化学式并加↓。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① "拆不拆"的本质是"电离程度",不是物质分类的死记忆:</b> 强电解质在水中几乎完全电离,已经是自由离子,所以拆;弱电解质只有极小部分电离,绝大部分仍以分子形式存在,拆开写反而不符合客观事实。理解这个电离度的本质,遇到没见过的物质也能推理判断,而不是死背"强酸强碱盐拆、其余不拆"这张表。</p>
+      <p style="margin:8px 0"><b>② 电荷守恒和原子守恒是"两把互不替代的尺子":</b> 原子守恒管的是"东西有没有凭空消失或增加",电荷守恒管的是"净电荷有没有凭空产生"。二者独立,任何一把尺子量出不对,方程式就是错的。查错题优先查电荷守恒,因为它计算更快、暴露系数错误更直接。</p>
+      <p style="margin:8px 0"><b>③ "少量/过量"问题的通用心法是"限量物质决定比例":</b> 不管是CO₂通NaOH,还是NaOH滴Ca(HCO₃)₂,还是任何两种物质的过量少量组合,都先问"谁是限量的?"再让限量物质按它自身参与反应的方式被"用光",过量物质的系数由此倒推。记住方法而不是记住结论,任何新组合都能现推。</p>
+      <p style="margin:8px 0"><b>④ 微溶物的本质是"平衡溶解度",拆不拆取决于体系的宏观状态:</b> Ca(OH)₂微溶,20℃时溶解度约0.165g/100g水,浓度低时能全部溶解形成澄清溶液(此时行为像强碱,拆);浓度超过溶解度就会有大量固体沉在底部形成浊液(石灰乳,此时行为像难溶物,不拆)。同一物质、不同浓度,行为完全不同,这是化学平衡思想在离子方程式里的体现。</p>
+      <p style="margin:8px 0"><b>⑤ 离子方程式的"通用性"是它最大的价值:</b> 一个离子方程式可以代表一类反应(例如Ba²⁺+SO₄²⁻=BaSO₄↓可以代表BaCl₂与Na₂SO₄、Ba(NO₃)₂与K₂SO₄等任意组合)。写对离子方程式,本质上是抓住了反应的"共同本质"——真正参加反应、生成新物质的那些粒子,这也是为什么高考反复考查它:它检验的是你有没有理解反应的本质,而不是死记某个具体反应。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 离子方程式的书写与正误判断</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:写拆删查四步动画 ===== */
+(function(){
+  const svg=document.getElementById('stepSvg');
+  const oStage=document.getElementById('stStage'),oCa=document.getElementById('stCa'),oHCl=document.getElementById('stHCl'),oCl=document.getElementById('stCl');
+  let stage=0;
+  const stages=["写","拆","删","查"];
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:30,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='例:CaCO₃ + 盐酸 → 氯化钙 + 水 + 二氧化碳';
+    let lines=[];
+    if(stage===0){
+      lines=["① 写(化学方程式):","CaCO₃ + 2HCl = CaCl₂ + H₂O + CO₂↑"];
+      oStage.textContent="写";oCa.textContent="—";oHCl.textContent="—";oCl.textContent="—";
+    } else if(stage===1){
+      lines=["② 拆(能拆的拆成离子):","CaCO₃(难溶,不拆) + 2H⁺ + 2Cl⁻(HCl强酸,拆)","= Ca²⁺ + 2Cl⁻(可溶盐,拆) + H₂O(不拆) + CO₂↑(不拆)"];
+      oStage.textContent="拆";oCa.textContent="不拆(难溶物)";oHCl.textContent="拆(强酸)";oCl.textContent="两边都有,待删";
+    } else if(stage===2){
+      lines=["③ 删(两边都有的旁观离子 Cl⁻ 删去):","CaCO₃ + 2H⁺ + 2Cl⁻ = Ca²⁺ + 2Cl⁻ + H₂O + CO₂↑","→ CaCO₃ + 2H⁺ = Ca²⁺ + H₂O + CO₂↑"];
+      oStage.textContent="删";oCa.textContent="不拆(难溶物)";oHCl.textContent="拆(强酸)";oCl.textContent="已删去(旁观离子)";
+    } else {
+      lines=["④ 查(原子守恒 + 电荷守恒):","原子:Ca1 C1 O3 H2 两边相等 ✓","电荷:左边 +2,右边 +2 ✓ 守恒","最终:CaCO₃ + 2H⁺ = Ca²⁺ + H₂O + CO₂↑"];
+      oStage.textContent="查(完成)";oCa.textContent="不拆(难溶物)";oHCl.textContent="拆(强酸)";oCl.textContent="已删去(旁观离子)";
+    }
+    lines.forEach((t,i)=>{
+      el(svg,'text',{x:60,y:80+i*32,'font-size':14.5,'font-weight':800,fill:i===0?BLUE:INK}).textContent=t;
+    });
+    // stage progress bar
+    for(let i=0;i<4;i++){
+      el(svg,'rect',{x:60+i*150,y:220,width:130,height:26,fill:i<=stage?GREEN:'#ddd6c0',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:60+i*150+65,y:238,'font-size':13,'font-weight':900,fill:i<=stage?'#fff':INK,'text-anchor':'middle'}).textContent=stages[i];
+    }
+  }
+  document.getElementById('stepNext').onclick=()=>{stage=(stage+1)%4;draw();};
+  document.getElementById('stepReset').onclick=()=>{stage=0;draw();};
+  draw();
+})();
+
+/* ===== 互动2:拆分判断器 ===== */
+(function(){
+  const svg=document.getElementById('splitSvg');
+  const chipsBox=document.getElementById('splitChips');
+  const note=document.getElementById('splitNote');
+  const items=[
+    {n:"HCl(盐酸)",split:true,reason:"强酸,在水中几乎完全电离 → 拆成 H⁺ + Cl⁻"},
+    {n:"H₂SO₄",split:true,reason:"强酸,完全电离 → 拆成 2H⁺ + SO₄²⁻"},
+    {n:"NaOH",split:true,reason:"强碱,完全电离 → 拆成 Na⁺ + OH⁻"},
+    {n:"Ba(OH)₂",split:true,reason:"强碱且可溶,完全电离 → 拆成 Ba²⁺ + 2OH⁻"},
+    {n:"Na₂CO₃",split:true,reason:"可溶性盐,完全电离 → 拆成 2Na⁺ + CO₃²⁻"},
+    {n:"CH₃COOH(醋酸)",split:false,reason:"弱酸,只部分电离,绝大多数以分子形式存在 → 写化学式,不拆"},
+    {n:"NH₃·H₂O",split:false,reason:"弱碱,部分电离 → 写化学式,不拆"},
+    {n:"CaCO₃(沉淀)",split:false,reason:"难溶物,不溶于水以整体形式存在 → 写化学式,不拆"},
+    {n:"BaSO₄(沉淀)",split:false,reason:"难溶物 → 写化学式,不拆"},
+    {n:"CO₂(气体)",split:false,reason:"气体,不是电解质离子形式 → 写化学式(做产物时加↑)"},
+    {n:"H₂O(水)",split:false,reason:"极弱电解质,电离程度极小 → 写化学式,不拆"},
+    {n:"CaO(氧化物)",split:false,reason:"氧化物,以化学式整体参与反应 → 不拆"},
+    {n:"Fe(单质)",split:false,reason:"单质,不是离子化合物 → 不拆"},
+    {n:"澄清石灰水",split:true,reason:"微溶物但已稀释澄清,几乎全部溶解 → 按可溶强碱拆成 Ca²⁺+2OH⁻"}
+  ];
+  items.forEach((it,idx)=>{
+    const c=document.createElement('div');c.className='chip';c.textContent=it.n;c.dataset.i=idx;
+    c.onclick=()=>{
+      document.querySelectorAll('#splitChips .chip').forEach(x=>x.classList.remove('on'));
+      c.classList.add('on');
+      show(idx);
+    };
+    chipsBox.appendChild(c);
+  });
+  function show(idx){
+    const it=items[idx];
+    clr(svg);
+    el(svg,'rect',{x:40,y:30,width:620,height:150,fill:it.split?'rgba(30,158,134,0.15)':'rgba(224,56,42,0.15)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:70,'font-size':22,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.n;
+    el(svg,'text',{x:350,y:105,'font-size':18,'font-weight':900,fill:it.split?GREEN:RED,'text-anchor':'middle'}).textContent=it.split?"✓ 能拆成离子":"✗ 不能拆,写化学式";
+    wrapText(svg,350,140,it.reason,560,15,'#4a4128');
+    note.innerHTML='<b>'+it.n+'</b>:'+(it.split?'<span style="color:'+GREEN+'">能拆</span>':'<span style="color:'+RED+'">不能拆</span>')+' — '+it.reason;
+  }
+  function wrapText(svg,cx,y,text,maxW,fs,color){
+    // simple char-based wrap for CJK
+    const maxChars=Math.floor(maxW/(fs*0.62));
+    let lines=[];let cur="";
+    for(const ch of text){cur+=ch;if(cur.length>=maxChars){lines.push(cur);cur="";}}
+    if(cur)lines.push(cur);
+    lines.forEach((ln,i)=>{
+      el(svg,'text',{x:cx,y:y+i*20,'font-size':fs,'font-weight':700,fill:color,'text-anchor':'middle'}).textContent=ln;
+    });
+  }
+  // init
+  document.querySelector('#splitChips .chip').classList.add('on');
+  show(0);
+})();
+
+/* ===== 互动3:微溶物拆分决策 ===== */
+(function(){
+  const svg=document.getElementById('microSvg');
+  const Ss=document.getElementById('microS');
+  const oDesc=document.getElementById('miDesc'),oSplit=document.getElementById('miSplit'),oForm=document.getElementById('miForm'),oEx=document.getElementById('miEx');
+  function draw(){
+    const s=+Ss.value;
+    clr(svg);
+    const clear=s>=50;
+    // container
+    el(svg,'rect',{x:220,y:40,width:260,height:150,fill:'none',stroke:INK,'stroke-width':4});
+    // liquid
+    const liqColor=clear?'rgba(20,80,200,0.12)':'rgba(150,140,110,0.55)';
+    el(svg,'rect',{x:224,y:44,width:252,height:142,fill:liqColor});
+    // undissolved particles at bottom if not clear
+    if(!clear){
+      const n=Math.round((50-s)/4);
+      for(let i=0;i<n;i++){
+        const px=240+(i*37)%220, py=150+((i*23)%35);
+        el(svg,'circle',{cx:px,cy:py,r:6,fill:'#cfc7ad',stroke:INK,'stroke-width':2});
+      }
+      el(svg,'text',{x:350,y:210,'font-size':12.5,'font-weight':800,fill:BROWN,'text-anchor':'middle'}).textContent='大量固体未溶(浊液/石灰乳)';
+    } else {
+      el(svg,'text',{x:350,y:210,'font-size':12.5,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='已充分溶解(澄清溶液)';
+    }
+    el(svg,'text',{x:350,y:25,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=clear?'状态:澄清石灰水':'状态:石灰乳(悬浊液)';
+    const desc=clear?"澄清石灰水":"石灰乳";
+    const split=clear;
+    const form=clear?"Ca²⁺+2OH⁻(拆)":"Ca(OH)₂(不拆)";
+    const ex=clear?"石灰水吸收CO₂":"石灰乳制漂白粉/烧碱";
+    oDesc.textContent=desc;oSplit.textContent=split?"拆":"不拆";oForm.textContent=form;oEx.textContent=ex;
+  }
+  Ss.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:电荷守恒检验天平 ===== */
+(function(){
+  const svg=document.getElementById('chargeSvg');
+  const note=document.getElementById('chargeNote');
+  const cases=[
+    {eq:"Fe³⁺ + 3OH⁻ = Fe(OH)₃↓",left:3+3*(-1),right:0,ok:true,msg:"左边=(+3)+3×(−1)=0;右边Fe(OH)₃不带电=0。电荷守恒,方程式正确。"},
+    {eq:"Fe³⁺ + 2OH⁻ = Fe(OH)₃↓",left:3+2*(-1),right:0,ok:false,msg:"左边=(+3)+2×(−1)=+1;右边=0。1≠0,电荷不守恒,系数错误(应为3OH⁻)。"},
+    {eq:"Ba²⁺ + SO₄²⁻ = BaSO₄↓",left:2+(-2),right:0,ok:true,msg:"左边=(+2)+(−2)=0;右边BaSO₄不带电=0。电荷守恒,方程式正确。"},
+    {eq:"Al³⁺ + 3OH⁻ = AlO₂⁻ + 2H₂O",left:3+3*(-1),right:-1,ok:false,msg:"左边=(+3)+3×(−1)=0;右边AlO₂⁻带−1电荷=−1。0≠−1,电荷不守恒(缺少H⁺参与,正确应为Al³⁺+4OH⁻=AlO₂⁻+2H₂O)。"}
+  ];
+  let c=0;
+  document.querySelectorAll('.chgcase').forEach((b,idx)=>b.onclick=()=>{
+    document.querySelectorAll('.chgcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=idx;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cs=cases[c];
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=cs.eq;
+    const balanced=cs.left===cs.right;
+    const tilt=balanced?0:(cs.left>cs.right?-14:14);
+    // fulcrum
+    const cx=350,cy=140,armY=cy-60;
+    el(svg,'polygon',{points:(cx-20)+','+(cy+40)+' '+(cx+20)+','+(cy+40)+' '+cx+','+cy,fill:INK});
+    // beam (rotated)
+    const rad=tilt*Math.PI/180;
+    const bx1=cx-180*Math.cos(rad), by1=cy-180*Math.sin(rad)-0;
+    const bx2=cx+180*Math.cos(rad), by2=cy+180*Math.sin(rad)-0;
+    el(svg,'line',{x1:bx1,y1:by1-40,x2:bx2,y2:by2-40,stroke:INK,'stroke-width':6});
+    el(svg,'line',{x1:cx,y1:cy,x2:cx,y2:cy-40,stroke:INK,'stroke-width':4});
+    // pans
+    el(svg,'rect',{x:bx1-45,y:by1-40,width:90,height:26,fill:cs.left>=0?'rgba(20,80,200,0.25)':'rgba(224,56,42,0.25)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx1,y:by1-46,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='左边电荷='+cs.left;
+    el(svg,'rect',{x:bx2-45,y:by2-40,width:90,height:26,fill:cs.right>=0?'rgba(20,80,200,0.25)':'rgba(224,56,42,0.25)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx2,y:by2-46,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='右边电荷='+cs.right;
+    el(svg,'text',{x:350,y:230,'font-size':14,'font-weight':900,fill:balanced?GREEN:RED,'text-anchor':'middle'}).textContent=balanced?'⚖️ 天平平衡 → 电荷守恒':'⚠ 天平倾斜 → 电荷不守恒,方程式错误';
+    note.innerHTML=cs.msg;
+    note.style.borderColor=cs.ok?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动5:过量/少量对比 ===== */
+(function(){
+  const svg=document.getElementById('excessSvg');
+  const note=document.getElementById('excNote');
+  const Rs=document.getElementById('excR');
+  let mode=0;
+  document.querySelectorAll('.excMode').forEach((b,idx)=>b.onclick=()=>{
+    document.querySelectorAll('.excMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=idx;draw();
+  });
+  function draw(){
+    const r=+Rs.value; // 0..100, <50 = 少量变量物质(NaOH过量/NaOH少量视模式), >=50 = 过量
+    clr(svg);
+    let title,leftLab,rightLab,eq,desc;
+    if(mode===0){
+      title="CO₂ 通入 NaOH 溶液";
+      leftLab="NaOH过量(CO₂少量)";rightLab="CO₂过量(NaOH少量)";
+      if(r<50){
+        eq="CO₂ + 2OH⁻ = CO₃²⁻ + H₂O";
+        desc="通入的CO₂较少,NaOH(OH⁻)过量,CO₂被完全转化为CO₃²⁻。";
+      } else {
+        eq="CO₂ + OH⁻ = HCO₃⁻";
+        desc="持续通入CO₂直至过量,OH⁻不足,只能生成HCO₃⁻,不能进一步变成CO₃²⁻。";
+      }
+    } else {
+      title="NaOH 滴入 Ca(HCO₃)₂ 溶液";
+      leftLab="NaOH少量";rightLab="NaOH过量";
+      if(r<50){
+        eq="Ca²⁺ + HCO₃⁻ + OH⁻ = CaCO₃↓ + H₂O";
+        desc="NaOH滴加较少,OH⁻是限量,按1:1:1消耗,HCO₃⁻和Ca²⁺都过量剩余。";
+      } else {
+        eq="Ca²⁺ + 2HCO₃⁻ + 2OH⁻ = CaCO₃↓ + CO₃²⁻ + 2H₂O";
+        desc="NaOH滴加过量,HCO₃⁻全部转化为CO₃²⁻,恰好与原Ca²⁺:HCO₃⁻=1:2的比例对应,Ca²⁺也完全沉淀。";
+      }
+    }
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    // slider bar visual
+    el(svg,'rect',{x:60,y:60,width:580,height:26,fill:'#eee6cf',stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:60,y:60,width:580*r/100,height:26,fill:RED,'fill-opacity':0.35});
+    el(svg,'line',{x1:60+580*0.5,y1:52,x2:60+580*0.5,y2:94,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:60,y:105,'font-size':12,'font-weight':800,fill:INK}).textContent=leftLab;
+    el(svg,'text',{x:640,y:105,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent=rightLab;
+    // marker
+    const mx=60+580*r/100;
+    el(svg,'polygon',{points:(mx-8)+',44 '+(mx+8)+',44 '+mx+',58',fill:VIO});
+    // equation box
+    el(svg,'rect',{x:60,y:135,width:580,height:50,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:166,'font-size':16,'font-weight':900,fill:r<50?BLUE:ORANGE,'text-anchor':'middle'}).textContent=eq;
+    wrap(svg,350,205,desc,600,13.5,'#4a4128');
+    note.innerHTML='当前:'+(r<50?leftLab:rightLab)+'　→　'+eq;
+    note.style.borderColor=r<50?BLUE:ORANGE;
+  }
+  function wrap(svg,cx,y,text,maxW,fs,color){
+    const maxChars=Math.floor(maxW/(fs*0.62));
+    let lines=[];let cur="";
+    for(const ch of text){cur+=ch;if(cur.length>=maxChars){lines.push(cur);cur="";}}
+    if(cur)lines.push(cur);
+    lines.forEach((ln,i)=>{
+      el(svg,'text',{x:cx,y:y+i*18,'font-size':fs,'font-weight':700,fill:color,'text-anchor':'middle'}).textContent=ln;
+    });
+  }
+  Rs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:正误判断闯关 ===== */
+(function(){
+  const svg=document.getElementById('judgeSvg');
+  const note=document.getElementById('judgeNote');
+  const oNum=document.getElementById('jNum'),oTotal=document.getElementById('jTotal'),oRight=document.getElementById('jRight'),oWrong=document.getElementById('jWrong'),oAcc=document.getElementById('jAcc');
+  const qs=[
+    {eq:"CH₃COOH + OH⁻ = CH₃COO⁻ + H₂O",ok:true,reason:"醋酸是弱酸不能拆,写化学式CH₃COOH;OH⁻是强碱拆分后的离子。电荷:左边−1,右边−1,守恒。正确。"},
+    {eq:"CH₃COOH + Na⁺ + OH⁻ = CH₃COO⁻ + Na⁺ + H₂O",ok:false,reason:"错在漏删旁观离子。Na⁺两边都存在且系数相同,应该删去,不应保留在离子方程式中。"},
+    {eq:"Fe + 2H⁺ = Fe²⁺ + H₂↑",ok:true,reason:"Fe单质不拆,H⁺是强酸拆分离子。原子守恒(Fe1、H2),电荷守恒(左边+2,右边+2)。符合客观事实(铁与非氧化性酸反应生成亚铁离子)。正确。"},
+    {eq:"Cu + 2H⁺ = Cu²⁺ + H₂↑",ok:false,reason:"不符合客观事实!铜是不活泼金属,排在金属活动性顺序氢之后,不能与稀盐酸/稀硫酸这类非氧化性酸反应放出氢气。"},
+    {eq:"CaCO₃ + 2H⁺ = Ca²⁺ + H₂O + CO₂↑",ok:true,reason:"CaCO₃是难溶物不拆,H⁺是强酸拆分离子。原子守恒、电荷守恒(左边+2,右边+2)。正确。"},
+    {eq:"CaCO₃ + 2H⁺ + SO₄²⁻ = CaSO₄↓ + H₂O + CO₂↑",ok:false,reason:"不符合客观事实!碳酸钙与硫酸反应,微溶的CaSO₄会覆盖在CaCO₃表面阻止反应继续进行,实际上稀硫酸与大理石反应很快就停止,不能简单类比盐酸的反应。此题重点在于:不能想当然套用同类反应,需核实生成物是否真实可行。"},
+    {eq:"少量CO₂通入NaOH溶液:CO₂ + OH⁻ = HCO₃⁻",ok:false,reason:"忽略了量的影响!少量CO₂意味着NaOH过量,OH⁻足量,CO₂应完全转化为CO₃²⁻,正确写法是CO₂+2OH⁻=CO₃²⁻+H₂O。"},
+    {eq:"过量NaOH滴入Ca(HCO₃)₂:Ca²⁺+2HCO₃⁻+2OH⁻=CaCO₃↓+CO₃²⁻+2H₂O",ok:true,reason:"NaOH过量,HCO₃⁻全部转化,恰好对应Ca(HCO₃)₂中Ca²⁺:HCO₃⁻=1:2的比例,Ca²⁺也完全沉淀。原子、电荷均守恒。正确。"}
+  ];
+  let idx=0,right=0,wrong=0,answered=false;
+  function draw(){
+    clr(svg);
+    const q=qs[idx];
+    el(svg,'text',{x:350,y:30,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='判断下列离子方程式是否正确:';
+    wrapEq(svg,350,75,q.eq,620,16.5,INK);
+    if(answered){
+      el(svg,'text',{x:350,y:130,'font-size':16,'font-weight':900,fill:q.ok?GREEN:RED,'text-anchor':'middle'}).textContent=q.ok?'✓ 正确':'✗ 错误';
+    }
+  }
+  function wrapEq(svg,cx,y,text,maxW,fs,color){
+    const maxChars=Math.floor(maxW/(fs*0.58));
+    let lines=[];let cur="";
+    for(const ch of text){cur+=ch;if(cur.length>=maxChars){lines.push(cur);cur="";}}
+    if(cur)lines.push(cur);
+    lines.forEach((ln,i)=>{
+      el(svg,'text',{x:cx,y:y+i*26,'font-size':fs,'font-weight':900,fill:color,'text-anchor':'middle'}).textContent=ln;
+    });
+  }
+  function answer(userSaysTrue){
+    if(answered)return;
+    answered=true;
+    const q=qs[idx];
+    const correct=(userSaysTrue===q.ok);
+    if(correct){right++;}else{wrong++;}
+    oRight.textContent=right;oWrong.textContent=wrong;
+    const total=right+wrong;
+    oAcc.textContent=total?Math.round(right/total*100)+'%':'—';
+    note.innerHTML=(correct?'<b style="color:'+GREEN+'">判断正确!</b> ':'<b style="color:'+RED+'">判断有误。</b> ')+'该式实际<b>'+(q.ok?'正确':'错误')+'</b>。原因:'+q.reason;
+    note.style.borderColor=correct?GREEN:RED;
+    draw();
+  }
+  document.getElementById('jTrue').onclick=()=>answer(true);
+  document.getElementById('jFalse').onclick=()=>answer(false);
+  document.getElementById('jNext').onclick=()=>{
+    idx=(idx+1)%qs.length;answered=false;oNum.textContent=idx+1;
+    note.innerHTML='点击"判对"或"判错"';note.style.borderColor=INK;
+    draw();
+  };
+  oTotal.textContent=qs.length;oNum.textContent=idx+1;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs2=[
+ {q:"1. 离子方程式的书写四步是什么?",a:"写(写出正确配平的化学方程式)→拆(强酸、强碱、可溶性盐拆成离子;其余保留化学式)→删(两边相同的旁观离子约去)→查(原子守恒+电荷守恒)。"},
+ {q:"2. 哪些物质在离子方程式里要拆成离子?哪些不拆?",a:"拆:强酸(HCl、H₂SO₄、HNO₃)、强碱(NaOH、KOH、可溶的Ba(OH)₂)、可溶性盐。不拆:弱酸弱碱(醋酸、碳酸、一水合氨)、难溶物(沉淀)、气体、水、氧化物、单质。"},
+ {q:"3. 澄清石灰水和石灰乳在离子方程式里处理方式一样吗?",a:"不一样。澄清石灰水已充分溶解,按可溶强碱拆成Ca²⁺+2OH⁻;石灰乳是大量固体未溶的浊液,按难溶物处理,写化学式Ca(OH)₂不拆。"},
+ {q:"4. 离子方程式除了原子守恒还要检查什么?怎么检查?",a:"还要检查电荷守恒:把两边各离子的'个数×电荷数'分别加总,正负分开算,两边电荷代数和必须相等。"},
+ {q:"5. 判断'Fe³⁺+2OH⁻=Fe(OH)₃↓'对不对,为什么?",a:"错误。左边电荷=(+3)+2×(−1)=+1,右边Fe(OH)₃不带电=0,电荷不守恒。正确系数应为3OH⁻。"},
+ {q:"6. 向NaOH溶液中通入少量CO₂,和通入过量CO₂,离子方程式一样吗?",a:"不一样。少量CO₂(NaOH过量):CO₂+2OH⁻=CO₃²⁻+H₂O。过量CO₂(NaOH不足):CO₂+OH⁻=HCO₃⁻。"},
+ {q:"7. NaOH少量滴入Ca(HCO₃)₂溶液,和NaOH过量滴入,离子方程式分别是什么?",a:"NaOH少量:Ca²⁺+HCO₃⁻+OH⁻=CaCO₃↓+H₂O(按1:1:1)。NaOH过量:Ca²⁺+2HCO₃⁻+2OH⁻=CaCO₃↓+CO₃²⁻+2H₂O(HCO₃⁻全部转化,对应原Ca²⁺:HCO₃⁻=1:2的比例)。"},
+ {q:"8. 离子方程式正误判断的五大常见错因是什么?",a:"①拆分错误(弱电解质/沉淀被错误拆开)②电荷不守恒③不符合客观事实(产物错)④漏写或多写离子(旁观离子处理错)⑤忽略量的影响(过量/少量导致产物不同)。"},
+ {q:"9. 为什么Cu不能与稀盐酸反应生成H₂?写成离子方程式错在哪一关?",a:"Cu是不活泼金属,排在金属活动性顺序氢之后,不能置换出氢气。这属于'不符合客观事实'这一关判错,而不是拆分或电荷问题。"},
+ {q:"10. Ca(HCO₃)₂中Ca²⁺与HCO₃⁻的比例是多少?写离子方程式时能不能随意改动这个比例?",a:"Ca²⁺:HCO₃⁻=1:2,由化学式决定,是固定的。写离子方程式时必须保持这个比例,不能随意写成1:1或其他比例。"},
+ {q:"11. 石灰乳与Na₂CO₃溶液反应的离子方程式怎么写?",a:"Ca(OH)₂+CO₃²⁻=CaCO₃↓+2OH⁻。石灰乳中Ca(OH)₂大量未溶,写化学式不拆;Na₂CO₃是可溶性盐,拆成Na⁺和CO₃²⁻(Na⁺是旁观离子已删去)。"},
+ {q:"12. 为什么离子方程式可以代表一类反应?举例说明。",a:"因为离子方程式只写真正参加反应、生成新物质的粒子,抓住了反应的共同本质。例如Ba²⁺+SO₄²⁻=BaSO₄↓可以代表BaCl₂与Na₂SO₄、Ba(NO₃)₂与K₂SO₄等任意可溶钡盐与可溶硫酸盐的反应。"}
+];
+const quiz=document.getElementById('quiz');
+qs2.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>集合与常用逻辑用语 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>集合与常用逻辑用语</h1>
+    <p class="lead">这是整个高中数学的「地基单元」——不难，但<b>全是细节陷阱</b>：互异性漏检、空集漏讨论、充分必要条件方向搞反、命题否定漏改量词。这一页把集合运算(交并补)、子集计数、充要条件判断、量词否定，全部拆成可操作的标准动作，配合数轴/Venn图/真值表，让你看一眼就知道该怎么下手。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 集合就是「装东西的框」，逻辑用语就是「怎么描述这个框和框之间的关系」。做题时脑子里要一直有两张图:一张是<b>数轴</b>(用来处理不等式表示的集合，端点开闭一定要看清)，一张是<b>包含圈</b>(用来判断充分必要条件，小圈⇒大圈)。这两张图能解决 90% 的题。</div>
+
+    <div class="keybox"><b>两条命门:</b> ① 讨论 A⊆B 一定要<b>先问 A 是不是可能为空集</b>——空集是任何集合的子集，这一步最容易漏，几乎每次考试都考。② 判断"p是q的什么条件"，本质是判断<b>集合的包含关系</b>：把p对应的集合记为P，q对应的记为Q，若 P⊆Q，则"小范围 P ⇒ 大范围 Q"，即 <b>p充分、q必要</b>——方向记反是最大的失分点。</div>
+
+    <h2>① 集合的表示与元素三性</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>表示法:</b></p>
+      <table>
+        <tr><th>方法</th><th>写法</th><th>例子</th></tr>
+        <tr><td>列举法</td><td>把元素一个个列出来，花括号</td><td>{1,2,3}、{-1,1}</td></tr>
+        <tr><td>描述法</td><td>{代表元素 | 满足的条件}</td><td>{x | x²-1=0}={-1,1}</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>描述法一定要看"代表元素"是谁</b>——它决定了这个集合到底是什么类型的集合:</p>
+      <table>
+        <tr><th>代表元素写法</th><th>集合类型</th><th>例子</th></tr>
+        <tr><td>{x | ...}</td><td><b>数集</b>(x是一个数)</td><td>{x | y=x²-1} 是 x 的取值范围，即定义域</td></tr>
+        <tr><td>{y | ...}</td><td><b>数集</b>(y是函数值)</td><td>{y | y=x²-1} 是 y 的取值范围，即值域</td></tr>
+        <tr><td>{(x,y) | ...}</td><td><b>点集</b>(点的坐标)</td><td>{(x,y) | y=x²-1} 是抛物线上所有点</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>元素三性:</b></p>
+      <table>
+        <tr><th>性质</th><th>含义</th></tr>
+        <tr><td><b>确定性</b></td><td>给定集合和元素，能明确判断这个元素属于还是不属于该集合</td></tr>
+        <tr><td><b>互异性</b></td><td>集合中的元素<b>互不相同</b>，重复只算一个——含参问题解出后必须代回检验是否重复</td></tr>
+        <tr><td><b>无序性</b></td><td>元素排列顺序不影响集合本身，{1,2}={2,1}</td></tr>
+      </table>
+      <p class="trap">⚠ 含参集合题解出参数后，务必把参数值代回原集合，检验<b>互异性</b>(元素是否重复)是否被破坏，这是最容易被忽略的一步扣分点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 1 — 描述法看代表元素:同一个式子 y=x²-1，代表元素不同 → 集合意义完全不同</div>
+      <svg id="reprSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="reprmode on" data-m="0">{x | y=x²-1}(定义域)</button>
+        <button class="reprmode" data-m="1">{y | y=x²-1}(值域)</button>
+        <button class="reprmode" data-m="2">{(x,y) | y=x²-1}(点集)</button>
+      </div>
+      <div class="verdict" id="reprNote"></div>
+      <p class="small">同一个表达式 y=x²-1，代表元素写 x 就是在描述 x 的范围(定义域)，写 y 就是在描述 y 的范围(值域)，写 (x,y) 就是在描述一条曲线上的点(点集)——三者是完全不同的集合。</p>
+    </div>
+
+    <h2 class="b">② 集合运算:交∩、并∪、补∁</h2>
+    <div class="card">
+      <table>
+        <tr><th>运算</th><th>符号</th><th>含义</th></tr>
+        <tr><td>交集</td><td>A∩B</td><td>既属于A<b>又</b>属于B的元素</td></tr>
+        <tr><td>并集</td><td>A∪B</td><td>属于A<b>或</b>属于B的元素(含两者都属于)</td></tr>
+        <tr><td>补集</td><td>∁<sub>U</sub>A</td><td>在全集U中但<b>不属于</b>A的元素</td></tr>
+      </table>
+      <div class="eq">∁<sub>U</sub>(A∩B) = (∁<sub>U</sub>A)∪(∁<sub>U</sub>B)　　∁<sub>U</sub>(A∪B) = (∁<sub>U</sub>A)∩(∁<sub>U</sub>B)</div>
+      <p style="margin:8px 0"><b>德摩根律</b>(上式)在含补集的复合运算里非常常用，记忆技巧:"交的补 = 补的并，并的补 = 补的交"(取补时∩、∪互换)。</p>
+      <p style="margin:8px 0"><b>解题工具:</b> 数集用<b>数轴</b>(区间表示，画出A、B在数轴上的位置，重叠部分是∩，覆盖部分是∪，数轴外是补)；抽象/离散集合用<b>Venn图</b>(圈与圈的重叠、覆盖关系)。</p>
+      <p class="trap">⚠ 区间端点开闭是数轴运算最容易出错的地方:原集合端点是否取等，运算后新端点是否取等，必须逐点核对，尤其是"边界值恰好相等"的临界情况。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⭕ 互动 2 — Venn图交互:拖动圆心距离，看 A∩B、A∪B、∁ 如何随重叠程度变化</div>
+      <svg id="vennSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>圆心距离 <input id="vennD" type="range" min="0" max="220" value="90" step="5"></label>
+        <button class="vennop on" data-op="cap">看 A∩B</button>
+        <button class="vennop" data-op="cup">看 A∪B</button>
+        <button class="vennop" data-op="comp">看 ∁<sub>U</sub>A</button>
+      </div>
+      <div class="live">
+        <div><b>A∩B 状态</b><span id="vnCap">-</span></div>
+        <div><b>A∪B 状态</b><span id="vnCup">-</span></div>
+        <div><b>关系</b><span id="vnRel">-</span></div>
+        <div><b>阴影表示</b><span id="vnShow">-</span></div>
+      </div>
+      <p class="small">拖动滑块改变两圆重叠程度:距离越小重叠越多(A∩B越大)，距离越大重叠越少直至无重叠(A∩B=∅)。当一圆完全包住另一圆时是包含关系(子集)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 3 — 数轴求含参集合运算:拖动参数 a 看 A∩B、A∪B、∁<sub>U</sub>A 随端点变化(含开闭)</div>
+      <svg id="lineSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>参数 a <input id="lineA" type="range" min="-4" max="8" value="2" step="0.5"></label>
+        <button class="lineop on" data-op="cap">A∩B</button>
+        <button class="lineop" data-op="cup">A∪B</button>
+        <button class="lineop" data-op="comp">∁<sub>R</sub>A</button>
+      </div>
+      <div class="verdict" id="lineNote"></div>
+      <p class="small">A=(-2,a] 会随 a 滑动而伸缩，B=[1,5) 固定。空心圆=不含端点(开)，实心圆=含端点(闭)。拖到 a=1 或 a=5 附近，观察端点开闭如何决定交并集是否为空、是否含端点。</p>
+    </div>
+
+    <h2 class="g">③ 子集、真子集、非空子集个数</h2>
+    <div class="card">
+      <div class="eq">n个元素的集合:子集 2ⁿ个　真子集 2ⁿ−1个　非空子集 2ⁿ−1个　非空真子集 2ⁿ−2个</div>
+      <p style="margin:8px 0"><b>推导逻辑:</b> 每个元素在某个子集里，只有"选"或"不选"两种状态，n个元素独立选择 → 2×2×...×2(n个2)=2ⁿ种组合，对应2ⁿ个子集(含空集∅和自身)。真子集要去掉"自身"这一个(2ⁿ−1)；非空子集要去掉"空集"这一个(2ⁿ−1)；非空真子集两个都要去掉(2ⁿ−2，n≥1时)。</p>
+      <table>
+        <tr><th>元素个数n</th><th>子集数2ⁿ</th><th>真子集2ⁿ−1</th><th>非空真子集2ⁿ−2</th></tr>
+        <tr><td>1</td><td>2</td><td>1</td><td>0</td></tr>
+        <tr><td>2</td><td>4</td><td>3</td><td>2</td></tr>
+        <tr><td>3</td><td>8</td><td>7</td><td>6</td></tr>
+        <tr><td>4</td><td>16</td><td>15</td><td>14</td></tr>
+      </table>
+      <p class="trap">⚠ 空集∅本身是一个子集(且是任何集合的真子集，除非该集合本身是∅)，切勿在计数中漏掉或重复排除。"真子集"排除的是"等于自身"，"非空子集"排除的是"空集"，两者是不同的排除对象，别混着减。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 4 — 子集个数计算器:选元素个数 n，实时展示所有子集与 2ⁿ 的对应</div>
+      <svg id="subsetSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>元素个数 n <input id="subN" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>子集数 2ⁿ</b><span id="subAll">0</span></div>
+        <div><b>真子集 2ⁿ−1</b><span id="subProper">0</span></div>
+        <div><b>非空子集 2ⁿ−1</b><span id="subNonempty">0</span></div>
+        <div><b>非空真子集 2ⁿ−2</b><span id="subBoth">0</span></div>
+      </div>
+      <p class="small">每个元素独立地"选/不选"，n个元素就有2ⁿ种组合方式，逐一列出的所有子集会显示在图中，帮你直观数清楚"真子集"与"非空子集"到底各自排除了谁。</p>
+    </div>
+
+    <h2 class="o">④ 充分条件与必要条件</h2>
+    <div class="card">
+      <table>
+        <tr><th>说法</th><th>符号</th><th>含义</th></tr>
+        <tr><td>p是q的充分条件</td><td>p⇒q</td><td>有p就一定有q(p够用了，"充分")</td></tr>
+        <tr><td>q是p的必要条件</td><td>p⇒q</td><td>没有q就一定没有p(q是必须的，"必要")</td></tr>
+        <tr><td>p是q的充要条件</td><td>p⇔q</td><td>p⇒q 且 q⇒p，两者互相决定</td></tr>
+      </table>
+      <div class="keybox"><b>集合判断法(核心):</b> 设命题p对应集合P={x|p(x)成立}，命题q对应集合Q={x|q(x)成立}。若 <b>P⊆Q</b>，则p⇒q成立，即<b>小范围充分、大范围必要</b>——p是q的充分条件，q是p的必要条件。</div>
+      <table>
+        <tr><th>关系</th><th>判定</th></tr>
+        <tr><td>P⊊Q(真子集)</td><td>p是q的<b>充分不必要</b>条件</td></tr>
+        <tr><td>Q⊊P(真子集)</td><td>p是q的<b>必要不充分</b>条件</td></tr>
+        <tr><td>P=Q</td><td>p是q的<b>充要</b>条件</td></tr>
+        <tr><td>P、Q互不包含</td><td>p是q的<b>既不充分也不必要</b>条件</td></tr>
+      </table>
+      <p class="trap">⚠ 头号易错点是<b>方向记反</b>:很多同学下意识觉得"大范围"才是"充分"，其实相反——小范围(条件更苛刻)才能保证大范围一定发生，所以是"小充分大必要"。判断时永远回到集合包含关系上验证，不要凭语感。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 充要条件的集合包含判断:拖两圆的包含关系，自动读出四种条件类型</div>
+      <svg id="cndSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cndcase on" data-c="0">P⊊Q(P小Q大)</button>
+        <button class="cndcase" data-c="1">Q⊊P(Q小P大)</button>
+        <button class="cndcase" data-c="2">P=Q(重合)</button>
+        <button class="cndcase" data-c="3">互不包含</button>
+      </div>
+      <div class="verdict" id="cndNote"></div>
+      <p class="small">P是命题p对应的集合，Q是命题q对应的集合。哪个圈被完全包在另一个里面，被包住的那个(小圈)对应的命题就是"充分"，包住别人的那个(大圈)对应的命题就是"必要"。</p>
+    </div>
+
+    <h2 class="v">⑤ 全称量词与存在量词、命题的否定</h2>
+    <div class="card">
+      <table>
+        <tr><th>量词</th><th>符号</th><th>命题写法</th><th>名称</th></tr>
+        <tr><td>全称量词"所有的/任意的"</td><td>∀</td><td>∀x∈M，p(x)</td><td>全称命题</td></tr>
+        <tr><td>存在量词"存在/有的"</td><td>∃</td><td>∃x₀∈M，p(x₀)</td><td>特称命题(存在性命题)</td></tr>
+      </table>
+      <div class="keybox"><b>否定口诀:</b> <b>改量词 + 否定结论</b>。∀ 改成 ∃，∃ 改成 ∀，同时把结论 p(x) 换成它的否定 ¬p(x)。</div>
+      <table>
+        <tr><th>原命题</th><th>否定</th></tr>
+        <tr><td>∀x∈M，p(x)</td><td>∃x₀∈M，¬p(x₀)</td></tr>
+        <tr><td>∃x₀∈M，p(x₀)</td><td>∀x∈M，¬p(x)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> 原命题"∀x∈R，x²≥0"的否定是"∃x₀∈R，x₀²&lt;0"(量词∀→∃，结论≥变&lt;)。原命题"∃x₀∈R，x₀+1=0"的否定是"∀x∈R，x+1≠0"(量词∃→∀，结论=变≠)。</p>
+      <p class="trap">⚠ 只改量词不改结论(或只改结论不改量词)都是错的，两处必须<b>同时改</b>。常见结论否定对照:≥的否定是&lt;、&gt;的否定是≤、=的否定是≠、"都是"的否定是"至少有一个不是"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 6 — 全称/特称命题否定演示:输入原命题类型，自动生成否定式(量词+结论同时翻转)</div>
+      <svg id="negSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="negcase on" data-n="0">∀x∈R, x²≥0</button>
+        <button class="negcase" data-n="1">∃x₀∈R, x₀+1=0</button>
+        <button class="negcase" data-n="2">∀x&gt;0, x+1/x≥2</button>
+        <button class="negcase" data-n="3">∃x₀∈Z, x₀是偶数</button>
+      </div>
+      <div class="verdict" id="negNote"></div>
+      <p class="small">左边是原命题(全称用∀，特称用∃)，右边自动展示否定式:量词翻转(∀↔∃)，同时结论被否定(≥↔&lt;，=↔≠等)——两处缺一不可。</p>
+    </div>
+
+    <h2 class="b">⑥ 逻辑联结词:且、或、非</h2>
+    <div class="card">
+      <table>
+        <tr><th>联结词</th><th>符号</th><th>真假规则</th></tr>
+        <tr><td>且(合取)</td><td>p∧q</td><td>p、q<b>都真</b>时才真，一假则假("一票否决")</td></tr>
+        <tr><td>或(析取)</td><td>p∨q</td><td>p、q<b>至少一真</b>时为真，全假才假("一票通过")</td></tr>
+        <tr><td>非(否定)</td><td>¬p</td><td>与p真假<b>相反</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>记忆技巧:</b> "且"想成乘法(有0则0，全1才1)，"或"想成加法上限为1(有1就是1，全0才0)。判断复合命题真假时先分别判断p、q的真假，再套用真值表。</p>
+      <p class="trap">⚠ "p∨q为假"能推出p、q<b>都假</b>；"p∧q为真"能推出p、q<b>都真</b>；但"p∨q为真"不能确定p、q各自的真假(可能一真一假，也可能都真)，做题时不要过度推断。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✅ 互动 7 — 逻辑联结词真值表:切换 p、q 真假，实时看 p∧q、p∨q、¬p 的结果</div>
+      <svg id="truthSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="toggleP" class="btn">切换 p (当前:真)</button>
+        <button id="toggleQ" class="btn">切换 q (当前:真)</button>
+      </div>
+      <div class="live">
+        <div><b>p</b><span id="tvP">真</span></div>
+        <div><b>q</b><span id="tvQ">真</span></div>
+        <div><b>p∧q</b><span id="tvAnd">真</span></div>
+        <div><b>p∨q</b><span id="tvOr">真</span></div>
+      </div>
+      <p class="small">下方是完整真值表，当前选中的一行会高亮，帮你建立"且要全真、或要有真"的直觉，同时展示¬p、¬q列方便对照。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 集合表示与元素三性</h3>
+      <p><b class="tag">触发信号:</b> 题目给出用列举法或描述法表示的集合，或含参集合要求先确定参数再验证元素互不相同。</p>
+      <p><b class="tag">标准动作:</b> 描述法先看代表元素类型(数集/点集)，确定集合含义；含参问题解出参数后<b>必须代回检验互异性</b>。</p>
+      <p><b class="tag">示例(带解):</b> 已知集合A={1,a,a²−a}中a为实数，求a的取值范围。互异性要求 a≠1 且 a²−a≠1 且 a²−a≠a。由a²−a≠a得a²≠2a即a≠0且a≠2；由a²−a≠1得a≠(1±√5)/2。综上a∈R且a≠0,1,2,(1±√5)/2。</p>
+      <p class="trap">陷阱:解出参数后忘记代回验证互异性；把描述法里的代表元素类型看错(x与y混淆)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 集合交并补运算(含参)</h3>
+      <p><b class="tag">触发信号:</b> 给出两个含参数的区间集合A、B，求A∩B、A∪B或已知运算结果反求参数范围。</p>
+      <p><b class="tag">标准动作:</b> 画数轴，标出A、B的位置和端点开闭；若已知A∩B或A∪B为某集合(含∅)，先讨论A是否为空集这一特殊情形，再列端点不等式(注意能否取等)。</p>
+      <p><b class="tag">示例(带解):</b> A=(-∞,a)，B=(1,3)，若A∩B=∅，求a的范围。数轴上A是a左侧的开区间，要与(1,3)无交集，需a≤1(注意a=1时A=(-∞,1)与(1,3)恰好无交集，取等成立)。故a≤1。</p>
+      <p class="trap">陷阱:漏掉A或B可能为空集的情形；端点能否取等判断错误(以为端点相等就一定有交集)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 已知A⊆B(或A∩B=A)求参数，必须讨论A=∅</h3>
+      <p><b class="tag">触发信号:</b> 题目出现"A⊆B""A∩B=A""A∪B=B"这类表述，且A含参数可能是空集。</p>
+      <p><b class="tag">标准动作:</b> 先讨论<b>A=∅</b>的情形(此时A⊆B恒成立，直接给出使A为空集的参数范围)；再讨论<b>A≠∅</b>的情形，列端点不等式求解；最后取两种情形的并集。</p>
+      <p><b class="tag">示例(带解):</b> A={x|a≤x≤2a-1}，B={x|-1≤x≤5}，若A⊆B，求a的范围。① A=∅时:a>2a-1即a<1，此时A⊆B恒成立。② A≠∅时:a≥1，需-1≤a且2a-1≤5，即a≥-1且a≤3，结合a≥1得1≤a≤3。综上a<1或1≤a≤3，即a≤3。</p>
+      <p class="trap">陷阱:直接假设A≠∅，漏掉A=∅这一大类情形——这是本考点最高频的失分点，务必养成"先问是否可能为空集"的习惯。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 子集/真子集个数计算</h3>
+      <p><b class="tag">触发信号:</b> "集合M有多少个子集""非空真子集个数"这类直接计数问题，或与其他条件(如M⊆N求M的可能个数)结合。</p>
+      <p><b class="tag">标准动作:</b> 先确定集合元素个数n，套用 子集2ⁿ、真子集2ⁿ−1、非空子集2ⁿ−1、非空真子集2ⁿ−2。若结合包含关系，先确定"必含元素"和"自由元素"，自由元素个数决定2的指数。</p>
+      <p><b class="tag">示例(带解):</b> 已知{1,2}⊆M⊆{1,2,3,4,5}，求满足条件的集合M的个数。M必须包含1、2，其余元素3,4,5可选可不选，自由元素3个 → 2³=8个这样的M。</p>
+      <p class="trap">陷阱:把"非空子集"和"真子集"排除的对象搞混(一个排除空集，一个排除自身)；忘记n=0(空集本身)时子集数仍为2⁰=1(只有∅自己)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 充分必要条件判断(定性)</h3>
+      <p><b class="tag">触发信号:</b> "p是q的什么条件""判断下列条件关系"，给出两个命题(常为不等式、几何关系等)。</p>
+      <p><b class="tag">标准动作:</b> 把p、q各自对应到集合P、Q，判断两集合的包含关系:P⊊Q→充分不必要，Q⊊P→必要不充分，P=Q→充要，互不包含→既不充分也不必要。</p>
+      <p><b class="tag">示例(带解):</b> p:x>2，q:x²>4。P=(2,+∞)，Q=(-∞,-2)∪(2,+∞)。P⊊Q(P是Q的真子集)，所以p是q的<b>充分不必要</b>条件(x>2能推出x²>4，但x²>4推不出x>2，因为x可能是-3)。</p>
+      <p class="trap">陷阱:把方向记反(误以为大范围是充分条件)；忽略q对应集合中被两段区间构成、只考虑了一半。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 用充要条件求参数范围</h3>
+      <p><b class="tag">触发信号:</b> "若p是q的充分不必要条件，求参数取值范围"，p、q常是含参不等式表示的区间。</p>
+      <p><b class="tag">标准动作:</b> 把p、q翻译成区间(集合)，根据"充分不必要⇒真子集"列出区间包含的不等式，<b>特别注意端点能否取等</b>(真子集时至少一个端点不能同时取等，否则退化为相等)。</p>
+      <p><b class="tag">示例(带解):</b> p:-2≤x≤3，q:1-m≤x≤1+m(m>0)。若p是q的充分不必要条件，则[-2,3]⊊[1-m,1+m]。需1-m≤-2且1+m≥3，即m≥3且m≥2，取m≥3；再验证等号不能同时成立(m=3时[1-m,1+m]=[-2,4]≠[-2,3]，是真子集，符合)。故m≥3。</p>
+      <p class="trap">陷阱:端点不等式该用≤还是&lt;判断错误；求出范围后没有验证是否真的是"真子集"而非"相等"(即遗漏排除充要的边界情形)。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 讨论A⊆B型问题<b>必须先讨论A=∅</b>的情形，这是最高频漏点，空集是任何集合的子集。</p>
+      <p class="trap">② 充分必要条件方向:<b>小范围⇒大范围</b>，小集合对应的命题是<b>充分</b>条件，大集合对应的命题是<b>必要</b>条件，别凭直觉记反。</p>
+      <p class="trap">③ 全称/特称命题否定要<b>量词和结论同时改</b>:∀改∃、∃改∀，同时把结论换成它的否定，只改一处都不对。</p>
+      <p class="trap">④ 含参集合解出参数后要<b>代回验证互异性</b>，元素重复的解要舍去。</p>
+      <p class="trap">⑤ 描述法看<b>代表元素</b>:{x|...}是x的取值集合(数集/定义域类)，{y|...}是y的取值集合(值域类)，{(x,y)|...}是点集，三者完全不同。</p>
+      <p class="trap">⑥ 区间端点开闭:数轴运算时原集合端点开闭状态要带着做完整个运算，交集取"最紧"的开闭，并集取"最松"的开闭，边界处要逐点核对。</p>
+      <p class="trap">⑦ "真子集"排除自身，"非空子集"排除空集，"非空真子集"两者都排除，三个概念不能混用。</p>
+      <p class="trap">⑧ p∨q为真<b>不能</b>推出p、q都真(可能一真一假)；只有p∧q为真才能推出两者都真。</p>
+      <p class="trap">⑨ 用充要条件求参数范围时，"充分不必要"对应<b>真子集</b>，端点不等式里至少要有一处不能同时取等，否则退化成充要条件，需要额外验证排除。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 集合是逻辑的"翻译层":</b> 所有关于命题真假、充分必要、命题否定的问题，本质都能翻译成集合语言。把"p⇒q"读成"P⊆Q"，把"p∧q"读成"P∩Q"，把"p∨q"读成"P∪Q"，把"¬p"读成"∁<sub>U</sub>P"——用这套字典去翻译，再抽象的逻辑题都能落地成数轴或Venn图上的具体操作。</p>
+      <p style="margin:8px 0"><b>② "小充分大必要"的本质是函数的单调性直觉:</b> 想象P、Q是两个"门槛"，P的门槛更高(范围更小)，能进P的一定能进Q(门槛更松的地方)，所以满足P的更"稀有"、更"充分"；满足Q是能进P的"必要"前提，但光满足Q还不够挑剔到P。用"越苛刻的条件越充分"这句话去记，永远不会搞反方向。</p>
+      <p style="margin:8px 0"><b>③ 空集讨论是"分类讨论思想"的入门必修课:</b> A⊆B先问A是否为空，本质上是在训练"参数的变化可能让问题的结构本身发生质变"这种警觉——同样的警觉后面会用在二次函数开口方向、等比数列公比正负、绝对值分段等几乎所有含参问题上，是贯穿高中数学的通用能力。</p>
+      <p style="margin:8px 0"><b>④ 命题否定的"改量词+否定结论"对应德摩根律的逻辑版本:</b> ∁(∀x, p(x)) = ∃x, ¬p(x)，这和集合的德摩根律∁(A∩B)=∁A∪∁B在结构上完全同构(∀对应"交"、∃对应"并")。理解这层对应，你会发现命题否定和集合补运算其实是同一套底层规则在不同语言里的两次呈现。</p>
+      <p style="margin:8px 0"><b>⑤ 充要条件的判断要"双向验证"，不能只验证一个方向:</b> 判断p是否是q的充分条件，要专门举一个反例测试"q成立但p不成立"是否可能，如果找不到反例就是必要，如果能找到就不必要。养成"先找反例再下结论"的习惯，比死记硬背集合包含关系更抗得住综合题的伪装。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 集合与常用逻辑用语</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:描述法看代表元素 ===== */
+(function(){
+  const svg=document.getElementById('reprSvg');const note=document.getElementById('reprNote');
+  let m=0;
+  document.querySelectorAll('.reprmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.reprmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=200,W=560,H=160,ox=X0+280,oy=Y0-80;
+    // axes for parabola view
+    el(svg,'line',{x1:X0,y1:oy,x2:X0+W,y2:oy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:ox,y1:Y0,x2:ox,y2:Y0-H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+W,y:oy-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:ox+8,y:Y0-H,'font-size':13,'font-weight':900,fill:INK}).textContent='y';
+    // draw parabola y=x^2-1 for reference, x in [-3,3]
+    let d='';
+    for(let i=0;i<=60;i++){
+      const xx=-3+i*0.1;
+      const yy=xx*xx-1;
+      const px=ox+xx*80, py=oy-yy*40;
+      d+=(i===0?'M':'L')+px+','+py+' ';
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:'#999','stroke-width':2});
+    el(svg,'text',{x:X0+10,y:30,'font-size':15,'font-weight':900,fill:INK}).textContent='曲线: y = x² − 1';
+    if(m===0){
+      // x range: all reals -> highlight x-axis fully
+      el(svg,'line',{x1:X0,y1:oy,x2:X0+W,y2:oy,stroke:RED,'stroke-width':6});
+      el(svg,'text',{x:X0+10,y:56,'font-size':13.5,'font-weight':800,fill:RED}).textContent='{x | y=x²−1} = R  (x 可取任意实数，这是定义域)';
+      note.innerHTML='代表元素是 <b>x</b> → 这是在描述 x 的取值范围 → <b>定义域</b> = R(全体实数)';
+      note.style.borderColor=RED;
+    } else if(m===1){
+      // y range: y>=-1 -> highlight y-axis from -1 upward
+      el(svg,'line',{x1:ox,y1:oy+40,x2:ox,y2:Y0-H,stroke:BLUE,'stroke-width':6});
+      el(svg,'circle',{cx:ox,cy:oy+40,r:6,fill:'#fff',stroke:BLUE,'stroke-width':3});
+      el(svg,'text',{x:X0+10,y:56,'font-size':13.5,'font-weight':800,fill:BLUE}).textContent='{y | y=x²−1} = [−1,+∞)  (y 的取值范围，这是值域)';
+      note.innerHTML='代表元素是 <b>y</b> → 这是在描述 y 的取值范围 → <b>值域</b> = [−1,+∞)';
+      note.style.borderColor=BLUE;
+    } else {
+      // point set: highlight the whole curve
+      el(svg,'path',{d:d,fill:'none',stroke:GREEN,'stroke-width':6});
+      el(svg,'text',{x:X0+10,y:56,'font-size':13.5,'font-weight':800,fill:GREEN}).textContent='{(x,y) | y=x²−1}  = 抛物线上所有点组成的点集';
+      note.innerHTML='代表元素是 <b>(x,y)</b> → 这是在描述满足关系式的点 → <b>点集</b>(一条抛物线)';
+      note.style.borderColor=GREEN;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动2:Venn图交互 ===== */
+(function(){
+  const svg=document.getElementById('vennSvg');
+  const Ds=document.getElementById('vennD');
+  const oCap=document.getElementById('vnCap'),oCup=document.getElementById('vnCup'),oRel=document.getElementById('vnRel'),oShow=document.getElementById('vnShow');
+  let op='cap',D=90;
+  document.querySelectorAll('.vennop').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.vennop').forEach(x=>x.classList.remove('on'));b.classList.add('on');op=b.dataset.op;draw();
+  });
+  Ds.oninput=()=>{D=+Ds.value;draw();};
+  function draw(){
+    clr(svg);
+    const cy=150,r=90;
+    const cxA=350-D/2, cxB=350+D/2;
+    const boxX0=20,boxY0=20,boxW=660,boxH=260;
+    el(svg,'rect',{x:boxX0,y:boxY0,width:boxW,height:boxH,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:boxX0+10,y:boxY0+24,'font-size':14,'font-weight':900,fill:INK}).textContent='U (全集)';
+    // clip paths for shading
+    const defs=el(svg,'defs',{});
+    const clipA=el(defs,'clipPath',{id:'clipVA'});
+    el(clipA,'circle',{cx:cxA,cy:cy,r:r});
+    const clipB=el(defs,'clipPath',{id:'clipVB'});
+    el(clipB,'circle',{cx:cxB,cy:cy,r:r});
+    if(op==='comp'){
+      // shade box minus A
+      el(svg,'rect',{x:boxX0,y:boxY0,width:boxW,height:boxH,fill:'rgba(224,56,42,0.25)'});
+      el(svg,'circle',{cx:cxA,cy:cy,r:r,fill:'#fff'});
+      el(svg,'circle',{cx:cxB,cy:cy,r:r,fill:'none',stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:cxA,cy:cy,r:r,fill:'none',stroke:RED,'stroke-width':3});
+    } else if(op==='cup'){
+      el(svg,'circle',{cx:cxA,cy:cy,r:r,fill:'rgba(224,56,42,0.25)'});
+      el(svg,'circle',{cx:cxB,cy:cy,r:r,fill:'rgba(20,80,200,0.25)'});
+      el(svg,'circle',{cx:cxA,cy:cy,r:r,fill:'none',stroke:RED,'stroke-width':3});
+      el(svg,'circle',{cx:cxB,cy:cy,r:r,fill:'none',stroke:BLUE,'stroke-width':3});
+    } else {
+      el(svg,'circle',{cx:cxA,cy:cy,r:r,fill:'none',stroke:RED,'stroke-width':3});
+      el(svg,'circle',{cx:cxB,cy:cy,r:r,fill:'none',stroke:BLUE,'stroke-width':3});
+      const g=el(svg,'g',{'clip-path':'url(#clipVA)'});
+      const g2=el(g,'g',{'clip-path':'url(#clipVB)'});
+      el(g2,'rect',{x:boxX0,y:boxY0,width:boxW,height:boxH,fill:'rgba(30,158,134,0.45)'});
+    }
+    el(svg,'text',{x:cxA,y:cy-r-14,'font-size':16,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='A';
+    el(svg,'text',{x:cxB,y:cy-r-14,'font-size':16,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='B';
+    const dist=D;
+    let rel,capState,cupState,showLabel;
+    if(dist>=2*r){rel='A、B 无公共元素(A∩B=∅)';capState='空集 ∅';}
+    else if(dist<=0){rel='A、B 完全重合(A=B)';capState='等于 A(=B)';}
+    else{rel='A、B 部分重叠';capState='非空的部分重叠区域';}
+    cupState= dist<=0 ? '等于 A(=B)' : '两圆覆盖的全部区域';
+    if(op==='cap')showLabel='绿色重叠区 = A∩B';
+    else if(op==='cup')showLabel='红+蓝全部区域 = A∪B';
+    else showLabel='红色区域(方框内非A部分) = ∁ᵤA';
+    oCap.textContent=capState;oCup.textContent=cupState;oRel.textContent=rel;oShow.textContent=showLabel;
+  }
+  draw();
+})();
+
+/* ===== 互动3:数轴含参集合运算 ===== */
+(function(){
+  const svg=document.getElementById('lineSvg');const note=document.getElementById('lineNote');
+  const As=document.getElementById('lineA');
+  let a=2,op='cap';
+  document.querySelectorAll('.lineop').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.lineop').forEach(x=>x.classList.remove('on'));b.classList.add('on');op=b.dataset.op;draw();
+  });
+  As.oninput=()=>{a=+As.value;draw();};
+  function xPos(v){return 60+(v+5)*(620/13);} // map [-5,8] to [60,680]
+  function draw(){
+    clr(svg);
+    const y0=180;
+    // main number line
+    el(svg,'line',{x1:40,y1:y0,x2:690,y2:y0,stroke:INK,'stroke-width':3});
+    for(let v=-4;v<=8;v++){
+      const px=xPos(v);
+      el(svg,'line',{x1:px,y1:y0-4,x2:px,y2:y0+4,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:px,y:y0+22,'font-size':11,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent=v;
+    }
+    // A = (-2, a]
+    const Alo=-2, Ahi=a;
+    const Bloc=1, Bhic=5; // B=[1,5)
+    // draw A on row y=100
+    drawInterval(svg, Alo, Ahi, 100, RED, 'A=(−2,'+a+']', false, true);
+    // draw B on row y=140
+    drawInterval(svg, Bloc, Bhic, 140, BLUE, 'B=[1,5)', true, false);
+    let desc='';
+    if(op==='cap'){
+      const lo=Math.max(Alo,Bloc), hi=Math.min(Ahi,Bhic);
+      if(hi<=lo && !(hi===lo)){
+        desc='A∩B = ∅ (a='+a+' 使区间无重叠，此时 a≤1)';
+      } else if(a<1){
+        desc='A∩B = ∅ (A的上界 a='+a+' 小于B的下界1，无重叠)';
+      } else {
+        const hiVal=Math.min(a,5);
+        desc='A∩B = (1, '+hiVal+(a<5?']':')')+'　(下界取较大者1开，上界取较小者)';
+      }
+      drawInterval(svg, Math.max(lo,1), Math.min(hi,5), 60, GREEN, 'A∩B', false,false);
+    } else if(op==='cup'){
+      desc = a>=1 ? 'A∪B = (−2, '+Math.max(a,5)+(a>=5?']':')')+'　(两区间有重叠或相接，合并为一段)' : 'A∪B = (−2,'+a+']∪[1,5)　(a<1时两段不相连，无法合并)';
+      if(a>=1){drawInterval(svg, -2, Math.max(a,5), 60, GREEN, 'A∪B', false, a>=5);}
+    } else {
+      desc='∁ᴿ A = (−∞,−2]∪('+a+',+∞)　(数轴上A以外的所有实数，端点开闭对调)';
+      el(svg,'text',{x:350,y:70,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='∁ᴿA: 保留A区间外的全部';
+    }
+    note.innerHTML=desc;
+  }
+  function drawInterval(svg,lo,hi,y,col,label,loClose,hiClose){
+    if(hi<lo){el(svg,'text',{x:350,y:y,'font-size':12,'font-weight':800,fill:col,'text-anchor':'middle'}).textContent=label+' = ∅';return;}
+    const x1=xPos(lo),x2=xPos(hi);
+    el(svg,'line',{x1:x1,y1:y,x2:x2,y2:y,stroke:col,'stroke-width':6});
+    el(svg,'circle',{cx:x1,cy:y,r:6,fill:loClose?col:'#fff',stroke:col,'stroke-width':3});
+    el(svg,'circle',{cx:x2,cy:y,r:6,fill:hiClose?col:'#fff',stroke:col,'stroke-width':3});
+    el(svg,'text',{x:(x1+x2)/2,y:y-12,'font-size':12.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=label;
+  }
+  draw();
+})();
+
+/* ===== 互动4:子集个数计算器 ===== */
+(function(){
+  const svg=document.getElementById('subsetSvg');
+  const Ns=document.getElementById('subN');
+  const oAll=document.getElementById('subAll'),oProper=document.getElementById('subProper'),oNon=document.getElementById('subNonempty'),oBoth=document.getElementById('subBoth');
+  let n=3;
+  Ns.oninput=()=>{n=+Ns.value;draw();};
+  function draw(){
+    const total=Math.pow(2,n);
+    oAll.textContent=total;
+    oProper.textContent=total-1;
+    oNon.textContent=total-1;
+    oBoth.textContent=Math.max(0,total-2);
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='集合元素个数 n='+n+'，全部 '+total+' 个子集(含∅与自身)如下:';
+    // enumerate subsets of {1..n}
+    const elems=[];
+    for(let i=1;i<=n;i++)elems.push(i);
+    const subsets=[];
+    for(let mask=0;mask<total;mask++){
+      const s=[];
+      for(let i=0;i<n;i++){if(mask&(1<<i))s.push(elems[i]);}
+      subsets.push(s);
+    }
+    const cols=8;
+    const cellW=Math.min(80,660/Math.min(cols,total));
+    const cellH=34;
+    subsets.forEach((s,idx)=>{
+      const col=idx%cols, row=Math.floor(idx/cols);
+      const x=40+col*cellW, y=50+row*cellH;
+      const isEmpty=s.length===0, isFull=s.length===n;
+      const fill= isEmpty? YEL : isFull? VIO : '#fff';
+      el(svg,'rect',{x:x,y:y,width:cellW-6,height:cellH-8,fill:fill,stroke:INK,'stroke-width':2});
+      const txt= isEmpty? '∅' : '{'+s.join(',')+'}';
+      el(svg,'text',{x:x+(cellW-6)/2,y:y+(cellH-8)/2+4,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=txt;
+    });
+    const rows=Math.ceil(total/cols);
+    el(svg,'text',{x:40,y:50+rows*cellH+20,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='黄色=空集∅(唯一被真子集/非空子集分别排除的两个特殊子集之一)　紫色=自身(真子集排除的对象)';
+  }
+  draw();
+})();
+
+/* ===== 互动5:充要条件集合包含判断 ===== */
+(function(){
+  const svg=document.getElementById('cndSvg');const note=document.getElementById('cndNote');
+  let c=0;
+  document.querySelectorAll('.cndcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cndcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cx=350,cy=150;
+    let rP,rQ,offset,verdict,detail;
+    if(c===0){ // P subset Q
+      rP=55;rQ=115;offset=0;
+      verdict='p 是 q 的<b>充分不必要</b>条件';
+      detail='P⊊Q：小圈P完全被大圈Q包住。p成立(在P里)就一定在Q里 → p⇒q。但q成立(在Q里)不一定在P里 → q推不出p。';
+    } else if(c===1){ // Q subset P
+      rP=115;rQ=55;offset=0;
+      verdict='p 是 q 的<b>必要不充分</b>条件';
+      detail='Q⊊P：小圈Q完全被大圈P包住。q成立能推出p成立(q⇒p)，但p成立推不出q成立。所以p是q的必要而非充分条件。';
+    } else if(c===2){ // equal
+      rP=85;rQ=85;offset=0;
+      verdict='p 是 q 的<b>充要</b>条件';
+      detail='P=Q：两圆完全重合。p⇒q 且 q⇒p，互相推出，即p⇔q。';
+    } else { // disjoint/overlap not subset
+      rP=75;rQ=75;offset=170;
+      verdict='p 是 q 的<b>既不充分也不必要</b>条件';
+      detail='P、Q互不包含(可能相交或相离)。既找不到 p⇒q，也找不到 q⇒p，两者互相都推不出对方。';
+    }
+    const cxP=cx-offset/2, cxQ=cx+offset/2;
+    el(svg,'circle',{cx:cxQ,cy:cy,r:rQ,fill:'rgba(20,80,200,0.15)',stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:cxP,cy:cy,r:rP,fill:'rgba(224,56,42,0.25)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:cxP-(rP*0.5),y:cy,'font-size':16,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='P(p)';
+    el(svg,'text',{x: c===3? cxQ+rQ*0.3 : cxQ+rQ*0.7 ,y: c===3? cy: cy-rQ+18,'font-size':16,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='Q(q)';
+    note.innerHTML='<b>'+verdict+'</b><br><span style="font-weight:600;font-size:13.5px">'+detail+'</span>';
+    note.style.borderColor= c===2? GREEN : c===3? INK : (c===0?RED:BLUE);
+  }
+  draw();
+})();
+
+/* ===== 互动6:命题否定演示 ===== */
+(function(){
+  const svg=document.getElementById('negSvg');const note=document.getElementById('negNote');
+  let n=0;
+  const cases=[
+    {orig:'∀x∈R, x²≥0', neg:'∃x₀∈R, x₀²<0', qFrom:'∀',qTo:'∃',cFrom:'≥',cTo:'<'},
+    {orig:'∃x₀∈R, x₀+1=0', neg:'∀x∈R, x+1≠0', qFrom:'∃',qTo:'∀',cFrom:'=',cTo:'≠'},
+    {orig:'∀x>0, x+1/x≥2', neg:'∃x₀>0, x₀+1/x₀<2', qFrom:'∀',qTo:'∃',cFrom:'≥',cTo:'<'},
+    {orig:'∃x₀∈Z, x₀是偶数', neg:'∀x∈Z, x不是偶数', qFrom:'∃',qTo:'∀',cFrom:'是',cTo:'不是'}
+  ];
+  document.querySelectorAll('.negcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.negcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');n=+b.dataset.n;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cs=cases[n];
+    el(svg,'text',{x:350,y:34,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='原命题 → 否定式(量词翻转 + 结论否定)';
+    // original box
+    el(svg,'rect',{x:60,y:70,width:260,height:90,fill:'#fff',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:190,y:100,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='原命题';
+    el(svg,'text',{x:190,y:130,'font-size':15,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=cs.orig;
+    // arrow
+    el(svg,'line',{x1:330,y1:115,x2:400,y2:115,stroke:INK,'stroke-width':4});
+    el(svg,'polygon',{points:'400,108 414,115 400,122',fill:INK});
+    // negation box
+    el(svg,'rect',{x:420,y:70,width:260,height:90,fill:'#fff',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:550,y:100,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='否定式';
+    el(svg,'text',{x:550,y:130,'font-size':15,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=cs.neg;
+    // change annotations
+    el(svg,'text',{x:350,y:190,'font-size':13.5,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='量词: '+cs.qFrom+' → '+cs.qTo;
+    el(svg,'text',{x:350,y:215,'font-size':13.5,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='结论: '+cs.cFrom+' → '+cs.cTo+'(两处必须同时改)';
+    note.innerHTML='量词 <b>'+cs.qFrom+'</b> 变 <b>'+cs.qTo+'</b>，结论 <b>'+cs.cFrom+'</b> 变 <b>'+cs.cTo+'</b> —— 缺一不可。';
+  }
+  draw();
+})();
+
+/* ===== 互动7:逻辑联结词真值表 ===== */
+(function(){
+  const svg=document.getElementById('truthSvg');
+  const oP=document.getElementById('tvP'),oQ=document.getElementById('tvQ'),oAnd=document.getElementById('tvAnd'),oOr=document.getElementById('tvOr');
+  let p=true,q=true;
+  document.getElementById('toggleP').onclick=()=>{p=!p;refreshBtn();draw();};
+  document.getElementById('toggleQ').onclick=()=>{q=!q;refreshBtn();draw();};
+  function refreshBtn(){
+    document.getElementById('toggleP').textContent='切换 p (当前:'+(p?'真':'假')+')';
+    document.getElementById('toggleQ').textContent='切换 q (当前:'+(q?'真':'假')+')';
+  }
+  function draw(){
+    const andV=p&&q, orV=p||q;
+    oP.textContent=p?'真':'假';oQ.textContent=q?'真':'假';
+    oAnd.textContent=andV?'真':'假';oOr.textContent=orV?'真':'假';
+    clr(svg);
+    const rows=[
+      [true,true],[true,false],[false,true],[false,false]
+    ];
+    const headers=['p','q','¬p','¬q','p∧q','p∨q'];
+    const colW=100,rowH=40,x0=50,y0=40;
+    headers.forEach((h,i)=>{
+      el(svg,'rect',{x:x0+i*colW,y:y0,width:colW,height:rowH,fill:INK});
+      el(svg,'text',{x:x0+i*colW+colW/2,y:y0+rowH/2+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=h;
+    });
+    rows.forEach((r,ri)=>{
+      const pv=r[0], qv=r[1];
+      const vals=[pv?'真':'假', qv?'真':'假', pv?'假':'真', qv?'假':'真', (pv&&qv)?'真':'假', (pv||qv)?'真':'假'];
+      const isCurrent = (pv===p && qv===q);
+      const y=y0+(ri+1)*rowH;
+      vals.forEach((v,ci)=>{
+        el(svg,'rect',{x:x0+ci*colW,y:y,width:colW,height:rowH,fill:isCurrent?'rgba(243,192,14,0.55)':'#fff',stroke:INK,'stroke-width':2});
+        const col = v==='真' ? GREEN : RED;
+        el(svg,'text',{x:x0+ci*colW+colW/2,y:y+rowH/2+5,'font-size':14,'font-weight':800,fill:col,'text-anchor':'middle'}).textContent=v;
+      });
+    });
+    el(svg,'text',{x:x0,y:y0+(rows.length+1)*rowH+26,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent='黄色高亮行 = 当前 p、q 的真假组合对应的那一行';
+  }
+  refreshBtn();draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 集合元素的三性是什么?互异性在解题中最容易在哪一步被忽略?",a:"确定性、互异性、无序性。互异性最容易在含参问题解出参数后被忽略——必须把参数代回原集合检验是否有重复元素。"},
+ {q:"2. 描述法{x|...}、{y|...}、{(x,y)|...}分别表示什么类型的集合?",a:"{x|...}是数集(x的取值范围，如定义域)；{y|...}是数集(y的取值范围，如值域)；{(x,y)|...}是点集(满足关系式的点组成的图形)。"},
+ {q:"3. 讨论A⊆B型问题时，第一步应该做什么?为什么?",a:"第一步必须讨论A是否可能为空集∅。因为空集是任何集合的子集，A=∅时A⊆B恒成立，这种情形若被漏掉会导致答案范围缺失一部分。"},
+ {q:"4. n个元素的集合有多少个子集、真子集、非空子集、非空真子集?",a:"子集2ⁿ个，真子集2ⁿ−1个(排除自身)，非空子集2ⁿ−1个(排除空集)，非空真子集2ⁿ−2个(两者都排除)。"},
+ {q:"5. 判断p是q的充分/必要条件的核心方法是什么?小范围对应充分还是必要?",a:"把p、q翻译成集合P、Q，判断包含关系:P⊆Q则p⇒q。小范围(P)对应充分条件，大范围(Q)对应必要条件——记忆口诀'小充分大必要'。"},
+ {q:"6. 全称命题∀x∈M,p(x)的否定怎么写?两处分别怎么改?",a:"否定为∃x₀∈M,¬p(x₀)。量词∀改为∃，同时结论p(x)改为其否定¬p(x)，两处必须同时改。"},
+ {q:"7. p:x>2，q:x²>4，判断p是q的什么条件。",a:"P=(2,+∞)，Q=(-∞,-2)∪(2,+∞)。P⊊Q，所以p是q的充分不必要条件(x>2⇒x²>4成立，但x²>4推不出x>2，如x=-3满足x²>4但不满足x>2)。"},
+ {q:"8. p∨q为真，能否推出p、q都为真?p∧q为真呢?",a:"p∨q为真不能推出两者都真(可能一真一假)。p∧q为真则能推出p、q都为真(且的定义要求两者同时成立)。"},
+ {q:"9. 已知{1,2}⊆M⊆{1,2,3,4,5}，满足条件的集合M有多少个?",a:"M必须含1、2，其余元素3,4,5各自可选可不选，自由元素3个，故有2³=8个这样的M。"},
+ {q:"10. A={x|-2≤x≤2a-1}，若A为空集，a的取值范围是什么?这一步常在什么题型中被要求先讨论?",a:"A为空集需要 -2>2a-1，解得a<1/2。这一步常在'已知A⊆B求参数'的题型中作为第一种情形先被讨论，遗漏会导致答案范围不完整。"},
+ {q:"11. 用集合语言写出充要条件p⇔q对应的关系是什么?",a:"P=Q，即p对应集合与q对应集合完全相等，p⇒q且q⇒p同时成立。"},
+ {q:"12. 命题'∃x₀∈Z，x₀是偶数'的否定怎么写?",a:"∀x∈Z，x不是偶数。量词∃改为∀，结论'是偶数'改为'不是偶数'。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

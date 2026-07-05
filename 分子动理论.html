@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分子动理论与内能 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>分子动理论与内能</h1>
+    <p class="lead">这一页是热学的地基:分子看不见摸不着,但<b>油膜法</b>能测出它的大小,<b>阿伏伽德罗常数 NA</b> 能把宏观量(体积、质量)换算成微观量(单个分子多大、多重、有几个)。<b>布朗运动</b>和<b>扩散</b>是分子永不停息运动的证据,<b>分子力</b>决定了物质为什么有形状、能被压缩。最后,温度、内能这些概念,全部要落回「大量分子的微观运动」来理解。</p>
+
+    <div class="say">🗣️ <b>分子动理论(人话版):</b> 物质是由数量多到吓人的小球(分子)堆出来的,这些小球从不停歇地到处乱撞(热运动),同时小球之间还有「弹簧」一样的相互作用(分子力)。温度就是这些小球「跑得有多快」的平均值,内能就是所有小球的「动能+势能」加在一起。宏观世界的热现象,全是微观小球乱撞的结果。</div>
+
+    <div class="keybox"><b>三个基本观点:</b> ① 物质是由<b>大量分子</b>组成的(分子间有<b>空隙</b>);② 分子<b>永不停息地做无规则热运动</b>(布朗运动、扩散是证据);③ 分子间存在<b>相互作用力</b>(引力和斥力同时存在)。这三条是本章一切结论的出发点。</div>
+
+    <h2>① 分子有多大?—— 油膜法估算分子直径</h2>
+    <div class="card">
+      <p style="margin:6px 0">分子直径太小(约 <b>10⁻¹⁰ m</b> 数量级),无法直接测量,但可以用<b>油膜法</b>间接测出。原理:把很难再散开的油酸溶液滴一滴到水面上,油酸会在水面上摊成<b>薄薄一层单分子油膜</b>——薄到不能再薄,此时油膜厚度就近似等于<b>一个分子的直径</b>。</p>
+      <div class="eq">d = V / S</div>
+      <p style="margin:8px 0">V 是这滴油酸的<b>纯油酸体积</b>(一滴溶液的体积 × 溶液中纯油酸的体积比),S 是它在水面上摊开的<b>油膜面积</b>(通常用方格纸估算,数格子)。把分子看作小球,V=S·d,直接解出 d=V/S。</p>
+      <table>
+        <tr><th>步骤</th><th>做法</th></tr>
+        <tr><td>① 配制</td><td>油酸溶于酒精,稀释成已知浓度(如 1mL 溶液含油酸体积 v₀)</td></tr>
+        <tr><td>② 滴一滴</td><td>用滴管数出 1mL 溶液有多少滴,算出一滴溶液体积、进而算出一滴中纯油酸体积 V</td></tr>
+        <tr><td>③ 滴在水面</td><td>先在浅盘水面撒薄薄一层痱子粉(便于看清轮廓),滴入一滴油酸溶液,酒精溶于水挥发/扩散,油酸摊开成单分子薄膜</td></tr>
+        <tr><td>④ 测面积</td><td>把水面上方压一块玻璃板,描出油膜轮廓,用方格纸数出面积 S(不足半格舍去、超过半格算一格)</td></tr>
+        <tr><td>⑤ 计算</td><td>d = V/S,数量级约 10⁻¹⁰ m</td></tr>
+      </table>
+      <p class="trap">⚠ 这是一种<b>估算</b>方法,不是精确测量;假设油膜是单分子层且分子为球形。面积数格子时"多算少舍"规则(不满半格不算,超过半格算一格)容易被考。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧈 互动 1 — 油膜法估算分子直径:d=V/S(调体积/面积看直径怎么变)</div>
+      <svg id="oilSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>油酸体积 V (×10⁻⁹ mL) <input id="oilV" type="range" min="2" max="10" value="5" step="0.5"></label>
+        <label>油膜面积 S (cm²) <input id="oilS" type="range" min="20" max="100" value="50" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>V (mL)</b><span id="oilVo">0</span></div>
+        <div><b>S (cm²)</b><span id="oilSo">0</span></div>
+        <div><b>d=V/S (m)</b><span id="oilDo">0</span></div>
+        <div><b>数量级</b><span id="oilOrder">0</span></div>
+      </div>
+      <p class="small">左圆盘表示水面上摊开的单分子油膜,面积 S 越大 → 油膜摊得越薄 → 算出的分子直径 d 越小。真实分子直径约 10⁻¹⁰ m,这就是本方法测出的数量级。</p>
+    </div>
+
+    <h2 class="b">② 用阿伏伽德罗常数 NA 估算微观量</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>阿伏伽德罗常数 NA = 6.02×10²³ /mol</b> 是连接「摸得着的宏观量」与「摸不着的微观量」的桥梁:1mol 任何物质都含有 NA 个分子(或原子)。只要知道摩尔质量 M、摩尔体积 Vmol,就能反推单个分子的质量、体积。</p>
+      <table>
+        <tr><th>要求的量</th><th>公式</th><th>适用</th></tr>
+        <tr><td>分子质量 m₀</td><td>m₀ = M / NA</td><td>固、液、气体都适用(质量守恒,不受聚集状态影响)</td></tr>
+        <tr><td>分子体积 V₀</td><td>V₀ = Vmol / NA</td><td><b>只适用于固体、液体</b>(分子紧挨着排列,Vmol/NA 才等于分子本身体积)</td></tr>
+        <tr><td>分子数 N</td><td>N = n·NA = (m/M)·NA = (V/Vmol)·NA</td><td>n 为摩尔数;固液气都适用于"数个数"</td></tr>
+      </table>
+      <div class="mono">气体分子体积 ≠ Vmol/NA!气体分子间距远大于分子直径,Vmol/NA 算出的只是「平均每个分子占据的空间」(含大量空隙),不是分子本身的体积。</div>
+      <p style="margin:8px 0">这是本章<b>最高频的坑</b>:固体、液体分子挨得很紧,近似没有空隙,所以 Vmol/NA≈分子体积;气体分子之间距离是分子直径的十倍以上,Vmol/NA 算出来的是"一个分子平均分到的空间"(近似一个立方体的边长做直径估算),完全不能当作分子本身的体积。</p>
+      <p class="trap">⚠ 见到"气体"两个字,若要估算气体分子本身的体积,不能直接用 Vmol/NA;若要估算「气体分子间的平均距离」,才用 Vmol/NA 再开立方。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 2 — 微观量估算器:用 NA 求分子质量/体积/数目(区分固液与气体)</div>
+      <svg id="naSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="naphase on" data-p="0">固/液体</button>
+        <button class="naphase" data-p="1">气体</button>
+        <label>摩尔质量 M (g/mol) <input id="naM" type="range" min="10" max="80" value="18" step="1"></label>
+        <label>样品质量 m (g) <input id="nam" type="range" min="1" max="200" value="18" step="1"></label>
+        <label>摩尔体积 Vmol (mL/mol) <input id="naVm" type="range" min="18" max="30000" value="18" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>分子质量 m₀=M/NA (kg)</b><span id="naM0">0</span></div>
+        <div><b>分子体积/占据空间 (m³)</b><span id="naV0">0</span></div>
+        <div><b>分子数 N=(m/M)NA</b><span id="naN">0</span></div>
+        <div><b>提示</b><span id="naTip">-</span></div>
+      </div>
+      <p class="small">切换"固/液体"与"气体":固液体模式下 Vmol/NA 就是分子体积;气体模式下同样公式算出的只是"每个分子平均占据的空间"(含空隙),数值会大得多,提示会明确指出区别。</p>
+    </div>
+
+    <h2 class="g">③ 布朗运动:分子撞出来的"无规则舞蹈"</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>布朗运动</b>是悬浮在液体(或气体)中的<b>固体小颗粒</b>(如花粉碎屑、炭黑颗粒)所做的<b>无规则运动</b>——注意,布朗运动的主角是<b>宏观可见的微粒</b>,<b>不是分子本身</b>(分子太小,显微镜看不见)!</p>
+      <p style="margin:6px 0">微粒之所以无规则运动,是因为它<b>持续受到周围液体分子从四面八方的不断撞击</b>。某一时刻某个方向撞击力量稍占上风,微粒就朝那个方向被推一下;下一时刻力量对比又变了,微粒又转向。微粒越小,某一时刻两侧受力越难"恰好抵消",运动越剧烈。</p>
+      <table>
+        <tr><th>影响布朗运动剧烈程度的因素</th><th>规律</th></tr>
+        <tr><td>温度</td><td>温度越高,液体分子热运动越剧烈,撞击越猛烈 → 布朗运动越剧烈</td></tr>
+        <tr><td>微粒大小</td><td>微粒越小,单次合力不平衡越明显 → 布朗运动越剧烈;微粒越大,撞击效果被"平均掉",运动趋于平稳</td></tr>
+      </table>
+      <p style="margin:6px 0"><b>意义:</b> 布朗运动本身不是分子运动,但它<b>间接、有力地证明了液体分子在做永不停息的无规则热运动</b>——因为只有分子在乱撞,微粒才会被撞得东倒西歪。</p>
+      <p class="trap">⚠ 最高频陷阱:题目问"布朗运动是什么在运动",很多人答"分子",正确答案是<b>悬浮的固体微粒</b>。布朗运动是分子运动的<b>间接证据</b>,不是分子运动的直接展示。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 3 — 布朗运动动画:微粒被周围分子撞击(调温度/微粒大小看剧烈程度)</div>
+      <canvas id="brownCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="brownGo">▶ 开始/暂停</button><button id="brownReset">↺ 重置轨迹</button>
+        <label>温度 T <input id="brownT" type="range" min="1" max="10" value="5" step="1"></label>
+        <label>微粒大小 <input id="brownR" type="range" min="4" max="16" value="9" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>分子平均速率</b><span id="brownSpd">0</span></div>
+        <div><b>微粒半径 (相对)</b><span id="brownRad">0</span></div>
+        <div><b>剧烈程度</b><span id="brownLvl">-</span></div>
+        <div><b>累计折线数</b><span id="brownN">0</span></div>
+      </div>
+      <p class="small">白色圆点是大量液体分子(高速乱撞),中间蓝色大圆是被观察的悬浮微粒,红色折线是微粒的实际运动轨迹。温度越高分子撞击越猛,微粒越小轨迹越"抖"。</p>
+    </div>
+
+    <h2 class="g">④ 扩散现象:分子运动的直接证据</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>扩散</b>是两种(或多种)能够相互接触的物质,<b>不需要外界搅拌</b>,分子会自动彼此进入对方、最终均匀混合的现象(如红墨水在水中散开、闻到香水味)。固、液、气三态都能扩散,气体最快、固体最慢。</p>
+      <p style="margin:6px 0">扩散是分子无规则运动的<b>直接证据</b>(不像布朗运动那样需要通过微粒"转一手")。<b>温度越高,扩散越快</b>——因为温度升高,分子热运动加剧,更容易钻进对方的空隙里。</p>
+      <table>
+        <tr><th></th><th>布朗运动</th><th>扩散现象</th></tr>
+        <tr><td>运动的主体</td><td>悬浮的固体微粒(不是分子)</td><td>分子本身</td></tr>
+        <tr><td>证明方式</td><td>间接证据</td><td>直接证据</td></tr>
+        <tr><td>共同点</td><td colspan="2">都能被"温度越高、现象越剧烈/越快"这条规律描述</td></tr>
+      </table>
+      <p class="trap">⚠ 别把布朗运动和扩散现象混为一谈:布朗运动看的是可见微粒,扩散现象看的是不同物质分子互相进入对方——两者都能证明分子在运动,但主体和证明方式不同。</p>
+    </div>
+
+    <h2 class="o">⑤ 分子间的作用力:又拉又推的"弹簧"</h2>
+    <div class="card">
+      <p style="margin:6px 0">分子之间<b>同时存在引力和斥力</b>,合力(分子力)是两者的合成。引力、斥力都随分子间距离 r 增大而<b>减小</b>,但<b>斥力随 r 减小的速度更快</b>(斥力比引力对距离更敏感)。</p>
+      <table>
+        <tr><th>距离关系</th><th>引力 vs 斥力</th><th>合力表现为</th></tr>
+        <tr><td>r = r₀(平衡位置,约10⁻¹⁰m)</td><td>引力 = 斥力</td><td>合力为 0</td></tr>
+        <tr><td>r &lt; r₀</td><td>斥力 &gt; 引力(斥力增长更快)</td><td>表现为<b>斥力</b>(总想把分子推开)</td></tr>
+        <tr><td>r &gt; r₀</td><td>引力 &gt; 斥力</td><td>表现为<b>引力</b>(总想把分子拉近)</td></tr>
+        <tr><td>r 增大到 10 倍分子直径以上</td><td>引力、斥力都趋于 0</td><td>分子力可忽略(气体分子间可视为无相互作用)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>分子势能</b>:分子间存在相互作用力,就一定伴随分子势能。规定 r→∞ 时势能为 0,则势能 Ep 随 r 变化的曲线在 <b>r=r₀ 处最低</b>(势能最小,最稳定);r&lt;r₀ 时靠近需克服斥力做功,势能随 r 减小而<b>急剧上升</b>;r&gt;r₀ 时分子力做正功(引力拉近),势能随 r 增大而<b>缓慢上升</b>,最终趋于 0。</p>
+      <p class="trap">⚠ 常见误解:"分子间距离增大时先表现引力增大后表现斥力"——错!正确是"引力和斥力一直都在,只是合力谁占上风";另外势能最小点在 r₀ 处,不是 r→0 或 r→∞。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧲 互动 4 — 分子力随距离变化:拖动 r 看引力/斥力/合力(找到 r₀ 平衡点)</div>
+      <svg id="forceSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>分子间距 r <input id="forceR" type="range" min="40" max="300" value="100" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>引力 (相对值)</b><span id="fAttr">0</span></div>
+        <div><b>斥力 (相对值)</b><span id="fRep">0</span></div>
+        <div><b>合力</b><span id="fNet">0</span></div>
+        <div><b>合力性质</b><span id="fType">-</span></div>
+      </div>
+      <p class="small">蓝线=引力、红线=斥力,都随 r 增大而减小,但红线下降更快。绿线=合力(引力−斥力)。拖到两线交点即 r=r₀,合力为 0,这是分子间的平衡距离。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 5 — 分子势能-距离曲线:r₀ 处势能最小</div>
+      <svg id="epSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>分子间距 r <input id="epR" type="range" min="40" max="300" value="100" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前势能 Ep(相对值)</b><span id="epVal">0</span></div>
+        <div><b>与 r₀ 的关系</b><span id="epCmp">-</span></div>
+        <div><b>此时合力方向</b><span id="epForce">-</span></div>
+        <div><b>速度变化趋势</b><span id="epTrend">-</span></div>
+      </div>
+      <p class="small">势能曲线在 r=r₀ 处最低。r&lt;r₀ 一侧曲线陡峭上升(斥力做负功急剧增大势能),r&gt;r₀ 一侧缓慢上升趋于 0。滑块联动上一个互动的 r。</p>
+    </div>
+
+    <h2 class="v">⑥ 温度与分子平均动能</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>温度是分子平均动能的标志</b>:温度越高,组成物质的<b>大量分子的平均动能越大</b>(分子运动越剧烈,平均速率越大)。这里的"平均"很关键——个别分子的速度有快有慢、时刻在变,但大量分子的<b>统计平均值</b>只由温度决定。</p>
+      <p class="trap">⚠ 温度标志的是<b>平均动能</b>,不是"总动能"、也不是某一个分子的动能。同一温度下,不同分子的速率各不相同,只是平均值相同。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌡️ 互动 6 — 温度与分子平均动能:升温看分子运动加剧</div>
+      <canvas id="tempCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="tempGo">▶ 播放/暂停</button>
+        <label>温度 T (K，相对) <input id="tempT" type="range" min="100" max="900" value="300" step="20"></label>
+      </div>
+      <div class="live">
+        <div><b>温度 T</b><span id="tempTo">0</span></div>
+        <div><b>分子平均速率(相对)</b><span id="tempV">0</span></div>
+        <div><b>分子平均动能(相对,∝T)</b><span id="tempEk">0</span></div>
+        <div><b>直观感受</b><span id="tempFeel">-</span></div>
+      </div>
+      <p class="small">容器内许多分子做无规则热运动。拖高温度滑块,分子平均速率(∝√T)、平均动能(∝T)同步增大,画面上分子明显跑得更快、碰撞更频繁。</p>
+    </div>
+
+    <h2 class="v">⑦ 内能:所有分子动能与势能的总和</h2>
+    <div class="card">
+      <div class="eq">内能 = 物体内所有分子的分子动能之和 + 所有分子的分子势能之和</div>
+      <p style="margin:6px 0">内能是<b>物体自身的属性</b>,由物体的温度(决定分子平均动能)和体积/分子间距(决定分子势能)共同决定。<b>一切物体在任何情况下都具有内能</b>(哪怕温度很低、看起来静止不动)。</p>
+      <table>
+        <tr><th>改变内能的途径</th><th>本质</th><th>举例</th></tr>
+        <tr><td>做功</td><td>机械能与内能<b>相互转化</b>(外界对物体做功,内能增加;物体对外做功,内能减少)</td><td>摩擦生热、压缩气体升温、锯木头发烫</td></tr>
+        <tr><td>热传递</td><td>内能从高温物体<b>转移</b>到低温物体,总量不变(能的转移,不是转化)</td><td>用热水焐手、晒太阳、金属块导热</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>内能 ≠ 机械能:</b> 机械能(动能+重力势能+弹性势能)描述物体<b>整体</b>的运动和位置;内能描述物体内部<b>大量分子</b>的热运动动能和分子势能。一个静止放在桌上的杯子机械能可以为 0(动能为0、势能取参考面为0),但它的内能绝不为 0(分子仍在热运动)。</p>
+      <p class="trap">⚠ 常见混淆:①"物体温度不变,内能就不变"——错,晶体熔化过程吸热但温度不变,内能却在增加(用于克服分子间作用力做功,转化为势能)。②做功和热传递<b>效果相同</b>(都能改变内能),但<b>本质不同</b>——做功是能量形式的转化,热传递是能量的转移。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 油膜法估算分子直径</h3>
+      <p><b class="tag">触发信号:</b>「油酸」「油膜」「单分子层」「估算分子直径」,给溶液浓度、滴数、方格纸面积。</p>
+      <p><b class="tag">标准动作:</b>先求一滴纯油酸体积 V(每滴溶液体积×油酸体积分数),再由方格纸数出油膜面积 S(不足半格舍、超过半格算一格),d=V/S。</p>
+      <p><b class="tag">示例(带解):</b>1mL 油酸酒精溶液含纯油酸 0.04mL,若溶液配制成 250 滴/mL,某次实验滴入 1 滴,油膜面积用方格纸数出为 80cm²。一滴纯油酸体积 V=0.04/250=1.6×10⁻⁴mL=1.6×10⁻¹⁰m³。d=V/S=1.6×10⁻¹⁰/(80×10⁻⁴)=2×10⁻⁸m。（注意统一单位换算到国际单位制再相除）</p>
+      <p class="trap">陷阱:体积、面积单位不统一(mL、cm²、m³混用);数格子"多算少舍"规则记反;把整滴溶液体积当纯油酸体积。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 用 NA 估算微观量(分子数/质量/体积)</h3>
+      <p><b class="tag">触发信号:</b>给密度、摩尔质量、体积或质量,求"分子有多少个""每个分子多重/多大"。</p>
+      <p><b class="tag">标准动作:</b>先判断固液体还是气体。质量用 m₀=M/NA;固液体体积用 V₀=Vmol/NA=M/(ρ·NA);分子数 N=(m/M)NA=nNA;气体只能用 Vmol/NA 求"平均占据空间",不能当分子体积。</p>
+      <p><b class="tag">示例(带解):</b>水的摩尔质量 M=18g/mol,密度 ρ=1g/cm³,求一个水分子的质量和体积。m₀=M/NA=18/6.02×10²³≈2.99×10⁻²³g。摩尔体积 Vmol=M/ρ=18cm³/mol,V₀=Vmol/NA=18/6.02×10²³≈2.99×10⁻²³cm³（水是液体，此计算有效）。</p>
+      <p class="trap">陷阱:气体套用 Vmol/NA 当分子体积;质量、体积单位没换算成国际单位;分子数公式记混 n=m/M 还是 M/m。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 布朗运动 / 扩散现象辨析</h3>
+      <p><b class="tag">触发信号:</b>「显微镜观察到微粒做无规则运动」「墨水在水中散开」「打开香水瓶闻到香味」,判断现象、运动主体、影响因素。</p>
+      <p><b class="tag">标准动作:</b>先判断运动主体——可见微粒(布朗运动,间接证据)还是分子本身(扩散,直接证据);再套"温度越高越剧烈/越快""微粒越小布朗运动越剧烈"。</p>
+      <p><b class="tag">示例(带解):</b>显微镜下观察到悬浮在水中的藤黄颗粒不停地做无规则运动,该运动是——藤黄颗粒(不是水分子)的运动,是水分子无规则热运动撞击颗粒的结果，属于布朗运动，间接证明水分子在做永不停息的无规则运动。</p>
+      <p class="trap">陷阱:把布朗运动直接等同于分子运动;认为温度不变布朗运动/扩散会停止(只要温度不是绝对零度就一直存在，只是程度不同)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 分子力(引力/斥力/合力)判断</h3>
+      <p><b class="tag">触发信号:</b>给出 r 与 r₀ 的大小关系，或给"分子力-距离图像"，问合力方向、做功正负、是否可看作无作用力。</p>
+      <p><b class="tag">标准动作:</b>r=r₀ 合力0;r&lt;r₀ 合力为斥力(要把分子拉开需克服斥力做正功，分子势能增大);r&gt;r₀ 合力为引力(要把分子拉开需克服引力做正功，势能同样增大——只有在r0处势能最小);r超过约10倍分子直径，引力斥力都可忽略。</p>
+      <p><b class="tag">示例(带解):</b>两分子由 r=r₀ 逐渐拉开距离,过程中合力方向如何变化?先r略大于r0，合力表现为引力（阻碍拉开，即拉力方向与运动方向相反，做负功，势能增大）；持续增大r，引力先增大后减小（r0之后引力随距离先增后减，存在一个引力峰值），最终趋于0。</p>
+      <p class="trap">陷阱:认为"斥力先减小引力再增大"，实际引力斥力自始至终同时存在只是相对大小变化;误以为r&gt;r₀时合力是斥力。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 温度、内能、分子动能综合判断</h3>
+      <p><b class="tag">触发信号:</b>「温度升高/降低」「物体吸热但温度不变」「摩擦生热」，判断分子平均动能、内能、分子势能的变化。</p>
+      <p><b class="tag">标准动作:</b>温度只对应分子<b>平均动能</b>；内能=分子动能总和+分子势能总和，温度不变不代表内能不变(如晶体熔化)；做功和热传递都能改变内能但本质不同。</p>
+      <p><b class="tag">示例(带解):</b>冰在0℃熔化成0℃的水，温度不变，是否吸热？内能是否变化？— 吸热(熔化潜热)，温度不变说明分子平均动能不变，但吸收的热量用于克服分子间作用力做功，分子势能增大，所以内能增大。</p>
+      <p class="trap">陷阱:"温度不变→内能不变"是错误的因果;把内能等同于温度;把机械能变化和内能变化混为一谈。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 微观量估算的单位换算陷阱</h3>
+      <p><b class="tag">触发信号:</b>题目给出的密度、摩尔质量、体积用的是 g/cm³、g/mol、mL 等非国际单位，要求最终答案用国际单位(kg、m³、m)。</p>
+      <p><b class="tag">标准动作:</b>先在草稿上把所有量统一换算成 kg、m、m³（1cm³=10⁻⁶m³，1g=10⁻³kg），再代入 m₀=M/NA、V₀=Vmol/NA 等公式，最后核对数量级是否合理(分子直径~10⁻¹⁰m，分子质量~10⁻²⁶~10⁻²²kg量级视物质而定)。</p>
+      <p><b class="tag">示例(带解):</b>铁的摩尔质量 56g/mol=0.056kg/mol，密度 7.9g/cm³=7900kg/m³。Vmol=M/ρ=0.056/7900≈7.09×10⁻⁶m³/mol。V₀=Vmol/NA≈7.09×10⁻⁶/6.02×10²³≈1.18×10⁻²⁹m³，可反推分子直径 d=∛(6V₀/π) 或简化按立方体 d=∛V₀ 约 2.3×10⁻¹⁰m，量级正确。</p>
+      <p class="trap">陷阱:g/cm³直接代入国际单位公式不转换；算出的数量级明显不对(比如分子直径算成10⁻³m)却不回头检查。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 布朗运动的主体是<b>悬浮的固体微粒</b>,<b>不是分子本身</b>——分子太小,光学显微镜根本看不到单个分子。</p>
+      <p class="trap">② 气体分子体积<b>不能</b>用 Vmol/NA 计算!气体分子间距远大于分子直径,Vmol/NA 算出的只是「平均占据的空间」,不是分子本身大小。只有固、液体才能用 Vmol/NA≈分子体积。</p>
+      <p class="trap">③ 分子间<b>引力和斥力一直同时存在</b>,不是"先引力后斥力"或"距离变了力的种类才出现"——变化的只是两者的相对大小(谁占上风决定合力表现)。</p>
+      <p class="trap">④ 温度是<b>分子平均动能</b>的标志,不是总动能,更不是个别分子的动能——同温度下分子速率各不相同,只是平均值一致。</p>
+      <p class="trap">⑤ <b>内能 ≠ 机械能</b>。内能是物体内部大量分子热运动动能与分子势能之和,与物体整体是否运动、位置高低(机械能)无关。静止的物体也有内能。</p>
+      <p class="trap">⑥ "温度不变"不等于"内能不变"——晶体熔化、液体沸腾过程温度不变,但持续吸热使内能增加(用于克服分子力做功、增大分子势能)。</p>
+      <p class="trap">⑦ 分子势能最小点在 <b>r=r₀ 处</b>(此时合力为0),不是r趋于0或趋于无穷处;r&lt;r₀ 时越靠近势能越大(增长更快),r&gt;r₀ 时越远离势能也越大(增长较慢趋于0)。</p>
+      <p class="trap">⑧ 扩散现象是分子运动的<b>直接</b>证据,布朗运动是<b>间接</b>证据——别把二者证明方式记反。</p>
+      <p class="trap">⑨ 阿伏伽德罗常数 NA=6.02×10²³ /mol 是<b>连接微观与宏观的桥梁</b>,单位是"每摩尔",不要漏写单位或和摩尔质量、摩尔体积搞混。</p>
+      <p class="trap">⑩ 做功和热传递改变内能<b>效果等效,本质不同</b>:做功是能量形式转化(如机械能→内能),热传递是能量转移(内能从高温到低温),别把两者混为一谈。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 三个基本观点是一条因果链:</b> 大量分子存在(物质基础)→ 永不停息无规则运动(动力学基础,产生温度概念)→ 分子间有作用力(产生势能概念,决定聚集状态)。做题时先判断题目在考哪一环,能极大提速定位知识点。</p>
+      <p style="margin:8px 0"><b>② 一切微观量估算的本质是"1mol=NA个"这一座桥:</b> 不管求分子质量、体积还是数目,思路永远是先把宏观量换算成"多少摩尔"(n=m/M 或 n=V/Vmol),再乘以 NA 得到分子个数,或者用宏观量除以 NA 得到单个分子对应的量。记住这一座桥，比死记三个公式更稳。</p>
+      <p style="margin:8px 0"><b>③ 气体分子体积算不出来,恰恰是理想气体模型的物理内涵:</b> 正因为气体分子本身体积相对其活动空间可以忽略不计(分子间距≫分子直径),才有了"理想气体"的简化模型——这也是为什么气体既容易压缩又能无限膨胀充满容器。这条逻辑贯穿整个气体实验定律。</p>
+      <p style="margin:8px 0"><b>④ 分子力—距离图像与势能—距离图像互为"导数关系":</b> 合力 F 是负的势能对距离的变化率(F=-dEp/dr)。势能曲线最低点(r₀)正对应力曲线的零点——曲线在最低点处斜率为0，这正是"势能最小处合力为零、为稳定平衡点"的数学本质，这也是弹簧模型、化学键、晶格振动等一切"平衡距离"问题的通用图景。</p>
+      <p style="margin:8px 0"><b>⑤ 内能变化量 ΔU=W+Q 是能量守恒的具体化:</b> 外界对物体做的功 W 加上传递给物体的热量 Q,等于物体内能的增量(热力学第一定律的雏形,选修3-3会展开)。现在先建立"内能可以通过做功和热传递两条路增加或减少"的直觉,后面学 ΔU=W+Q 会非常顺。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 分子动理论与内能:热学的微观地基</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const NA=6.02e23;
+
+/* ===== 互动1:油膜法估算分子直径 ===== */
+(function(){
+  const svg=document.getElementById('oilSvg');
+  const Vs=document.getElementById('oilV'),Ss=document.getElementById('oilS');
+  const oVo=document.getElementById('oilVo'),oSo=document.getElementById('oilSo'),oDo=document.getElementById('oilDo'),oOrder=document.getElementById('oilOrder');
+  function sync(){draw();}
+  Vs.oninput=Ss.oninput=sync;
+  function draw(){
+    clr(svg);
+    const Vraw=+Vs.value; // x10^-9 mL
+    const Sraw=+Ss.value; // cm^2
+    const V_mL=Vraw*1e-9; // mL
+    const V_m3=V_mL*1e-6; // m^3
+    const S_cm2=Sraw;
+    const S_m2=S_cm2*1e-4; // m^2
+    const d=V_m3/S_m2; // m
+    oVo.textContent=V_mL.toExponential(2)+' mL';
+    oSo.textContent=S_cm2.toFixed(0)+' cm²';
+    oDo.textContent=d.toExponential(2)+' m';
+    const order=Math.floor(Math.log10(d));
+    oOrder.textContent='10^'+order;
+    // draw oil film circle: radius scaled from S
+    const cx=180,cy=140;
+    const rpx=Math.sqrt(S_cm2)*3.2+18;
+    el(svg,'circle',{cx:cx,cy:cy,r:rpx,fill:'rgba(232,106,23,0.28)',stroke:ORANGE,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:cx,y:cy+rpx+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='油膜面积 S='+S_cm2.toFixed(0)+' cm²';
+    el(svg,'text',{x:cx,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='单分子油膜俯视图(水面上摊开的油酸)';
+    // right side: thickness bar representing d
+    const bx=470,by=60,bh=160;
+    el(svg,'rect',{x:bx,y:by,width:120,height:bh,fill:'#eee',stroke:INK,'stroke-width':3});
+    const dNorm=Math.min(1,Math.max(0.04, (d/3e-9)));
+    const barH=Math.max(4,dNorm*bh);
+    el(svg,'rect',{x:bx,y:by+bh-barH,width:120,height:barH,fill:'rgba(20,80,200,0.35)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:bx+60,y:by+bh+22,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='油膜厚度≈分子直径d';
+    el(svg,'text',{x:bx+60,y:by-10,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='d='+d.toExponential(2)+'m';
+    el(svg,'text',{x:350,y:230,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='d = V / S　(把分子看成紧密排列的小球，膜厚即分子直径)';
+  }
+  draw();
+})();
+
+/* ===== 互动2:NA微观量估算器 ===== */
+(function(){
+  const svg=document.getElementById('naSvg');
+  const Ms=document.getElementById('naM'),ms=document.getElementById('nam'),Vms=document.getElementById('naVm');
+  const oM0=document.getElementById('naM0'),oV0=document.getElementById('naV0'),oN=document.getElementById('naN'),oTip=document.getElementById('naTip');
+  let phase=0;
+  document.querySelectorAll('.naphase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.naphase').forEach(x=>x.classList.remove('on'));b.classList.add('on');phase=+b.dataset.p;
+    if(phase===1){Vms.min=1000;Vms.max=30000;Vms.value=22400;}else{Vms.min=18;Vms.max=30000;Vms.value=18;}
+    draw();
+  });
+  function sync(){draw();}
+  Ms.oninput=ms.oninput=Vms.oninput=sync;
+  function draw(){
+    clr(svg);
+    const M=+Ms.value; // g/mol
+    const m=+ms.value; // g
+    const Vmol=+Vms.value; // mL/mol
+    const M_kg=M*1e-3, m_kg=m*1e-3, Vmol_m3=Vmol*1e-6;
+    const m0=M_kg/NA; // kg per molecule
+    const V0=Vmol_m3/NA; // m^3 per molecule (only valid if liquid/solid)
+    const n=m/M; // mol
+    const N=n*NA;
+    oM0.textContent=m0.toExponential(3);
+    oV0.textContent=V0.toExponential(3);
+    oN.textContent=N.toExponential(3);
+    if(phase===0){
+      oTip.textContent='固/液体:V0≈分子体积';
+    } else {
+      oTip.textContent='气体:V0仅为平均占据空间,≠分子体积!';
+    }
+    // simple bar chart of m0, V0(scaled), N(log scale)
+    const items=[
+      {lab:'m₀ (kg)',val:m0,col:BLUE},
+      {lab:phase===0?'V₀=分子体积(m³)':'平均占据空间(m³)',val:V0,col:phase===0?GREEN:RED},
+    ];
+    const bx0=80,by=150,bw=140,gap=220;
+    items.forEach((it,i)=>{
+      const logv=Math.log10(it.val);
+      const h=Math.max(10,Math.min(110,(logv+30)*4));
+      const x=bx0+i*gap;
+      el(svg,'rect',{x:x,y:by-h,width:bw,height:h,fill:it.col,stroke:INK,'stroke-width':3,opacity:0.75});
+      el(svg,'text',{x:x+bw/2,y:by+20,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.lab;
+      el(svg,'text',{x:x+bw/2,y:by-h-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.val.toExponential(2);
+    });
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(phase===0?'固/液体模式':'气体模式')+'：分子数 N='+N.toExponential(2)+'个';
+    el(svg,'text',{x:350,y:184,'font-size':12,'font-weight':800,fill:phase===0?GREEN:RED,'text-anchor':'middle'}).textContent=phase===0?'V₀=Vmol/NA 直接就是分子体积':'V₀=Vmol/NA 只是"平均占据空间"，含大量空隙';
+  }
+  draw();
+})();
+
+/* ===== 互动3:布朗运动 ===== */
+(function(){
+  const cv=document.getElementById('brownCv');const ctx=cv.getContext('2d');
+  const Ts=document.getElementById('brownT'),Rs=document.getElementById('brownR');
+  const oSpd=document.getElementById('brownSpd'),oRad=document.getElementById('brownRad'),oLvl=document.getElementById('brownLvl'),oN=document.getElementById('brownN');
+  const W=cv.width,H=cv.height;
+  let molecules=[];
+  const NMOL=40;
+  let particle={x:W/2,y:H/2,vx:0,vy:0};
+  let trail=[];
+  let running=true;
+  let T=5,R=9;
+  function initMol(){
+    molecules=[];
+    for(let i=0;i<NMOL;i++){
+      molecules.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5),vy:(Math.random()-0.5)});
+    }
+  }
+  function sync(){T=+Ts.value;R=+Rs.value;
+    oRad.textContent=R;
+    oSpd.textContent=(T*1.2).toFixed(1);
+    oLvl.textContent = (T>=8?'剧烈':T>=5?'中等':'轻微')+ (R<=7?'(微粒小,更剧烈)':R>=13?'(微粒大,较平稳)':'');
+  }
+  Ts.oninput=Rs.oninput=sync;
+  function reset(){particle={x:W/2,y:H/2,vx:0,vy:0};trail=[{x:particle.x,y:particle.y}];oN.textContent='0';}
+  function step(){
+    const speed=T*0.6;
+    let fx=0,fy=0;
+    molecules.forEach(m=>{
+      m.x+=m.vx*speed;m.y+=m.vy*speed;
+      if(m.x<0||m.x>W)m.vx*=-1;
+      if(m.y<0||m.y>H)m.vy*=-1;
+      m.x=Math.max(0,Math.min(W,m.x));
+      m.y=Math.max(0,Math.min(H,m.y));
+      const dx=particle.x-m.x, dy=particle.y-m.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<R+6 && dist>0.1){
+        fx+=dx/dist; fy+=dy/dist;
+        const ang=Math.atan2(m.y-particle.y,m.x-particle.x);
+        m.vx=Math.cos(ang)*Math.abs(m.vx||0.6);
+        m.vy=Math.sin(ang)*Math.abs(m.vy||0.6);
+      }
+    });
+    const impact=(30/Math.max(6,R))*0.5;
+    particle.vx=particle.vx*0.85+fx*impact*(T/5)*0.3+(Math.random()-0.5)*(T/5)*0.4;
+    particle.vy=particle.vy*0.85+fy*impact*(T/5)*0.3+(Math.random()-0.5)*(T/5)*0.4;
+    particle.x+=particle.vx;particle.y+=particle.vy;
+    particle.x=Math.max(R,Math.min(W-R,particle.x));
+    particle.y=Math.max(R,Math.min(H-R,particle.y));
+    trail.push({x:particle.x,y:particle.y});
+    if(trail.length>250)trail.shift();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    // molecules
+    molecules.forEach(m=>{
+      ctx.beginPath();ctx.arc(m.x,m.y,3,0,2*Math.PI);
+      ctx.fillStyle='#9fb3d1';ctx.fill();
+    });
+    // trail
+    ctx.strokeStyle=RED;ctx.lineWidth=1.6;
+    ctx.beginPath();
+    trail.forEach((p,i)=>{if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});
+    ctx.stroke();
+    // particle
+    ctx.beginPath();ctx.arc(particle.x,particle.y,R,0,2*Math.PI);
+    ctx.fillStyle='rgba(20,80,200,0.55)';ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('悬浮微粒(可见)',10,20);
+    ctx.fillText('小圆点=液体分子(高速乱撞)',10,H-12);
+    oN.textContent=trail.length;
+  }
+  function loop(){
+    if(running){step();draw();}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('brownGo').onclick=()=>{running=!running;};
+  document.getElementById('brownReset').onclick=reset;
+  initMol();reset();sync();
+  requestAnimationFrame(loop);
+})();
+
+/* ===== 互动4:分子力随距离变化 ===== */
+(function(){
+  const svg=document.getElementById('forceSvg');
+  const Rs=document.getElementById('forceR');
+  const oAttr=document.getElementById('fAttr'),oRep=document.getElementById('fRep'),oNet=document.getElementById('fNet'),oType=document.getElementById('fType');
+  const r0=100; // equilibrium pixel-scale distance
+  function attrF(r){return 800/Math.pow(r,1.2);}
+  function repF(r){return 4.2e6/Math.pow(r,4.5)*Math.pow(r0,3.3);}
+  function sync(){draw();}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=+Rs.value;
+    const X0=60,Y0=140,W=580,Hh=110;
+    el(svg,'line',{x1:X0,y1:Y0-Hh,x2:X0,y2:Y0+Hh,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0+W,y2:Y0,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:Y0+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='距离 r';
+    el(svg,'text',{x:X0-14,y:Y0-Hh+8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='力';
+    // curves
+    let attrPts=[],repPts=[],netPts=[];
+    for(let rr=30;rr<=300;rr+=2){
+      const x=X0+(rr-30)/(300-30)*W;
+      const a=attrF(rr), rp=repF(rr);
+      const net=rp-a; // positive = repulsive(net force pushes apart), negative = attractive
+      const scale=1.6;
+      attrPts.push(x+','+(Y0+Math.min(Hh-4,a*scale)));
+      repPts.push(x+','+(Y0-Math.min(Hh-4,rp*scale)));
+      netPts.push(x+','+(Y0-Math.max(-Hh+4,Math.min(Hh-4,-net*scale))));
+    }
+    el(svg,'polyline',{points:attrPts.join(' '),fill:'none',stroke:BLUE,'stroke-width':3});
+    el(svg,'polyline',{points:repPts.join(' '),fill:'none',stroke:RED,'stroke-width':3});
+    el(svg,'polyline',{points:netPts.join(' '),fill:'none',stroke:GREEN,'stroke-width':3.5});
+    el(svg,'text',{x:X0+8,y:Y0-Hh+18,'font-size':12,'font-weight':900,fill:RED}).textContent='斥力(上方)';
+    el(svg,'text',{x:X0+8,y:Y0+Hh-8,'font-size':12,'font-weight':900,fill:BLUE}).textContent='引力(下方)';
+    el(svg,'text',{x:X0+8,y:Y0-14,'font-size':12,'font-weight':900,fill:GREEN}).textContent='合力(绿)';
+    // r0 marker
+    const x0=X0+(r0-30)/(300-30)*W;
+    el(svg,'line',{x1:x0,y1:Y0-Hh,x2:x0,y2:Y0+Hh,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:x0,y:Y0+Hh+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='r₀(平衡距离)';
+    // current r marker
+    const x=X0+(r-30)/(300-30)*W;
+    el(svg,'circle',{cx:x,cy:Y0,r:6,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:x,y1:Y0-Hh,x2:x,y2:Y0+Hh,stroke:ORANGE,'stroke-width':2});
+    const a=attrF(r), rp=repF(r), net=rp-a;
+    oAttr.textContent=a.toFixed(2);
+    oRep.textContent=rp.toFixed(2);
+    oNet.textContent=Math.abs(net).toFixed(2);
+    oType.textContent = Math.abs(net)<0.15 ? '≈0(平衡点)' : (net>0? '表现为斥力' : '表现为引力');
+  }
+  draw();
+})();
+
+/* ===== 互动5:分子势能-距离曲线 ===== */
+(function(){
+  const svg=document.getElementById('epSvg');
+  const Rs=document.getElementById('epR');
+  const oVal=document.getElementById('epVal'),oCmp=document.getElementById('epCmp'),oForce=document.getElementById('epForce'),oTrend=document.getElementById('epTrend');
+  const r0=100;
+  function Ep(r){
+    // Lennard-Jones-like shape, minimum at r0, ->0 as r->inf, steep rise as r->0
+    const x=r0/r;
+    return 4*(Math.pow(x,4)-Math.pow(x,2))*20; // scaled, min near r0
+  }
+  function sync(){draw();}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=+Rs.value;
+    const X0=60,Y0=60,W=580,Hh=170;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+Hh,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+Hh*0.55,x2:X0+W,y2:Y0+Hh*0.55,stroke:'#999','stroke-width':1.5,'stroke-dasharray':'4 4'});
+    el(svg,'line',{x1:X0,y1:Y0+Hh,x2:X0+W,y2:Y0+Hh,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:Y0+Hh+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='距离 r';
+    el(svg,'text',{x:X0-14,y:Y0+10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='Ep';
+    let pts=[];
+    let minY=1e9,minX=0;
+    for(let rr=35;rr<=300;rr+=2){
+      const x=X0+(rr-35)/(300-35)*W;
+      let e=Ep(rr);
+      e=Math.max(-40,Math.min(120,e));
+      const y=Y0+Hh*0.55-e*1.2;
+      const yc=Math.max(Y0,Math.min(Y0+Hh,y));
+      pts.push(x+','+yc);
+      if(yc<minY){minY=yc;minX=x;}
+    }
+    el(svg,'polyline',{points:pts.join(' '),fill:'none',stroke:VIO,'stroke-width':3.5});
+    el(svg,'line',{x1:minX,y1:Y0,x2:minX,y2:Y0+Hh,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:minX,y:Y0+Hh+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='r₀(势能最小)';
+    // current marker
+    const x=X0+(r-35)/(300-35)*W;
+    let e=Ep(r);e=Math.max(-40,Math.min(120,e));
+    const y=Y0+Hh*0.55-e*1.2;
+    const yc=Math.max(Y0,Math.min(Y0+Hh,y));
+    el(svg,'circle',{cx:x,cy:yc,r:7,fill:YEL,stroke:INK,'stroke-width':2.5});
+    oVal.textContent=e.toFixed(1);
+    oCmp.textContent = r<r0-3 ? 'r<r₀(靠近)' : r>r0+3 ? 'r>r₀(远离)' : 'r≈r₀';
+    oForce.textContent = r<r0-3 ? '合力为斥力' : r>r0+3 ? '合力为引力' : '合力≈0';
+    oTrend.textContent = r<r0-3 ? '势能随r减小而快速增大' : r>r0+3 ? '势能随r增大而缓慢增大' : '势能最低,最稳定';
+  }
+  draw();
+})();
+
+/* ===== 互动6:温度与分子平均动能 ===== */
+(function(){
+  const cv=document.getElementById('tempCv');const ctx=cv.getContext('2d');
+  const Ts=document.getElementById('tempT');
+  const oTo=document.getElementById('tempTo'),oV=document.getElementById('tempV'),oEk=document.getElementById('tempEk'),oFeel=document.getElementById('tempFeel');
+  const W=cv.width,H=cv.height;
+  let mols=[];
+  const N=36;
+  let running=true;
+  let T=300;
+  function init(){
+    mols=[];
+    for(let i=0;i<N;i++){
+      const ang=Math.random()*2*Math.PI;
+      mols.push({x:Math.random()*W,y:Math.random()*H,ang:ang});
+    }
+  }
+  function sync(){
+    T=+Ts.value;
+    const v=Math.sqrt(T/300)*100;
+    const ek=(T/300)*100;
+    oTo.textContent=T;
+    oV.textContent=v.toFixed(0);
+    oEk.textContent=ek.toFixed(0);
+    oFeel.textContent = T>=700?'剧烈碰撞':T>=400?'明显加快':T>=250?'常温':'缓慢';
+  }
+  Ts.oninput=sync;
+  function step(){
+    const speed=Math.sqrt(T/300)*2.2;
+    mols.forEach(m=>{
+      m.x+=Math.cos(m.ang)*speed;
+      m.y+=Math.sin(m.ang)*speed;
+      if(m.x<8||m.x>W-8){m.ang=Math.PI-m.ang;m.x=Math.max(8,Math.min(W-8,m.x));}
+      if(m.y<8||m.y>H-8){m.ang=-m.ang;m.y=Math.max(8,Math.min(H-8,m.y));}
+      if(Math.random()<0.02)m.ang+=(Math.random()-0.5)*1.2;
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(2,2,W-4,H-4);
+    const hue = T>=700?RED : T>=450?ORANGE : T>=250?GREEN : BLUE;
+    mols.forEach(m=>{
+      ctx.beginPath();ctx.arc(m.x,m.y,6,0,2*Math.PI);
+      ctx.fillStyle=hue;ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();
+    });
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('容器内大量分子做无规则热运动 (T='+T+'K)',12,22);
+  }
+  function loop(){
+    if(running){step();}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('tempGo').onclick=()=>{running=!running;};
+  init();sync();
+  requestAnimationFrame(loop);
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 分子动理论的三个基本观点是什么?",a:"①物质由大量分子组成(分子间有空隙);②分子永不停息地做无规则热运动;③分子间存在相互作用力(引力和斥力同时存在)。"},
+ {q:"2. 油膜法测分子直径的公式和原理是什么?",a:"d=V/S。V是纯油酸体积,S是它在水面摊开成单分子油膜的面积。油膜薄到不能再薄时,厚度近似等于一个分子的直径。"},
+ {q:"3. 用NA估算分子质量、分子数的公式分别是什么?",a:"分子质量 m₀=M/NA(M为摩尔质量)。分子数 N=nNA=(m/M)NA=(V/Vmol)NA(n为摩尔数)。"},
+ {q:"4. 为什么气体不能用Vmol/NA计算分子体积?",a:"气体分子间距远大于分子直径,分子间有大量空隙,Vmol/NA算出的是「平均每个分子占据的空间」而非分子本身体积;只有固、液体分子紧密排列,Vmol/NA才近似等于分子体积。"},
+ {q:"5. 布朗运动的主体是什么?它说明了什么?",a:"布朗运动的主体是悬浮在液体(或气体)中的固体微粒,不是分子本身。它是液体分子无规则热运动撞击微粒的结果,间接证明分子在做永不停息的无规则运动。"},
+ {q:"6. 布朗运动的剧烈程度受哪些因素影响?",a:"温度越高,布朗运动越剧烈;微粒越小,布朗运动越剧烈(反之,微粒越大越平稳)。"},
+ {q:"7. 扩散现象和布朗运动的区别是什么?",a:"扩散现象是分子本身的运动,是分子运动的直接证据;布朗运动是悬浮微粒的运动,是分子运动的间接证据。两者都随温度升高而更剧烈/更快。"},
+ {q:"8. 分子间的引力和斥力随距离怎么变化?r=r₀时怎样?",a:"引力和斥力都随分子间距离增大而减小,但斥力减小得更快。r=r₀(平衡距离,约10⁻¹⁰m量级)时引力=斥力,合力为0;r<r₀合力表现为斥力;r>r₀合力表现为引力。"},
+ {q:"9. 分子势能随距离r如何变化?最小值在哪?",a:"在r=r₀处分子势能最小(最稳定)。r<r₀时,靠近需克服斥力做功,势能随r减小而急剧增大;r>r₀时,远离需克服引力做功,势能随r增大而缓慢增大,最终趋于0。"},
+ {q:"10. 温度的微观意义是什么?",a:"温度是物体分子平均动能的标志。温度越高,分子的平均动能越大(注意是平均值,不是总动能,也不是单个分子的动能)。"},
+ {q:"11. 内能的定义是什么?与机械能有何区别?",a:"内能=物体内所有分子的分子动能之和+所有分子的分子势能之和。内能描述分子热运动和分子间作用力,机械能描述物体整体的动能和(重力/弹性)势能,两者完全不同——静止物体机械能可为0但内能不为0。"},
+ {q:"12. 改变内能的两种途径是什么?本质有何不同?",a:"做功和热传递。做功是能量形式的转化(如机械能转化为内能),热传递是内能从高温物体向低温物体的转移,总量不变。两者改变内能的效果相同,但本质不同。"},
+ {q:"13. 晶体熔化过程温度不变,内能是否变化?为什么?",a:"内能增加。虽然温度不变(分子平均动能不变),但持续吸收的热量用于克服分子间作用力做功,使分子势能增大,所以内能仍在增加。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

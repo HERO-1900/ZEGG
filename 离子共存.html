@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>离子共存问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+  .ionchip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:8px 12px;font-size:14px;font-weight:900;cursor:pointer;box-shadow:2px 2px 0 var(--ink);border-radius:4px}
+  .ionchip.on{background:var(--blue);color:#fff}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>离子共存问题</h1>
+    <p class="lead">「离子能否大量共存」的本质只有一句话:<b>只要离子之间会自发反应,就不能共存</b>。题目难在两点——一是要把<b>四大反应类型</b>(沉淀/气体/弱电解质/氧化还原)背到条件反射,二是要能读出<b>隐含条件</b>(无色、酸性、碱性、水电离受抑制……)这些「暗号」在偷偷排除哪些离子。这一页把判断流程拆成可执行的步骤,不留死角。</p>
+
+    <div class="say">🗣️ <b>离子共存(人话版):</b> 一群离子扔进同一个烧杯,能不能和平共处?就看它们两两之间会不会「勾搭」——勾搭方式无非四种:<b>抱团沉淀</b>、<b>产气跑路</b>、<b>联姻生成弱电解质(如水)</b>、<b>互相电子转移(氧化还原)</b>。除此之外还有两种「隐藏勾搭」:<b>双水解</b>(互相促进水解到底)和<b>络合</b>(变个新颜色的配离子)。题目还常给你「暗号」——颜色、酸碱性、水电离程度——这些暗号本身就在告诉你「场上已经有谁了」,先解码暗号,再判断共存,一步都不能跳。</div>
+
+    <div class="keybox"><b>判断总口诀:</b> <b>看清条件(暗号解码)→ 两两配对检查四大反应 → 别漏双水解和络合 → 排除法定结论</b>。做题顺序反了(先配对不看条件)是最大丢分点。</div>
+
+    <h2>① 不能共存的四大原因</h2>
+    <div class="card">
+      <h3>原因一:生成沉淀</h3>
+      <p style="margin:6px 0">Ba²⁺ 与 SO₄²⁻(生成 BaSO₄↓);Ag⁺ 与 Cl⁻/Br⁻/I⁻(卤化银↓);OH⁻ 与 Mg²⁺/Cu²⁺/Fe³⁺/Fe²⁺/Al³⁺(氢氧化物↓);Ca²⁺ 与 CO₃²⁻/SO₄²⁻(微溶也算不共存)。</p>
+      <h3>原因二:生成气体或挥发性物质</h3>
+      <p style="margin:6px 0">H⁺ 与 CO₃²⁻/HCO₃⁻(生成 CO₂↑+H₂O);H⁺ 与 S²⁻/HS⁻(生成 H₂S↑);H⁺ 与 SO₃²⁻/HSO₃⁻(生成 SO₂↑);NH₄⁺ 与 OH⁻(浓、加热生成 NH₃↑)。</p>
+      <h3>原因三:生成弱电解质</h3>
+      <p style="margin:6px 0">H⁺ 与 OH⁻(生成 H₂O);H⁺ 与弱酸根/弱酸酸式根(CH₃COO⁻、F⁻、ClO⁻、AlO₂⁻等,生成弱酸);OH⁻ 与 NH₄⁺(生成 NH₃·H₂O 弱碱);H⁺ 与 弱酸根 或 OH⁻ 与 弱碱阳离子,本质都是「强碰弱,弱的被消灭」。</p>
+      <h3>原因四:发生氧化还原反应</h3>
+      <p style="margin:6px 0">Fe³⁺ 与 I⁻(2Fe³⁺+2I⁻=2Fe²⁺+I₂,氧化性 Fe³⁺>I₂);Fe³⁺ 与 S²⁻(同理被氧化);H⁺同时与 NO₃⁻ 和 Fe²⁺共存时,H⁺+NO₃⁻构成稀硝酸的强氧化性,会把 Fe²⁺氧化成 Fe³⁺(三者不能共存,尽管两两单独看似可以);MnO₄⁻(酸性高锰酸钾)与 Fe²⁺/I⁻/S²⁻/SO₃²⁻等还原性离子;ClO⁻(次氯酸盐,强氧化性)与 I⁻/S²⁻/SO₃²⁻/Fe²⁺等还原性离子。</p>
+      <p class="trap">⚠ 氧化还原是最容易漏判的一类——尤其是「H⁺ + NO₃⁻ + Fe²⁺」组合,单独看 H⁺与Fe²⁺、NO₃⁻与Fe²⁺都「像」能共存,但三者同时存在时 NO₃⁻在酸性环境下变成强氧化剂,照样把 Fe²⁺氧化掉。看到 NO₃⁻和 H⁺同时出现,要立刻检查场上有没有还原性离子(Fe²⁺、S²⁻、I⁻、SO₃²⁻等)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 1 — 四大不共存原因分类卡:点例子看反应类型与方程式</div>
+      <div id="reasonSvg"></div>
+      <div class="ctrl" id="reasonBtns"></div>
+      <div class="verdict" id="reasonNote">点击上方任意例子查看详情</div>
+      <p class="small">四张卡片对应沉淀 / 气体 / 弱电解质 / 氧化还原四大类,每类给 3 个高频例子。先把这张表刻进脑子,后面所有判断都是在调用它。</p>
+    </div>
+
+    <h2 class="b">② 离子共存判断器</h2>
+    <div class="card">
+      <p style="margin:6px 0">真正做题时,你要在脑内跑一个「两两配对检查」的循环:任选两个离子,依次问「会沉淀吗?会产气吗?会生成弱电解质吗?会氧化还原吗?」,四问全部否定才算这一对能共存。全场任意两个离子都通过,才是「大量共存」。</p>
+      <div class="mono">解题流程:①读条件(暗号解码,先排除一批)→②列出剩余离子→③两两配对过四关→④找到冲突立即下结论"不能共存"</div>
+      <p class="trap">⚠ 只要找到<b>一对</b>冲突,整个选项就判「不能共存」,不需要检查完所有组合——但考试压力下最容易漏看某一对,建议用「打表法」逐对划掉。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 2 — 离子共存判断器:勾选离子与环境条件,高亮冲突配对并给出原因</div>
+      <svg id="checkerSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl" id="checkerIons"></div>
+      <div class="ctrl" id="checkerCond"></div>
+      <div class="verdict" id="checkerNote">勾选离子后查看判断结果</div>
+      <p class="small">圆点=离子,红色连线=冲突配对(悬浮/点击查看原因)。条件(酸性/碱性/无色等)会先淡化被排除的离子。</p>
+    </div>
+
+    <h2 class="g">③ 隐含条件的解读(暗号解码)</h2>
+    <div class="card">
+      <table>
+        <tr><th>暗号(题目原话)</th><th>真实含义</th><th>排除对象</th></tr>
+        <tr><td>无色溶液</td><td>不能含有颜色离子</td><td>Cu²⁺(蓝)、Fe³⁺(黄)、Fe²⁺(浅绿)、MnO₄⁻(紫红)</td></tr>
+        <tr><td>酸性溶液 / pH=1</td><td>大量 H⁺存在</td><td>弱酸根(CO₃²⁻/HCO₃⁻/S²⁻/SO₃²⁻/ClO⁻/AlO₂⁻/CH₃COO⁻)、OH⁻</td></tr>
+        <tr><td>碱性溶液 / pH=14</td><td>大量 OH⁻存在</td><td>弱碱阳离子(NH₄⁺、Mg²⁺、Cu²⁺、Fe³⁺、Al³⁺等)、酸式根(HCO₃⁻、HSO₃⁻等,遇碱被中和)、H⁺</td></tr>
+        <tr><td>水电离出的 c(H⁺)=10⁻¹³mol/L(被抑制)</td><td>溶液可能是<b>强酸性</b>,也可能是<b>强碱性</b>——两种情况都要讨论</td><td>酸性时排除弱酸根/OH⁻;碱性时排除弱碱阳离子/酸式根/H⁺</td></tr>
+        <tr><td>加入铝粉产生 H₂</td><td>可能是<b>强酸性</b>(Al失电子),也可能是<b>强碱性</b>(Al与OH⁻反应)——双解</td><td>酸性、碱性两套排除表都要各判一次</td></tr>
+        <tr><td>含大量 Fe³⁺ 或酸性条件下的 NO₃⁻</td><td>体系具有<b>强氧化性</b></td><td>还原性离子(I⁻、S²⁻、SO₃²⁻、Fe²⁺等)</td></tr>
+      </table>
+      <p class="trap">⚠ 「水电离受抑制」≠「一定是酸性」!学生最常见的丢分:只想到酸性,漏掉碱性也能抑制水的电离,导致漏解一半。加铝产氢同理,必须双向讨论。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔑 互动 3 — 隐含条件解码器:选一个"暗号"，自动高亮排除的离子并给出理由</div>
+      <svg id="decodeSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl" id="decodeBtns"></div>
+      <div class="verdict" id="decodeNote">选择上方条件查看解码结果</div>
+      <p class="small">灰色=被排除的离子,绿色=仍可能存在。"水电离受抑制"和"加铝产氢"会出现两组灰色方案(酸性/碱性各一套),需要都看。</p>
+    </div>
+
+    <h2 class="o">④ 颜色离子:「无色溶液」暗号的钥匙</h2>
+    <div class="card">
+      <p style="margin:6px 0">中学阶段要记住的<b>有色离子</b>只有这四个,见到「无色溶液」题干,先把它们从候选里划掉:</p>
+      <table>
+        <tr><th>离子</th><th>颜色</th><th>常见来源</th></tr>
+        <tr><td>Cu²⁺</td><td>蓝色</td><td>CuSO₄、Cu(NO₃)₂ 等溶液</td></tr>
+        <tr><td>Fe³⁺</td><td>黄色(棕黄)</td><td>FeCl₃、Fe₂(SO₄)₃ 等溶液</td></tr>
+        <tr><td>Fe²⁺</td><td>浅绿色</td><td>FeSO₄、FeCl₂ 等溶液</td></tr>
+        <tr><td>MnO₄⁻</td><td>紫红色(紫色)</td><td>KMnO₄ 溶液</td></tr>
+      </table>
+      <p class="trap">⚠ 其余常见离子(Na⁺、K⁺、Cl⁻、SO₄²⁻、CO₃²⁻、NO₃⁻、Ba²⁺、Al³⁺、NH₄⁺等)本身都无色,别被"看起来特殊"的名字唬住。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎨 互动 4 — 颜色离子示意:四种有色离子的溶液外观对比</div>
+      <svg id="colorSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small">四个烧杯从左到右:Cu²⁺(蓝)、Fe³⁺(黄)、Fe²⁺(浅绿)、MnO₄⁻(紫红)。题干出现"无色溶液"四个字,这四杯里的离子全部出局。</p>
+    </div>
+
+    <h2 class="v">⑤ 双水解不共存</h2>
+    <div class="card">
+      <p style="margin:6px 0">有些「弱酸阳离子」和「弱酸根/强碱弱酸盐阴离子」放在一起,会发生<b>相互促进的水解反应</b>(双水解),水解程度远大于单独水解,通常直接<b>反应完全生成沉淀+气体</b>,所以不能共存。</p>
+      <table>
+        <tr><th>阳离子</th><th>阴离子</th><th>反应产物</th></tr>
+        <tr><td>Al³⁺</td><td>CO₃²⁻ / HCO₃⁻</td><td>Al(OH)₃↓ + CO₂↑</td></tr>
+        <tr><td>Al³⁺</td><td>AlO₂⁻</td><td>Al(OH)₃↓(3AlO₂⁻+Al³⁺+6H₂O=4Al(OH)₃↓)</td></tr>
+        <tr><td>Al³⁺</td><td>S²⁻ / HS⁻</td><td>Al(OH)₃↓ + H₂S↑</td></tr>
+        <tr><td>Fe³⁺</td><td>CO₃²⁻ / HCO₃⁻</td><td>Fe(OH)₃↓ + CO₂↑</td></tr>
+        <tr><td>Fe³⁺</td><td>AlO₂⁻</td><td>Fe(OH)₃↓ + Al(OH)₃↓</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>本质:</b> Al³⁺、Fe³⁺水解显酸性,CO₃²⁻、AlO₂⁻、S²⁻水解显碱性,两者放一起互相「拉扯」对方水解平衡往正方向走,直到接近完全反应。这跟"弱酸弱碱盐双水解"是同一套逻辑,只是这里发生在溶液里的离子之间。</p>
+      <p class="trap">⚠ 双水解常被误判为"能共存"——因为学生只检查了四大反应类型,却忘了水解这条隐藏线。看到 Al³⁺/Fe³⁺ 配 CO₃²⁻/HCO₃⁻/AlO₂⁻/S²⁻,要条件反射式地判"不能共存"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 5 — 双水解相互促进示意:两个水解平衡如何互相拖拽到底</div>
+      <svg id="hydroSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="hydroGo">▶ 演示相互促进</button><button id="hydroReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="hydroNote"></div>
+      <p class="small">左边 Al³⁺单独水解程度很小(平衡偏左);右边 CO₃²⁻单独水解也很小。放一起后,Al³⁺水解生成的 H⁺ 被 CO₃²⁻消耗,CO₃²⁻水解生成的 OH⁻被 Al³⁺消耗——两个平衡互相"抽走"对方的生成物,一起被拖向完全反应。</p>
+    </div>
+
+    <h2 class="r">⑥ 络合反应不共存</h2>
+    <div class="card">
+      <p style="margin:6px 0">Fe³⁺ 与 SCN⁻(硫氰酸根)不发生沉淀/气体/氧化还原,但会生成<b>血红色的配离子</b> [Fe(SCN)]²⁺等,严格意义上溶液组成已经改变(生成了新物种),中学教材通常也把这一类归为"不能大量共存"或作为特征反应考查(检验 Fe³⁺的经典方法)。</p>
+      <div class="eq">Fe³⁺ + 3SCN⁻ ⇌ Fe(SCN)₃　(血红色,可逆)</div>
+      <p class="trap">⚠ Fe(SCN)₃ 是可逆的络合反应而非彻底沉淀/气体,但只要题目问"能否大量共存",血红色配离子的生成本身就说明两者发生了显著反应,判"不能共存"。这是检验 Fe³⁺存在的教材经典方法,务必记住颜色特征。</p>
+    </div>
+
+    <h2 class="b">⑦ 常见陷阱汇总</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>陷阱一:</b> 忽略隐含的酸碱性/颜色条件——只看离子本身能不能共存,没注意题干说了"无色"或"pH=1"。</p>
+      <p style="margin:6px 0"><b>陷阱二:</b> 漏判氧化还原——尤其是 NO₃⁻在酸性环境下的隐藏氧化性,以及 Fe³⁺、MnO₄⁻、ClO⁻作为氧化剂时容易被忽略。</p>
+      <p style="margin:6px 0"><b>陷阱三:</b> 酸式根(HCO₃⁻、HSO₃⁻、HS⁻等)「腹背受敌」——既怕强酸(生成气体),又怕强碱(被中和生成正盐+水),酸性、碱性条件下都可能被排除,不能只挡一边。</p>
+    </div>
+
+    <h2 class="g">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 直接判断四大反应型不共存</h3>
+      <p><b class="tag">触发信号:</b>题干直接给出一组离子,不附加任何环境条件,问"能否大量共存"。</p>
+      <p><b class="tag">标准动作:</b>两两配对,依次检查沉淀→气体→弱电解质→氧化还原四关,任意一对触发即不能共存。</p>
+      <p><b class="tag">示例(带解):</b>判断 Ba²⁺、Na⁺、SO₄²⁻、Cl⁻能否大量共存。检查:Ba²⁺与SO₄²⁻生成BaSO₄↓——不能共存。其余组合(Na⁺与任意、Cl⁻与Ba²⁺)均无反应,但只要一对冲突就判整体不能共存。</p>
+      <p class="trap">陷阱:只看常见的"名对"(如H⁺/OH⁻),漏看不显眼的沉淀对(如Ba²⁺/SO₄²⁻、Ca²⁺/CO₃²⁻)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 隐含颜色条件("无色溶液")</h3>
+      <p><b class="tag">触发信号:</b>题干出现"无色溶液""溶液呈无色"字样。</p>
+      <p><b class="tag">标准动作:</b>先排除 Cu²⁺(蓝)、Fe³⁺(黄)、Fe²⁺(浅绿)、MnO₄⁻(紫红)四种离子,再对剩余离子做四大反应判断。</p>
+      <p><b class="tag">示例(带解):</b>无色溶液中能否大量存在 Fe³⁺、K⁺、NO₃⁻、Cl⁻?Fe³⁺显黄色,与"无色"矛盾,直接排除,不能大量共存。</p>
+      <p class="trap">陷阱:只记得 Cu²⁺是蓝色,漏掉 Fe²⁺的浅绿色容易被忽视(颜色较淡,常被误认为"接近无色")。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 隐含酸碱性条件(pH / 指示剂 / 使某试纸变色)</h3>
+      <p><b class="tag">触发信号:</b>"pH=1的溶液""能使石蕊变红的溶液""碱性溶液"等描述。</p>
+      <p><b class="tag">标准动作:</b>先判断是酸性还是碱性,酸性→排除弱酸根和OH⁻;碱性→排除弱碱阳离子、酸式根、H⁺;再做四大反应判断剩余离子。</p>
+      <p><b class="tag">示例(带解):</b>pH=1的溶液中能否大量存在 Na⁺、HCO₃⁻、Cl⁻、K⁺?pH=1即大量H⁺存在,HCO₃⁻遇H⁺生成CO₂↑+H₂O,不能大量共存。</p>
+      <p class="trap">陷阱:忘记"能使紫色石蕊变红"就是酸性、"使酚酞变红"就是碱性,只认数字pH而不认文字描述的等价条件。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 双向讨论型("水电离受抑制"、"加铝产氢")</h3>
+      <p><b class="tag">触发信号:</b>"水电离出的c(H⁺)=10⁻¹³mol/L""加入铝粉产生大量H₂"等描述,没有明说到底是酸性还是碱性。</p>
+      <p><b class="tag">标准动作:</b>意识到该条件对应<b>强酸性或强碱性两种可能</b>,分别按两套排除表判断,只要有一种情况能共存,该选项一般判"能共存"(或按题目具体问法,通常要求"一定能"或"可能能",需看清楚问法)。</p>
+      <p><b class="tag">示例(带解):</b>某溶液中水电离出的c(H⁺)=10⁻¹³mol/L，问能否大量存在 Na⁺、K⁺、HCO₃⁻、Cl⁻。该溶液可能强酸性(HCO₃⁻与H⁺反应,排除)也可能强碱性(HCO₃⁻与OH⁻反应生成CO₃²⁻+H₂O,同样排除)。两种情况下HCO₃⁻都被消耗，故不能大量共存。</p>
+      <p class="trap">陷阱:只考虑一种情况(通常是酸性)就下结论,漏掉另一半可能性导致错判。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 双水解 / 络合型</h3>
+      <p><b class="tag">触发信号:</b>题目中出现 Al³⁺、Fe³⁺ 与 CO₃²⁻、HCO₃⁻、AlO₂⁻、S²⁻、SCN⁻ 等的组合，看起来不属于四大反应中任何一类。</p>
+      <p><b class="tag">标准动作:</b>识别"弱酸阳离子+强碱弱酸根"组合触发双水解，或Fe³⁺遇SCN⁻触发络合，直接判不能共存。</p>
+      <p><b class="tag">示例(带解):</b>Al³⁺与NaHCO₃溶液混合能否大量共存?二者发生双水解:Al³⁺+3HCO₃⁻=Al(OH)₃↓+3CO₂↑，不能大量共存。</p>
+      <p class="trap">陷阱:机械套用四大反应类型表格找不到对应条目，误判为"能共存"，忘记双水解和络合是独立的第五、第六种不共存机制。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 氧化性环境下的隐藏氧化还原(NO₃⁻/H⁺组合)</h3>
+      <p><b class="tag">触发信号:</b>题目同时给出 H⁺(或酸性条件)和 NO₃⁻，且候选离子中含有 Fe²⁺、I⁻、S²⁻、SO₃²⁻等还原性离子。</p>
+      <p><b class="tag">标准动作:</b>识别"H⁺+NO₃⁻"在酸性环境下等效于稀硝酸，具有强氧化性，会把场上的还原性离子氧化，即使该还原性离子与H⁺、NO₃⁻单独看都不反应。</p>
+      <p><b class="tag">示例(带解):</b>在含大量H⁺和NO₃⁻的溶液中，能否大量共存Fe²⁺、K⁺、Cl⁻?H⁺与NO₃⁻组合成强氧化性环境，3Fe²⁺+4H⁺+NO₃⁻=3Fe³⁺+NO↑+2H₂O，Fe²⁺被氧化，不能大量共存。</p>
+      <p class="trap">陷阱:只单独检查Fe²⁺与H⁺(不反应)、Fe²⁺与NO₃⁻(不反应)，漏掉三者组合产生的氧化还原效应。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 「无色溶液」排除 Cu²⁺(蓝)、Fe³⁺(黄)、Fe²⁺(浅绿)、MnO₄⁻(紫红)——四个都要记住，Fe²⁺浅绿最容易漏。</p>
+      <p class="trap">② 「酸性/pH小」排除弱酸根(CO₃²⁻、HCO₃⁻、S²⁻、SO₃²⁻、ClO⁻、AlO₂⁻、CH₃COO⁻等)和OH⁻，别只排除碳酸根忘了其他弱酸根。</p>
+      <p class="trap">③ 「碱性/pH大」排除弱碱阳离子(NH₄⁺、Mg²⁺、Al³⁺、Fe³⁺、Cu²⁺等)、酸式根(会被中和)和H⁺。</p>
+      <p class="trap">④ 「水电离受抑制」和「加铝产氢」都是<b>双解</b>——酸性、碱性都要讨论，只考虑一种情况必错。</p>
+      <p class="trap">⑤ H⁺+NO₃⁻ 组合在酸性环境下有强氧化性，会氧化 Fe²⁺、I⁻、S²⁻、SO₃²⁻，即使单独两两看不反应。</p>
+      <p class="trap">⑥ 酸式根(HCO₃⁻、HSO₃⁻、HS⁻)「两头怕」——怕强酸(产气)也怕强碱(被中和成正盐)，双向都要检查。</p>
+      <p class="trap">⑦ 双水解不属于四大反应类型，是独立的第五种机制:Al³⁺/Fe³⁺ 遇 CO₃²⁻/HCO₃⁻/AlO₂⁻/S²⁻ 直接判不能共存。</p>
+      <p class="trap">⑧ Fe³⁺与SCN⁻络合生成血红色物质，是检验Fe³⁺的经典反应，也判不能大量共存。</p>
+      <p class="trap">⑨ 微溶物(如CaSO₄、Ag₂SO₄)在"大量共存"语境下也按沉淀处理，不能因为"微溶"就放行。</p>
+      <p class="trap">⑩ 只要找到一对冲突就可以下结论，不必检查完所有组合——但要用"打表法"避免漏看某一对。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 四大反应的本质是"谁更稳定谁获胜":</b> 沉淀、气体、弱电解质、氧化还原产物，本质上都比原来的离子组合<b>能量更低、更稳定</b>。判断共存的深层逻辑不是死记硬背反应表，而是问"这些离子放在一起，有没有更稳定的去处"——有，就会自发反应，就不能共存。</p>
+      <p style="margin:8px 0"><b>② 隐含条件都是在给你"场上已有大量H⁺或OH⁻"的信息:</b> 无论是pH数值、指示剂变色，还是水电离程度，本质都是在暗示溶液的酸碱环境，进而排除与H⁺/OH⁻不相容的离子。把所有隐含条件都翻译成"这个溶液里H⁺多还是OH⁻多"，就能统一处理，不必分别记忆每种表述。</p>
+      <p style="margin:8px 0"><b>③ "双向讨论"是这类题目区分度的核心:</b> 水电离受抑制、加铝产氢，命题人故意设置"看似单一实则双解"的条件，专门筛选出只会套模板而不会真思考的学生。凡遇到"没有明说是酸性还是碱性"但暗示了极端pH的描述，第一反应就是"两种情况都要算"。</p>
+      <p style="margin:8px 0"><b>④ 氧化还原共存问题要看"组合效应"而非"两两效应":</b> H⁺和NO₃⁻单独存在都不氧化Fe²⁺，但组合在一起就是硝酸的氧化性来源。这提醒我们：离子共存不是纯粹的两两配对问题，某些"三体组合"会产生单独配对时不存在的反应活性，做题时要对NO₃⁻/H⁺组合保持敏感。</p>
+      <p style="margin:8px 0"><b>⑤ 双水解和络合是命题人用来测试"你是否只会背四大类型"的加分项:</b> 真正的高手会在扫描四大反应类型之外，额外用0.5秒检查一遍"有没有Al³⁺/Fe³⁺配弱酸根"和"有没有Fe³⁺配SCN⁻"，这是把满分和及格分区分开的最后一道关卡。</p>
+    </div>
+
+    <h2 class="b">⑪ 共存闯关小测</h2>
+    <div class="card">
+      <div class="vlabel">🏁 互动 6 — 共存闯关:逐题选"能"或"不能"共存，即时判定并给出原因</div>
+      <div id="gameArea"></div>
+      <div class="ctrl">
+        <button id="gameNext">下一题 →</button><button id="gameReset">↺ 重新开始</button>
+      </div>
+      <div class="live">
+        <div><b>第几题</b><span id="gameIdx">1</span></div>
+        <div><b>总题数</b><span id="gameTotal">0</span></div>
+        <div><b>答对</b><span id="gameCorrect">0</span></div>
+        <div><b>正确率</b><span id="gameRate">—</span></div>
+      </div>
+    </div>
+
+    <h2 class="g">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 离子共存问题</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GRAY="#9a9a9a";
+
+/* ===== 互动1:四大不共存原因分类卡 ===== */
+(function(){
+  const btnBox=document.getElementById('reasonBtns');
+  const svgBox=document.getElementById('reasonSvg');
+  const note=document.getElementById('reasonNote');
+  const data=[
+    {cat:"沉淀",col:BLUE,items:[
+      {name:"Ba²⁺ + SO₄²⁻",eq:"Ba²⁺ + SO₄²⁻ = BaSO₄↓",desc:"生成难溶白色硫酸钡沉淀，遇盐酸不溶。"},
+      {name:"Ag⁺ + Cl⁻",eq:"Ag⁺ + Cl⁻ = AgCl↓",desc:"生成白色氯化银沉淀，是检验Cl⁻的经典反应。"},
+      {name:"OH⁻ + Mg²⁺",eq:"Mg²⁺ + 2OH⁻ = Mg(OH)₂↓",desc:"生成白色氢氧化镁沉淀；Cu²⁺、Fe³⁺遇OH⁻同理生成蓝色/红棕色沉淀。"}
+    ]},
+    {cat:"气体/挥发",col:GREEN,items:[
+      {name:"H⁺ + CO₃²⁻",eq:"CO₃²⁻ + 2H⁺ = H₂O + CO₂↑",desc:"生成二氧化碳气体逸出；HCO₃⁻同理。"},
+      {name:"H⁺ + S²⁻",eq:"S²⁻ + 2H⁺ = H₂S↑",desc:"生成臭鸡蛋味的硫化氢气体。"},
+      {name:"H⁺ + SO₃²⁻",eq:"SO₃²⁻ + 2H⁺ = H₂O + SO₂↑",desc:"生成刺激性气味的二氧化硫气体。"}
+    ]},
+    {cat:"弱电解质",col:ORANGE,items:[
+      {name:"H⁺ + OH⁻",eq:"H⁺ + OH⁻ = H₂O",desc:"中和反应生成水，是最基本的弱电解质生成反应。"},
+      {name:"H⁺ + CH₃COO⁻",eq:"CH₃COO⁻ + H⁺ = CH₃COOH",desc:"强酸制弱酸，生成弱电解质醋酸。"},
+      {name:"OH⁻ + NH₄⁺",eq:"NH₄⁺ + OH⁻ = NH₃·H₂O",desc:"生成弱碱一水合氨，浓/加热时进一步放出NH₃气体。"}
+    ]},
+    {cat:"氧化还原",col:RED,items:[
+      {name:"Fe³⁺ + I⁻",eq:"2Fe³⁺ + 2I⁻ = 2Fe²⁺ + I₂",desc:"Fe³⁺氧化性强于I₂，把I⁻氧化为碘单质。"},
+      {name:"MnO₄⁻ + Fe²⁺",eq:"MnO₄⁻ + 5Fe²⁺ + 8H⁺ = Mn²⁺ + 5Fe³⁺ + 4H₂O",desc:"酸性高锰酸钾把Fe²⁺氧化为Fe³⁺，自身紫色褪去。"},
+      {name:"H⁺+NO₃⁻ + Fe²⁺",eq:"3Fe²⁺ + 4H⁺ + NO₃⁻ = 3Fe³⁺ + NO↑ + 2H₂O",desc:"酸性条件下NO₃⁻具强氧化性，三者不能共存，即使两两单看不反应。"}
+    ]}
+  ];
+  let cur=0,curItem=0;
+  function buildBtns(){
+    clr2(btnBox);
+    data.forEach((d,i)=>{
+      const b=document.createElement('button');
+      b.textContent=d.cat;
+      b.style.background=cur===i?d.col:INK;
+      b.onclick=()=>{cur=i;curItem=0;render();};
+      btnBox.appendChild(b);
+    });
+  }
+  function clr2(n){while(n.firstChild)n.removeChild(n.firstChild);}
+  function render(){
+    buildBtns();
+    clr2(svgBox);
+    const d=data[cur];
+    const row=document.createElement('div');
+    row.className='chips';
+    d.items.forEach((it,i)=>{
+      const c=document.createElement('span');
+      c.className='chip'+(curItem===i?' on':'');
+      c.textContent=it.name;
+      c.onclick=()=>{curItem=i;render();};
+      row.appendChild(c);
+    });
+    svgBox.appendChild(row);
+    const it=d.items[curItem];
+    note.innerHTML='<b style="color:'+d.col+'">['+d.cat+']</b> '+it.eq+'　—　'+it.desc;
+    note.style.borderColor=d.col;
+  }
+  render();
+})();
+
+/* ===== 互动2:离子共存判断器 ===== */
+(function(){
+  const svg=document.getElementById('checkerSvg');
+  const ionBox=document.getElementById('checkerIons');
+  const condBox=document.getElementById('checkerCond');
+  const note=document.getElementById('checkerNote');
+  const ions=[
+    {n:"Ba²⁺",col:BLUE},{n:"Cu²⁺",col:BLUE},{n:"Fe³⁺",col:BLUE},{n:"Fe²⁺",col:BLUE},{n:"Al³⁺",col:BLUE},{n:"NH₄⁺",col:BLUE},{n:"H⁺",col:BLUE},
+    {n:"SO₄²⁻",col:ORANGE},{n:"CO₃²⁻",col:ORANGE},{n:"Cl⁻",col:ORANGE},{n:"OH⁻",col:ORANGE},{n:"S²⁻",col:ORANGE},{n:"I⁻",col:ORANGE},{n:"NO₃⁻",col:ORANGE}
+  ];
+  const conds=["无(常温中性)","酸性(大量H⁺)","碱性(大量OH⁻)"];
+  let sel={};ions.forEach(o=>sel[o.n]=false);
+  let cond=0;
+  function pairConflict(a,b,condIdx){
+    // returns reason string or null
+    const set=[a,b].sort().join(",");
+    const rules=[
+      [["Ba²⁺","SO₄²⁻"],"生成BaSO₄↓沉淀"],
+      [["Cl⁻","Ba²⁺"],null],
+      [["OH⁻","Cu²⁺"],"生成Cu(OH)₂↓沉淀"],
+      [["OH⁻","Fe³⁺"],"生成Fe(OH)₃↓沉淀"],
+      [["OH⁻","Fe²⁺"],"生成Fe(OH)₂↓沉淀"],
+      [["OH⁻","Al³⁺"],"生成Al(OH)₃↓沉淀"],
+      [["OH⁻","NH₄⁺"],"生成NH₃·H₂O弱电解质"],
+      [["OH⁻","H⁺"],"生成H₂O"],
+      [["H⁺","CO₃²⁻"],"生成CO₂↑和H₂O"],
+      [["H⁺","S²⁻"],"生成H₂S↑气体"],
+      [["Fe³⁺","I⁻"],"Fe³⁺氧化I⁻生成I₂"],
+      [["Fe³⁺","S²⁻"],"Fe³⁺氧化S²⁻"],
+      [["Fe³⁺","CO₃²⁻"],"双水解生成Fe(OH)₃↓和CO₂↑"],
+      [["Al³⁺","CO₃²⁻"],"双水解生成Al(OH)₃↓和CO₂↑"]
+    ];
+    for(const r of rules){
+      const key=r[0].slice().sort().join(",");
+      if(key===set && r[1]) return r[1];
+    }
+    // H+ + NO3- + Fe2+ special triple (handled separately)
+    return null;
+  }
+  function excludedByCond(name,c){
+    if(c===1){ // acidic
+      if(["OH⁻","CO₃²⁻","S²⁻"].includes(name)) return "酸性环境下与H⁺反应，不能大量存在";
+    }
+    if(c===2){ // basic
+      if(["H⁺","NH₄⁺","Fe³⁺","Fe²⁺","Cu²⁺","Al³⁺"].includes(name)) return "碱性环境下与OH⁻反应，不能大量存在";
+    }
+    return null;
+  }
+  function buildUI(){
+    clr(ionBox);
+    ions.forEach(o=>{
+      const b=document.createElement('button');
+      b.textContent=o.n;
+      b.style.background=sel[o.n]?RED:INK;
+      b.onclick=()=>{sel[o.n]=!sel[o.n];buildUI();draw();};
+      ionBox.appendChild(b);
+    });
+  }
+  function buildCond(){
+    clr(condBox);
+    conds.forEach((c,i)=>{
+      const b=document.createElement('button');
+      b.textContent=c;
+      b.style.background=cond===i?GREEN:INK;
+      b.onclick=()=>{cond=i;buildCond();draw();};
+      condBox.appendChild(b);
+    });
+  }
+  function draw(){
+    clr(svg);
+    const active=ions.filter(o=>sel[o.n]);
+    if(active.length===0){note.innerHTML='请勾选至少两个离子';note.style.borderColor=INK;return;}
+    const cx=350,cy=190,R=140;
+    const pos={};
+    active.forEach((o,i)=>{
+      const ang=(i/active.length)*2*Math.PI - Math.PI/2;
+      const x=cx+R*Math.cos(ang),y=cy+R*Math.sin(ang);
+      pos[o.n]=[x,y];
+    });
+    let conflicts=[];
+    for(let i=0;i<active.length;i++){
+      for(let j=i+1;j<active.length;j++){
+        const a=active[i].n,b=active[j].n;
+        const r=pairConflict(a,b,cond);
+        if(r) conflicts.push([a,b,r]);
+      }
+    }
+    // check triple H+ NO3- Fe2+
+    if(sel["H⁺"]&&sel["NO₃⁻"]&&sel["Fe²⁺"]){
+      conflicts.push(["H⁺+NO₃⁻","Fe²⁺","三者组合具强氧化性，氧化Fe²⁺为Fe³⁺"]);
+      if(!pos["H⁺+NO₃⁻"])pos["H⁺+NO₃⁻"]=[(pos["H⁺"][0]+pos["NO₃⁻"][0])/2,(pos["H⁺"][1]+pos["NO₃⁻"][1])/2];
+    }
+    const condExcl={};
+    active.forEach(o=>{const r=excludedByCond(o.n,cond);if(r)condExcl[o.n]=r;});
+    // draw lines for conflicts first (behind nodes)
+    conflicts.forEach(c=>{
+      if(pos[c[0]]&&pos[c[1]]){
+        el(svg,'line',{x1:pos[c[0]][0],y1:pos[c[0]][1],x2:pos[c[1]][0],y2:pos[c[1]][1],stroke:RED,'stroke-width':4});
+      }
+    });
+    // draw nodes
+    active.forEach(o=>{
+      const [x,y]=pos[o.n];
+      const excluded=condExcl[o.n];
+      el(svg,'circle',{cx:x,cy:y,r:26,fill:excluded?GRAY:'#fff',stroke:excluded?GRAY:o.col,'stroke-width':4});
+      el(svg,'text',{x:x,y:y+5,'font-size':13,'font-weight':900,fill:excluded?'#fff':INK,'text-anchor':'middle'}).textContent=o.n;
+    });
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='条件:'+conds[cond]+'　灰色=被条件排除　红线=冲突配对';
+    let msg='';
+    if(Object.keys(condExcl).length>0){
+      msg+='<b>被条件排除:</b>'+Object.keys(condExcl).map(k=>k+'('+condExcl[k]+')').join('；')+'　';
+    }
+    if(conflicts.length>0){
+      msg+='<b style="color:'+RED+'">发现冲突,不能大量共存:</b>'+conflicts.map(c=>c[0]+' 与 '+c[1]+'——'+c[2]).join('；');
+      note.style.borderColor=RED;
+    } else if(Object.keys(condExcl).length>0){
+      msg+='除条件排除外，其余离子两两未发现四大类型冲突。';
+      note.style.borderColor=GREEN;
+    } else {
+      msg='当前所选离子两两之间未发现冲突，可能大量共存(仅演示常见规则，不含全部反应)。';
+      note.style.borderColor=GREEN;
+    }
+    note.innerHTML=msg;
+  }
+  buildUI();buildCond();draw();
+})();
+
+/* ===== 互动3:隐含条件解码器 ===== */
+(function(){
+  const svg=document.getElementById('decodeSvg');
+  const btnBox=document.getElementById('decodeBtns');
+  const note=document.getElementById('decodeNote');
+  const allIons=["Na⁺","K⁺","Cu²⁺","Fe³⁺","Fe²⁺","Al³⁺","NH₄⁺","H⁺","Cl⁻","SO₄²⁻","CO₃²⁻","OH⁻","MnO₄⁻","S²⁻"];
+  const modes=[
+    {name:"无色溶液",excl:["Cu²⁺","Fe³⁺","Fe²⁺","MnO₄⁻"],reason:"排除有颜色的离子(蓝/黄/浅绿/紫红)",dual:false},
+    {name:"酸性(pH=1)",excl:["CO₃²⁻","OH⁻","S²⁻"],reason:"大量H⁺存在，排除弱酸根和OH⁻",dual:false},
+    {name:"碱性(pH=14)",excl:["NH₄⁺","Cu²⁺","Fe³⁺","Fe²⁺","Al³⁺","H⁺"],reason:"大量OH⁻存在，排除弱碱阳离子和H⁺",dual:false},
+    {name:"水电离受抑制",excl:null,reason:"可能强酸性也可能强碱性，需双向讨论",dual:true},
+    {name:"加铝产生H₂",excl:null,reason:"可能强酸性(Al失电子)也可能强碱性(Al与OH⁻反应)，需双向讨论",dual:true}
+  ];
+  let cur=0;
+  function buildBtns(){
+    clr(btnBox);
+    modes.forEach((m,i)=>{
+      const b=document.createElement('button');
+      b.textContent=m.name;
+      b.style.background=cur===i?RED:INK;
+      b.onclick=()=>{cur=i;buildBtns();draw();};
+      btnBox.appendChild(b);
+    });
+  }
+  function draw(){
+    clr(svg);
+    const m=modes[cur];
+    const cols=7;
+    const cellW=90,cellH=50;
+    const startX=(700-cols*cellW)/2, startY=60;
+    if(!m.dual){
+      allIons.forEach((ion,i)=>{
+        const x=startX+(i%cols)*cellW, y=startY+Math.floor(i/cols)*cellH;
+        const excluded=m.excl.includes(ion);
+        el(svg,'rect',{x:x+8,y:y+6,width:cellW-16,height:cellH-14,fill:excluded?GRAY:'#dff5ee',stroke:excluded?GRAY:GREEN,'stroke-width':3});
+        el(svg,'text',{x:x+cellW/2,y:y+cellH/2+5,'font-size':14,'font-weight':900,fill:excluded?'#fff':INK,'text-anchor':'middle'}).textContent=ion;
+      });
+      el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='暗号:'+m.name;
+      note.innerHTML='<b>'+m.reason+'</b>　被排除:'+m.excl.join('、');
+      note.style.borderColor=RED;
+    } else {
+      // dual: show two rows, acid scenario and base scenario
+      const acidExcl=["CO₃²⁻","OH⁻","S²⁻"];
+      const baseExcl=["NH₄⁺","Cu²⁺","Fe³⁺","Fe²⁺","Al³⁺","H⁺"];
+      el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='暗号:'+m.name+'（需双向讨论）';
+      el(svg,'text',{x:60,y:52,'font-size':13,'font-weight':900,fill:RED}).textContent='情况① 若为强酸性:';
+      allIons.forEach((ion,i)=>{
+        const x=startX+(i%cols)*cellW, y=60+Math.floor(i/cols)*cellH;
+        const excluded=acidExcl.includes(ion);
+        el(svg,'rect',{x:x+8,y:y+6,width:cellW-16,height:cellH-16,fill:excluded?GRAY:'#dff5ee',stroke:excluded?GRAY:GREEN,'stroke-width':3});
+        el(svg,'text',{x:x+cellW/2,y:y+cellH/2,'font-size':13,'font-weight':900,fill:excluded?'#fff':INK,'text-anchor':'middle'}).textContent=ion;
+      });
+      el(svg,'text',{x:60,y:180,'font-size':13,'font-weight':900,fill:BLUE}).textContent='情况② 若为强碱性:';
+      allIons.forEach((ion,i)=>{
+        const x=startX+(i%cols)*cellW, y=188+Math.floor(i/cols)*cellH;
+        const excluded=baseExcl.includes(ion);
+        el(svg,'rect',{x:x+8,y:y+6,width:cellW-16,height:cellH-16,fill:excluded?GRAY:'#dff5ee',stroke:excluded?GRAY:BLUE,'stroke-width':3});
+        el(svg,'text',{x:x+cellW/2,y:y+cellH/2,'font-size':13,'font-weight':900,fill:excluded?'#fff':INK,'text-anchor':'middle'}).textContent=ion;
+      });
+      note.innerHTML='<b>'+m.reason+'</b>　酸性时排除:'+acidExcl.join('、')+'；碱性时排除:'+baseExcl.join('、');
+      note.style.borderColor=VIO;
+    }
+  }
+  buildBtns();draw();
+})();
+
+/* ===== 互动4:颜色离子示意 ===== */
+(function(){
+  const svg=document.getElementById('colorSvg');
+  const items=[
+    {name:"Cu²⁺",col:"#2f6fd6",label:"蓝色"},
+    {name:"Fe³⁺",col:"#d6a92f",label:"黄色(棕黄)"},
+    {name:"Fe²⁺",col:"#8fcf9a",label:"浅绿色"},
+    {name:"MnO₄⁻",col:"#8a2f6f",label:"紫红色"}
+  ];
+  function draw(){
+    clr(svg);
+    const w=150,gap=25,startX=35,cy=170;
+    items.forEach((it,i)=>{
+      const x=startX+i*(w+gap);
+      // beaker
+      el(svg,'rect',{x:x,y:60,width:w,height:110,fill:'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'rect',{x:x+6,y:90,width:w-12,height:76,fill:it.col,opacity:0.75});
+      el(svg,'line',{x1:x-4,y1:60,x2:x-4,y2:170,stroke:INK,'stroke-width':0});
+      el(svg,'text',{x:x+w/2,y:40,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.name;
+      el(svg,'text',{x:x+w/2,y:188,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=it.label;
+    });
+    el(svg,'text',{x:350,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='"无色溶液"题干 → 这四种离子全部排除';
+  }
+  draw();
+})();
+
+/* ===== 互动5:双水解相互促进示意 ===== */
+(function(){
+  const svg=document.getElementById('hydroSvg');
+  const note=document.getElementById('hydroNote');
+  let t=0,running=false;
+  function draw(){
+    clr(svg);
+    const cx1=180,cx2=520,cy=110;
+    el(svg,'text',{x:cx1,y:34,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='Al³⁺ 水解';
+    el(svg,'text',{x:cx1,y:54,'font-size':12,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent='Al³⁺+3H₂O⇌Al(OH)₃+3H⁺';
+    el(svg,'text',{x:cx2,y:34,'font-size':14,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='CO₃²⁻ 水解';
+    el(svg,'text',{x:cx2,y:54,'font-size':12,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent='CO₃²⁻+H₂O⇌HCO₃⁻+OH⁻';
+    // progress bars showing how far each hydrolysis has proceeded
+    const prog=Math.min(1,t);
+    const barH=120;
+    el(svg,'rect',{x:cx1-40,y:cy+70,width:80,height:6,fill:'#ddd',stroke:INK,'stroke-width':2});
+    el(svg,'rect',{x:cx1-40,y:cy+70,width:80*prog,height:6,fill:BLUE});
+    el(svg,'rect',{x:cx2-40,y:cy+70,width:80,height:6,fill:'#ddd',stroke:INK,'stroke-width':2});
+    el(svg,'rect',{x:cx2-40,y:cy+70,width:80*prog,height:6,fill:ORANGE});
+    el(svg,'text',{x:cx1,y:cy+95,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='水解程度 '+(prog*100).toFixed(0)+'%';
+    el(svg,'text',{x:cx2,y:cy+95,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='水解程度 '+(prog*100).toFixed(0)+'%';
+    // arrows showing H+ being consumed by OH- (meeting in middle)
+    if(prog>0.05){
+      const hx=cx1+60+ (cx2-cx1-120)*Math.min(1,prog*1.3);
+      const ohx=cx2-60-(cx2-cx1-120)*Math.min(1,prog*1.3);
+      el(svg,'circle',{cx:hx,cy:cy,r:10,fill:RED});
+      el(svg,'text',{x:hx,y:cy+4,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='H+';
+      el(svg,'circle',{cx:ohx,cy:cy,r:10,fill:GREEN});
+      el(svg,'text',{x:ohx,y:cy+4,'font-size':9,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='OH-';
+      if(hx>=ohx-25){
+        el(svg,'text',{x:(hx+ohx)/2,y:cy-20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='H⁺+OH⁻=H₂O（互相抵消，拖拽平衡）';
+      }
+    }
+    if(prog>=1){
+      el(svg,'text',{x:350,y:cy+130,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='最终:Al³⁺+3CO₃²⁻+3H₂O=2Al(OH)₃↓+3CO₂↑（趋于完全反应）';
+      note.innerHTML='双水解使两个平衡都被大幅拖向正方向，最终生成沉淀+气体，两离子不能大量共存。';
+      note.style.borderColor=RED;
+    } else {
+      note.innerHTML='演示中:Al³⁺水解产生的H⁺不断被CO₃²⁻水解产生的OH⁻中和，促使两个水解平衡都持续正向移动。';
+      note.style.borderColor=INK;
+    }
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.015;
+    if(t>=1){t=1;running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('hydroGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('hydroReset').onclick=()=>{t=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动6:共存闯关小测 ===== */
+(function(){
+  const area=document.getElementById('gameArea');
+  const oIdx=document.getElementById('gameIdx'),oTotal=document.getElementById('gameTotal'),oCorrect=document.getElementById('gameCorrect'),oRate=document.getElementById('gameRate');
+  const questions=[
+    {ions:"Ba²⁺、Na⁺、SO₄²⁻、Cl⁻",can:false,reason:"Ba²⁺与SO₄²⁻生成BaSO₄↓沉淀，不能共存。"},
+    {ions:"K⁺、Cl⁻、NO₃⁻、SO₄²⁻",can:true,reason:"四种离子两两之间无沉淀、气体、弱电解质、氧化还原反应，可以共存。"},
+    {ions:"（无色溶液）Fe³⁺、K⁺、NO₃⁻、Cl⁻",can:false,reason:"Fe³⁺显黄色，与'无色'矛盾，不能共存。"},
+    {ions:"（pH=1）Na⁺、HCO₃⁻、Cl⁻、K⁺",can:false,reason:"pH=1即大量H⁺，HCO₃⁻遇H⁺生成CO₂↑和H₂O，不能共存。"},
+    {ions:"（碱性溶液）Na⁺、NH₄⁺、Cl⁻、SO₄²⁻",can:false,reason:"碱性溶液大量OH⁻，与NH₄⁺生成NH₃·H₂O，不能共存。"},
+    {ions:"Al³⁺、HCO₃⁻、Na⁺、Cl⁻",can:false,reason:"Al³⁺与HCO₃⁻发生双水解，生成Al(OH)₃↓和CO₂↑，不能共存。"},
+    {ions:"（含大量H⁺、NO₃⁻）Fe²⁺、K⁺、Cl⁻",can:false,reason:"H⁺+NO₃⁻构成强氧化性环境，把Fe²⁺氧化为Fe³⁺，不能共存。"},
+    {ions:"Fe³⁺、SCN⁻、Na⁺、Cl⁻",can:false,reason:"Fe³⁺与SCN⁻络合生成血红色物质，不能共存。"},
+    {ions:"Mg²⁺、K⁺、NO₃⁻、Cl⁻",can:true,reason:"四种离子两两之间无沉淀、气体、弱电解质、氧化还原反应，可以共存。"},
+    {ions:"（水电离c(H⁺)=10⁻¹³mol/L）Na⁺、K⁺、HCO₃⁻、Cl⁻",can:false,reason:"该条件对应强酸性或强碱性，两种情况下HCO₃⁻都会被消耗，不能共存。"}
+  ];
+  let idx=0,correct=0,answered=false;
+  function render(){
+    area.innerHTML='';
+    if(idx>=questions.length){
+      area.innerHTML='<div class="verdict">闯关结束!正确率 '+((correct/questions.length)*100).toFixed(0)+'%，可点"重新开始"再练一遍。</div>';
+      oIdx.textContent=questions.length;oTotal.textContent=questions.length;oCorrect.textContent=correct;oRate.textContent=((correct/questions.length)*100).toFixed(0)+'%';
+      return;
+    }
+    const q=questions[idx];
+    oIdx.textContent=idx+1;oTotal.textContent=questions.length;oCorrect.textContent=correct;
+    oRate.textContent=idx>0?((correct/idx)*100).toFixed(0)+'%':'—';
+    const qDiv=document.createElement('div');
+    qDiv.innerHTML='<p style="font-weight:900;font-size:15px">第'+(idx+1)+'题:'+q.ions+' 能否大量共存?</p>';
+    const btnRow=document.createElement('div');
+    btnRow.className='chips';
+    const yesBtn=document.createElement('button');yesBtn.className='chip';yesBtn.textContent='能共存';
+    const noBtn=document.createElement('button');noBtn.className='chip';noBtn.textContent='不能共存';
+    const result=document.createElement('div');result.style.marginTop='10px';result.style.fontWeight='800';
+    function answer(userSaysCan){
+      if(answered)return;answered=true;
+      const isCorrect=(userSaysCan===q.can);
+      if(isCorrect)correct++;
+      result.innerHTML=(isCorrect?'<span style="color:'+GREEN+'">✓ 判断正确!</span>':'<span style="color:'+RED+'">✗ 判断有误。</span>')+' 正确答案:'+(q.can?'能共存':'不能共存')+'。'+q.reason;
+      oCorrect.textContent=correct;
+      oRate.textContent=(((correct)/(idx+1))*100).toFixed(0)+'%';
+    }
+    yesBtn.onclick=()=>answer(true);
+    noBtn.onclick=()=>answer(false);
+    btnRow.appendChild(yesBtn);btnRow.appendChild(noBtn);
+    qDiv.appendChild(btnRow);qDiv.appendChild(result);
+    area.appendChild(qDiv);
+  }
+  document.getElementById('gameNext').onclick=()=>{if(answered){idx++;answered=false;render();}};
+  document.getElementById('gameReset').onclick=()=>{idx=0;correct=0;answered=false;render();};
+  render();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 离子不能共存的四大原因是什么?",a:"①生成沉淀 ②生成气体或挥发性物质 ③生成弱电解质 ④发生氧化还原反应。此外还有双水解、络合两种隐藏机制。"},
+ {q:"2. 「无色溶液」这个条件排除哪些离子?",a:"Cu²⁺(蓝色)、Fe³⁺(黄色)、Fe²⁺(浅绿色)、MnO₄⁻(紫红色)。"},
+ {q:"3. 「酸性溶液」和「碱性溶液」分别排除哪些离子?",a:"酸性(大量H⁺):排除弱酸根(CO₃²⁻、HCO₃⁻、S²⁻、SO₃²⁻等)和OH⁻。碱性(大量OH⁻):排除弱碱阳离子(NH₄⁺、Mg²⁺、Al³⁺、Fe³⁺等)、酸式根和H⁺。"},
+ {q:"4. 「水电离出的c(H⁺)=10⁻¹³mol/L」是什么意思?为什么要双向讨论?",a:"说明水的电离被抑制，可能是强酸性(H⁺抑制)，也可能是强碱性(OH⁻抑制)，两种情况都要分别判断排除哪些离子，只考虑一种会漏解。"},
+ {q:"5. 为什么Al³⁺和CO₃²⁻不能大量共存?属于四大反应类型的哪一种?",a:"不属于四大类型，而是双水解:Al³⁺水解显酸性、CO₃²⁻水解显碱性，两者互相促进水解趋于完全，生成Al(OH)₃↓和CO₂↑。"},
+ {q:"6. 为什么含大量H⁺和NO₃⁻的溶液中不能有Fe²⁺(即使H⁺和Fe²⁺、NO₃⁻和Fe²⁺单独都不反应)?",a:"H⁺和NO₃⁻组合相当于稀硝酸，具有强氧化性，会把Fe²⁺氧化为Fe³⁺:3Fe²⁺+4H⁺+NO₃⁻=3Fe³⁺+NO↑+2H₂O。"},
+ {q:"7. Fe³⁺与SCN⁻反应属于四大类型之一吗?现象是什么?",a:"不属于，是络合反应，生成血红色的Fe(SCN)₃，是检验Fe³⁺的经典方法，此题若问「能否大量共存」应判不能共存。"},
+ {q:"8. HCO₃⁻这种酸式根为什么说它「两头怕」?",a:"遇强酸(H⁺)会生成CO₂↑和H₂O;遇强碱(OH⁻)会被中和生成CO₃²⁻和H₂O。所以酸性、碱性条件下都可能被排除，需双向检查。"},
+ {q:"9. 判断一组离子能否大量共存的标准流程是什么?",a:"①先解码题目隐含条件(颜色/酸碱性/水电离/加铝产氢等)，排除相应离子；②列出剩余离子；③两两配对检查沉淀、气体、弱电解质、氧化还原四关，外加双水解、络合；④只要发现一对冲突即判不能共存。"},
+ {q:"10. 「加入铝粉产生大量H₂」这个条件说明什么?",a:"溶液可能是强酸性(Al失去电子被氧化，2Al+6H⁺=2Al³⁺+3H₂↑)，也可能是强碱性(2Al+2OH⁻+2H₂O=2AlO₂⁻+3H₂↑)，需双向讨论排除对应离子。"},
+ {q:"11. Ca²⁺和CO₃²⁻、SO₄²⁻能大量共存吗?为什么容易被忽视?",a:"不能共存，CaCO₃和CaSO₄都是难溶(或微溶)物质会生成沉淀。CaSO₄属于微溶物，容易被误认为「反应程度不够」而误判为可以共存，实际按沉淀处理。"},
+ {q:"12. Fe²⁺和Fe³⁺各自的溶液颜色是什么?容易混淆的地方在哪?",a:"Fe²⁺显浅绿色，Fe³⁺显黄色(棕黄色)。容易混淆:浅绿色较淡，做题时容易被误判为「接近无色」而漏排；也容易把两者颜色记反。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

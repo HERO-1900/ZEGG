@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>功率与机车启动问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>功率与机车启动问题</h1>
+    <p class="lead">机车启动问题的全部难点,归结为一句话:<b>额定功率 P额 是天花板,牵引力 F 和速度 v 谁先到顶,取决于你选哪种启动方式</b>。搞懂 P=Fv 这一个反比关系,再配合牛顿第二定律和动能定理,两种启动方式的 v-t 曲线、最大速度、能不能用匀加速公式,全都能现推,不用死记硬背。</p>
+
+    <div class="say">🗣️ <b>机车启动(人话版):</b> 汽车厂给你的发动机标了一个「额定功率」,这是它<b>正常工作时能出的最大功率</b>,不能超。你有两种「踩油门」的方式:一种是<b>一脚踩到底</b>,让功率立刻拉满(恒定功率启动)——这样一开始牵引力巨大但会越跑越"没劲",加速度越来越小;另一种是<b>先温柔地匀加速</b>(恒定加速度启动),功率随速度慢慢爬升,爬到额定功率后再转成第一种方式。两种方式殊途同归,最终都停在同一个"终点速度"——<b>最大速度 vmax=P额/f</b>,此时牵引力刚好等于阻力,加速度归零。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>P=W/t(平均功率)、P=Fv(瞬时功率,F、v 同向)</b>。功率一定时,<b>F 与 v 成反比</b>——这是整章的发动机。额定功率 P额 是机器能长期稳定输出的<b>最大功率</b>;实际功率 P实 ≤ P额,只有"拉满"时才相等。</div>
+
+    <h2>① 功率的两个公式:平均功率 vs 瞬时功率</h2>
+    <div class="card">
+      <div class="eq">平均功率:P = W/t　　瞬时功率:P = Fv(F 与 v 同向或同线)</div>
+      <p style="margin:8px 0">功率描述"做功的快慢"。<b>P=W/t</b> 是一段过程的<b>平均功率</b>,只看总功和总时间,不管中间怎么变化。<b>P=Fv</b> 是<b>某一时刻</b>的<b>瞬时功率</b>,F 是该时刻的牵引力,v 是该时刻的速度——这是机车问题里用得最多的公式,因为它把"力"和"速度"直接挂钩。</p>
+      <table>
+        <tr><th>公式</th><th>用在哪</th><th>注意</th></tr>
+        <tr><td>P=W/t</td><td>求一段时间/一段位移的<b>平均功率</b></td><td>W 可用动能定理或 W=Fs 求</td></tr>
+        <tr><td>P=Fv</td><td>求<b>某时刻</b>的瞬时功率,或已知功率反求 F 或 v</td><td>F、v 必须同一时刻、同方向</td></tr>
+      </table>
+      <p class="trap">⚠ P=Fv 里的 F 和 v 必须是<b>同一时刻</b>的值——机车启动过程中 F 和 v 都在变,不能用启动时的 F 配末速度 v 去算功率,那样张冠李戴。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚙️ 互动 1 — 额定功率 vs 实际功率:油门(实际功率)只要不超过发动机上限(额定功率)就行</div>
+      <svg id="ratedSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>额定功率 P额 (kW) <input id="ratedPe" type="range" min="40" max="100" value="60" step="5"></label>
+        <label>实际功率 P实 (kW) <input id="ratedPr" type="range" min="10" max="100" value="40" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>额定功率 P额</b><span id="ratedOutPe">0</span></div>
+        <div><b>实际功率 P实</b><span id="ratedOutPr">0</span></div>
+        <div><b>状态</b><span id="ratedState">—</span></div>
+        <div><b>是否合法</b><span id="ratedOk">—</span></div>
+      </div>
+      <p class="small">仪表盘指针=实际功率,红色刻度线=额定功率上限。实际功率可以小于额定功率(没开足马力),但<b>不能超过</b>额定功率——那是发动机的物理极限。只有"全力冲刺"阶段,P实=P额。</p>
+    </div>
+
+    <h2 class="b">② P=Fv 的核心关系:功率一定,F 与 v 成反比</h2>
+    <div class="card">
+      <div class="eq">P 恒定时:F = P/v　(v 增大 → F 减小;v 减小 → F 增大)</div>
+      <p style="margin:8px 0">这是整章的"发动机"。想象你在骑一辆功率恒定的自行车:速度越快,你能"挤出"的牵引力就越小;速度越慢,同样的功率能换来更大的牵引力(这也是为什么上坡要减挡——降低 v 来换取更大 F)。</p>
+      <p style="margin:8px 0">图像上,P 恒定时 F-v 图是一条<b>反比例曲线</b>(双曲线),F·v=P 处处成立。这条曲线是分析"恒定功率启动"过程的核心工具:v 从 0 开始沿曲线往右走,F 沿曲线往下掉,直到 F=f(阻力)为止。</p>
+      <p class="trap">⚠ 反比关系只在<b>功率恒定</b>时成立。恒定加速度启动的匀加速阶段,F 是恒定的,这时候功率 P=Fv 反而随 v 增大而增大,别把两种情形的因果关系搞反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动 2 — P=Fv 反比关系:拖动速度 v,看牵引力 F 如何变化(F-v 双曲线)</div>
+      <svg id="invSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>功率 P (kW，恒定) <input id="invP" type="range" min="20" max="80" value="50" step="5"></label>
+        <label>速度 v (m/s) <input id="invV" type="range" min="2" max="40" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>功率 P (kW)</b><span id="invOutP">0</span></div>
+        <div><b>速度 v (m/s)</b><span id="invOutV">0</span></div>
+        <div><b>牵引力 F=P/v (N)</b><span id="invOutF">0</span></div>
+        <div><b>验证 F·v</b><span id="invCheck">0</span></div>
+      </div>
+      <p class="small">曲线是 F=P/v 的双曲线,红点是当前(v,F)。往右拖 v,红点沿曲线往下滑——功率不变时,速度和牵引力此消彼长,乘积永远等于 P。</p>
+    </div>
+
+    <h2 class="g">③ 恒定功率启动:功率拉满,牵引力一路减小</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>过程:</b> 一开始就让发动机以<b>额定功率 P额</b> 工作(P额 恒定)。由 F=P额/v,v=0 时 F 最大(理论上无穷大,实际受限于轮胎摩擦等,不深究),随 v 增大,F=P额/v <b>持续减小</b>。</p>
+      <div class="eq">a = (F−f)/m = (P额/v − f)/m　→　随 v↑,F↓ ⇒ a 持续减小</div>
+      <p style="margin:8px 0">这是一个<b>加速度逐渐减小的加速运动</b>(不是匀加速!)。当 v 增大到使 F=f(牵引力等于阻力)时,a=0,速度不再增大,达到<b>最大速度</b>:</p>
+      <div class="eq">v_max = P额 / f</div>
+      <h3>此过程只能用动能定理,不能用匀变速公式</h3>
+      <div class="mono">P额·t − f·s = ½mv² − ½mv₀²　(全程功率恒定,牵引力做的功 = P额·t)</div>
+      <p style="margin:8px 0">因为加速度不是常数,vt=v0+at、s=v0t+½at² 这些<b>匀变速公式统统失效</b>。但功率恒定,牵引力做的功可以直接写成 W=P额·t(功率×时间,不需要知道力和位移的具体关系),这是动能定理在此类问题里"降维打击"的关键。</p>
+      <p class="trap">⚠ 恒定功率启动全程都不是匀加速,唯一能直接套公式的是 vmax=P额/f(a=0 时的终态)和动能定理 P额t−fs=ΔEk(全程适用,含中间任意一段)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚗 互动 3 — 恒定功率启动动画:功率拉满,牵引力 F=P额/v 减小,加速度减小,v 趋于 vmax</div>
+      <canvas id="pConstCv" width="700" height="150"></canvas>
+      <svg id="pConstSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="pcGo">▶ 启动(恒定功率)</button><button id="pcReset">↺ 重置</button>
+        <label>额定功率 P额 (kW) <input id="pcP" type="range" min="30" max="90" value="60" step="5"></label>
+        <label>阻力 f (N) <input id="pcF" type="range" min="500" max="2000" value="1000" step="100"></label>
+        <label>质量 m (t) <input id="pcM" type="range" min="1" max="3" value="1.5" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>当前速度 v (m/s)</b><span id="pcV">0</span></div>
+        <div><b>当前牵引力 F=P/v (N)</b><span id="pcTf">0</span></div>
+        <div><b>当前加速度 a (m/s²)</b><span id="pcA">0</span></div>
+        <div><b>最大速度 vmax=P/f</b><span id="pcVmax">0</span></div>
+      </div>
+      <p class="small">上方小车加速前进,下方 v-t 曲线是"加速度递减的加速运动"——曲线一开始很陡(a 大),越来越平(a 减小),最终趋于水平线 v=vmax。牵引力条从高到低下降到与阻力线齐平时,a 归零。</p>
+    </div>
+
+    <h2 class="o">④ 恒定加速度启动:先匀加速,后转恒功率</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>过程分两阶段:</b></p>
+      <h3>阶段一:恒定加速度(匀加速)</h3>
+      <p style="margin:6px 0">牵引力 F 恒定(且 F&gt;f),由 F=ma 得 <b>a=(F−f)/m 恒定</b>,做<b>匀加速直线运动</b>,此阶段功率 P=Fv <b>随 v 增大而增大</b>(F 不变,v 在涨,乘积当然涨)。这阶段可以放心使用 vt=v0+at、s=v0t+½at² 等匀变速公式。</p>
+      <h3>阶段二:功率达到额定值后,转为恒定功率</h3>
+      <p style="margin:6px 0">当 P=Fv 涨到等于 P额 时(此刻速度记为 <b>v₁=P额/F</b>),功率不能再涨了(已到发动机上限)。此后若继续保持 F 不变,P 会超过 P额,这是不允许的——于是牵引力开始随 v 增大而减小(F=P额/v),运动转为"恒定功率启动"模式(加速度开始减小),直到 F=f,达到同样的最大速度 <b>vmax=P额/f</b>。</p>
+      <div class="eq">阶段一末速度:v₁ = P额/F　(此刻 a 突变,由恒定转为递减)　　终态:vmax = P额/f</div>
+      <p class="trap">⚠ 恒定加速度启动的第一阶段功率<b>不是恒定的</b>,是随 v 线性增大的(P=Fv,F 恒定)。很多同学误以为整个"恒定加速度启动"过程功率都不变,这是错的——恒定的是<b>加速度</b>,不是功率;功率恒定要等到第二阶段才成立。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚙 互动 4 — 恒定加速度启动动画:两阶段(匀加速 → 恒功率),v-t 曲线在 v₁ 处转折</div>
+      <canvas id="aConstCv" width="700" height="150"></canvas>
+      <svg id="aConstSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="acGo">▶ 启动(恒定加速度)</button><button id="acReset">↺ 重置</button>
+        <label>牵引力 F (N) <input id="acF" type="range" min="1500" max="4000" value="2500" step="100"></label>
+        <label>额定功率 P额 (kW) <input id="acP" type="range" min="30" max="90" value="60" step="5"></label>
+        <label>阻力 f (N) <input id="acFr" type="range" min="500" max="2000" value="1000" step="100"></label>
+        <label>质量 m (t) <input id="acM" type="range" min="1" max="3" value="1.5" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>当前阶段</b><span id="acPhase">—</span></div>
+        <div><b>转折速度 v₁=P/F</b><span id="acV1">0</span></div>
+        <div><b>当前速度 v</b><span id="acV">0</span></div>
+        <div><b>最大速度 vmax=P/f</b><span id="acVmax">0</span></div>
+      </div>
+      <p class="small">v-t 曲线前段是<b>直线</b>(匀加速,斜率=a 恒定),到达 v₁ 处出现<b>转折点</b>,之后曲线变凹(加速度递减),最终趋于水平线 vmax。转折点就是"功率刚好达到额定值"的瞬间。</p>
+    </div>
+
+    <h2 class="v">⑤ 两种启动方式对比:v-t 图与"谁更快到达 vmax"</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>恒定功率启动</th><th>恒定加速度启动</th></tr>
+        <tr><td>牵引力 F</td><td>持续减小(F=P额/v)</td><td>先恒定,达 P额 后减小</td></tr>
+        <tr><td>加速度 a</td><td>持续减小(从大到 0)</td><td>先恒定,后减小到 0</td></tr>
+        <tr><td>功率 P</td><td>全程 = P额(恒定)</td><td>先增大到 P额,后恒定</td></tr>
+        <tr><td>v-t 图形状</td><td>一条上凸曲线(斜率渐小)</td><td>先直线后上凸曲线,有转折点</td></tr>
+        <tr><td>适用公式</td><td>只能动能定理(全程变加速)</td><td>阶段一可用匀变速公式;阶段二转恒功率同左</td></tr>
+        <tr><td>相同点</td><td colspan="2">最终都达到同一 vmax=P额/f(此时 F=f,a=0)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>比较起步冲劲:</b> 恒定功率启动一开始牵引力可以非常大(F=P额/v,v→0 时 F→∞,受限于实际条件),起步"猛";恒定加速度启动为了不超额定功率,前期牵引力恒定且有限,起步"稳"。实际机车常用恒定加速度启动,保护机械、乘坐舒适。</p>
+      <p class="trap">⚠ 无论哪种方式,最大速度都是同一个 vmax=P额/f——因为最大速度的条件只有一个:F=f、a=0,与怎么启动的过程无关。别以为两种方式会到达不同的"终点"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 5 — 两种启动方式 v-t 图对比:同一 vmax,不同路径</div>
+      <svg id="cmpSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>额定功率 P额 (kW) <input id="cmpP" type="range" min="30" max="90" value="60" step="5"></label>
+        <label>阻力 f (N) <input id="cmpFr" type="range" min="500" max="2000" value="1000" step="100"></label>
+        <label>恒加速阶段 F (N) <input id="cmpFa" type="range" min="1500" max="4000" value="2500" step="100"></label>
+      </div>
+      <div class="live">
+        <div><b>最大速度 vmax</b><span id="cmpVmax">0</span></div>
+        <div><b>恒加速转折 v₁</b><span id="cmpV1">0</span></div>
+        <div><b>红线</b><span id="cmpNoteRed">恒定功率</span></div>
+        <div><b>蓝线</b><span id="cmpNoteBlue">恒定加速度</span></div>
+      </div>
+      <p class="small">红色曲线(恒定功率启动)从一开始就是上凸的减速增长;蓝色曲线(恒定加速度启动)先是直线,到 v₁ 处转弯变凸,两者最终都收敛到同一条水平虚线 vmax。</p>
+    </div>
+
+    <h2 class="b">⑥ vmax = P额/f 计算器:最大速度的条件</h2>
+    <div class="card">
+      <div class="eq">达到最大速度时:F = f　(牵引力=阻力)　⇒　a = 0　⇒　vmax = P额/f</div>
+      <p style="margin:8px 0">这是全章唯一"稳态"的时刻——不管之前用哪种方式启动,只要匀速阶段到了,牵引力必然等于阻力(否则还会继续加速或减速),此时功率也达到最大值且等于 P额(若额定功率已用满)。</p>
+      <p class="trap">⚠ vmax=P额/f 成立的前提是"最终匀速阶段发动机以额定功率工作"。如果题目说"以某个小于额定功率的恒定功率行驶最终匀速",那么此时 vmax'=P/f 用的是<b>那个恒定的 P</b>,不是 P额——看清题目给的是哪个功率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 6 — vmax=P额/f 计算器:拖动额定功率与阻力,实时看最大速度</div>
+      <svg id="vmaxSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>额定功率 P额 (kW) <input id="vmP" type="range" min="20" max="100" value="60" step="5"></label>
+        <label>阻力 f (N) <input id="vmF" type="range" min="500" max="2500" value="1000" step="100"></label>
+      </div>
+      <div class="live">
+        <div><b>额定功率 P额 (W)</b><span id="vmOutP">0</span></div>
+        <div><b>阻力 f (N)</b><span id="vmOutF">0</span></div>
+        <div><b>最大速度 vmax (m/s)</b><span id="vmOutV">0</span></div>
+        <div><b>换算 (km/h)</b><span id="vmOutKmh">0</span></div>
+      </div>
+      <p class="small">横向标尺显示 vmax 随 P额、f 的变化:功率越大、阻力越小,vmax 越大。刻度条长度正比于 vmax,直观感受"谁涨谁跌"。</p>
+    </div>
+
+    <h2 class="g">⑦ 额定功率 vs 实际功率:两个常被混淆的概念</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>额定功率 P额</th><th>实际功率 P实</th></tr>
+        <tr><td>含义</td><td>发动机<b>铭牌标定</b>的最大安全输出功率</td><td>某一时刻发动机<b>实际正在输出</b>的功率</td></tr>
+        <tr><td>能否超过</td><td>不能超过(机器上限)</td><td>P实 ≤ P额,可等可小于</td></tr>
+        <tr><td>何时相等</td><td colspan="2">"全力以赴"阶段(恒定功率启动全程、恒定加速度启动的第二阶段、最终匀速阶段)</td></tr>
+        <tr><td>何时不等</td><td colspan="2">恒定加速度启动的第一阶段(匀加速期),P实=Fv &lt; P额,随 v 增大</td></tr>
+      </table>
+      <p style="margin:8px 0">类比:额定功率像汽车说明书上写的"最高马力",实际功率是你此刻真正踩出来的马力。你可以温柔驾驶(P实&lt;P额),但发动机再怎么"使劲"也不可能突破铭牌上限。</p>
+      <p class="trap">⚠ 看到题目说"以恒定功率 P 行驶"而没写"额定"二字时要留心:如果 P &lt; P额,说明还没开到极限,车辆还能再加速(只要继续加大功率);只有当 P=P额 且已到最大速度,才是真正的"极限状态"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎛️ 互动 7 — 额定/实际功率随启动过程的变化:两种方式下 P实 与 P额 的关系曲线</div>
+      <svg id="ratioSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ratiomode on" data-m="0">恒定功率启动</button>
+        <button class="ratiomode" data-m="1">恒定加速度启动</button>
+      </div>
+      <div class="verdict" id="ratioNote"></div>
+      <p class="small">横轴是时间,纵轴是功率。虚线=额定功率 P额。恒定功率启动:P实 从一开始就贴着 P额(水平线);恒定加速度启动:P实 先线性爬升,碰到 P额 后贴线不再增大。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求最大速度 vmax</h3>
+      <p><b class="tag">触发信号:</b>「最大速度」「最终匀速速度」「能达到的最高速度」,给了额定功率和阻力(或摩擦系数、质量、g)。</p>
+      <p><b class="tag">标准动作:</b>最大速度时 F=f,a=0 ⇒ vmax=P额/f。若阻力未直接给出,先由 f=μmg(水平面)或受力分析求 f。</p>
+      <p><b class="tag">示例(带解):</b>质量 2000kg 汽车,额定功率 60kW,水平路面阻力恒为 1000N,求最大速度。vmax=P额/f=60000/1000=60 m/s。</p>
+      <p class="trap">陷阱:把某一时刻的瞬时功率当额定功率代入;忘记先求阻力 f;误用未到额定功率的"半路"数据。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 恒定功率启动,求某时刻的量或用动能定理求过程量</h3>
+      <p><b class="tag">触发信号:</b>「以额定功率启动」「保持功率不变加速」,问某时刻的牵引力/加速度,或问一段时间/位移内的功、末速度。</p>
+      <p><b class="tag">标准动作:</b>某时刻:F=P额/v,a=(F−f)/m。一段过程:全程变加速,只能用动能定理 P额t−fs=½mv²−½mv₀²,不能用匀变速公式。</p>
+      <p><b class="tag">示例(带解):</b>额定功率 60kW 的汽车质量 2000kg,从静止以恒定功率启动,阻力恒为 1000N,加速到 20m/s 时,牵引力 F=P额/v=60000/20=3000N,此时 a=(3000−1000)/2000=1 m/s²。若求加速到 20m/s 所用的时间,需已知位移或用动能定理反推,不能直接用 v=at。</p>
+      <p class="trap">陷阱:恒定功率启动全程不是匀加速,乱用 v=v0+at 或 s=v0t+½at²;漏看"某时刻"还是"全过程"。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 恒定加速度启动,求转折点 v₁ 与后续过程</h3>
+      <p><b class="tag">触发信号:</b>「以恒定加速度启动」「匀加速到功率达到额定值后」,问何时功率达到额定、之后如何运动。</p>
+      <p><b class="tag">标准动作:</b>阶段一(匀加速):F、a 恒定,用 F=ma、v=at、s=½at² 等匀变速公式;当 P=Fv 增大到 P额 时,v₁=P额/F,阶段一结束。阶段二起转为恒定功率启动模式,用动能定理,直到 vmax=P额/f。</p>
+      <p><b class="tag">示例(带解):</b>质量 1500kg 汽车,以恒定加速度 a=1 m/s² 从静止启动,牵引力 F=2500N(阻力 f=1000N,故 a=(2500−1000)/1500≈1),额定功率 60kW。当 v₁=P额/F=60000/2500=24 m/s 时,功率达到额定值,阶段一结束;此时已用时 t₁=v₁/a=24s,位移 s₁=½at₁²=288m。此后转恒定功率,继续加速到 vmax=60000/1000=60 m/s。</p>
+      <p class="trap">陷阱:把整个恒定加速度启动过程都当匀加速处理,漏掉"到 v₁ 后转折"这一步;算 v₁ 时误用 v₁=P额·f/F 等错误变形。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 判断能否达到某速度 / 比较两种启动方式</h3>
+      <p><b class="tag">触发信号:</b>「能否达到 v=30m/s」「哪种启动方式先达到额定功率」「比较两车谁先到最大速度」。</p>
+      <p><b class="tag">标准动作:</b>先求 vmax=P额/f,与题目所问速度比较:若所问速度 &gt; vmax,则永远达不到;若 ≤ vmax,则理论上能达到(恒定功率启动瞬时可达,恒定加速度启动需先看是否超过 v₁ 阶段)。</p>
+      <p><b class="tag">示例(带解):</b>上例中 vmax=60m/s,若问"能否达到 70m/s",因 70&gt;60=vmax,回答:不能,因为达到 vmax 后 F=f,a=0,速度不再增大。</p>
+      <p class="trap">陷阱:忽视"匀速上限"的存在,以为只要时间够长速度就能一直增大;混淆"额定功率"与题目中途某个"实际功率"。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 由 v-t 图像反推运动过程与功率状态</h3>
+      <p><b class="tag">触发信号:</b>给出一张 v-t 图,曲线先是直线后是上凸曲线(或全程上凸),问对应的启动方式、何时功率恒定、何时加速度恒定。</p>
+      <p><b class="tag">标准动作:</b>看图形:全程上凸(斜率渐减)→恒定功率启动;先直线后上凸(有转折点)→恒定加速度启动,转折点即 P 达到 P额 的时刻;最终水平段→vmax=P额/f,读出终值。</p>
+      <p><b class="tag">示例(带解):</b>某 v-t 图 0~5s 为过原点的直线,斜率 2m/s²,5s 后变为上凸曲线并趋于 20m/s。可知:0~5s 为恒定加速度阶段(a=2m/s²),v₁=2×5=10m/s 为转折速度;5s 后转恒定功率阶段;最终 vmax=20m/s。</p>
+      <p class="trap">陷阱:把上凸曲线段误读成继续匀加速;忽视水平渐近线就是 vmax,读错终值。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 平均功率与瞬时功率混合计算</h3>
+      <p><b class="tag">触发信号:</b>「求这段时间的平均功率」和「求此时的瞬时功率」同时出现在一题中,或要求先求功后求功率。</p>
+      <p><b class="tag">标准动作:</b>平均功率:先求这段过程的总功 W(动能定理或 W=Fs),再 P平=W/t。瞬时功率:抓住具体时刻的 F、v,直接 P=Fv。两者不能混用同一个式子求。</p>
+      <p><b class="tag">示例(带解):</b>汽车质量 1000kg,由静止匀加速到 10m/s 用时 5s,阻力恒 500N,求：(1) 5s 末瞬时功率;(2) 这 5s 内的平均功率。a=10/5=2m/s²,F=ma+f=2000+500=2500N。(1) P瞬=Fv=2500×10=25000W。(2) 位移 s=½at²=25m,W=Fs=2500×25=62500J,P平=W/t=62500/5=12500W(注意 P平≠½P瞬,因为 v 不是从 0 均匀映射到 F·v 的平均)。</p>
+      <p class="trap">陷阱:以为匀加速时 P平=½P瞬(F 恒定但 v 是线性增长,P=Fv 也线性增长,其实 P平=F·v平=F·(v0+v)/2,本例中确实等于½P瞬,但换算需要重新验证而非死记);把平均功率和瞬时功率的公式套反。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① P=Fv 中的 F、v 必须是<b>同一时刻</b>的瞬时值,不能拿启动时的力配末速度,也不能拿平均速度直接代入求瞬时功率。</p>
+      <p class="trap">② <b>恒定功率启动全程不是匀加速</b>!F、a 都在减小,vt=v0+at、s=v0t+½at² 一律不能用,只能用动能定理和 vmax=P额/f。</p>
+      <p class="trap">③ <b>恒定加速度启动只有第一阶段是匀加速</b>,达到额定功率后转为恒定功率模式,后半段同样不能再用匀变速公式。</p>
+      <p class="trap">④ 达到最大速度 vmax 的条件是 <b>F=f、a=0</b>,不是 v 不再变化就是"功率最大"——要分清"速度最大"和"功率最大"有时同时发生,有时不同时。</p>
+      <p class="trap">⑤ 额定功率 P额 是发动机能长期输出的<b>最大功率</b>,不能超过;实际功率 P实 可以小于或等于 P额,只有全力状态才相等。</p>
+      <p class="trap">⑥ vmax=P额/f 前提是"最终以额定功率匀速行驶";若题目说是以某个非额定的恒定功率匀速,vmax 要用<b>那个恒定功率</b>而非 P额。</p>
+      <p class="trap">⑦ 恒定加速度启动阶段一的功率<b>不是恒定的</b>,是随 v 线性增大到 P额;恒定的是加速度,别把"恒定加速度"误记成"恒定功率"。</p>
+      <p class="trap">⑧ 求恒定加速度启动的转折速度 v₁ 时,用的是<b>阶段一的恒定牵引力 F</b>:v₁=P额/F,不是 vmax 的公式 P额/f,两者分母不同(F≠f)。</p>
+      <p class="trap">⑨ 平均功率 P平=W/t 不能想当然地等于½P瞬(只在牵引力恒定且末速度是从 0 线性增长的特殊匀加速情形下,平均速度=v末/2,才恰好有这个数值关系,不是普遍公式)。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 两种启动方式的本质是同一个约束下的两条路径:</b> 无论怎么启动,发动机都受"P≤P额"这一个硬约束。恒定功率启动是"一开始就把约束用满";恒定加速度启动是"先不用满,匀加速攒到约束边界,再用满"。理解了这一点,你会发现所有"能不能达到某速度""何时转折"的问题,本质都是在问"什么时候撞上了 P=P额 这堵墙"。</p>
+      <p style="margin:8px 0"><b>② vmax=P额/f 是唯一的"不动点":</b> 数学上,F=f 是加速度方程 a=(P/v−f)/m=0 的唯一解(v>0),不管初始条件、不管走哪条路径,只要时间足够长,系统都会收敛到这个不动点。这也是为什么两种启动方式的 v-t 曲线最终"殊途同归"——它们是同一个微分方程在不同初始阶段下的解,渐近线相同。</p>
+      <p style="margin:8px 0"><b>③ 恒定功率启动的动能定理式,本质是省去了对 F(t)、a(t) 具体形式的求解:</b> P额t−fs=ΔEk 之所以好用,是因为它把"牵引力如何随时间/速度变化"这个复杂的微分过程,直接用"总功=总功率×总时间"打包处理,不需要积分 F(t)dt 或解微分方程。这是动能定理相对牛顿第二定律的降维优势,在变力问题里体现得淋漓尽致。</p>
+      <p style="margin:8px 0"><b>④ 恒定加速度启动的转折速度 v₁=P额/F 可以用来"反推"额定功率或牵引力:</b> 只要题目告诉你匀加速阶段的加速度、持续的时间或位移,再加上"转折时功率达到额定值"这个条件,就能建立方程组求出 F、f、P额 中的未知量——这是一类隐藏较深的综合题的解题入口。</p>
+      <p style="margin:8px 0"><b>⑤ 图像思维:F-v 图与 v-t 图是同一物理过程的两种"投影":</b> F-v 图上,恒定功率启动是沿着一条双曲线 F=P/v 移动的点;v-t 图上,同一过程表现为一条上凸曲线。看到题目给出任意一种图像,都可以在脑中"翻译"成另一种,交叉验证是否存在计算错误。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 功率与机车启动问题</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:额定功率 vs 实际功率仪表盘 ===== */
+(function(){
+  const svg=document.getElementById('ratedSvg');
+  const Pes=document.getElementById('ratedPe'),Prs=document.getElementById('ratedPr');
+  const oPe=document.getElementById('ratedOutPe'),oPr=document.getElementById('ratedOutPr'),oState=document.getElementById('ratedState'),oOk=document.getElementById('ratedOk');
+  function sync(){draw();}
+  Pes.oninput=Prs.oninput=sync;
+  function draw(){
+    clr(svg);
+    let Pe=+Pes.value, Pr=+Prs.value;
+    const over = Pr>Pe;
+    if(over){Prs.value=Pe;Pr=Pe;}
+    const cx=350,cy=200,R=150;
+    const maxScale=100;
+    // gauge background arc
+    const startA=Math.PI, endA=0;
+    el(svg,'path',{d:arcPath(cx,cy,R,startA,endA),fill:'none',stroke:INK,'stroke-width':10});
+    // rated power tick (red line)
+    const rAng=Math.PI-(Pe/maxScale)*Math.PI;
+    const rx1=cx+R*Math.cos(rAng),ry1=cy-R*Math.sin(rAng);
+    const rx2=cx+(R+22)*Math.cos(rAng),ry2=cy-(R+22)*Math.sin(rAng);
+    el(svg,'line',{x1:rx1,y1:ry1,x2:rx2,y2:ry2,stroke:RED,'stroke-width':6});
+    el(svg,'text',{x:rx2,y:ry2-8,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='额定上限 P额='+Pe+'kW';
+    // needle for actual power
+    const nAng=Math.PI-(Pr/maxScale)*Math.PI;
+    const nx=cx+(R-20)*Math.cos(nAng),ny=cy-(R-20)*Math.sin(nAng);
+    el(svg,'line',{x1:cx,y1:cy,x2:nx,y2:ny,stroke:BLUE,'stroke-width':7,'stroke-linecap':'round'});
+    el(svg,'circle',{cx:cx,cy:cy,r:10,fill:INK});
+    el(svg,'text',{x:cx,y:cy+40,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='实际功率 P实='+Pr+'kW';
+    el(svg,'text',{x:cx,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='功率仪表盘(蓝针=实际功率,红线=额定功率上限)';
+    oPe.textContent=Pe+' kW';oPr.textContent=Pr+' kW';
+    if(Pr>=Pe){oState.textContent='全力(P实=P额)';oOk.textContent='合法(贴上限)';}
+    else{oState.textContent='未拉满';oOk.textContent='合法';}
+  }
+  function arcPath(cx,cy,r,a0,a1){
+    const x0=cx+r*Math.cos(a0),y0=cy-r*Math.sin(a0);
+    const x1=cx+r*Math.cos(a1),y1=cy-r*Math.sin(a1);
+    return 'M '+x0+' '+y0+' A '+r+' '+r+' 0 0 1 '+x1+' '+y1;
+  }
+  sync();
+})();
+
+/* ===== 互动2:P=Fv 反比关系 ===== */
+(function(){
+  const svg=document.getElementById('invSvg');
+  const Ps=document.getElementById('invP'),Vs=document.getElementById('invV');
+  const oP=document.getElementById('invOutP'),oV=document.getElementById('invOutV'),oF=document.getElementById('invOutF'),oCheck=document.getElementById('invCheck');
+  function sync(){draw();}
+  Ps.oninput=Vs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const P=+Ps.value*1000; // W
+    const v=+Vs.value;
+    const F=P/v;
+    const X0=70,Y0=30,W=560,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-14,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='F(N)';
+    el(svg,'text',{x:X0+W,y:Y0+H+24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v(m/s)';
+    const Vmax=40, Fmax=P/2; // scale based on min v=2 giving max F shown
+    const FmaxScale=Math.max(F,25000);
+    // draw hyperbola F=P/v for v in [1,40]
+    let pts=[];
+    for(let vv=1; vv<=Vmax; vv+=0.5){
+      const ff=P/vv;
+      if(ff>FmaxScale*1.2) continue;
+      const px=X0+(vv/Vmax)*W;
+      const py=Y0+H-(ff/FmaxScale)*H;
+      if(py<Y0) continue;
+      pts.push(px+','+py);
+    }
+    el(svg,'polyline',{points:pts.join(' '),fill:'none',stroke:BLUE,'stroke-width':4});
+    // current point
+    const px=X0+(v/Vmax)*W;
+    const py=Y0+H-(F/FmaxScale)*H;
+    const cy=Math.max(Y0,Math.min(Y0+H,py));
+    el(svg,'circle',{cx:px,cy:cy,r:8,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px,y1:cy,x2:px,y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'line',{x1:X0,y1:cy,x2:px,y2:cy,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='F=P/v 双曲线（P='+(P/1000).toFixed(0)+'kW 恒定）';
+    oP.textContent=(P/1000).toFixed(0)+' kW';
+    oV.textContent=v+' m/s';
+    oF.textContent=F.toFixed(0)+' N';
+    oCheck.textContent=(F*v/1000).toFixed(1)+' kW';
+  }
+  sync();
+})();
+
+/* ===== 互动3:恒定功率启动动画 ===== */
+(function(){
+  const cv=document.getElementById('pConstCv');const ctx=cv.getContext('2d');
+  const svg=document.getElementById('pConstSvg');
+  const Ps=document.getElementById('pcP'),Fs=document.getElementById('pcF'),Ms=document.getElementById('pcM');
+  const oV=document.getElementById('pcV'),oTf=document.getElementById('pcTf'),oA=document.getElementById('pcA'),oVmax=document.getElementById('pcVmax');
+  let P=60000,f=1000,m=1500,v=0.01,t=0,running=false,history=[];
+  function sync(){P=+Ps.value*1000;f=+Fs.value;m=+Ms.value*1000;reset();}
+  Ps.oninput=Fs.oninput=Ms.oninput=sync;
+  function reset(){v=0.05;t=0;history=[[0,0]];running=false;stats();drawCar();drawGraph();}
+  function stats(){
+    const F=P/v;
+    const a=(F-f)/m;
+    const vmax=P/f;
+    oV.textContent=v.toFixed(1);
+    oTf.textContent=F>99999?'很大':F.toFixed(0);
+    oA.textContent=a.toFixed(2);
+    oVmax.textContent=vmax.toFixed(1);
+  }
+  function drawCar(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const vmax=P/f;
+    const frac=Math.min(1,v/vmax);
+    const carX=40+frac*580;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(0,120);ctx.lineTo(cv.width,120);ctx.stroke();
+    // car body
+    ctx.fillStyle=ORANGE;ctx.fillRect(carX,90,60,24);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(carX,90,60,24);
+    ctx.beginPath();ctx.arc(carX+14,116,8,0,2*Math.PI);ctx.fillStyle=INK;ctx.fill();
+    ctx.beginPath();ctx.arc(carX+46,116,8,0,2*Math.PI);ctx.fill();
+    // force bar
+    const F=Math.min(P/Math.max(v,0.5), 6000);
+    const fh=Math.min(80,(F/6000)*80);
+    ctx.fillStyle=RED;ctx.fillRect(carX+20,86-fh,16,fh);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText('F',carX+24,80-fh);
+    // resistance line
+    ctx.strokeStyle=GREEN;ctx.setLineDash([5,4]);
+    const fLineH=Math.min(80,(f/6000)*80);
+    ctx.beginPath();ctx.moveTo(0,86-fLineH);ctx.lineTo(cv.width,86-fLineH);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=GREEN;ctx.font='bold 11px sans-serif';ctx.fillText('阻力 f 水平线',10,86-fLineH-4);
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('v='+v.toFixed(1)+'m/s',carX,80);
+  }
+  function drawGraph(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=170;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const vmax=P/f;
+    const Tmax=Math.max(60,t*1.2);
+    const pts=history.map(function(pt){
+      const px=X0+(pt[0]/Tmax)*W;
+      const py=Y0+H-(pt[1]/vmax)*H*0.92;
+      return px+','+py;
+    });
+    el(svg,'polyline',{points:pts.join(' '),fill:'none',stroke:RED,'stroke-width':4});
+    const vmY=Y0+H-(vmax/vmax)*H*0.92;
+    el(svg,'line',{x1:X0,y1:vmY,x2:X0+W,y2:vmY,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:X0+8,y:vmY-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='vmax='+vmax.toFixed(1);
+    el(svg,'text',{x:X0+W/2,y:Y0-4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='v-t 曲线：加速度递减的加速运动，趋于 vmax';
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.05;
+    const F=P/v;
+    const a=(F-f)/m;
+    v+=a*dt;
+    t+=dt;
+    if(v>=P/f*0.999){v=P/f*0.999;running=false;}
+    history.push([t,v]);
+    if(history.length>400)history.shift();
+    stats();drawCar();drawGraph();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('pcGo').onclick=function(){sync();running=true;requestAnimationFrame(loop);};
+  document.getElementById('pcReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动4:恒定加速度启动动画 ===== */
+(function(){
+  const cv=document.getElementById('aConstCv');const ctx=cv.getContext('2d');
+  const svg=document.getElementById('aConstSvg');
+  const Fs=document.getElementById('acF'),Ps=document.getElementById('acP'),Frs=document.getElementById('acFr'),Ms=document.getElementById('acM');
+  const oPhase=document.getElementById('acPhase'),oV1=document.getElementById('acV1'),oV=document.getElementById('acV'),oVmax=document.getElementById('acVmax');
+  let F=2500,P=60000,f=1000,m=1500,v=0,t=0,running=false,phase=1,history=[];
+  function sync(){F=+Fs.value;P=+Ps.value*1000;f=+Frs.value;m=+Ms.value*1000;reset();}
+  Fs.oninput=Ps.oninput=Frs.oninput=Ms.oninput=sync;
+  function reset(){v=0;t=0;phase=1;history=[[0,0]];running=false;stats();drawCar();drawGraph();}
+  function stats(){
+    const v1=P/F;
+    const vmax=P/f;
+    oPhase.textContent=phase===1?'阶段一(匀加速)':'阶段二(恒功率)';
+    oV1.textContent=v1.toFixed(1);
+    oV.textContent=v.toFixed(1);
+    oVmax.textContent=vmax.toFixed(1);
+  }
+  function drawCar(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const vmax=P/f;
+    const frac=Math.min(1,v/vmax);
+    const carX=40+frac*580;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(0,120);ctx.lineTo(cv.width,120);ctx.stroke();
+    ctx.fillStyle=phase===1?BLUE:ORANGE;ctx.fillRect(carX,90,60,24);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(carX,90,60,24);
+    ctx.beginPath();ctx.arc(carX+14,116,8,0,2*Math.PI);ctx.fillStyle=INK;ctx.fill();
+    ctx.beginPath();ctx.arc(carX+46,116,8,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('v='+v.toFixed(1)+'m/s  ('+(phase===1?'匀加速':'恒功率')+')',carX-20,80);
+  }
+  function drawGraph(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=170;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const vmax=P/f;
+    const Tmax=Math.max(60,t*1.2);
+    const pts=history.map(function(pt){
+      const px=X0+(pt[0]/Tmax)*W;
+      const py=Y0+H-(pt[1]/vmax)*H*0.92;
+      return px+','+py;
+    });
+    el(svg,'polyline',{points:pts.join(' '),fill:'none',stroke:BLUE,'stroke-width':4});
+    const vmY=Y0+H-(vmax/vmax)*H*0.92;
+    el(svg,'line',{x1:X0,y1:vmY,x2:X0+W,y2:vmY,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:X0+8,y:vmY-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='vmax='+vmax.toFixed(1);
+    // mark v1 turning point
+    const v1=P/F;
+    if(v1<vmax){
+      const t1=v1/((F-f)/m);
+      if(t1<=Tmax){
+        const px=X0+(t1/Tmax)*W;
+        const py=Y0+H-(v1/vmax)*H*0.92;
+        el(svg,'circle',{cx:px,cy:py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:px+8,y:py-8,'font-size':11.5,'font-weight':900,fill:RED}).textContent='转折 v₁='+v1.toFixed(1);
+      }
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0-4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='v-t 曲线：先直线(匀加速)，转折后上凸，趋于 vmax';
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.05;
+    const v1=P/F;
+    if(phase===1 && v<v1){
+      const a=(F-f)/m;
+      v+=a*dt;
+      if(v>=v1){v=v1;phase=2;}
+    } else {
+      phase=2;
+      const Fnow=v>0.01?P/v:F;
+      const a=(Fnow-f)/m;
+      v+=a*dt;
+    }
+    t+=dt;
+    const vmax=P/f;
+    if(v>=vmax*0.999){v=vmax*0.999;running=false;}
+    history.push([t,v]);
+    if(history.length>400)history.shift();
+    stats();drawCar();drawGraph();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('acGo').onclick=function(){sync();running=true;requestAnimationFrame(loop);};
+  document.getElementById('acReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动5:两种启动方式 v-t 图对比 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');
+  const Ps=document.getElementById('cmpP'),Frs=document.getElementById('cmpFr'),Fas=document.getElementById('cmpFa');
+  const oVmax=document.getElementById('cmpVmax'),oV1=document.getElementById('cmpV1');
+  function sync(){draw();}
+  Ps.oninput=Frs.oninput=Fas.oninput=sync;
+  function draw(){
+    clr(svg);
+    const P=+Ps.value*1000, f=+Frs.value, Fa=+Fas.value;
+    const m=1500;
+    const vmax=P/f;
+    const v1=P/Fa;
+    oVmax.textContent=vmax.toFixed(1);
+    oV1.textContent=Math.min(v1,vmax).toFixed(1);
+    const X0=60,Y0=30,W=580,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // simulate constant-power curve
+    let vRed=0.05, tRed=0, redPts=[];
+    for(let i=0;i<2000;i++){
+      const F=P/vRed;
+      const a=(F-f)/m;
+      vRed+=a*0.05; tRed+=0.05;
+      redPts.push([tRed,vRed]);
+      if(vRed>=vmax*0.995)break;
+    }
+    // simulate constant-accel curve
+    let vBlue=0, tBlue=0, bluePts=[[0,0]], phase=1;
+    for(let i=0;i<3000;i++){
+      if(phase===1 && vBlue<v1){
+        const a=(Fa-f)/m;
+        vBlue+=a*0.05;
+        if(vBlue>=v1){vBlue=v1;phase=2;}
+      } else {
+        phase=2;
+        const Fnow=vBlue>0.01?P/vBlue:Fa;
+        const a=(Fnow-f)/m;
+        vBlue+=a*0.05;
+      }
+      tBlue+=0.05;
+      bluePts.push([tBlue,vBlue]);
+      if(vBlue>=vmax*0.995)break;
+    }
+    const Tmax=Math.max(redPts[redPts.length-1][0],bluePts[bluePts.length-1][0]);
+    function toPts(arr){
+      return arr.map(function(pt){
+        const px=X0+(pt[0]/Tmax)*W;
+        const py=Y0+H-(pt[1]/vmax)*H*0.92;
+        return px+','+py;
+      }).join(' ');
+    }
+    el(svg,'polyline',{points:toPts(redPts),fill:'none',stroke:RED,'stroke-width':4});
+    el(svg,'polyline',{points:toPts(bluePts),fill:'none',stroke:BLUE,'stroke-width':4});
+    const vmY=Y0+H-(vmax/vmax)*H*0.92;
+    el(svg,'line',{x1:X0,y1:vmY,x2:X0+W,y2:vmY,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:X0+8,y:vmY-6,'font-size':12,'font-weight':900,fill:INK}).textContent='共同 vmax='+vmax.toFixed(1)+'m/s';
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='红=恒定功率启动　蓝=恒定加速度启动';
+  }
+  sync();
+})();
+
+/* ===== 互动6:vmax=P/f 计算器 ===== */
+(function(){
+  const svg=document.getElementById('vmaxSvg');
+  const Ps=document.getElementById('vmP'),Fs=document.getElementById('vmF');
+  const oP=document.getElementById('vmOutP'),oF=document.getElementById('vmOutF'),oV=document.getElementById('vmOutV'),oKmh=document.getElementById('vmOutKmh');
+  function sync(){draw();}
+  Ps.oninput=Fs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const P=+Ps.value*1000;
+    const f=+Fs.value;
+    const vmax=P/f;
+    oP.textContent=P.toFixed(0)+' W';
+    oF.textContent=f.toFixed(0)+' N';
+    oV.textContent=vmax.toFixed(1)+' m/s';
+    oKmh.textContent=(vmax*3.6).toFixed(1)+' km/h';
+    const X0=60,Y0=60,W=580;
+    const vScaleMax=200;
+    const barW=(vmax/vScaleMax)*W;
+    el(svg,'text',{x:X0,y:30,'font-size':15,'font-weight':900,fill:INK}).textContent='vmax = P额/f = '+vmax.toFixed(1)+' m/s';
+    el(svg,'rect',{x:X0,y:Y0,width:Math.min(W,barW),height:40,fill:'rgba(30,158,134,0.35)',stroke:GREEN,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+50,x2:X0+W,y2:Y0+50,stroke:INK,'stroke-width':2});
+    for(let i=0;i<=200;i+=20){
+      const x=X0+(i/vScaleMax)*W;
+      el(svg,'line',{x1:x,y1:Y0+50,x2:x,y2:Y0+56,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x,y:Y0+70,'font-size':10.5,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=i;
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0+96,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='刻度条长度正比于 vmax(m/s)：功率越大／阻力越小，vmax 越大';
+  }
+  sync();
+})();
+
+/* ===== 互动7:额定/实际功率随过程变化 ===== */
+(function(){
+  const svg=document.getElementById('ratioSvg');const note=document.getElementById('ratioNote');
+  let mode=0;
+  const P=60000, f=1000, F=2500, m=1500;
+  document.querySelectorAll('.ratiomode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.ratiomode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=+b.dataset.m;draw();
+    };
+  });
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=190;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='P';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const PeY=Y0+H-(P/P)*H*0.85;
+    el(svg,'line',{x1:X0,y1:PeY,x2:X0+W,y2:PeY,stroke:RED,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:X0+8,y:PeY-6,'font-size':12,'font-weight':900,fill:RED}).textContent='额定功率 P额';
+    let pts=[],desc;
+    if(mode===0){
+      // constant power: P实 = P额 flat line from t=0
+      let v=0.05,t=0;
+      for(let i=0;i<800;i++){
+        const Fnow=P/v;
+        const a=(Fnow-f)/m;
+        v+=a*0.05;t+=0.05;
+        pts.push([t,P]);
+        if(v>=P/f*0.995)break;
+      }
+      desc='恒定功率启动：P实 从一开始就贴着 P额（水平线），全程 P实=P额。';
+    } else {
+      let v=0,t=0,phase=1;
+      for(let i=0;i<1200;i++){
+        let Pnow;
+        if(phase===1 && F*v<P){
+          const a=(F-f)/m; v+=a*0.05; Pnow=F*v;
+          if(F*v>=P){phase=2;}
+        } else {
+          phase=2;
+          const Fnow=v>0.01?P/v:F;
+          const a=(Fnow-f)/m; v+=a*0.05; Pnow=P;
+        }
+        t+=0.05;
+        pts.push([t,Math.min(Pnow,P)]);
+        if(v>=P/f*0.995)break;
+      }
+      desc='恒定加速度启动：P实 先线性爬升(P=Fv,F恒定)，到达 P额 后贴线不再增大。';
+    }
+    const Tmax=pts[pts.length-1][0];
+    const linePts=pts.map(function(pt){
+      const px=X0+(pt[0]/Tmax)*W;
+      const py=Y0+H-(pt[1]/P)*H*0.85;
+      return px+','+py;
+    }).join(' ');
+    el(svg,'polyline',{points:linePts,fill:'none',stroke:mode===0?RED:BLUE,'stroke-width':4});
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=mode===0?'恒定功率启动：P实 全程 = P额':'恒定加速度启动：P实 先增后恒定';
+    note.innerHTML='👉 '+desc;
+    note.style.borderColor=mode===0?RED:BLUE;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 平均功率和瞬时功率的公式分别是什么？各用在什么场合？",a:"平均功率 P=W/t，用于求一段过程的总体功率；瞬时功率 P=Fv（F、v 同一时刻），用于求某一时刻的功率，F、v必须同时同向。"},
+ {q:"2. 额定功率和实际功率的关系是什么？",a:"额定功率 P额 是发动机能长期稳定输出的最大功率，不能超过；实际功率 P实 ≤ P额，只有全力状态（拉满油门）时才相等。"},
+ {q:"3. 功率恒定时，牵引力 F 与速度 v 是什么关系？",a:"成反比：F=P/v。v 增大，F 减小；v 减小，F 增大，乘积 Fv=P 恒定。"},
+ {q:"4. 恒定功率启动过程中，加速度如何变化？为什么不能用 v=v0+at？",a:"加速度持续减小（a=(P/v−f)/m，随v增大而减小），直到a=0达到最大速度。因为整个过程不是匀加速（a不是常数），匀变速公式全部失效，只能用动能定理。"},
+ {q:"5. 恒定功率启动达到最大速度的条件和公式是什么？",a:"条件：牵引力等于阻力（F=f），此时加速度a=0。公式：vmax=P额/f。"},
+ {q:"6. 恒定功率启动过程中求某段时间/位移内的物理量，该用什么定理？为什么？",a:"用动能定理：P额·t−f·s=½mv²−½mv0²。因为全程变加速，牛顿第二定律运动学公式不适用，但功率恒定时牵引力做的功可直接写成W=P额·t。"},
+ {q:"7. 恒定加速度启动分几个阶段？各阶段的特点是什么？",a:"两个阶段。阶段一：牵引力F恒定，做匀加速运动，功率P=Fv随v增大而增大；阶段二：功率达到额定值P额后，转为恒定功率启动模式，牵引力开始减小，加速度减小，直到vmax=P额/f。"},
+ {q:"8. 恒定加速度启动中，阶段一结束（转折）时的速度v₁怎么求？",a:"v₁=P额/F（F是阶段一恒定的牵引力）。此刻功率恰好达到额定功率P额。"},
+ {q:"9. 两种启动方式最终达到的最大速度相同吗？为什么？",a:"相同，都是vmax=P额/f。因为最大速度的条件只有一个：牵引力等于阻力、加速度为零，与用哪种方式启动的过程无关。"},
+ {q:"10. 恒定加速度启动的阶段一，功率是恒定的吗？",a:"不是。阶段一牵引力F恒定，但速度v在增大，P=Fv随v线性增大，直到增大到P额才进入阶段二。恒定的是加速度，不是功率。"},
+ {q:"11. 汽车额定功率60kW，某时刻以30m/s行驶，此时牵引力多大？",a:"用瞬时功率公式：若此时P实=P额=60000W，则F=P/v=60000/30=2000N。（若P实<P额需用题目给出的实际功率代入。）"},
+ {q:"12. v-t图上，恒定功率启动和恒定加速度启动的曲线形状有什么区别？",a:"恒定功率启动：全程是一条上凸曲线（斜率从大到0，一直在减小）。恒定加速度启动：先是一条直线（斜率恒定=a），到转折速度v₁后变为上凸曲线，两者最终都趋于同一条水平渐近线vmax。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){
+  const d=document.createElement('div');
+  d.style.cssText='margin:12px 0;font-weight:700';
+  d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';
+  d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};
+  quiz.appendChild(d);
+});
+</script>
+</body>
+</html>

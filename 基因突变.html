@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基因突变与基因重组 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>基因突变与基因重组</h1>
+    <p class="lead">这一页只讲<b>基因这一级</b>的两种变异来源——基因突变(DNA碱基对变了)和基因重组(基因重新洗牌)。跟「变异与育种」那一页不同,这里不比三种变异的宏观分类,而是死磕机制本身:一个碱基替换 vs 增添/缺失,后果为什么天差地别;交叉互换和自由组合到底发生在哪个时期;为什么基因突变才是<b>新基因</b>的唯一来源,基因重组只是把已有的牌重新洗一遍。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 基因突变 = DNA这本书里<b>某一个字被改错、加了字或删了字</b>——错别字可能不影响阅读(简并性/隐性),也可能让后面全部乱码(移码)。基因重组 = 减数分裂时<b>两副扑克牌重新洗牌再分</b>——牌的内容(基因)一张没变,只是组合方式变了。记住一句话:<b>突变造新牌,重组洗旧牌</b>。</div>
+
+    <div class="keybox"><b>核心地位:</b> 基因突变是生物变异的<b>根本来源</b>,是新基因产生的<b>唯一</b>途径;基因重组不产生新基因,只是让已有基因重新搭配,是<b>生物多样性</b>的重要原因(尤其是有性生殖种群)。染色体变异则是染色体<b>结构或数目</b>的改变,三者是高考区分的高频考点。</div>
+
+    <h2>① 基因突变是什么:DNA碱基对的替换、增添、缺失</h2>
+    <div class="card">
+      <div class="eq">基因突变 = 基因内部碱基对的替换 / 增添 / 缺失 → 基因结构(碱基序列)改变</div>
+      <p style="margin:8px 0">基因突变的本质是<b>基因内部碱基对种类或数目发生了改变</b>,产生了新的等位基因(新基因)。它可以发生在体细胞,也可以发生在生殖细胞;发生在生殖细胞的突变才能<b>遗传给后代</b>,发生在体细胞的突变一般不能通过有性生殖传递(除非该体细胞后续发育成生殖细胞,如植物某些营养繁殖情形)。</p>
+      <table>
+        <tr><th>类型</th><th>具体变化</th></tr>
+        <tr><td><b>替换</b></td><td>某个碱基对被替换成另一种碱基对(如 A-T → G-C)</td></tr>
+        <tr><td><b>增添</b></td><td>DNA序列中多插入了一个或几个碱基对</td></tr>
+        <tr><td><b>缺失</b></td><td>DNA序列中丢失了一个或几个碱基对</td></tr>
+      </table>
+      <p class="trap">⚠ 基因突变是「基因内部」的改变,不涉及染色体结构或数目;不要和染色体结构变异(缺失、重复、倒位、易位——那是一大段DNA/染色体片段的改变)混淆。</p>
+    </div>
+
+    <h2 class="b">② 替换 vs 增添/缺失:后果为什么天差地别</h2>
+    <div class="card">
+      <p style="margin:6px 0">mRNA上<b>连续三个碱基</b>组成一个密码子,对应一个氨基酸。这就决定了「改一个碱基」的影响范围,取决于它是<b>替换</b>还是<b>增添/缺失</b>。</p>
+      <h3>碱基替换 —— 影响通常局限在一个密码子</h3>
+      <p style="margin:6px 0">替换只改变<b>这一个</b>碱基对应的那个密码子,读码框(以3个为一组的分组方式)不会错位,后面的密码子照常翻译。所以替换<b>最多只影响一个氨基酸</b>——而且由于密码子的<b>简并性</b>(一种氨基酸可对应多个密码子),替换后的新密码子仍可能编码同一种氨基酸,蛋白质甚至可以完全不变!</p>
+      <h3>碱基增添/缺失 —— 引起「移码突变」,后果可能放大到全局</h3>
+      <p style="margin:6px 0">增添或缺失一个(或非3的倍数个)碱基对,会使从突变点往后的<b>读码框整体错位</b>(称为<b>移码突变</b>)——后面所有密码子都被重新分组,对应的氨基酸序列可能<b>大范围改变</b>,甚至提前出现终止密码子使翻译提前终止。</p>
+      <div class="mono">替换:只错一个字 → 最多影响一个氨基酸　|　增添/缺失:后面全部错位对齐 → 可能大段乱码(移码)</div>
+      <p class="trap">⚠ 高频陷阱:「缺失/增添3个碱基对(整密码子)」不会移码,只是<b>少/多一个氨基酸</b>,后面读码框不受影响——是否移码看增添/缺失的碱基数是否为3的倍数。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动1 — 碱基替换/增添/缺失对密码子与氨基酸序列的影响(点击碱基修改,看下游氨基酸怎么变)</div>
+      <svg id="codonSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="codonMode on" data-m="sub">替换第5位碱基</button>
+        <button class="codonMode" data-m="ins">在第5位后增添1个碱基</button>
+        <button class="codonMode" data-m="del">缺失第5位碱基</button>
+        <button id="codonReset">↺ 恢复原序列</button>
+      </div>
+      <div class="live">
+        <div><b>突变类型</b><span id="cdType">-</span></div>
+        <div><b>是否移码</b><span id="cdFrame">-</span></div>
+        <div><b>受影响氨基酸数</b><span id="cdN">-</span></div>
+        <div><b>是否可能不变(简并性)</b><span id="cdDeg">-</span></div>
+      </div>
+      <p class="small">上排=原mRNA序列(每3个碱基一个密码子框),下排=突变后。替换只重新框出第5位所在的那一个密码子;增添/缺失让第5位之后的所有分组整体错开——这就是移码。</p>
+    </div>
+
+    <h2 class="g">③ 基因突变的四大特点 + 发生时间与诱因</h2>
+    <div class="card">
+      <h3>四大特点</h3>
+      <table>
+        <tr><th>特点</th><th>含义</th></tr>
+        <tr><td><b>普遍性</b></td><td>一切生物都可能发生基因突变,病毒(RNA病毒)、原核、真核生物概莫能外</td></tr>
+        <tr><td><b>随机性</b></td><td>可发生在细胞周期任何时期、DNA分子的任何部位、个体发育的任何阶段</td></tr>
+        <tr><td><b>低频性</b></td><td>自然状态下突变率很低(每个基因每一代 10⁻⁵~10⁻⁸ 数量级)</td></tr>
+        <tr><td><b>不定向性</b></td><td>一个基因可以向多个方向突变,产生一系列不同的等位基因(复等位基因)</td></tr>
+        <tr><td><b>多害少利</b></td><td>大多数突变破坏原有蛋白质的结构与功能,对生物体有害;少数中性或有利</td></tr>
+      </table>
+      <h3>发生时间</h3>
+      <p style="margin:6px 0">基因突变主要发生在<b>DNA复制时期</b>——即有丝分裂间期、减数第一次分裂前的间期(DNA复制时碱基配对偶尔出错,或复制后未被修复)。这也是为什么突变率虽低,却在<b>细胞分裂旺盛的组织</b>(如癌变、快速分裂的细胞)中更容易累积。</p>
+      <h3>诱发因素</h3>
+      <table>
+        <tr><th>类别</th><th>举例</th></tr>
+        <tr><td><b>物理因素</b></td><td>紫外线、X射线、γ射线等辐射</td></tr>
+        <tr><td><b>化学因素</b></td><td>亚硝酸盐、碱基类似物、某些农药/工业毒物</td></tr>
+        <tr><td><b>生物因素</b></td><td>某些病毒(如某些致癌RNA病毒)</td></tr>
+      </table>
+      <p class="trap">⚠ 「不定向性」≠「不定时发生」——不定向说的是突变<b>方向</b>(变成哪种新基因)不确定,不是说没有偏好的发生时期。诱因只是<b>提高突变频率</b>,不能决定突变的方向(基因突变本身仍是不定向、随机的,环境不能「按需」诱导特定有利突变)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🃏 互动2 — 基因突变四特点卡(点开每张卡看例子+一句话记忆)</div>
+      <div id="featCards" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div>
+      <p class="small">点击卡片翻面查看例子。四特点常以选择题「下列关于基因突变特点的说法」形式综合考查,四个都要能各自举一个例子。</p>
+    </div>
+
+    <h2 class="o">④ 基因重组:两种类型 + 基因工程</h2>
+    <div class="card">
+      <div class="eq">基因重组 = 控制不同性状的基因重新组合(基因本身不变,组合方式变)</div>
+      <p style="margin:8px 0">基因重组发生在<b>有性生殖</b>过程中,具体是减数分裂形成配子的过程里。教材规定的两种类型:</p>
+      <h3>类型①:自由组合 —— 减数第一次分裂后期</h3>
+      <p style="margin:6px 0">非同源染色体上的<b>非等位基因</b>,随非同源染色体的自由组合而<b>自由组合</b>。发生在<b>减数第一次分裂后期</b>,同源染色体分开的同时,非同源染色体自由组合进入不同的次级性母细胞。</p>
+      <h3>类型②:交叉互换 —— 减数第一次分裂前期(四分体时期)</h3>
+      <p style="margin:6px 0">同源染色体上的<b>非姐妹染色单体</b>之间,对应片段发生交叉互换,导致染色单体上的基因重新组合。发生在<b>减数第一次分裂前期的四分体时期</b>。</p>
+      <h3>基因工程 —— 人为的基因重组</h3>
+      <p style="margin:6px 0">通过转基因等技术,将一种生物的目的基因导入另一种生物的基因组,人为地实现基因重组,可以<b>打破物种界限</b>(自然的基因重组只能发生在同种生物、同一个体减数分裂形成配子的过程中)。</p>
+      <table>
+        <tr><th>类型</th><th>发生时期</th><th>涉及对象</th></tr>
+        <tr><td>自由组合</td><td>减数第一次分裂后期</td><td>非同源染色体上的非等位基因</td></tr>
+        <tr><td>交叉互换</td><td>减数第一次分裂前期(四分体)</td><td>同源染色体上非姐妹染色单体的等位基因/相关基因</td></tr>
+        <tr><td>基因工程</td><td>人工操作(体外)</td><td>不同物种之间的目的基因</td></tr>
+      </table>
+      <p class="trap">⚠ 基因重组<b>不产生新基因</b>,只是让已有的基因换个「搭配」。它是有性生殖后代出现变异、形成多样性的重要原因,但不是新基因的来源——新基因只能靠基因突变产生。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动3 — 自由组合动画:减数第一次分裂后期,非同源染色体自由组合进入两极</div>
+      <svg id="assortSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="assortGo">▶ 演示一次组合</button><button id="assortReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>本次组合方式</b><span id="asWay">-</span></div>
+        <div><b>2对同源染色体可能组合数</b><span id="asN">4</span></div>
+        <div><b>n对同源染色体组合数</b><span id="asFormula">2ⁿ</span></div>
+        <div><b>发生时期</b><span id="asTime">减I后期</span></div>
+      </div>
+      <p class="small">每次点击「演示一次组合」,两对非同源染色体(红/蓝各一对)随机以一种方式移向两极——这就是自由组合。多次点击可看到不同的组合结果,但基因本身没有变化。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动4 — 交叉互换动画:四分体时期,非姐妹染色单体片段互换</div>
+      <svg id="crossSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="crossGo">▶ 演示交叉互换</button><button id="crossReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>发生时期</b><span id="csTime">减I前期(四分体)</span></div>
+        <div><b>涉及对象</b><span id="csObj">非姐妹染色单体</span></div>
+        <div><b>是否产生新基因</b><span id="csNew">否</span></div>
+        <div><b>结果</b><span id="csResult">-</span></div>
+      </div>
+      <p class="small">一对同源染色体(各含两条姐妹染色单体,共四条=四分体)中,非姐妹染色单体(图中标②③的那两条)对应片段发生交换,交换后染色单体上的基因组合发生了改变,但基因种类没有增加。</p>
+    </div>
+
+    <h2 class="v">⑤ 基因突变 vs 基因重组 vs 染色体变异:三者怎么区分</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>基因突变</th><th>基因重组</th><th>染色体变异</th></tr>
+        <tr><td>改变的对象</td><td>基因内部碱基对(替换/增添/缺失)</td><td>基因的组合方式(基因不变)</td><td>染色体的结构或数目</td></tr>
+        <tr><td>是否产生新基因</td><td><b>是</b>(唯一来源)</td><td>否</td><td>否</td></tr>
+        <tr><td>光学显微镜下能否观察到</td><td>不能(DNA分子水平,太小)</td><td>不能</td><td><b>能</b>(染色体结构/数目变化可见)</td></tr>
+        <tr><td>发生范围/时期</td><td>DNA复制时(有丝/减数分裂间期)</td><td>有性生殖,减数分裂(自由组合/交叉互换)</td><td>细胞分裂时染色体行为异常</td></tr>
+        <tr><td>是否只在有性生殖中发生</td><td>否(有丝分裂、无性生殖也可发生)</td><td><b>是</b>(依赖减数分裂)</td><td>否</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>三句话记住核心区别:</b> ① 只有基因突变能造出<b>新基因</b>;② 只有染色体变异能在<b>显微镜下看到</b>;③ 只有基因重组<b>依赖有性生殖</b>(无性生殖一般不发生基因重组,但仍可能发生基因突变)。</p>
+      <p class="trap">⚠ 「变异」是这三者的<b>上位概念</b>(可遗传的变异=基因突变+基因重组+染色体变异)。题目问「属于哪种变异」时,先问自己:改的是碱基序列(突变)?还是基因的搭配方式(重组)?还是染色体本身看得见的结构/数目(染色体变异)?</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动5 — 三种变异判别器:选描述,自动判断属于哪一种</div>
+      <div id="judgeBox"></div>
+      <p class="small">选择一条变异描述,系统会给出判断依据(是否产生新基因、是否显微镜可见、是否依赖减数分裂)。这是选择题秒杀三种变异归属的核心思路。</p>
+    </div>
+
+    <h2 class="b">⑥ 基因突变不一定改变性状:三大原因</h2>
+    <div class="card">
+      <p style="margin:6px 0">「基因突变了」≠「性状一定变了」。三种常见情形让突变「隐身」:</p>
+      <table>
+        <tr><th>原因</th><th>解释</th></tr>
+        <tr><td><b>密码子简并性</b></td><td>替换后的新密码子仍编码<b>同一种氨基酸</b>,蛋白质结构不变,性状不变</td></tr>
+        <tr><td><b>隐性突变</b></td><td>显性基因突变为隐性等位基因,但在杂合子中被显性基因掩盖,当代不表现</td></tr>
+        <tr><td><b>发生在非编码区</b></td><td>突变发生在不翻译为蛋白质的序列(如内含子、调控区之外的非功能区),不影响蛋白质产物</td></tr>
+      </table>
+      <p class="trap">⚠ 「基因突变≠性状改变」是高考高频送分点也是送命点——看到「基因发生突变,但表现型未变」不要判「矛盾」或「不可能」,先想这三种原因。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎭 互动6 — 突变不一定改变性状:三种原因交互演示</div>
+      <svg id="hideSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="hideMode on" data-m="0">简并性</button>
+        <button class="hideMode" data-m="1">隐性突变(杂合子掩盖)</button>
+        <button class="hideMode" data-m="2">非编码区突变</button>
+      </div>
+      <div class="verdict" id="hideNote"></div>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断碱基替换/增添/缺失对氨基酸序列的影响</h3>
+      <p><b class="tag">触发信号:</b> 给出DNA/mRNA序列变化,问「氨基酸序列如何改变」「是否影响后续密码子」。</p>
+      <p><b class="tag">标准动作:</b> 先看是替换还是增添/缺失。替换→只查这一个密码子对应的氨基酸(注意查密码子表看是否简并);增添/缺失→看是否为3的倍数,不是3的倍数就必然引起移码,从突变点起后面全部重新分组。</p>
+      <p><b class="tag">示例(带解):</b> mRNA中某位置由 …AUG CUA GGC… 变为 …AUG CUU AGG C…(缺失1个碱基),从缺失点起密码子全部重新分组(CUU、AGG…),对应氨基酸大范围改变——这是移码突变;若只是把CUA中的A替换成G变成CUG,查密码子表CUA与CUG都编码亮氨酸,氨基酸不变(简并性)。</p>
+      <p class="trap">陷阱:把「替换」当成也会移码;把「增添/缺失3个碱基对」误判为移码(实际只是多/少一个氨基酸,不移码)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断是基因突变、基因重组还是染色体变异</h3>
+      <p><b class="tag">触发信号:</b> 给出某变异现象描述(如「同源染色体片段互换」「DNA中一个碱基对被替换」「染色体某片段缺失」),问属于哪种变异。</p>
+      <p><b class="tag">标准动作:</b> 三问:①是否产生新基因(是→突变);②光学显微镜下能否看见(能→染色体变异);③是否是减数分裂中基因重新组合、基因本身不变(是→重组)。</p>
+      <p><b class="tag">示例(带解):</b> 「四分体时期,一对同源染色体上非姐妹染色单体对应片段发生交换」——基因种类不变、只是组合方式变、发生在减数分裂,判断为基因重组;若是「非同源染色体之间某片段移接」,涉及染色体结构本身改变、显微镜下可见,判断为染色体结构变异(易位)。</p>
+      <p class="trap">陷阱:把「交叉互换」误判为染色体变异(它其实是基因重组的一种,染色体形态并未发生异常结构改变);把基因突变误判为能在显微镜下看见。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 基因突变为什么/为什么不改变性状</h3>
+      <p><b class="tag">触发信号:</b>「基因发生突变,但该个体表现型未发生变化,原因可能是」。</p>
+      <p><b class="tag">标准动作:</b> 从三个角度作答:密码子简并性(蛋白质不变)、隐性突变被显性基因掩盖(杂合子)、突变发生在非编码区(不影响蛋白质表达)。多选题常三个都要写全。</p>
+      <p><b class="tag">示例(带解):</b> 某二倍体生物显性基因A中一个碱基对发生替换突变为a,若该个体基因型为Aa,由于A对a的显性作用,该个体表现型仍为显性性状,当代不表现,但a可以遗传给后代并在纯合时表现出来。</p>
+      <p class="trap">陷阱:漏答某一种原因(只答隐性掩盖,忘记简并性和非编码区);误认为「基因型变了表现型就一定变」。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 自由组合与交叉互换的时期与对象辨析</h3>
+      <p><b class="tag">触发信号:</b> 给出显微镜下细胞图或描述,问「此变异属于自由组合还是交叉互换」「发生在什么时期」。</p>
+      <p><b class="tag">标准动作:</b> 看关键词——「四分体」「非姐妹染色单体」「片段交换」→交叉互换,减I前期;「非同源染色体」「移向同一极/不同极」「后期」→自由组合,减I后期。</p>
+      <p><b class="tag">示例(带解):</b> 某细胞图中同源染色体的两条非姐妹染色单体之间出现交叉点并发生片段交换——判断为交叉互换,发生在减数第一次分裂前期(四分体时期);另一细胞图中两对同源染色体分开、非同源染色体分别移向细胞两极——判断为自由组合,发生在减数第一次分裂后期。</p>
+      <p class="trap">陷阱:把交叉互换错记成发生在「后期」;把自由组合的对象错记成「姐妹染色单体」(姐妹染色单体来自同一DNA复制,基因通常相同,不存在自由组合意义上的基因重组)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — n对同源染色体的组合方式/配子种类计算</h3>
+      <p><b class="tag">触发信号:</b>「不考虑交叉互换,该细胞可产生几种配子」「n对同源染色体自由组合可能有多少种组合方式」。</p>
+      <p><b class="tag">标准动作:</b> 每对同源染色体的分配相互独立、各有2种可能去向,n对则组合方式数为 2ⁿ(不考虑交叉互换时,配子种类数也是2ⁿ)。</p>
+      <p><b class="tag">示例(带解):</b> 某精原细胞含3对同源染色体,不考虑交叉互换,该个体可能产生的配子种类数为 2³=8 种;若某精原细胞(单个细胞)减数分裂产生的4个精子,因为是同一个细胞、同一次分裂,最多只能是2种(每对染色体的分配在这一次分裂里已经确定)。</p>
+      <p class="trap">陷阱:混淆「一个个体能产生几种配子」(2ⁿ)和「一个细胞一次减数分裂实际产生几种配子」(不考虑交叉互换是2种,一次分裂里染色体去向已固定)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 基因突变的特点/时间/诱因综合辨析</h3>
+      <p><b class="tag">触发信号:</b> 给出若干关于基因突变特点、发生时期、诱因的陈述,判断正误。</p>
+      <p><b class="tag">标准动作:</b> 对照普遍性/随机性/低频性/不定向性/多害少利五个关键词逐条核对;发生时期认准「DNA复制时」;诱因分物理/化学/生物三类,注意诱因只提高频率、不改变突变方向。</p>
+      <p><b class="tag">示例(带解):</b>「紫外线照射能定向诱导某基因突变为对紫外线有抗性的基因」——错误,诱变因素只能提高突变频率,不能决定突变方向(不定向性),不能「按需」定向诱导出特定有利变异。</p>
+      <p class="trap">陷阱:把「诱因提高突变率」误解成「诱因决定突变方向」;把「多害少利」等同于「都有害」(仍有少数有利或中性)。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 基因突变才是<b>新基因</b>产生的唯一途径;基因重组和染色体变异都<b>不</b>产生新基因,只是把已有基因重新组合或改变了染色体上的位置/数量。</p>
+      <p class="trap">② 碱基<b>替换</b>最多影响一个氨基酸(可能因简并性完全不影响);碱基<b>增添/缺失</b>(非3倍数)会引起<b>移码</b>,影响可能波及后面一大段氨基酸序列。</p>
+      <p class="trap">③ 基因突变<b>不一定</b>导致性状改变——密码子简并性、隐性突变被掩盖、突变发生在非编码区,都可能让性状「看起来没变」。</p>
+      <p class="trap">④ 基因突变主要发生在<b>DNA复制时</b>(有丝分裂间期、减数第一次分裂前的间期),不要笼统答「随时发生」。</p>
+      <p class="trap">⑤ 交叉互换发生在<b>减数第一次分裂前期(四分体时期)</b>,对象是<b>非姐妹染色单体</b>;自由组合发生在<b>减数第一次分裂后期</b>,对象是<b>非同源染色体</b>上的非等位基因。两者时期和对象都不能混。</p>
+      <p class="trap">⑥ 基因重组<b>依赖有性生殖(减数分裂)</b>,无性生殖(如细菌二分裂、植物营养繁殖)一般不发生基因重组,但仍可能发生基因突变——基因突变不受生殖方式限制。</p>
+      <p class="trap">⑦ 只有<b>染色体变异</b>可以在光学显微镜下直接观察到(染色体结构或数目的改变);基因突变和基因重组都发生在分子水平,显微镜下看不见。</p>
+      <p class="trap">⑧ 诱变因素(物理/化学/生物)只能<b>提高突变频率</b>,不能决定突变<b>方向</b>——基因突变仍然是不定向的,不存在「定向诱导出所需性状」这回事。</p>
+      <p class="trap">⑨ 基因工程(转基因)属于<b>人为的基因重组</b>,它的特殊之处是能够打破<b>物种界限</b>,这是自然状态下减数分裂产生的基因重组做不到的。</p>
+      <p class="trap">⑩ 姐妹染色单体(同一DNA复制而来)之间基因通常相同(除非发生突变),不构成基因重组意义上的「交换」；只有非姐妹染色单体之间的交叉互换才算基因重组。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 用「信息论」的眼光看替换 vs 移码:</b> 密码子是「三位一体」的读码框,替换只污染一个「字」,不改变分组方式;增添/缺失(非3倍数)相当于在文本中间硬插/硬删了字符,让后面所有的三字一组的切分点全部后移或前移,导致「集体误读」。理解了这一点,你甚至不需要死记「移码」这个词,自己就能推出后果。</p>
+      <p style="margin:8px 0"><b>② 「新基因」和「新基因型/新表现型」是两个层级的问题:</b> 基因突变创造新的<b>等位基因</b>(新基因这个「词条」);基因重组只是让已有的「词条」重新排列组合,可以创造出前所未有的<b>基因型组合</b>(比如AaBb通过自由组合产生AB、Ab、aB、ab四种配子),进而带来丰富的表现型组合——但这些基因本身,一个都不是新的。分清「新基因」与「新的基因组合」,是这一章最容易混淆也最爱考的一层。</p>
+      <p style="margin:8px 0"><b>③ 交叉互换本质上是「局部的基因重组」,不是染色体结构变异:</b> 很多同学看到「染色体片段互换」就条件反射写「染色体变异」——关键要看互换发生在<b>同源染色体的非姐妹染色单体之间(对应片段)</b>还是<b>非同源染色体之间(不对应片段)</b>。前者是正常的、必然发生的减数分裂事件,属于基因重组;后者才是异常的染色体结构变异(相互易位)。</p>
+      <p style="margin:8px 0"><b>④ 减数分裂两个时期各贡献一种「洗牌」方式,二者独立叠加:</b> 四分体时期的交叉互换负责「同一对同源染色体内部」基因的重新搭配;减I后期的自由组合负责「不同对同源染色体之间」基因的重新搭配。一个精原细胞若同时发生这两种过程,产生的配子种类会远超过 2ⁿ——这也是为什么真实配子多样性远大于理论上「不考虑交叉互换」时的 2ⁿ。</p>
+      <p style="margin:8px 0"><b>⑤ 判断三种变异,记住一条「检索路径」而不是死记结论:</b> 先问「基因的种类变了吗」(变了→基因突变);再问「显微镜下看得见变化吗」(看得见→染色体变异);都不是,又发生在减数分裂中→基因重组。这条判别路径可以应对几乎所有变型题,比死记案例列表更稳。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 本页聚焦基因突变与基因重组的机制辨析,配套:变异与育种攻坚包(讲宏观分类与育种方法)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 简化密码子表(教学用,够本页示例) */
+const CODON_TABLE={
+ "UUU":"苯丙","UUC":"苯丙","UUA":"亮","UUG":"亮",
+ "CUU":"亮","CUC":"亮","CUA":"亮","CUG":"亮",
+ "AUG":"甲硫(起始)","AUU":"异亮","AUC":"异亮","AUA":"异亮",
+ "GGU":"甘","GGC":"甘","GGA":"甘","GGG":"甘",
+ "GCU":"丙","GCC":"丙","GCA":"丙","GCG":"丙",
+ "UAA":"终止","UAG":"终止","UGA":"终止",
+ "CCU":"脯","CCC":"脯","CCA":"脯","CCG":"脯",
+ "ACU":"苏","ACC":"苏","ACA":"苏","ACG":"苏",
+ "AGG":"精","AGA":"精","CGU":"精","CGC":"精"
+};
+function codonAA(c){return CODON_TABLE[c]||"?(未知)";}
+
+/* ===== 互动1:密码子/移码演示 ===== */
+(function(){
+  const svg=document.getElementById('codonSvg');
+  const oType=document.getElementById('cdType'),oFrame=document.getElementById('cdFrame'),oN=document.getElementById('cdN'),oDeg=document.getElementById('cdDeg');
+  const base="AUGCUAGGCACUGCG"; // 15 bases -> 5 codons: AUG CUA GGC ACU GCG
+  let mode='sub';
+  document.querySelectorAll('.codonMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.codonMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    mode=b.dataset.m;draw();
+  });
+  document.getElementById('codonReset').onclick=()=>{draw();};
+  function mutate(){
+    let seq=base;
+    if(mode==='sub'){
+      // replace position 5 (index4) with a different base
+      const pos=4;const cur=seq[pos];
+      const opts=['A','U','C','G'].filter(x=>x!==cur);
+      const nb=opts[0];
+      seq=seq.slice(0,pos)+nb+seq.slice(pos+1);
+    }else if(mode==='ins'){
+      const pos=5; // insert after position5(index4)
+      seq=seq.slice(0,pos)+'U'+seq.slice(pos);
+    }else if(mode==='del'){
+      const pos=4;
+      seq=seq.slice(0,pos)+seq.slice(pos+1);
+    }
+    return seq;
+  }
+  function splitCodons(seq){
+    const arr=[];
+    for(let i=0;i+3<=seq.length;i+=3)arr.push(seq.slice(i,i+3));
+    return arr;
+  }
+  function draw(){
+    clr(svg);
+    const origCodons=splitCodons(base);
+    const mutSeq=mutate();
+    const mutCodons=splitCodons(mutSeq);
+    const rowY1=60, rowY2=170;
+    const startX=40, cw=34; // per-base cell width
+    // draw original sequence with codon grouping brackets
+    el(svg,'text',{x:startX,y:rowY1-30,'font-size':13,'font-weight':900,fill:INK}).textContent='原mRNA序列(每3碱基一个密码子):';
+    for(let i=0;i<base.length;i++){
+      const x=startX+i*cw;
+      const codIdx=Math.floor(i/3);
+      const col=codIdx%2===0?'#e8f4f1':'#fdf1d6';
+      el(svg,'rect',{x:x,y:rowY1-22,width:cw-2,height:26,fill:col,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x+cw/2-1,y:rowY1-4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=base[i];
+    }
+    // amino acid labels under original
+    origCodons.forEach((c,idx)=>{
+      const x=startX+idx*3*cw;
+      el(svg,'text',{x:x+1.5*cw-1,y:rowY1+16,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent=codonAA(c);
+    });
+    el(svg,'text',{x:startX,y:rowY2-30,'font-size':13,'font-weight':900,fill:RED}).textContent='突变后序列:';
+    for(let i=0;i<mutSeq.length;i++){
+      const x=startX+i*cw;
+      const codIdx=Math.floor(i/3);
+      const col=codIdx%2===0?'#f6dede':'#eee1f7';
+      el(svg,'rect',{x:x,y:rowY2-22,width:cw-2,height:26,fill:col,stroke:RED,'stroke-width':2});
+      el(svg,'text',{x:x+cw/2-1,y:rowY2-4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=mutSeq[i];
+    }
+    mutCodons.forEach((c,idx)=>{
+      const x=startX+idx*3*cw;
+      el(svg,'text',{x:x+1.5*cw-1,y:rowY2+16,'font-size':11,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent=codonAA(c);
+    });
+    // stats
+    let type,frame,n,deg;
+    if(mode==='sub'){
+      type='替换(第5位碱基)';
+      frame='否(读码框不错位)';
+      // find which codon differs
+      let diffCount=0;
+      for(let i=0;i<Math.min(origCodons.length,mutCodons.length);i++){if(origCodons[i]!==mutCodons[i])diffCount++;}
+      n=String(diffCount)+'个(仅该密码子)';
+      deg=(codonAA(origCodons[1])===codonAA(mutCodons[1]))?'是(氨基酸未变,简并性发挥作用)':'否(氨基酸改变)';
+    }else if(mode==='ins'){
+      type='增添(第5位后插入1个U)';
+      frame='是(非3的倍数,发生移码)';
+      let diffCount=0;
+      for(let i=0;i<Math.min(origCodons.length,mutCodons.length);i++){if(origCodons[i]!==mutCodons[i])diffCount++;}
+      n=String(diffCount)+'个及以后全部受影响';
+      deg='不适用(已移码,氨基酸序列整体改变)';
+    }else{
+      type='缺失(第5位碱基)';
+      frame='是(非3的倍数,发生移码)';
+      let diffCount=0;
+      for(let i=0;i<Math.min(origCodons.length,mutCodons.length);i++){if(origCodons[i]!==mutCodons[i])diffCount++;}
+      n=String(diffCount)+'个及以后全部受影响';
+      deg='不适用(已移码,氨基酸序列整体改变)';
+    }
+    oType.textContent=type;oFrame.textContent=frame;oN.textContent=n;oDeg.textContent=deg;
+  }
+  draw();
+})();
+
+/* ===== 互动2:四特点卡片 ===== */
+(function(){
+  const box=document.getElementById('featCards');
+  const feats=[
+    {t:"普遍性",c:GREEN,d:"一切生物都可能发生基因突变——细菌、植物、动物、甚至病毒的遗传物质都会突变。例:大肠杆菌可突变出抗药性菌株。"},
+    {t:"随机性",c:BLUE,d:"突变可发生在细胞周期任何时期、DNA任何部位、个体发育任何阶段(体细胞/生殖细胞均可)。例:同一株植物不同枝条可能各自独立发生不同突变(体细胞突变的嵌合现象)。"},
+    {t:"低频性",c:ORANGE,d:"自然状态下突变率很低(约10⁻⁵~10⁻⁸/基因/代)。例:正是因为低频,自然种群中有害突变不会迅速大规模累积。"},
+    {t:"不定向性",c:VIO,d:"同一基因可以向多个方向突变,产生一系列不同的等位基因(复等位基因)。例:一个显性基因可以突变成多种不同的隐性等位基因,方向不由环境决定。"},
+    {t:"多害少利",c:RED,d:"大多数突变破坏原有蛋白质结构功能,对生物体不利;但少数中性甚至有利(如为适应新环境提供原材料)。例:镰刀型细胞贫血症基因突变对纯合子有害,但对杂合子有一定抗疟疾优势。"}
+  ];
+  feats.forEach((f,idx)=>{
+    const card=document.createElement('div');
+    card.style.cssText='border:3px solid '+INK+';box-shadow:3px 3px 0 '+INK+';padding:12px 14px;cursor:pointer;background:#fff;font-weight:700;font-size:13.5px;min-height:70px';
+    card.innerHTML='<b style="font-size:15px;color:'+f.c+'">'+f.t+'</b><div class="qa" style="color:'+INK+';margin-top:6px">'+f.d+'</div>';
+    card.onclick=()=>{const q=card.querySelector('.qa');q.classList.toggle('show');};
+    box.appendChild(card);
+  });
+})();
+
+/* ===== 互动3:自由组合动画 ===== */
+(function(){
+  const svg=document.getElementById('assortSvg');
+  const oWay=document.getElementById('asWay');
+  let running=false;
+  function drawCell(way){
+    clr(svg);
+    // way: 0 or 1, representing 2 possible arrangements of 2 pairs (red pair, blue pair)
+    const midX=350;
+    el(svg,'line',{x1:midX,y1:20,x2:midX,y2:230,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:120,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='左极';
+    el(svg,'text',{x:580,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='右极';
+    // pair1 (red, homolog r1a/r1b) and pair2 (blue, homolog b1a/b1b)
+    // way0: r1a & b1a go left, r1b & b1b go right
+    // way1: r1a & b1b go left, r1b & b1a go right
+    let leftItems, rightItems;
+    if(way===0){leftItems=[['R','大']];rightItems=[['R','小']];leftItems=[['红-大']];rightItems=[['红-小']];}
+    function chromo(x,y,color,label){
+      el(svg,'rect',{x:x-8,y:y-30,width:16,height:60,rx:8,fill:color,stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:x,y:y+46,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=label;
+    }
+    if(way===0){
+      chromo(150,110,RED,'红①');chromo(210,110,BLUE,'蓝①');
+      chromo(490,110,RED,'红②');chromo(550,110,BLUE,'蓝②');
+      oWay.textContent='红①+蓝① 同侧　|　红②+蓝② 同侧';
+    }else{
+      chromo(150,110,RED,'红①');chromo(210,110,BLUE,'蓝②');
+      chromo(490,110,RED,'红②');chromo(550,110,BLUE,'蓝①');
+      oWay.textContent='红①+蓝② 同侧　|　红②+蓝① 同侧(与上一种不同的组合)';
+    }
+    el(svg,'text',{x:midX,y:15,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='减数第一次分裂后期：非同源染色体自由组合移向两极';
+  }
+  drawCell(0);
+  document.getElementById('assortGo').onclick=()=>{
+    const way=Math.random()<0.5?0:1;
+    drawCell(way);
+  };
+  document.getElementById('assortReset').onclick=()=>{drawCell(0);};
+})();
+
+/* ===== 互动4:交叉互换动画 ===== */
+(function(){
+  const svg=document.getElementById('crossSvg');
+  const oResult=document.getElementById('csResult');
+  let done=false;
+  function draw(swapped){
+    clr(svg);
+    el(svg,'text',{x:350,y:18,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='四分体：一对同源染色体，各含两条姐妹染色单体';
+    // 4 chromatids: 1(red-a sister1),2(red-a sister2)... actually pair: homolog A (chromatids ①②, sisters), homolog B (chromatids ③④, sisters)
+    // non-sister: ② and ③ undergo crossing-over
+    const y0=50,h=110;
+    function bar(x,color,label,breakY){
+      if(!breakY){
+        el(svg,'rect',{x:x-9,y:y0,width:18,height:h,rx:8,fill:color,stroke:INK,'stroke-width':2.5});
+      }
+      el(svg,'text',{x:x,y:y0+h+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=label;
+    }
+    const xs=[160,220,420,480];
+    if(!swapped){
+      bar(xs[0],'#e08a8a','①(姐妹)');
+      bar(xs[1],RED,'②(姐妹)');
+      bar(xs[2],BLUE,'③(姐妹)');
+      bar(xs[3],'#7fa8e0','④(姐妹)');
+      el(svg,'text',{x:(xs[1]+xs[2])/2,y:y0+h/2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='②③=非姐妹染色单体';
+      oResult.textContent='尚未交换 —— 点击「演示交叉互换」查看片段互换后的结果';
+    }else{
+      // swap lower half of chromatid 2 and 3
+      el(svg,'rect',{x:xs[0]-9,y:y0,width:18,height:h,rx:8,fill:'#e08a8a',stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:xs[0],y:y0+h+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='①';
+      // chromatid2: top red, bottom blue (swapped)
+      el(svg,'rect',{x:xs[1]-9,y:y0,width:18,height:h/2,fill:RED,stroke:INK,'stroke-width':2.5});
+      el(svg,'rect',{x:xs[1]-9,y:y0+h/2,width:18,height:h/2,rx:8,fill:BLUE,stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:xs[1],y:y0+h+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='②(含互换片段)';
+      // chromatid3: top blue, bottom red (swapped)
+      el(svg,'rect',{x:xs[2]-9,y:y0,width:18,height:h/2,fill:BLUE,stroke:INK,'stroke-width':2.5});
+      el(svg,'rect',{x:xs[2]-9,y:y0+h/2,width:18,height:h/2,rx:8,fill:RED,stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:xs[2],y:y0+h+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='③(含互换片段)';
+      el(svg,'rect',{x:xs[3]-9,y:y0,width:18,height:h,rx:8,fill:'#7fa8e0',stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:xs[3],y:y0+h+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='④';
+      // crossing lines
+      el(svg,'line',{x1:xs[1]+9,y1:y0+h/2,x2:xs[2]-9,y2:y0+h/2,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});
+      el(svg,'text',{x:(xs[1]+xs[2])/2,y:y0+h/2-8,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='交叉点(片段互换)';
+      oResult.textContent='②③下半段片段互换 —— 染色单体上基因重新组合,种类未增加';
+    }
+  }
+  draw(false);
+  document.getElementById('crossGo').onclick=()=>{draw(true);};
+  document.getElementById('crossReset').onclick=()=>{draw(false);};
+})();
+
+/* ===== 互动5:三种变异判别器 ===== */
+(function(){
+  const box=document.getElementById('judgeBox');
+  const cases=[
+    {d:"DNA复制时,某碱基对A-T被错误配对成G-C",ans:"基因突变",why:"改变的是基因内部碱基对的种类,产生新的等位基因;显微镜下不可见;不依赖减数分裂。"},
+    {d:"减数第一次分裂后期,含红色标记的染色体与含蓝色标记的非同源染色体一起移向细胞左极",ans:"基因重组(自由组合)",why:"非同源染色体上非等位基因随机组合,基因本身不变,发生在减数分裂中,依赖有性生殖。"},
+    {d:"四分体时期,同源染色体的非姐妹染色单体对应片段发生交换",ans:"基因重组(交叉互换)",why:"基因种类不变,只是组合方式变了,发生在减数分裂前期,不产生新基因。"},
+    {d:"某染色体上多了一段原本不属于它的片段(来自非同源染色体的易位)",ans:"染色体变异(结构变异·易位)",why:"染色体本身的结构发生了改变,光学显微镜下可以观察到。"},
+    {d:"某细胞中染色体数目比正常体细胞多了一条",ans:"染色体变异(数目变异)",why:"染色体数目改变,光学显微镜下可以直接计数观察到。"},
+    {d:"紫外线照射使某基因中连续3个碱基对缺失",ans:"基因突变",why:"基因内部碱基对数目改变(缺失3个,不移码但少一个氨基酸对应的密码子),仍属于基因突变范畴,不产生染色体可见变化。"}
+  ];
+  cases.forEach(c=>{
+    const d=document.createElement('div');
+    d.style.cssText='border:3px solid '+INK+';box-shadow:3px 3px 0 '+INK+';padding:12px 16px;margin:10px 0;background:#fff;font-weight:700;font-size:13.5px';
+    d.innerHTML='<div>'+c.d+'</div><button class="btn" style="margin-top:8px">判断属于哪种变异</button><div class="qa" style="margin-top:8px"><b style="color:'+GREEN+'">答案:'+c.ans+'</b><br>'+c.why+'</div>';
+    d.querySelector('button').onclick=()=>{d.querySelector('.qa').classList.toggle('show');};
+    box.appendChild(d);
+  });
+})();
+
+/* ===== 互动6:突变不一定改变性状 ===== */
+(function(){
+  const svg=document.getElementById('hideSvg');const note=document.getElementById('hideNote');
+  let m=0;
+  document.querySelectorAll('.hideMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.hideMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    if(m===0){
+      el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='原因① 密码子简并性';
+      el(svg,'text',{x:170,y:70,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='密码子 CUA(亮氨酸)';
+      el(svg,'rect',{x:110,y:85,width:120,height:40,fill:'#e8f4f1',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:170,y:110,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CUA';
+      el(svg,'text',{x:350,y:110,'font-size':20,fill:INK,'text-anchor':'middle'}).textContent='替换→';
+      el(svg,'rect',{x:470,y:85,width:120,height:40,fill:'#f6dede',stroke:RED,'stroke-width':3});
+      el(svg,'text',{x:530,y:110,'font-size':15,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='CUG';
+      el(svg,'text',{x:530,y:70,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='密码子 CUG(仍是亮氨酸!)';
+      el(svg,'text',{x:350,y:160,'font-size':13,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='→ 同一种氨基酸 → 蛋白质不变 → 性状不变';
+      note.innerHTML='DNA碱基对替换后密码子变了,但由于<b>简并性</b>(多个密码子对应同一氨基酸),翻译出的氨基酸没变,蛋白质结构和功能不变,性状自然不变。';
+      note.style.borderColor=GREEN;
+    }else if(m===1){
+      el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='原因② 隐性突变被杂合子掩盖';
+      el(svg,'text',{x:170,y:90,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='A (显性,正常)';
+      el(svg,'rect',{x:110,y:100,width:120,height:36,fill:'#f3c00e',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:170,y:124,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='A';
+      el(svg,'text',{x:350,y:122,'font-size':18,fill:INK,'text-anchor':'middle'}).textContent='突变→';
+      el(svg,'rect',{x:470,y:100,width:120,height:36,fill:'#ddd','stroke':INK,'stroke-width':3});
+      el(svg,'text',{x:530,y:124,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='a(隐性)';
+      el(svg,'text',{x:530,y:90,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='一条A突变为a';
+      el(svg,'text',{x:350,y:170,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='基因型 Aa（杂合子）→ 表现型仍为显性性状';
+      note.innerHTML='突变后基因型是 <b>Aa</b>,由于A对a的完全显性,表现型当代<b>不表现</b>a的性状,但a可以隐藏在杂合子中遗传给后代,纯合(aa)时才表现。';
+      note.style.borderColor=ORANGE;
+    }else{
+      el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='原因③ 突变发生在非编码区';
+      const y=100;
+      el(svg,'rect',{x:80,y:y,width:150,height:34,fill:'#e8f4f1',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:155,y:y+22,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='编码区(决定蛋白质)';
+      el(svg,'rect',{x:240,y:y,width:220,height:34,fill:'#fdf1d6',stroke:RED,'stroke-width':3,'stroke-dasharray':'5 3'});
+      el(svg,'text',{x:350,y:y+22,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='非编码区(突变发生在此)';
+      el(svg,'rect',{x:470,y:y,width:150,height:34,fill:'#e8f4f1',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:545,y:y+22,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='编码区(决定蛋白质)';
+      el(svg,'text',{x:350,y:170,'font-size':13.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='非编码区不翻译为蛋白质 → 蛋白质产物不受影响 → 性状不变';
+      note.innerHTML='基因中包括编码区和非编码区(以及基因间的非基因序列),若碱基对的改变发生在<b>不翻译为蛋白质的区域</b>,则不影响蛋白质的合成,性状不受影响。';
+      note.style.borderColor=BLUE;
+    }
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 基因突变的本质是什么?包括哪三种类型?",a:"基因内部碱基对的种类或数目发生改变,包括:替换、增添、缺失。"},
+ {q:"2. 为什么碱基替换和碱基增添/缺失对氨基酸序列的影响程度不同?",a:"替换只改变对应的那一个密码子,读码框不错位,最多影响一个氨基酸;增添/缺失(非3的倍数)会使从突变点起后面的读码框整体错位(移码突变),影响可能波及大段氨基酸序列。"},
+ {q:"3. 基因突变有哪四个特点?",a:"普遍性、随机性、低频性、不定向性(还可加多害少利,合称五个特点也常见表述)。"},
+ {q:"4. 基因突变主要发生在什么时期?诱因有哪些?",a:"主要发生在DNA复制时(有丝分裂间期、减数第一次分裂前的间期)。诱因分物理(紫外线、X射线等辐射)、化学(亚硝酸盐等)、生物(某些病毒)三类。"},
+ {q:"5. 基因突变了,性状一定会改变吗?为什么?",a:"不一定。可能因为:①密码子简并性(氨基酸未变);②隐性突变被杂合子中的显性基因掩盖;③突变发生在非编码区,不影响蛋白质合成。"},
+ {q:"6. 基因重组包括哪两种类型?各发生在什么时期?",a:"①自由组合:非同源染色体上非等位基因的自由组合,发生在减数第一次分裂后期;②交叉互换:同源染色体上非姐妹染色单体对应片段的交换,发生在减数第一次分裂前期(四分体时期)。"},
+ {q:"7. 基因工程属于哪种变异来源?它和自然的基因重组有什么不同?",a:"基因工程属于人为的基因重组。不同在于:自然的基因重组只能发生在同种生物体内(减数分裂形成配子过程中),基因工程可以打破物种界限,在不同物种之间转移基因。"},
+ {q:"8. 基因突变、基因重组、染色体变异,谁能产生新基因?谁能在光学显微镜下观察到?",a:"只有基因突变能产生新基因(新的等位基因);只有染色体变异(结构或数目改变)能在光学显微镜下直接观察到。基因突变和基因重组都是分子水平的变化,显微镜下看不见。"},
+ {q:"9. 无性生殖的生物会发生基因突变吗?会发生基因重组吗?",a:"会发生基因突变(不依赖生殖方式,DNA复制时就可能出错);一般不发生基因重组(基因重组依赖减数分裂和有性生殖过程)。"},
+ {q:"10. n对同源染色体,不考虑交叉互换,自由组合能产生多少种配子(或组合方式)?",a:"2ⁿ种。因为每对同源染色体的分配相互独立,各有2种可能的去向。"},
+ {q:"11. 「紫外线可以定向诱导某基因突变成抗紫外线的基因」,这句话对吗?",a:"不对。诱变因素(物理/化学/生物)只能提高突变的频率,不能决定突变的方向——基因突变本身仍然是不定向的。"},
+ {q:"12. 交叉互换和自由组合分别涉及什么对象?容易混淆的点是什么?",a:"交叉互换涉及同源染色体上的非姐妹染色单体;自由组合涉及非同源染色体上的非等位基因。易混点:姐妹染色单体(同一DNA复制而来,基因通常相同)之间不发生这种意义上的重组;交叉互换常被误判为染色体结构变异,实际上它属于基因重组,染色体形态未发生异常改变。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

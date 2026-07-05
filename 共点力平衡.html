@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>共点力平衡 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>共点力平衡</h1>
+    <p class="lead">「共点力」指作用线交于一点(或可平移交于一点)的几个力。物体在共点力作用下<b>平衡</b>,意味着合力为零——这是整个高中力学「受力分析」的地基。这一页专攻<b>三力平衡</b>的三种解法(正交分解、力的三角形、相似三角形)和<b>动态平衡</b>的图解判断,这是尖子生和普通学生分野最明显的一块。</p>
+
+    <div class="say">🗣️ <b>共点力平衡(人话版):</b> 几个力"拔河"拔不动物体,就是平衡。三个力平衡时有个漂亮性质:把三个力矢量首尾相接,一定能围成一个<b>封闭三角形</b>——这就是「力的三角形法」。如果这个三角形恰好和题目里的几何三角形<b>相似</b>,力的比例就直接等于边长比例,不用解方程,一眼出答案。这是相似三角形法的全部秘密。</div>
+
+    <div class="keybox"><b>核心条件:</b> 共点力平衡 ⟺ <b>合力 ΣF = 0</b>。正交分解写成分量式:<b>ΣFx = 0 且 ΣFy = 0</b>(两个方向分别独立平衡)。三个非平行共点力平衡时,它们的<b>作用线必交于一点</b>(三力汇交),矢量首尾相接构成<b>闭合三角形</b>。</div>
+
+    <h2>① 共点力平衡条件:ΣF=0 与正交分解</h2>
+    <div class="card">
+      <div class="eq">合力为零:ΣF = 0　⟺　ΣFx = 0　且　ΣFy = 0</div>
+      <p style="margin:8px 0"><b>共点力:</b> 几个力的作用线相交(或延长后相交)于一点(可等效为作用在同一点)。物体处于<b>静止</b>或<b>匀速直线运动</b>状态,就是共点力平衡态,此时合外力必为零。</p>
+      <h3>正交分解法(万能通用解法)</h3>
+      <div class="mono">第1步:对研究对象做完整受力分析(重力、弹力、摩擦力、拉力……一个都不能少)。</div>
+      <div class="mono">第2步:建立 xOy 坐标系(通常沿最方便的方向,如水平/竖直,或沿斜面/垂直斜面)。</div>
+      <div class="mono">第3步:把每个力分解到 x、y 两个方向,分别列 ΣFx=0、ΣFy=0 两个方程联立求解。</div>
+      <p class="trap">⚠ 最常见的丢分点是<b>受力分析漏力或多力</b>——漏摩擦力、多算一个不存在的"向心力"、把合力也当成一个力来分析。养成习惯:先隔离物体画"孤立受力图",再动笔分解。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 正交分解法:选情形 → 建坐标系 → 分解 → 列方程求平衡</div>
+      <svg id="orthoSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="orthoCase on" data-c="0">水平面拉物体</button>
+        <button class="orthoCase" data-c="1">斜面静止物块</button>
+        <label>角度 θ <input id="orthoTheta" type="range" min="10" max="60" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>Fx 方向合力</b><span id="orX">0</span></div>
+        <div><b>Fy 方向合力</b><span id="orY">0</span></div>
+        <div><b>未知力大小</b><span id="orF">0</span></div>
+        <div><b>是否平衡</b><span id="orOK">—</span></div>
+      </div>
+      <p class="small">拖角度看分量如何随 θ 变化。斜面情形:沿斜面方向 mg·sinθ 与摩擦力(或拉力)平衡,垂直斜面方向 N 与 mg·cosθ 平衡——两个方向"互不干扰"独立列式。</p>
+    </div>
+
+    <h2 class="b">② 三力平衡:力的三角形法(首尾相接、闭合三角形)</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>核心性质:</b> 若物体受<b>三个</b>共点力平衡,把三个力矢量依次<b>首尾相接</b>画出来,终点一定回到起点——构成一个<b>封闭三角形</b>。反过来说:<b>任意一个力,与另外两个力的合力等大反向</b>(这两个力的合力 = 第三个力的负矢量)。</p>
+      <div class="eq">F₁ + F₂ + F₃ = 0　⟺　F₃ = −(F₁+F₂)　⟺　三力矢量首尾相接成闭合三角形</div>
+      <p style="margin:8px 0"><b>为什么好用:</b> 一旦画出这个力三角形,三角形三边就分别对应三个力的<b>大小</b>,夹角对应力与力之间的夹角关系(注意:三角形内角 = 180° − 对应两力夹角,因为是首尾相接不是共起点)。可以用正弦定理、余弦定理,或找相似关系直接出比例。</p>
+      <p class="trap">⚠ 力的三角形是<b>矢量首尾相接图</b>,不是三个力从同一点出发的"星形图"。画错起点会导致夹角全部理解错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔺 互动 2 — 力的三角形闭合演示:拖动第三力方向/大小,看是否首尾闭合(=平衡)</div>
+      <svg id="triSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="triGo">▶ 自动找平衡</button><button id="triReset">↺ 重置</button>
+        <label>F₃ 大小 <input id="triF3" type="range" min="1" max="10" value="5" step="0.5"></label>
+        <label>F₃ 方向角 <input id="triAng" type="range" min="0" max="360" value="180" step="2"></label>
+      </div>
+      <div class="live">
+        <div><b>F₁(N)</b><span id="triF1">6.0</span></div>
+        <div><b>F₂(N)</b><span id="triF2">4.0</span></div>
+        <div><b>缺口大小</b><span id="triGap">0</span></div>
+        <div><b>闭合(平衡)?</b><span id="triOK">否</span></div>
+      </div>
+      <p class="small">左图:三力从共同作用点出发的"实景图"。右图:同样三个矢量首尾相接的"三角形图"——拖 F₃ 的大小和方向,右图出现<b>缺口</b>就代表不平衡;缺口闭合(首尾重合)瞬间就是平衡态,此时左图三力也恰好"抵消"。</p>
+    </div>
+
+    <h2 class="g">③ 相似三角形法:力三角形 ∽ 几何三角形</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>适用条件:</b> 当物体所受<b>三个力</b>方向恰好与题目给出的某个<b>几何图形</b>(绳、杆、斜面构成的三角形)三条边分别<b>平行</b>时,力的三角形与几何三角形<b>相似</b>(对应边平行 ⟹ 相似)。</p>
+      <div class="eq">力三角形 ∽ 几何三角形　⟹　F₁/边₁ = F₂/边₂ = F₃/边₃</div>
+      <p style="margin:8px 0"><b>解法优势:</b> 不需要求任何角度的正弦、余弦——直接读出幾何图形的边长(或边长比),按对应关系写比例式,一步求出各力大小之比。是所有解法里最快的,但<b>只在能找到相似关系时用</b>。</p>
+      <h3>典型模型一:挂在墙上的球(轻绳+轻杆/墙面)</h3>
+      <p style="margin:6px 0">球靠在光滑墙上,轻绳斜向上拉。三力:重力 mg(竖直向下)、绳拉力 T(沿绳)、墙的支持力 N(垂直墙面,水平)。这三力方向与"绳-竖直墙-球心到墙的垂线"构成的几何三角形三边分别平行,于是 mg : T : N = 对应边长比。</p>
+      <h3>典型模型二:绳绕过光滑滑轮</h3>
+      <p style="margin:6px 0">轻绳绕过光滑轻滑轮,滑轮两侧张力大小相等(光滑滑轮只改变方向、不改变大小)。此时可把滑轮结点视为受两段绳张力(等大)与重物重力三力平衡,若两段绳方向与几何图形边平行,同样可用相似三角形法。</p>
+      <p class="trap">⚠ 用相似三角形法前必须<b>验证对应边确实平行</b>(方向一致),对应关系搞反(比如把 mg 对应错了边)是最常见的错误。杆的弹力方向不一定沿杆(视杆的约束而定),别想当然当成沿杆。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧱 互动 3 — 相似三角形法模型:挂墙上的球,几何三角形 ↔ 力三角形对应</div>
+      <svg id="simSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>绳与墙夹角 α <input id="simAlpha" type="range" min="20" max="70" value="40" step="1"></label>
+        <label>球重 mg(N) <input id="simMg" type="range" min="2" max="10" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>绳拉力 T=mg/sinα</b><span id="simT">0</span></div>
+        <div><b>墙支持力 N=mg/tanα</b><span id="simN">0</span></div>
+        <div><b>相似比校验</b><span id="simCheck">0</span></div>
+        <div><b>夹角 α</b><span id="simA">0</span></div>
+      </div>
+      <p class="small">左图:几何三角形(绳、竖直墙、球心到墙的垂线段)。右图:力三角形(mg、T、N 首尾相接)。两三角形<b>形状相同</b>(对应边平行)——拖 α 看两个三角形同步变化,验证 mg:T:N 恒等于对应边长之比。</p>
+    </div>
+
+    <h2 class="o">④ 三力汇交原理</h2>
+    <div class="card">
+      <div class="eq">三个非平行的共点力平衡　⟹　三力作用线必交于一点</div>
+      <p style="margin:8px 0"><b>原理:</b> 若三个力不平行且平衡,前两个力的合力必与第三个力等大反向、共线。而前两个力的合力作用线必过这两个力作用线的交点,所以第三个力的作用线也必须通过这一点——三条作用线交于一点。</p>
+      <p style="margin:6px 0"><b>用途:</b> 已知两个力方向,可先求出它们的交点,再确定第三个未知力(通常是杆的弹力方向)必过这个交点,从而<b>不用计算就能确定方向</b>——这是判断"杆的弹力方向不沿杆"类问题的关键工具。</p>
+      <p class="trap">⚠ 三力汇交只能用于<b>不平行</b>的三个共点力;若三力中有两个恰好平行,则汇交原理不适用(交点在无穷远,退化为力的三角形直接首尾相接判断即可)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✳️ 互动 4 — 三力汇交示意:两条已知力作用线定交点,第三力必过此点</div>
+      <svg id="concSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>力1方向角 <input id="concA1" type="range" min="200" max="260" value="230" step="2"></label>
+        <label>力2方向角 <input id="concA2" type="range" min="280" max="340" value="310" step="2"></label>
+      </div>
+      <div class="verdict" id="concNote"></div>
+      <p class="small">拖动力1、力2的方向,虚线延长后相交于一点(黄色标记);第三力(红色,如杆的弹力)方向必须<b>穿过该交点</b>才能使三力平衡——这就是三力汇交在判断"弹力方向"时的用法。</p>
+    </div>
+
+    <h2 class="v">⑤ 动态平衡(缓慢变化):图解法判断增减</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>典型情境:</b> 物体始终处于平衡态,但过程中某个角度(或位置)<b>缓慢连续变化</b>。此时三个力里往往有:①<b>大小、方向都不变</b>的力(如重力),②<b>方向不变、大小可变</b>的力,③<b>大小、方向都变</b>的力。</p>
+      <h3>图解法(动态力三角形)三步</h3>
+      <div class="mono">第1步:找出大小方向都不变的力,画成三角形中固定不变的一条边。</div>
+      <div class="mono">第2步:找出方向不变的力,过定边端点画出这条边所在的<b>定方向直线</b>(大小可沿线滑动)。</div>
+      <div class="mono">第3步:让第三边(大小方向都变的力)的端点在定方向线上移动,连续画出一系列力三角形,直接从图上读出这条边(和另一可变边)长度<b>如何随过程变化</b>——是先减后增、单调增、还是单调减。</div>
+      <p style="margin:8px 0"><b>判断技巧:</b> 当滑动边(第三力)与定方向线<b>垂直</b>时,滑动边长度最短——这是判断"某力先减后增"或"存在最小值"的几何依据(点到直线垂线段最短)。</p>
+      <p class="trap">⚠ 动态平衡最容易犯的错是<b>凭直觉猜方向</b>,而不是老老实实画图解法。三个力里哪个不变、哪个方向不变要先看清楚题目情境(通常由"缓慢转动""缓慢移动"的动作决定),画错固定边全盘皆错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 5 — 动态平衡图解法:拖角度,动态力三角形(一边不变、一边定向)实时显示第三力增减</div>
+      <svg id="dynSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="dynGo">▶ 自动缓慢转动</button><button id="dynReset">↺ 重置</button>
+        <label>拉力方向角 φ <input id="dynPhi" type="range" min="5" max="150" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>重力 mg(不变)</b><span id="dynG">10.0</span></div>
+        <div><b>绳张力 T</b><span id="dynT">0</span></div>
+        <div><b>拉力 F(方向不变)</b><span id="dynF">0</span></div>
+        <div><b>F 是否为最小值</b><span id="dynMin">—</span></div>
+      </div>
+      <p class="small">情境:重物挂于绳上,绳的上端固定方向不变,另用一水平方向<b>不变</b>的拉力 F(可变大小)缓慢将绳拉起角度 φ。重力 mg 恒定(定边);F 方向水平不变(定方向线);绳张力 T 大小方向都变(滑动边)。拖 φ 观察 F、T 如何变化,F⊥绳时 F 有最小值。</p>
+    </div>
+
+    <h2 class="r">⑥ 缓慢移动:各力随过程变化的曲线</h2>
+    <div class="card">
+      <p style="margin:6px 0">把互动5中角度 φ 从很小缓慢转到接近 180°,把每个力的大小画成随 φ 变化的曲线,能更直观看出"单调变"还是"先减后增"。</p>
+      <table>
+        <tr><th>力</th><th>变化规律(本模型:mg 恒定,F 水平方向不变)</th></tr>
+        <tr><td>重力 mg</td><td>恒定不变(定边)</td></tr>
+        <tr><td>拉力 F</td><td>F = mg·tanφ,随 φ 增大而<b>单调增大</b>(φ→90° 时 F→∞)</td></tr>
+        <tr><td>绳张力 T</td><td>T = mg/cosφ,先缓后随 φ 增大而<b>单调增大</b>(φ→90° 时 T→∞)</td></tr>
+      </table>
+      <p class="trap">⚠ 不同的动态平衡模型(定边/定方向线的选取不同)会得到不同的单调性,不能死记"越转越大"这种结论——必须每次重新画图解法判断,曲线只是验证图解法结论的工具。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 6 — 缓慢移动过程中各力变化曲线:F、T 随角度 φ 的变化图</div>
+      <svg id="curveSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="curveGo">▶ 播放扫描</button><button id="curveReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前角 φ</b><span id="cuPhi">0°</span></div>
+        <div><b>F(N)</b><span id="cuF">0</span></div>
+        <div><b>T(N)</b><span id="cuT">0</span></div>
+        <div><b>趋势</b><span id="cuTrend">—</span></div>
+      </div>
+      <p class="small">蓝线=F(N)，绿线=T(N)，横轴 φ 从 5°→85°。可见两者都单调递增，且 φ 越接近 90°增速越快(渐近发散)——这正是"绳越拉越竖直、越难再拉紧"的直观数学解释。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 正交分解法求平衡力</h3>
+      <p><b class="tag">触发信号:</b>受多个方向不同的力(不构成简单三力三角形关系,或力的个数≥4),要求某个力的大小/方向,或判断能否平衡。</p>
+      <p><b class="tag">标准动作:</b>完整受力分析 → 建 xOy(常沿水平竖直或沿斜面方向) → 各力分解 → ΣFx=0、ΣFy=0 联立解未知量。</p>
+      <p><b class="tag">示例(带解):</b>质量2kg木块静止于水平面,受水平拉力F=8N和竖直向上拉力Fy=6N,mg=20N,摩擦系数μ=0.4。竖直方向:N=mg−Fy=20−6=14N;水平方向:摩擦力f=μN=5.6N&lt;F=8N，说明木块不可能静止,矛盾——需重新判断实际受静摩擦f=F=8N且需验证f≤μN,若8&gt;5.6则木块实际已滑动,不再是静平衡问题。</p>
+      <p class="trap">陷阱:受力分析漏摩擦力或多出不存在的力;分解时正弦余弦用反;先假设静止却不验证最大静摩擦力是否够用。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 三力平衡·力的三角形法</h3>
+      <p><b class="tag">触发信号:</b>物体只受三个共点力,要求某力大小或方向,题目常给出两力方向及一力大小。</p>
+      <p><b class="tag">标准动作:</b>画出三力矢量首尾相接的闭合三角形 → 用正弦定理/余弦定理或直接几何关系求边长(即力的大小)。</p>
+      <p><b class="tag">示例(带解):</b>小球用两根绳挂住,一绳水平,一绳与竖直方向成37°,球重mg=10N。三力(mg、水平绳拉力T₁、斜绳拉力T₂)首尾相接成直角三角形:T₂cos37°=mg → T₂=10/0.8=12.5N；T₁=T₂sin37°=12.5×0.6=7.5N。</p>
+      <p class="trap">陷阱:把力三角形的内角和几何图里的角度直接等同,不做"角度互补/对应"检查；漏掉某个力导致三角形不闭合却强行计算。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 相似三角形法</h3>
+      <p><b class="tag">触发信号:</b>题目给出绳、杆、斜面构成的几何图形，且能观察到三个力方向分别与几何图形三边平行(常见:挂墙的球、斜靠的杆、滑轮组结点)。</p>
+      <p><b class="tag">标准动作:</b>先验证对应边平行 → 确认力三角形与几何三角形相似 → 按对应边写比例式 F₁:F₂:F₃=边₁:边₂:边₃ → 直接代入已知边长或角度求解。</p>
+      <p><b class="tag">示例(带解):</b>球靠在光滑竖直墙上,轻绳一端固定于墙上方,绳长L，球心到墙的垂直距离为d，球重mg。几何三角形三边:绳(斜边,长L)、竖直墙(邻边)、垂线段(对边,长d)。力三角形(mg竖直向下、T沿绳、N水平)与之相似:mg/d = T/L = N/(墙上那段边长)，直接代入边长比即可求 T、N,无需先求角度。</p>
+      <p class="trap">陷阱:对应边找错(比如把 mg 对应成绳长而非竖直边)；杆的弹力方向想当然设为沿杆方向(需先判断杆的约束类型，二力杆才沿杆，若为可转动的轻杆则不一定)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 三力汇交定方向</h3>
+      <p><b class="tag">触发信号:</b>题目要求"判断杆的弹力方向"或"某未知力方向"，且已知另外两个力的作用线方向。</p>
+      <p><b class="tag">标准动作:</b>画出已知两力的作用线延长线，找交点 → 第三个未知力的作用线必过此交点 → 结合三力首尾闭合的三角形关系或正交分解求大小。</p>
+      <p><b class="tag">示例(带解):</b>一轻杆一端铰接墙上，另一端用绳吊起重物且绳不沿杆方向。已知重力mg竖直向下、绳拉力T沿绳方向，两条作用线延长后交于杆上方一点P；则杆对绳端的弹力方向必沿"铰接点到P"的连线，而不是沿杆方向。确定方向后再用正交分解或三角形法求大小。</p>
+      <p class="trap">陷阱:想当然认为轻杆的弹力一定沿杆(只有两端都是铰接且杆本身不受其他力的"二力杆"才成立)；忽略汇交点在杆的延长线之外的情况。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 动态平衡·图解法判断增减</h3>
+      <p><b class="tag">触发信号:</b>题目出现"缓慢转动""缓慢移动""缓慢拉起"等描述，问某个力"如何变化"(一直增大/一直减小/先减后增)，且不要求具体数值。</p>
+      <p><b class="tag">标准动作:</b>识别三力中"大小方向都不变"的定边、"方向不变大小变"的定方向线、"大小方向都变"的滑动边 → 画出动态力三角形序列 → 直接读出滑动边长度的变化趋势(留意垂直定方向线处出现极值)。</p>
+      <p><b class="tag">示例(带解):</b>用绳缓慢将放在斜面上的物块沿斜面方向匀速拉出，绳与斜面夹角从0°缓慢增大到90°过程中，斜面支持力N如何变化？重力沿斜面分量和垂直分量恒定不变(定边由mg分解出)，绳拉力方向不断变化——画图解法可知支持力N随夹角增大先缓后加速减小，全程单调减小，不存在极值(因为夹角变化范围内绳方向没有垂直于恒定边)。</p>
+      <p class="trap">陷阱:不画图直接凭感觉猜"越转越大/越小"；找错哪个力是"定边"哪个是"定方向"，导致图解法从根上画错。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 滑轮张力与"绳上张力处处相等"辨析</h3>
+      <p><b class="tag">触发信号:</b>题目出现绳绕过滑轮、绳跨过钉子或圆柱面，问绳上不同段的张力关系。</p>
+      <p><b class="tag">标准动作:</b>先判断滑轮/钉子是否<b>光滑(轻质、无摩擦)</b>——只有光滑理想滑轮才能保证同一根绳跨过滑轮两侧张力大小相等（只改变绳的方向，不改变大小）；若滑轮有摩擦或质量，则两侧张力一般不相等，需要分别对滑轮和绳做受力分析。</p>
+      <p><b class="tag">示例(带解):</b>轻绳绕过光滑轻质定滑轮，一端接重物mg，另一端被人手水平拉住并保持静止。因滑轮光滑轻质，绳中张力处处相等，故人手拉力大小等于mg，方向沿绳(水平)。若换成有摩擦的粗糙滑轮，则不能直接得出人手拉力等于mg。</p>
+      <p class="trap">陷阱:不加条件地认为"只要是绳绕过滑轮，两侧张力就一定相等"——必须先确认滑轮"轻质、光滑(或无摩擦)"这两个前提缺一不可。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 受力分析<b>漏力</b>(常漏摩擦力、绳的弹力)或<b>多力</b>(把合力又当成一个独立的力重复计算)。养成"隔离物体→逐个力核对来源"的习惯。</p>
+      <p class="trap">② 力的三角形是<b>首尾相接</b>的矢量图，不是三力共起点的"星形图"；三角形内角与几何夹角的对应关系要仔细核对(常互补而非相等)。</p>
+      <p class="trap">③ 相似三角形法：必须先验证<b>对应边确实平行</b>才能用比例式；对应关系(哪条边对应哪个力)搞反是最高频错误。</p>
+      <p class="trap">④ 动态平衡定性判断：不能凭直觉猜方向，必须画"定边+定方向线+滑动边"的动态力三角形，才能确定单调增、单调减还是先减后增。</p>
+      <p class="trap">⑤ 杆的弹力方向<b>不一定沿杆</b>——只有两端都是光滑铰接、且杆上无其他外力的"二力杆"，弹力才必沿杆方向；否则要用三力汇交或整体分析确定方向。</p>
+      <p class="trap">⑥ "绳上张力处处相等"只在<b>绳绕过光滑(无摩擦)、轻质(无质量)</b>的滑轮或钉子时成立；粗糙或有质量的滑轮，两侧张力一般不等。</p>
+      <p class="trap">⑦ 三力汇交原理只适用于<b>三个互不平行</b>的共点力；若其中两力平行，交点在无穷远，此时应直接用力的三角形或正交分解。</p>
+      <p class="trap">⑧ 判断静摩擦力时，先假设静止列平衡方程解出所需摩擦力，再检验是否<b>不超过最大静摩擦力</b>——直接代最大静摩擦力当作实际摩擦力是常见误区。</p>
+      <p class="trap">⑨ 正交分解时坐标系选择不当会让计算暴增——優先沿"斜面/垂直斜面"或题目中天然的两个垂直方向，而不是死板地永远选水平竖直。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 三种解法本质上是同一个 ΣF=0 的三种"表达方式":</b> 正交分解是"代数视角"(分量式方程组)，力的三角形是"几何视角"(矢量图形闭合)，相似三角形是"比例视角"(利用几何相似省去三角函数)。遇到三力问题先判断能不能画出漂亮的相似三角形——能就秒杀，不能退回三角形法或正交分解，这是解题速度分层的关键。</p>
+      <p style="margin:8px 0"><b>② 动态平衡的本质是"约束轨迹+极值几何":</b> 图解法之所以有效，是因为把"力"抽象成了矢量线段，而"缓慢变化"对应线段端点沿一条固定直线连续滑动——这本质上是纯几何问题(点到直线的距离、极值出现在垂足处)。理解了这层抽象，任何"缓慢转动/移动"的动态平衡题都能秒判方向而不必硬算。</p>
+      <p style="margin:8px 0"><b>③ 三力汇交是"二力先合成、再与第三力对冲"的严格推论:</b> 不要死记结论，用"F₁+F₂ = −F₃"重新推一遍——F₁、F₂的合力作用线必过它们的交点，而这个合力与F₃共线反向，所以F₃的作用线也过该点。理解推导过程，才能在四力、五力体系里灵活地"两两合成、逐步转化为三力"。</p>
+      <p style="margin:8px 0"><b>④ "杆的弹力不一定沿杆"是对"二力构件"概念的精确检验:</b> 只有一根轻杆两端都是理想铰接、且杆身不再受其他外力时，才能用二力平衡的性质证明杆的弹力必沿杆身连线。一旦杆上还挂了别的东西、或者杆和墙是固定(非铰接)连接，就必须老老实实用三力汇交或整体法求方向——这是杆件模型里最容易被简化教学误导的一点。</p>
+      <p style="margin:8px 0"><b>⑤ 相似三角形法的"平行判定"是投影几何的直接应用:</b> 力方向与几何边平行，本质是因为约束(绳、杆、墙面)本身就定义了力的方向；只要把每个力的作用线画成从同一个几何顶点出发的方向线，相似关系自动浮现。练出"看到绳/杆/斜面构成的三角形，第一反应画对应力三角形"的条件反射，是三力问题的最高效率解法。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 共点力平衡:静态平衡(三种解法) + 动态平衡(图解法) + 三力汇交</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:正交分解法 ===== */
+(function(){
+  const svg=document.getElementById('orthoSvg');
+  const thetaS=document.getElementById('orthoTheta');
+  const oX=document.getElementById('orX'),oY=document.getElementById('orY'),oF=document.getElementById('orF'),oOK=document.getElementById('orOK');
+  let caseIdx=0,theta=30;
+  document.querySelectorAll('.orthoCase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.orthoCase').forEach(x=>x.classList.remove('on'));b.classList.add('on');caseIdx=+b.dataset.c;draw();
+  });
+  thetaS.oninput=()=>{theta=+thetaS.value;draw();};
+  function draw(){
+    clr(svg);
+    const mg=10;
+    const th=theta*Math.PI/180;
+    if(caseIdx===0){
+      // horizontal pull with vertical component: F at angle theta above horizontal, weight mg, normal N, friction f
+      const F=8;
+      const Fx=F*Math.cos(th), Fy=F*Math.sin(th);
+      const N=mg-Fy, f=Fx; // assume static balance: friction opposes horizontal pull
+      el(svg,'text',{x:20,y:26,'font-size':14,'font-weight':900,fill:INK}).textContent='情形:水平面上物体受斜向上拉力F，重力mg，支持力N，摩擦力f';
+      // draw block
+      const bx=350,by=200;
+      el(svg,'rect',{x:bx-40,y:by-30,width:80,height:60,fill:'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:60,y1:by+30,x2:640,y2:by+30,stroke:INK,'stroke-width':3});
+      // F arrow
+      arrow(svg,bx+40,by,Math.cos(th)*120,-Math.sin(th)*120,RED,'F='+F);
+      // components dashed
+      el(svg,'line',{x1:bx+40,y1:by,x2:bx+40+Math.cos(th)*120,y2:by,stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+      el(svg,'line',{x1:bx+40+Math.cos(th)*120,y1:by,x2:bx+40+Math.cos(th)*120,y2:by-Math.sin(th)*120,stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+      el(svg,'text',{x:bx+40+Math.cos(th)*60,y:by+16,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='Fx='+Fx.toFixed(1);
+      el(svg,'text',{x:bx+40+Math.cos(th)*120+8,y:by-Math.sin(th)*60,'font-size':12,'font-weight':800,fill:RED}).textContent='Fy='+Fy.toFixed(1);
+      // mg
+      arrow(svg,bx,by+30,0,50,INK,'mg='+mg);
+      // N
+      arrow(svg,bx-70,by+28,0,-50,BLUE,'N='+N.toFixed(1));
+      // f
+      arrow(svg,bx-40,by+60,-f*8,0,GREEN,'f='+f.toFixed(1));
+      el(svg,'text',{x:20,y:290,'font-size':13,'font-weight':800,fill:INK}).textContent='竖直:N+Fy=mg → N=mg−Fsinθ　　水平:f=Fx=Fcosθ(假设平衡)';
+      oX.textContent=Fx.toFixed(2);oY.textContent=(N+Fy-mg).toFixed(2);oF.textContent=N.toFixed(2);
+      oOK.textContent=(N>=0)?'是(N≥0)':'否(N<0,已离地)';
+    } else {
+      // incline block
+      const m=2,g=10,mgv=m*g;
+      const gpar=mgv*Math.sin(th), gperp=mgv*Math.cos(th);
+      const cx=350,cy=230,L=280;
+      el(svg,'text',{x:20,y:26,'font-size':14,'font-weight':900,fill:INK}).textContent='情形:斜面上静止物块，沿斜面/垂直斜面分解重力';
+      // incline
+      const ix0=100,iy0=270, ix1=100+L*Math.cos(th), iy1=270-L*Math.sin(th);
+      el(svg,'polygon',{points:ix0+','+iy0+' '+ix1+','+iy1+' '+ix0+','+iy1,fill:'#e8dfc4',stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:60,y1:270,x2:640,y2:270,stroke:INK,'stroke-width':3});
+      // block on incline at midpoint
+      const t=0.55;
+      const px=ix0+(ix1-ix0)*t, py=iy0+(iy1-iy0)*t;
+      const nx=-Math.sin(th), ny=-Math.cos(th);
+      const bx=px+nx*22, by=py+ny*22;
+      el(svg,'g',{transform:'translate('+bx+','+by+') rotate('+(-theta)+')'}).appendChild((()=>{const r=document.createElementNS(NS,'rect');r.setAttribute('x',-30);r.setAttribute('y',-20);r.setAttribute('width',60);r.setAttribute('height',40);r.setAttribute('fill','#fff');r.setAttribute('stroke',INK);r.setAttribute('stroke-width',3);return r;})());
+      // mg vertical down
+      arrow(svg,bx,by,0,70,INK,'mg='+mgv);
+      // component along incline (down-slope direction)
+      const dsx=Math.cos(th), dsy=Math.sin(th);
+      arrow(svg,bx,by,dsx*gpar*3,dsy*gpar*3,RED,'mg·sinθ='+gpar.toFixed(1));
+      // component perpendicular into incline
+      arrow(svg,bx,by,nx*-gperp*3,ny*-gperp*3,BLUE,'mg·cosθ='+gperp.toFixed(1));
+      el(svg,'text',{x:20,y:300,'font-size':13,'font-weight':800,fill:INK}).textContent='沿斜面:f=mg·sinθ='+gpar.toFixed(1)+'N　　垂直斜面:N=mg·cosθ='+gperp.toFixed(1)+'N';
+      oX.textContent=gpar.toFixed(2);oY.textContent=gperp.toFixed(2);oF.textContent=Math.sqrt(gpar*gpar+gperp*gperp).toFixed(2);
+      oOK.textContent='是(静摩擦=mgsinθ，需≤最大静摩擦)';
+    }
+  }
+  function arrow(p,x,y,dx,dy,col,lab){
+    const x2=x+dx,y2=y+dy;
+    el(p,'line',{x1:x,y1:y,x2:x2,y2:y2,stroke:col,'stroke-width':4});
+    const ang=Math.atan2(dy,dx);
+    const ax1=x2-10*Math.cos(ang-0.4),ay1=y2-10*Math.sin(ang-0.4);
+    const ax2=x2-10*Math.cos(ang+0.4),ay2=y2-10*Math.sin(ang+0.4);
+    el(p,'polygon',{points:x2+','+y2+' '+ax1+','+ay1+' '+ax2+','+ay2,fill:col});
+    el(p,'text',{x:x2+8*Math.sign(dx||1),y:y2+(dy<0?-8:16),'font-size':12,'font-weight':800,fill:col}).textContent=lab;
+  }
+  draw();
+})();
+
+/* ===== 互动2:力的三角形闭合 ===== */
+(function(){
+  const svg=document.getElementById('triSvg');
+  const f3S=document.getElementById('triF3'),angS=document.getElementById('triAng');
+  const oF1=document.getElementById('triF1'),oF2=document.getElementById('triF2'),oGap=document.getElementById('triGap'),oOK=document.getElementById('triOK');
+  const F1=6, F1ang=0; // F1 points along angle 0 (right)
+  const F2=4, F2ang=110; // F2 points at 110 deg
+  let F3=5, F3ang=180, running=false;
+  function sync(){F3=+f3S.value;F3ang=+angS.value;draw();}
+  f3S.oninput=angS.oninput=sync;
+  function vec(mag,ang){const r=ang*Math.PI/180;return [mag*Math.cos(r),-mag*Math.sin(r)];}
+  function draw(){
+    clr(svg);
+    const [x1,y1]=vec(F1,F1ang);
+    const [x2,y2]=vec(F2,F2ang);
+    const [x3,y3]=vec(F3,F3ang);
+    // LEFT: real picture, all from common point
+    const ox=170,oy=140;
+    el(svg,'text',{x:ox,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='实景图(共点)';
+    el(svg,'circle',{cx:ox,cy:oy,r:5,fill:INK});
+    drawArrow(svg,ox,oy,x1*8,y1*8,RED,'F₁');
+    drawArrow(svg,ox,oy,x2*8,y2*8,BLUE,'F₂');
+    drawArrow(svg,ox,oy,x3*8,y3*8,GREEN,'F₃');
+    // RIGHT: tip-to-tail triangle
+    const sx=470,sy=230;
+    el(svg,'text',{x:530,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='力三角形(首尾相接)';
+    let px=sx,py=sy;
+    el(svg,'circle',{cx:px,cy:py,r:5,fill:INK});
+    drawArrow(svg,px,py,x1*8,y1*8,RED,'F₁');
+    px+=x1*8;py+=y1*8;
+    drawArrow(svg,px,py,x2*8,y2*8,BLUE,'F₂');
+    px+=x2*8;py+=y2*8;
+    drawArrow(svg,px,py,x3*8,y3*8,GREEN,'F₃');
+    px+=x3*8;py+=y3*8;
+    const gap=Math.sqrt((px-sx)*(px-sx)+(py-sy)*(py-sy));
+    if(gap>3){
+      el(svg,'line',{x1:sx,y1:sy,x2:px,y2:py,stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'4 4'});
+      el(svg,'text',{x:(sx+px)/2+10,y:(sy+py)/2,'font-size':11.5,'font-weight':800,fill:ORANGE}).textContent='缺口';
+    }
+    oF1.textContent=F1.toFixed(1);oF2.textContent=F2.toFixed(1);
+    oGap.textContent=(gap/8).toFixed(2);
+    oOK.textContent=gap<4?'是(闭合)':'否';
+    svg.style.background=gap<4?'#eafaf3':'#fff';
+  }
+  function drawArrow(p,x,y,dx,dy,col,lab){
+    const x2=x+dx,y2=y+dy;
+    el(p,'line',{x1:x,y1:y,x2:x2,y2:y2,stroke:col,'stroke-width':4});
+    const ang=Math.atan2(dy,dx);
+    const ax1=x2-9*Math.cos(ang-0.4),ay1=y2-9*Math.sin(ang-0.4);
+    const ax2=x2-9*Math.cos(ang+0.4),ay2=y2-9*Math.sin(ang+0.4);
+    el(p,'polygon',{points:x2+','+y2+' '+ax1+','+ay1+' '+ax2+','+ay2,fill:col});
+    el(p,'text',{x:x2+6,y:y2-6,'font-size':11.5,'font-weight':800,fill:col}).textContent=lab;
+  }
+  function findBalance(){
+    // solve F3 such that F1(vec)+F2(vec)+F3(vec)=0 given direction search
+    const [x1,y1]=vec(F1,F1ang);
+    const [x2,y2]=vec(F2,F2ang);
+    const sumx=x1+x2, sumy=y1+y2;
+    const needMag=Math.sqrt(sumx*sumx+sumy*sumy);
+    let needAng=Math.atan2(-sumy,-sumx)*180/Math.PI;
+    if(needAng<0)needAng+=360;
+    return [needMag,needAng];
+  }
+  function loop(t0){
+    if(!running)return;
+    const [tgtMag,tgtAng]=findBalance();
+    let dAng=tgtAng-F3ang;
+    while(dAng>180)dAng-=360;while(dAng<-180)dAng+=360;
+    F3ang+=dAng*0.08;
+    if(F3ang<0)F3ang+=360; if(F3ang>=360)F3ang-=360;
+    F3+=(tgtMag-F3)*0.08;
+    f3S.value=F3.toFixed(1);angS.value=F3ang.toFixed(0);
+    draw();
+    if(Math.abs(dAng)<0.5&&Math.abs(tgtMag-F3)<0.05){running=false;return;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('triGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('triReset').onclick=()=>{running=false;F3=5;F3ang=180;f3S.value=5;angS.value=180;draw();};
+  sync();
+})();
+
+/* ===== 互动3:相似三角形法(挂墙的球) ===== */
+(function(){
+  const svg=document.getElementById('simSvg');
+  const alphaS=document.getElementById('simAlpha'),mgS=document.getElementById('simMg');
+  const oT=document.getElementById('simT'),oN=document.getElementById('simN'),oCheck=document.getElementById('simCheck'),oA=document.getElementById('simA');
+  let alpha=40,mg=6;
+  function sync(){alpha=+alphaS.value;mg=+mgS.value;draw();}
+  alphaS.oninput=mgS.oninput=sync;
+  function draw(){
+    clr(svg);
+    const a=alpha*Math.PI/180;
+    const T=mg/Math.sin(a);
+    const N=mg/Math.tan(a);
+    oT.textContent=T.toFixed(2);oN.textContent=N.toFixed(2);oA.textContent=alpha+'°';
+    // LEFT: geometry — wall vertical, rope from top point to ball, ball touches wall
+    const wallX=140, topY=40, ballY=topY+180/Math.tan(a)*0 ; // recompute properly
+    // define rope length L fixed=200 (screen units), angle alpha from wall(vertical)
+    const L=190;
+    const ropeDX=L*Math.sin(a), ropeDY=L*Math.cos(a);
+    const px0=wallX, py0=topY;
+    const px1=wallX+ropeDX, py1=topY+ropeDY;
+    el(svg,'text',{x:210,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='几何三角形(绳-墙-垂线)';
+    el(svg,'line',{x1:wallX,y1:20,x2:wallX,y2:280,stroke:INK,'stroke-width':5});
+    el(svg,'text',{x:wallX-10,y:150,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='墙';
+    // rope
+    el(svg,'line',{x1:px0,y1:py0,x2:px1,y2:py1,stroke:BROWN,'stroke-width':3});
+    // vertical from top to ball height (d segment)
+    el(svg,'line',{x1:px0,y1:py0,x2:px0,y2:py1,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // horizontal from wall to ball (perpendicular distance d)
+    el(svg,'line',{x1:px0,y1:py1,x2:px1,y2:py1,stroke:GREEN,'stroke-width':3});
+    // ball
+    el(svg,'circle',{cx:px1,cy:py1,r:18,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:(px0+px1)/2+6,y:(py0+py1)/2-6,'font-size':12,'font-weight':800,fill:BROWN}).textContent='L(绳)';
+    el(svg,'text',{x:px0+(px1-px0)/2,y:py1+18,'font-size':12,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='d';
+    el(svg,'text',{x:wallX-6,y:(py0+py1)/2,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='h';
+    // angle arc at top
+    el(svg,'text',{x:px0+14,y:py0+22,'font-size':11.5,'font-weight':900,fill:RED}).textContent='α='+alpha+'°';
+
+    // RIGHT: force triangle, tip-to-tail: mg(down) -> T(back to start along rope reversed) -> N(horizontal)
+    const ox=500, oy=60;
+    el(svg,'text',{x:530,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='力三角形(mg·T·N)';
+    const scale=14;
+    // mg down
+    const mgLen=mg*scale;
+    el(svg,'line',{x1:ox,y1:oy,x2:ox,y2:oy+mgLen,stroke:INK,'stroke-width':4});
+    arrowhead(svg,ox,oy+mgLen,90,INK);
+    el(svg,'text',{x:ox+8,y:oy+mgLen/2,'font-size':12,'font-weight':800,fill:INK}).textContent='mg='+mg;
+    // N horizontal from bottom back
+    const Nlen=N*scale;
+    el(svg,'line',{x1:ox,y1:oy+mgLen,x2:ox+Nlen,y2:oy+mgLen,stroke:GREEN,'stroke-width':4});
+    arrowhead(svg,ox+Nlen,oy+mgLen,0,GREEN);
+    el(svg,'text',{x:ox+Nlen/2,y:oy+mgLen+18,'font-size':12,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='N='+N.toFixed(1);
+    // T from end back to start (closes triangle)
+    el(svg,'line',{x1:ox+Nlen,y1:oy+mgLen,x2:ox,y2:oy,stroke:BROWN,'stroke-width':4});
+    el(svg,'text',{x:ox+Nlen/2+10,y:(oy+oy+mgLen)/2-6,'font-size':12,'font-weight':800,fill:BROWN}).textContent='T='+T.toFixed(1);
+
+    const ratioCheck = (mg/ (Math.sqrt(px0===px1?0:( (py1-py0)*(py1-py0) )) || 1));
+    oCheck.textContent = 'mg/h='+(mg/(ropeDY/scale*1||1)).toFixed(2)+' ≈ N/d='+(N/(ropeDX/scale||1)).toFixed(2);
+  }
+  function arrowhead(p,x,y,angDeg,col){
+    const ang=angDeg*Math.PI/180;
+    const ax1=x-9*Math.cos(ang-0.45),ay1=y-9*Math.sin(ang-0.45);
+    const ax2=x-9*Math.cos(ang+0.45),ay2=y-9*Math.sin(ang+0.45);
+    el(p,'polygon',{points:x+','+y+' '+ax1+','+ay1+' '+ax2+','+ay2,fill:col});
+  }
+  sync();
+})();
+
+/* ===== 互动4:三力汇交示意 ===== */
+(function(){
+  const svg=document.getElementById('concSvg');const note=document.getElementById('concNote');
+  const a1S=document.getElementById('concA1'),a2S=document.getElementById('concA2');
+  function sync(){draw();}
+  a1S.oninput=a2S.oninput=sync;
+  function lineFrom(px,py,angDeg,len){
+    const r=angDeg*Math.PI/180;
+    return [px+len*Math.cos(r), py+len*Math.sin(r)];
+  }
+  function intersect(p1,d1,p2,d2){
+    // p+t*d, solve p1+t1 d1 = p2+t2 d2
+    const denom = d1[0]*(-d2[1]) - d1[1]*(-d2[0]);
+    if(Math.abs(denom)<1e-6) return null;
+    const rhsx = p2[0]-p1[0], rhsy=p2[1]-p1[1];
+    const t1 = (rhsx*(-d2[1]) - rhsy*(-d2[0]))/denom;
+    return [p1[0]+t1*d1[0], p1[1]+t1*d1[1]];
+  }
+  function draw(){
+    clr(svg);
+    const a1=+a1S.value, a2=+a2S.value;
+    const P=[350,90]; // common application point
+    el(svg,'text',{x:20,y:22,'font-size':13,'font-weight':900,fill:INK}).textContent='已知力1、力2方向 → 延长线交于一点 → 第三力(如杆的弹力)必过该点';
+    el(svg,'circle',{cx:P[0],cy:P[1],r:6,fill:INK});
+    el(svg,'text',{x:P[0]+10,y:P[1]-10,'font-size':12,'font-weight':800,fill:INK}).textContent='作用点';
+    const r1=a1*Math.PI/180, d1=[Math.cos(r1),Math.sin(r1)];
+    const r2=a2*Math.PI/180, d2=[Math.cos(r2),Math.sin(r2)];
+    // draw extended lines both directions
+    function extLine(dir,col,lab){
+      const len=400;
+      const x1=P[0]-dir[0]*len*0.15, y1=P[1]-dir[1]*len*0.15;
+      const x2=P[0]+dir[0]*len, y2=P[1]+dir[1]*len;
+      el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':2,'stroke-dasharray':'6 5'});
+      // actual force arrow near P
+      const ax=P[0]+dir[0]*70, ay=P[1]+dir[1]*70;
+      el(svg,'line',{x1:P[0],y1:P[1],x2:ax,y2:ay,stroke:col,'stroke-width':4});
+      const ang=Math.atan2(dir[1],dir[0]);
+      const h1x=ax-9*Math.cos(ang-0.4),h1y=ay-9*Math.sin(ang-0.4);
+      const h2x=ax-9*Math.cos(ang+0.4),h2y=ay-9*Math.sin(ang+0.4);
+      el(svg,'polygon',{points:ax+','+ay+' '+h1x+','+h1y+' '+h2x+','+h2y,fill:col});
+      el(svg,'text',{x:ax+8*dir[0],y:ay+8*dir[1]-6,'font-size':12,'font-weight':800,fill:col}).textContent=lab;
+    }
+    extLine(d1,RED,'力1');
+    extLine(d2,BLUE,'力2');
+    // find intersection ahead of P (positive t along both lines going "down/away")
+    const Q=intersect(P,d1,P,d2);
+    let note1;
+    if(Q){
+      el(svg,'circle',{cx:Q[0],cy:Q[1],r:7,fill:YEL,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:Q[0]+10,y:Q[1]+4,'font-size':12.5,'font-weight':900,fill:'#7a5b00'}).textContent='交点(汇交点)';
+      // third force direction: from P through... actually third force must pass through Q too (all three concurrent at same point commonly = P itself for concurrent force systems)
+      note1='力1、力2的作用线相交于黄点。若两者不平行，第三个未知力(如轻杆弹力)的作用线也必须通过此交点——这就是三力汇交在确定弹力方向时的用法。';
+    } else {
+      note1='当前力1、力2方向平行，无法用三力汇交确定交点(此时应改用力的三角形法直接判断)。';
+    }
+    note.innerHTML=note1;
+    note.style.borderColor=Q?INK:RED;
+  }
+  sync();
+})();
+
+/* ===== 互动5:动态平衡图解法 ===== */
+(function(){
+  const svg=document.getElementById('dynSvg');
+  const phiS=document.getElementById('dynPhi');
+  const oG=document.getElementById('dynG'),oT=document.getElementById('dynT'),oF=document.getElementById('dynF'),oMin=document.getElementById('dynMin');
+  let phi=30,running=false;
+  function sync(){phi=+phiS.value;draw();}
+  phiS.oninput=sync;
+  function draw(){
+    clr(svg);
+    const mg=10;
+    const r=phi*Math.PI/180;
+    const T=mg/Math.cos(r);
+    const F=mg*Math.tan(r);
+    oG.textContent=mg.toFixed(1);oT.textContent=T.toFixed(2);oF.textContent=F.toFixed(2);
+    oMin.textContent = phi<=6? '接近最小(F→0)':'非最小(仍在增大)';
+
+    el(svg,'text',{x:20,y:22,'font-size':13,'font-weight':900,fill:INK}).textContent='情形:绳固定端方向不变(竖直)，F水平方向不变、大小可调，缓慢拉起角φ';
+    // LEFT: physical picture
+    const pivot=[170,50];
+    const ropeLen=170;
+    const bx=pivot[0]+ropeLen*Math.sin(r), by=pivot[1]+ropeLen*Math.cos(r);
+    el(svg,'circle',{cx:pivot[0],cy:pivot[1],r:5,fill:INK});
+    el(svg,'line',{x1:pivot[0],y1:pivot[1],x2:bx,y2:by,stroke:BROWN,'stroke-width':3});
+    el(svg,'circle',{cx:bx,cy:by,r:16,fill:YEL,stroke:INK,'stroke-width':3});
+    // mg down
+    dArrow(svg,bx,by,0,60,INK,'mg');
+    // F horizontal
+    dArrow(svg,bx,by,90,0,RED,'F');
+    // T along rope back to pivot direction shown as label
+    el(svg,'text',{x:(pivot[0]+bx)/2-30,y:(pivot[1]+by)/2,'font-size':12,'font-weight':800,fill:BLUE}).textContent='T';
+    el(svg,'text',{x:pivot[0]+10,y:pivot[1]+20,'font-size':11.5,'font-weight':800,fill:INK}).textContent='φ='+phi+'°';
+
+    // RIGHT: dynamic force triangle — mg fixed vertical edge; F horizontal (direction fixed, magnitude variable); T is the sliding hypotenuse
+    const ox=500, oy=50;
+    const scale=8;
+    const mgLen=mg*scale;
+    el(svg,'text',{x:530,y:22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='动态力三角形';
+    // mg fixed edge (vertical, down)
+    el(svg,'line',{x1:ox,y1:oy,x2:ox,y2:oy+mgLen,stroke:INK,'stroke-width':4});
+    arrowhead2(svg,ox,oy+mgLen,90,INK);
+    el(svg,'text',{x:ox-30,y:oy+mgLen/2,'font-size':12,'font-weight':800,fill:INK}).textContent='mg';
+    // F fixed-direction line (horizontal), draw guide line
+    el(svg,'line',{x1:ox,y1:oy+mgLen,x2:ox+180,y2:oy+mgLen,stroke:RED,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    const Flen=Math.min(170,F*scale);
+    el(svg,'line',{x1:ox,y1:oy+mgLen,x2:ox+Flen,y2:oy+mgLen,stroke:RED,'stroke-width':4});
+    arrowhead2(svg,ox+Flen,oy+mgLen,0,RED);
+    el(svg,'text',{x:ox+Flen/2,y:oy+mgLen+18,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='F='+F.toFixed(1);
+    // T sliding edge: from F tip back to top of mg (closes triangle)
+    el(svg,'line',{x1:ox+Flen,y1:oy+mgLen,x2:ox,y2:oy,stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:ox+Flen/2+8,y:(oy+oy+mgLen)/2-4,'font-size':12,'font-weight':800,fill:BLUE}).textContent='T='+T.toFixed(1);
+    el(svg,'text',{x:20,y:300,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent='mg(黑)为定边；F(红)沿水平定方向线滑动；T(蓝)是斜边，随φ增大而增大，φ→90°时T、F都趋于无穷大。';
+  }
+  function dArrow(p,x,y,dx,dy,col,lab){
+    const x2=x+dx,y2=y+dy;
+    el(p,'line',{x1:x,y1:y,x2:x2,y2:y2,stroke:col,'stroke-width':4});
+    const ang=Math.atan2(dy,dx);
+    const h1x=x2-9*Math.cos(ang-0.4),h1y=y2-9*Math.sin(ang-0.4);
+    const h2x=x2-9*Math.cos(ang+0.4),h2y=y2-9*Math.sin(ang+0.4);
+    el(p,'polygon',{points:x2+','+y2+' '+h1x+','+h1y+' '+h2x+','+h2y,fill:col});
+    el(p,'text',{x:x2+6,y:y2-6,'font-size':12,'font-weight':800,fill:col}).textContent=lab;
+  }
+  function arrowhead2(p,x,y,angDeg,col){
+    const ang=angDeg*Math.PI/180;
+    const ax1=x-9*Math.cos(ang-0.45),ay1=y-9*Math.sin(ang-0.45);
+    const ax2=x-9*Math.cos(ang+0.45),ay2=y-9*Math.sin(ang+0.45);
+    el(p,'polygon',{points:x+','+y+' '+ax1+','+ay1+' '+ax2+','+ay2,fill:col});
+  }
+  function loop(){
+    if(!running)return;
+    phi+=0.6;
+    if(phi>=85){phi=85;running=false;}
+    phiS.value=phi.toFixed(0);
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('dynGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('dynReset').onclick=()=>{running=false;phi=30;phiS.value=30;draw();};
+  sync();
+})();
+
+/* ===== 互动6:缓慢移动各力变化曲线 ===== */
+(function(){
+  const svg=document.getElementById('curveSvg');
+  const oPhi=document.getElementById('cuPhi'),oF=document.getElementById('cuF'),oT=document.getElementById('cuT'),oTrend=document.getElementById('cuTrend');
+  let phi=5,running=false;
+  const mg=10;
+  function Fval(p){const r=p*Math.PI/180;return mg*Math.tan(r);}
+  function Tval(p){const r=p*Math.PI/180;return mg/Math.cos(r);}
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='力';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='φ';
+    const phiMin=5,phiMax=85;
+    const Fmax=60, valCap=60;
+    function xOf(p){return X0+(p-phiMin)/(phiMax-phiMin)*W;}
+    function yOf(v){const vc=Math.min(v,valCap);return Y0+H-(vc/valCap)*H;}
+    // F curve blue... wait spec says F blue, T green per label; let's keep consistent with small text below (F blue line, T green)
+    let ptsF=[],ptsT=[];
+    for(let p=phiMin;p<=phi;p+=1){
+      ptsF.push([xOf(p),yOf(Fval(p))]);
+      ptsT.push([xOf(p),yOf(Tval(p))]);
+    }
+    function poly(pts,col){
+      if(pts.length<2)return;
+      const d=pts.map((pt,i)=>(i===0?'M':'L')+pt[0]+','+pt[1]).join(' ');
+      el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':3});
+    }
+    poly(ptsF,BLUE);
+    poly(ptsT,GREEN);
+    el(svg,'text',{x:X0+10,y:Y0+16,'font-size':12,'font-weight':800,fill:BLUE}).textContent='F(N) 蓝线';
+    el(svg,'text',{x:X0+10,y:Y0+34,'font-size':12,'font-weight':800,fill:GREEN}).textContent='T(N) 绿线';
+    const curF=Fval(phi), curT=Tval(phi);
+    oPhi.textContent=phi.toFixed(0)+'°';oF.textContent=curF.toFixed(2);oT.textContent=curT.toFixed(2);
+    oTrend.textContent = phi<45? 'F、T缓慢增大':'F、T加速增大(渐近发散)';
+    // marker
+    if(ptsF.length){
+      const lastF=ptsF[ptsF.length-1], lastT=ptsT[ptsT.length-1];
+      el(svg,'circle',{cx:lastF[0],cy:lastF[1],r:5,fill:BLUE});
+      el(svg,'circle',{cx:lastT[0],cy:lastT[1],r:5,fill:GREEN});
+    }
+  }
+  function loop(){
+    if(!running)return;
+    phi+=0.5;
+    if(phi>=85){phi=85;running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('curveGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('curveReset').onclick=()=>{running=false;phi=5;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 共点力平衡的条件是什么？正交分解写成什么形式？",a:"合力为零 ΣF=0；正交分解写成 ΣFx=0 且 ΣFy=0，两个方向分别独立列式。"},
+ {q:"2. 三力平衡时，把三个力矢量首尾相接会得到什么图形？由此能得出什么结论？",a:"会得到一个封闭(闭合)的三角形。由此可知：任意一个力与另外两个力的合力等大反向。"},
+ {q:"3. 三力汇交原理的内容是什么？适用条件是什么？",a:"三个互不平行的共点力平衡时，它们的作用线必交于一点。适用条件是三力互不平行(若有两力平行则不适用)。"},
+ {q:"4. 相似三角形法的适用条件和优势是什么？",a:"当力三角形的三边与题目几何图形三边分别平行(即相似)时可用；优势是不需要算三角函数，直接按边长比例 F₁:F₂:F₃=边₁:边₂:边₃ 求解，速度最快。"},
+ {q:"5. 挂在光滑墙上的球(轻绳斜拉)模型中，三个力分别是什么？怎么用相似三角形法求T和N？",a:"三力：重力mg(竖直向下)、绳拉力T(沿绳)、墙的支持力N(水平)。几何三角形为绳、竖直边、水平边构成的三角形，与力三角形相似，故 mg:T:N = 竖直边:斜边(绳长):水平边，代入边长比直接求T、N。"},
+ {q:"6. 什么条件下才能说'绳上张力处处相等'？",a:"只有绳绕过光滑(无摩擦)、轻质(无质量)的滑轮或钉子时，两侧张力大小才处处相等——缺一个条件都不成立。"},
+ {q:"7. 动态平衡的图解法三步是什么？",a:"①找出大小方向都不变的力，画成三角形的定边；②找出方向不变、大小可变的力，画出它所在的定方向线；③让第三边(大小方向都变的力)端点沿定方向线滑动，画出一系列三角形，读出变化趋势。"},
+ {q:"8. 图解法中，滑动边(某个力)出现最小值的几何条件是什么？",a:"当滑动边与定方向线垂直时，滑动边长度最短(点到直线的垂线段最短)，此时对应的力出现最小值。"},
+ {q:"9. 用绳竖直悬挂重物，另用水平方向不变的力F缓慢将绳拉起角度φ，F和绳中张力T如何随φ变化？",a:"F=mg·tanφ，T=mg/cosφ，两者都随φ增大而单调增大，φ→90°时都趋于无穷大。"},
+ {q:"10. 为什么说'轻杆的弹力不一定沿杆方向'？什么情况下才一定沿杆？",a:"只有轻杆两端都是理想铰接、且杆身不再受其他外力(即'二力杆')时，由二力平衡的性质才能保证弹力必沿杆身连线；否则(比如杆上还挂了别的重物、或与墙固定连接)弹力方向需要用三力汇交或整体法重新判断。"},
+ {q:"11. 判断静摩擦力大小时最容易犯的错误是什么？正确做法是什么？",a:"容易犯的错是直接把最大静摩擦力当成实际摩擦力。正确做法是先假设静止列平衡方程解出所需的摩擦力大小，再检验它是否不超过最大静摩擦力(μN)。"},
+ {q:"12. 三力平衡问题一般有哪三种解法？各自最适合什么情况？",a:"①正交分解法：通用，任何多力情形都能用，尤其力个数多或没有明显几何相似关系时；②力的三角形法：三力问题，配合正弦/余弦定理求解；③相似三角形法：当力三角形与题目几何图形相似(对应边平行)时最快，直接用边长比例。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
