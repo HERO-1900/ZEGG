@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动量定理与冲量 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>动量定理与冲量</h1>
+    <p class="lead">「动量守恒」讲的是系统内部的动量搬家;这一页讲的是<b>单个物体</b>的动量为什么会变——变多少,由<b>合外力的冲量</b>说了算。缓冲、气囊、钉钉子、反弹、喷气,全都是动量定理 I合=Δp 的直接应用。跟守恒篇互为姊妹:一个算「守」,一个算「变」。</p>
+
+    <div class="say">🗣️ <b>动量定理(人话版):</b> 想让一个物体的运动状态「变多少」,就得给它<b>一份冲量</b>。冲量 = 力 × 作用时间(I=Ft)。同样要让它停下来(Δp 一定),你可以用<b>大力短时间</b>(墙),也可以用<b>小力长时间</b>(气囊)——两种方式冲量一样,但受的力天差地别。这就是缓冲的全部秘密:<b>拖长时间,削小冲力</b>。反过来钉钉子想要大冲力,就得<b>缩短时间</b>。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>I合 = F·t = Δp = p′ − p = mv′ − mv₀</b>。左边是「合外力的冲量」(矢量,含重力!),右边是「动量的变化」(矢量,末动量减初动量)。解题第一步永远是:<b>规定正方向</b>,把速度、力都带上符号。</div>
+
+    <h2>① 冲量 I:力在时间上的累积</h2>
+    <div class="card">
+      <div class="eq">恒力冲量:I = F · t　(单位 N·s)</div>
+      <p style="margin:8px 0"><b>冲量是矢量</b>,方向<b>与力的方向相同</b>(不是与速度方向!)。它描述「力在一段时间里累积的效果」。单位 N·s,恰好等价于 kg·m/s(与动量单位相同,这不是巧合)。</p>
+      <table>
+        <tr><th>情形</th><th>怎么求冲量</th></tr>
+        <tr><td><b>恒力</b>(力不变)</td><td>直接 I = F·t</td></tr>
+        <tr><td><b>变力</b>(力随时间变)</td><td>① 用动量定理 I=Δp 反求;② 用 F-t 图像<b>面积</b>求</td></tr>
+        <tr><td><b>多个力</b></td><td>先求合外力 F合,再 I合=F合·t;或各力冲量矢量相加</td></tr>
+      </table>
+      <p class="trap">⚠ 冲量方向跟<b>力</b>同向,别写成跟速度同向。变力的冲量硬乘 F·t 是错的——变力没有单一的 F,只能用 F-t 图面积或反用动量定理。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 动量定理演示:F-t 图,面积=冲量=Δp(拖力/时间看动量怎么变)</div>
+      <svg id="ftSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ftGo">▶ 施力演示</button><button id="ftReset">↺ 重置</button>
+        <label>合力 F <input id="ftF" type="range" min="1" max="10" value="4" step="1"></label>
+        <label>时间 t <input id="ftT" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>质量 m <input id="ftM" type="range" min="1" max="5" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>冲量 I=Ft (N·s)</b><span id="ftI">0</span></div>
+        <div><b>Δp=I (kg·m/s)</b><span id="ftDp">0</span></div>
+        <div><b>末速 v′ (m/s)</b><span id="ftV">0</span></div>
+        <div><b>图中阴影面积</b><span id="ftA">0</span></div>
+      </div>
+      <p class="small">物体初速为 0。F-t 图下的<b>阴影面积</b>=冲量 I=Ft=Δp。改 F 或 t，面积同步变，末动量 mv′ 就等于这块面积。</p>
+    </div>
+
+    <h2 class="b">② 动量 p:运动状态的「量」</h2>
+    <div class="card">
+      <div class="eq">动量:p = m·v　(单位 kg·m/s)</div>
+      <p style="margin:8px 0"><b>动量是矢量</b>,方向<b>与速度方向相同</b>。它衡量「一个物体运动的『冲劲』有多大」——质量越大、速度越快,越难让它停下。</p>
+      <h3>动量 p 与动能 Ek 的关系(高频)</h3>
+      <div class="eq">Ek = p²/(2m)　⟺　p = √(2m·Ek)</div>
+      <p style="margin:8px 0">同一物体:<b>动量是矢量</b>(有方向,反弹会变号),<b>动能是标量</b>(只有大小,永远非负)。由 Ek=½mv² 和 p=mv 消去 v 即得。这两式让你在「已知动能求动量」或反之时一步到位。</p>
+      <p class="trap">⚠ 动量方向 = 速度方向,冲量方向 = 力方向,两者常常<b>不同向</b>(比如刹车:速度向前，合外力向后)。别混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 6 — p 与 Ek 关系计算器:p=√(2mEk)、Ek=p²/2m 互推</div>
+      <svg id="peSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>质量 m (kg) <input id="peM" type="range" min="1" max="10" value="2" step="1"></label>
+        <label>动能 Ek (J) <input id="peE" type="range" min="1" max="50" value="16" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>速度 v=√(2Ek/m)</b><span id="peV">0</span></div>
+        <div><b>动量 p=mv</b><span id="peP">0</span></div>
+        <div><b>验证 p=√(2mEk)</b><span id="peP2">0</span></div>
+        <div><b>验证 Ek=p²/2m</b><span id="peE2">0</span></div>
+      </div>
+      <p class="small">两根条形:蓝=动量 p,黄=动能 Ek。注意 Ek 随 p 是<b>二次</b>关系(p 翻倍，Ek 变 4 倍)。两种公式互验，结果必须一致。</p>
+    </div>
+
+    <h2 class="g">③ 动量定理:合外力的冲量 = 动量的变化</h2>
+    <div class="card">
+      <div class="eq">I合 = F合·t = Δp = mv′ − mv₀</div>
+      <p style="margin:8px 0"><b>文字表述:</b> 物体所受<b>合外力的冲量</b>,等于物体<b>动量的变化</b>。这是牛顿第二定律 F=ma 的「时间累积」版本(F=Δp/Δt 变形而来),对<b>恒力、变力都成立</b>。</p>
+      <h3>解题三步(矢量式!)</h3>
+      <div class="mono">第1步:规定正方向(通常取初速度方向或某一固定方向为正)。</div>
+      <div class="mono">第2步:各速度、各力按方向带正负号代入。</div>
+      <div class="mono">第3步:分方向列式 F合·t = mv′ − mv₀,解未知量(常是力或末速度)。</div>
+      <p style="margin:8px 0"><b>合外力冲量含重力!</b> 竖直方向问题,合外力 = 外力 − mg(或 +mg),重力的冲量 mg·t 不能漏。</p>
+      <p class="trap">⚠ 动量定理是<b>矢量式</b>。二维问题要分 x、y 方向分别列式。一维反向时,mv′ 和 mv₀ 符号相反,Δp 会比你直觉的大很多。</p>
+    </div>
+
+    <h2 class="o">④ 动量定理的应用</h2>
+    <div class="card">
+      <h3>应用一:缓冲问题 — 拖长时间,削小冲力</h3>
+      <p style="margin:6px 0">Δp 一定时,由 F=Δp/t:<b>作用时间 t 越长,冲力 F 越小</b>。这是所有「减震防护」的原理。</p>
+      <div class="chips" style="margin:8px 0">
+        <span class="chip">跳远落沙坑</span><span class="chip">汽车安全气囊</span><span class="chip">玻璃杯落地毯</span><span class="chip">跳绳缓冲屈膝</span><span class="chip">包裹泡沫填充</span>
+      </div>
+      <h3>应用二:增大冲力 — 缩短时间</h3>
+      <p style="margin:6px 0">想要<b>大冲力</b>(打击、破坏)反而要<b>缩短</b>作用时间。例:钉钉子(硬碰硬、接触时间极短)、锤子打击、快速击球。</p>
+      <h3>应用三:喷气 / 流体冲击 — 单位时间的动量变化</h3>
+      <div class="eq">F = Δp/Δt = (Δm/Δt)·v　(单位时间喷出/撞上的质量 × 速度)</div>
+      <p style="margin:6px 0">火箭喷气、水流冲墙、风吹物体:把「每秒有多少动量被改变」算出来,就是平均作用力。Δm/Δt 是单位时间流过的质量。</p>
+      <p class="trap">⚠ 缓冲不改变 Δp(冲量总量一样),只改变「用多长时间完成」→ 改变的是冲力 F。别以为气囊让你少受了冲量,它让你少受了<b>峰值力</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🥚 互动 2 — 缓冲原理:同样 Δp，延长作用时间 → 冲力减小(鸡蛋落地毯 vs 水泥)</div>
+      <canvas id="cushCv" width="700" height="220"></canvas>
+      <div class="ctrl">
+        <button id="cushGo">▶ 同时落下</button><button id="cushReset">↺ 重置</button>
+        <label>落地速度 v <input id="cushV" type="range" min="3" max="9" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>共同 Δp (kg·m/s)</b><span id="cuDp">0</span></div>
+        <div><b>水泥 接触时间</b><span id="cuT1">0</span></div>
+        <div><b>地毯 接触时间</b><span id="cuT2">0</span></div>
+        <div><b>冲力之比 F水泥:F地毯</b><span id="cuR">0</span></div>
+      </div>
+      <p class="small">两个鸡蛋<b>同样质量、同样落地速度</b>→ Δp 完全相同。左落水泥(接触时间极短→冲力巨大→碎),右落地毯(接触时间长→冲力小→安全)。柱高=冲力大小。</p>
+    </div>
+
+    <h2 class="v">⑤ 动量定理 vs 动能定理:矢量 vs 标量</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>动量定理</th><th>动能定理</th></tr>
+        <tr><td>公式</td><td>I合 = F·t = Δp = mv′−mv₀</td><td>W合 = F·s = ΔEk = ½mv′²−½mv₀²</td></tr>
+        <tr><td>与什么对应</td><td>力的<b>冲量</b>(力×时间)</td><td>力做的<b>功</b>(力×位移)</td></tr>
+        <tr><td>矢量/标量</td><td><b>矢量</b>(要定正方向、带符号)</td><td><b>标量</b>(功、动能都是标量)</td></tr>
+        <tr><td>反弹时</td><td>Δp 很大(方向变号)</td><td>ΔEk 可能为 0(速率没变)</td></tr>
+        <tr><td>擅长求</td><td>时间、冲力、碰撞前后速度</td><td>位移、路程、末速率、摩擦生热</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>选谁?</b> 题目出现<b>时间 / 冲量 / 力作用多久 / 反弹</b> → 动量定理;出现<b>位移 / 距离 / 做功 / 高度</b> → 动能定理。同一过程两个定理都成立,选「已知量和所求量」最匹配的那个。</p>
+      <p class="trap">⚠ 经典陷阱:球以速率 v 撞墙原速反弹。动能定理:ΔEk=0(速率没变,墙对球不做功,因为墙位移为0);但动量定理:Δp=mv′−mv₀=(−mv)−(mv)=−2mv,大得很!别用动能定理去求这类反弹力。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 动量定理 vs 动能定理:同一过程两种分析(矢量 vs 标量)</div>
+      <svg id="cmpSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cmpcase on" data-c="0">刹车减速</button>
+        <button class="cmpcase" data-c="1">原速反弹</button>
+        <button class="cmpcase" data-c="2">加速前进</button>
+      </div>
+      <div class="verdict" id="cmpNote"></div>
+      <p class="small">看同一个物理过程:左边动量定理(矢量,箭头会变号)算 Δp;右边动能定理(标量,只看大小)算 ΔEk。反弹时两者差异最刺眼。</p>
+    </div>
+
+    <h2 class="r">⑥ 反弹类 Δp:方向变号是命门</h2>
+    <div class="card">
+      <p style="margin:6px 0">反弹问题是动量定理的头号失分点,全因为<b>动量是矢量、方向变号</b>。</p>
+      <div class="eq">规定正方向后:Δp = mv′ − mv₀　(v′、v₀ 各带符号)</div>
+      <p style="margin:8px 0"><b>球撞墙反弹例:</b> 设初速向右为正 v₀=+v,反弹后向左 v′=−v。则 Δp = m(−v) − m(+v) = <b>−2mv</b>(方向向左,大小 2mv,不是 0!)。墙对球的平均力 F = Δp/t = 2mv/t。</p>
+      <table>
+        <tr><th>情形</th><th>Δp 大小</th></tr>
+        <tr><td>撞墙<b>停住</b>(v′=0)</td><td>|Δp| = mv₀</td></tr>
+        <tr><td>撞墙<b>原速反弹</b>(v′=−v₀)</td><td>|Δp| = 2mv₀(最大!)</td></tr>
+        <tr><td>撞墙<b>减速反弹</b>(v′=−½v₀)</td><td>|Δp| = 1.5mv₀</td></tr>
+      </table>
+      <p class="trap">⚠ 反弹的 Δp = mv′−(−mv) 这种写法要看你怎么定正方向。牢记:先定正方向,反向速度必带负号,末减初。停住 mv₀、反弹 2mv₀,后者是前者两倍。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎾 互动 3 — 反弹 Δp 矢量计算(球撞墙,Δp=mv′−mv₀ 含方向，箭头显示)</div>
+      <canvas id="bounceCv" width="700" height="180"></canvas>
+      <svg id="bounceVec" viewBox="0 0 700 130" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="bnGo">▶ 撞一次</button><button id="bnReset">↺ 重置</button>
+        <label>入射速率 v₀ <input id="bnV" type="range" min="2" max="6" value="4" step="1"></label>
+        <label>恢复系数 e <input id="bnE" type="range" min="0" max="1" value="1" step="0.25"></label>
+      </div>
+      <div class="live">
+        <div><b>初动量 mv₀</b><span id="bnP0">0</span></div>
+        <div><b>末动量 mv′</b><span id="bnP1">0</span></div>
+        <div><b>Δp=mv′−mv₀</b><span id="bnDp">0</span></div>
+        <div><b>|Δp| 倍数</b><span id="bnK">0</span></div>
+      </div>
+      <p class="small">下方矢量图:蓝箭=初动量 mv₀(向右)、绿箭=末动量 mv′(向左，若反弹)、红箭=Δp=末−初。e=1 原速反弹时 |Δp|=2mv₀ 最大;e=0 停住时 |Δp|=mv₀。</p>
+    </div>
+
+    <h2 class="b">⑦ 恒力冲量 vs 变力冲量:面积才是真相</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>恒力:</b> F-t 图是一条水平线,冲量 = 矩形面积 = F·t,直接乘即可。</p>
+      <p style="margin:6px 0"><b>变力:</b> F-t 图是曲线/折线,冲量 = <b>图线下的面积</b>(不能用某个 F 硬乘 t)。求变力冲量的两条路:① 直接算 F-t 图<b>面积</b>;② 用动量定理 I=Δp=mv′−mv₀ <b>反求</b>(只要知道首末速度,过程多复杂都不管)。</p>
+      <div class="mono">变力冲量 = F-t 图面积 = mv′ − mv₀(两条路殊途同归)</div>
+      <p class="trap">⚠ 变力问题千万别写 I=F·t——变力没有单一 F。看到「打击力随时间变化的曲线」「弹力先增后减」,一律走面积或动量定理。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 4 — 恒力 / 变力冲量对比:两种 F-t 图，面积相等则冲量相等</div>
+      <svg id="ivSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ivmode on" data-m="0">恒力(矩形)</button>
+        <button class="ivmode" data-m="1">变力·三角(先增后无)</button>
+        <button class="ivmode" data-m="2">变力·梯形(先增后减)</button>
+      </div>
+      <div class="verdict" id="ivNote"></div>
+      <p class="small">三种 F-t 图，<b>面积都调成相等</b>→ 冲量相等 → 对同一物体产生相同的 Δp。峰值力可以差很多，但「时间累积」一样。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求冲量(恒力 / F-t 图)</h3>
+      <p><b class="tag">触发信号:</b>「求某力的冲量」「求合外力的冲量」，给了力和时间，或给一张 F-t 图。</p>
+      <p><b class="tag">标准动作:</b>恒力→I=F·t 直接算;变力→算 F-t 图面积，或用 I=Δp=mv′−mv₀ 反求。多力→先合成再乘时间。</p>
+      <p><b class="tag">示例(带解):</b>质量 2kg 物体受水平恒力 F=6N 作用 t=4s，冲量 I=F·t=6×4=24 N·s，方向与 F 同向。若同时受 mg，则合外力冲量要含重力冲量 mg·t（竖直方向另算）。</p>
+      <p class="trap">陷阱:冲量方向写成速度方向;变力硬乘 F·t;漏掉重力/摩擦的冲量。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 动量定理求力或速度</h3>
+      <p><b class="tag">触发信号:</b>给作用时间求平均力，或给力和时间求末速度;关键词「作用了 t 秒」「平均冲力」。</p>
+      <p><b class="tag">标准动作:</b>定正方向 → F合·t = mv′−mv₀ → 解 F 或 v′。竖直问题合外力含 mg。</p>
+      <p><b class="tag">示例(带解):</b>0.5kg 球以 4m/s 竖直下落砸地，反弹速率 3m/s，接触时间 0.02s。取向上为正:v₀=−4，v′=+3。(N−mg)·t=mv′−mv₀ → N×0.02−0.5×10×0.02 = 0.5×3−0.5×(−4)=3.5，N×0.02=3.5+0.1=3.6，N=180N。</p>
+      <p class="trap">陷阱:忘定正方向;漏重力冲量;把反弹的 v′ 当成正号。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 缓冲问题(比冲力)</h3>
+      <p><b class="tag">触发信号:</b>「气囊」「沙坑」「地毯」「屈膝」，问为什么受伤更轻、冲力小几倍。</p>
+      <p><b class="tag">标准动作:</b>Δp 相同(同质量同速度) → F=Δp/t，时间长几倍冲力就小几倍。定量:F₁/F₂ = t₂/t₁。</p>
+      <p><b class="tag">示例(带解):</b>同一人跳下，落硬地接触 0.02s，落沙坑 0.2s。Δp 相同 → 冲力之比 F硬:F沙 = t沙:t硬 = 0.2:0.02 = 10:1。硬地冲力是沙坑的 10 倍。</p>
+      <p class="trap">陷阱:误以为缓冲减小了冲量/Δp;其实减小的是冲力(峰值力)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 反弹 Δp 计算</h3>
+      <p><b class="tag">触发信号:</b>球/分子撞墙、撞板并反弹，问 Δp、平均力、墙受的力。</p>
+      <p><b class="tag">标准动作:</b>定正方向 → Δp=mv′−mv₀(反向带负号) → 求墙对球的力 F=Δp/t，反作用即球对墙的力。</p>
+      <p><b class="tag">示例(带解):</b>0.2kg 球以 5m/s 撞墙原速反弹，接触 0.1s。取入射为正:Δp=m(−5)−m(5)=−0.2×10=−2 kg·m/s。|F|=2/0.1=20N，方向背离墙。</p>
+      <p class="trap">陷阱:算成 Δp=0(以为速率没变);符号处理错;把 mv₀ 当末动量。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 流体 / 喷气冲击</h3>
+      <p><b class="tag">触发信号:</b>水流冲墙、风吹、火箭喷气，给「每秒多少质量」和速度求力。</p>
+      <p><b class="tag">标准动作:</b>取 Δt 时间内流过的质量 Δm=(Δm/Δt)·Δt，其动量变化 Δp=Δm·Δv → F=Δp/Δt=(Δm/Δt)·Δv。</p>
+      <p><b class="tag">示例(带解):</b>水流每秒 10kg 以 8m/s 水平撞墙后速度变 0。F=(Δm/Δt)·Δv=10×8=80N。若反弹(Δv=2×8)，则 F=160N。</p>
+      <p class="trap">陷阱:忘了 Δm/Δt 是「单位时间的质量」;反弹时 Δv 要用 2v;方向弄反。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 动量与动能综合</h3>
+      <p><b class="tag">触发信号:</b>已知动量求动能、已知动能求动量，或比较两物体 p 与 Ek 的大小关系。</p>
+      <p><b class="tag">标准动作:</b>用 Ek=p²/2m 和 p=√(2mEk) 互推;比较时注意「动量相同、质量不同」时动能反比于质量。</p>
+      <p><b class="tag">示例(带解):</b>两物体动量相同 p，质量 m₁=2m₂。由 Ek=p²/2m，Ek₁:Ek₂ = m₂:m₁ = 1:2，轻的动能大。若动能相同，则 p=√(2mEk) → p₁:p₂=√m₁:√m₂=√2:1，重的动量大。</p>
+      <p class="trap">陷阱:动量与动能不成简单正比;比较前先看是「p 相同」还是「Ek 相同」。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 动量是<b>矢量</b>!反弹时 Δp=mv′−(−mv₀) 式子里 v′、v₀ 各带符号，原速反弹 |Δp|=2mv 不是 0。</p>
+      <p class="trap">② 冲量方向 = <b>力</b>方向，不是速度方向。刹车时冲量向后、速度向前。</p>
+      <p class="trap">③ 合外力的冲量<b>含重力</b>!竖直方向 F合=N−mg，重力冲量 mg·t 不能漏。</p>
+      <p class="trap">④ 动量定理(时间、冲量、反弹) vs 动能定理(位移、功、路程):选错工具会卡死。反弹力用动量定理。</p>
+      <p class="trap">⑤ <b>F-t 图的面积</b>才是冲量;变力不能用 I=F·t(没有单一 F)。</p>
+      <p class="trap">⑥ 缓冲减小的是<b>冲力 F</b>，不是 Δp/冲量。Δp 由首末速度定，跟怎么缓冲无关。</p>
+      <p class="trap">⑦ 单位:冲量 N·s = 动量 kg·m/s，两者等价，可直接对接。</p>
+      <p class="trap">⑧ 二维问题动量定理要<b>分方向</b>列式(x、y 各一个方程)。</p>
+      <p class="trap">⑨ p 与 Ek:Ek=p²/2m。动量相同、质量不同时，动能<b>不</b>相同(反比于 m)。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 动量定理是「F=ma 的积分版」:</b> F=ma=m·dv/dt ⇒ F·dt=m·dv ⇒ ∫F dt=Δp。理解这一步，你就明白为什么变力也能用——牛顿第二定律对变力本来就成立，动量定理只是把它在时间上累加。F-t 图面积 = ∫F dt = 冲量，一目了然。</p>
+      <p style="margin:8px 0"><b>② 冲量-动量是「时间视角」，功-动能是「空间视角」:</b> 同一个 F，乘时间得冲量(改变动量)、乘位移得功(改变动能)。想清楚题目给的是「时间信息」还是「空间信息」，就知道该走哪条路——这是选锅的底层逻辑。</p>
+      <p style="margin:8px 0"><b>③ 反弹用「末减初」永不出错:</b> Δp=p末−p初，先画正方向轴，把每个动量当带符号的矢量放上去，再相减。别背「停住 mv、反弹 2mv」的结论，用统一的 mv′−mv₀ 现推，任何角度斜碰都不慌(二维就分量各算)。</p>
+      <p style="margin:8px 0"><b>④ 缓冲的定量本质是「冲量守恒、冲力反比于时间」:</b> Δp 固定 ⇒ F·t=常量 ⇒ F∝1/t。所有气囊/沙坑题都能一句话秒杀:时间放大几倍，冲力缩小几倍。反过来钉钉子:时间缩到极短，冲力放大到能钉进木头。</p>
+      <p style="margin:8px 0"><b>⑤ 流体冲击 = 动量定理的「率」形式:</b> F=dp/dt=(dm/dt)v。把「每秒送来多少动量」直接读成力。这套思路统一了水流、喷气、雨滴、传送带上料等一大类题——凡是「持续供给质量」的问题，都是单位时间动量变化率。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:动量守恒攻坚包(讲「守」)、本页讲「变」</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:动量定理 F-t 图 ===== */
+(function(){
+  const svg=document.getElementById('ftSvg');
+  const Fs=document.getElementById('ftF'),Ts=document.getElementById('ftT'),Ms=document.getElementById('ftM');
+  const oI=document.getElementById('ftI'),oDp=document.getElementById('ftDp'),oV=document.getElementById('ftV'),oA=document.getElementById('ftA');
+  let F=4,T=3,M=2,anim=0,running=false;
+  function sync(){F=+Fs.value;T=+Ts.value;M=+Ms.value;}
+  Fs.oninput=Ts.oninput=Ms.oninput=()=>{sync();anim=1;draw();};
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=560,H=230;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='F';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const Fmax=10,Tmax=6;
+    const fw=(F/Fmax)*H; // bar height
+    const tw=(T/Tmax)*W*anim; // bar width grows with anim
+    const y=Y0+H-fw;
+    // shaded rectangle = impulse
+    el(svg,'rect',{x:X0,y:y,width:tw,height:fw,fill:'rgba(224,56,42,0.22)',stroke:RED,'stroke-width':3});
+    // top line label
+    el(svg,'line',{x1:X0,y1:y,x2:X0+tw,y2:y,stroke:RED,'stroke-width':4});
+    // F tick
+    el(svg,'line',{x1:X0-6,y1:y,x2:X0,y2:y,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:y+5,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='F='+F;
+    // t tick
+    el(svg,'line',{x1:X0+tw,y1:Y0+H,x2:X0+tw,y2:Y0+H+6,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+tw,y:Y0+H+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='t='+(T*anim).toFixed(1);
+    // impulse label inside
+    if(tw>60){el(svg,'text',{x:X0+tw/2,y:y+fw/2+5,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='I=Ft='+(F*T*anim).toFixed(1);}
+    // moving object below
+    const objX=X0+ (F*T*anim/ (Fmax*Tmax)) *W*0.9 + 10;
+    el(svg,'text',{x:X0,y:Y0-8,'font-size':12.5,'font-weight':800,fill:INK}).textContent='F-t 图下阴影面积 = 冲量 I = 动量变化 Δp';
+    // stats
+    const I=F*T*anim;const dp=I;const v=dp/M;
+    oI.textContent=(F*T).toFixed(1);oDp.textContent=(F*T).toFixed(1);oV.textContent=(F*T/M).toFixed(2);oA.textContent=(F*T).toFixed(1);
+  }
+  function loop(){if(!running)return;anim+=0.03;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('ftGo').onclick=()=>{sync();anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('ftReset').onclick=()=>{sync();anim=1;draw();};
+  sync();anim=1;draw();
+})();
+
+/* ===== 互动6:p 与 Ek 关系 ===== */
+(function(){
+  const svg=document.getElementById('peSvg');
+  const Ms=document.getElementById('peM'),Es=document.getElementById('peE');
+  const oV=document.getElementById('peV'),oP=document.getElementById('peP'),oP2=document.getElementById('peP2'),oE2=document.getElementById('peE2');
+  let M=2,E=16;
+  function sync(){M=+Ms.value;E=+Es.value;draw();}
+  Ms.oninput=Es.oninput=sync;
+  function draw(){
+    clr(svg);
+    const v=Math.sqrt(2*E/M);
+    const p=M*v;
+    const p2=Math.sqrt(2*M*E);
+    const e2=p*p/(2*M);
+    oV.textContent=v.toFixed(2);oP.textContent=p.toFixed(2);oP2.textContent=p2.toFixed(2);oE2.textContent=e2.toFixed(2);
+    // two bars: momentum (blue) scaled, energy (yellow) scaled
+    const baseY=170,maxH=120;
+    const pMax=Math.sqrt(2*10*50); // max possible p
+    const eMax=50;
+    const ph=Math.max(6,(p/pMax)*maxH), eh=Math.max(6,(E/eMax)*maxH);
+    // p bar
+    el(svg,'rect',{x:180,y:baseY-ph,width:90,height:ph,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:225,y:baseY+22,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='动量 p';
+    el(svg,'text',{x:225,y:baseY-ph-8,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=p.toFixed(1);
+    // Ek bar
+    el(svg,'rect',{x:420,y:baseY-eh,width:90,height:eh,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:465,y:baseY+22,'font-size':14,'font-weight':900,fill:'#b8860b','text-anchor':'middle'}).textContent='动能 Ek';
+    el(svg,'text',{x:465,y:baseY-eh-8,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=E.toFixed(0);
+    el(svg,'line',{x1:140,y1:baseY,x2:560,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='p = √(2m·Ek)　⟺　Ek = p²/(2m)';
+    el(svg,'text',{x:350,y:52,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='m='+M+'kg，v='+v.toFixed(2)+'m/s（p 翻倍则 Ek 变 4 倍）';
+  }
+  sync();
+})();
+
+/* ===== 互动2:缓冲原理 ===== */
+(function(){
+  const cv=document.getElementById('cushCv');const ctx=cv.getContext('2d');
+  const Vs=document.getElementById('cushV');
+  const oDp=document.getElementById('cuDp'),oT1=document.getElementById('cuT1'),oT2=document.getElementById('cuT2'),oR=document.getElementById('cuR');
+  const m=0.06; // egg mass kg
+  const t1=0.02, t2=0.2; // cement vs carpet contact time
+  let V=6,y1=20,y2=20,vy1=0,vy2=0,phase1=0,phase2=0,running=false,squash1=0,squash2=0;
+  const groundY=170,startY=20;
+  function sync(){V=+Vs.value;reset();}
+  Vs.oninput=sync;
+  function reset(){
+    y1=startY;y2=startY;vy1=0;vy2=0;phase1=0;phase2=0;squash1=0;squash2=0;running=false;
+    const dp=m*V;
+    oDp.textContent=dp.toFixed(2);oT1.textContent=t1.toFixed(2)+'s';oT2.textContent=t2.toFixed(2)+'s';
+    oR.textContent=(t2/t1).toFixed(0)+':1';
+    draw();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // labels
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('落 水泥（硬）',110,18);ctx.fillText('落 地毯（软）',470,18);
+    // grounds
+    ctx.fillStyle='#7a7a7a';ctx.fillRect(60,groundY,260,26);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(60,groundY,260,26);
+    ctx.fillStyle=VIO;ctx.fillRect(420,groundY,260,26);ctx.strokeRect(420,groundY,260,26);
+    ctx.fillStyle='#fff';ctx.fillText('水泥',175,groundY+18);ctx.fillText('地毯',535,groundY+18);
+    // eggs
+    drawEgg(190,y1,squash1,'#f2c94c');
+    drawEgg(550,y2,squash2,'#f2c94c');
+    // force bars during contact
+    if(phase1===1){bar(190,'F水泥',impF(t1),RED);}
+    if(phase1===2){ctx.fillStyle=RED;ctx.font='bold 13px sans-serif';ctx.fillText('💥 碎!',210,groundY-30);}
+    if(phase2>=1){bar(550,'F地毯',impF(t2),GREEN);}
+  }
+  function impF(t){return (m*V)/t;} // peak force proportional
+  function bar(cx,lab,f,col){
+    const h=Math.min(120,f*1.2);
+    ctx.fillStyle=col;ctx.fillRect(cx-14,groundY-2-h,28,h);
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(cx-14,groundY-2-h,28,h);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText(lab+'='+f.toFixed(0),cx-30,groundY-6-h);
+  }
+  function drawEgg(cx,cy,sq,col){
+    ctx.save();ctx.translate(cx,cy);
+    ctx.fillStyle=col;ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.ellipse(0,0,15,20-sq*8,0,0,2*Math.PI);ctx.fill();ctx.stroke();
+    ctx.restore();
+  }
+  function loop(){
+    if(!running)return;
+    const g=0.9;
+    // egg1 fall + short contact
+    if(phase1===0){vy1+=g;y1+=vy1;if(y1>=groundY-20){y1=groundY-20;phase1=1;squash1=0;}}
+    else if(phase1===1){squash1+=0.25;if(squash1>=1){squash1=1;phase1=2;}} // fast squash then crack
+    // egg2 fall + long contact
+    if(phase2===0){vy2+=g;y2+=vy2;if(y2>=groundY-20){y2=groundY-20;phase2=1;squash2=0;}}
+    else if(phase2===1){squash2+=0.03;if(squash2>=1){squash2=1;phase2=2;}} // slow squash, survives
+    draw();
+    if(phase1>=2&&phase2>=2){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('cushGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('cushReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动5:动量定理 vs 动能定理 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');const note=document.getElementById('cmpNote');
+  let c=0;
+  const m=2;
+  document.querySelectorAll('.cmpcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cmpcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    // case data: v0, v1 (signed, +right)
+    let v0,v1,title,fdir;
+    if(c===0){v0=6;v1=2;title='刹车减速：向前，变慢';fdir=-1;}
+    else if(c===1){v0=5;v1=-5;title='原速反弹：速率不变，方向反转';fdir=-1;}
+    else{v0=2;v1=6;title='加速前进：向前，变快';fdir=1;}
+    const p0=m*v0,p1=m*v1;
+    const dp=p1-p0;
+    const ek0=0.5*m*v0*v0,ek1=0.5*m*v1*v1;
+    const dek=ek1-ek0;
+    // divider
+    el(svg,'line',{x1:350,y1:20,x2:350,y2:230,stroke:INK,'stroke-width':3,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:175,y:26,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='动量定理（矢量）';
+    el(svg,'text',{x:525,y:26,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='动能定理（标量）';
+    // LEFT: momentum arrows (signed)
+    const cx=175, sc=9;
+    arrow(svg,cx,70,p0*sc,RED,'p₀=mv₀='+p0);
+    arrow(svg,cx,110,p1*sc,GREEN,'p′=mv′='+p1);
+    // Δp
+    el(svg,'text',{x:40,y:160,'font-size':13,'font-weight':900,fill:INK}).textContent='Δp = p′−p₀ = '+dp.toFixed(0)+' kg·m/s';
+    el(svg,'text',{x:40,y:182,'font-size':12,'font-weight':800,fill:RED}).textContent='|Δp|='+Math.abs(dp).toFixed(0)+(c===1?'（反弹→很大!）':'');
+    el(svg,'text',{x:40,y:206,'font-size':12,'font-weight':800,fill:INK}).textContent='方向：'+(dp>0?'向右(+)':dp<0?'向左(−)':'零');
+    // RIGHT: energy bars (magnitude only)
+    const bx=430,by=170,bw=40,es=1.4;
+    el(svg,'rect',{x:bx,y:by-ek0*es,width:bw,height:ek0*es,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+bw/2,y:by+16,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Ek₀='+ek0.toFixed(0);
+    el(svg,'rect',{x:bx+90,y:by-ek1*es,width:bw,height:ek1*es,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+90+bw/2,y:by+16,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Ek′='+ek1.toFixed(0);
+    el(svg,'line',{x1:bx-10,y1:by,x2:bx+160,y2:by,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:bx,y:by+38,'font-size':12,'font-weight':900,fill:BLUE}).textContent='ΔEk='+dek.toFixed(0)+' J'+(c===1?'（=0!）':'');
+    // note
+    let msg;
+    if(c===0)msg='刹车：动量减小（Δp='+dp+'，方向向后，与阻力冲量同向）；动能也减小（ΔEk='+dek+'，摩擦做负功）。两者都变。';
+    else if(c===1)msg='反弹：动量剧变 Δp='+dp+'（方向反转，|Δp|=2mv 最大）；但动能 ΔEk=0（速率没变，墙不做功）。★ 反弹力只能用动量定理求！';
+    else msg='加速：动量增大（Δp='+dp+'，与推力冲量同向）；动能增大（ΔEk='+dek+'，推力做正功）。两者都变。';
+    note.innerHTML=title+'　→　'+msg;
+    note.style.borderColor=c===1?RED:INK;
+  }
+  function arrow(p,x,y,len,col,lab){
+    const dir=len>=0?1:-1;const L=Math.abs(len);
+    el(p,'line',{x1:x,y1:y,x2:x+len,y2:y,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x+len)+','+(y-6)+' '+(x+len+dir*10)+','+y+' '+(x+len)+','+(y+6),fill:col});
+    el(p,'text',{x:x,y:y-10,'font-size':11.5,'font-weight':800,fill:col,'text-anchor':len>=0?'start':'end'}).textContent=lab;
+  }
+  draw();
+})();
+
+/* ===== 互动3:反弹 Δp 矢量 ===== */
+(function(){
+  const cv=document.getElementById('bounceCv');const ctx=cv.getContext('2d');
+  const vecSvg=document.getElementById('bounceVec');
+  const Vs=document.getElementById('bnV'),Es=document.getElementById('bnE');
+  const oP0=document.getElementById('bnP0'),oP1=document.getElementById('bnP1'),oDp=document.getElementById('bnDp'),oK=document.getElementById('bnK');
+  const m=0.2;
+  let V=4,e=1,x=60,vx=0,phase=0,running=false;
+  const wallX=560,ballR=16,cy=90;
+  function sync(){V=+Vs.value;e=+Es.value;reset();}
+  Vs.oninput=Es.oninput=sync;
+  function reset(){x=60;vx=V*4;phase=0;running=false;stats();draw();vectors();}
+  function stats(){
+    const p0=m*V, p1=-m*V*e;
+    const dp=p1-p0;
+    oP0.textContent=(m*V).toFixed(2);
+    oP1.textContent=(p1).toFixed(2);
+    oDp.textContent=dp.toFixed(2);
+    oK.textContent=(Math.abs(dp)/(m*V)).toFixed(2)+'×';
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // wall
+    ctx.fillStyle='#5a5a5a';ctx.fillRect(wallX,20,30,140);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(wallX,20,30,140);
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.save();ctx.translate(wallX+15,90);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('墙',0,4);ctx.restore();
+    // ground
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,160);ctx.lineTo(cv.width,160);ctx.stroke();
+    // ball
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(x,cy,ballR,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    // velocity arrow
+    ctx.strokeStyle=BLUE;ctx.lineWidth=4;const dir=vx>=0?1:-1;
+    ctx.beginPath();ctx.moveTo(x,cy);ctx.lineTo(x+dir*34,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x+dir*34,cy);ctx.lineTo(x+dir*24,cy-6);ctx.lineTo(x+dir*24,cy+6);ctx.closePath();ctx.fillStyle=BLUE;ctx.fill();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('v',x+dir*40-4,cy-8);
+  }
+  function vectors(){
+    clr(vecSvg);
+    const p0=m*V, p1=-m*V*e, dp=p1-p0;
+    const sc=90;const cx=170,y=40;
+    el(vecSvg,'text',{x:20,y:16,'font-size':12.5,'font-weight':900,fill:INK}).textContent='动量矢量图：Δp = mv′ − mv₀（首尾相接：初 + Δp = 末）';
+    // p0 arrow (right, blue)
+    vArrow(vecSvg,80,y,p0*sc,BLUE,'mv₀');
+    // p1 arrow (green) from same origin
+    vArrow(vecSvg,80,y+40,p1*sc,GREEN,'mv′');
+    // Δp arrow (red)
+    vArrow(vecSvg,80,y+80,dp*sc,RED,'Δp');
+    el(vecSvg,'text',{x:520,y:y+84,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'start'}).textContent='|Δp|='+Math.abs(dp).toFixed(2)+' = '+(Math.abs(dp)/(m*V)).toFixed(2)+'·mv₀';
+  }
+  function vArrow(p,x,y,len,col,lab){
+    if(Math.abs(len)<1){el(p,'circle',{cx:x,cy:y,r:4,fill:col});el(p,'text',{x:x+10,y:y+4,'font-size':11.5,'font-weight':800,fill:col}).textContent=lab+'=0';return;}
+    const dir=len>=0?1:-1;
+    el(p,'line',{x1:x,y1:y,x2:x+len,y2:y,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x+len)+','+(y-6)+' '+(x+len+dir*11)+','+y+' '+(x+len)+','+(y+6),fill:col});
+    el(p,'text',{x:len>=0?x+len+16:x+len-16,y:y+4,'font-size':11.5,'font-weight':900,fill:col,'text-anchor':len>=0?'start':'end'}).textContent=lab;
+  }
+  function loop(){
+    if(!running)return;
+    if(phase===0){
+      x+=vx*0.06;
+      if(x+ballR>=wallX){x=wallX-ballR;vx=-V*4*e;phase=1;stats();vectors();}
+    }else{
+      x+=vx*0.06;
+      if(x<40||e===0){running=false;}
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('bnGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('bnReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动4:恒力/变力冲量对比 ===== */
+(function(){
+  const svg=document.getElementById('ivSvg');const note=document.getElementById('ivNote');
+  let m=0;
+  document.querySelectorAll('.ivmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.ivmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=560,H=210;const targetArea=24; // impulse fixed = 24 N·s
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='F';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const Tmax=6,Fmax=12;
+    const sx=W/Tmax, sy=H/Fmax;
+    let pts,desc,peak,T;
+    if(m===0){ // rectangle: F=4 over t=6, area=24
+      T=6;const F=targetArea/T; peak=F;
+      pts=[[0,F],[T,F]];
+      // draw rect
+      el(svg,'rect',{x:X0,y:Y0+H-F*sy,width:T*sx,height:F*sy,fill:'rgba(20,80,200,0.20)',stroke:BLUE,'stroke-width':3});
+      desc='恒力 F=4N 作用 6s：矩形面积 = 4×6 = 24 N·s。峰值力最小、最平稳。';
+    } else if(m===1){ // triangle: rise to peak then 0, base T, area=½·T·peak=24
+      T=6;peak=2*targetArea/T; // 8
+      const p1=[X0,Y0+H],p2=[X0+T*sx,Y0+H],p3=[X0,Y0+H-peak*sy];
+      el(svg,'polygon',{points:p3[0]+','+p3[1]+' '+p1[0]+','+p1[1]+' '+p2[0]+','+p2[1],fill:'rgba(232,106,23,0.20)',stroke:ORANGE,'stroke-width':3});
+      // hmm triangle shape: start high, decline to 0 -> use start peak
+      desc='变力（三角）：从峰值 8N 递减到 0，作用 6s。面积 = ½×6×8 = 24 N·s。峰值力更大。';
+    } else { // trapezoid: rise then plateau then fall, area=24
+      T=6;peak=6; // area = trapezoid; choose so area=24
+      // trapezoid: bottom base 6, top base 2, height peak -> area=(6+2)/2*peak=4*peak=24 -> peak=6
+      const bx0=X0, bx1=X0+T*sx;
+      const tx0=X0+2*sx, tx1=X0+4*sx;
+      const yTop=Y0+H-peak*sy, yBot=Y0+H;
+      el(svg,'polygon',{points:bx0+','+yBot+' '+tx0+','+yTop+' '+tx1+','+yTop+' '+bx1+','+yBot,fill:'rgba(122,63,242,0.20)',stroke:VIO,'stroke-width':3});
+      desc='变力（梯形）：先增到 6N，保持，再减到 0，作用 6s。面积 = (6+2)/2×6 = 24 N·s。';
+    }
+    // area label
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='三种 F-t 图，面积都 = 24 N·s → 冲量相同 → Δp 相同';
+    el(svg,'text',{x:X0+W*0.4,y:Y0+H*0.55,'font-size':16,'font-weight':900,fill:INK}).textContent='面积 = 24 N·s';
+    // peak marker
+    el(svg,'text',{x:X0+8,y:Y0+H-peak*sy-6,'font-size':11.5,'font-weight':800,fill:RED}).textContent='峰值='+peak.toFixed(0)+'N';
+    note.innerHTML='👉 '+desc+'　对同一 2kg 物体都产生 Δp=24 kg·m/s（末速 12m/s），但<b>峰值冲力</b>差很多。';
+    note.style.borderColor=m===0?BLUE:m===1?ORANGE:VIO;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 冲量的定义式和单位？方向与什么相同？",a:"恒力冲量 I=F·t，单位 N·s（等价于 kg·m/s）。冲量是矢量，方向与力的方向相同（不是速度方向）。"},
+ {q:"2. 动量的定义式和单位？方向与什么相同？",a:"p=m·v，单位 kg·m/s。动量是矢量，方向与速度方向相同。"},
+ {q:"3. 动量定理的文字表述和公式？对变力成立吗？",a:"物体所受合外力的冲量等于物体动量的变化：I合=F合·t=mv′−mv₀。对恒力、变力都成立（它是 F=ma 的时间累积版）。"},
+ {q:"4. 变力的冲量怎么求？为什么不能用 I=F·t？",a:"变力没有单一的 F，不能直接乘。两条路：① 求 F-t 图线下的面积；② 用动量定理 I=Δp=mv′−mv₀ 反求。"},
+ {q:"5. 缓冲（气囊、沙坑）的原理是什么？减小的是什么？",a:"Δp 一定时 F=Δp/t，延长作用时间 t → 冲力 F 减小。缓冲减小的是冲力（峰值力），不是冲量或 Δp。"},
+ {q:"6. 想要更大的冲力（如钉钉子），该怎么做？",a:"缩短作用时间。Δp 一定时，t 越短 F 越大。硬碰硬接触时间极短，冲力极大。"},
+ {q:"7. 0.2kg 球以 5m/s 撞墙并原速反弹，接触 0.1s，求墙对球的平均力。",a:"取入射为正：Δp=m(−5)−m(5)=−0.2×10=−2 kg·m/s。|F|=|Δp|/t=2/0.1=20N，方向背离墙。"},
+ {q:"8. 同样的球，撞墙停住 vs 原速反弹，哪个 Δp 大？大几倍？",a:"反弹大。停住 |Δp|=mv₀；原速反弹 |Δp|=2mv₀，是停住的 2 倍。"},
+ {q:"9. 球原速反弹，动能定理算 ΔEk 是多少？为什么不能用它求撞击力？",a:"ΔEk=0（速率没变，墙位移为0不做功）。撞击力对应冲量/时间，是矢量效应，只能用动量定理 Δp=mv′−mv₀（=−2mv≠0）来求。"},
+ {q:"10. 动量定理和动能定理的核心区别？各擅长求什么？",a:"动量定理：力×时间=冲量=Δp，矢量，擅长求时间、冲力、碰撞/反弹速度。动能定理：力×位移=功=ΔEk，标量，擅长求位移、路程、末速率、生热。"},
+ {q:"11. 已知动量 p 和质量 m，动能怎么求？两物动量相同、质量不同，谁动能大？",a:"Ek=p²/(2m)。动量相同时 Ek 反比于 m，所以质量小的动能大。（反过来 p=√(2mEk)。）"},
+ {q:"12. 水流每秒 10kg 以 8m/s 水平撞墙后速度变 0，求墙受的平均力。若水流原速反弹呢？",a:"F=(Δm/Δt)·Δv=10×8=80N。若原速反弹，Δv=2×8=16，F=10×16=160N（反弹力翻倍）。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

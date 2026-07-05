@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>力学实验(打点计时器与数据处理) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>力学实验(打点计时器与数据处理)</h1>
+    <p class="lead">纸带、打点计时器、逐差法、验证机械能守恒、探究 a 与 F、平行四边形定则——高考力学实验的分不是靠算,是靠「会读纸带 + 会处理数据 + 会说误差」。这页把每个实验拆成「原理 → 动作 → 陷阱」,再用 6 个动画把纸带、能量条、图线拨给你看。</p>
+
+    <div class="say">🗣️ <b>力学实验(人话版):</b> 打点计时器就是一台<b>每 0.02 秒盖一个章的机器</b>(50Hz 交流,间隔 T=1/f=0.02s)。它在纸带上留下一串点,点越来越疏 = 越来越快。你要干两件事:<b>求某点的瞬时速度</b>(用它两边那段的平均速度,即「中间时刻法」v=(前段+后段)/2T),和<b>求加速度</b>(用「逐差法」把误差摊平)。剩下的实验——验证机械能守恒、探究 a 与 F、平行四边形定则——套路都是「设计实验 → 读数据 → 画图线 → 说误差」。</div>
+
+    <div class="keybox"><b>四把钥匙速记:</b> ① 时间间隔 <b>T=1/f</b>,50Hz→<b>0.02s</b>(每打 n 个间隔时间 nT);② 瞬时速度用<b>中间时刻法</b> vₙ=(xₙ₋₁+xₙ)/2T;③ 加速度用<b>逐差法</b> a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²;④ 判断匀变速看 <b>Δx=aT²</b> 是否恒定。</div>
+
+    <h2>① 打点计时器:两种型号 + 时间间隔</h2>
+    <p class="lead">先认设备。两种计时器长得像,但电源天差地别,填空常考。</p>
+    <div class="card">
+      <table>
+        <tr><th>型号</th><th>电源</th><th>工作原理</th></tr>
+        <tr><td><b>电磁</b>打点计时器</td><td><b>4~6V 交流</b>电</td><td>线圈通交流电,振针周期性上下打点</td></tr>
+        <tr><td><b>电火花</b>计时器</td><td><b>220V 交流</b>电</td><td>火花放电在墨粉纸上打点,阻力更小、更精确</td></tr>
+      </table>
+      <div class="eq">相邻两点时间间隔 T = 1/f　(交流 50Hz → T = 0.02 s)</div>
+      <p style="margin:8px 0"><b>取点技巧:</b> 点太密不好量,常<b>每 5 个间隔取一个计数点</b>,则计数点间时间 T′=5×0.02=0.1s。审题一定看清「相邻两点」还是「相邻两计数点」!</p>
+      <p class="trap">⚠ 电磁用低压交流(4~6V),电火花用 220V 交流——两个都是<b>交流</b>,别写成直流!频率跟电源频率一致(50Hz)。计数点间隔按你「每几个间隔取一点」来算,不是永远 0.02s。</p>
+    </div>
+
+    <h2 class="b">② 纸带数据处理:中间时刻法求 v</h2>
+    <div class="card">
+      <div class="eq">vₙ = (xₙ₋₁ + xₙ) / (2T)　(某点瞬时速度 = 它相邻两段的平均速度)</div>
+      <p style="margin:8px 0"><b>为什么能这么算:</b> 匀变速运动中,<b>某段时间中间时刻的瞬时速度 = 这段时间的平均速度</b>。所以想求第 n 个点的瞬时速度,就取<b>跨过这个点的一段</b>(从 n−1 到 n+1),它的中间时刻正好是 n 点,平均速度 =(该段总位移)/(总时间)=(xₙ₋₁+xₙ)/2T。</p>
+      <p class="trap">⚠ 不能用某<b>一段</b>的平均速度当端点速度!那是「段」的中点速度,不是端点。求端点 n 的瞬时速度必须<b>跨过 n 点</b>取前后两段。这是纸带题第一大坑。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 1 — 纸带处理:点选一个计数点,中间时刻法求 v、逐差法求 a</div>
+      <svg id="tapeSvg" viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="tapePick">点计数点求 v (点纸带上的点)</button>
+        <button id="tapeA">▶ 逐差法求 a</button>
+        <label>加速度 <input id="tapeAcc" type="range" min="1" max="5" value="3" step="0.5"></label>
+      </div>
+      <div class="verdict" id="tapeOut">点纸带上任意一个中间计数点(除首尾),看中间时刻法算 v。</div>
+      <p class="small">T=0.1s(每 5 间隔取一点)。红点=你选的点,它两边的段(黄色高亮)平均速度就是它的瞬时速度。</p>
+    </div>
+
+    <h2 class="g">③ 逐差法求加速度(减小误差的灵魂)</h2>
+    <div class="card">
+      <div class="eq">a = (x₄+x₅+x₆ − x₁−x₂−x₃) / (9T²)</div>
+      <p style="margin:8px 0"><b>为什么这么设计:</b> 匀变速中相邻相等时间的位移差恒定 Δx=aT²。若直接 a=(x₂−x₁)/T² 只用了两个数据,其它全浪费。逐差法把 6 段分成<b>前一半、后一半</b>两组求差,让<b>每个数据都参与</b>,把偶然误差摊平——这就是它比「逐个相减取平均」更优的原因(后者其实只有首尾起作用)。</p>
+      <div class="mono">通式(2n 段):a = [(xₙ₊₁+…+x₂ₙ) − (x₁+…+xₙ)] / (n²T²)</div>
+      <p style="margin:8px 0"><b>判断是否匀变速:</b> 算相邻位移差 Δx=x₂−x₁, x₃−x₂, …,若都≈<b>常数</b>,则 Δx=aT² 恒定 → 匀变速直线运动;差值不恒定则不是。</p>
+      <p class="trap">⚠ 逐差法必须<b>偶数段</b>配对相减,不能奇数段硬凑。若量到 5 段,舍掉一段或补测,凑成偶数再逐差。分母是 <b>9T²</b>(6段时),别漏平方、别漏 9。</p>
+    </div>
+
+    <h2 class="o">④ 五大力学实验一览</h2>
+    <div class="card">
+      <table>
+        <tr><th>实验</th><th>核心思想</th><th>要点/条件</th></tr>
+        <tr><td>①研究匀变速直线运动</td><td>纸带测 v、a</td><td>中间时刻法求v,逐差法求a</td></tr>
+        <tr><td>②探究速度随时间变化</td><td>作 v-t 图</td><td>各点v画图,斜率=a,直线=匀变速</td></tr>
+        <tr><td>③验证平行四边形定则</td><td><b>等效替代</b></td><td>两分力与合力拉到<b>同一点O</b>,比对合力实测与作图</td></tr>
+        <tr><td>④探究 a 与 F、m 关系</td><td><b>控制变量</b></td><td>先<b>平衡摩擦</b>,须 <b>M≫m</b>,作 a-F、a-1/M 图</td></tr>
+        <tr><td>⑤验证机械能守恒</td><td>验 mgh=½mv²</td><td>重物自由下落,因阻力 mgh <b>略大于</b> ΔEk</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>还常考:</b> ⑥验证动量守恒(碰撞前后 m₁v₁=m₁v₁′+m₂v₂′,用纸带或平抛测速度)。</p>
+    </div>
+
+    <h2 class="r">⑤ 验证机械能守恒:为什么 mgh 略大于 ΔEk</h2>
+    <div class="card">
+      <div class="eq">要验证:mgh = ½mvₙ² − ½mv₀²　(自由下落,v₀ 常=0 从静止)</div>
+      <p style="margin:8px 0"><b>怎么做:</b> 重物拴纸带自由下落,打点计时器记录。测下落高度 h(从起点到第 n 点),用<b>中间时刻法</b>求第 n 点速度 vₙ=(hₙ₋₁+hₙ)/2T,比较 <b>mgh</b>(重力势能减少)与 <b>½mvₙ²</b>(动能增加)。</p>
+      <div class="keybox" style="margin:6px 0"><b>关键结论:</b> 实验中总有 <b>mgh 略大于 ½mvₙ²</b>(势能减少 > 动能增加)。原因:纸带与限位孔<b>摩擦</b> + <b>空气阻力</b>消耗了一部分机械能。<b>不需要测 m</b>——因为 m 两边都有,约去!只要验 gh ≈ ½vₙ²。</p>
+      <p class="trap">⚠ 因为阻力,mgh 恒<b>大于</b>动能增量,绝不会小于(除非算错)。选<b>密度大、体积小</b>的重物(减小空气阻力占比)、纸带要<b>先接通电源再放</b>重物、纸带竖直减小摩擦。h 从<b>第一个点</b>量起(那时 v 未必为0,所以用 vₙ²−v₀²)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 2 — 验证机械能守恒:重物下落,mgh vs ½mv² 条形对比(阻力致略差)</div>
+      <canvas id="mechCv" width="700" height="200"></canvas>
+      <div class="ctrl">
+        <button id="mechGo">▶ 下落</button><button id="mechReset">↺ 重置</button>
+        <label>阻力占比 <input id="mechR" type="range" min="0" max="8" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>下落高度 h</b><span id="mechH">0</span></div>
+        <div><b>速度 v (m/s)</b><span id="mechV">0</span></div>
+        <div><b>ΔEp = mgh</b><span id="mechEp">0</span></div>
+        <div><b>ΔEk = ½mv²</b><span id="mechEk">0</span></div>
+      </div>
+      <svg id="mechBar" viewBox="0 0 700 90" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small">左条=重力势能减少 mgh,右条=动能增加 ½mv²。阻力越大,右条越比左条短(差值=损失)。理想无阻力两条相等。</p>
+    </div>
+
+    <h2 class="v">⑥ 探究 a 与 F、m:控制变量 + 平衡摩擦</h2>
+    <div class="card">
+      <h3>三个必做的「前置动作」</h3>
+      <p style="margin:6px 0"><b>① 平衡摩擦力:</b> 把木板<b>抬高一个角度</b>,让重力沿斜面分量正好抵消摩擦,使小车不挂砝码时能<b>匀速</b>下滑(轻推后匀速)。这样绳的拉力=合力。</p>
+      <p style="margin:6px 0"><b>② 控制变量:</b> 研究 a 与 F,固定 M;研究 a 与 M,固定 F。</p>
+      <p style="margin:6px 0"><b>③ 近似条件 M≫m:</b> 用<b>砂桶重力 mg 近似当作小车所受拉力 F</b>。只有当小车质量 M 远大于砂桶质量 m 时,这个近似才成立(否则真实拉力 F=Mmg/(M+m) 明显小于 mg)。</p>
+      <div class="eq">作 a-F 图:过原点直线(斜率=1/M)；作 a-1/M 图:过原点直线(斜率=F)</div>
+      <p class="trap">⚠ 三大坑:① <b>没平衡摩擦</b> → a-F 图不过原点、右移(F 要克服摩擦后才有 a)；② <b>平衡过头</b> → 图线左移(F=0 已有 a)；③ <b>m 不够小</b>(M≫m 破坏)→ a-F 图末端<b>向下弯</b>(拉力比 mg 小得越来越多)。图像斜率的物理意义:a-F 斜率=1/M。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 探究 a-F-m:平衡摩擦对不对,直线是否过原点</div>
+      <svg id="afSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="afmode on" data-m="0">a-F 图 (固定 M)</button>
+        <button class="afmode" data-m="1">a-1/M 图 (固定 F)</button>
+      </div>
+      <div class="ctrl">
+        <label>平衡摩擦 <input id="afBal" type="range" min="-3" max="3" value="0" step="1"></label>
+        <label>m≫M? <input id="afHeavy" type="range" min="0" max="3" value="0" step="1"></label>
+      </div>
+      <div class="verdict" id="afOut"></div>
+      <p class="small">拖「平衡摩擦」:0=恰好过原点;正=平衡不足(右移);负=平衡过头(左移)。拖「m≫M?」增大砂桶质量看末端下弯。</p>
+    </div>
+
+    <h2 class="b">⑦ 图像法:斜率与截距的物理意义</h2>
+    <div class="card">
+      <h3>为什么力学实验都爱画图</h3>
+      <p style="margin:6px 0"><b>图像法两大好处:</b> ① <b>直线化</b>——把关系画成直线,一眼看出成正比/线性;② <b>取平均、抗误差</b>——连一条「让点均匀分布两侧」的直线,个别偏差点被平滑掉,比单点计算准。</p>
+      <p style="margin:6px 0"><b>怎么读:</b> <b>斜率 k=Δy/Δx</b>(在直线上取<b>相距远</b>的两点算,别用原始数据点),<b>截距</b>=直线与坐标轴交点。斜率、截距各自对应一个物理量,要<b>结合方程</b>解读。</p>
+      <div class="mono">例:v-t 图 → 斜率=a,纵截距=v₀;a-F 图 → 斜率=1/M；½v²-h 图 → 斜率=g(验机械能守恒)。</div>
+      <p class="trap">⚠ 求斜率<b>不能</b>直接用某个数据点坐标除(那含截距)!要在拟合直线上取两点作差。连线时让点<b>均匀分布在直线两侧</b>,不强行过原点(除非理论要求)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 4 — 图像法求斜率、截距(拖动直线拟合散点)</div>
+      <svg id="fitSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fitScatter">↻ 换一组散点</button>
+        <label>斜率 <input id="fitK" type="range" min="0.2" max="2.5" value="1" step="0.05"></label>
+        <label>截距 <input id="fitB" type="range" min="-40" max="60" value="10" step="2"></label>
+      </div>
+      <div class="verdict" id="fitOut"></div>
+      <p class="small">调斜率、截距让直线穿过散点中心(点均匀分两侧)。绿色=拟合好,红色=偏了。斜率、截距读数实时显示。</p>
+    </div>
+
+    <h2 class="g">⑧ 验证平行四边形定则:等效替代</h2>
+    <div class="card">
+      <h3>核心思想:等效替代</h3>
+      <p style="margin:6px 0">用两个弹簧测力计(分力 F₁、F₂)把橡皮条一端拉到某点 <b>O</b>,记下方向与大小;再用<b>一个</b>弹簧测力计(合力 F)把它拉到<b>同一点 O</b>——「拉到同一点」保证两次<b>效果相同(等效)</b>。</p>
+      <p style="margin:6px 0"><b>验证:</b> 按 F₁、F₂ 作平行四边形,量出<b>作图合力 F′</b>(对角线);与单独测的<b>实测合力 F</b> 比较。若 F′ 与 F 大小、方向都近似相同 → 平行四边形定则成立。</p>
+      <p class="trap">⚠ 两次必须拉到<b>同一点 O</b>(否则不等效)。要记录每个力的<b>大小和方向</b>(拉线方向)。合力 F 是<b>实测</b>(单测力计读数),F′ 是<b>作图</b>(平行四边形对角线)——比的就是这两者。误差来自读数、作图、方向记录。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔺 互动 5 — 平行四边形定则:两分力合成,合力等效替代</div>
+      <svg id="paraSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>F₁ 大小 <input id="paraF1" type="range" min="20" max="120" value="80" step="5"></label>
+        <label>F₁ 角度 <input id="paraA1" type="range" min="10" max="80" value="35" step="5"></label>
+        <label>F₂ 大小 <input id="paraF2" type="range" min="20" max="120" value="70" step="5"></label>
+      </div>
+      <div class="verdict" id="paraOut"></div>
+      <p class="small">红、蓝=两分力 F₁、F₂;紫=作图合力(对角线);橙虚线=单个测力计实测的等效合力。两者重合=定则成立。</p>
+    </div>
+
+    <h2 class="r">⑨ 误差分析:系统误差 vs 偶然误差</h2>
+    <div class="card">
+      <table>
+        <tr><th> </th><th>系统误差</th><th>偶然误差</th></tr>
+        <tr><td>来源</td><td><b>方法/装置</b>本身(原理近似、仪器不准、摩擦阻力)</td><td><b>读数/操作</b>偶然波动(估读、量长度)</td></tr>
+        <tr><td>特点</td><td>总偏一个方向(偏大或偏小)</td><td>时大时小,无固定方向</td></tr>
+        <tr><td>减小方法</td><td>改进方法/装置(如平衡摩擦、减小阻力)</td><td><b>多次测量取平均</b>、用<b>图像法</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>典型系统误差:</b> 验机械能守恒(阻力使 mgh 偏大)、探究 a-F(未平衡摩擦、M≫m 不满足)、都是<b>方法/装置</b>造成,属<b>系统</b>误差。</p>
+      <p class="trap">⚠ 「多次测量取平均」只能减小<b>偶然</b>误差,对系统误差无效!系统误差要靠<b>改进实验方法或装置</b>。这是选择题高频判断点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 6 — 误差来源判别:系统误差 or 偶然误差?</div>
+      <div class="chips" id="errChips"></div>
+      <div class="verdict" id="errVerdict"></div>
+      <svg id="errTarget" viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small">选一个情景,判断它是系统误差(靶心整体偏移)还是偶然误差(散乱分布)。左靶=系统偏移,右靶=偶然散布。</p>
+    </div>
+
+    <h2 class="o">⑩ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 纸带求瞬时速度 v</h3>
+      <p><b class="tag">触发信号:</b>给一条纸带各点间距,问某点(某计数点)速度。</p>
+      <p><b class="tag">标准动作:</b>确定时间间隔 T(看每几个间隔取一点)→ 中间时刻法 vₙ=(xₙ₋₁+xₙ)/2T。</p>
+      <p><b class="tag">示例(带解):</b>每 5 间隔取一点,T=0.1s。第3点前段 x₂=2.40cm,后段 x₃=3.00cm,v₃=(2.40+3.00)/(2×0.1)=27.0cm/s=0.27m/s。</p>
+      <p class="trap">陷阱:用单段平均速度当端点速度;T 用错(相邻点 vs 相邻计数点);cm/m 单位不换。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 逐差法求加速度 a</h3>
+      <p><b class="tag">触发信号:</b>给连续相等时间的多段位移 x₁…x₆,求加速度。</p>
+      <p><b class="tag">标准动作:</b>凑偶数段配对 → a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²。判断匀变速看 Δx=aT² 是否恒定。</p>
+      <p><b class="tag">示例(带解):</b>T=0.1s,x₁~x₆=1,2,3,4,5,6(cm)。a=((4+5+6)−(1+2+3))/(9×0.01)cm/s²=(15−6)/0.09=100cm/s²=1.0m/s²。</p>
+      <p class="trap">陷阱:分母漏平方或漏 9;段数是奇数硬套;直接相邻相减取平均(误差没摊平)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 验证机械能守恒</h3>
+      <p><b class="tag">触发信号:</b>重物自由下落纸带,验 mgh 与 ½mv² 是否相等。</p>
+      <p><b class="tag">标准动作:</b>中间时刻法求 vₙ → 比较 gh 与 ½vₙ²(m 约去)→ 说明 mgh 略大于 ΔEk 因阻力。可作 ½v²-h 图,斜率=g 验证。</p>
+      <p><b class="tag">示例(带解):</b>某点 h=0.20m,v=1.95m/s。gh=9.8×0.20=1.96 J/kg;½v²=½×1.95²=1.90 J/kg。gh 略大,差 0.06 来自阻力,守恒近似成立。</p>
+      <p class="trap">陷阱:说 mgh 小于动能增量(方向错);非要测 m;用一段平均速度当端点速度。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 探究 a 与 F、m</h3>
+      <p><b class="tag">触发信号:</b>小车+砂桶,给 a-F 或 a-1/M 图,问结论、判图线异常。</p>
+      <p><b class="tag">标准动作:</b>先平衡摩擦(匀速下滑)→ M≫m 近似 F=mg → a-F 过原点直线(斜率1/M);a-1/M 过原点直线(斜率F)。看图线截距/弯曲判操作错误。</p>
+      <p><b class="tag">示例(带解):</b>a-F 图不过原点、在 F 轴有正截距 → 未平衡摩擦(要先克服摩擦);末端下弯 → m 太大,M≫m 不满足。</p>
+      <p class="trap">陷阱:忘平衡摩擦;把砂桶重当拉力却 M 不够大;斜率物理意义答错(a-F 斜率是 1/M 不是 M)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 验证平行四边形定则</h3>
+      <p><b class="tag">触发信号:</b>橡皮条+两/一弹簧测力计,验证合力。</p>
+      <p><b class="tag">标准动作:</b>两分力拉到 O 点记大小方向 → 一个力拉到<b>同一 O 点</b>得实测合力 F → 按分力作平行四边形得 F′ → 比 F 与 F′。</p>
+      <p><b class="tag">示例(带解):</b>F₁=4N、F₂=3N 夹角90°,作图对角线 F′=5N;单测力计实测 F≈5N,方向一致 → 定则成立。</p>
+      <p class="trap">陷阱:两次没拉到同一点(不等效);漏记方向;混淆实测合力 F 与作图合力 F′。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 误差分析</h3>
+      <p><b class="tag">触发信号:</b>问某误差是系统还是偶然,如何减小。</p>
+      <p><b class="tag">标准动作:</b>看来源——方法/装置=系统(改装置);读数/操作波动=偶然(多测取平均、图像法)。</p>
+      <p><b class="tag">示例(带解):</b>验机械能守恒 mgh>ΔEk 是<b>系统</b>误差(阻力),多次测量<b>不能</b>消除,须减小阻力;测长度估读不准是<b>偶然</b>误差,多测取平均可减小。</p>
+      <p class="trap">陷阱:以为多次测量能消系统误差;把方法性误差说成偶然。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 瞬时速度用<b>中间时刻法</b>:vₙ=(xₙ₋₁+xₙ)/2T,不能用单段平均速度当端点速度。</p>
+      <p class="trap">② 逐差法是为<b>减小误差</b>(每个数据都参与),不是随便配对;分母 9T² 别漏平方漏 9。</p>
+      <p class="trap">③ 验机械能守恒:mgh <b>略大于</b>动能增量(阻力),不是小于;m 可约去不必测。</p>
+      <p class="trap">④ 探究 a 与 F:<b>先平衡摩擦</b>(木板倾斜使匀速下滑),且必须 <b>M≫m</b> 才能用 mg 当拉力。</p>
+      <p class="trap">⑤ 图像<b>斜率的物理意义</b>要结合方程:a-F 斜率=1/M;v-t 斜率=a;½v²-h 斜率=g。</p>
+      <p class="trap">⑥ 计时器都用<b>交流</b>:电磁 4~6V、电火花 220V;T=1/f,50Hz→0.02s。</p>
+      <p class="trap">⑦ 平行四边形:两次必须拉到<b>同一点</b>;区分实测合力 F 与作图合力 F′。</p>
+      <p class="trap">⑧ 系统误差靠<b>改装置</b>,偶然误差靠<b>多测取平均/图像法</b>——别搞反。</p>
+      <p class="trap">⑨ 求斜率在<b>拟合直线</b>上取远两点,不能拿原始数据点坐标直接除(那含截距)。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 「中间时刻」是纸带的统一钥匙:</b> 匀变速中,中间时刻瞬时速度=全程平均速度,这不仅用来求 v,还是逐差法、v-t 图取点的底层依据。把每个计数点都当「某段的中间时刻」来看,所有纸带处理都统一了。</p>
+      <p style="margin:8px 0"><b>② 逐差法本质是「最小二乘的手算近似」:</b> 直接相邻相减取平均,数学上只有首尾两个数据起作用(中间全约掉);逐差法把数据分两半作差,让每个点都参与,方差更小。理解这一点,才知道为什么老师说「逐差法减小误差」而不是随口一说。</p>
+      <p style="margin:8px 0"><b>③ 图线异常是「诊断报告」:</b> a-F 图不过原点向右=没平衡摩擦;向左=平衡过头;末端下弯=M≫m 破坏。会「反读」图线的异常特征,等于会给实验做体检——高考压轴常考这种「看图找操作错误」。</p>
+      <p style="margin:8px 0"><b>④ 「约去 m」体现物理的优雅:</b> 验机械能守恒不必测质量,因为 mgh=½mv² 两边 m 同——本质是验 gh=½v²。凡是「某量两边都有可约去」的实验,都少测一个量、少一个误差源。养成先看「哪些量能约掉」的习惯。</p>
+      <p style="margin:8px 0"><b>⑤ 误差分类先问「偏一个方向吗」:</b> 系统误差总朝一个方向(如阻力让 mgh 恒偏大),偶然误差随机双向。判断口诀:<b>有没有一个固定的物理原因让它总偏一边?有=系统,没有=偶然。</b> 抓住「方向性」,分类不再靠背。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理电学实验攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:纸带处理(中间时刻法 + 逐差法) ===== */
+(function(){
+  const svg=document.getElementById('tapeSvg');const out=document.getElementById('tapeOut');
+  const accS=document.getElementById('tapeAcc');
+  const T=0.1;               // 计数点间隔 s
+  let a=3;                   // m/s^2
+  const v0=1.0;              // 起点速度 m/s
+  const N=7;                 // 计数点个数 0..6
+  let sel=-1;
+  const X0=40, scale=1;      // 绘图
+  function seg(i){ // 第 i 段位移 (点 i-1 到 i), i=1..N-1 , 单位 m; x_i = v0*T + (i-0.5)*a*T^2
+    return v0*T + (i-0.5)*a*T*T;
+  }
+  function draw(){
+    a=+accS.value;
+    clr(svg);
+    // 累积位置
+    const pos=[0];for(let i=1;i<N;i++)pos.push(pos[i-1]+seg(i));
+    const totM=pos[N-1];
+    const drawW=620; const px=x=>40+ x/totM*drawW;
+    // 纸带底线
+    el(svg,'rect',{x:30,y:70,width:640,height:40,fill:'#faf6ea',stroke:INK,'stroke-width':3});
+    // 高亮选点两侧段
+    if(sel>0&&sel<N-1){
+      el(svg,'rect',{x:px(pos[sel-1]),y:70,width:px(pos[sel+1])-px(pos[sel-1]),height:40,fill:'rgba(243,192,14,0.45)',stroke:'none'});
+    }
+    // 点与间距标注
+    for(let i=0;i<N;i++){
+      const cx=px(pos[i]);
+      const isSel=(i===sel);
+      el(svg,'circle',{cx:cx,cy:90,r:isSel?8:5,fill:isSel?RED:INK,stroke:INK,'stroke-width':2,style:'cursor:pointer'}).addEventListener('click',()=>{sel=i;draw();report();});
+      el(svg,'text',{x:cx,y:132,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=i;
+      if(i>0){const midx=(px(pos[i-1])+px(pos[i]))/2;el(svg,'text',{x:midx,y:60,'font-size':10.5,'font-weight':800,fill:i>=1&&i<=N-1?'#6b5d3a':INK,'text-anchor':'middle'}).textContent='x'+i;}
+    }
+    el(svg,'text',{x:350,y:22,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='打点纸带(计数点 0~6,T=0.1s)——点一个中间点';
+    el(svg,'text',{x:40,y:158,'font-size':11,'font-weight':800,fill:INK}).textContent='←起点(慢) 越往右点越疏(越快)→';
+  }
+  function report(){
+    if(sel<=0||sel>=N-1){out.innerHTML='请点<b>中间</b>计数点(1~5,首尾无前/后段无法用中间时刻法)。';out.style.borderColor=RED;return;}
+    const xa=seg(sel), xb=seg(sel+1); // 前段(sel-1→sel)、后段(sel→sel+1)
+    const v=(xa+xb)/(2*T);
+    const vTrue=v0+a*(sel*T);
+    out.innerHTML='选中点 <b>'+sel+'</b>:前段 x'+sel+'='+(xa*100).toFixed(2)+'cm,后段 x'+(sel+1)+'='+(xb*100).toFixed(2)+'cm。<br>中间时刻法 v'+sel+'=(x'+sel+'+x'+(sel+1)+')/(2T)=('+(xa*100).toFixed(2)+'+'+(xb*100).toFixed(2)+')/(2×0.1) = <b>'+v.toFixed(3)+' m/s</b>(理论真值 '+vTrue.toFixed(3)+',几乎相等 ✓)';
+    out.style.borderColor=GREEN;
+  }
+  function diffMethod(){
+    // 用 x1..x6 逐差法; 需要 6 段, N-1=6 ✓
+    const x=[];for(let i=1;i<N;i++)x.push(seg(i)); // x[0..5] = x1..x6
+    const acc=((x[3]+x[4]+x[5])-(x[0]+x[1]+x[2]))/(9*T*T);
+    out.innerHTML='逐差法:a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²<br>=(('+(x[3]*100).toFixed(2)+'+'+(x[4]*100).toFixed(2)+'+'+(x[5]*100).toFixed(2)+')−('+(x[0]*100).toFixed(2)+'+'+(x[1]*100).toFixed(2)+'+'+(x[2]*100).toFixed(2)+'))cm /(9×0.01) = <b>'+acc.toFixed(3)+' m/s²</b>(设定值 '+a.toFixed(2)+' ✓)';
+    out.style.borderColor=BLUE;
+  }
+  document.getElementById('tapePick').onclick=()=>{out.innerHTML='点纸带上一个<b>中间</b>红/黑点(1~5),自动用中间时刻法求它的瞬时速度。';out.style.borderColor=INK;};
+  document.getElementById('tapeA').onclick=diffMethod;
+  accS.oninput=()=>{draw();if(sel>0&&sel<N-1)report();};
+  draw();
+})();
+
+/* ===== 互动2:验证机械能守恒 ===== */
+(function(){
+  const cv=document.getElementById('mechCv');const ctx=cv.getContext('2d');
+  const bar=document.getElementById('mechBar');
+  const rS=document.getElementById('mechR');
+  const hEl=document.getElementById('mechH'),vEl=document.getElementById('mechV'),epEl=document.getElementById('mechEp'),ekEl=document.getElementById('mechEk');
+  const g=9.8, Hmax=1.0;   // m
+  let y=0, running=false, resist=0.03;
+  function reset(){y=0;running=false;draw();stats();}
+  function stats(){
+    resist=(+rS.value)/100;            // 阻力等效为「有效重力减少比例」
+    const h=y;
+    const v=Math.sqrt(2*g*(1-resist)*h); // 阻力使实际加速度 g(1-resist)
+    const ep=g*h;                        // mgh (per unit mass)
+    const ek=0.5*v*v;                    // ½v²
+    hEl.textContent=h.toFixed(2)+' m';
+    vEl.textContent=v.toFixed(2);
+    epEl.textContent=ep.toFixed(2);
+    ekEl.textContent=ek.toFixed(2);
+    drawBar(ep,ek);
+  }
+  function drawBar(ep,ek){
+    clr(bar);const X0=60,base=g*Hmax,maxW=560,y0=14,h=26;
+    const wEp=Math.min(1,ep/base)*maxW, wEk=Math.min(1,ek/base)*maxW;
+    el(bar,'text',{x:8,y:y0+18,'font-size':11,'font-weight':800,fill:INK}).textContent='mgh';
+    el(bar,'rect',{x:X0,y:y0,width:maxW,height:h,fill:'none',stroke:INK,'stroke-width':2});
+    el(bar,'rect',{x:X0,y:y0,width:wEp,height:h,fill:BLUE});
+    el(bar,'text',{x:X0+wEp+6,y:y0+18,'font-size':11,'font-weight':900,fill:BLUE}).textContent=ep.toFixed(2);
+    const y1=y0+34;
+    el(bar,'text',{x:8,y:y1+18,'font-size':11,'font-weight':800,fill:INK}).textContent='½v²';
+    el(bar,'rect',{x:X0,y:y1,width:maxW,height:h,fill:'none',stroke:INK,'stroke-width':2});
+    el(bar,'rect',{x:X0,y:y1,width:wEk,height:h,fill:GREEN});
+    el(bar,'text',{x:X0+wEk+6,y:y1+18,'font-size':11,'font-weight':900,fill:GREEN}).textContent=ek.toFixed(2);
+    if(ep>0){const gap=ep-ek;el(bar,'text',{x:X0,y:y1+38,'font-size':11,'font-weight':800,fill:RED}).textContent='mgh−½v² = '+gap.toFixed(3)+'(阻力损失,故 mgh 略大)';}
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 计时器
+    ctx.fillStyle=INK;ctx.fillRect(40,10,120,26);ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.fillText('打点计时器',52,28);
+    // 纸带竖直
+    ctx.strokeStyle='#c9b98a';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(100,36);ctx.lineTo(100,40+ y/Hmax*130);ctx.stroke();
+    // 打点
+    ctx.fillStyle=INK;for(let i=0;i<=8;i++){const yy=40+ (i/8)*(y/Hmax*130);if(yy<40+y/Hmax*130+1){ctx.beginPath();ctx.arc(100,40+i*i/64*(y/Hmax*130),2.5,0,7);ctx.fill();}}
+    // 重物
+    const by=40+ y/Hmax*130;
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(100,by+14,16,0,7);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 11px sans-serif';ctx.fillText('重物',86,by+18);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('h='+y.toFixed(2)+'m',150,by+18);
+  }
+  function loop(){
+    if(!running)return;
+    resist=(+rS.value)/100;
+    // 自由下落(带阻力):dy 用简单欧拉
+    const g_eff=g*(1-resist);
+    const v=Math.sqrt(2*g_eff*Math.max(y,0));
+    y+= (v*0.02 + 0.5*g_eff*0.02*0.02);
+    if(y>=Hmax){y=Hmax;running=false;}
+    draw();stats();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('mechGo').onclick=()=>{if(y>=Hmax)y=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('mechReset').onclick=reset;
+  rS.oninput=()=>{stats();};
+  reset();
+})();
+
+/* ===== 互动3:探究 a-F-m ===== */
+(function(){
+  const svg=document.getElementById('afSvg');const out=document.getElementById('afOut');
+  const balS=document.getElementById('afBal'),heavyS=document.getElementById('afHeavy');
+  let mode=0;
+  document.querySelectorAll('.afmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.afmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();});
+  balS.oninput=heavyS.oninput=draw;
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=580,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='a';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=mode===0?'F':'1/M';
+    const bal=+balS.value;    // 平衡摩擦: 0 好, 正=不足(右移), 负=过头(左移)
+    const heavy=+heavyS.value;// m≫M 破坏程度: 0 好, 越大末端越下弯
+    const nPts=8;
+    const offset = bal*0.09;  // 横轴上的截距偏移(以归一化单位)
+    // 生成数据点
+    for(let i=0;i<=nPts;i++){
+      const fx=i/nPts;               // 归一化 F 或 1/M
+      let a = (fx - offset);         // 理想直线过 (offset,0)
+      // m≫M破坏: F 越大越下弯 (F=mg 高估拉力)
+      a = a - heavy*0.06*fx*fx;
+      if(a<0)a=0;
+      const jitter=(Math.random()-0.5)*0.02;
+      const py=Y0+H - Math.min(1,a+jitter)*H*0.9;
+      const px=X0+fx*W;
+      el(svg,'circle',{cx:px,cy:py,r:5,fill:RED,stroke:INK,'stroke-width':2});
+    }
+    // 拟合直线(理想部分,忽略下弯)
+    let d='';for(let k=0;k<=60;k++){const fx=k/60;let a=fx-offset;if(a<0)a=0;const px=X0+fx*W;const py=Y0+H-Math.min(1,a)*H*0.9;d+=(k===0?'M':'L')+px+' '+py+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // 原点标记
+    el(svg,'circle',{cx:X0,cy:Y0+H,r:4,fill:INK});
+    // 说明
+    let msg='';
+    if(Math.abs(bal)<0.5){msg='✅ 平衡摩擦恰好:图线<b>过原点</b>的直线,'+(mode===0?'斜率=1/M':'斜率=F')+'。';out.style.borderColor=GREEN;}
+    else if(bal>0){msg='⚠ 平衡<b>不足</b>:图线<b>右移</b>(F 轴有正截距)——F 要先克服未平衡的摩擦才产生 a。';out.style.borderColor=RED;}
+    else{msg='⚠ 平衡<b>过头</b>:图线<b>左移</b>(F=0 已有 a)——木板抬太高,重力分量超过摩擦。';out.style.borderColor=RED;}
+    if(heavy>0&&mode===0){msg+=' <br>另外末端<b>向下弯</b>:砂桶质量偏大,M≫m 被破坏,实际拉力 &lt; mg。';}
+    out.innerHTML=msg;
+  }
+  draw();
+})();
+
+/* ===== 互动4:图像法求斜率截距 ===== */
+(function(){
+  const svg=document.getElementById('fitSvg');const out=document.getElementById('fitOut');
+  const kS=document.getElementById('fitK'),bS=document.getElementById('fitB');
+  let trueK=1.2,trueB=15,pts=[];
+  const X0=60,Y0=20,W=580,H=250,Xmax=100,Ymax=280;
+  function gen(){trueK=0.6+Math.random()*1.6;trueB=(Math.random()*70)-10;pts=[];for(let i=0;i<8;i++){const x=8+i*11;const y=trueK*x+trueB+(Math.random()-0.5)*28;pts.push([x,y]);}draw();}
+  function px(x){return X0+x/Xmax*W;}
+  function py(y){return Y0+H-y/Ymax*H;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    const k=+kS.value,b=+bS.value;
+    // 拟合优度:比较用户线与真实
+    let sse=0;pts.forEach(p=>{const yp=k*p[0]+b;sse+=(yp-p[1])*(yp-p[1]);});
+    const rmse=Math.sqrt(sse/pts.length);
+    const good=rmse<16;
+    // 直线
+    const y1=b, y2=k*Xmax+b;
+    el(svg,'line',{x1:px(0),y1:py(y1),x2:px(Xmax),y2:py(y2),stroke:good?GREEN:RED,'stroke-width':3});
+    // 截距点
+    el(svg,'circle',{cx:px(0),cy:py(b),r:5,fill:good?GREEN:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(0)+8,y:py(b)-6,'font-size':11,'font-weight':800,fill:INK}).textContent='截距b='+b.toFixed(0);
+    // 斜率两点示意
+    el(svg,'circle',{cx:px(20),cy:py(k*20+b),r:4,fill:INK});
+    el(svg,'circle',{cx:px(80),cy:py(k*80+b),r:4,fill:INK});
+    // 散点
+    pts.forEach(p=>{el(svg,'circle',{cx:px(p[0]),cy:py(p[1]),r:5,fill:'none',stroke:BLUE,'stroke-width':3});});
+    out.innerHTML='当前直线:<b>斜率 k='+k.toFixed(2)+'</b>,<b>截距 b='+b.toFixed(0)+'</b>。'+(good?'✅ 拟合良好——点均匀分布在直线两侧。斜率取远两点(20,80)算,不用原始点!':'⚠ 偏了——点没均匀落在两侧,调 k、b 让直线穿过散点中心。');
+    out.style.borderColor=good?GREEN:RED;
+  }
+  document.getElementById('fitScatter').onclick=gen;
+  kS.oninput=bS.oninput=draw;
+  gen();
+})();
+
+/* ===== 互动5:平行四边形定则 ===== */
+(function(){
+  const svg=document.getElementById('paraSvg');const out=document.getElementById('paraOut');
+  const f1S=document.getElementById('paraF1'),a1S=document.getElementById('paraA1'),f2S=document.getElementById('paraF2');
+  const Ox=180,Oy=250,sc=1.4;
+  f1S.oninput=a1S.oninput=f2S.oninput=draw;
+  function draw(){
+    clr(svg);
+    const F1=+f1S.value, A1=(+a1S.value)*Math.PI/180;
+    const F2=+f2S.value, A2=0; // F2 沿水平方向(基准)
+    // 分力矢量(y 向上为负屏幕方向)
+    const v1x=F1*Math.cos(A1), v1y=-F1*Math.sin(A1);
+    const v2x=F2*Math.cos(A2), v2y=-F2*Math.sin(A2);
+    const rx=v1x+v2x, ry=v1y+v2y;
+    const R=Math.sqrt(rx*rx+ry*ry);
+    // O 点(橡皮条被拉到的点)
+    el(svg,'circle',{cx:Ox,cy:Oy,r:6,fill:INK});
+    el(svg,'text',{x:Ox-16,y:Oy+18,'font-size':13,'font-weight':900,fill:INK}).textContent='O';
+    // 橡皮条(从固定点到O)
+    el(svg,'line',{x1:60,y1:Oy,x2:Ox,y2:Oy,stroke:'#b08',['stroke-width']:3,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:70,y:Oy-8,'font-size':11,'font-weight':800,fill:'#b08'}).textContent='橡皮条';
+    function arrow(x0,y0,dx,dy,col,lab){
+      const x1=x0+dx*sc,y1=y0+dy*sc;
+      el(svg,'line',{x1:x0,y1:y0,x2:x1,y2:y1,stroke:col,'stroke-width':4});
+      const ang=Math.atan2(y1-y0,x1-x0);const ah=10;
+      el(svg,'line',{x1:x1,y1:y1,x2:x1-ah*Math.cos(ang-0.4),y2:y1-ah*Math.sin(ang-0.4),stroke:col,'stroke-width':4});
+      el(svg,'line',{x1:x1,y1:y1,x2:x1-ah*Math.cos(ang+0.4),y2:y1-ah*Math.sin(ang+0.4),stroke:col,'stroke-width':4});
+      el(svg,'text',{x:x1+6,y:y1-4,'font-size':12.5,'font-weight':900,fill:col}).textContent=lab;
+    }
+    // 平行四边形辅助虚线
+    el(svg,'line',{x1:Ox+v1x*sc,y1:Oy+v1y*sc,x2:Ox+rx*sc,y2:Oy+ry*sc,stroke:'#999','stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'line',{x1:Ox+v2x*sc,y1:Oy+v2y*sc,x2:Ox+rx*sc,y2:Oy+ry*sc,stroke:'#999','stroke-width':2,'stroke-dasharray':'4 4'});
+    // 分力 + 合力
+    arrow(Ox,Oy,v1x,v1y,RED,'F₁='+F1);
+    arrow(Ox,Oy,v2x,v2y,BLUE,'F₂='+F2);
+    arrow(Ox,Oy,rx,ry,VIO,"F'(作图)="+R.toFixed(0));
+    // 实测合力(橙,略偏移演示等效)——理论上与作图重合
+    el(svg,'line',{x1:Ox,y1:Oy,x2:Ox+rx*sc,y2:Oy+ry*sc-0,stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'7 4'});
+    el(svg,'text',{x:Ox+rx*sc/2,y:Oy+ry*sc/2-14,'font-size':11.5,'font-weight':900,fill:ORANGE}).textContent='F(实测,等效替代)';
+    out.innerHTML='两分力 F₁='+F1+'N、F₂='+F2+'N → 作图合力 F′='+R.toFixed(1)+'N。单个测力计把橡皮条拉到<b>同一点 O</b> 得实测合力 F,理论上与 F′ <b>大小方向一致</b> → 平行四边形定则成立(此处橙虚线与紫箭头重合)。';
+    out.style.borderColor=GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动6:误差来源判别 ===== */
+(function(){
+  const cs=document.getElementById('errChips');const vd=document.getElementById('errVerdict');const tg=document.getElementById('errTarget');
+  const cases=[
+    {k:'验机械能守恒 mgh 偏大',type:'系统',exp:'纸带摩擦、空气阻力是<b>装置/方法</b>本身造成,总让 mgh 偏大 → 系统误差。减小:选密度大重物、减小阻力,不是多测。'},
+    {k:'测纸带长度估读不准',type:'偶然',exp:'读刻度尺末位靠估读,时大时小无方向 → 偶然误差。减小:<b>多次测量取平均</b>。'},
+    {k:'探究a-F 未平衡摩擦',type:'系统',exp:'方法缺陷,图线整体右移,总偏一方向 → 系统误差。减小:先<b>平衡摩擦</b>(改进方法)。'},
+    {k:'秒表/计时人为反应差',type:'偶然',exp:'手动计时反应有随机快慢 → 偶然误差。减小:多次取平均或改用打点计时器。'},
+    {k:'弹簧测力计零点没校准',type:'系统',exp:'仪器<b>零点偏差</b>使每次读数都偏同一方向 → 系统误差。减小:校零/换准仪器。'},
+    {k:'画v-t 图连线取斜率',type:'偶然',exp:'图像法本身是<b>减小偶然误差</b>的手段(平滑个别偏差点),体现对偶然误差的处理。'}
+  ];
+  let ci=-1;
+  cases.forEach((c,i)=>{const b=document.createElement('div');b.className='chip';b.textContent=c.k;b.onclick=()=>{[...cs.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');ci=i;render();};cs.appendChild(b);});
+  function drawTargets(sys){
+    clr(tg);
+    // 两个靶
+    function target(cx,label){
+      for(let r=50;r>0;r-=16)el(tg,'circle',{cx:cx,cy:90,r:r,fill:'none',stroke:INK,'stroke-width':2});
+      el(tg,'circle',{cx:cx,cy:90,r:3,fill:RED});
+      el(tg,'text',{x:cx,y:170,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=label;
+    }
+    target(190,'系统误差:整体偏移');
+    target(510,'偶然误差:散乱分布');
+    // 弹孔
+    if(sys===null)return;
+    if(sys){ // 系统:偏靶心右上一致方向
+      for(let i=0;i<7;i++){const ox=28+(Math.random()-0.5)*10, oy=-24+(Math.random()-0.5)*10;el(tg,'circle',{cx:190+ox,cy:90+oy,r:4,fill:ORANGE,stroke:INK,'stroke-width':1.5});}
+    }else{ // 偶然:围绕靶心散
+      for(let i=0;i<7;i++){const ox=(Math.random()-0.5)*80, oy=(Math.random()-0.5)*80;el(tg,'circle',{cx:510+ox,cy:90+oy,r:4,fill:GREEN,stroke:INK,'stroke-width':1.5});}
+    }
+  }
+  function render(){
+    if(ci<0){vd.textContent='点上面一个情景试试。';drawTargets(null);return;}
+    const c=cases[ci];const isSys=c.type==='系统';
+    vd.innerHTML='👉 这是【<b>'+c.type+'误差</b>】　'+c.exp;
+    vd.style.borderColor=isSys?RED:GREEN;
+    drawTargets(isSys);
+  }
+  vd.textContent='点上面一个情景试试。';drawTargets(null);
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 电磁打点计时器和电火花计时器的电源分别是什么?时间间隔怎么算?",a:"电磁用 4~6V 交流电,电火花用 220V 交流电(都是交流)。相邻两点时间间隔 T=1/f,交流 50Hz 时 T=0.02s。若每 5 个间隔取一计数点,则计数点间隔 T′=0.1s。"},
+ {q:"2. 纸带上某计数点的瞬时速度怎么求?为什么?",a:"用中间时刻法:vₙ=(xₙ₋₁+xₙ)/2T,即跨过该点前后两段的平均速度。因为匀变速中,某段中间时刻的瞬时速度=该段平均速度,而 n 点正是该段(n−1到n+1)的中间时刻。"},
+ {q:"3. 逐差法求加速度公式?它为什么能减小误差?",a:"a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²。它把数据分成前后两半作差,让每个数据都参与运算(而不是像逐个相减取平均那样只有首尾起作用),从而摊平偶然误差。"},
+ {q:"4. 怎么用纸带判断是否为匀变速直线运动?",a:"看相邻相等时间的位移差 Δx=x₂−x₁, x₃−x₂,… 是否恒定。若 Δx=aT² 为常数,则是匀变速直线运动。"},
+ {q:"5. 验证机械能守恒时,为什么 mgh 总是略大于 ½mv²?",a:"因为重物下落时纸带与限位孔的摩擦、空气阻力消耗了一部分机械能,使动能增量略小于势能减少量。所以 mgh 恒略大于 ΔEk,不会小于。"},
+ {q:"6. 验证机械能守恒需要测重物质量 m 吗?",a:"不需要。因为 mgh=½mv² 两边都有 m,可约去,实质是验证 gh=½v²。少测一个量、少一个误差源。"},
+ {q:"7. 探究 a 与 F、m 的关系,为什么要先平衡摩擦?怎么平衡?",a:"为了让绳的拉力(≈砂桶重力)等于小车所受合力。方法:把木板一端垫高,使小车在不挂砂桶时能沿板匀速下滑(轻推后匀速),此时重力沿斜面分量恰好抵消摩擦。"},
+ {q:"8. 探究 a 与 F,为什么必须 M≫m(小车质量远大于砂桶)?",a:"实验用砂桶重力 mg 近似当作小车拉力 F。真实拉力 F=Mmg/(M+m),只有 M≫m 时才≈mg。若 m 不够小,a-F 图末端会向下弯。"},
+ {q:"9. a-F 图线不过原点、在 F 轴有正截距,说明什么操作问题?",a:"说明没有平衡摩擦力(或平衡不足):要先施加一定的 F 克服摩擦后小车才有加速度,图线整体右移。若图线左移(F=0已有a)则是平衡过头(木板垫太高)。"},
+ {q:"10. 验证平行四边形定则的核心思想是什么?两次拉橡皮条有什么要求?",a:"等效替代。两个分力和一个合力必须把橡皮条(结点)拉到同一点 O,保证效果相同。比较作图合力 F′(平行四边形对角线)与实测合力 F(单测力计读数)是否一致。"},
+ {q:"11. 系统误差和偶然误差怎么区分?各用什么方法减小?",a:"系统误差来自方法/装置(如阻力、未平衡摩擦、零点不准),总偏一个方向,靠改进方法或装置减小;偶然误差来自读数/操作波动,时大时小,靠多次测量取平均或图像法减小。多次测量对系统误差无效。"},
+ {q:"12. 某纸带 T=0.1s,连续六段位移 x₁~x₆=1.0,1.6,2.2,2.8,3.4,4.0(cm),求加速度。",a:"a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²=((2.8+3.4+4.0)−(1.0+1.6+2.2))/(9×0.01) cm/s² =(10.2−4.8)/0.09=60 cm/s²=0.60 m/s²。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
