@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遗传系谱图分析 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>遗传系谱图分析</h1>
+    <p class="lead">系谱图题的本质是<b>侦探推理</b>:给你几代人的患病情况(方形=男、圆形=女、涂黑=患病),让你倒推出<b>遗传方式</b>(显性/隐性)、<b>基因位置</b>(常染色体/X染色体),再算<b>基因型</b>与<b>后代概率</b>。整套流程有固定套路:先判显隐,再判常/性连锁,最后写基因型、算概率。三步走完,系谱图题就是送分题。</p>
+
+    <div class="say">🗣️ <b>系谱图判读口诀(人话版):</b> 看"父母正常,孩子得病"——这叫<b>无中生有</b>,只能是<b>隐性</b>(因为显性性状不会凭空冒出来,得病基因得是隐性纯合才会显现)。看"父母都得病,孩子却正常"——这叫<b>有中生无</b>,只能是<b>显性</b>(致病基因是显性时,纯合的患病父母也可能各带一个隐性正常基因,组合出正常孩子)。判完显隐,再看是不是"传男传女不同"——如果是,多半跟 X 染色体有关。</div>
+
+    <div class="keybox"><b>三步解题法:</b> <b>①判显隐</b>(无中生有为隐性;有中生无为显性) → <b>②判常染色体/伴性</b>(找"父病女必病、子病母必病"这类交叉遗传特征) → <b>③写基因型算概率</b>(先定遗传方式,再逐个个体代入,X染色体上的基因男性只写一个字母)。三步顺序不能乱,尤其不能跳过①直接猜②。</div>
+
+    <h2>① 判断显隐性:无中生有 vs 有中生无</h2>
+    <div class="card">
+      <div class="eq">双亲正常 → 子代患病 ⟹ 隐性("无中生有为隐性")</div>
+      <div class="eq">双亲患病 → 子代正常 ⟹ 显性("有中生无为显性")</div>
+      <p style="margin:8px 0"><b>原理:</b> 如果致病基因是<b>显性</b>,那么表现正常的双亲一定都不含这个显性致病基因(不然他们自己就该患病了),不可能凭空生出一个带显性致病基因的孩子——所以"正常×正常→患病孩子"只能是<b>隐性</b>基因纯合的结果("无中生有")。反过来,如果致病基因是<b>隐性</b>,患病的双亲(隐性纯合 aa)理论上不能生出显性正常的孩子……除非致病基因是<b>显性</b>,双亲都是杂合(Aa×Aa),就能生出 aa 的正常孩子("有中生无")。</p>
+      <table>
+        <tr><th>系谱特征</th><th>结论</th><th>为什么</th></tr>
+        <tr><td>双亲都正常,子代有患病者</td><td><b>隐性遗传</b></td><td>正常双亲不可能含显性致病基因,患病孩子必是隐性纯合</td></tr>
+        <tr><td>双亲都患病,子代有正常者</td><td><b>显性遗传</b></td><td>患病双亲都是杂合子,能分离出隐性纯合的正常孩子</td></tr>
+        <tr><td>双亲表现不同,子代表现多样</td><td>需结合其他世代综合判断</td><td>单看一代信息不够,要看整个系谱</td></tr>
+      </table>
+      <p class="trap">⚠ 只有出现"无中生有"或"有中生无"这两种<b>确凿</b>特征时才能下结论。系谱图里如果没有出现这类组合,不能瞎猜显隐,要用"最可能"的方式讨论(见第③节)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 1 — 显隐判定小剧场:点亲代表现型组合,看能否推出显隐结论</div>
+      <svg id="dhSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="dhcase on" data-c="0">父正常+母正常→女儿患病</button>
+        <button class="dhcase" data-c="1">父患病+母患病→儿子正常</button>
+        <button class="dhcase" data-c="2">父患病+母正常→儿子患病</button>
+      </div>
+      <div class="verdict" id="dhNote"></div>
+      <p class="small">前两种是"无中生有"和"有中生无",能直接判显隐;第三种(父患病×母正常→子患病)不能单独判显隐——患病孩子可能来自父亲的显性基因,也可能是隐性基因,需要更多信息。</p>
+    </div>
+
+    <h2 class="b">② 判断常染色体 vs 伴性(X染色体):交叉遗传是关键信号</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>核心判据——"交叉遗传":</b> 男性的 X 染色体<b>必然</b>来自母亲(Y染色体来自父亲)。所以如果致病基因在 X 染色体上,会呈现"母传子、父传女"的交叉规律,反过来看某些组合就会"矛盾":</p>
+      <table>
+        <tr><th>遗传方式</th><th>能排除伴X的系谱特征</th><th>推理</th></tr>
+        <tr><td><b>隐性遗传</b></td><td>"父亲正常,女儿患病"</td><td>若为伴X隐性,女儿患病(x²x²)必从父亲得到 x²,父亲就该是 x²y 患者;父亲正常 ⟹ 矛盾 ⟹ <b>不是伴X隐性 ⟹ 是常染色体隐性</b></td></tr>
+        <tr><td><b>隐性遗传</b></td><td>"母亲患病,儿子正常"</td><td>若为伴X隐性,母亲患病(x²x²)只能把 x² 传给儿子,儿子必患病;儿子正常 ⟹ 矛盾 ⟹ <b>是常染色体隐性</b></td></tr>
+        <tr><td><b>显性遗传</b></td><td>"母亲患病,儿子正常"</td><td>若为伴X显性,母亲患病可能是 X^A X^a,儿子有 1/2 概率正常——这种情况<b>不能排除</b>伴X显性!需用"父正女患"来判断</td></tr>
+        <tr><td><b>显性遗传</b></td><td>"父亲正常,女儿患病"</td><td>若为伴X显性,父亲正常(X^a Y)不含 X^A,女儿的 X^A 必来自父亲——但父亲没有 ⟹ 矛盾 ⟹ <b>是常染色体显性</b></td></tr>
+      </table>
+      <div class="keybox" style="margin-top:14px"><b>记忆口诀:</b> "父病女必病、子病母必病"是伴X<b>隐性</b>遗传必须满足的特征(否则排除伴X隐性,判为常染色体隐性)。也就是说:若出现<b>"父正女病"</b>或<b>"母病子正"</b>,隐性遗传必为<b>常染色体</b>;显性遗传只有出现<b>"父正女病"</b>才能排除伴X显性,单出现"母病子正"<b>不能</b>排除伴X显性。</div>
+      <p class="trap">⚠ 最容易搞反的一点:"母亲患病、儿子正常"能排除伴X<b>隐性</b>,但<b>不能</b>排除伴X<b>显性</b>(因为患病母亲可能是杂合 X^A X^a,儿子完全可能拿到那个 X^a 而正常)。判断显性遗传的伴性问题,一定要找"父正常、女儿患病"这条更硬的证据。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 2 — 常染色体/伴性判定流程图:选遗传方式+系谱特征,自动高亮结论路径</div>
+      <svg id="flowSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>致病遗传方式
+          <select id="flowMode">
+            <option value="r">隐性</option>
+            <option value="d">显性</option>
+          </select>
+        </label>
+        <label>系谱关键特征
+          <select id="flowFeat">
+            <option value="fd">父正常,女儿患病</option>
+            <option value="ms">母患病,儿子正常</option>
+            <option value="none">都没出现(无法排除)</option>
+          </select>
+        </label>
+      </div>
+      <div class="verdict" id="flowNote"></div>
+      <p class="small">流程图从上往下走:先看遗传方式,再看系谱特征,最后落到结论框。绿色框=能确定为常染色体;黄色框=不能排除伴性,需要"最可能"讨论。</p>
+    </div>
+
+    <h2 class="g">③ 无法确定时:"最可能"的判断与常见比例</h2>
+    <div class="card">
+      <p style="margin:6px 0">当系谱图里没有出现能排除伴性遗传的"硬证据"(父正女病 / 母病子正)时,题目常问"最可能的遗传方式是什么"。这时要结合<b>自然界发病率的一般规律</b>来讨论,而不是"随便选一个":</p>
+      <table>
+        <tr><th>情形</th><th>"最可能"的判断依据</th></tr>
+        <tr><td>隐性遗传,伴X隐性 vs 常染色体隐性都不能排除</td><td>若题目暗示<b>男性患者明显多于女性患者</b>(如红绿色盲类多见于男性),更可能是<b>伴X隐性</b>;若男女患病比例接近,更可能是<b>常染色体隐性</b></td></tr>
+        <tr><td>显性遗传,伴X显性 vs 常染色体显性都不能排除</td><td>若题目暗示<b>女性患者明显多于男性患者</b>,更可能是<b>伴X显性</b>;若男女比例接近,更可能是<b>常染色体显性</b></td></tr>
+        <tr><td>只有极少数据、无法比较男女比例</td><td>教材惯例:题目未特别说明时,优先考虑<b>常染色体遗传</b>(伴性遗传属于特例,需要更强证据支持)</td></tr>
+      </table>
+      <p class="trap">⚠ "最可能"≠"一定"!这是概率性推断,不是逻辑必然。做题时要用词准确:能排除的写"一定是/不可能是";不能排除、只是更符合规律的,必须写"最可能是"或"更可能是",不能写"一定"。这是判卷扣分的高频点。</p>
+    </div>
+
+    <h2 class="o">④ 写基因型:先定遗传方式,再逐个体推算</h2>
+    <div class="card">
+      <h3>写基因型三步走</h3>
+      <div class="mono">第1步:先完成①②——确定是"显性/隐性"+"常染色体/X染色体"，这是写基因型的前提。</div>
+      <div class="mono">第2步:从最确定的个体开始推(患者、纯合亲本、已知性别的关键个体)，逐步向外扩展。</div>
+      <div class="mono">第3步:凡是不能确定的杂合/纯合，用"A_"或"X^A_"表示，保留不确定性，不要瞎猜。</div>
+      <table>
+        <tr><th>情况</th><th>基因型写法</th><th>示例</th></tr>
+        <tr><td>常染色体，显性A/隐性a</td><td>男女都写两个字母</td><td>患者 AA 或 Aa；正常者 aa</td></tr>
+        <tr><td>X染色体，显性X^A/隐性X^a</td><td><b>女性写两个</b>(X^A X^A / X^A X^a / X^a X^a)；<b>男性只写一个显隐字母 + Y</b></td><td>男性患者(隐性) X^a Y；男性正常(隐性遗传) X^A Y</td></tr>
+        <tr><td>Y染色体遗传(罕见，如外耳道多毛)</td><td>只传父子，男性写 X Y^A 一类记号(教材少考)</td><td>—</td></tr>
+      </table>
+      <p class="trap">⚠ 高频书写错误:把男性的X连锁基因型写成两个字母，比如误写成 X^A X^a Y——男性只有<b>一条 X</b>，基因型应写作 <b>X^A Y</b> 或 <b>X^a Y</b>，绝不出现两个X上的字母加Y。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">👪 互动 3 — 交互系谱图:点击方形(男)/圆形(女)个体，查看该个体的可能基因型</div>
+      <svg id="pedSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>致病方式
+          <select id="pedMode">
+            <option value="ar">常染色体隐性</option>
+            <option value="ad">常染色体显性</option>
+            <option value="xr">伴X隐性</option>
+            <option value="xd">伴X显性</option>
+          </select>
+        </label>
+      </div>
+      <div class="verdict" id="pedNote">点击图中任意一个人物，查看其可能基因型。</div>
+      <p class="small">系谱:第一代为一对夫妻(Ⅰ-1父，Ⅰ-2母)；第二代为其子女(Ⅱ-1女，Ⅱ-2子，Ⅱ-2患病)。切换"致病方式"下拉框，观察同一张系谱图在四种遗传方式下基因型写法的差异。</p>
+    </div>
+
+    <h2 class="v">⑤ 概率计算:分步算、再相乘</h2>
+    <div class="card">
+      <div class="eq">某性状概率 = 父方传递该基因概率 × 母方传递该基因概率(逐个基因位点分别算，再乘)</div>
+      <p style="margin:8px 0"><b>标准流程:</b> ① 先确定双亲基因型(可能不止一种，需要分情况讨论概率加权)；② 对每一对等位基因，分别列出这对亲本产生对应配子的概率；③ 把各对基因的概率<b>相乘</b>(基因自由组合，互相独立)；④ 如果双亲基因型本身有多种可能(概率P1、P2...)，先对每种亲本组合分别算子代概率，再按亲本组合概率加权求和。</p>
+      <h3>患病概率 vs 携带者概率 vs 性别限定概率</h3>
+      <table>
+        <tr><th>问法</th><th>怎么算</th></tr>
+        <tr><td>"后代患病概率"</td><td>不分性别，把患病基因型对应的概率直接相加</td></tr>
+        <tr><td>"后代是携带者的概率"</td><td>只算杂合子(表现正常但带隐性致病基因)对应的概率，注意携带者一般专指<b>常染色体隐性</b>或<b>X隐性女性杂合子</b>这种表现正常但带致病基因的个体</td></tr>
+        <tr><td>"生一个患病孩子的概率"</td><td>患病概率(不分男女，包含男孩患病+女孩患病的可能性之和)</td></tr>
+        <tr><td>"生一个患病<b>男孩</b>的概率"</td><td>= 生男孩的概率(1/2) × 该男孩患病的概率——<b>两者相乘</b>，比单纯"患病概率"多乘一个 1/2 的性别因子</td></tr>
+      </table>
+      <p class="trap">⚠ 最容易漏乘的一步:"患病概率"和"患病男孩概率"不是一回事!伴X遗传尤其要小心——因为男女患病概率本身就不对称，"生一个患病孩子"要把男孩患病概率和女孩患病概率加权平均，"生一个患病男孩"则要单独在男孩这个子集里算，再乘 1/2 的性别概率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌳 互动 4 — 概率计算树状图:分步展开父母配子 → 子代基因型 → 相乘得概率</div>
+      <svg id="probSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>亲本组合(伴X隐性为例)
+          <select id="probCase">
+            <option value="0">父X^AY(正常) × 母X^AX^a(携带者)</option>
+            <option value="1">父X^aY(患病) × 母X^AX^a(携带者)</option>
+          </select>
+        </label>
+      </div>
+      <div class="live">
+        <div><b>女儿患病概率</b><span id="prD">0</span></div>
+        <div><b>儿子患病概率</b><span id="prS">0</span></div>
+        <div><b>后代患病概率</b><span id="prAll">0</span></div>
+        <div><b>患病男孩概率</b><span id="prBoy">0</span></div>
+      </div>
+      <p class="small">树的第一层是"生男/生女"(各1/2)，第二层是"该性别下患病/不患病"的概率，末端把两层概率<b>相乘</b>得到联合概率。"患病男孩概率"= 生男(1/2) × 男孩患病概率，只在男孩这条分支上算。</p>
+    </div>
+
+    <h2 class="r">⑥ 伴X隐性遗传:为什么男性患者远多于女性</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>核心原因——男性只需一个致病基因就患病，女性需要两个:</b> 男性基因型只有 X^A Y 或 X^a Y 两种，只要那<b>唯一一条 X</b>带致病基因(x^a)就会患病(Y上没有对应的等位基因来"掩盖"它)。女性有两条 X，必须<b>两条都是</b> x^a(纯合 X^a X^a)才患病，只带一个 x^a 的女性(X^A X^a)是表现正常的<b>携带者</b>。因此在群体中，携带 x^a 基因频率相同的情况下，男性患病的门槛比女性低得多，患病人数自然多很多。</p>
+      <h3>红绿色盲、血友病是经典例子</h3>
+      <p style="margin:6px 0">红绿色盲(X^b)、血友病(X^h)都是<b>伴X隐性</b>遗传病。男性患者多于女性，且有典型的<b>交叉遗传</b>现象——男性患者的致病基因必然来自母亲(可能是患病母亲，也可能是携带者母亲)，患病男性把致病基因传给女儿(女儿至少是携带者)，但不会直接传给儿子(儿子的X来自母亲)。</p>
+      <div class="keybox"><b>交叉遗传记忆图景:</b> 外公(患病)→ 女儿(必为携带者，因为外公的唯一X给了她) → 外孙(有1/2概率患病，因为携带者母亲传X^a给儿子的概率是1/2)。这条"外公→女儿→外孙"的链条隔代出现在男性身上，是伴X隐性遗传的标志性图景。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 5 — 伴X隐性交叉遗传示意:外公患病 → 女儿必为携带者 → 外孙 1/2 概率患病</div>
+      <svg id="crossSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="crossGo">▶ 播放交叉遗传</button><button id="crossReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>外公基因型</b><span id="crG1">X^aY</span></div>
+        <div><b>女儿基因型</b><span id="crG2">—</span></div>
+        <div><b>外孙患病概率</b><span id="crG3">—</span></div>
+        <div><b>外孙女患病概率</b><span id="crG4">—</span></div>
+      </div>
+      <p class="small">红色 X 代表带致病基因(x^a)的染色体。外公的唯一一条 X 必然传给女儿(女儿变为 X^A X^a 携带者，本身不患病)；女儿的两条 X 各有 1/2 概率传给儿子，所以外孙有 1/2 概率患病；外孙女则至多是携带者(需父亲也提供 x^a 才会患病，图中父亲设为正常)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 6 — 男女患病比例对比:伴X隐性 vs 常染色体隐性(同样致病基因频率下)</div>
+      <svg id="ratioSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ratiomode on" data-r="0">伴X隐性</button>
+        <button class="ratiomode" data-r="1">常染色体隐性</button>
+      </div>
+      <div class="verdict" id="ratioNote"></div>
+      <p class="small">设致病基因(a 或 x^a)在群体中的频率相同。伴X隐性时，男性只要携带一个 x^a 就患病，患病率≈基因频率本身；女性要两个 x^a 才患病，患病率≈基因频率的平方(远小于男性)。常染色体隐性时，男女患病概率完全相同(都要 aa 纯合)，柱状图等高。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断显隐性</h3>
+      <p><b class="tag">触发信号:</b> 给出系谱图，问"该病是显性还是隐性遗传"。</p>
+      <p><b class="tag">标准动作:</b> 找"双亲正常→子代患病"(无中生有→隐性)或"双亲患病→子代正常"(有中生无→显性)。若两种组合都没出现，说明信息不足以单独判断显隐，需结合概率或题目其他条件。</p>
+      <p><b class="tag">示例(带解):</b> 系谱图中Ⅰ-1(正常)×Ⅰ-2(正常)生下Ⅱ-3(患病)。双亲都正常却生出患病孩子——无中生有，判定为<b>隐性遗传</b>。</p>
+      <p class="trap">陷阱:见到"父母有一方患病、孩子也患病"就误判方向；这种情况本身不构成"无中生有"或"有中生无"，不能直接下结论。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断常染色体 / 伴X</h3>
+      <p><b class="tag">触发信号:</b> 已确定显隐性，问"该病位于常染色体还是X染色体上"。</p>
+      <p><b class="tag">标准动作:</b> 隐性遗传找"父正常女儿患病"或"母患病儿子正常"，出现任一即为常染色体隐性；显性遗传找"父正常女儿患病"(能排除伴X显性)或"母患病儿子正常"(不能排除伴X显性，需谨慎)。</p>
+      <p><b class="tag">示例(带解):</b> 已判定为隐性遗传病，系谱图中Ⅱ-1(父，正常)×Ⅱ-2(母，正常)生下Ⅲ-1(女，患病)。若为伴X隐性，患病女儿基因型 x^ax^a，其中一个 x^a 必来自父亲，则父亲应为 x^ay 患者，但父亲正常——矛盾，故排除伴X隐性，判定为<b>常染色体隐性遗传</b>。</p>
+      <p class="trap">陷阱:把"母患病儿子正常"当成能排除伴X显性的证据(实际上不能，因为患病母亲可能是杂合子X^AX^a)；只有"父正女病"能排除伴X显性。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 系谱图信息不足，判"最可能"</h3>
+      <p><b class="tag">触发信号:</b> 系谱图中没出现"父正女病"或"母病子正"这类硬证据，问"最可能的遗传方式"。</p>
+      <p><b class="tag">标准动作:</b> 结合"男女患病比例"辅助判断——隐性遗传中男性患者明显偏多，倾向伴X隐性；显性遗传中女性患者明显偏多，倾向伴X显性；比例接近或信息不足，倾向常染色体遗传。答案必须用"最可能是……"的措辞。</p>
+      <p><b class="tag">示例(带解):</b> 某隐性遗传病系谱图中，患者全为男性，且系谱中没有出现能直接排除伴性遗传的关键组合。结合"男性患者明显多于女性"的现象，可判断该病<b>最可能</b>是伴X隐性遗传，但不能排除是常染色体隐性遗传(小样本系谱恰好只显示男性患者)。</p>
+      <p class="trap">陷阱:把"最可能"写成"一定"，这是判卷重扣点；概率性结论必须保留"最可能/更可能"的措辞。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 写基因型</h3>
+      <p><b class="tag">触发信号:</b> 已确定遗传方式(如"常染色体隐性"或"伴X隐性")，要求写出图中某个体的基因型。</p>
+      <p><b class="tag">标准动作:</b> 先写患者的确定基因型(隐性纯合或X隐性男性)，再倒推双亲(必为杂合子)，最后推正常子代(可能AA/Aa或纯Y/X^AY，若不确定则写"A_")。X染色体上男性只写一个字母+Y。</p>
+      <p><b class="tag">示例(带解):</b> 已确定为伴X隐性遗传。Ⅱ-2(男，患病)基因型为 <b>X^aY</b>。其母亲Ⅰ-2(女，正常)必为携带者 <b>X^AX^a</b>(因为把 x^a 传给了儿子)。其父亲Ⅰ-1(男，正常)基因型为 <b>X^AY</b>。</p>
+      <p class="trap">陷阱:把男性患者写成 X^aX^aY 或 X^aYY 之类错误组合；男性永远只有一条X，基因型只能是 X^_Y 两个字符的组合。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 概率计算(患病 / 携带者 / 指定性别)</h3>
+      <p><b class="tag">触发信号:</b> 问"再生一个孩子患病的概率"、"是携带者的概率"、"生一个患病男孩/女孩的概率"。</p>
+      <p><b class="tag">标准动作:</b> 先写出双亲基因型，用棋盘法或直接分离定律列出子代基因型比例；若问题限定性别，则先算"生该性别概率(1/2)"，再乘"该性别中患病/携带的条件概率"。</p>
+      <p><b class="tag">示例(带解):</b> 父 X^AY(正常)×母 X^AX^a(携带者)。子代:女儿全部正常(1/2 X^AX^A + 1/2 X^AX^a，都不患病)；儿子 1/2 X^AY(正常)+1/2 X^aY(患病)。"生一个患病孩子"概率 = 女儿患病(0)×1/2 + 儿子患病(1/2)×1/2 = <b>1/4</b>。"生一个患病男孩"概率 = 生男孩(1/2)×男孩患病(1/2)= <b>1/4</b>(本例二者恰好相等，是因为女儿必不患病；一般情况下两者并不相等，需要分别计算)。</p>
+      <p class="trap">陷阱:漏掉性别加权直接把"儿子患病概率"当成"孩子患病概率"；或者把"患病男孩概率"错误地等同于"患病概率"。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 伴X隐性男女患病比例 / 交叉遗传推理</h3>
+      <p><b class="tag">触发信号:</b> 涉及红绿色盲、血友病一类"男性患者远多于女性"的现象解释，或"外祖父患病，外孙患病概率"这类隔代推理。</p>
+      <p><b class="tag">标准动作:</b> 说明男性只需一个致病X就患病、女性需两个致病X才患病的门槛差异；隔代推理时利用"男性的X必传给女儿、必不传给儿子"的规律，逐代传递基因型。</p>
+      <p><b class="tag">示例(带解):</b> 外祖父患红绿色盲(X^bY)，女儿(外祖母基因型未知，设为正常X^BX^B)与一正常男子(X^BY)婚配。女儿必得外祖父的 X^b，为携带者 <b>X^BX^b</b>。该女儿与正常男子生育的儿子，患病概率 = <b>1/2</b>(母亲传X^b的概率)；生育的女儿，患病概率 = 0(需要父亲也提供X^b，而父亲正常)，但女儿有 1/2 概率是携带者。</p>
+      <p class="trap">陷阱:忘记外祖母基因型未知时应作出合理设定或讨论；把"外孙患病概率1/2"误用到外孙女身上。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 把"最可能是"当成"一定是"。系谱图信息不足以排除某种遗传方式时，结论必须保留概率性措辞，不能写成绝对结论。</p>
+      <p class="trap">② 男性的X连锁基因型写错，写成两个字母(如 X^AX^aY)。男性只有一条X，基因型只能是 X^AY 或 X^aY 这种"一个字母+Y"的形式。</p>
+      <p class="trap">③ 概率计算没有分性别就直接相加或相乘。"生一个患病孩子"和"生一个患病男孩/女孩"是不同的问题，后者要多乘一个 1/2 的性别概率因子。</p>
+      <p class="trap">④ 把"母亲患病、儿子正常"当作排除伴X显性的证据。这条只能排除伴X<b>隐性</b>，不能排除伴X<b>显性</b>(患病母亲可能是杂合子)。</p>
+      <p class="trap">⑤ 判断显隐性时，把"父病子病"这种不构成"无中生有/有中生无"的组合强行拿来下结论。这类组合本身信息不足，不能单独判断显隐。</p>
+      <p class="trap">⑥ 忽略"携带者"的定义范围。携带者通常指表现正常但携带隐性致病基因的杂合子(如 Aa 或 X^AX^a女性)，不包括显性遗传中的患病杂合子。</p>
+      <p class="trap">⑦ 把伴X遗传的"交叉遗传"方向搞反。应记牢:男性的X染色体来自母亲，男性只把X传给女儿，不传给儿子(儿子的X来自母亲、Y来自父亲)。</p>
+      <p class="trap">⑧ 只算一种双亲基因型组合，漏掉双亲基因型本身有多种可能性的情况。如双亲表现型已知但基因型不唯一时，需要对每种可能基因型组合分别算概率再加权求和。</p>
+      <p class="trap">⑨ 把"常染色体显性遗传"和"常染色体隐性遗传"的系谱特征搞混，混淆"无中生有"和"有中生无"分别对应的显隐关系。</p>
+      <p class="trap">⑩ 计算概率时,忘记基因自由组合定律——两对(或以上)独立遗传的基因,应该分别算每对的概率再<b>相乘</b>,不能直接从系谱图"目测"总概率。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 系谱图推理的本质是"反向工程孟德尔定律":</b> 正常做题是"已知基因型推后代比例"，系谱图题反过来"已知后代表现型推基因型/遗传方式"。掌握这一点后，你会发现"无中生有为隐性"其实就是分离定律的逆向应用——纯合显性和杂合显性都不能凭空产生新的显性性状，只有隐性纯合(aa)才能从两个杂合子(Aa×Aa)中"突然出现"。</p>
+      <p style="margin:8px 0"><b>② 交叉遗传的本质是X和Y的"不对称性":</b> Y染色体只能父传子，X染色体男性只有一条且必来自母亲。这个不对称性是所有"伴性遗传特殊规律"的根源——包括男性患者多、隔代遗传现象、色盲基因的"外祖父→女儿→外孙"传递链，全部可以从"男性X必来自母亲、必传给女儿"这一句话推出来，不需要死记结论。</p>
+      <p style="margin:8px 0"><b>③ 概率问题的"独立事件相乘"原则:</b> 只要两个事件互不影响(比如"生男生女"和"是否遗传到某致病基因"独立、两对非同源染色体上的基因自由组合独立)，联合概率就是两者相乘。系谱图的概率题几乎都能拆成"性别概率×基因型概率"或"这对基因概率×那对基因概率"的乘积形式，学会拆分比死记具体数字更重要。</p>
+      <p style="margin:8px 0"><b>④ "最可能"背后是贝叶斯式的直觉:</b> 当系谱证据不足以完全排除某种假设时，我们诉诸自然发病率的先验知识(伴性遗传病中男女患病比例本身不对称)来判断哪个假设更"可能"。这不是玄学，而是隐含的条件概率推理——只是中学阶段不要求写出贝叶斯公式，用"发病率高低"的直觉替代即可。</p>
+      <p style="margin:8px 0"><b>⑤ 一个基因型不确定时,用"A_"占位而不是瞎猜:</b> 高手和普通学生的差距往往体现在"不确定的地方敢不敢诚实标注"。系谱图给的信息往往不足以唯一确定所有个体的基因型,该写"A_"或"1/2 AA、1/2 Aa"就不要武断写成AA或Aa——这既是审题能力,也是概率思维的体现。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 遗传系谱图分析:判显隐 → 判常染色体/伴性 → 写基因型 → 算概率</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 绘制一个个体符号:方形=男,圆形=女；filled=是否患病涂黑 */
+function person(svg,cx,cy,sex,filled,label,r){
+  r=r||18;
+  const grp=el(svg,'g',{});
+  if(sex==='m'){
+    el(grp,'rect',{x:cx-r,y:cy-r,width:r*2,height:r*2,fill:filled?INK:'#fff',stroke:INK,'stroke-width':3});
+  }else{
+    el(grp,'circle',{cx:cx,cy:cy,r:r,fill:filled?INK:'#fff',stroke:INK,'stroke-width':3});
+  }
+  if(label){
+    el(grp,'text',{x:cx,y:cy+r+16,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=label;
+  }
+  return grp;
+}
+
+/* ===== 互动1:显隐判定小剧场 ===== */
+(function(){
+  const svg=document.getElementById('dhSvg');
+  const note=document.getElementById('dhNote');
+  let c=0;
+  document.querySelectorAll('.dhcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.dhcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    let fatherSick,motherSick,childSex,childSick,verdict,reason,vcolor;
+    if(c===0){fatherSick=false;motherSick=false;childSex='f';childSick=true;verdict='判定:隐性遗传（无中生有为隐性）';reason='父母都正常，女儿却患病——致病基因不可能凭空出现在显性情况下，只能是隐性纯合。';vcolor=GREEN;}
+    else if(c===1){fatherSick=true;motherSick=true;childSex='m';childSick=false;verdict='判定:显性遗传（有中生无为显性）';reason='父母都患病，儿子却正常——说明父母都是杂合子，能分离出隐性纯合的正常孩子，故致病基因是显性。';vcolor=GREEN;}
+    else{fatherSick=true;motherSick=false;childSex='m';childSick=true;verdict='无法单独判断显隐性';reason='父患病、母正常、儿子患病——这既可能是显性遗传（父传显性基因），也可能是隐性遗传（父母都携带隐性基因）。需要更多信息。';vcolor=ORANGE;}
+    person(svg,220,70,'m',fatherSick,'父');
+    person(svg,380,70,'f',motherSick,'母');
+    el(svg,'line',{x1:220,y1:70,x2:380,y2:70,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:300,y1:70,x2:300,y2:150,stroke:INK,'stroke-width':3});
+    person(svg,300,190,childSex,childSick,childSex==='f'?'女儿':'儿子');
+    el(svg,'text',{x:350,y:250,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='□=男性　○=女性　涂黑=患病';
+    note.textContent=verdict+'。'+reason;
+    note.style.borderColor=vcolor;
+  }
+  draw();
+})();
+
+/* ===== 互动2:常染色体/伴性判定流程图 ===== */
+(function(){
+  const svg=document.getElementById('flowSvg');
+  const note=document.getElementById('flowNote');
+  const modeSel=document.getElementById('flowMode'),featSel=document.getElementById('flowFeat');
+  modeSel.onchange=draw;featSel.onchange=draw;
+  function box(x,y,w,h,text,fill,active){
+    const g=el(svg,'g',{});
+    el(g,'rect',{x:x,y:y,width:w,height:h,fill:fill,stroke:INK,'stroke-width':active?4:2.5,opacity:active?1:0.55});
+    const lines=text.split('\n');
+    lines.forEach((ln,i)=>{
+      el(g,'text',{x:x+w/2,y:y+h/2-((lines.length-1)*8)+i*16+5,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=ln;
+    });
+    return g;
+  }
+  function draw(){
+    clr(svg);
+    const mode=modeSel.value, feat=featSel.value;
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='遗传方式 → 系谱特征 → 结论';
+    // level1: mode
+    box(60,40,180,44,mode==='r'?'致病基因：隐性':'致病基因：显性','#fff',true);
+    // level2: features (two branches)
+    const featFD='父正常\n女儿患病';
+    const featMS='母患病\n儿子正常';
+    const activeFD=(feat==='fd');
+    const activeMS=(feat==='ms');
+    box(60,120,180,50,featFD,activeFD?YEL:'#fff',activeFD);
+    box(280,120,180,50,featMS,activeMS?YEL:'#fff',activeMS);
+    box(500,120,180,50,'都没出现\n(无法排除)',feat==='none'?YEL:'#fff',feat==='none');
+    // arrows level1->level2
+    [150].forEach(x=>{el(svg,'line',{x1:x,y1:84,x2:150,y2:120,stroke:INK,'stroke-width':2});});
+    el(svg,'line',{x1:150,y1:84,x2:370,y2:120,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:150,y1:84,x2:590,y2:120,stroke:INK,'stroke-width':2});
+    // level3: conclusions depend on mode+feat
+    let concl,color,arrowX;
+    if(mode==='r'){
+      if(feat==='fd'||feat==='ms'){concl='排除伴X隐性\n⟹ 常染色体隐性';color='#bfe8dc';arrowX=(feat==='fd')?150:370;}
+      else{concl='不能排除伴性\n⟹ 需"最可能"讨论';color='#fde9b0';arrowX=590;}
+    }else{
+      if(feat==='fd'){concl='排除伴X显性\n⟹ 常染色体显性';color='#bfe8dc';arrowX=150;}
+      else if(feat==='ms'){concl='不能排除伴X显性!\n(母杂合可生正常子)';color='#fde9b0';arrowX=370;}
+      else{concl='不能排除伴性\n⟹ 需"最可能"讨论';color='#fde9b0';arrowX=590;}
+    }
+    box(280,220,220,60,concl,color,true);
+    el(svg,'line',{x1:arrowX,y1:170,x2:390,y2:220,stroke:RED,'stroke-width':3});
+    el(svg,'polygon',{points:'390,220 384,208 396,208',fill:RED});
+    note.textContent=(mode==='r'?'隐性遗传':'显性遗传')+' + '+(feat==='fd'?'父正常女儿患病':feat==='ms'?'母患病儿子正常':'无关键特征')+' → '+concl.replace('\n','，');
+    note.style.borderColor=color==='#bfe8dc'?GREEN:ORANGE;
+  }
+  draw();
+})();
+
+/* ===== 互动3:交互系谱图查看基因型 ===== */
+(function(){
+  const svg=document.getElementById('pedSvg');
+  const note=document.getElementById('pedNote');
+  const modeSel=document.getElementById('pedMode');
+  modeSel.onchange=draw;
+  // fixed pedigree: I-1(father,normal) I-2(mother,normal) -> II-1(daughter,normal) II-2(son,affected)
+  const people=[
+    {id:'I-1',sex:'m',sick:false,cx:220,cy:70,gen:1},
+    {id:'I-2',sex:'f',sick:false,cx:380,cy:70,gen:1},
+    {id:'II-1',sex:'f',sick:false,cx:260,cy:210,gen:2},
+    {id:'II-2',sex:'m',sick:true,cx:380,cy:210,gen:2}
+  ];
+  function genotypeInfo(mode,p){
+    // returns text of possible genotype(s) given mode
+    if(mode==='ar'){ // autosomal recessive, a=disease
+      if(p.id==='II-2')return 'aa（患病，隐性纯合）';
+      if(p.id==='I-1'||p.id==='I-2')return 'Aa（正常，但必为携带者，因为儿子是aa）';
+      if(p.id==='II-1')return '1/3 AA 或 2/3 Aa（正常，双亲都是Aa，按1AA:2Aa:1aa中排除aa后的比例）';
+    }
+    if(mode==='ad'){ // autosomal dominant, A=disease... but here II-2 sick, parents normal -> can't be dominant with normal parents+sick child unless new mutation; use alt scenario: treat as if roles flipped for illustration
+      if(p.id==='II-2')return 'Aa 或 AA（患病，若为显性遗传，但正常双亲通常不能生出患病孩子——此系谱其实不支持显性遗传，仅作示例：若强行按显性讨论则矛盾）';
+      if(p.id==='I-1'||p.id==='I-2')return 'aa（正常，显性遗传中正常个体为隐性纯合）';
+      if(p.id==='II-1')return 'aa（正常）';
+    }
+    if(mode==='xr'){ // X-linked recessive, a=disease, II-2 son sick
+      if(p.id==='II-2')return 'X^aY（患病男性，只有一条X）';
+      if(p.id==='I-2')return 'X^AX^a（正常母亲，必为携带者，因为儿子拿到了她的X^a）';
+      if(p.id==='I-1')return 'X^AY（正常父亲）';
+      if(p.id==='II-1')return '1/2 X^AX^A 或 1/2 X^AX^a（正常女儿，母亲传X^A或X^a各1/2，父亲必传X^A）';
+    }
+    if(mode==='xd'){ // X-linked dominant, A=disease; but II-2(son) sick with normal parents is inconsistent for dominant... show as illustrative caution
+      if(p.id==='II-2')return '若为伴X显性，患病儿子需X^AY，其X^A应来自母亲——但母亲正常(需为X^aX^a)，矛盾！此系谱不支持伴X显性（仅作对比示例）';
+      if(p.id==='I-2')return 'X^aX^a（正常母亲，伴X显性中正常为隐性纯合）';
+      if(p.id==='I-1')return 'X^aY（正常父亲）';
+      if(p.id==='II-1')return 'X^aX^a（正常女儿）';
+    }
+    return '—';
+  }
+  function draw(){
+    clr(svg);
+    const mode=modeSel.value;
+    // draw lines
+    el(svg,'line',{x1:220,y1:70,x2:380,y2:70,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:300,y1:70,x2:300,y2:160,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:260,y1:160,x2:380,y2:160,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:260,y1:160,x2:260,y2:210,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:380,y1:160,x2:380,y2:210,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:60,y:75,'font-size':13,'font-weight':900,fill:INK}).textContent='Ⅰ';
+    el(svg,'text',{x:60,y:215,'font-size':13,'font-weight':900,fill:INK}).textContent='Ⅱ';
+    people.forEach(p=>{
+      const g=person(svg,p.cx,p.cy,p.sex,p.sick,p.id,20);
+      g.style.cursor='pointer';
+      g.addEventListener('click',()=>{
+        note.innerHTML='<b>'+p.id+'</b>（'+(p.sex==='m'?'男':'女')+'，'+(p.sick?'患病':'正常')+'）在<b>'+modeLabel(mode)+'</b>假设下的可能基因型：'+genotypeInfo(mode,p);
+      });
+    });
+    el(svg,'text',{x:500,y:250,'font-size':12,'font-weight':800,fill:INK}).textContent='□=男性　○=女性　黑=患病';
+    el(svg,'text',{x:350,y:280,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点击任意人物查看基因型解释（当前假设：'+modeLabel(mode)+'）';
+  }
+  function modeLabel(m){
+    if(m==='ar')return '常染色体隐性';
+    if(m==='ad')return '常染色体显性';
+    if(m==='xr')return '伴X隐性';
+    return '伴X显性';
+  }
+  draw();
+})();
+
+/* ===== 互动4:概率计算树状图 ===== */
+(function(){
+  const svg=document.getElementById('probSvg');
+  const caseSel=document.getElementById('probCase');
+  const oD=document.getElementById('prD'),oS=document.getElementById('prS'),oAll=document.getElementById('prAll'),oBoy=document.getElementById('prBoy');
+  caseSel.onchange=draw;
+  function draw(){
+    clr(svg);
+    const cs=caseSel.value;
+    let fatherLabel,motherLabel,daughterSick,sonSick;
+    // case0: father X^AY (normal) x mother X^AX^a (carrier)
+    // daughters: 1/2 X^AX^A, 1/2 X^AX^a -> all normal (father always gives X^A)
+    // sons: 1/2 X^AY, 1/2 X^aY -> 1/2 sick
+    let dSickProb, sSickProb;
+    if(cs==='0'){
+      fatherLabel='X^AY（正常）';motherLabel='X^AX^a（携带者）';
+      dSickProb=0; sSickProb=0.5;
+    }else{
+      fatherLabel='X^aY（患病）';motherLabel='X^AX^a（携带者）';
+      // daughters: 1/2 X^AX^a(normal carrier),1/2 X^aX^a(sick) -> 1/2 sick
+      // sons: 1/2 X^AY normal, 1/2 X^aY sick -> 1/2 sick
+      dSickProb=0.5; sSickProb=0.5;
+    }
+    const allSick=0.5*dSickProb+0.5*sSickProb;
+    const boySick=0.5*sSickProb;
+    oD.textContent=(dSickProb*100).toFixed(0)+'%';
+    oS.textContent=(sSickProb*100).toFixed(0)+'%';
+    oAll.textContent=(allSick*100).toFixed(0)+'%';
+    oBoy.textContent=(boySick*100).toFixed(0)+'%';
+    // tree drawing
+    el(svg,'text',{x:350,y:22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='父 '+fatherLabel+'　×　母 '+motherLabel;
+    // root
+    const rootX=350,rootY=50;
+    el(svg,'circle',{cx:rootX,cy:rootY,r:6,fill:INK});
+    // level1: son/daughter
+    const sonX=200,dauX=500,l1Y=110;
+    el(svg,'line',{x1:rootX,y1:rootY,x2:sonX,y2:l1Y,stroke:BLUE,'stroke-width':3});
+    el(svg,'line',{x1:rootX,y1:rootY,x2:dauX,y2:l1Y,stroke:VIO,'stroke-width':3});
+    el(svg,'text',{x:(rootX+sonX)/2-10,y:(rootY+l1Y)/2,'font-size':12,'font-weight':800,fill:BLUE}).textContent='生男 1/2';
+    el(svg,'text',{x:(rootX+dauX)/2+10,y:(rootY+l1Y)/2,'font-size':12,'font-weight':800,fill:VIO}).textContent='生女 1/2';
+    el(svg,'text',{x:sonX,y:l1Y+18,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='儿子';
+    el(svg,'text',{x:dauX,y:l1Y+18,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='女儿';
+    // level2: sick/normal for son
+    const sonSickX=120,sonNormX=280,l2Y=200;
+    el(svg,'line',{x1:sonX,y1:l1Y,x2:sonSickX,y2:l2Y,stroke:RED,'stroke-width':2.5});
+    el(svg,'line',{x1:sonX,y1:l1Y,x2:sonNormX,y2:l2Y,stroke:GREEN,'stroke-width':2.5});
+    el(svg,'text',{x:sonSickX,y:l2Y+18,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='患病 '+(sSickProb*100).toFixed(0)+'%';
+    el(svg,'text',{x:sonNormX,y:l2Y+18,'font-size':11.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='正常 '+((1-sSickProb)*100).toFixed(0)+'%';
+    // level2: sick/normal for daughter
+    const dauSickX=420,dauNormX=580;
+    el(svg,'line',{x1:dauX,y1:l1Y,x2:dauSickX,y2:l2Y,stroke:RED,'stroke-width':2.5});
+    el(svg,'line',{x1:dauX,y1:l1Y,x2:dauNormX,y2:l2Y,stroke:GREEN,'stroke-width':2.5});
+    el(svg,'text',{x:dauSickX,y:l2Y+18,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='患病 '+(dSickProb*100).toFixed(0)+'%';
+    el(svg,'text',{x:dauNormX,y:l2Y+18,'font-size':11.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='正常 '+((1-dSickProb)*100).toFixed(0)+'%';
+    // final joint prob labels
+    el(svg,'text',{x:sonSickX,y:l2Y+40,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='联合='+(0.5*sSickProb*100).toFixed(0)+'%';
+    el(svg,'text',{x:dauSickX,y:l2Y+40,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='联合='+(0.5*dSickProb*100).toFixed(0)+'%';
+    el(svg,'text',{x:350,y:290,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='后代患病概率 = 男孩联合 + 女孩联合 = '+(allSick*100).toFixed(0)+'%';
+    el(svg,'text',{x:350,y:312,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='患病男孩概率（只算男孩这支）= 1/2 × '+(sSickProb*100).toFixed(0)+'% = '+(boySick*100).toFixed(0)+'%';
+  }
+  draw();
+})();
+
+/* ===== 互动5:伴X隐性交叉遗传示意 ===== */
+(function(){
+  const svg=document.getElementById('crossSvg');
+  const oG2=document.getElementById('crG2'),oG3=document.getElementById('crG3'),oG4=document.getElementById('crG4');
+  let step=0,running=false;
+  function reset(){step=0;oG2.textContent='—';oG3.textContent='—';oG4.textContent='—';draw();}
+  function draw(){
+    clr(svg);
+    // Gen1: grandfather (sick, X^aY) -- grandmother (normal, X^AX^A, assumed)
+    person(svg,180,60,'m',true,'外公 X^aY');
+    person(svg,340,60,'f',false,'外婆 X^AX^A');
+    el(svg,'line',{x1:180,y1:60,x2:340,y2:60,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:260,y1:60,x2:260,y2:130,stroke:INK,'stroke-width':3});
+    // Gen2: daughter (mother) -- normal husband
+    person(svg,260,170,'f',false,step>=1?'女儿 X^AX^a':'女儿 ?');
+    person(svg,440,170,'m',false,'女婿 X^AY');
+    if(step>=1){
+      el(svg,'line',{x1:260,y1:170,x2:440,y2:170,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:350,y1:170,x2:350,y2:230,stroke:INK,'stroke-width':3});
+    }
+    // Gen3: grandson (sick, 1/2) and granddaughter
+    if(step>=2){
+      person(svg,300,260,'m',true,'外孙 1/2患病');
+      person(svg,400,260,'f',false,'外孙女 携带/正常');
+      el(svg,'line',{x1:350,y1:230,x2:300,y2:260,stroke:INK,'stroke-width':2.5});
+      el(svg,'line',{x1:350,y1:230,x2:400,y2:260,stroke:INK,'stroke-width':2.5});
+    }
+    // highlight X^a transmission arrow
+    if(step===1){
+      el(svg,'text',{x:260,y:110,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='外公唯一的X^a必传给女儿';
+    }
+    if(step>=2){
+      el(svg,'text',{x:350,y:245,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='女儿的X^a有1/2概率传给儿子';
+    }
+    el(svg,'text',{x:550,y:270,'font-size':11.5,'font-weight':800,fill:'#6b5d3a'}).textContent='□男 ○女 黑=患病';
+    if(step>=1)oG2.textContent='X^AX^a（携带者）';
+    if(step>=2){oG3.textContent='1/2';oG4.textContent='0（需父亲也患病才会患病）';}
+  }
+  function loop(){
+    if(!running)return;
+    step++;
+    if(step>2){running=false;step=2;draw();return;}
+    draw();
+    setTimeout(()=>{if(running)requestAnimationFrame(loop);},900);
+  }
+  document.getElementById('crossGo').onclick=()=>{reset();running=true;step=0;loop();};
+  document.getElementById('crossReset').onclick=()=>{running=false;reset();};
+  reset();
+})();
+
+/* ===== 互动6:男女患病比例对比 ===== */
+(function(){
+  const svg=document.getElementById('ratioSvg');
+  const note=document.getElementById('ratioNote');
+  let r=0;
+  document.querySelectorAll('.ratiomode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.ratiomode').forEach(x=>x.classList.remove('on'));b.classList.add('on');r=+b.dataset.r;draw();
+  });
+  function draw(){
+    clr(svg);
+    const q=0.1; // assumed allele frequency of recessive disease allele
+    let maleP,femaleP,title;
+    if(r===0){ // X-linked recessive
+      maleP=q; femaleP=q*q; title='伴X隐性：男性患病率≈q，女性患病率≈q²（远小于男性）';
+    }else{ // autosomal recessive
+      maleP=q*q; femaleP=q*q; title='常染色体隐性：男女患病率都=q²（相同，柱状图等高）';
+    }
+    const baseY=210,maxH=160,scale=maxH/Math.max(maleP,0.15);
+    const mh=maleP*scale, fh=femaleP*scale;
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    el(svg,'text',{x:350,y:44,'font-size':12,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='(设致病基因频率 q=0.1，仅作比例示意)';
+    // male bar
+    el(svg,'rect',{x:220,y:baseY-mh,width:80,height:mh,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:260,y:baseY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='男性患病率';
+    el(svg,'text',{x:260,y:baseY-mh-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(maleP*100).toFixed(1)+'%';
+    // female bar
+    el(svg,'rect',{x:400,y:baseY-fh,width:80,height:fh,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:440,y:baseY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='女性患病率';
+    el(svg,'text',{x:440,y:baseY-fh-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(femaleP*100).toFixed(1)+'%';
+    el(svg,'line',{x1:150,y1:baseY,x2:560,y2:baseY,stroke:INK,'stroke-width':3});
+    note.textContent=r===0?'伴X隐性遗传中，男性只需一个致病X基因就患病，女性需要两个才患病，所以男性患病率远高于女性——这正是红绿色盲、血友病患者中男性明显多于女性的原因。':'常染色体隐性遗传中，男女获得两条致病基因的概率完全相同(都要aa纯合)，所以男女患病比例理论上相等。';
+    note.style.borderColor=r===0?BLUE:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 系谱图中，双亲都正常但生出患病孩子，能判断出什么？为什么？",a:"能判断该病为隐性遗传（无中生有为隐性）。因为如果是显性遗传，正常的双亲不可能含有致病的显性基因，不可能生出患病孩子；只有隐性遗传时，杂合的双亲才能生出隐性纯合的患病孩子。"},
+ {q:"2. 系谱图中，双亲都患病但生出正常孩子，能判断出什么？",a:"能判断该病为显性遗传（有中生无为显性）。患病的双亲都是杂合子（各带一个隐性正常基因），可以分离组合出隐性纯合的正常孩子。"},
+ {q:"3. 已确定是隐性遗传病，系谱图中出现\"父亲正常，女儿患病\"，能得出什么结论？",a:"能排除伴X隐性遗传，判定为常染色体隐性遗传。因为若为伴X隐性，患病女儿(x^ax^a)的一个x^a必来自父亲，父亲就该患病，但父亲正常，矛盾。"},
+ {q:"4. \"母亲患病，儿子正常\"能否排除伴X显性遗传？为什么？",a:"不能。患病母亲可能是杂合子(X^AX^a)，儿子有1/2概率得到X^a而正常，所以这个组合不能排除伴X显性，只能排除伴X隐性。"},
+ {q:"5. 男性的X连锁基因型应该怎么写？举例说明常见错误。",a:"男性只有一条X染色体，基因型只写一个显隐字母加Y，如X^AY或X^aY。常见错误是写成X^AX^aY这种两个字母加Y的形式，这是错的，因为男性没有两条X。"},
+ {q:"6. 系谱图信息不足以确定是常染色体还是伴X遗传时，应该怎么下结论？",a:"应结合男女患病比例给出\"最可能\"的判断，不能写\"一定\"。隐性遗传中男性患者明显偏多则倾向伴X隐性；比例接近则倾向常染色体遗传。"},
+ {q:"7. \"生一个患病孩子的概率\"和\"生一个患病男孩的概率\"有什么区别？",a:"前者不分性别，是男孩患病和女孩患病概率的加权总和；后者要多乘一个\"生男孩\"的概率(1/2)，只在男孩这个分支里计算患病概率，两者一般不相等。"},
+ {q:"8. 为什么伴X隐性遗传病（如红绿色盲）男性患者远多于女性？",a:"男性只有一条X染色体，只要这条X带致病基因(x^a)就会患病，没有另一条X来掩盖；女性有两条X，必须两条都是x^a（纯合）才患病，门槛更高，所以女性患病率远低于男性。"},
+ {q:"9. 什么是伴X隐性遗传的\"交叉遗传\"现象？",a:"男性的X染色体必然来自母亲，男性只能把X染色体传给女儿、不能传给儿子。因此患病男性的致病基因会经女儿（携带者）传给外孙，隔代出现在男性身上，形成\"外公→女儿→外孙\"的交叉遗传链条。"},
+ {q:"10. 判断遗传方式和位置的正确顺序是什么？",a:"先判断显隐性（无中生有为隐性、有中生无为显性），再判断常染色体还是X染色体（找父正女病、母病子正等交叉遗传特征），最后才写基因型、算概率。顺序不能颠倒。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

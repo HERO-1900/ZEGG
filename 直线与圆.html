@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>直线与圆 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>直线与圆:方程·位置关系·弦长·切线</h1>
+    <p class="lead">这一章的骨架其实很简单:<b>直线怎么写</b>(五种形式,各有失效的场景)、<b>圆怎么写</b>(标准式看圆心半径,一般式先判是不是圆)、<b>它们俩什么关系</b>(比大小:d 和 r 比、圆心距和 R+r/|R−r| 比)。几乎所有题都是这三件事的排列组合,把每个「失效条件」记牢,这一章就没有陷阱了。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 直线方程有五张「身份证」,但<b>点斜式和斜截式对竖直线没用</b>(斜率不存在),<b>截距式对过原点或与坐标轴平行的线没用</b>——每次设方程前先问自己「这条线会不会正好是我设的形式排除掉的那种」。圆呢,先看是「标准式」还是「一般式」,一般式还要先验一下<b>D²+E²−4F&gt;0</b>,不然它根本不是个圆。直线和圆的关系,永远优先想「<b>点到直线距离 d</b> 和「<b>半径 r</b>」比大小」,这比联立方程求判别式快得多。</div>
+
+    <div class="keybox"><b>一句话地图:</b> 设直线(小心斜率不存在)→ 设圆(标准式或一般式,一般式先判 D²+E²−4F&gt;0)→ 求圆心到直线距离 <b>d=|Ax₀+By₀+C|/√(A²+B²)</b> → 比较 <b>d 与 r</b>(相交/相切/相离)→ 若要弦长,用 <b>半弦²+d²=r²</b>,弦长=<b>2√(r²−d²)</b>;若要切线,记住<b>过圆上点唯一、过圆外点两条(其中竖直那条最容易漏)</b>。</div>
+
+    <h2>① 直线方程:五种形式与各自的「死穴」</h2>
+    <div class="card">
+      <table>
+        <tr><th>形式</th><th>方程</th><th>失效/限制条件</th></tr>
+        <tr><td>点斜式</td><td>y−y₀=k(x−x₀)</td><td><b>斜率不存在(竖直线)时不能用</b>,必须单独设 x=x₀</td></tr>
+        <tr><td>斜截式</td><td>y=kx+b</td><td>同样要求斜率存在;竖直线无法表示</td></tr>
+        <tr><td>两点式</td><td>(y−y₁)/(y₂−y₁)=(x−x₁)/(x₂−x₁)</td><td>x₁=x₂(竖直)或 y₁=y₂(水平)时分母为0,需先讨论</td></tr>
+        <tr><td>截距式</td><td>x/a+y/b=1</td><td><b>过原点</b>(无截距)或<b>截距为0</b>或<b>平行于坐标轴</b>时不能用</td></tr>
+        <tr><td>一般式</td><td>Ax+By+C=0(A,B不同时为0)</td><td>万能形式,能表示<b>所有</b>直线(含竖直线),但不直观</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>选哪种?</b> 已知一点+斜率 → 点斜式;已知两点 → 两点式;已知在两轴的截距 → 截距式;题目让你「设直线方程」求参数、又不确定斜率是否存在 → <b>优先用一般式,或分「斜率存在/不存在」两种情况讨论</b>。一般式最保险,因为它不会漏掉竖直线。</p>
+      <p class="trap">⚠ 陷阱之王:题目说「过点 P 的直线」若设成 y−y₀=k(x−x₀),就<b>默认排除了竖直线</b>!只要题目没有明说斜率存在,必须先讨论「斜率不存在」这一支,再讨论「斜率存在,设为 k」。截距式同理,过原点的直线、与坐标轴平行的直线都设不出截距式,必须单独讨论。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 直线方程五种形式对照:改点/改斜率,看哪些形式「失效」</div>
+      <svg id="lineSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>x₀ <input id="lnX0" type="range" min="-4" max="4" value="1" step="1"></label>
+        <label>y₀ <input id="lnY0" type="range" min="-4" max="4" value="1" step="1"></label>
+        <button id="lnVert">切换:竖直线(斜率不存在)</button>
+        <label>斜率 k <input id="lnK" type="range" min="-3" max="3" value="1" step="0.5"></label>
+      </div>
+      <div class="verdict" id="lnNote"></div>
+      <p class="small">拖动 k 或点「切换竖直线」,观察下方哪些形式还能正常写出方程——竖直线时点斜式/斜截式直接失效,只能用 x=x₀ 或一般式。</p>
+    </div>
+
+    <h2 class="b">② 圆的方程:标准式与一般式</h2>
+    <div class="card">
+      <div class="eq">标准方程:(x−a)² + (y−b)² = r²　(圆心 (a,b),半径 r)</div>
+      <div class="eq">一般方程:x² + y² + Dx + Ey + F = 0</div>
+      <p style="margin:8px 0">把一般方程配方:(x+D/2)²+(y+E/2)² = (D²+E²−4F)/4。所以:</p>
+      <table>
+        <tr><th>D²+E²−4F 的符号</th><th>图形</th></tr>
+        <tr><td><b>&gt;0</b></td><td>是圆,圆心 (−D/2, −E/2),半径 r=½√(D²+E²−4F)</td></tr>
+        <tr><td><b>=0</b></td><td>是一个点 (−D/2, −E/2)(退化圆,半径为0)</td></tr>
+        <tr><td><b>&lt;0</b></td><td>不表示任何图形(无实数解)</td></tr>
+      </table>
+      <p class="trap">⚠ 拿到一般方程 x²+y²+Dx+Ey+F=0 的第一件事永远是<b>算 D²+E²−4F 的符号</b>,直接当成圆来求圆心半径是最常见的送分题失分点。另外系数必须是 x²、y² 的系数都为 1 且相等,否则要先除以公因数化成这个标准形式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔵 互动 2 — 一般方程判圆:拖 D/E/F,实时看 D²+E²−4F 的符号与图形</div>
+      <svg id="genSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>D <input id="genD" type="range" min="-8" max="8" value="-2" step="1"></label>
+        <label>E <input id="genE" type="range" min="-8" max="8" value="-2" step="1"></label>
+        <label>F <input id="genF" type="range" min="-10" max="10" value="1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>D²+E²−4F</b><span id="genDelta">0</span></div>
+        <div><b>圆心</b><span id="genC">-</span></div>
+        <div><b>半径 r</b><span id="genR">-</span></div>
+        <div><b>结论</b><span id="genV">-</span></div>
+      </div>
+      <p class="small">配方后 (x+D/2)²+(y+E/2)²=(D²+E²−4F)/4。判别量&gt;0 画出圆;=0 只剩一个点;&lt;0 什么都画不出来(下方会提示)。</p>
+    </div>
+
+    <h2 class="g">③ 点到直线距离与位置关系判定</h2>
+    <div class="card">
+      <div class="eq">d = |Ax₀ + By₀ + C| / √(A²+B²)</div>
+      <p style="margin:8px 0">这是整章的「量尺」。求出<b>圆心到直线的距离 d</b>,与半径 r 比较:</p>
+      <table>
+        <tr><th>比较</th><th>位置关系</th><th>方程组解的个数</th></tr>
+        <tr><td>d &lt; r</td><td>相交(两个交点)</td><td>联立后判别式 Δ&gt;0</td></tr>
+        <tr><td>d = r</td><td>相切(一个交点)</td><td>Δ=0</td></tr>
+        <tr><td>d &gt; r</td><td>相离(无交点)</td><td>Δ&lt;0</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>两条路都能判:</b> ① 幾何法——算 d 与 r 比大小(<b>更快,推荐</b>);② 代数法——直线代入圆方程消元,看判别式 Δ 的符号(适合还要求交点坐标时)。只判位置关系用①,要具体交点坐标或弦长常常还是要联立。</p>
+      <p class="trap">⚠ 距离公式的直线必须是<b>一般式 Ax+By+C=0</b>;如果题目给的是 y=kx+b,要先移项整理成 kx−y+b=0 再代入,别漏了系数或搞错 A、B、C 对应关系。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 3 — 点到直线距离:拖动点,实时看 d=|Ax₀+By₀+C|/√(A²+B²)</div>
+      <svg id="distSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>点 x₀ <input id="dpX" type="range" min="-6" max="6" value="3" step="0.5"></label>
+        <label>点 y₀ <input id="dpY" type="range" min="-4" max="4" value="3" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>直线</b><span id="dpLine">x−y+1=0</span></div>
+        <div><b>分子 |Ax₀+By₀+C|</b><span id="dpNum">0</span></div>
+        <div><b>√(A²+B²)</b><span id="dpDen">0</span></div>
+        <div><b>距离 d</b><span id="dpD">0</span></div>
+      </div>
+      <p class="small">固定直线 x−y+1=0(即 A=1,B=−1,C=1),拖点观察垂线段长度与公式计算值始终一致——公式算的就是「点到直线的垂线段长」。</p>
+    </div>
+
+    <h2 class="o">④ 直线与圆的位置关系(可拖动演示)</h2>
+    <div class="card">
+      <p style="margin:6px 0">位置关系的判断本质就是「圆心到直线的距离 d」和「半径 r」比大小,下面直接把直线拖到不同位置,实时看 d 与 r 的关系如何切换相交→相切→相离。</p>
+      <p class="trap">⚠ 相切是「恰好」的临界状态,做题时若已知相切,直接令 <b>d=r</b> 列方程解未知数(比联立判别式=0 更快)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 4 — 直线与圆位置关系:拖动直线偏移量,看 d vs r 三种情形切换</div>
+      <svg id="posSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>直线偏移 c <input id="posC" type="range" min="-8" max="8" value="0" step="0.2"></label>
+        <label>半径 r <input id="posR" type="range" min="1" max="5" value="3" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>圆心到直线距离 d</b><span id="posD">0</span></div>
+        <div><b>半径 r</b><span id="posR2">0</span></div>
+        <div><b>d 与 r</b><span id="posCmp">-</span></div>
+        <div><b>位置关系</b><span id="posRel">-</span></div>
+      </div>
+      <p class="small">圆心固定在原点,直线为 x+y+c=0,拖 c 相当于平移直线。d=|c|/√2,与 r 比较即得三种关系。</p>
+    </div>
+
+    <h2 class="v">⑤ 弦长:半弦² + 弦心距² = 半径²</h2>
+    <div class="card">
+      <div class="eq">弦长 = 2√(r² − d²)　(d = 圆心到弦所在直线的距离)</div>
+      <p style="margin:8px 0"><b>几何原理:</b> 圆心向弦作垂线,垂足恰为弦的中点(垂径定理)。这样就构成一个直角三角形:斜边是<b>半径 r</b>,一条直角边是<b>弦心距 d</b>,另一条直角边是<b>半弦长(弦长的一半)</b>。由勾股定理:</p>
+      <div class="mono">半弦² + d² = r²　⟹　半弦 = √(r²−d²)　⟹　弦长 = 2√(r²−d²)</div>
+      <p style="margin:8px 0">解题标准动作:① 把直线化成一般式;② 求圆心到直线的距离 d;③ 直接代入弦长公式,<b>不需要求出两个交点坐标</b>。这比联立方程用韦达定理算 |AB| 快得多。</p>
+      <p class="trap">⚠ 常见算错:把 d 和 r 的位置搞反,写成 2√(d²−r²)(此时 d&gt;r 直线与圆根本不相交,根号内为负,方程无解——出现这种情况说明前面 d 算错了)。还有人直接忘记乘以 2,只算了半弦长当弦长。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 5 — 弦长几何:半径-弦心距-半弦直角三角形,拖 d 看弦长 2√(r²−d²)</div>
+      <svg id="chordSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>半径 r <input id="chR" type="range" min="2" max="6" value="5" step="0.5"></label>
+        <label>弦心距 d <input id="chD" type="range" min="0" max="6" value="3" step="0.2"></label>
+      </div>
+      <div class="live">
+        <div><b>半径 r</b><span id="chRv">0</span></div>
+        <div><b>弦心距 d</b><span id="chDv">0</span></div>
+        <div><b>半弦 √(r²−d²)</b><span id="chHalf">0</span></div>
+        <div><b>弦长 2√(r²−d²)</b><span id="chLen">0</span></div>
+      </div>
+      <p class="small">红色直角三角形:斜边=r,竖直角边=d,水平角边=半弦。d 拖到超过 r 时,直线已与圆相离,弦不存在(下方会提示)。</p>
+    </div>
+
+    <h2 class="r">⑥ 切线方程:圆上一点 vs 圆外一点</h2>
+    <div class="card">
+      <h3>情形一:过圆上一点 P(x₀,y₀) 的切线 —— 唯一,且与半径垂直</h3>
+      <p style="margin:6px 0">切线垂直于过切点的半径。若圆心为 (a,b),半径方向斜率为 (y₀−b)/(x₀−a),则切线斜率为其<b>负倒数</b>。对标准圆 (x−a)²+(y−b)²=r²,切线方程可直接写成:</p>
+      <div class="eq">(x₀−a)(x−a) + (y₀−b)(y−b) = r²</div>
+      <p style="margin:6px 0">这是「配方对称代入法」的结果,不需要先求斜率,记住这个公式最快。</p>
+      <h3>情形二:过圆外一点 Q(x₁,y₁) 的切线 —— 有两条</h3>
+      <p style="margin:6px 0">圆外一点能作<b>两条</b>切线。标准做法:设切线斜率为 k,写成点斜式 y−y₁=k(x−x₁)(即 kx−y+(y₁−kx₁)=0),令<b>圆心到该直线的距离 = r</b>,解出两个 k 值。</p>
+      <p class="trap">⚠ 头号陷阱:如果 Q 与圆心的连线正好是<b>竖直线</b>方向,两条切线中会有一条<b>斜率不存在</b>(竖直切线),用点斜式设法解出来的方程只能给你另一条!必须先单独检验 x=x₁ 是否也是切线(即检验圆心到直线 x=x₁ 的距离是否等于 r),再用点斜式求另一条。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✏️ 互动 6 — 过圆外点作切线:两条切线(含容易漏掉的竖直切线)</div>
+      <svg id="tanSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>点 Q 的 x₁ <input id="tanX" type="range" min="-6" max="6" value="5" step="0.5"></label>
+        <label>点 Q 的 y₁ <input id="tanY" type="range" min="-5" max="5" value="0" step="0.5"></label>
+      </div>
+      <div class="verdict" id="tanNote"></div>
+      <p class="small">圆固定为 x²+y²=9(圆心原点,半径3)。当 Q 恰好在 x 轴上(y₁=0)时,两条切线关于 x 轴对称,且都不是竖直线;把 Q 拖到圆心正上/正下方(x₁=0)时,其中一条切线会变成<b>竖直线</b>——这正是最容易漏掉的情形。</p>
+    </div>
+
+    <h2 class="b">⑦ 圆与圆的位置关系</h2>
+    <div class="card">
+      <p style="margin:6px 0">设两圆半径为 R、r(R≥r),圆心距为 d,比较 d 与 R+r、|R−r| 即可:</p>
+      <table>
+        <tr><th>比较</th><th>位置关系</th><th>公切线条数</th></tr>
+        <tr><td>d &gt; R+r</td><td>外离</td><td>4 条</td></tr>
+        <tr><td>d = R+r</td><td>外切</td><td>3 条</td></tr>
+        <tr><td>|R−r| &lt; d &lt; R+r</td><td>相交(两个交点)</td><td>2 条</td></tr>
+        <tr><td>d = |R−r|(R≠r)</td><td>内切</td><td>1 条</td></tr>
+        <tr><td>0 ≤ d &lt; |R−r|</td><td>内含(d=0 为同心圆)</td><td>0 条</td></tr>
+      </table>
+      <p class="trap">⚠ 别把 R+r 和 |R−r| 记反:两圆越推越远是「外离」对应 d 变大(&gt;R+r);一个圆缩到另一个圆里面是「内含」对应 d 变小(&lt;|R−r|)。判断前先算好两个半径,分清哪个是 R(大)哪个是 r(小)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⭕ 互动 7 — 两圆位置关系:拖圆心距 d,看五种情形切换</div>
+      <svg id="circSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>圆心距 d <input id="ccD" type="range" min="0" max="10" value="6" step="0.2"></label>
+        <label>大圆 R <input id="ccR" type="range" min="2" max="4" value="3" step="0.5"></label>
+        <label>小圆 r <input id="ccr" type="range" min="1" max="3" value="1.5" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>圆心距 d</b><span id="ccDv">0</span></div>
+        <div><b>R+r</b><span id="ccSum">0</span></div>
+        <div><b>|R−r|</b><span id="ccDiff">0</span></div>
+        <div><b>位置关系</b><span id="ccRel">-</span></div>
+      </div>
+      <p class="small">左圆固定在原点,右圆圆心随 d 移动。留意 d 经过 R+r 和 |R−r| 两个临界值时关系如何跳变。</p>
+    </div>
+
+    <h2 class="g">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求直线方程(五种形式的选择与讨论)</h3>
+      <p><b class="tag">触发信号:</b>「求过点 P 的直线方程」「过两点」「在坐标轴上的截距」,没有明说斜率是否存在。</p>
+      <p><b class="tag">标准动作:</b>先看是否需要讨论斜率不存在的情形(竖直线);若不确定,分两种情况:① k 不存在,直线为 x=x₀,单独代入验证;② k 存在,设 y−y₀=k(x−x₀),代入条件解 k。截距式只在两截距都非零且不过原点时可用。</p>
+      <p><b class="tag">示例(带解):</b>过点 (2,3) 且在两坐标轴上截距相等的直线方程。① 若截距为0(过原点):设 y=kx,代入 (2,3) 得 k=3/2,即 y=3x/2;② 若截距不为0:设 x/a+y/a=1 即 x+y=a,代入得 a=5,即 x+y−5=0。两解都要写,漏一个就错。</p>
+      <p class="trap">陷阱:只考虑斜率存在或只考虑截距不为0的情形,漏掉另一支;两点式中忘记讨论 x₁=x₂ 的情形。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由一般方程判断并求圆心半径</h3>
+      <p><b class="tag">触发信号:</b>给出 x²+y²+Dx+Ey+F=0 形式,要求判断是否表示圆、求圆心和半径。</p>
+      <p><b class="tag">标准动作:</b>先算 D²+E²−4F,大于0才是圆,圆心 (−D/2,−E/2),半径 ½√(D²+E²−4F)。若 x²、y² 系数不为1,先除以公因数化简。</p>
+      <p><b class="tag">示例(带解):</b>x²+y²−4x+2y+m=0 表示圆,求 m 的范围。D=−4,E=2,D²+E²−4F=16+4−4m=20−4m&gt;0,解得 m&lt;5。</p>
+      <p class="trap">陷阱:直接套圆心半径公式而不验证判别量是否大于0;x²、y² 系数不为1时忘记先化简。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 判断直线与圆的位置关系</h3>
+      <p><b class="tag">触发信号:</b>给出直线和圆方程,问「相交/相切/相离」,或给参数问「使其相切」求参数值。</p>
+      <p><b class="tag">标准动作:</b>求出圆心和半径,代入距离公式算 d,与 r 比较;若已知相切直接令 d=r 解方程,比联立判别式更快。</p>
+      <p><b class="tag">示例(带解):</b>直线 3x+4y+m=0 与圆 x²+y²=4 相切,求 m。圆心(0,0),半径2。d=|m|/5=2,解得 m=±10。</p>
+      <p class="trap">陷阱:忘记相切时结果通常有<b>两个</b>值(绝对值方程);把圆的一般方程直接当标准方程读圆心半径。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 弦长计算</h3>
+      <p><b class="tag">触发信号:</b>「直线截圆所得弦长」「弦AB的长度」,给了直线和圆方程。</p>
+      <p><b class="tag">标准动作:</b>求圆心到直线的距离 d,代入弦长=2√(r²−d²),不必求交点坐标。若题目还要弦的中点或垂直平分线,再用垂径定理配合圆心。</p>
+      <p><b class="tag">示例(带解):</b>圆 x²+y²=25,直线 3x+4y−25=0 截得的弦长。圆心(0,0)到直线距离 d=|−25|/5=5=r,说明相切,弦长为0(单点)。若直线换成 3x+4y−15=0,则 d=15/5=3,弦长=2√(25−9)=2×4=8。</p>
+      <p class="trap">陷阱:直接联立解交点再用两点间距离公式(计算量大且易错);忘记先检查 d≤r 这个前提。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 求切线方程</h3>
+      <p><b class="tag">触发信号:</b>「过圆上一点的切线」「过圆外一点作切线」「公切线」。</p>
+      <p><b class="tag">标准动作:</b>圆上点用对称代入公式 (x₀−a)(x−a)+(y₀−b)(y−b)=r²;圆外点先检验竖直线是否为切线,再设点斜式令 d=r 解出另一条(或另两条)斜率。</p>
+      <p><b class="tag">示例(带解):</b>过点 (5,0) 作圆 x²+y²=9 的切线。检验竖直线 x=5:圆心到该直线距离=5≠3,不是切线。设 y=k(x−5) 即 kx−y−5k=0,d=|−5k|/√(k²+1)=3,25k²=9k²+9,k²=9/16,k=±3/4。两条切线:y=¾(x−5) 和 y=−¾(x−5)。</p>
+      <p class="trap">陷阱:只解出点斜式给出的这一支,漏检验竖直切线是否存在;把「过圆上一点」和「过圆外一点」的方法搞混(圆上点只有一条,不需要判别式)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 圆与圆的位置关系及公共弦</h3>
+      <p><b class="tag">触发信号:</b>给两个圆的方程,问位置关系,或求两圆公共弦所在直线方程/公共弦长。</p>
+      <p><b class="tag">标准动作:</b>求两圆心和半径,算圆心距 d,与 R+r、|R−r| 比较得位置关系。若相交求公共弦,两圆一般方程<b>相减</b>消去二次项,得到的一次方程就是公共弦所在直线;再按弦长公式(对其中一个圆)算弦长。</p>
+      <p><b class="tag">示例(带解):</b>圆 x²+y²=4 与圆 x²+y²−4x+2y=0 相交,求公共弦所在直线。两式相减:(x²+y²)−(x²+y²−4x+2y)=4−0 ⟹ 4x−2y=4 ⟹ 2x−y−2=0,即为公共弦所在直线。</p>
+      <p class="trap">陷阱:两圆方程相减时,若两圆二次项系数不同(不都是1),要先统一系数再相减;算完直线后忘记它只是「所在直线」,弦长仍要另外用弦长公式求。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 点斜式/斜截式对<b>竖直线(斜率不存在)</b>失效,题目没说斜率存在就必须分类讨论,单独设 x=x₀。</p>
+      <p class="trap">② 截距式对<b>过原点</b>或<b>截距为0</b>或<b>与坐标轴平行</b>的直线失效,同样要分类讨论。</p>
+      <p class="trap">③ 一般方程 x²+y²+Dx+Ey+F=0 拿到手<b>先判 D²+E²−4F&gt;0</b>,不满足就根本不是圆,不能直接读圆心半径。</p>
+      <p class="trap">④ 点到直线距离公式里的直线必须是<b>一般式 Ax+By+C=0</b>,斜截式要先移项整理,别把系数对应错。</p>
+      <p class="trap">⑤ 弦长公式是 <b>2√(r²−d²)</b>,别写成 √(r²−d²)(漏乘2)或把 d、r 位置写反。</p>
+      <p class="trap">⑥ 过圆外一点作切线有<b>两条</b>,用点斜式求解前一定先检验<b>竖直线</b>是否是切线之一,否则会漏解。</p>
+      <p class="trap">⑦ 圆与圆位置关系比较的是<b>圆心距 d</b> 与 <b>R+r、|R−r|</b>,别记反外切内切对应的不等式方向。</p>
+      <p class="trap">⑧ 相切问题直接令 <b>d=r</b> 解方程即可,不需要非得联立方程组用判别式=0(更慢,容易算错)。</p>
+      <p class="trap">⑨ 求两圆公共弦所在直线,是把两个圆的方程<b>相减</b>(消去二次项),前提是两圆二次项系数相同(通常都是1)。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一般式是「万能挡板」:</b> 点斜式、斜截式、截距式都有各自的失效条件,但一般式 Ax+By+C=0(A、B不同时为0)能表示<b>平面内任何直线</b>,包括竖直线(此时 B=0)。拿不准某条直线是否会撞上某种形式的失效条件时,直接设一般式或分类讨论,永远不会错。</p>
+      <p style="margin:8px 0"><b>② 判位置关系,几何法永远比代数法快:</b> 判断直线与圆(或圆与圆)的位置关系,「比较距离与半径(或半径和/差)」这条几何路径,比「联立方程组算判别式」快一个量级,尤其是含参数的题。只有需要具体交点坐标时才不得不联立。</p>
+      <p style="margin:8px 0"><b>③ 弦长本质是勾股定理,别死记结论:</b> 半弦² + 弦心距² = 半径²,这个直角三角形关系可以推出弦长、也可以反过来已知弦长求 d 或 r。凡是「垂径定理」相关的题(弦的中点、垂直平分线过圆心),都是这个直角三角形的变形应用。</p>
+      <p style="margin:8px 0"><b>④ 切线的两种求法本质相同:</b> 圆上一点的切线公式 (x₀−a)(x−a)+(y₀−b)(y−b)=r² 其实是「圆心到切线距离=r」这个条件在切点已知时的化简结果。理解了这一点,你会发现「圆上点」和「圆外点」的切线问题本质上是同一个 d=r 方程,只是圆上点因为知道切点、可以跳过设斜率这一步。</p>
+      <p style="margin:8px 0"><b>⑤ 两圆方程相减 = 找公共弦,不是巧合:</b> 若两点同时满足两个圆的方程,代入相减后二次项抵消,说明交点必然在这条一次方程(直线)上——这就是「公共弦所在直线」的由来,本质是两个方程联立消元的代数操作,推广到更多场景(如根轴)都是同一思路。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 直线与圆:方程·位置关系·弦长·切线</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:直线方程五种形式 ===== */
+(function(){
+  const svg=document.getElementById('lineSvg');
+  const X0s=document.getElementById('lnX0'),Y0s=document.getElementById('lnY0'),Ks=document.getElementById('lnK');
+  const note=document.getElementById('lnNote'),vertBtn=document.getElementById('lnVert');
+  let vertical=false;
+  const cx=350,cy=160,scale=28;
+  function toPx(x,y){return [cx+x*scale, cy-y*scale];}
+  vertBtn.onclick=()=>{vertical=!vertical;draw();};
+  function draw(){
+    clr(svg);
+    const x0=+X0s.value, y0=+Y0s.value, k=+Ks.value;
+    // axes
+    el(svg,'line',{x1:20,y1:cy,x2:680,y2:cy,stroke:'#999','stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:300,stroke:'#999','stroke-width':2});
+    for(let i=-6;i<=6;i++){
+      const [px]=toPx(i,0);el(svg,'line',{x1:px,y1:cy-4,x2:px,y2:cy+4,stroke:'#999','stroke-width':1});
+      const [,py]=toPx(0,i);el(svg,'line',{x1:cx-4,y1:py,x2:cx+4,y2:py,stroke:'#999','stroke-width':1});
+    }
+    // point P
+    const [px,py]=toPx(x0,y0);
+    el(svg,'circle',{cx:px,cy:py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px+10,y:py-8,'font-size':13,'font-weight':900,fill:RED}).textContent='P('+x0+','+y0+')';
+    // line
+    let desc,ok={pt:true,sk:true,tp:true,ic:true,gen:true};
+    if(vertical){
+      el(svg,'line',{x1:px,y1:20,x2:px,y2:300,stroke:BLUE,'stroke-width':4});
+      desc='当前:竖直线 x='+x0+'（斜率不存在)';
+      ok.pt=false;ok.sk=false;
+      if(x0===0){ok.ic=false;}
+    } else {
+      const x1=-6,x2=6;
+      const y1v=y0+k*(x1-x0),y2v=y0+k*(x2-x0);
+      const [ax,ay]=toPx(x1,y1v),[bx,by]=toPx(x2,y2v);
+      el(svg,'line',{x1:ax,y1:ay,x2:bx,y2:by,stroke:BLUE,'stroke-width':4});
+      const b=y0-k*x0;
+      desc='当前:y−'+y0+'='+k+'(x−'+x0+')　即 y='+k+'x'+(b>=0?'+':'')+b.toFixed(1);
+      if(k===0){ /* horizontal, ok for all but intercept if passes through origin along axis */ }
+      // intercept form fails if passes through origin or b==0 (no y-intercept usable) or k==0(no x-intercept)
+      const xIntercept = k!==0 ? x0-y0/k : null;
+      if(b===0||k===0||xIntercept===0){ok.ic=false;}
+    }
+    note.innerHTML=desc+'<br>点斜式:'+(ok.pt?'✅可用':'❌失效')+'　斜截式:'+(ok.sk?'✅可用':'❌失效')+'　截距式:'+(ok.ic?'✅可用':'❌失效(过原点/截距为0)')+'　一般式:✅恒可用';
+  }
+  X0s.oninput=Y0s.oninput=Ks.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:一般方程判圆 ===== */
+(function(){
+  const svg=document.getElementById('genSvg');
+  const Ds=document.getElementById('genD'),Es=document.getElementById('genE'),Fs=document.getElementById('genF');
+  const oDelta=document.getElementById('genDelta'),oC=document.getElementById('genC'),oR=document.getElementById('genR'),oV=document.getElementById('genV');
+  const cx=350,cy=150,scale=24;
+  function toPx(x,y){return [cx+x*scale, cy-y*scale];}
+  function draw(){
+    clr(svg);
+    const D=+Ds.value,E=+Es.value,F=+Fs.value;
+    const delta=D*D+E*E-4*F;
+    el(svg,'line',{x1:20,y1:cy,x2:680,y2:cy,stroke:'#999','stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:280,stroke:'#999','stroke-width':2});
+    const a=-D/2, b=-E/2;
+    oDelta.textContent=delta.toFixed(1);
+    oC.textContent='('+a.toFixed(1)+','+b.toFixed(1)+')';
+    const [pcx,pcy]=toPx(a,b);
+    if(delta>0){
+      const r=0.5*Math.sqrt(delta);
+      oR.textContent=r.toFixed(2);
+      oV.textContent='是圆';
+      el(svg,'circle',{cx:pcx,cy:pcy,r:r*scale,fill:'rgba(20,80,200,0.15)',stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:pcx,cy:pcy,r:4,fill:INK});
+      el(svg,'text',{x:pcx+8,y:pcy-8,'font-size':12.5,'font-weight':900,fill:INK}).textContent='圆心('+a.toFixed(1)+','+b.toFixed(1)+')';
+    } else if(delta===0){
+      oR.textContent='0';
+      oV.textContent='退化为一点';
+      el(svg,'circle',{cx:pcx,cy:pcy,r:6,fill:ORANGE,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:pcx+8,y:pcy-8,'font-size':12.5,'font-weight':900,fill:ORANGE}).textContent='只是一个点';
+    } else {
+      oR.textContent='—';
+      oV.textContent='不表示图形';
+      el(svg,'text',{x:cx,y:cy,'font-size':15,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='D²+E²−4F<0：无图形';
+    }
+    el(svg,'text',{x:350,y:270,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='x²+y²+('+D+')x+('+E+')y+('+F+')=0';
+  }
+  Ds.oninput=Es.oninput=Fs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:点到直线距离 ===== */
+(function(){
+  const svg=document.getElementById('distSvg');
+  const Xs=document.getElementById('dpX'),Ys=document.getElementById('dpY');
+  const oNum=document.getElementById('dpNum'),oDen=document.getElementById('dpDen'),oD=document.getElementById('dpD');
+  // fixed line: x - y + 1 = 0  (A=1,B=-1,C=1)
+  const A=1,B=-1,C=1;
+  const cx=350,cy=170,scale=30;
+  function toPx(x,y){return [cx+x*scale, cy-y*scale];}
+  function draw(){
+    clr(svg);
+    const x0=+Xs.value,y0=+Ys.value;
+    el(svg,'line',{x1:20,y1:cy,x2:680,y2:cy,stroke:'#999','stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:300,stroke:'#999','stroke-width':2});
+    // line: y = x+1
+    const [ax,ay]=toPx(-8,-7),[bx,by]=toPx(8,9);
+    el(svg,'line',{x1:ax,y1:ay,x2:bx,y2:by,stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:bx-70,y:by-10,'font-size':13,'font-weight':900,fill:BLUE}).textContent='x−y+1=0';
+    // point
+    const [px,py]=toPx(x0,y0);
+    el(svg,'circle',{cx:px,cy:py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px+10,y:py-8,'font-size':13,'font-weight':900,fill:RED}).textContent='P('+x0+','+y0+')';
+    // foot of perpendicular
+    const num=A*x0+B*y0+C;
+    const den2=A*A+B*B;
+    const fx=x0-A*num/den2, fy=y0-B*num/den2;
+    const [fpx,fpy]=toPx(fx,fy);
+    el(svg,'line',{x1:px,y1:py,x2:fpx,y2:fpy,stroke:GREEN,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(svg,'circle',{cx:fpx,cy:fpy,r:4,fill:GREEN});
+    const den=Math.sqrt(den2);
+    const d=Math.abs(num)/den;
+    oNum.textContent=Math.abs(num).toFixed(2);
+    oDen.textContent=den.toFixed(3);
+    oD.textContent=d.toFixed(2);
+  }
+  Xs.oninput=Ys.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:直线与圆位置关系 ===== */
+(function(){
+  const svg=document.getElementById('posSvg');
+  const Cs=document.getElementById('posC'),Rs=document.getElementById('posR');
+  const oD=document.getElementById('posD'),oR2=document.getElementById('posR2'),oCmp=document.getElementById('posCmp'),oRel=document.getElementById('posRel');
+  const cx=350,cy=160,scale=32;
+  function toPx(x,y){return [cx+x*scale, cy-y*scale];}
+  function draw(){
+    clr(svg);
+    const c=+Cs.value, r=+Rs.value;
+    el(svg,'line',{x1:20,y1:cy,x2:680,y2:cy,stroke:'#999','stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:300,stroke:'#999','stroke-width':2});
+    // circle centered at origin
+    el(svg,'circle',{cx:cx,cy:cy,r:r*scale,fill:'rgba(122,63,242,0.12)',stroke:VIO,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    // line: x+y+c=0  -> y = -x - c
+    const x1=-9,x2=9;
+    const y1=-x1-c, y2=-x2-c;
+    const [ax,ay]=toPx(x1,y1),[bx,by]=toPx(x2,y2);
+    const d=Math.abs(c)/Math.sqrt(2);
+    let rel,col;
+    if(d<r-0.02){rel='相交';col=GREEN;}
+    else if(Math.abs(d-r)<=0.03){rel='相切';col=ORANGE;}
+    else{rel='相离';col=RED;}
+    el(svg,'line',{x1:ax,y1:ay,x2:bx,y2:by,stroke:col,'stroke-width':4});
+    oD.textContent=d.toFixed(2);
+    oR2.textContent=r.toFixed(2);
+    oCmp.textContent=d<r-0.02?'d<r':Math.abs(d-r)<=0.03?'d=r':'d>r';
+    oRel.textContent=rel;
+    el(svg,'text',{x:350,y:290,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='直线:x+y+('+c.toFixed(1)+')=0　'+rel;
+  }
+  Cs.oninput=Rs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:弦长几何 ===== */
+(function(){
+  const svg=document.getElementById('chordSvg');
+  const Rs=document.getElementById('chR'),Ds2=document.getElementById('chD');
+  const oR=document.getElementById('chRv'),oD=document.getElementById('chDv'),oHalf=document.getElementById('chHalf'),oLen=document.getElementById('chLen');
+  const cx=250,cy=170,scale=26;
+  function draw(){
+    clr(svg);
+    const r=+Rs.value, d=+Ds2.value;
+    oR.textContent=r.toFixed(1);
+    oD.textContent=d.toFixed(1);
+    if(d>=r){
+      oHalf.textContent='—';oLen.textContent='不存在(相离)';
+      el(svg,'text',{x:350,y:160,'font-size':15,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='d ≥ r：直线与圆相离或相切于此配置下弦不存在';
+      // still draw circle
+      el(svg,'circle',{cx:cx,cy:cy,r:r*scale,fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+      return;
+    }
+    const half=Math.sqrt(r*r-d*d);
+    oHalf.textContent=half.toFixed(2);
+    oLen.textContent=(2*half).toFixed(2);
+    // circle
+    el(svg,'circle',{cx:cx,cy:cy,r:r*scale,fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    // chord horizontal at distance d below center
+    const chordY=cy+d*scale;
+    const halfPx=half*scale;
+    el(svg,'line',{x1:cx-halfPx,y1:chordY,x2:cx+halfPx,y2:chordY,stroke:RED,'stroke-width':4});
+    // radius to chord end
+    el(svg,'line',{x1:cx,y1:cy,x2:cx+halfPx,y2:chordY,stroke:GREEN,'stroke-width':3});
+    // d segment (center to chord, vertical)
+    el(svg,'line',{x1:cx,y1:cy,x2:cx,y2:chordY,stroke:ORANGE,'stroke-width':3});
+    // right angle marker
+    el(svg,'rect',{x:cx-10,y:chordY-10,width:10,height:10,fill:'none',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx+halfPx/2,y:chordY+20,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='半弦='+half.toFixed(2);
+    el(svg,'text',{x:cx-30,y:cy+d*scale/2,'font-size':12.5,'font-weight':900,fill:ORANGE,'text-anchor':'end'}).textContent='d='+d.toFixed(1);
+    el(svg,'text',{x:cx+halfPx/2+20,y:cy+d*scale/2-6,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='r='+r.toFixed(1);
+    el(svg,'text',{x:cx-halfPx,y:chordY+40,'font-size':13,'font-weight':900,fill:INK}).textContent='弦长=2√(r²−d²)='+(2*half).toFixed(2);
+  }
+  Rs.oninput=Ds2.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:过圆外点作切线 ===== */
+(function(){
+  const svg=document.getElementById('tanSvg');
+  const Xs=document.getElementById('tanX'),Ys=document.getElementById('tanY');
+  const note=document.getElementById('tanNote');
+  const R=3; // circle x^2+y^2=9
+  const cx=350,cy=170,scale=32;
+  function toPx(x,y){return [cx+x*scale, cy-y*scale];}
+  function draw(){
+    clr(svg);
+    const qx=+Xs.value, qy=+Ys.value;
+    el(svg,'line',{x1:20,y1:cy,x2:680,y2:cy,stroke:'#999','stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:320,stroke:'#999','stroke-width':2});
+    el(svg,'circle',{cx:cx,cy:cy,r:R*scale,fill:'rgba(30,158,134,0.12)',stroke:GREEN,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    const distQ=Math.sqrt(qx*qx+qy*qy);
+    const [qpx,qpy]=toPx(qx,qy);
+    el(svg,'circle',{cx:qpx,cy:qpy,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:qpx+10,y:qpy-8,'font-size':13,'font-weight':900,fill:RED}).textContent='Q('+qx+','+qy+')';
+    if(distQ<=R+0.05){
+      note.innerHTML='Q 在圆内或圆上，无法从此点作两条外部切线，请把 Q 拖到圆外。';
+      note.style.borderColor=RED;
+      return;
+    }
+    // tangent length
+    const tLen=Math.sqrt(distQ*distQ-R*R);
+    // check vertical tangent case: line x=qx tangent iff |qx| == R
+    let verticalIsTangent = Math.abs(Math.abs(qx)-R) < 0.06;
+    let lines=[];
+    if(verticalIsTangent){
+      lines.push({vertical:true,x:qx});
+      // the other tangent: solve normally excluding vertical, compute via formula for non-vertical when qy!=0
+      // For a point on x=R line generally (R,t): one tangent is x=R itself only when qx=R exactly and any qy -> handle general k solve below excluding vertical dup
+    }
+    // general: solve k from distance formula: |k*qx - qy + (R^2)/... use line y - qy = k(x-qx) -> kx - y + (qy - k*qx) = 0
+    // distance from (0,0): |qy - k*qx| / sqrt(k^2+1) = R
+    // (qy-k*qx)^2 = R^2(k^2+1)
+    // qy^2 -2*k*qx*qy + k^2*qx^2 = R^2 k^2 + R^2
+    // k^2(qx^2-R^2) -2*qx*qy*k + (qy^2-R^2) = 0
+    const a=qx*qx-R*R, b=-2*qx*qy, c=qy*qy-R*R;
+    let ks=[];
+    if(Math.abs(a)<1e-6){
+      if(Math.abs(b)>1e-6){ks.push(-c/b);}
+    } else {
+      const disc=b*b-4*a*c;
+      if(disc>=0){
+        const sq=Math.sqrt(disc);
+        ks.push((-b+sq)/(2*a));
+        if(sq>1e-6)ks.push((-b-sq)/(2*a));
+      }
+    }
+    const colors=[BLUE,ORANGE];
+    let idx=0;
+    if(verticalIsTangent){
+      // draw vertical tangent line
+      const [vx1,vy1]=toPx(qx,-6),[vx2,vy2]=toPx(qx,6);
+      el(svg,'line',{x1:vx1,y1:vy1,x2:vx2,y2:vy2,stroke:colors[idx],'stroke-width':4,'stroke-dasharray':idx===0?'':''});
+      el(svg,'text',{x:vx1+6,y:40,'font-size':12.5,'font-weight':900,fill:colors[idx]}).textContent='切线:x='+qx+'（竖直!）';
+      idx++;
+    }
+    ks.forEach(k=>{
+      if(idx>=2)return;
+      const x1=-9,x2=9;
+      const y1v=qy+k*(x1-qx), y2v=qy+k*(x2-qx);
+      const [ax,ay]=toPx(x1,y1v),[bx,by]=toPx(x2,y2v);
+      el(svg,'line',{x1:ax,y1:ay,x2:bx,y2:by,stroke:colors[idx],'stroke-width':4});
+      el(svg,'text',{x:20,y:40+idx*20,'font-size':12.5,'font-weight':900,fill:colors[idx]}).textContent='切线'+(idx+1)+': y−'+qy+'='+k.toFixed(2)+'(x−'+qx+')';
+      idx++;
+    });
+    let msg='切线长 = √(|OQ|²−R²) = '+tLen.toFixed(2)+'。';
+    if(verticalIsTangent){
+      msg+=' ⚠ 此时其中一条切线恰好是<b>竖直线</b>，若只用点斜式设法会漏掉它！';
+    } else {
+      msg+=' 两条切线斜率均存在，可直接用点斜式+距离公式求出。';
+    }
+    note.innerHTML=msg;
+    note.style.borderColor=verticalIsTangent?RED:INK;
+  }
+  Xs.oninput=Ys.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动7:两圆位置关系 ===== */
+(function(){
+  const svg=document.getElementById('circSvg');
+  const Ds3=document.getElementById('ccD'),Rs2=document.getElementById('ccR'),rs2=document.getElementById('ccr');
+  const oD=document.getElementById('ccDv'),oSum=document.getElementById('ccSum'),oDiff=document.getElementById('ccDiff'),oRel=document.getElementById('ccRel');
+  const cx1=200,cy=150,scale=28;
+  function draw(){
+    clr(svg);
+    let d=+Ds3.value, R=+Rs2.value, r=+rs2.value;
+    if(r>R){const t=R;R=r;r=t;} // ensure R>=r
+    el(svg,'line',{x1:20,y1:cy,x2:680,y2:cy,stroke:'#999','stroke-width':2});
+    const cx2=cx1+d*scale;
+    el(svg,'circle',{cx:cx1,cy:cy,r:R*scale,fill:'rgba(20,80,200,0.15)',stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:cx1,cy:cy,r:3,fill:INK});
+    el(svg,'circle',{cx:cx2,cy:cy,r:r*scale,fill:'rgba(224,56,42,0.15)',stroke:RED,'stroke-width':3});
+    el(svg,'circle',{cx:cx2,cy:cy,r:3,fill:INK});
+    el(svg,'text',{x:cx1,y:cy-R*scale-10,'font-size':12.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='R='+R.toFixed(1);
+    el(svg,'text',{x:cx2,y:cy-r*scale-10,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='r='+r.toFixed(1);
+    const sum=R+r, diff=Math.abs(R-r);
+    let rel;
+    if(d>sum+0.03)rel='外离(4条公切线)';
+    else if(Math.abs(d-sum)<=0.05)rel='外切(3条公切线)';
+    else if(d>diff+0.05 && d<sum-0.05)rel='相交(2条公切线)';
+    else if(Math.abs(d-diff)<=0.05 && diff>0.05)rel='内切(1条公切线)';
+    else rel='内含(0条公切线)';
+    oD.textContent=d.toFixed(1);
+    oSum.textContent=sum.toFixed(1);
+    oDiff.textContent=diff.toFixed(1);
+    oRel.textContent=rel;
+    el(svg,'text',{x:350,y:280,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='圆心距 d='+d.toFixed(1)+'　'+rel;
+  }
+  Ds3.oninput=Rs2.oninput=rs2.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 点斜式和截距式各自在什么情况下失效?",a:"点斜式(斜截式同理)在斜率不存在(竖直线)时失效,必须单独设 x=x₀。截距式在过原点、截距为0、或直线与坐标轴平行时失效,需分类讨论。"},
+ {q:"2. 一般方程 x²+y²+Dx+Ey+F=0 表示圆的条件是什么?圆心和半径怎么求?",a:"条件是 D²+E²−4F>0。圆心 (−D/2,−E/2),半径 r=½√(D²+E²−4F)。若判别量≤0则不是圆(=0为一点,<0无图形)。"},
+ {q:"3. 点到直线距离公式是什么?使用前要注意什么?",a:"d=|Ax₀+By₀+C|/√(A²+B²)。直线必须先化成一般式 Ax+By+C=0,若给的是斜截式要先移项整理。"},
+ {q:"4. 直线与圆的位置关系怎么判断?哪种方法更快?",a:"比较圆心到直线的距离 d 与半径 r:d<r相交,d=r相切,d>r相离。几何法(比较d与r)比联立方程算判别式更快,尤其含参数时。"},
+ {q:"5. 弦长公式是什么?怎么推出来的?",a:"弦长=2√(r²−d²),其中 d 是圆心到弦所在直线的距离。由勾股定理:半弦²+d²=r²(圆心向弦作垂线,垂足为弦中点)。"},
+ {q:"6. 过圆外一点作切线为什么容易漏解?怎么避免?",a:"过圆外一点有两条切线,若只用点斜式设 y−y₁=k(x−x₁)求解,会默认排除斜率不存在的情形。若这条连线恰好与圆心构成竖直方向,其中一条切线就是竖直线,必须先单独检验 x=x₁ 是否满足距离等于半径。"},
+ {q:"7. 圆与圆的位置关系怎么用圆心距 d 判断?五种关系分别对应什么条件?",a:"设R≥r:d>R+r外离;d=R+r外切;|R−r|<d<R+r相交;d=|R−r|(R≠r)内切;0≤d<|R−r|内含。"},
+ {q:"8. 圆 x²+y²=25 与直线 3x+4y−15=0 的弦长是多少?",a:"圆心(0,0)半径5,d=|−15|/5=3。弦长=2√(25−9)=2×4=8。"},
+ {q:"9. 求两圆公共弦所在直线的方法是什么?前提条件是什么?",a:"把两圆的一般方程相减,消去二次项,得到的一次方程即为公共弦所在直线。前提是两圆的二次项系数相同(通常都化为1)。"},
+ {q:"10. 判断 x²+y²−4x+2y+m=0 是圆的 m 的取值范围?",a:"D=−4,E=2,需D²+E²−4F=16+4−4m>0,解得 m<5。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

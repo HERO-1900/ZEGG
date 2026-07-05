@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生态系统能量流动与计算 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .ctrl select{border:3px solid var(--ink);font-weight:800;font-size:13px;padding:4px 6px;background:#fff}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>生态系统能量流动与计算</h1>
+    <p class="lead">能量流动这一章,考试考的从来不是「背概念」,而是<b>算数</b>——尤其是「最多/最少」这类方向题,一旦搞反 10% 和 20% 用在哪一级,整题就废。这一页把「能量去哪了」的账本画清楚,把「最多最少该用哪个效率、哪条食物链」的方向感钉死,让你看到题干秒选公式。</p>
+
+    <div class="say">🗣️ <b>能量流动(人话版):</b> 太阳能量进了生产者这个「账户」,每往下一级转账,银行(呼吸作用+分解者+未利用)都要扣掉 80%~90% 的「手续费」,只有 10%~20% 能真正到账下一级。所以链条越长,越到后面账户里剩的钱越少——这就是「营养级越高,可利用能量越少」的全部道理。能量流动是<b>单向</b>的(不能循环用),而且<b>逐级递减</b>(不会越转越多)。</div>
+
+    <div class="keybox"><b>两条命根子公式:</b> ① <b>摄入量 = 同化量 + 粪便量</b>(粪便量属于<b>上一营养级</b>的未同化部分,不是这一级同化的!);② <b>同化量 = 呼吸消耗量 + 用于生长发育繁殖的能量</b>,而「用于生长发育繁殖的能量」又分三路去:<b>流入下一营养级 + 被分解者分解利用 + 未被利用(暂时储存)</b>。传递效率 = <b>下一营养级同化量 ÷ 本营养级同化量</b>,一般在 <b>10%~20%</b> 之间。</div>
+
+    <h2>① 能量流动的过程与特点</h2>
+    <div class="card">
+      <p style="margin:8px 0">生态系统能量流动的起点是<b>生产者固定的太阳能总量</b>(即生产者的同化量),这是流经该生态系统的<b>总能量</b>。能量沿着「生产者→初级消费者→次级消费者→……」这条食物链(食物网)传递。</p>
+      <table>
+        <tr><th>特点</th><th>含义</th></tr>
+        <tr><td><b>单向流动</b></td><td>能量只能从低营养级流向高营养级,不能反向流动,也不能循环利用(与物质循环不同!)</td></tr>
+        <tr><td><b>逐级递减</b></td><td>每一营养级同化的能量只有一部分(10%~20%)流入下一营养级,能量沿营养级流动是「递减」的,不会越流越多</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么递减?</b> 因为每一级都有大量能量被<b>呼吸作用</b>以热能形式散失(不可逆、不能再被利用),还有一部分随遗体残骸、粪便被<b>分解者</b>分解消耗,并非全部「转账」给下一级。</p>
+      <p class="trap">⚠ 「单向流动」不等于「逐级递减」——单向说的是<b>方向</b>(不能倒流、不能循环),递减说的是<b>数量</b>(越往后越少)。两者是能量流动的两个不同侧面,答题时不要只答一半。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌊 互动 1 — 能量流动漏斗图:拖动传递效率,看每一营养级还剩多少能量</div>
+      <svg id="funnelSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>生产者固定总能量 (×10⁴ kJ) <input id="fnE0" type="range" min="50" max="200" value="100" step="10"></label>
+        <label>传递效率 (%) <input id="fnEff" type="range" min="10" max="20" value="15" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>生产者(第一营养级)</b><span id="fnL0">0</span></div>
+        <div><b>初级消费者(第二)</b><span id="fnL1">0</span></div>
+        <div><b>次级消费者(第三)</b><span id="fnL2">0</span></div>
+        <div><b>三级消费者(第四)</b><span id="fnL3">0</span></div>
+      </div>
+      <p class="small">每一级宽度 = 该级同化的能量,按你设的传递效率逐级缩窄。效率越低,漏斗收窄得越快——这就是为什么食物链很少超过 4~5 级:能量早被「漏」光了。</p>
+    </div>
+
+    <h2 class="b">② 一个营养级的能量去向:摄入→同化→呼吸/下一级/分解者/未利用</h2>
+    <div class="card">
+      <div class="eq">摄入量 = 同化量 + 粪便量</div>
+      <div class="eq">同化量 = 呼吸消耗量 + (流入下一营养级 + 被分解者分解 + 未被利用)</div>
+      <p style="margin:8px 0"><b>摄入量</b>是这一营养级「吃进嘴里」的总量;其中没被消化吸收、随粪便排出的部分<b>不算这一级同化</b>,而是算<b>上一营养级</b>流向分解者的能量(比如兔子吃草,兔粪里的能量本质是草固定的能量,只是没被兔子吸收,该记在草这一级流向分解者的账上)。</p>
+      <p style="margin:8px 0"><b>同化量</b>才是这一级真正「收入囊中」的能量,它有四个去处:① <b>呼吸作用消耗</b>(以热能形式散失,占大头,不可再利用);② <b>流入下一营养级</b>(被更高营养级摄食同化);③ <b>被分解者分解利用</b>(遗体、残枝败叶等被分解者分解);④ <b>暂时未被利用</b>(以有机物形式暂存在体内,还没被消耗、也没流向下一级或分解者,比如当季未被捕食的部分)。</p>
+      <table>
+        <tr><th>易混术语</th><th>辨析</th></tr>
+        <tr><td>摄入量 vs 同化量</td><td>摄入量 = 同化量 + 粪便量;<b>同化量 &lt; 摄入量</b>(除非消化吸收率100%,现实不存在)</td></tr>
+        <tr><td>粪便量归谁</td><td>算<b>上一营养级</b>流向分解者的能量,<b>不是</b>本营养级同化的能量,也<b>不是</b>本营养级流向分解者的能量</td></tr>
+        <tr><td>呼吸消耗 vs 用于生长发育繁殖</td><td>同化量先减去呼吸消耗,剩下的才用于生长发育繁殖(增重、繁殖),这部分再分流向下一级/分解者/未利用</td></tr>
+      </table>
+      <p class="trap">⚠ 最高频陷阱:把「摄入量」当「同化量」直接拿去乘传递效率,算出来的效率虚低。传递效率的分子分母都必须是<b>同化量</b>,不是摄入量!</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 2 — 单营养级能量去向拆分:摄入→同化+粪便;同化→呼吸+下一级+分解者+未利用</div>
+      <svg id="flowSvg" viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>摄入量 (×10⁴ kJ) <input id="fwIn" type="range" min="80" max="200" value="120" step="10"></label>
+        <label>粪便占摄入 (%) <input id="fwFec" type="range" min="10" max="40" value="20" step="5"></label>
+        <label>呼吸占同化 (%) <input id="fwResp" type="range" min="40" max="80" value="60" step="5"></label>
+        <label>流入下一级 (%同化) <input id="fwNext" type="range" min="10" max="20" value="15" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>摄入量</b><span id="fwOutIn">0</span></div>
+        <div><b>粪便量(上一级账)</b><span id="fwOutFec">0</span></div>
+        <div><b>同化量</b><span id="fwOutAss">0</span></div>
+        <div><b>呼吸消耗</b><span id="fwOutResp">0</span></div>
+        <div><b>流入下一营养级</b><span id="fwOutNext">0</span></div>
+        <div><b>被分解者分解</b><span id="fwOutDec">0</span></div>
+        <div><b>未被利用</b><span id="fwOutUn">0</span></div>
+        <div><b>校验:各去向之和</b><span id="fwOutSum">0</span></div>
+      </div>
+      <p class="small">左边一条「摄入量」先分两支:粪便量(不算这一级的,是上一级流向分解者的)+ 同化量。同化量再分四支:呼吸消耗(散失)+ 流入下一级 + 被分解者分解 + 未被利用。拖动滑块看每一支怎么变。</p>
+    </div>
+
+    <h2 class="g">③ 传递效率:定义、范围与计算</h2>
+    <div class="card">
+      <div class="eq">传递效率 = 下一营养级同化量 ÷ 本营养级同化量 × 100%</div>
+      <p style="margin:8px 0">传递效率一般在 <b>10%~20%</b> 之间(俗称「十分之一到五分之一定律」),这是<b>相邻两个营养级之间</b>同化量的比值,不是"摄入量"的比值,也不是"个体数量"的比值。</p>
+      <h3>基础计算题的两种问法</h3>
+      <table>
+        <tr><th>已知</th><th>求</th><th>公式</th></tr>
+        <tr><td>本营养级同化量、传递效率</td><td>下一营养级同化量</td><td>下一级同化量 = 本级同化量 × 效率</td></tr>
+        <tr><td>下一营养级同化量、传递效率</td><td>本营养级同化量(至少需要多少)</td><td>本级同化量 = 下一级同化量 ÷ 效率</td></tr>
+      </table>
+      <p style="margin:8px 0">例:生产者同化量 1000×10⁴kJ,传递效率按 20% 计算,则初级消费者同化量 = 1000×20% = 200×10⁴kJ,次级消费者 = 200×20% = 40×10⁴kJ,逐级往下乘。</p>
+      <p class="trap">⚠ 传递效率<b>不是</b>「呼吸消耗占同化量的比例」,也<b>不是</b>「摄入量之比」。它专指<b>相邻营养级、同化量对同化量</b>的比值,四个字记牢:「同化」比「同化」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 3 — 最多/最少计算器:选题型 × 选方向 → 自动匹配 10% 还是 20%、最短还是最长食物链</div>
+      <svg id="calcSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>题型 <select id="calcType">
+          <option value="top">求"最高营养级获得能量"(顶层视角)</option>
+          <option value="base">求"消耗生产者数量"(反推低层需求)</option>
+        </select></label>
+        <label>方向 <select id="calcDir">
+          <option value="max">最多</option>
+          <option value="min">最少</option>
+        </select></label>
+        <label>食物链营养级数 <input id="calcN" type="range" min="3" max="5" value="4" step="1"></label>
+      </div>
+      <div class="verdict" id="calcNote"></div>
+      <p class="small">这是全章最容易翻车的地方:同样问"最多/最少",问法不同(求顶层拿到多少 vs 求底层要付出多少)对应的效率<b>正好相反</b>。工具帮你把逻辑走一遍,但考场上要自己能秒判。</p>
+    </div>
+
+    <h2 class="o">④ "最多/最少"方向陷阱精讲</h2>
+    <div class="card">
+      <h3>情形一:求"最高营养级最多/最少能获得多少能量"</h3>
+      <p style="margin:6px 0">站在<b>顶层消费者的角度</b>,问它最多/最少能拿到多少能量,本质是「能量从底层往上传,传递效率决定上层能拿多少」。</p>
+      <table>
+        <tr><th>要求</th><th>效率怎么选</th><th>食物链怎么选</th><th>逻辑</th></tr>
+        <tr><td><b>最多</b>获得</td><td>用<b>20%</b>(上限)</td><td>选<b>最短</b>食物链(营养级数最少)</td><td>效率越高、级数越少,损耗越少,顶层拿得越多</td></tr>
+        <tr><td><b>最少</b>获得</td><td>用<b>10%</b>(下限)</td><td>选<b>最长</b>食物链(营养级数最多)</td><td>效率越低、级数越多,损耗越大,顶层拿得越少</td></tr>
+      </table>
+      <h3>情形二:求"最多/最少消耗(需要)多少生产者"——方向相反!</h3>
+      <p style="margin:6px 0">这类题是<b>已知高营养级的需求量</b>,反推<b>最底层生产者至少/最多需要多少</b>,是「自上而下」倒推,逻辑和情形一<b>正好相反</b>。</p>
+      <table>
+        <tr><th>要求</th><th>效率怎么选</th><th>逻辑</th></tr>
+        <tr><td><b>消耗最多</b>生产者</td><td>用<b>10%</b>(下限)</td><td>效率越低,同样的顶层需求就要底层付出越多能量去"喂"——所以消耗量最多时用最低效率反推</td></tr>
+        <tr><td><b>消耗最少</b>生产者</td><td>用<b>20%</b>(上限)</td><td>效率越高,传递损耗越小,底层只需付出较少能量就能满足顶层需求——消耗量最少时用最高效率反推</td></tr>
+      </table>
+      <div class="mono">情形一(求顶层获得):最多→20%+最短链;最少→10%+最长链
+情形二(求底层消耗):最多→10%；最少→20%（与情形一效率方向相反!）</div>
+      <p class="trap">⚠ 这是命题人最爱设的坑:同一句「最多」,在"求获得"和"求消耗"两种问法里对应<b>不同的效率</b>。判断口诀——先看问的是「谁受益」(顶层获得,正向用效率上下限直接对应最多/最少)还是「谁买单」(底层消耗,反向倒推,效率上下限对应关系颠倒)。</p>
+    </div>
+
+    <h2 class="v">⑤ 食物网中的能量分配计算</h2>
+    <div class="card">
+      <p style="margin:6px 0">当一个消费者同时以<b>多种食物</b>为食(食物网而非单一食物链)时,要先按题目给的<b>比例</b>把它的食物来源拆开,分别按各自食物链计算,再求和或分别设未知数联立方程。</p>
+      <p style="margin:8px 0"><b>例:</b> 已知某肉食动物同化量一半来自吃植食性动物 A(A 又吃生产者),一半来自直接吃生产者。若已知它的总同化量为 20×10⁴kJ,传递效率均按 10% 计算,求最少需要多少生产者的同化量。分两条链算:① 经 A 转一道:需要 A 同化量 = 10×10⁴÷10% = 100×10⁴,再需要生产者 = 100×10⁴÷10% = 1000×10⁴;② 直接吃生产者:需要生产者 = 10×10⁴÷10% = 100×10⁴。两者相加 = 1100×10⁴kJ。</p>
+      <p class="trap">⚠ 食物网分配题最容易漏算或算重——一定要先把「比例」在<b>同化量</b>层面拆干净,每条链单独走完效率换算,最后再合并,不要图省事直接对总量做单一比例的效率换算。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🕸️ 互动 4 — 食物网能量按比例分配计算器</div>
+      <svg id="webSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>顶层同化量 (×10⁴kJ) <input id="webTop" type="range" min="10" max="40" value="20" step="5"></label>
+        <label>来自A链比例 (%) <input id="webRatio" type="range" min="0" max="100" value="50" step="10"></label>
+        <label>传递效率 (%) <input id="webEff" type="range" min="10" max="20" value="10" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>经A链需要的生产者</b><span id="webA">0</span></div>
+        <div><b>直接链需要的生产者</b><span id="webB">0</span></div>
+        <div><b>合计需要生产者</b><span id="webSum">0</span></div>
+        <div><b>验证:总量占比</b><span id="webCheck">0</span></div>
+      </div>
+      <p class="small">顶层消费者的同化量按比例拆成"经中间捕食者 A"和"直接吃生产者"两支,每支各自按效率逐级除回生产者,最后相加——两支<b>不能</b>先合并总量再统一算,因为一支多绕了一级。</p>
+    </div>
+
+    <h2 class="b">⑥ 能量金字塔 vs 数量金字塔 / 生物量金字塔</h2>
+    <div class="card">
+      <table>
+        <tr><th>金字塔类型</th><th>形状</th><th>为什么</th></tr>
+        <tr><td><b>能量金字塔</b></td><td><b>一定是正金字塔</b>(下宽上窄,逐级递减)</td><td>能量流动逐级递减是硬规律,任何生态系统都不例外</td></tr>
+        <tr><td>数量金字塔</td><td><b>可能倒置</b>(如一棵树上有成千上万只昆虫)</td><td>数量金字塔看的是"个体数目",一个生产者个体(树)可以支撑远超过自己数量的高营养级个体数</td></tr>
+        <tr><td>生物量金字塔</td><td><b>可能倒置</b>(如海洋中浮游植物生物量&lt;浮游动物)</td><td>生产者(如浮游藻类)世代周期短、繁殖快,某一时刻的『存量』可以小于消费者,但『流量』(能量)依然是生产者更多</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>核心原因:</b> 能量金字塔衡量的是<b>一段时间内流经各营养级的能量总量</b>(流量),这个量不可能倒置,因为能量传递效率恒小于100%。而数量金字塔、生物量金字塔衡量的是<b>某一时刻的存量</b>(个体数目或质量),存量会受个体大小、世代更替速度等因素影响,所以可能出现倒置。</p>
+      <p class="trap">⚠ 千万别把"生物量金字塔可能倒置"误推广成"能量金字塔也可能倒置"——能量金字塔是唯一<b>永远不会倒置</b>的金字塔,这是死规则,考试常以"下列金字塔一定不会倒置的是"来设问。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔺 互动 5 — 能量金字塔 vs 数量金字塔对比:切换类型,看谁能倒置</div>
+      <svg id="pyrSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="pyrmode on" data-p="0">能量金字塔</button>
+        <button class="pyrmode" data-p="1">数量金字塔(正常:草原)</button>
+        <button class="pyrmode" data-p="2">数量金字塔(倒置:一棵树+昆虫)</button>
+        <button class="pyrmode" data-p="3">生物量金字塔(倒置:海洋浮游生物)</button>
+      </div>
+      <div class="verdict" id="pyrNote"></div>
+      <p class="small">四个按钮切换四种情景:能量金字塔永远正立(每级都比下一级窄);数量/生物量金字塔在特殊情况下(一棵大树寄生大量昆虫、海洋浮游植物繁殖快而『存量』少)可以倒过来。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 能量去向基础计算(摄入/同化/呼吸)</h3>
+      <p><b class="tag">触发信号:</b> 给出「摄入量」「粪便量」「呼吸消耗量」中的若干个,求同化量或用于生长发育繁殖的能量。</p>
+      <p><b class="tag">标准动作:</b> 摄入量=同化量+粪便量 → 先求同化量;同化量=呼吸消耗+用于生长发育繁殖 → 再求生长发育繁殖部分;若还要往下,该部分再拆成「流入下一级+被分解者分解+未利用」。</p>
+      <p><b class="tag">示例(带解):</b> 某种群摄入量150×10⁴kJ,粪便量30×10⁴kJ,呼吸消耗70×10⁴kJ。同化量=150−30=120×10⁴kJ;用于生长发育繁殖的能量=120−70=50×10⁴kJ(这50再分流向下一级、分解者、未利用三部分)。</p>
+      <p class="trap">陷阱:把摄入量直接当同化量;把粪便量算成"呼吸消耗"或本级流向分解者的能量。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 传递效率基础计算(逐级正推/反推)</h3>
+      <p><b class="tag">触发信号:</b>「传递效率」「按20%(或10%)计算」,给定某一营养级同化量,求另一营养级同化量。</p>
+      <p><b class="tag">标准动作:</b> 正推(低→高):下一级=本级×效率;反推(高→低):本级=下一级÷效率。逐级累乘/累除,营养级每差一级就多乘/除一次效率。</p>
+      <p><b class="tag">示例(带解):</b> 生产者同化量2000×10⁴kJ,效率按10%计算,第三营养级同化量 = 2000×10%×10% = 20×10⁴kJ(隔两级,乘两次效率)。</p>
+      <p class="trap">陷阱:营养级级差数错(隔几级就该乘/除几次效率,数错一级结果差10倍);正推反推搞反(该乘写成除)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — "最多/最少获得能量"(顶层视角)</h3>
+      <p><b class="tag">触发信号:</b>「最高营养级最多/最少能获得多少能量」「顶级消费者最多能增重多少」。</p>
+      <p><b class="tag">标准动作:</b> 最多→用20%+选最短食物链;最少→用10%+选最长食物链。同一食物网多条链时先列出所有链的营养级数,再套对应效率。</p>
+      <p><b class="tag">示例(带解):</b> 某食物网中,顶级消费者可通过"生产者→植食动物→顶级消费者"(3级)或"生产者→植食动物→小型肉食动物→顶级消费者"(4级)获得能量,生产者同化量为1000×10⁴kJ。最多获得:选最短链(3级)、按20%计算 = 1000×20%×20% = 40×10⁴kJ。最少获得:选最长链(4级)、按10%计算 = 1000×10%×10%×10% = 1×10⁴kJ。</p>
+      <p class="trap">陷阱:只调效率、不换食物链(或反之);把"最多"和"最少"对应的链长选反(应该是最多→最短链,不是最多→最长链)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — "最多/最少消耗生产者"(反推,方向相反!)</h3>
+      <p><b class="tag">触发信号:</b>「求最多/最少消耗生产者多少」「至少需要多少生产者才能满足」,已知的是<b>高营养级的需求量</b>,反推低层。</p>
+      <p><b class="tag">标准动作:</b> 消耗最多→用10%(下限);消耗最少→用20%(上限)。这与题型C效率方向<b>正好相反</b>,判断关键词是"消耗/需要生产者"而不是"顶层获得"。</p>
+      <p><b class="tag">示例(带解):</b> 某消费者同化量为10×10⁴kJ,通过"生产者→植食动物→该消费者"(2次传递)获得。最多消耗生产者:用10% → 10÷10%÷10% = 1000×10⁴kJ。最少消耗生产者:用20% → 10÷20%÷20% = 250×10⁴kJ。</p>
+      <p class="trap">陷阱:把题型C的"最多→20%"习惯性搬到这里,结果效率用反,答案差好几倍;没意识到这是"倒推"问题就直接正向套用。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 食物网比例分配计算</h3>
+      <p><b class="tag">触发信号:</b>「该动物X%的食物来自A,Y%来自B」,或食物网图中一个消费者有多条食物链来源,求总消耗量。</p>
+      <p><b class="tag">标准动作:</b> 按比例把顶层同化量拆成若干支,每支单独按各自食物链的级数做效率换算(乘或除),最后把各支结果相加,不可先合并总量再统一按同一级数计算。</p>
+      <p><b class="tag">示例(带解):</b> 见正文⑤的例题:分两支分别算经A链(1000×10⁴)和直接链(100×10⁴),相加得1100×10⁴kJ,不能直接把20×10⁴同化量当成走同一条链处理。</p>
+      <p class="trap">陷阱:比例分配后忘记每支的食物链<b>级数不同</b>,统一按一个级数计算;漏算某一支或算重。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 能量金字塔/数量金字塔判断</h3>
+      <p><b class="tag">触发信号:</b>「下列哪个金字塔一定不会倒置」「某生态系统中数量金字塔出现倒置,原因是」。</p>
+      <p><b class="tag">标准动作:</b> 能量金字塔=死规则,一定正立;数量、生物量金字塔可能倒置(多因个体大小悬殊或世代周期/繁殖速度差异)。判断题干问的是『流量』(能量,恒定规律)还是『存量』(数量/生物量,可能例外)。</p>
+      <p><b class="tag">示例(带解):</b> 一棵大树上生活着大量昆虫,数量金字塔在"树→昆虫"这一级出现倒置(1个生产者个体对应远多于1的消费者个体数),但能量金字塔仍是生产者(树光合固定的总能量)大于昆虫同化的能量,不会倒置。</p>
+      <p class="trap">陷阱:误以为"金字塔倒置"就说明能量流动违反了逐级递减规律——倒置的是数量/生物量(存量),能量(流量)从未违反过递减规律。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 传递效率的分子分母必须是<b>同化量</b>,不能是摄入量、也不能是"个体数量"之比。</p>
+      <p class="trap">② 粪便量是<b>上一营养级</b>流向分解者的能量,不属于本营养级的同化量,更不是本营养级流向分解者的能量。</p>
+      <p class="trap">③ "最多/最少获得能量"(顶层视角):最多→20%+最短链;最少→10%+最长链。</p>
+      <p class="trap">④ "最多/最少消耗生产者"(反推底层):最多→10%;最少→20%——与③方向<b>正好相反</b>,是全章最大陷阱。</p>
+    </div>
+    <div class="card">
+      <p class="trap">⑤ 营养级级差数错:隔几级传递效率就该连乘/连除几次,数错一级答案差一个数量级。</p>
+      <p class="trap">⑥ 能量流动是<b>单向流动+逐级递减</b>两个特点,不能只答"单向"漏答"递减",也不能理解成"能量守恒式的循环"(能量不能像物质那样循环利用)。</p>
+      <p class="trap">⑦ 能量金字塔一定不会倒置;数量金字塔、生物量金字塔<b>可能</b>倒置——三者不能混为一谈。</p>
+      <p class="trap">⑧ 同化量的去处是"呼吸消耗"+"流入下一营养级"+"被分解者分解"+"未被利用"共<b>四支</b>,遗漏"未被利用"这一支是常见丢分点。</p>
+      <p class="trap">⑨ 分解者获得的能量来自各营养级的<b>遗体残骸和粪便</b>,分解者本身<b>不占营养级</b>(它不是消费者链条上的一级)。</p>
+      <p class="trap">⑩ 生产者固定的太阳能总量是流经该生态系统的<b>总能量</b>,不是"照射到该生态系统的太阳能总量"(后者绝大部分未被固定,不进入能量流动)。</p>
+      <p class="trap">⑪ 食物网分配题不能先把总量合并再统一套一个效率,必须按各支食物链的级数<b>分别</b>换算。</p>
+      <p class="trap">⑫ 「10%~20%」是<b>经验范围</b>,不是每次传递都精确等于15%或某个定值,题目怎么给就怎么用,不能自行代入课本例题的数字。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 把"最多/最少"问题统一成一句话判断:</b> 先问自己"我求的是谁的收益,还是谁的成本"。求收益(顶层拿到多少)→ 效率和结果同向(高效率→多收益);求成本(底层要付出多少)→ 效率和结果反向(高效率→少成本)。想清楚这一层,就再也不会在"最多用10%还是20%"上纠结。</p>
+      <p style="margin:8px 0"><b>② 同化量是能量流动计算的唯一"通货":</b> 摄入量、粪便量都只是中间账目,真正参与传递效率计算、参与逐级传递的永远是同化量。做任何计算题第一步先把题目给的数字"翻译"成同化量,再套公式。</p>
+      <p style="margin:8px 0"><b>③ 能量金字塔的"永不倒置"来自数学必然性:</b> 传递效率恒小于100%(能量不可能凭空增加),所以流经上一营养级的能量流量必然大于下一营养级——这是熵增和呼吸消耗的物理必然,不依赖具体物种。而数量/生物量金字塔依赖"个体大小""世代周期"这些生物学变量,所以有例外。分清"物理规律"和"生物学现象"两个层次,就懂了为什么只有能量金字塔是死规则。</p>
+      <p style="margin:8px 0"><b>④ 食物网中"多来源"本质是能量的分流叠加:</b> 把一个消费者的同化量按比例拆开分别倒推,再相加——这跟电路里"多支路分别算再叠加"是同一种思维,不能図省事对总量做单一效率换算,因为不同支路走的"级数"(电阻)不同。</p>
+      <p style="margin:8px 0"><b>⑤ 分解者不是"缺失的营养级",而是能量流动的"终点站之一":</b> 各营养级流向分解者的能量(遗体残骸、粪便)最终也以呼吸热能形式散失,不会再进入消费者链条。理解这一点,才能明白为什么"生态系统能量流动图解"里分解者通常画在链条外侧、单独收纳箭头,而不是链条上的一环。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 生态系统能量流动与计算</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:能量流动漏斗图 ===== */
+(function(){
+  const svg=document.getElementById('funnelSvg');
+  const E0s=document.getElementById('fnE0'),Effs=document.getElementById('fnEff');
+  const oL0=document.getElementById('fnL0'),oL1=document.getElementById('fnL1'),oL2=document.getElementById('fnL2'),oL3=document.getElementById('fnL3');
+  function sync(){draw();}
+  E0s.oninput=Effs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const E0=+E0s.value, eff=+Effs.value/100;
+    const L0=E0, L1=L0*eff, L2=L1*eff, L3=L2*eff;
+    oL0.textContent=L0.toFixed(1);oL1.textContent=L1.toFixed(2);oL2.textContent=L2.toFixed(3);oL3.textContent=L3.toFixed(4);
+    const levels=[L0,L1,L2,L3];
+    const names=['生产者','初级消费者','次级消费者','三级消费者'];
+    const cols=[GREEN,BLUE,ORANGE,VIO];
+    const maxW=560, X0=350, topY=30, bandH=64;
+    levels.forEach((v,i)=>{
+      const w=Math.max(6,(v/E0)*maxW);
+      const y=topY+i*bandH;
+      el(svg,'rect',{x:X0-w/2,y:y,width:w,height:bandH-8,fill:cols[i],stroke:INK,'stroke-width':3,opacity:0.85});
+      el(svg,'text',{x:X0,y:y+(bandH-8)/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=names[i]+'：'+v.toFixed(2)+'×10⁴kJ';
+    });
+    el(svg,'text',{x:X0,y:topY+4*bandH+20,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='传递效率='+(eff*100).toFixed(0)+'%　每一级宽度按该效率相对上一级收窄';
+  }
+  sync();
+})();
+
+/* ===== 互动2:单营养级能量去向拆分 ===== */
+(function(){
+  const svg=document.getElementById('flowSvg');
+  const Ins=document.getElementById('fwIn'),Fecs=document.getElementById('fwFec'),Resps=document.getElementById('fwResp'),Nexts=document.getElementById('fwNext');
+  const oIn=document.getElementById('fwOutIn'),oFec=document.getElementById('fwOutFec'),oAss=document.getElementById('fwOutAss'),oResp=document.getElementById('fwOutResp'),oNext=document.getElementById('fwOutNext'),oDec=document.getElementById('fwOutDec'),oUn=document.getElementById('fwOutUn'),oSum=document.getElementById('fwOutSum');
+  function sync(){draw();}
+  Ins.oninput=Fecs.oninput=Resps.oninput=Nexts.oninput=sync;
+  function draw(){
+    clr(svg);
+    const IN=+Ins.value, fecPct=+Fecs.value/100, respPct=+Resps.value/100, nextPct=+Nexts.value/100;
+    const FEC=IN*fecPct;
+    const ASS=IN-FEC;
+    const RESP=ASS*respPct;
+    const rest=ASS-RESP;
+    const NEXT=ASS*nextPct;
+    let remain=rest-NEXT; if(remain<0){remain=0;}
+    const DEC=remain*0.6;
+    const UN=remain*0.4;
+    oIn.textContent=IN.toFixed(1);oFec.textContent=FEC.toFixed(1);oAss.textContent=ASS.toFixed(1);oResp.textContent=RESP.toFixed(1);oNext.textContent=NEXT.toFixed(1);oDec.textContent=DEC.toFixed(1);oUn.textContent=UN.toFixed(1);
+    oSum.textContent=(FEC+RESP+NEXT+DEC+UN).toFixed(1)+' / '+IN.toFixed(1);
+    // draw flow: left box 摄入, splits to 粪便(top) and 同化(down), 同化 splits to 呼吸/下一级/分解者/未利用
+    const x0=40,y0=150,w0=90,h0=60;
+    el(svg,'rect',{x:x0,y:y0,width:w0,height:h0,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x0+w0/2,y:y0+h0/2+5,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='摄入量';
+    el(svg,'text',{x:x0+w0/2,y:y0+h0+18,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=IN.toFixed(0);
+    // arrow to 粪便 (up)
+    el(svg,'line',{x1:x0+w0,y1:y0+18,x2:x0+180,y2:y0-60,stroke:BROWN,'stroke-width':3});
+    const fecX=x0+200,fecY=y0-90;
+    el(svg,'rect',{x:fecX,y:fecY,width:110,height:44,fill:'#d8c49a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:fecX+55,y:fecY+18,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='粪便量(上一级账)';
+    el(svg,'text',{x:fecX+55,y:fecY+34,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=FEC.toFixed(1);
+    // arrow to 同化 (down/right)
+    el(svg,'line',{x1:x0+w0,y1:y0+42,x2:x0+180,y2:y0+42,stroke:GREEN,'stroke-width':3});
+    const assX=x0+200,assY=y0+18;
+    el(svg,'rect',{x:assX,y:assY,width:110,height:48,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:assX+55,y:assY+20,'font-size':12.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='同化量';
+    el(svg,'text',{x:assX+55,y:assY+38,'font-size':11.5,'font-weight':800,fill:'#fff','text-anchor':'middle'}).textContent=ASS.toFixed(1);
+    // four branches from 同化
+    const branches=[
+      {name:'呼吸消耗',val:RESP,col:RED,dy:-90},
+      {name:'流入下一营养级',val:NEXT,col:BLUE,dy:-30},
+      {name:'被分解者分解',val:DEC,col:BROWN,dy:30},
+      {name:'未被利用',val:UN,col:VIO,dy:90}
+    ];
+    const bx=assX+280;
+    branches.forEach(b=>{
+      const by=assY+24+b.dy;
+      el(svg,'line',{x1:assX+110,y1:assY+24,x2:bx,y2:by,stroke:b.col,'stroke-width':3});
+      el(svg,'rect',{x:bx,y:by-20,width:150,height:40,fill:b.col,stroke:INK,'stroke-width':3,opacity:0.85});
+      el(svg,'text',{x:bx+75,y:by-2,'font-size':11.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=b.name;
+      el(svg,'text',{x:bx+75,y:by+15,'font-size':11.5,'font-weight':800,fill:'#fff','text-anchor':'middle'}).textContent=b.val.toFixed(1);
+    });
+  }
+  sync();
+})();
+
+/* ===== 互动3:最多/最少计算器 ===== */
+(function(){
+  const svg=document.getElementById('calcSvg');const note=document.getElementById('calcNote');
+  const Ts=document.getElementById('calcType'),Ds=document.getElementById('calcDir'),Ns=document.getElementById('calcN');
+  function sync(){draw();}
+  Ts.onchange=Ds.onchange=Ns.oninput=sync;
+  function draw(){
+    clr(svg);
+    const type=Ts.value, dir=Ds.value, n=+Ns.value; // n = 营养级数
+    const steps=n-1; // 传递次数
+    let eff,effLabel,chainNote;
+    if(type==='top'){
+      // 求最高营养级获得能量：最多用20%+最短链；最少用10%+最长链
+      eff = dir==='max' ? 0.2 : 0.1;
+      chainNote = dir==='max' ? '选最短食物链（营养级数尽量少）' : '选最长食物链（营养级数尽量多）';
+    } else {
+      // 求消耗生产者：最多用10%；最少用20%（方向相反）
+      eff = dir==='max' ? 0.1 : 0.2;
+      chainNote = '按题给食物链级数直接反推（此题型不涉及选链长，是效率方向相反）';
+    }
+    effLabel=(eff*100).toFixed(0)+'%';
+    const baseE=100; // 假设基准同化量 100
+    let result,formula;
+    if(type==='top'){
+      result = baseE*Math.pow(eff,steps);
+      formula = '顶层同化量 = 生产者同化量 × 效率^'+steps+' = 100 × '+effLabel+'^'+steps+' = '+result.toFixed(4)+' (×10⁴kJ，设生产者同化量=100)';
+    } else {
+      result = baseE/Math.pow(eff,steps);
+      formula = '生产者同化量 = 顶层需求 ÷ 效率^'+steps+' = 100 ÷ '+effLabel+'^'+steps+' = '+result.toFixed(1)+' (×10⁴kJ，设顶层需求=100)';
+    }
+    // draw a simple chain diagram
+    const X0=40,Y=90,gap=560/(n-1);
+    for(let i=0;i<n;i++){
+      const x=X0+i*gap;
+      el(svg,'circle',{cx:x,cy:Y,r:22,fill:i===0?GREEN:(i===n-1?RED:BLUE),stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x,y:Y+5,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=i===0?'生产者':'第'+(i+1)+'级';
+      if(i<n-1){
+        el(svg,'line',{x1:x+22,y1:Y,x2:x+gap-22,y2:Y,stroke:INK,'stroke-width':3});
+        el(svg,'polygon',{points:(x+gap-22)+','+(Y-6)+' '+(x+gap-10)+','+Y+' '+(x+gap-22)+','+(Y+6),fill:INK});
+        el(svg,'text',{x:x+gap/2,y:Y-14,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=effLabel;
+      }
+    }
+    el(svg,'text',{x:350,y:30,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(type==='top'?'求顶层获得能量':'求消耗/需要生产者')+'　方向:'+(dir==='max'?'最多':'最少');
+    el(svg,'text',{x:350,y:150,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent=chainNote;
+    note.innerHTML='选用效率 <b>'+effLabel+'</b>，营养级数 <b>'+n+'</b>（传递'+steps+'次）。'+formula;
+    note.style.borderColor = type==='top'?BLUE:ORANGE;
+  }
+  sync();
+})();
+
+/* ===== 互动4:食物网能量按比例分配 ===== */
+(function(){
+  const svg=document.getElementById('webSvg');
+  const Tops=document.getElementById('webTop'),Rs=document.getElementById('webRatio'),Es=document.getElementById('webEff');
+  const oA=document.getElementById('webA'),oB=document.getElementById('webB'),oSum=document.getElementById('webSum'),oCheck=document.getElementById('webCheck');
+  function sync(){draw();}
+  Tops.oninput=Rs.oninput=Es.oninput=sync;
+  function draw(){
+    clr(svg);
+    const top=+Tops.value, ratio=+Rs.value/100, eff=+Es.value/100;
+    const topA=top*ratio;   // 经A链部分
+    const topB=top*(1-ratio); // 直接链部分
+    // A链: 顶层 <- A <- 生产者 (两次传递)
+    const needA = topA/eff/eff;
+    // B链: 顶层 <- 生产者 (一次传递)
+    const needB = topB/eff;
+    const sum = needA+needB;
+    oA.textContent=needA.toFixed(2);oB.textContent=needB.toFixed(2);oSum.textContent=sum.toFixed(2);
+    oCheck.textContent='A支'+(ratio*100).toFixed(0)+'%+B支'+((1-ratio)*100).toFixed(0)+'%=100%';
+    // diagram: top consumer splits into two chains
+    el(svg,'circle',{cx:600,cy:130,r:26,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:600,y:135,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='顶层';
+    // chain A: top <- A <- producer(top)
+    el(svg,'line',{x1:574,y1:115,x2:420,y2:60,stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:400,cy:50,r:22,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:400,y:55,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='A';
+    el(svg,'line',{x1:378,y1:50,x2:230,y2:50,stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:210,cy:50,r:22,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:210,y:55,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='生产者';
+    el(svg,'text',{x:300,y:30,'font-size':11.5,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='经A链　需生产者='+needA.toFixed(1);
+    // chain B: top <- producer(direct)
+    el(svg,'line',{x1:574,y1:145,x2:230,y2:200,stroke:ORANGE,'stroke-width':3});
+    el(svg,'circle',{cx:210,cy:210,r:22,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:210,y:215,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='生产者';
+    el(svg,'text',{x:400,y:230,'font-size':11.5,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='直接链　需生产者='+needB.toFixed(1);
+    el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='合计需要生产者同化量 = '+sum.toFixed(2)+' (×10⁴kJ)';
+  }
+  sync();
+})();
+
+/* ===== 互动5:能量金字塔 vs 数量/生物量金字塔 ===== */
+(function(){
+  const svg=document.getElementById('pyrSvg');const note=document.getElementById('pyrNote');
+  let p=0;
+  document.querySelectorAll('.pyrmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.pyrmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');p=+b.dataset.p;draw();
+  });
+  function draw(){
+    clr(svg);
+    const names=['生产者','初级消费者','次级消费者'];
+    let widths,title,msg,col;
+    if(p===0){ widths=[500,100,20]; title='能量金字塔（正常生态系统）'; msg='能量金字塔:生产者同化的总能量 &gt; 初级消费者 &gt; 次级消费者，逐级递减，<b>永远正立</b>，不存在例外。'; col=GREEN; }
+    else if(p===1){ widths=[420,140,40]; title='数量金字塔（草原：草→兔→狐，正常）'; msg='数量金字塔:多数情况下也是下宽上窄（草的株数&gt;兔的只数&gt;狐的只数），但这只是"通常"，不是铁律。'; col=BLUE; }
+    else if(p===2){ widths=[40,420,0]; title='数量金字塔（倒置：一棵树→大量昆虫）'; msg='数量金字塔倒置:1棵大树（生产者，个体数=1）却能养活成千上万只昆虫（消费者，个体数远超1），因为"个体大小"悬殊——生产者数量金字塔在此<b>倒置</b>，但能量金字塔依然正立（树固定的总能量仍大于昆虫同化的能量）。'; col=ORANGE; }
+    else { widths=[80,340,0]; title='生物量金字塔（倒置：海洋浮游植物→浮游动物）'; msg='生物量金字塔倒置:海洋中浮游植物个体小、世代周期短、繁殖快，某一时刻『存量』(生物量)可能小于浮游动物，但因为繁殖速度快，『流量』(单位时间固定的能量)依然更多——生物量金字塔可倒置，能量金字塔不倒置。'; col=VIO; }
+    const cx=350,topY=30,bandH=64;
+    for(let i=0;i<3;i++){
+      const w=widths[i];
+      if(w<=0)continue;
+      const y=topY+i*bandH;
+      el(svg,'rect',{x:cx-w/2,y:y,width:w,height:bandH-8,fill:col,stroke:INK,'stroke-width':3,opacity:0.8});
+      el(svg,'text',{x:cx,y:y+(bandH-8)/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=names[i];
+    }
+    el(svg,'text',{x:cx,y:16,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    note.innerHTML=msg;
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 能量流动有哪两个基本特点?二者分别是什么意思?",a:"单向流动(只能从低营养级流向高营养级,不能倒流、不能循环利用)和逐级递减(每一级只有10%~20%的同化量流入下一级)。"},
+ {q:"2. 摄入量、同化量、粪便量三者关系是什么?粪便量该算谁的账?",a:"摄入量=同化量+粪便量。粪便量不是本营养级同化的能量,而是算作上一营养级流向分解者的能量(粪便里的物质和能量来自上一营养级,只是没被本级吸收)。"},
+ {q:"3. 同化量的四个去向是什么?",a:"①呼吸作用消耗(散失为热能);②流入下一营养级;③被分解者分解利用;④未被利用(暂时储存)。"},
+ {q:"4. 传递效率的定义式?一般范围是多少?",a:"传递效率=下一营养级同化量÷本营养级同化量×100%,一般在10%~20%之间。"},
+ {q:"5. 求「最高营养级最多能获得多少能量」,该用哪个效率、哪条食物链?",a:"用20%(效率上限),并选营养级数最少的最短食物链——效率越高、级数越少,损耗越小,顶层拿到的越多。"},
+ {q:"6. 求「最高营养级最少能获得多少能量」呢?",a:"用10%(效率下限),并选营养级数最多的最长食物链——效率越低、级数越多,顶层拿到的越少。"},
+ {q:"7. 求「消耗/需要生产者最多」,该用哪个效率?这跟题6的方向一样吗?",a:"用10%(效率下限)。这是已知高营养级需求反推底层,方向与「求顶层获得」相反:效率越低,同样的顶层需求就需要底层付出越多能量。"},
+ {q:"8. 求「消耗/需要生产者最少」呢?",a:"用20%(效率上限)——效率越高,传递损耗越小,满足顶层需求所需的生产者能量反而最少。"},
+ {q:"9. 能量金字塔和数量金字塔在「是否可能倒置」上有什么本质区别?为什么?",a:"能量金字塔一定不会倒置,因为传递效率恒小于100%,是数学/物理必然规律。数量金字塔、生物量金字塔可能倒置(如一棵树养活大量昆虫,或海洋浮游植物生物量小于浮游动物),因为它们衡量的是某一时刻的『存量』,受个体大小、世代周期等生物学因素影响。"},
+ {q:"10. 食物网中,一个消费者同时以两种食物为食时,该怎么计算它一共消耗了多少生产者的能量?",a:"先按比例把该消费者的同化量拆成两支,每支各自按其食物链的营养级数逐级用效率反推出所需的生产者同化量,最后把两支的结果相加,不能先合并总量再统一按同一级数计算。"},
+ {q:"11. 生产者固定的太阳能总量是指什么?和照射到生态系统的太阳能总量一样吗?",a:"生产者固定的太阳能总量就是流经该生态系统的总能量(生产者的同化量),远小于照射到该生态系统的太阳能总量——大部分太阳能没有被生产者固定,不进入能量流动。"},
+ {q:"12. 计算题中最常见的一个陷阱是什么?",a:"把摄入量当同化量直接代入传递效率公式;或者在「最多/最少获得能量」和「最多/最少消耗生产者」两类问法之间效率用反(这两类问法的效率方向正好相反)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

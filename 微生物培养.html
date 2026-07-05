@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微生物的培养与计数 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>微生物的培养与计数</h1>
+    <p class="lead">这一页讲的是「怎么把看不见的微生物养出来、挑出来、数出来」。核心是三件事:配<b>培养基</b>(给微生物吃喝住)、做<b>无菌操作</b>(不让杂菌捣乱)、会<b>接种与计数</b>(把菌分开、数明白)。灭菌和消毒不是一回事,选择培养基和鉴别培养基也不是一回事——这两组概念是这一章的命门。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 培养基就是「微生物的自助餐+住处」,配方要给碳源、氮源、水、无机盐,特殊的还得加特殊营养物质,酸碱度也要调好。想要「只留我要的菌、饿死别的菌」——用<b>选择培养基</b>;想要「让我要的菌自己现出原形(变色)」——用<b>鉴别培养基</b>。操作前先把整个世界灭菌(高压蒸汽)、把工具反复灼烧(接种环),中途一沾杂菌前功尽弃。数菌不能直接数,得先稀释再涂布,数出来的菌落数往往比实际活菌数<b>偏小</b>,因为几个细胞挤在一起只长成一个菌落。</div>
+
+    <div class="keybox"><b>两组一定要分清:</b> ① <b>灭菌</b>(杀灭包括芽孢在内的<b>一切</b>微生物,如高压蒸汽灭菌、灼烧灭菌、干热灭菌)≠ <b>消毒</b>(只杀死<b>部分</b>微生物,如煮沸消毒、巴氏消毒、紫外线消毒、75%酒精消毒)。② <b>选择培养基</b>(靠营养或药物「筛掉」不需要的菌,让目标菌<b>存活富集</b>)≠ <b>鉴别培养基</b>(靠指示剂/染色剂让目标菌「显出颜色」,方便<b>区分挑选</b>,不筛掉别的菌)。</div>
+
+    <h2>① 培养基:微生物的「自助餐」</h2>
+    <div class="card">
+      <p style="margin:8px 0">培养基是人工配制的、供微生物生长繁殖(或积累代谢产物)的营养基质。不管配方多花哨,五大类成分缺一不可(特殊营养物质除外):</p>
+      <table>
+        <tr><th>成分</th><th>作用</th><th>常见来源</th></tr>
+        <tr><td><b>碳源</b></td><td>提供碳架和能量</td><td>糖类(如葡萄糖)、CO₂(自养菌)</td></tr>
+        <tr><td><b>氮源</b></td><td>合成蛋白质、核酸</td><td>硝酸盐、铵盐、尿素、蛋白胨、N₂(固氮菌)</td></tr>
+        <tr><td><b>水</b></td><td>溶剂,参与代谢</td><td>蒸馏水</td></tr>
+        <tr><td><b>无机盐</b></td><td>维持渗透压、pH,组成酶活性中心</td><td>各种矿质元素盐</td></tr>
+        <tr><td><b>特殊营养物质</b></td><td>某些菌自己不能合成、必须外供</td><td>维生素、氨基酸、血液等</td></tr>
+      </table>
+      <p style="margin:8px 0">配好后必须<b>调节到适宜的pH</b>(不同微生物最适 pH 不同,如细菌偏中性偏碱、霉菌偏酸性),再灭菌备用。</p>
+      <h3>按物理状态分类</h3>
+      <p style="margin:6px 0"><b>固体培养基</b>(加琼脂等凝固剂,如琼脂培养基)——用于分离、计数、观察菌落形态。<b>液体培养基</b>(不加凝固剂)——用于大量扩大培养、发酵生产。</p>
+      <h3>按功能分类</h3>
+      <p style="margin:6px 0"><b>选择培养基</b>与<b>鉴别培养基</b>(见下节详解)。</p>
+      <p class="trap">⚠ 培养基里"糖类"是碳源,不是能源的全部说法——对异养菌,碳源常常<b>同时</b>是能源;对自养菌(如硝化细菌),碳源是CO₂,能源另有其他(如氧化氨)。别把碳源等同于能源。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🥣 互动 1 — 培养基成分拼配:少放一类会怎样?</div>
+      <svg id="mediaSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label><input type="checkbox" id="mC" checked> 碳源</label>
+        <label><input type="checkbox" id="mN" checked> 氮源</label>
+        <label><input type="checkbox" id="mW" checked> 水</label>
+        <label><input type="checkbox" id="mS" checked> 无机盐</label>
+      </div>
+      <div class="verdict" id="mediaNote"></div>
+      <p class="small">四个开关分别代表碳源、氮源、水、无机盐是否加入配方。全部勾选→微生物茁壮生长;去掉任意一类→生长受阻或停滞。特殊营养物质因菌而异,这里不作为必需项。</p>
+    </div>
+
+    <h2 class="b">② 选择培养基:靠「饿」或「毒」筛出目标菌</h2>
+    <div class="card">
+      <p style="margin:8px 0">选择培养基利用微生物<b>营养需求或抗性的差异</b>,人为造出「有的活得下、有的活不下」的环境,从而把目标菌从混合菌群中<b>富集出来</b>。</p>
+      <table>
+        <tr><th>目标</th><th>怎么设计培养基</th><th>原理</th></tr>
+        <tr><td>筛选<b>固氮菌</b></td><td>培养基中<b>不加任何氮源</b>(缺氮培养基)</td><td>只有能自身固定N₂的菌才能生长,其他菌因缺氮死亡/不长</td></tr>
+        <tr><td>筛选<b>分解尿素的细菌</b></td><td>以<b>尿素为唯一氮源</b></td><td>只有能分泌脲酶分解尿素、获得氮的菌才能生长</td></tr>
+        <tr><td>筛选<b>抗某抗生素的菌</b></td><td>培养基中<b>加入该抗生素</b></td><td>敏感菌被抑制/杀死,抗性菌照常繁殖</td></tr>
+        <tr><td>筛选<b>纤维素分解菌</b></td><td>以<b>纤维素为唯一碳源</b></td><td>只有能分泌纤维素酶的菌才能利用碳源生长</td></tr>
+      </table>
+      <p class="trap">⚠ 选择培养基的关键词是「唯一」「缺」「加入抑制剂」——凡是把营养做成「卡脖子」条件,就是选择培养基思路;它筛掉的是「长不出来的」,不是靠变色区分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧫 互动 2 — 选择培养基筛选:抗生素/缺氮环境下,谁活下来?</div>
+      <svg id="selSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="selmode on" data-m="0">普通培养基(不筛选)</button>
+        <button class="selmode" data-m="1">加抗生素</button>
+        <button class="selmode" data-m="2">缺氮源(筛固氮菌)</button>
+      </div>
+      <div class="verdict" id="selNote"></div>
+      <p class="small">圆点代表混合菌群:蓝=普通敏感菌,绿=抗性菌/固氮菌。切换培养基类型,看哪些点存活(实心)、哪些死亡(变灰淡出)。</p>
+    </div>
+
+    <h2 class="g">③ 鉴别培养基:让目标菌自己「变色现形」</h2>
+    <div class="card">
+      <p style="margin:8px 0">鉴别培养基<b>不筛掉</b>其他微生物,而是加入某种指示剂或化学试剂,利用目标菌特有的代谢反应,使菌落或培养基<b>变色</b>,从而把目标菌从一堆菌落里"认出来"。</p>
+      <table>
+        <tr><th>鉴别培养基</th><th>加入的指示剂/试剂</th><th>目标菌与现象</th></tr>
+        <tr><td>伊红美蓝(EMB)培养基</td><td>伊红 + 美蓝</td><td>大肠杆菌大量分解糖产酸,与两种染料结合,菌落呈<b>黑色并带金属光泽</b></td></tr>
+        <tr><td>尿素培养基</td><td>尿素 + <b>酚红</b>指示剂</td><td>分解尿素的细菌产生脲酶,尿素分解出氨使环境变碱性,酚红遇碱<b>变红</b></td></tr>
+        <tr><td>刚果红培养基</td><td>刚果红染料(与纤维素结合显红)</td><td>纤维素分解菌分泌纤维素酶分解周围纤维素,菌落周围出现<b>透明圈(脱色圈)</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>选择 + 鉴别可以叠加:</b> 比如筛选纤维素分解菌时,常用「以纤维素为唯一碳源(选择)+ 刚果红染色(鉴别透明圈大小判断分解能力强弱)」的组合培养基。</p>
+      <p class="trap">⚠ 鉴别培养基的关键词是「指示剂」「变色」「透明圈」——它不负责把别的菌饿死,只负责让你一眼认出目标菌;选择培养基关键词是「唯一」「缺」「抑制剂」。两者常被出题人混在一起考,看关键词区分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎨 互动 3 — 鉴别培养基显色:EMB变黑 / 尿素+酚红变红 / 刚果红透明圈</div>
+      <svg id="diffSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="diffmode on" data-m="0">EMB培养基</button>
+        <button class="diffmode" data-m="1">尿素+酚红培养基</button>
+        <button class="diffmode" data-m="2">刚果红培养基</button>
+        <button id="diffGo">▶ 培养一段时间</button>
+      </div>
+      <div class="verdict" id="diffNote"></div>
+      <p class="small">点击不同培养基类型再点「培养」,观察目标菌落的显色/透明圈变化。这是"看现象倒推菌的代谢能力"的经典考法。</p>
+    </div>
+
+    <h2 class="o">④ 灭菌 vs 消毒:程度天差地别</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>灭菌:</b> 使用强烈的理化因素杀灭物体内外<b>一切</b>微生物,<b>包括芽孢和孢子</b>。用于培养基、接种工具等要求绝对无菌的场合。<b>消毒:</b> 只杀死物体表面或内部<b>部分</b>微生物(主要是不产生芽孢的病原微生物),达不到彻底无菌。</p>
+      <table>
+        <tr><th>方法</th><th>属于</th><th>典型对象</th><th>能否杀灭芽孢</th></tr>
+        <tr><td>灼烧灭菌</td><td>灭菌</td><td>接种环、接种针</td><td>能(直接烧成灰)</td></tr>
+        <tr><td>干热灭菌</td><td>灭菌</td><td>玻璃器皿、金属器械</td><td>能</td></tr>
+        <tr><td>高压蒸汽灭菌</td><td>灭菌</td><td>培养基、无菌水、耐高温耗材</td><td>能</td></tr>
+        <tr><td>煮沸消毒</td><td>消毒</td><td>某些用具</td><td>不能(芽孢耐煮沸)</td></tr>
+        <tr><td>巴氏消毒</td><td>消毒</td><td>牛奶等饮品(60~70℃左右)</td><td>不能</td></tr>
+        <tr><td>化学药剂消毒(如75%酒精)</td><td>消毒</td><td>皮肤、操作台</td><td>不能</td></tr>
+        <tr><td>紫外线消毒</td><td>消毒</td><td>接种室、无菌室空气</td><td>不能(仅体表/空气)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>实验室怎么用:</b> <b>接种环、接种针</b>——每次用前用前用后都要在酒精灯火焰上<b>灼烧灭菌</b>,待冷却后再蘸取菌种(灼热的环会直接烫死菌种,必须先冷却);<b>培养基、锥形瓶、吸管</b>等——用<b>高压蒸汽灭菌锅</b>灭菌(通常121℃、15~20分钟);<b>双手、操作台面</b>——用酒精棉球擦拭消毒即可,不必也无法灭菌。</p>
+      <p class="trap">⚠ 最常见失分点:把"灭菌"和"消毒"当同义词混用,或以为煮沸/酒精也能杀灭芽孢。牢记—— 芽孢是灭菌与消毒的分水岭:能杀灭芽孢才叫灭菌。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔥 互动 4 — 灭菌 vs 消毒对比:温度、时间与能否杀灭芽孢</div>
+      <svg id="sterSvg" viewBox="0 0 700 270" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="stermode on" data-m="0">灼烧灭菌</button>
+        <button class="stermode" data-m="1">高压蒸汽灭菌</button>
+        <button class="stermode" data-m="2">煮沸消毒</button>
+        <button class="stermode" data-m="3">紫外线消毒</button>
+      </div>
+      <div class="verdict" id="sterNote"></div>
+      <p class="small">柱高≈处理强度(温度/能量),芽孢图标变灰=被杀灭、保持黑色=存活。只有灼烧和高压蒸汽能把芽孢也杀光。</p>
+    </div>
+
+    <h2 class="v">⑤ 接种方法:平板划线法 与 稀释涂布平板法</h2>
+    <div class="card">
+      <h3>平板划线法——连续稀释、分离单菌落</h3>
+      <p style="margin:6px 0">用灼烧灭菌并冷却后的<b>接种环</b>蘸取少量菌种,在无菌平板培养基表面<b>连续划线</b>:每划完一线,再<b>灼烧接种环冷却</b>后,从上一次划线的末端开始划下一线(角度错开),如此重复5~7次。原理:每一次新划线,接种环上的菌数被前一线"稀释"、抹薄一次,划到最后菌液已经很稀,<b>单个细胞</b>之间彼此分开,培养后各自长成分离的<b>单菌落</b>。</p>
+      <h3>稀释涂布平板法——可用于计数</h3>
+      <p style="margin:6px 0">先将菌液做<b>梯度稀释</b>(如10倍、100倍……),取一定体积(如0.1mL)的稀释液,用无菌涂布器<b>均匀涂布</b>在平板培养基表面,培养后长出分散的菌落。稀释倍数合适时,菌落彼此分开、可以计数。</p>
+      <table>
+        <tr><th></th><th>平板划线法</th><th>稀释涂布平板法</th></tr>
+        <tr><td>工具</td><td>接种环</td><td>涂布器 + 移液管(稀释)</td></tr>
+        <tr><td>目的</td><td>分离纯化菌种</td><td>分离纯化 + <b>可用于计数</b></td></tr>
+        <tr><td>能否计数</td><td>不能(划线不定量)</td><td><b>能</b>(取样体积、稀释倍数已知)</td></tr>
+      </table>
+      <p class="trap">⚠ 平板划线法每次划线前都要重新<b>灼烧接种环并冷却</b>——忘记灼烧,菌液浓度不会被稀释,划到最后仍是一片菌苔,长不出单菌落。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✏️ 互动 5 — 平板划线法动画:菌越划越稀,最终分离出单菌落</div>
+      <svg id="streakSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="streakGo">▶ 逐区划线</button><button id="streakReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前区</b><span id="stZone">0</span></div>
+        <div><b>菌液相对浓度</b><span id="stConc">100%</span></div>
+        <div><b>接种环状态</b><span id="stLoop">已灼烧冷却</span></div>
+        <div><b>预计单菌落区</b><span id="stSingle">否</span></div>
+      </div>
+      <p class="small">每次划完一个区域,接种环会重新灼烧(闪光提示),菌液浓度对半"稀释"。划到第5~6区时点密度已足够稀,可分离出单个菌落。</p>
+    </div>
+
+    <h2 class="r">⑥ 微生物计数:稀释涂布平板法数菌落</h2>
+    <div class="card">
+      <div class="eq">原液菌数浓度 = 平均菌落数 ÷ 涂布体积 ÷ 稀释倍数</div>
+      <p style="margin:8px 0">具体做法:把菌液作梯度稀释(如稀释10⁴、10⁵、10⁶倍),各取相同体积(如0.1mL)涂布到平板上,培养后选<b>菌落数在30~300之间</b>的平板计数(太多太少都不准),再按公式换算回原液浓度。通常同一稀释度做<b>3个重复平板</b>取平均值,减小误差。</p>
+      <h3>为什么计数结果偏小?</h3>
+      <p style="margin:6px 0">稀释涂布平板法统计的是"<b>菌落数</b>",而不是直接数细胞个数。若<b>两个或多个细菌细胞连在一起</b>(没有被完全分散开),培养后它们只会长成<b>一个</b>菌落。于是统计出的菌落数<b>往往比活菌的真实个数偏低</b>——这是稀释涂布平板法计数活菌数的<b>系统性偏差</b>,而不是操作失误。</p>
+      <p style="margin:6px 0"><b>与显微镜直接计数(如血细胞计数板)对比:</b> 显微镜计数法数的是"细胞总数"(含死菌),不能反映活菌比例;稀释涂布平板法数的是"能繁殖出菌落的活菌数",更能反映活菌情况,但会因细胞粘连而偏小。</p>
+      <p class="trap">⚠ 常见坑:①稀释倍数与菌落数换算搞反(应除以稀释倍数是把"稀释后的浓度"换算回"稀释前",不是乘);②选取的平板菌落数太少(<30)或太多(>300)都不能用于计数,前者随机误差大,后者菌落连成一片无法分辨;③把"计数偏小"的原因答成"操作污染"——标准答案是"两个或多个细胞连在一起只形成一个菌落"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 6 — 稀释涂布平板法计数:改稀释倍数→菌落密度→反推原液浓度</div>
+      <svg id="countSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>稀释倍数(10^n) <input id="cnN" type="range" min="2" max="7" value="5" step="1"></label>
+        <label>涂布体积(mL) <input id="cnV" type="range" min="0.1" max="0.5" value="0.1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>平板菌落数</b><span id="cnCount">0</span></div>
+        <div><b>是否在30~300内</b><span id="cnValid">-</span></div>
+        <div><b>反推原液浓度(个/mL)</b><span id="cnConc">0</span></div>
+        <div><b>换算公式</b><span id="cnFormula" style="font-size:11px">-</span></div>
+      </div>
+      <p class="small">原液真实浓度固定为 2×10⁷ 个/mL(模拟设定)。拖动稀释倍数,看平板上菌落点从"多到连片"变到"稀疏可数",再变到"太稀太少"。只有落在30~300颗之间的稀释度才适合用来计数反推。</p>
+    </div>
+
+    <h2 class="b">⑦ 计数偏小原因:重叠的菌落</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是选择题、简答题都爱考的一个点,单独拿出来强化。当两个或多个活菌细胞在液体中挨得很近、涂布时没有被完全分散(如菌体成对、成链或成簇存在),它们会一起被涂布到平板同一位置,培养后<b>只长出一个菌落</b>(因为一个菌落本质是"一个可见的细胞堆"能不能分辨"里面曾经有几个细胞"是分辨不出来的)。所以:</p>
+      <div class="mono">统计的菌落数 ≤ 实际接种的活菌细胞数　→　计数结果总是偏小,不会偏大</div>
+      <p class="trap">⚠ 反过来"计数结果偏大"这种说法在人教版语境下是不合理的——偏小是稀释涂布平板法固有的系统误差方向,别写反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 7 — 计数偏小原因示意:重叠/成团的细胞只长成一个菌落</div>
+      <svg id="overlapSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="overlapGo">▶ 培养(细胞→菌落)</button><button id="overlapReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>实际活菌细胞数</b><span id="ovCells">0</span></div>
+        <div><b>培养后菌落数</b><span id="ovColonies">0</span></div>
+        <div><b>是否偏小</b><span id="ovLess">-</span></div>
+      </div>
+      <p class="small">左侧显微视野里有单个细胞、也有挨在一起的"细胞团"。点击培养,单个细胞各自长成一个菌落,而每一团挨在一起的细胞只长成<b>一个</b>菌落——这就是计数偏小的根源。</p>
+    </div>
+
+    <h2 class="g">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 培养基成分与配制</h3>
+      <p><b class="tag">触发信号:</b>给出培养基配方或缺某成分,问"还缺什么""能否正常培养""该成分作用是什么"。</p>
+      <p><b class="tag">标准动作:</b>核对碳源/氮源/水/无机盐/(特殊营养物质)是否齐全;判断该微生物是自养还是异养(决定碳源来源);确认pH是否调节到适宜范围。</p>
+      <p><b class="tag">示例(带解):</b>某培养基只含葡萄糖、水、无机盐,缺氮源。培养固氮菌可以正常生长(固氮菌能利用空气中N₂),但培养大肠杆菌则不能正常繁殖(大肠杆菌不能固氮,必须外源供氮)。</p>
+      <p class="trap">陷阱:把"碳源"等同于"能源";忽视pH调节这一步;误以为特殊营养物质对所有微生物都必需。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 选择培养基设计</h3>
+      <p><b class="tag">触发信号:</b>"从土壤中分离出能分解某物质的细菌""筛选抗某药物的菌株""富集固氮菌"。</p>
+      <p><b class="tag">标准动作:</b>把目标菌"独有的代谢能力"设计成培养基里"唯一"或"缺失"的条件(唯一碳源/唯一氮源/加入抑制剂),使非目标菌无法生长,目标菌照常生长。</p>
+      <p><b class="tag">示例(带解):</b>要分离能分解尿素的细菌,应配制以<b>尿素为唯一氮源</b>的培养基;不能分解尿素的细菌因缺氮无法繁殖,能分解尿素的细菌正常生长,从而被富集分离出来。</p>
+      <p class="trap">陷阱:把选择培养基设计成加了指示剂但不限制营养(那是鉴别培养基思路);忘记选择培养基仍需具备水、pH等基本条件。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 鉴别培养基原理</h3>
+      <p><b class="tag">触发信号:</b>"菌落变黑""菌落周围出现透明圈""培养基变红",问这说明什么、加了什么指示剂。</p>
+      <p><b class="tag">标准动作:</b>先看现象对应哪种指示剂反应(EMB→黑色带金属光泽=大肠杆菌;尿素+酚红→变红=分解尿素产氨使碱性增强;刚果红→透明圈=纤维素被分解脱色)。</p>
+      <p><b class="tag">示例(带解):</b>在刚果红培养基上某菌落周围出现明显透明圈,说明该菌能分泌<b>纤维素酶</b>分解刚果红染料结合的纤维素,是纤维素分解菌;透明圈越大,分解能力越强。</p>
+      <p class="trap">陷阱:把鉴别培养基当成选择培养基,以为不变色的菌就"死了"(实际上只是没有目标代谢能力,依然可能存活生长)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 灭菌与消毒的选择</h3>
+      <p><b class="tag">触发信号:</b>给出接种环、培养基、双手、牛奶、接种室空气等对象,问该用哪种灭菌/消毒方式。</p>
+      <p><b class="tag">标准动作:</b>先问"要不要彻底杀灭芽孢/绝对无菌"——是→灭菌(灼烧/干热/高压蒸汽);否,只需降低微生物数量、保留营养或活性——消毒(煮沸/巴氏/酒精/紫外线)。</p>
+      <p><b class="tag">示例(带解):</b>培养基必须绝对无菌,用<b>高压蒸汽灭菌</b>;接种环每次使用前后用<b>灼烧灭菌</b>;双手和操作台用<b>70%~75%酒精消毒</b>即可,不必灭菌(也做不到)。</p>
+      <p class="trap">陷阱:以为煮沸能灭菌(不能杀芽孢);以为紫外线能彻底灭菌(只消毒空气/表面,穿透力弱);混用"灭菌""消毒"两词。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 平板划线法操作与原理</h3>
+      <p><b class="tag">触发信号:</b>给出划线示意图或操作步骤,问"为什么每次划线前要灼烧接种环""为什么最后能得到单菌落"。</p>
+      <p><b class="tag">标准动作:</b>抓住"接种环灼烧冷却→蘸菌→连续划线→稀释"这条链条;强调每次新划线都从上一线末端开始,菌液经多次划线被逐步稀释,最终分散为单个细胞。</p>
+      <p><b class="tag">示例(带解):</b>某同学划线时忘记在第3次划线前灼烧接种环,结果第3、4区域菌落连成一片。原因:接种环上菌液没有减少(没被稀释),延续了前一区的高浓度,无法分离出单菌落。</p>
+      <p class="trap">陷阱:以为划线的目的是"消毒平板"(其实平板本身已灭菌,划线是为了稀释分离);忘记灼烧后要<b>冷却</b>再蘸菌(否则高温烫死菌种)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 稀释涂布平板法计数与误差</h3>
+      <p><b class="tag">触发信号:</b>给出稀释倍数、涂布体积、平板菌落数,求原液浓度;或问"为什么计数结果比实际活菌数少"。</p>
+      <p><b class="tag">标准动作:</b>公式 原液浓度(个/mL)= 平均菌落数 ÷ 涂布体积(mL) ÷ 稀释倍数;先检查所选平板菌落数是否落在30~300之间;偏小原因固定答案——两个或多个细胞连在一起只长成一个菌落。</p>
+      <p><b class="tag">示例(带解):</b>取10⁻⁵稀释液0.1mL涂布,平板上长出150个菌落。原液浓度=150÷0.1÷10⁻⁵=1.5×10⁸个/mL。若该值仍比理论值偏低,原因是部分细胞成团存在,只形成了一个菌落。</p>
+      <p class="trap">陷阱:除法方向搞反(误乘稀释倍数);选了菌落数超过300或低于30的平板计数;把偏小原因答成"培养基灭菌不彻底"等无关因素。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 灭菌 ≠ 消毒:灭菌要<b>连芽孢一起杀死</b>(灼烧、干热、高压蒸汽);消毒只杀部分微生物(煮沸、巴氏、酒精、紫外线),芽孢杀不死。</p>
+      <p class="trap">② 培养基必须用<b>高压蒸汽灭菌</b>,不能只用消毒方式处理,否则杂菌(尤其芽孢)会污染培养。</p>
+      <p class="trap">③ 接种环使用前后都要<b>灼烧灭菌</b>,灼烧后必须<b>冷却</b>才能蘸取菌种,否则高温杀死目标菌。</p>
+      <p class="trap">④ 选择培养基 ≠ 鉴别培养基:选择培养基靠"唯一营养/抑制剂"筛掉非目标菌;鉴别培养基靠"指示剂变色"认出目标菌,不筛掉别的菌。</p>
+      <p class="trap">⑤ 平板划线法<b>不能</b>用于计数(涂布量不定量);只有<b>稀释涂布平板法</b>可以计数。</p>
+      <p class="trap">⑥ 稀释涂布平板法计数结果<b>总是偏小</b>,原因固定:两个或多个细胞连在一起只形成一个菌落。不要答成操作污染或其他。</p>
+      <p class="trap">⑦ 选取计数用的平板,菌落数必须在<b>30~300</b>之间,过多过少都不准确,通常要设置重复组取平均值。</p>
+      <p class="trap">⑧ 原液浓度换算是"<b>除以</b>稀释倍数、除以涂布体积",别写成乘稀释倍数。</p>
+      <p class="trap">⑨ 尿素培养基变红的指示剂是<b>酚红</b>(遇碱变红),不是石蕊或其他指示剂;EMB培养基鉴别的是<b>大肠杆菌</b>,菌落呈黑色并带金属光泽。</p>
+      <p class="trap">⑩ 巴氏消毒和紫外线消毒都<b>不能</b>用于要求绝对无菌的培养基或器械灭菌,只适用于对温度/化学处理敏感、只需降低菌量的场合。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切培养基设计都是"投微生物所好、卡它所需":</b> 选择培养基的本质不是"毒死"目标外的菌,而是让它们"缺了活不下去的东西"(唯一氮源/唯一碳源)或"遇上了扛不住的东西"(抗生素)。理解这一点,任何"筛选XX菌"的新题,你都能自己设计培养基,而不用死记案例。</p>
+      <p style="margin:8px 0"><b>② 鉴别培养基的核心是"把代谢差异翻译成颜色差异":</b> EMB黑色、酚红变红、刚果红褪色,本质都是"目标代谢产物 + 指示剂 → 可见变化"。抓住这条翻译链,遇到没见过的指示剂组合,也能推理出原理(先问:目标菌代谢会产生什么物质?这种物质会让指示剂怎么变?)。</p>
+      <p style="margin:8px 0"><b>③ 灭菌/消毒的选择是"成本-无菌需求"的权衡:</b> 越怕污染(培养基、发酵罐)就要上强度最大的高压蒸汽灭菌;越怕破坏对象本身(牛奶怕高温变质、双手怕灼烧)就退而求其次用消毒。做题时先判断"这个对象经不经得起灭菌",答案往往就出来了。</p>
+      <p style="margin:8px 0"><b>④ 平板划线与稀释涂布,本质都是"用空间稀释代替试管稀释":</b> 划线法在同一块平板上、靠反复灼烧完成稀释;涂布法在试管里预先梯度稀释、再摊开摊薄。两者共同目的都是让细胞在空间上充分分散,单个细胞才能长成肉眼可辨的单菌落——这是"看到一个菌落=一个祖先细胞"这一计数假设成立的前提。</p>
+      <p style="margin:8px 0"><b>⑤ 计数偏小是"以菌落数代替细胞数"这一方法本身带来的系统误差:</b> 只要还在用"数菌落"这个手段,就永远无法排除"细胞粘连"的可能,所以稀释涂布平板法测得的活菌数是一个<b>下限估计</b>。真正想知道细胞总数(不分死活),要换用血细胞计数板等直接计数法;想要更接近真实活菌数,则要尽量提高稀释倍数、加强振荡分散,减小细胞粘连概率。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 微生物的培养与计数(无菌技术·培养基·接种·发酵)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GRAY="#9a9a9a";
+
+/* ===== 互动1:培养基成分拼配 ===== */
+(function(){
+  const svg=document.getElementById('mediaSvg');
+  const note=document.getElementById('mediaNote');
+  const cC=document.getElementById('mC'),cN=document.getElementById('mN'),cW=document.getElementById('mW'),cS=document.getElementById('mS');
+  function draw(){
+    clr(svg);
+    const items=[
+      {on:cC.checked,label:'碳源',x:100,role:'提供碳架和能量'},
+      {on:cN.checked,label:'氮源',x:260,role:'合成蛋白质/核酸'},
+      {on:cW.checked,label:'水',x:420,role:'溶剂,参与代谢'},
+      {on:cS.checked,label:'无机盐',x:580,role:'维持渗透压/pH'}
+    ];
+    items.forEach(it=>{
+      const col=it.on?GREEN:GRAY;
+      el(svg,'rect',{x:it.x-50,y:60,width:100,height:70,fill:it.on?'rgba(30,158,134,0.18)':'rgba(154,154,154,0.15)',stroke:col,'stroke-width':3});
+      el(svg,'text',{x:it.x,y:100,'font-size':16,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=it.label;
+      el(svg,'text',{x:it.x,y:150,'font-size':11,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=it.role;
+      el(svg,'text',{x:it.x,y:170,'font-size':18,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=it.on?'✓':'✗';
+    });
+    const allOn=items.every(i=>i.on);
+    const missing=items.filter(i=>!i.on).map(i=>i.label);
+    // microbe growth indicator
+    const growH=allOn?110:Math.max(10,110-missing.length*35);
+    el(svg,'rect',{x:250,y:230-growH,width:200,height:growH,fill:allOn?GREEN:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:250,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='微生物生长状况';
+    if(allOn){note.innerHTML='✅ 四类基本成分齐全 → 微生物可以正常生长繁殖(特殊营养物质视具体菌种而定)。';note.style.borderColor=GREEN;}
+    else{note.innerHTML='⚠ 缺少:<b>'+missing.join('、')+'</b> → 微生物生长会受阻甚至无法繁殖(具体影响因缺项而异)。';note.style.borderColor=RED;}
+  }
+  cC.onchange=cN.onchange=cW.onchange=cS.onchange=draw;
+  draw();
+})();
+
+/* ===== 互动2:选择培养基筛选 ===== */
+(function(){
+  const svg=document.getElementById('selSvg');
+  const note=document.getElementById('selNote');
+  let mode=0;
+  const dots=[];
+  for(let i=0;i<24;i++){
+    dots.push({x:70+ (i%8)*80 + (Math.random()*20-10), y:70+Math.floor(i/8)*60+(Math.random()*14-7), type: i%3===0?'resist':'normal'});
+  }
+  document.querySelectorAll('.selmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.selmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    el(svg,'rect',{x:20,y:20,width:660,height:220,fill:'#fdfaf0',stroke:INK,'stroke-width':3});
+    let title,desc;
+    if(mode===0){title='普通培养基(无筛选)';desc='所有菌都能正常生长,无法区分抗性菌/固氮菌与普通菌。';}
+    else if(mode===1){title='加入抗生素';desc='敏感的普通菌(蓝)被抑制/杀死;具有抗性的菌(绿)照常存活繁殖,被富集出来。';}
+    else{title='缺氮源(唯一目标:筛固氮菌)';desc='不能固氮的普通菌(蓝)因缺氮无法繁殖;能固定N₂的固氮菌(绿)正常生长,被富集出来。';}
+    el(svg,'text',{x:350,y:44,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    dots.forEach(d=>{
+      let alive=true, col= d.type==='resist'?GREEN:BLUE;
+      if(mode!==0 && d.type!=='resist'){alive=false;}
+      const r= d.type==='resist'?9:7;
+      el(svg,'circle',{cx:d.x,cy:d.y+30,r:r,fill:alive?col:'#d8d2c0',opacity:alive?1:0.35,stroke:INK,'stroke-width':2});
+    });
+    el(svg,'text',{x:40,y:255,'font-size':12,'font-weight':800,fill:BLUE}).textContent='● 普通/敏感菌';
+    el(svg,'text',{x:220,y:255,'font-size':12,'font-weight':800,fill:GREEN}).textContent='● 抗性菌/固氮菌(目标)';
+    note.innerHTML=desc;
+    note.style.borderColor=mode===0?INK:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动3:鉴别培养基显色 ===== */
+(function(){
+  const svg=document.getElementById('diffSvg');
+  const note=document.getElementById('diffNote');
+  let mode=0,grown=false;
+  document.querySelectorAll('.diffmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.diffmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;grown=false;draw();
+  });
+  document.getElementById('diffGo').onclick=()=>{grown=true;draw();};
+  function draw(){
+    clr(svg);
+    el(svg,'circle',{cx:350,cy:130,r:110,fill:'#fdfaf0',stroke:INK,'stroke-width':4});
+    let title,desc,note_col;
+    if(mode===0){
+      title='伊红美蓝(EMB)培养基';
+      const col= grown? '#1a1a1a':'#e8dfc4';
+      el(svg,'circle',{cx:350,cy:130,r:grown?26:14,fill:col,stroke:INK,'stroke-width':2});
+      if(grown){el(svg,'circle',{cx:350,cy:130,r:26,fill:'none',stroke:'#3a6ea5',opacity:0.6,'stroke-width':3});}
+      desc= grown? '大肠杆菌大量繁殖,分解糖产酸,与伊红、美蓝结合 → 菌落呈<b>黑色并带金属光泽</b>,可确定该菌落是大肠杆菌。':'点击"培养一段时间"观察显色。';
+      note_col=grown?RED:INK;
+    } else if(mode===1){
+      title='尿素培养基(含酚红指示剂)';
+      const bg= grown? '#e0546b':'#f2c9c9';
+      el(svg,'circle',{cx:350,cy:130,r:100,fill:bg,opacity:0.55});
+      el(svg,'circle',{cx:350,cy:130,r:14,fill:'#c9a24a',stroke:INK,'stroke-width':2});
+      desc= grown? '细菌分泌<b>脲酶</b>分解尿素生成氨,环境变<b>碱性</b>,酚红遇碱<b>变红</b> → 说明该菌能分解尿素。':'点击"培养一段时间"观察显色。';
+      note_col=grown?RED:INK;
+    } else {
+      title='刚果红培养基';
+      const bg='#d94f4f';
+      el(svg,'circle',{cx:350,cy:130,r:100,fill:bg,opacity:0.85});
+      el(svg,'circle',{cx:350,cy:130,r:14,fill:'#8a5a2b',stroke:INK,'stroke-width':2});
+      if(grown){el(svg,'circle',{cx:350,cy:130,r:40,fill:'#fdfaf0',stroke:INK,'stroke-width':2,opacity:0.9});el(svg,'circle',{cx:350,cy:130,r:14,fill:'#8a5a2b',stroke:INK,'stroke-width':2});}
+      desc= grown? '纤维素分解菌分泌<b>纤维素酶</b>,分解菌落周围与刚果红结合的纤维素 → 出现<b>透明圈(脱色圈)</b>,圈越大分解能力越强。':'点击"培养一段时间"观察透明圈。';
+      note_col=grown?RED:INK;
+    }
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    note.innerHTML=desc;
+    note.style.borderColor=note_col;
+  }
+  draw();
+})();
+
+/* ===== 互动4:灭菌 vs 消毒对比 ===== */
+(function(){
+  const svg=document.getElementById('sterSvg');
+  const note=document.getElementById('sterNote');
+  let mode=0;
+  document.querySelectorAll('.stermode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.stermode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  const data=[
+    {name:'灼烧灭菌',temp:'>500℃(明火直接烧)',kind:'灭菌',killSpore:true,desc:'接种环/接种针每次使用前后都要灼烧,冷却后才能蘸取菌种。'},
+    {name:'高压蒸汽灭菌',temp:'121℃,15~20分钟',kind:'灭菌',killSpore:true,desc:'培养基、无菌水、耐高温器皿的标准灭菌方式,能彻底杀灭芽孢。'},
+    {name:'煮沸消毒',temp:'100℃,数分钟~十几分钟',kind:'消毒',killSpore:false,desc:'能杀死大多数细菌繁殖体,但芽孢耐煮沸,不能彻底无菌。'},
+    {name:'紫外线消毒',temp:'常温,紫外辐射',kind:'消毒',killSpore:false,desc:'用于接种室、无菌室空气及物体表面消毒,穿透力弱,不能杀灭芽孢。'}
+  ];
+  function draw(){
+    clr(svg);
+    const d=data[mode];
+    const heights=[230,200,140,40]; // relative "intensity" bar height
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=d.name+'　['+d.kind+']';
+    // intensity bar
+    const h=heights[mode];
+    el(svg,'rect',{x:120,y:230-h,width:70,height:h,fill:d.kind==='灭菌'?RED:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:155,y:250,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='处理强度';
+    el(svg,'text',{x:155,y:230-h-10,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=d.temp;
+    // spore icons
+    for(let i=0;i<5;i++){
+      const sx=300+i*70, sy=150;
+      el(svg,'circle',{cx:sx,cy:sy,r:16,fill:d.killSpore?'#cfc9b8':'#3a2f1a',stroke:INK,'stroke-width':2,opacity:d.killSpore?0.4:1});
+      if(d.killSpore){el(svg,'line',{x1:sx-11,y1:sy-11,x2:sx+11,y2:sy+11,stroke:RED,'stroke-width':3});el(svg,'line',{x1:sx-11,y1:sy+11,x2:sx+11,y2:sy-11,stroke:RED,'stroke-width':3});}
+    }
+    el(svg,'text',{x:300+2*70,y:190,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=d.killSpore?'芽孢全部被杀灭':'芽孢仍然存活(耐受)';
+    note.innerHTML=d.desc+(d.kind==='灭菌'?' <b>→ 属于灭菌,连芽孢都杀死。</b>':' <b>→ 属于消毒,芽孢杀不死。</b>');
+    note.style.borderColor=d.kind==='灭菌'?RED:BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动5:平板划线法动画 ===== */
+(function(){
+  const svg=document.getElementById('streakSvg');
+  const oZone=document.getElementById('stZone'),oConc=document.getElementById('stConc'),oLoop=document.getElementById('stLoop'),oSingle=document.getElementById('stSingle');
+  let zone=0;
+  const maxZone=6;
+  // define zig-zag zone paths across a round plate
+  function zonePath(z){
+    const cy=170, r=150, cx=350;
+    const angleStart=(z*55)*Math.PI/180 - Math.PI*0.9;
+    const lines=6;
+    const pts=[];
+    const spanAngle=50*Math.PI/180;
+    const rStart= r*0.85 - z*14;
+    for(let i=0;i<=lines;i++){
+      const a=angleStart + (i/lines)*spanAngle;
+      const rr= rStart - (i%2===0?0:6);
+      pts.push([cx + rr*Math.cos(a), cy + rr*Math.sin(a)]);
+    }
+    return pts;
+  }
+  function draw(){
+    clr(svg);
+    const cx=350,cy=170,r=150;
+    el(svg,'circle',{cx:cx,cy:cy,r:r,fill:'#fdfaf0',stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:cx,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='平板划线法(俯视):每个区域代表一次划线';
+    const colors=[RED,ORANGE,YEL,GREEN,BLUE,VIO];
+    for(let z=0;z<zone;z++){
+      const pts=zonePath(z);
+      const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L');
+      el(svg,'path',{d:d,fill:'none',stroke:colors[z%colors.length],'stroke-width':Math.max(1.5,4-z*0.5),'stroke-linecap':'round'});
+      // dots getting sparser as zone increases
+      const dotCount=Math.max(1,10-z*2);
+      for(let i=0;i<dotCount;i++){
+        const p=pts[Math.floor(Math.random()*pts.length)];
+        el(svg,'circle',{cx:p[0]+(Math.random()*6-3),cy:p[1]+(Math.random()*6-3),r:z>=4?2.6:1.6,fill:colors[z%colors.length],opacity:0.8});
+      }
+    }
+    if(zone>=5){
+      // highlight a single-colony zone
+      const pts=zonePath(zone-1);
+      const p=pts[Math.floor(pts.length/2)];
+      el(svg,'circle',{cx:p[0],cy:p[1],r:10,fill:'none',stroke:RED,'stroke-width':3,'stroke-dasharray':'4 3'});
+      el(svg,'text',{x:p[0]+16,y:p[1]-10,'font-size':11.5,'font-weight':900,fill:RED}).textContent='← 分离出单菌落';
+    }
+    oZone.textContent=zone+' / '+maxZone;
+    oConc.textContent=Math.round(100/Math.pow(1.9,zone))+'%';
+    oLoop.textContent= zone<maxZone? '已灼烧冷却' : '本轮结束';
+    oSingle.textContent= zone>=5? '是(第5~6区)':'否';
+  }
+  document.getElementById('streakGo').onclick=()=>{ if(zone<maxZone){zone++;draw();} };
+  document.getElementById('streakReset').onclick=()=>{zone=0;draw();};
+  draw();
+})();
+
+/* ===== 互动6:稀释涂布平板法计数 ===== */
+(function(){
+  const svg=document.getElementById('countSvg');
+  const Ns=document.getElementById('cnN'),Vs=document.getElementById('cnV');
+  const oCount=document.getElementById('cnCount'),oValid=document.getElementById('cnValid'),oConc=document.getElementById('cnConc'),oFormula=document.getElementById('cnFormula');
+  const trueConc=2e7; // 个/mL, fixed "true" concentration
+  function sync(){draw();}
+  Ns.oninput=Vs.oninput=sync;
+  function draw(){
+    const n=+Ns.value, v=+Vs.value;
+    const dilution=Math.pow(10,n);
+    const expectedCount = Math.round(trueConc * v / dilution);
+    clr(svg);
+    el(svg,'circle',{cx:350,cy:130,r:110,fill:'#fdfaf0',stroke:INK,'stroke-width':4});
+    // draw dots capped for visual clarity
+    const showCount=Math.min(expectedCount,400);
+    for(let i=0;i<showCount;i++){
+      const ang=Math.random()*2*Math.PI, rr=Math.sqrt(Math.random())*100;
+      const x=350+rr*Math.cos(ang), y=130+rr*Math.sin(ang);
+      el(svg,'circle',{cx:x,cy:y,r:2.2,fill: expectedCount>300?'rgba(224,56,42,0.55)':GREEN});
+    }
+    el(svg,'text',{x:350,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='稀释10^'+n+'倍，涂布'+v.toFixed(1)+'mL 后的平板';
+    const valid= expectedCount>=30 && expectedCount<=300;
+    oCount.textContent=expectedCount;
+    oValid.textContent= valid? '是,可计数' : (expectedCount>300?'太多,不可计数':'太少,不可计数');
+    const backCalc= expectedCount / v / dilution;
+    oConc.textContent= valid? backCalc.toExponential(2)+' 个/mL' : '—(此稀释度不适用)';
+    oFormula.textContent= expectedCount+' ÷ '+v.toFixed(1)+' ÷ 10^'+n;
+  }
+  sync();
+})();
+
+/* ===== 互动7:计数偏小原因(重叠菌落) ===== */
+(function(){
+  const svg=document.getElementById('overlapSvg');
+  const oCells=document.getElementById('ovCells'),oCol=document.getElementById('ovColonies'),oLess=document.getElementById('ovLess');
+  let grown=false;
+  // define cell clusters: some singles, some clumped (2-3 cells together)
+  const clusters=[
+    {x:120,y:100,cells:1},{x:180,y:150,cells:1},{x:230,y:90,cells:2},
+    {x:300,y:140,cells:1},{x:360,y:100,cells:3},{x:420,y:150,cells:1},
+    {x:480,y:90,cells:1},{x:540,y:140,cells:2},{x:150,y:190,cells:1},
+    {x:400,y:190,cells:1}
+  ];
+  function totalCells(){return clusters.reduce((s,c)=>s+c.cells,0);}
+  function draw(){
+    clr(svg);
+    el(svg,'rect',{x:20,y:20,width:660,height:200,fill:'#fdfaf0',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:14,'font-size':0,'font-weight':900}); // placeholder no-op
+    el(svg,'text',{x:350,y:40,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent= grown? '培养后:每一簇细胞只长成一个菌落' : '培养前:显微视野中的活菌细胞(单个/成团)';
+    clusters.forEach(c=>{
+      if(!grown){
+        for(let i=0;i<c.cells;i++){
+          const ox=c.cells>1?(i-(c.cells-1)/2)*10:0;
+          el(svg,'circle',{cx:c.x+ox,cy:c.y+80,r:6,fill:c.cells>1?ORANGE:BLUE,stroke:INK,'stroke-width':1.5});
+        }
+      } else {
+        const r= c.cells>1? 16:11;
+        el(svg,'circle',{cx:c.x,cy:c.y+80,r:r,fill:c.cells>1?'#e8b23a':'#c9a24a',stroke:INK,'stroke-width':2});
+        if(c.cells>1){el(svg,'text',{x:c.x,y:c.y+80+4,'font-size':10,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='1个菌落';}
+      }
+    });
+    const cells=totalCells();
+    const colonies=clusters.length;
+    oCells.textContent=cells;
+    oCol.textContent= grown? colonies : '—(未培养)';
+    oLess.textContent= grown? (colonies<cells?'是,偏小 ('+colonies+' < '+cells+')':'—') : '—';
+  }
+  document.getElementById('overlapGo').onclick=()=>{grown=true;draw();};
+  document.getElementById('overlapReset').onclick=()=>{grown=false;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 培养基必须含有的基本成分有哪些?",a:"碳源、氮源、水、无机盐(特殊营养物质因菌种而异,不是所有培养基都必需),并需调节到适宜的pH。"},
+ {q:"2. 选择培养基和鉴别培养基的核心区别是什么?",a:"选择培养基靠营养缺失或加入抑制剂「筛掉」非目标菌,让目标菌富集存活;鉴别培养基靠指示剂使目标菌「变色/出现特殊现象」,不筛掉其他菌,只用于识别区分。"},
+ {q:"3. 要从土壤中分离能分解尿素的细菌,培养基该怎么设计?",a:"配制以尿素为唯一氮源的培养基。不能分解尿素获取氮的细菌因缺氮无法繁殖,能分解尿素的细菌可正常生长,从而被筛选富集出来。"},
+ {q:"4. 伊红美蓝(EMB)培养基和尿素+酚红培养基分别鉴别什么、现象是什么?",a:"EMB培养基鉴别大肠杆菌:菌落呈黑色并带金属光泽。尿素+酚红培养基鉴别能分解尿素的细菌:分解尿素产氨使环境变碱性,酚红遇碱变红。"},
+ {q:"5. 灭菌和消毒的本质区别是什么?举例说明。",a:"灭菌杀灭一切微生物(包括芽孢),如灼烧灭菌、高压蒸汽灭菌、干热灭菌;消毒只杀死部分微生物、芽孢杀不死,如煮沸消毒、巴氏消毒、酒精消毒、紫外线消毒。"},
+ {q:"6. 接种环和培养基分别应该用什么方式灭菌?",a:"接种环用灼烧灭菌(每次使用前后灼烧,冷却后再蘸取菌种);培养基用高压蒸汽灭菌(通常121℃、15~20分钟)。"},
+ {q:"7. 平板划线法的原理是什么?为什么每次划线前要重新灼烧接种环?",a:"原理是通过接种环反复蘸取、连续划线,使菌液逐次被稀释,最终使单个细胞分散开来,培养后长成单个菌落。每次划线前灼烧接种环是为了把上一次沾在环上的多余菌液烧掉,从而实现「稀释」的效果;否则菌液浓度不会降低,划到最后仍连成一片,无法分离出单菌落。"},
+ {q:"8. 平板划线法能不能用于微生物计数?为什么?",a:"不能。因为划线操作没有定量控制涂布的菌液体积和稀释倍数,无法据此推算原液浓度;只有稀释涂布平板法(已知稀释倍数和涂布体积)可以用于计数。"},
+ {q:"9. 用稀释涂布平板法计数时,原液浓度怎么计算?选平板计数有什么要求?",a:"原液浓度(个/mL)=平板平均菌落数 ÷ 涂布体积(mL) ÷ 稀释倍数。应选菌落数在30~300之间的平板计数(太多无法分辨、太少误差大),通常设置多个重复取平均值。"},
+ {q:"10. 为什么稀释涂布平板法测得的活菌数往往比实际活菌数偏小?",a:"因为两个或多个细菌细胞连在一起(没有被完全分散),培养后只会长成一个菌落,导致统计出的菌落数少于实际活菌细胞数,这是该方法固有的系统偏差方向(只偏小,不偏大)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

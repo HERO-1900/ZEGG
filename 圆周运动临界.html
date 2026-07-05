@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆周运动的临界问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>圆周运动的临界问题(竖直圆·水平圆·过桥)</h1>
+    <p class="lead">圆周运动本身不难,难的是「临界」——那个恰好能过、恰好要脱离、恰好要打滑的瞬间。这一页把所有临界问题收敛成一句话:<b>先找指向圆心的合力,再看这个合力最少能有多小</b>。绳只能拉不能推、杆既能拉又能撑、桥面失重超重,全是这一句话的具体展开。</p>
+
+    <div class="say">🗣️ <b>临界问题人话版:</b> 圆周运动最魔幻的地方在于——向心力不是一种新的力,它只是「一群力凑出来的效果」。你永远要先问:这一堆力(重力、绳的拉力、杆的支持力、地面摩擦力……)加起来,指向圆心的那部分等于多少?这部分等于 mv²/r 时,物体才能维持这个半径的圆周运动。当外力不够「拉」住物体走这么小的弯时,物体就会「甩出去」或者「掉下来」——这就是临界的来历。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>F向 = mv²/r = mω²r</b>,方向永远指向圆心。这个 F向 不是单独存在的力,而是<b>沿半径方向、指向圆心的合外力</b>。解题第一步永远是:<b>画受力图,把所有力沿「指向圆心」和「垂直半径」方向分解,列出指向圆心方向的牛顿第二定律</b>。</div>
+
+    <h2>① 向心力分析总纲:向心力是「效果力」</h2>
+    <div class="card">
+      <div class="eq">F向 = m·v²/r = m·ω²·r　(方向:沿半径指向圆心)</div>
+      <p style="margin:8px 0"><b>向心力不是某个具体的力</b>,它是物体所受<b>合外力沿半径方向、指向圆心的分量</b>(如果所有力都沿半径,那就是合力本身)。常见的「提供者」:绳的拉力、杆的弹力、重力的分量、摩擦力、正压力的分量、几个力的合力。</p>
+      <h3>解题三步(所有圆周问题通用)</h3>
+      <div class="mono">第1步:明确圆心在哪、半径 r 是多少(不一定是绳长,要看几何关系)。</div>
+      <div class="mono">第2步:对物体做受力分析,把每个力沿"指向圆心"和"垂直半径(切向)"分解。</div>
+      <div class="mono">第3步:指向圆心方向列 F合(向心)=mv²/r,解出未知量(常是临界速度、临界角度、支持力)。</div>
+      <p class="trap">⚠ 千万不要把"向心力"当成一种额外画在受力图上的力——它是合力的名字,不能和重力、拉力并列相加,否则会重复计算。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动1 — 向心力来源分解通用图:任意角度上合力沿半径方向的分量=向心力</div>
+      <svg id="genSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>物体所在角度 θ <input id="genTh" type="range" min="0" max="360" value="0" step="5"></label>
+        <label>速度 v (m/s) <input id="genV" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>半径 r (m) <input id="genR" type="range" min="1" max="3" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>需要的向心力 (N)</b><span id="genFc">0</span></div>
+        <div><b>重力分量(指圆心) (N)</b><span id="genMgR">0</span></div>
+        <div><b>切向分量 (N)</b><span id="genTan">0</span></div>
+        <div><b>绳/杆需提供 (N)</b><span id="genRope">0</span></div>
+      </div>
+      <p class="small">小球(质量1kg)在竖直圆上任意角度 θ。红色箭头=指向圆心的向心力需求 mv²/r;重力 mg 沿半径的分量会"帮忙"或"拖后腿",差额由绳/杆补足。拖动 θ 看不同位置绳/杆张力如何变化。</p>
+    </div>
+
+    <h2 class="b">② 竖直平面最高点:绳(轨道)模型 vs 杆(管道)模型</h2>
+    <div class="card">
+      <h3>模型一:轻绳 / 轨道内侧(只能拉/压,不能推物体离开圆心之外)</h3>
+      <p style="margin:6px 0">最高点,绳的拉力(或轨道对小球的压力)<b>只能指向圆心</b>(向下),不能反向。此时重力和绳的拉力都指向圆心:</p>
+      <div class="eq">最高点:mg + T = mv²/r　(T≥0)</div>
+      <p style="margin:6px 0"><b>临界条件</b>:恰好能通过最高点时,绳的拉力 T=0,重力单独提供全部向心力:</p>
+      <div class="eq">mg = mv²min/r　⟹　<b>vmin = √(gr)</b></div>
+      <p style="margin:6px 0">这是全章最重要的一个数。若过最高点的速度 <b>v ≥ √(gr)</b>,绳才能一直有 T≥0 的拉力,小球才能沿圆轨迹运动而不掉下来;若 v<√(gr),绳还没到最高点就已经"松弛"(T 提前降为0),小球脱离圆轨迹做斜抛运动,根本到不了名义上的最高点。</p>
+      <h3>模型二:轻杆 / 管道(内外壁都能给力,能拉也能撑)</h3>
+      <p style="margin:6px 0">杆(或管道双侧壁)既能像绳一样拉物体向下,也能像支持力一样把物体向上撑住。所以最高点最小速度可以是 <b>0</b>:</p>
+      <div class="eq">v=0 时:杆给向上支持力 N=mg(平衡重力,物体静止不掉落)</div>
+      <p style="margin:6px 0">杆模型最高点受力方程仍是 <b>mg ± N = mv²/r</b>(N 的方向随 v 大小变化):</p>
+      <table>
+        <tr><th>速度区间</th><th>杆的作用</th><th>方程</th></tr>
+        <tr><td>v²  &gt;  gr</td><td>杆向下拉(像绳)</td><td>mg + T = mv²/r</td></tr>
+        <tr><td>v² = gr</td><td>杆不受力</td><td>mg = mv²/r</td></tr>
+        <tr><td>0 ≤ v² &lt; gr</td><td>杆向上撑(给支持力)</td><td>mg − N = mv²/r</td></tr>
+      </table>
+      <p class="trap">⚠ 最大陷阱:看到"最高点"就无脑套 vmin=√(gr)——这只对<b>绳/轨道内侧模型</b>成立!杆/管道模型最高点速度可以小到 0,千万先判断题目给的是绳还是杆。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎡 互动2 — 竖直圆最高点:切换绳/杆模型,拖速度看能否通过 & 张力/支持力 N 的正负</div>
+      <svg id="topSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="topmode on" data-m="0">轻绳/轨道内侧</button>
+        <button class="topmode" data-m="1">轻杆/管道</button>
+        <label>最高点速度 v (m/s) <input id="topV" type="range" min="0" max="6" value="4" step="0.2"></label>
+        <label>半径 r (m) <input id="topR" type="range" min="0.5" max="3" value="1" step="0.25"></label>
+      </div>
+      <div class="verdict" id="topNote"></div>
+      <div class="live">
+        <div><b>vmin=√(gr)</b><span id="topVmin">0</span></div>
+        <div><b>需要 F向=mv²/r</b><span id="topFc">0</span></div>
+        <div><b>绳/杆受力 N</b><span id="topN">0</span></div>
+        <div><b>能否通过</b><span id="topOK">-</span></div>
+      </div>
+      <p class="small">质量取 1kg。绳/轨道模型:v&lt;√(gr) 时小球会提前脱离圆轨迹(红色警示)。杆/管道模型:任意 v(含0)都能维持在最高点,只是杆的受力方向不同(N&gt;0 表示向下拉,N&lt;0 表示向上撑)。</p>
+    </div>
+
+    <h2 class="g">③ 水平面圆周:圆锥摆 · 水平转弯摩擦</h2>
+    <div class="card">
+      <h3>圆锥摆:重力 + 绳张力的合力提供向心力</h3>
+      <p style="margin:6px 0">小球在水平圆上做圆锥摆运动,绳与竖直方向夹角 θ。绳张力 T 沿绳方向,把它分解成竖直和水平两个分量:</p>
+      <div class="eq">竖直方向:T·cosθ = mg　　水平方向(指向圆心):T·sinθ = mv²/r = mω²r</div>
+      <p style="margin:6px 0">两式相除消去 T,得到圆锥摆的核心关系:</p>
+      <div class="eq"><b>tanθ = v²/(gr) = ω²r/g</b></div>
+      <p style="margin:6px 0">角速度 ω 越大,夹角 θ 越大(绳越"甩"得张开)。这是水平圆周问题的标准范式:<b>只要是"斜绳/斜杆撑住做水平圆周"，就先竖直方向平衡,再水平方向指向圆心。</b></p>
+      <h3>水平转弯靠摩擦:μmg ≥ mv²/r</h3>
+      <p style="margin:6px 0">汽车在水平路面转弯(无侧倾),向心力完全由地面摩擦力提供。摩擦力有上限 f≤μN=μmg(水平路面 N=mg):</p>
+      <div class="eq">μmg ≥ mv²/r　⟹　<b>vmax = √(μgr)</b></div>
+      <p style="margin:6px 0">车速超过 vmax,摩擦力不够提供所需向心力,车会<b>侧滑甩出</b>(不是"转不动"而是"转不了这么小的弯")。这就是弯道限速、弯道半径设计的物理依据。</p>
+      <p class="trap">⚠ 圆锥摆里绳的张力<b>不是</b>直接等于向心力,而是它的水平分量才是;千万别把 T 和 mv²/r 直接画等号。摩擦转弯里,μmg 是摩擦力的<b>最大值</b>,不是恒定值——只有临界打滑时才取等号。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪀 互动3 — 圆锥摆受力分解:改 θ / 角速度,看张力与向心力分量</div>
+      <svg id="coneSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>摆角 θ (°) <input id="coneTh" type="range" min="5" max="80" value="30" step="1"></label>
+        <label>绳长 L (m) <input id="coneL" type="range" min="0.5" max="2" value="1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>半径 r=Lsinθ</b><span id="coneR">0</span></div>
+        <div><b>张力 T=mg/cosθ</b><span id="coneT">0</span></div>
+        <div><b>向心分量 Tsinθ</b><span id="coneFc">0</span></div>
+        <div><b>对应角速度 ω</b><span id="coneW">0</span></div>
+      </div>
+      <p class="small">质量取1kg,g=10。θ 越大,张力 T 越大,水平向心分量 Tsinθ 也越大,对应角速度 ω=√(g·tanθ/r) 越大——甩得越快,摆角越张开。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚗 互动4 — 水平转弯摩擦临界:拖 μ 看最大安全速度</div>
+      <svg id="turnSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>摩擦系数 μ <input id="turnMu" type="range" min="0.1" max="1" value="0.4" step="0.05"></label>
+        <label>弯道半径 r (m) <input id="turnR" type="range" min="10" max="100" value="40" step="5"></label>
+        <label>行驶速度 v (m/s) <input id="turnV" type="range" min="1" max="35" value="15" step="1"></label>
+      </div>
+      <div class="verdict" id="turnNote"></div>
+      <div class="live">
+        <div><b>vmax=√(μgr)</b><span id="turnVmax">0</span></div>
+        <div><b>所需向心力 (N)</b><span id="turnFc">0</span></div>
+        <div><b>最大摩擦力 (N)</b><span id="turnFmax">0</span></div>
+        <div><b>状态</b><span id="turnOK">-</span></div>
+      </div>
+      <p class="small">车质量取1000kg。v&gt;vmax 时所需向心力超过最大摩擦力,俯视图中车会偏离圆弧向外侧滑。这就是弯道限速牌背后的公式。</p>
+    </div>
+
+    <h2 class="o">④ 汽车 / 火车过桥:拱形桥失重 · 凹形桥超重</h2>
+    <div class="card">
+      <h3>拱形桥(凸形桥):最高点失重,可能腾空</h3>
+      <p style="margin:6px 0">车过拱形桥顶(桥面是凸出的圆弧,圆心在桥下方),重力和支持力都在竖直方向,指向圆心(向下)的是<b>重力减支持力</b>:</p>
+      <div class="eq">最高点:mg − N = mv²/r　⟹　N = mg − mv²/r</div>
+      <p style="margin:6px 0">v 越大,N 越小——这就是"失重"。当 <b>N=0</b> 时达到临界,车即将腾空:</p>
+      <div class="eq">临界:mg = mv²临界/r　⟹　<b>v临界 = √(gr)</b></div>
+      <p style="margin:6px 0">v 超过 √(gr),按公式 N 会变负,但支持力不能为负——物理意义是<b>车已经离开桥面腾空</b>,不再做圆周运动(变抛体运动)。</p>
+      <h3>凹形桥(凹形路面):最低点超重</h3>
+      <p style="margin:6px 0">凹形桥最低点,圆心在车的正上方,指向圆心的是<b>支持力减重力</b>:</p>
+      <div class="eq">最低点:N − mg = mv²/r　⟹　N = mg + mv²/r　(超重,N恒 &gt; mg)</div>
+      <p style="margin:6px 0">凹形桥没有"腾空"临界——v 越大 N 越大,车轮和路面受到的压力持续增大,这是"超重"而非临界脱离问题。</p>
+      <p class="trap">⚠ 拱桥失重的方程是 mg−N=mv²/r(向心力方向向下,指向圆心);凹桥超重是 N−mg=mv²/r(向心力方向向上,指向圆心)。两者极易写反符号——记住"圆心在哪,合力就指向哪"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌉 互动5 — 汽车过拱形桥:改速度看支持力 N,失重到腾空临界</div>
+      <svg id="bridgeSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="bgGo">▶ 过桥演示</button><button id="bgReset">↺ 重置</button>
+        <label>速度 v (m/s) <input id="bgV" type="range" min="1" max="12" value="6" step="0.5"></label>
+        <label>桥顶半径 r (m) <input id="bgR" type="range" min="5" max="30" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>v临界=√(gr)</b><span id="bgVc">0</span></div>
+        <div><b>支持力 N (N)</b><span id="bgN">0</span></div>
+        <div><b>视重 N/mg</b><span id="bgRatio">0</span></div>
+        <div><b>状态</b><span id="bgState">-</span></div>
+      </div>
+      <p class="small">车质量取1000kg。观察车过桥顶时的支持力 N:v 越大 N 越小(失重),v≥v临界 时 N=0,车会腾空离开桥面(动画中车会"飞起")。</p>
+    </div>
+
+    <h2 class="v">⑤ vmin=√(gr) 计算器:临界速度速算</h2>
+    <div class="card">
+      <p style="margin:6px 0">竖直圆最高点(绳/轨道模型)、拱形桥腾空临界,本质是同一个方程 <b>mg=mv²/r</b>,解出的临界速度都是 <b>v=√(gr)</b>。这是全章使用频率最高的公式,建议直接记住几个常见半径对应的临界速度。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动6 — vmin=√(gr) 计算器:输入半径直接得临界速度</div>
+      <svg id="calcSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>半径 r (m) <input id="calcR" type="range" min="0.2" max="20" value="2" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>vmin=√(gr) (m/s)</b><span id="calcV">0</span></div>
+        <div><b>对应转速 n (r/s)</b><span id="calcN">0</span></div>
+        <div><b>周期 T (s)</b><span id="calcT">0</span></div>
+        <div><b>g 取值</b><span id="calcG">10</span></div>
+      </div>
+      <p class="small">g 固定取 10 m/s²。半径越大,临界速度越大(半径翻4倍,临界速度翻2倍——注意是<b>平方根</b>关系,不是正比)。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 竖直圆最高点(绳/轨道模型)能否通过</h3>
+      <p><b class="tag">触发信号:</b>"轻绳""圆形轨道内侧""细线拴球做竖直圆周",问"恰好通过最高点""最小速度""能否通过"。</p>
+      <p><b class="tag">标准动作:</b>最高点 mg+T=mv²/r,令 T=0 得 vmin=√(gr)。若给定速度 v,比较 v 与 √(gr):v≥√(gr) 能过,v&lt;√(gr) 中途脱离(做斜抛)。</p>
+      <p><b class="tag">示例(带解):</b>绳长 r=0.4m,球质量 0.5kg,求最高点恰好通过的速度和此时绳的张力。vmin=√(gr)=√(10×0.4)=2 m/s,此时 T=0(临界,绳张力为0,重力独自提供向心力)。</p>
+      <p class="trap">陷阱:忘记临界条件是 T=0 而不是 T=mg;把"轨道"默认当"杆"处理,导致漏判"能否通过"。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 竖直圆最高点(杆/管道模型)受力</h3>
+      <p><b class="tag">触发信号:</b>"轻杆""细管""圆管道内的小球",问最高点杆的受力方向和大小,或"能否以某速度通过"。</p>
+      <p><b class="tag">标准动作:</b>先判断 v² 与 gr 的大小关系,决定杆是拉还是撑;方程统一写 mg±N=mv²/r,再代入求 N,并判断正负号对应的方向。</p>
+      <p><b class="tag">示例(带解):</b>杆长 r=0.5m,球质量 1kg,最高点速度 v=1m/s。因为 v²=1&lt;gr=5,杆要向上支持:mg−N=mv²/r → N=mg−mv²/r=10−1×1²/0.5=10−2=8N,方向向上支持小球。</p>
+      <p class="trap">陷阱:杆模型误用绳模型的 vmin=√(gr) 去判断"能否通过"——杆模型任意速度(含0)都能通过,只是受力方向不同。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 圆锥摆</h3>
+      <p><b class="tag">触发信号:</b>"圆锥摆""绳与竖直方向成角度做水平圆周""绳拴球在水平面内转"。</p>
+      <p><b class="tag">标准动作:</b>竖直方向 Tcosθ=mg,水平方向(指圆心) Tsinθ=mv²/r=mω²r,两式相除得 tanθ=v²/(gr)=ω²r/g。r=Lsinθ(L为绳长)。</p>
+      <p><b class="tag">示例(带解):</b>绳长 L=1m,球质量 0.2kg,摆角 θ=37°(sin37°=0.6,cos37°=0.8)。r=Lsinθ=0.6m。T=mg/cosθ=0.2×10/0.8=2.5N。由 tanθ=v²/(gr):v²=gr·tanθ=10×0.6×0.75=4.5,v≈2.12m/s。</p>
+      <p class="trap">陷阱:把张力 T 直接当向心力代入 T=mv²/r(漏了 sinθ);半径 r 用绳长 L 代替(应是 Lsinθ)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 水平转弯摩擦临界(最大速度)</h3>
+      <p><b class="tag">触发信号:</b>"汽车水平路面转弯""无侧倾""摩擦力提供向心力",问最大安全速度或是否打滑。</p>
+      <p><b class="tag">标准动作:</b>水平路面 N=mg,摩擦力上限 f≤μmg,临界打滑 μmg=mv²max/r → vmax=√(μgr)。比较实际速度与 vmax 判断是否打滑。</p>
+      <p><b class="tag">示例(带解):</b>μ=0.5,弯道半径 r=20m,g=10。vmax=√(μgr)=√(0.5×10×20)=10 m/s=36km/h。若车速为15m/s,超过 vmax,车会侧滑甩出弯道。</p>
+      <p class="trap">陷阱:把 μmg 当成恒定摩擦力代入方程求速度(应是不等式判断临界);忽略"水平路面 N=mg"这一前提(有坡度/侧倾时 N≠mg)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 拱形桥失重与腾空临界</h3>
+      <p><b class="tag">触发信号:</b>"过拱桥""凸形桥面""桥洞顶部",问支持力、视重,或"多大速度会腾空/离开桥面"。</p>
+      <p><b class="tag">标准动作:</b>桥顶 mg−N=mv²/r → N=mg−mv²/r。令 N=0 得腾空临界 v临界=√(gr)。v超过临界,车已离开桥面做抛体运动,不再是圆周问题。</p>
+      <p><b class="tag">示例(带解):</b>桥顶半径 r=8m,车质量 1000kg,速度 v=8m/s。N=mg−mv²/r=1000×10−1000×64/8=10000−8000=2000N&gt;0,未腾空。腾空临界 v临界=√(gr)=√80≈8.94 m/s。</p>
+      <p class="trap">陷阱:算出 N 为负值时仍然照抄(物理上不可能,说明车已腾空,应改用抛体运动分析);把"失重"误当成合力方向向上。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 凹形桥/凹槽超重</h3>
+      <p><b class="tag">触发信号:</b>"凹形桥面""洼地""过山车谷底",问支持力(视重)。</p>
+      <p><b class="tag">标准动作:</b>最低点 N−mg=mv²/r → N=mg+mv²/r,恒大于 mg,属于超重,没有"临界脱离"这一说(N 只会更大,不会归零)。</p>
+      <p><b class="tag">示例(带解):</b>凹槽半径 r=5m,车质量 1000kg,速度 v=10m/s。N=mg+mv²/r=10000+1000×100/5=10000+20000=30000N,车对地面的压力也是30000N(反作用力),是静止时的3倍。</p>
+      <p class="trap">陷阱:把凹形桥最低点方程写成 mg−N=mv²/r(符号写反,应为 N−mg=mv²/r);误以为凹槽也存在"腾空"临界。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 向心力不是独立的力,不能在受力图上单独画出再和其它力相加——它是合力(或合力沿半径方向的分量)的名字。</p>
+      <p class="trap">② 绳/轨道模型最高点临界是 <b>T=0</b>,不是 v=0;杆/管道模型才能在 v=0 时仍停留在最高点(T或N可正可负)。</p>
+      <p class="trap">③ 重力在竖直圆任意位置都要看是否沿半径方向:只有最高点、最低点重力才完全沿半径;侧面需要分解重力沿半径的分量。</p>
+      <p class="trap">④ 拱形桥失重方程 mg−N=mv²/r 与凹形桥超重方程 N−mg=mv²/r 符号相反,务必按"圆心方位"重新推导,不要死记硬背导致弄反。</p>
+      <p class="trap">⑤ 临界条件 <b>N=0</b>(拱桥腾空、绳张力为0)是"支持力/张力恰好消失",不是"合力为0"——此时合力仍等于 mg,只是它全部用来提供向心力。</p>
+      <p class="trap">⑥ 圆锥摆中半径 <b>r=Lsinθ</b>,不是绳长 L;水平转弯半径是弯道半径,不是车长。</p>
+      <p class="trap">⑦ 计算 v 超过临界值之后的运动,不能再用圆周运动公式硬算 N(会得负数)——应改用平抛/斜抛分析,物体已脱离原轨迹。</p>
+      <p class="trap">⑧ 摩擦提供向心力时,μmg 是摩擦力的<b>最大值</b>(仅当打滑临界成立等号);正常行驶时实际摩擦力 f=mv²/r&lt;μmg,不要每次都代 μmg 求力。</p>
+      <p class="trap">⑨ vmin=√(gr) 与 vmax=√(μgr) 形式相似但物理意义完全不同(前者是"最高点最小过弯速度",后者是"水平转弯最大安全速度"),不要混用场景。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切临界问题的通用母句:</b> "某个力恰好减小到0(或恰好达到上限)"就是临界。绳张力T=0、支持力N=0、摩擦力f=μN(达到上限)——本质上都是"提供向心力的那个力,恰好用尽了它的可调节范围"。抓住这句话,任何新变式(比如小球在半球顶端下滑脱离)都能秒判临界条件。</p>
+      <p style="margin:8px 0"><b>② 绳与杆的本质区别是"力的方向约束":</b> 绳只能产生指向绳收缩方向的拉力(单向),杆/管道能同时提供两个方向的力(双向)。看到题目描述"细线""软绳"就往单向想,看到"杆""管""轨道双侧壁"就往双向想——这是判断"vmin能否为0"的第一道分岔。</p>
+      <p style="margin:8px 0"><b>③ 圆锥摆和"锥形漏斗里转动的小球"是同一物理模型:</b> 无论绳在上方拴住小球做圆锥摆,还是小球贴着圆锥内壁(斜面提供支持力)转动,核心都是"斜向的力,分解出竖直分量平衡重力、水平分量提供向心力"。掌握了 tanθ=v²/(gr) 这套分解方法,可以直接套用到光滑圆锥面、旋转漏斗等变式。</p>
+      <p style="margin:8px 0"><b>④ 过桥问题是"变相的竖直圆周运动最高点/最低点":</b> 拱桥顶=竖直圆最高点(重力减支持力=向心力,失重),凹槽底=竖直圆最低点(支持力减重力=向心力,超重)。把过桥问题直接映射到竖直圆模型上,公式可以秒写,不用重新推导。</p>
+      <p style="margin:8px 0"><b>⑤ v 与 v² 的关系提醒你临界速度是"平方根尺度":</b> vmin=√(gr)、vmax=√(μgr) 都是根号形式——半径变4倍,临界速度只变2倍;要达到2倍临界速度,需要的半径要变4倍。做估算题时,先反应"是不是要开根号"能避免直接翻倍的低级错误。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 圆周运动的临界问题:竖直圆·水平圆·过桥,三套模型一套逻辑</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const G=10;
+
+/* ===== 互动1:向心力来源分解通用图 ===== */
+(function(){
+  const svg=document.getElementById('genSvg');
+  const Ths=document.getElementById('genTh'),Vs=document.getElementById('genV'),Rs=document.getElementById('genR');
+  const oFc=document.getElementById('genFc'),oMgR=document.getElementById('genMgR'),oTan=document.getElementById('genTan'),oRope=document.getElementById('genRope');
+  const m=1;
+  function sync(){draw();}
+  Ths.oninput=Vs.oninput=Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const th=+Ths.value*Math.PI/180, v=+Vs.value, r=+Rs.value;
+    const cx=350, cy=170, scale=70*r/2;
+    const R=Math.max(60,r*scale/2+40);
+    // circle track
+    el(svg,'circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:INK,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:cx+8,y:cy-8,'font-size':12,'font-weight':800,fill:INK}).textContent='圆心';
+    // ball position: measure theta from top, clockwise
+    const bx=cx+R*Math.sin(th), by=cy-R*Math.cos(th);
+    el(svg,'circle',{cx:bx,cy:by,r:14,fill:YEL,stroke:INK,'stroke-width':3});
+    // radial direction (pointing to center) unit vector
+    const rx=(cx-bx)/R, ry=(cy-by)/R;
+    // Fc needed
+    const Fc=m*v*v/r;
+    const FcLen=Fc*8;
+    el(svg,'line',{x1:bx,y1:by,x2:bx+rx*FcLen,y2:by+ry*FcLen,stroke:RED,'stroke-width':5});
+    arrowHead(svg,bx+rx*FcLen,by+ry*FcLen,rx,ry,RED);
+    el(svg,'text',{x:bx+rx*FcLen+rx*14,y:by+ry*FcLen+ry*14,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='F向';
+    // gravity vector (down)
+    const mgLen=m*G*3;
+    el(svg,'line',{x1:bx,y1:by,x2:bx,y2:by+mgLen,stroke:BLUE,'stroke-width':4});
+    arrowHead(svg,bx,by+mgLen,0,1,BLUE);
+    el(svg,'text',{x:bx+14,y:by+mgLen,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='mg';
+    // gravity radial component = mg * (-ry) projected onto radial dir... component of gravity(0,mg) along radial unit (rx,ry)
+    const mgRadial=(0*rx + m*G*ry); // dot product of gravity vector(0,mg) with radial unit vector
+    const tanComp=Math.sqrt(Math.max(0,(m*G)*(m*G)-mgRadial*mgRadial));
+    const ropeNeeded=Fc-mgRadial;
+    oFc.textContent=Fc.toFixed(2);
+    oMgR.textContent=mgRadial.toFixed(2);
+    oTan.textContent=tanComp.toFixed(2);
+    oRope.textContent=ropeNeeded.toFixed(2);
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='θ='+(+Ths.value)+'°　F向=mv²/r='+Fc.toFixed(2)+'N　重力沿半径分量='+mgRadial.toFixed(2)+'N　差额由绳/杆='+ropeNeeded.toFixed(2)+'N';
+    el(svg,'text',{x:20,y:296,'font-size':12,'font-weight':700,fill:'#6b5d3a'}).textContent='红=需要的向心力(指圆心)　蓝=重力(竖直向下)　绳/杆补足两者差额';
+  }
+  function arrowHead(p,x,y,dx,dy,col){
+    const ang=Math.atan2(dy,dx);
+    const a1=ang+2.6,a2=ang-2.6;
+    el(p,'polygon',{points:x+','+y+' '+(x-10*Math.cos(a1))+','+(y-10*Math.sin(a1))+' '+(x-10*Math.cos(a2))+','+(y-10*Math.sin(a2)),fill:col});
+  }
+  sync();
+})();
+
+/* ===== 互动2:竖直圆最高点 绳/杆模型 ===== */
+(function(){
+  const svg=document.getElementById('topSvg');
+  const Vs=document.getElementById('topV'),Rs=document.getElementById('topR');
+  const oVmin=document.getElementById('topVmin'),oFc=document.getElementById('topFc'),oN=document.getElementById('topN'),oOK=document.getElementById('topOK');
+  const note=document.getElementById('topNote');
+  let mode=0; // 0=rope,1=rod
+  const m=1;
+  document.querySelectorAll('.topmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.topmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  Vs.oninput=Rs.oninput=draw;
+  function draw(){
+    clr(svg);
+    const v=+Vs.value, r=+Rs.value;
+    const vmin=Math.sqrt(G*r);
+    const Fc=m*v*v/r;
+    const N=Fc-m*G; // required extra force beyond gravity (positive = need rope/rod pulling down more; if negative, rod must push up)
+    oVmin.textContent=vmin.toFixed(2);
+    oFc.textContent=Fc.toFixed(2);
+    let canPass, msg, Ndisplay;
+    if(mode===0){
+      // rope/track: can only pull toward center (down), T>=0
+      if(v>=vmin){canPass=true;Ndisplay=N;msg='绳可以通过:T='+N.toFixed(2)+'N ≥ 0,绳绷紧提供向下拉力,小球沿圆轨迹通过最高点。';}
+      else{canPass=false;Ndisplay=0;msg='⚠ v<vmin=√(gr)='+vmin.toFixed(2)+',绳会提前松弛(T=0都不够转这么快),小球脱离圆轨迹做斜抛运动,到不了名义最高点!';}
+    } else {
+      // rod/tube: N can be negative(push up) or positive(pull down), always can pass
+      canPass=true;Ndisplay=N;
+      if(N>0)msg='杆向下拉,拉力='+N.toFixed(2)+'N(v²>gr,重力不够,杆帮忙向下拉)。';
+      else if(N<0)msg='杆向上撑,支持力='+(-N).toFixed(2)+'N(v²<gr,重力过多,杆向上顶住)。';
+      else msg='杆恰好不受力(v²=gr,重力恰好提供全部向心力)。';
+    }
+    oN.textContent=Ndisplay.toFixed(2);
+    oOK.textContent=canPass?'✓ 能通过':'✗ 不能通过';
+    note.innerHTML=(mode===0?'【绳/轨道模型】':'【杆/管道模型】')+' '+msg;
+    note.style.borderColor=canPass?GREEN:RED;
+    // drawing: circle with ball at top
+    const cx=350,cy=180,R=110;
+    el(svg,'circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:INK,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    const topY=cy-R;
+    const ballColor=canPass?YEL:RED;
+    if(canPass){
+      el(svg,'circle',{cx:cx,cy:topY,r:15,fill:ballColor,stroke:INK,'stroke-width':3});
+    } else {
+      // show ball flying off tangent (leaving the circle) to illustrate detachment
+      el(svg,'circle',{cx:cx,cy:topY,r:15,fill:ballColor,stroke:INK,'stroke-width':3,opacity:0.35});
+      el(svg,'circle',{cx:cx-40,cy:topY+35,r:13,fill:ballColor,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx-40,y:topY+65,'font-size':11,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='脱离轨迹(斜抛)';
+    }
+    // gravity arrow at top ball
+    el(svg,'line',{x1:cx,y1:topY,x2:cx,y2:topY+40,stroke:BLUE,'stroke-width':4});
+    el(svg,'polygon',{points:cx+','+(topY+40)+' '+(cx-6)+','+(topY+30)+' '+(cx+6)+','+(topY+30),fill:BLUE});
+    el(svg,'text',{x:cx+10,y:topY+38,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='mg';
+    // rope/rod force arrow
+    if(mode===0 && canPass){
+      el(svg,'line',{x1:cx,y1:topY,x2:cx,y2:topY+20+N*3},{});
+    }
+    const fLen=Math.abs(N)*4;
+    if(fLen>2){
+      const dirDown = N>0;
+      const y2 = dirDown? topY+20+fLen : topY-20-fLen;
+      el(svg,'line',{x1:cx+18,y1:topY,x2:cx+18,y2:y2,stroke:RED,'stroke-width':4});
+      const ay=dirDown?y2:y2;
+      el(svg,'polygon',{points:(cx+18)+','+y2+' '+(cx+12)+','+(dirDown?y2-8:y2+8)+' '+(cx+24)+','+(dirDown?y2-8:y2+8),fill:RED});
+      el(svg,'text',{x:cx+30,y:topY,'font-size':11.5,'font-weight':900,fill:RED}).textContent=(mode===0?'T=':'N=')+Math.abs(N).toFixed(1);
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='最高点,m=1kg,r='+r+'m,v='+v+'m/s';
+  }
+  draw();
+})();
+
+/* ===== 互动3:圆锥摆 ===== */
+(function(){
+  const svg=document.getElementById('coneSvg');
+  const Ths=document.getElementById('coneTh'),Ls=document.getElementById('coneL');
+  const oR=document.getElementById('coneR'),oT=document.getElementById('coneT'),oFc=document.getElementById('coneFc'),oW=document.getElementById('coneW');
+  const m=1;
+  Ths.oninput=Ls.oninput=draw;
+  function draw(){
+    clr(svg);
+    const thDeg=+Ths.value, th=thDeg*Math.PI/180, L=+Ls.value;
+    const r=L*Math.sin(th);
+    const T=m*G/Math.cos(th);
+    const Fc=T*Math.sin(th);
+    const w=Math.sqrt(G*Math.tan(th)/r);
+    oR.textContent=r.toFixed(2);oT.textContent=T.toFixed(2);oFc.textContent=Fc.toFixed(2);oW.textContent=w.toFixed(2);
+    // drawing: pivot at top, ball swings out
+    const pivotX=200,pivotY=40;
+    const drawScale=90;
+    const bx=pivotX+drawScale*Math.sin(th), by=pivotY+drawScale*Math.cos(th);
+    // ceiling
+    el(svg,'line',{x1:100,y1:pivotY,x2:300,y2:pivotY,stroke:INK,'stroke-width':5});
+    el(svg,'line',{x1:pivotX,y1:pivotY,x2:bx,y2:by,stroke:INK,'stroke-width':3});
+    // vertical dashed axis
+    el(svg,'line',{x1:pivotX,y1:pivotY,x2:pivotX,y2:by,stroke:'#999','stroke-width':2,'stroke-dasharray':'5 4'});
+    // circle path (horizontal, drawn as ellipse for perspective)
+    el(svg,'ellipse',{cx:pivotX,cy:by,rx:drawScale*Math.sin(th),ry:14,fill:'none',stroke:'#999','stroke-width':2,'stroke-dasharray':'4 3'});
+    // ball
+    el(svg,'circle',{cx:bx,cy:by,r:14,fill:YEL,stroke:INK,'stroke-width':3});
+    // angle arc
+    el(svg,'path',{d:'M '+pivotX+' '+(pivotY+30)+' A 30 30 0 0 1 '+(pivotX+30*Math.sin(th))+' '+(pivotY+30*Math.cos(th)),fill:'none',stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:pivotX+18,y:pivotY+45,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='θ='+thDeg+'°';
+    // force vectors on ball: gravity down, tension along string
+    el(svg,'line',{x1:bx,y1:by,x2:bx,y2:by+50,stroke:BLUE,'stroke-width':4});
+    el(svg,'polygon',{points:bx+','+(by+50)+' '+(bx-6)+','+(by+40)+' '+(bx+6)+','+(by+40),fill:BLUE});
+    el(svg,'text',{x:bx+8,y:by+48,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='mg';
+    // tension direction (from ball toward pivot)
+    const tdx=(pivotX-bx), tdy=(pivotY-by); const tl=Math.sqrt(tdx*tdx+tdy*tdy);
+    const tux=tdx/tl, tuy=tdy/tl;
+    el(svg,'line',{x1:bx,y1:by,x2:bx+tux*55,y2:by+tuy*55,stroke:RED,'stroke-width':4});
+    el(svg,'text',{x:bx+tux*65,y:by+tuy*65,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='T';
+    // horizontal component (向心 direction) arrow at right side chart
+    const cx2=520,cy2=150;
+    el(svg,'text',{x:cx2-90,y:60,'font-size':13,'font-weight':900,fill:INK}).textContent='受力分解:';
+    el(svg,'line',{x1:cx2-90,y1:cy2,x2:cx2-90,y2:cy2+Fc*10,stroke:RED,'stroke-width':5});
+    el(svg,'text',{x:cx2-90,y:cy2+Fc*10+18,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='Tsinθ='+Fc.toFixed(1);
+    el(svg,'line',{x1:cx2+10,y1:cy2,x2:cx2+10,y2:cy2+m*G*10/10,stroke:BLUE,'stroke-width':5});
+    el(svg,'text',{x:cx2+10,y:cy2+m*G+18,'font-size':11.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='Tcosθ=mg';
+    el(svg,'text',{x:20,y:280,'font-size':12,'font-weight':700,fill:'#6b5d3a'}).textContent='tanθ=v²/(gr)=ω²r/g　m=1kg,g=10';
+  }
+  draw();
+})();
+
+/* ===== 互动4:水平转弯摩擦临界 ===== */
+(function(){
+  const svg=document.getElementById('turnSvg');
+  const Mus=document.getElementById('turnMu'),Rs=document.getElementById('turnR'),Vs=document.getElementById('turnV');
+  const oVmax=document.getElementById('turnVmax'),oFc=document.getElementById('turnFc'),oFmax=document.getElementById('turnFmax'),oOK=document.getElementById('turnOK');
+  const note=document.getElementById('turnNote');
+  const m=1000;
+  Mus.oninput=Rs.oninput=Vs.oninput=draw;
+  function draw(){
+    clr(svg);
+    const mu=+Mus.value, r=+Rs.value, v=+Vs.value;
+    const vmax=Math.sqrt(mu*G*r);
+    const Fc=m*v*v/r;
+    const Fmax=mu*m*G;
+    const skid=Fc>Fmax;
+    oVmax.textContent=vmax.toFixed(2);oFc.textContent=Fc.toFixed(0);oFmax.textContent=Fmax.toFixed(0);
+    oOK.textContent=skid?'✗ 打滑侧滑':'✓ 安全转弯';
+    note.innerHTML=skid?('⚠ v='+v+'m/s &gt; vmax='+vmax.toFixed(2)+'m/s,所需向心力('+Fc.toFixed(0)+'N)超过最大摩擦力('+Fmax.toFixed(0)+'N),车会侧滑冲出弯道!'):('v='+v+'m/s ≤ vmax='+vmax.toFixed(2)+'m/s,摩擦力足够提供向心力,安全过弯。');
+    note.style.borderColor=skid?RED:GREEN;
+    // top-down view: curved road
+    const cx=350,cy=160,R=100;
+    el(svg,'path',{d:'M '+(cx-R)+' '+cy+' A '+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy,fill:'none',stroke:'#999','stroke-width':20});
+    el(svg,'path',{d:'M '+(cx-R)+' '+cy+' A '+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy,fill:'none',stroke:'#fff','stroke-width':2,'stroke-dasharray':'10 8'});
+    // car on the arc at 45 degrees
+    const ang=Math.PI*0.75;
+    const carX=cx+R*Math.cos(ang), carY=cy-R*Math.sin(ang)+ (cy-  (cy-R)); // approximate position along arc top
+    const cAng=Math.PI*(1-0.5); // simplify: place at top-left quarter
+    const px=cx-R*Math.cos(Math.PI*0.25), py=cy-R*Math.sin(Math.PI*0.25)-(cy-cy);
+    const carAngle=Math.PI*0.65;
+    const carPx=cx+R*Math.cos(carAngle), carPy=cy-R*Math.sin(Math.abs(carAngle-Math.PI))- (0);
+    // simpler: parametric point on upper arc
+    const t=0.35; // fraction along arc
+    const theta=Math.PI*(1-t);
+    const px2=cx+R*Math.cos(theta), py2=cy-R*Math.sin(theta);
+    const carColor=skid?RED:GREEN;
+    el(svg,'rect',{x:px2-16,y:py2-9,width:32,height:18,fill:carColor,stroke:INK,'stroke-width':3,transform:'rotate('+(-theta*180/Math.PI+90)+' '+px2+' '+py2+')'});
+    if(skid){
+      el(svg,'line',{x1:px2,y1:py2,x2:px2+40,y2:py2-15,stroke:RED,'stroke-width':3,'stroke-dasharray':'4 3'});
+      el(svg,'text',{x:px2+45,y:py2-18,'font-size':11,'font-weight':900,fill:RED}).textContent='滑出!';
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='俯视图:车质量1000kg,μ='+mu+',r='+r+'m';
+  }
+  draw();
+})();
+
+/* ===== 互动5:汽车过拱形桥 ===== */
+(function(){
+  const svg=document.getElementById('bridgeSvg');
+  const Vs=document.getElementById('bgV'),Rs=document.getElementById('bgR');
+  const oVc=document.getElementById('bgVc'),oN=document.getElementById('bgN'),oRatio=document.getElementById('bgRatio'),oState=document.getElementById('bgState');
+  const m=1000;
+  let anim=0,running=false;
+  Vs.oninput=Rs.oninput=()=>{draw();};
+  function draw(){
+    clr(svg);
+    const v=+Vs.value, r=+Rs.value;
+    const vc=Math.sqrt(G*r);
+    const N=m*G-m*v*v/r;
+    const airborne=N<0;
+    oVc.textContent=vc.toFixed(2);
+    oN.textContent=Math.max(0,N).toFixed(0);
+    oRatio.textContent=(Math.max(0,N)/(m*G)).toFixed(2);
+    oState.textContent=airborne?'✈ 腾空!':(N<m*G*0.15?'明显失重':'正常');
+    // draw bridge arc
+    const cx=350,groundY=230,R=170;
+    const cy=groundY - (R - r*4); // control curvature via r visually
+    const bridgeR=Math.min(160,r*6+40);
+    const bcy=groundY-bridgeR*0.6;
+    el(svg,'path',{d:'M 90 '+groundY+' Q 350 '+(groundY-bridgeR)+' 610 '+groundY,fill:'none',stroke:INK,'stroke-width':6});
+    el(svg,'line',{x1:40,y1:groundY,x2:90,y2:groundY,stroke:INK,'stroke-width':6});
+    el(svg,'line',{x1:610,y1:groundY,x2:660,y2:groundY,stroke:INK,'stroke-width':6});
+    // car position along the quadratic path based on anim (0..1), x from 90 to 610
+    const t=0.5; // sit at top for the static readout view, but animate x with anim
+    const ax = 90+(610-90)*anim;
+    const qy = groundY - bridgeR*(1-Math.pow((ax-350)/260,2));
+    let carY=qy;
+    let extra=0;
+    if(airborne && Math.abs(ax-350)<60){
+      extra = (60-Math.abs(ax-350))*0.6; // pops up when airborne near top
+    }
+    carY -= extra;
+    el(svg,'rect',{x:ax-22,y:carY-14,width:44,height:20,fill:airborne?RED:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'circle',{cx:ax-12,cy:carY+8,r:5,fill:INK});
+    el(svg,'circle',{cx:ax+12,cy:carY+8,r:5,fill:INK});
+    if(airborne && extra>2){
+      el(svg,'text',{x:ax,y:carY-22,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='腾空!';
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='车质量1000kg,桥顶半径r='+r+'m,v='+v+'m/s → N='+Math.max(0,N).toFixed(0)+'N'+(airborne?'(公式给负值→已腾空)':'');
+    el(svg,'text',{x:20,y:280,'font-size':12,'font-weight':700,fill:'#6b5d3a'}).textContent='v≥v临界=√(gr)时车离开桥面做抛体运动,不再是圆周运动';
+  }
+  function loop(){
+    if(!running)return;
+    anim+=0.012;
+    if(anim>=1){anim=1;running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('bgGo').onclick=()=>{anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('bgReset').onclick=()=>{anim=0;running=false;draw();};
+  anim=0.5;draw();
+})();
+
+/* ===== 互动6:vmin=√(gr) 计算器 ===== */
+(function(){
+  const svg=document.getElementById('calcSvg');
+  const Rs=document.getElementById('calcR');
+  const oV=document.getElementById('calcV'),oN=document.getElementById('calcN'),oT=document.getElementById('calcT'),oG=document.getElementById('calcG');
+  Rs.oninput=draw;
+  function draw(){
+    clr(svg);
+    const r=+Rs.value;
+    const v=Math.sqrt(G*r);
+    const n=v/(2*Math.PI*r); // rev per second
+    const T=1/n;
+    oV.textContent=v.toFixed(3);oN.textContent=n.toFixed(3);oT.textContent=T.toFixed(3);oG.textContent='10';
+    // bar chart: r vs v (sqrt relationship) across range
+    const X0=60,Y0=20,W=580,H=160;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='r';
+    const rMax=20,vMax=Math.sqrt(G*rMax);
+    // curve v=sqrt(G*r)
+    let d='M '+X0+' '+(Y0+H);
+    for(let rr=0;rr<=rMax;rr+=0.5){
+      const px=X0+(rr/rMax)*W;
+      const vv=Math.sqrt(G*rr);
+      const py=Y0+H-(vv/vMax)*H;
+      d+=' L '+px+' '+py;
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':4});
+    // marker at current r
+    const mx=X0+(r/rMax)*W, my=Y0+H-(v/vMax)*H;
+    el(svg,'line',{x1:mx,y1:Y0+H,x2:mx,y2:my,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'line',{x1:X0,y1:my,x2:mx,y2:my,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'circle',{cx:mx,cy:my,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:mx,y:my-12,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='r='+r.toFixed(1)+',v='+v.toFixed(2);
+    el(svg,'text',{x:X0+W-10,y:Y0+H+40,'font-size':11.5,'font-weight':700,fill:'#6b5d3a','text-anchor':'end'}).textContent='曲线 v=√(gr)　—　半径越大,临界速度按平方根增长(不是正比)';
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 向心力公式是什么?它是不是一种独立存在的力?",a:"F向=mv²/r=mω²r,方向指向圆心。它不是独立的力,而是物体所受合外力沿半径方向(指向圆心)的分量或合力本身,不能与其它力并列相加。"},
+ {q:"2. 竖直圆最高点(绳/轨道模型)恰好通过的临界条件和临界速度是什么?",a:"临界条件是绳的拉力(或轨道压力)T=0,重力单独提供向心力:mg=mv²min/r,解得 vmin=√(gr)。v≥√(gr) 才能通过。"},
+ {q:"3. 轻杆模型和轻绳模型在最高点的最大区别是什么?",a:"绳只能提供指向圆心(向下)的拉力,最小通过速度必须满足 v≥√(gr);杆(或管道)既能拉也能撑,最高点速度可以小到0,此时杆提供向上的支持力N=mg。"},
+ {q:"4. 圆锥摆的核心关系式 tanθ=v²/(gr) 是怎么推出来的?",a:"竖直方向:Tcosθ=mg;水平方向(指圆心):Tsinθ=mv²/r。两式相除消去T,得 tanθ=v²/(gr)=ω²r/g。注意半径r=Lsinθ(L为绳长)。"},
+ {q:"5. 汽车水平路面转弯,最大安全速度怎么求?",a:"向心力由摩擦力提供,摩擦力上限 μmg。临界打滑:μmg=mv²max/r,解得 vmax=√(μgr)。速度超过vmax会侧滑甩出。"},
+ {q:"6. 车过拱形桥顶,支持力N怎么算?什么时候会腾空?",a:"mg−N=mv²/r → N=mg−mv²/r。N=0时为腾空临界,v临界=√(gr)。v超过临界,按公式N会变负(不可能),说明车已离开桥面做抛体运动。"},
+ {q:"7. 车过凹形桥(凹槽)最低点,支持力N怎么算?会不会有腾空临界?",a:"N−mg=mv²/r → N=mg+mv²/r,恒大于mg,属于超重。没有腾空临界——v越大N越大,不会归零。"},
+ {q:"8. 拱桥失重公式 mg−N=mv²/r 和凹桥超重公式 N−mg=mv²/r 为什么符号相反?",a:"因为向心力方向永远指向圆心。拱桥圆心在桥下方,指圆心方向向下,合力=mg−N;凹桥圆心在车上方,指圆心方向向上,合力=N−mg。"},
+ {q:"9. 绳长r=0.4m的球做竖直圆周,恰好通过最高点时速度和张力各是多少?(g=10)",a:"vmin=√(gr)=√(10×0.4)=2m/s。恰好通过意味着临界,此时绳张力T=0(重力独自提供向心力)。"},
+ {q:"10. 圆锥摆中,张力T是不是直接等于向心力mv²/r?",a:"不是。张力T沿绳方向,只有它的水平分量Tsinθ才是向心力:Tsinθ=mv²/r。竖直分量Tcosθ用来平衡重力。直接令T=mv²/r是常见错误。"},
+ {q:"11. 弯道半径r=20m,μ=0.5,g=10,求最大安全过弯速度。若实际车速15m/s会怎样?",a:"vmax=√(μgr)=√(0.5×10×20)=10m/s。实际速度15m/s>10m/s,超过最大安全速度,摩擦力不足以提供所需向心力,车会侧滑冲出弯道。"},
+ {q:"12. 为什么半径变为4倍,竖直圆最高点的临界速度只变为2倍?",a:"因为vmin=√(gr)是半径的平方根关系,不是正比关系。r变4倍,gr也变4倍,√(4)=2,所以vmin只变2倍。做临界速度估算时要注意开根号,不能直接翻倍。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学计算方法 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>化学计算方法(差量法·守恒法·关系式法·过量判断·混合物)</h1>
+    <p class="lead">化学计算题拉分不在"会不会列方程",而在<b>选不选得对方法</b>——同一道题,硬算(设未知数、写全部方程)可能要五步,守恒法或差量法两步搞定。这一页把五种"巧算"武器摆齐:<b>差量法</b>抓"差值成比例"、<b>守恒法</b>抓"总量不变"、<b>过量判断</b>抓"谁不够用"、<b>关系式法</b>抓"掐头去尾"、<b>混合物</b>抓"列方程组"。会挑方法,才是尖子生和普通学生的分水岭。</p>
+
+    <div class="say">🗣️ <b>计算方法(人话版):</b> 看到"金属加热失重""结晶水加热"——想<b>差量法</b>(差值和计量数成比例,不用管中间过程)。看到"氧化还原""溶液里全是离子"——想<b>守恒法</b>(电子数、电荷数,算总账不算细节)。看到"两种物质都给了量"——先判断<b>谁过量</b>,按不足的算。看到"A做了三步反应变成D,只问D的量"——用<b>关系式法</b>直接连 A 和 D,中间 B、C 不用管。看到"合金/混合气体"——设两个未知数,列<b>方程组</b>。</div>
+
+    <div class="keybox"><b>一句话总纲:</b> <b>差量找比例、守恒算总账、过量看不足、关系式抓首尾、混合物列方程组</b>。五种方法本质都是"绕开繁琐中间步骤,直接抓住不变的量或成比例的量"。</div>
+
+    <h2>① 差量法:差值与计量数成比例</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>原理:</b> 化学反应前后,某个物理量(质量、气体体积、物质的量)发生的<b>变化量(差值)</b>,与反应中各物质的<b>化学计量数成正比</b>。只要能找到"差值"和它对应的化学计量数,就能直接列比例,<b>不需要知道反应物、生成物各自的绝对量</b>。</p>
+      <div class="eq">Δ(实际) / Δ(理论,由计量数定) = n(实际参与反应) / 化学计量数</div>
+      <table>
+        <tr><th>题型</th><th>差量来源</th></tr>
+        <tr><td>金属+酸/盐溶液置换</td><td>反应前后<b>固体质量差</b>(如 Fe+CuSO₄→FeSO₄+Cu,每反应1mol Fe,固体增重 8g)</td></tr>
+        <tr><td>结晶水合物加热</td><td>加热前后<b>质量差</b> = 失去结晶水的质量</td></tr>
+        <tr><td>气体参与/生成反应</td><td>反应前后<b>气体体积差</b>(同温同压下,与计量数差成正比)</td></tr>
+        <tr><td>加热分解(如 NaHCO₃)</td><td>固体<b>质量差</b> = 生成的 H₂O+CO₂ 质量</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> 把铁粉加入 CuSO₄ 溶液,反应 Fe+CuSO₄=FeSO₄+Cu,每消耗 56g(1mol) Fe,生成 64g(1mol) Cu,固体<b>净增重</b> 64−56=<b>8g</b>。若实际测得固体增重 1.6g,则 n(Fe反应)=1.6/8=0.2mol。全程不用管溶液里剩多少 CuSO₄,只靠"增重8g对应1mol"这一个比例关系。</p>
+      <p class="trap">⚠ 差量法只在"哪个量变化"想清楚时才好用:是质量差、体积差还是物质的量差?一定要先写出<b>对应计量数的"理论差值"</b>,再列比例,不能凭直觉套数字。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 1 — 差量法可视化:反应前后质量条,差值高亮,拖比例看物质的量</div>
+      <svg id="dcSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>实际固体增重 Δm实际(g) <input id="dcM" type="range" min="0.8" max="8" value="1.6" step="0.4"></label>
+      </div>
+      <div class="live">
+        <div><b>理论:1mol Fe→增重(g)</b><span id="dcTheory">8</span></div>
+        <div><b>Δm实际(g)</b><span id="dcActual">1.6</span></div>
+        <div><b>n(Fe反应)=Δm实际/8</b><span id="dcN">0.2</span></div>
+        <div><b>生成 Cu 质量(g)</b><span id="dcCu">12.8</span></div>
+      </div>
+      <p class="small">Fe+CuSO₄=FeSO₄+Cu:每 1mol(56g) Fe 反应,生成 1mol(64g) Cu,固体净增重 8g(理论差值)。左条=反应前固体,右条=反应后固体,红色高亮段=差值 Δm。拖动滑块看"差值∝计量数"直接给出 n(Fe)。</p>
+    </div>
+
+    <h2 class="b">② 守恒法:质量、元素、电子、电荷四种"总账"</h2>
+    <div class="card">
+      <p style="margin:8px 0">守恒法的核心信念:<b>某个总量在反应前后不变</b>,不管中间发生了什么反应、生成了什么中间体,只要抓住"总账"就能跳过细节直接算。</p>
+      <h3>质量守恒</h3>
+      <p style="margin:6px 0">反应前后<b>总质量不变</b>(密闭体系)。常用于"混合物完全反应后,生成物总质量 = 反应物总质量"这类整体计算,尤其是不知道具体反应式细节时。</p>
+      <h3>元素守恒(原子个数守恒)</h3>
+      <p style="margin:6px 0">反应前后,<b>同一种元素的原子总数不变</b>。适合多步反应中追踪"某元素最终去哪了"——比如所有的 N 元素、C 元素反应前后总原子数相等,不用管中间生成了几种含氮物质。</p>
+      <h3>电子守恒(氧化还原)</h3>
+      <div class="eq">n(失电子) × 化合价升高值 = n(得电子) × 化合价降低值</div>
+      <p style="margin:6px 0">氧化还原反应中,<b>还原剂失去的电子总数 = 氧化剂得到的电子总数</b>。多步氧化还原(如铁的多级反应、KMnO₄滴定)只需比较<b>最初还原剂的化合价</b>和<b>最终氧化产物的化合价</b>,中间过程全部跳过。</p>
+      <h3>电荷守恒</h3>
+      <div class="eq">溶液中:Σ(阳离子浓度×电荷数) = Σ(阴离子浓度×电荷数)</div>
+      <p style="margin:6px 0">电解质溶液整体呈电中性,<b>所有阳离子带的正电荷总数 = 所有阴离子带的负电荷总数</b>(以物质的量浓度×电荷数计,不是简单加浓度)。常用于求溶液中某离子浓度、检验数据是否自洽。</p>
+      <p class="trap">⚠ 电荷守恒是"浓度×电荷数"相加,不是离子浓度直接相加(如 c(Na⁺)+c(H⁺)=c(Cl⁻)+c(OH⁻),系数都是1才能直接加;若有 SO₄²⁻ 则要乘2)。电子守恒要看清"化合价变化了多少",不是"转移了几个原子"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 2 — 电子守恒天平:左失电子=右得电子,拖系数配平氧化还原反应</div>
+      <svg id="ebSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>还原剂 Fe²⁺→Fe³⁺ 的 mol 数(每分子失1e⁻) <input id="ebA" type="range" min="1" max="10" value="5" step="1"></label>
+        <label>氧化剂 MnO₄⁻→Mn²⁺ 每分子得电子数(定值5) <input id="ebB" type="range" min="5" max="5" value="5" step="1" disabled></label>
+      </div>
+      <div class="live">
+        <div><b>失电子总数 = 5×1</b><span id="ebLose">5</span></div>
+        <div><b>需 MnO₄⁻ mol 数(得5e⁻/个)</b><span id="ebNeed">1</span></div>
+        <div><b>得电子总数</b><span id="ebGain">5</span></div>
+        <div><b>是否配平</b><span id="ebOk">✓ 配平</span></div>
+      </div>
+      <p class="small">反应:5Fe²⁺+MnO₄⁻+8H⁺=5Fe³⁺+Mn²⁺+4H₂O。每个 Fe²⁺→Fe³⁺ 失 1 个电子(+2→+3),每个 MnO₄⁻→Mn²⁺ 得 5 个电子(+7→+2)。天平左边=失电子总数,右边=得电子总数,拖 Fe²⁺ 的量,系统自动算出配平所需 MnO₄⁻ 的量,两边高度必须相等。</p>
+    </div>
+
+    <h2 class="g">③ 过量判断:先比谁不够,再按不足量算</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>标准三步:</b></p>
+      <div class="mono">第1步:把两种反应物都换算成 mol(物质的量)。</div>
+      <div class="mono">第2步:按化学方程式计量数比,算出"恰好完全反应"需要的比例,与实际的量之比对比。</div>
+      <div class="mono">第3步:比值偏大的那个是<b>过量</b>,比值偏小(或恰好达到比例)的是<b>不足量</b>——所有后续计算(生成物、剩余量)都<b>以不足量为基准</b>。</div>
+      <p style="margin:8px 0"><b>判断技巧:</b> 设反应为 aA + bB → 产物。计算 n(A)/a 和 n(B)/b,数值<b>较小</b>的一方对应的反应物是<b>不足量</b>(先耗尽),按它计算产物的量;数值较大的一方是<b>过量</b>,剩余量 = 原有量 − 消耗量。</p>
+      <p style="margin:8px 0"><b>例:</b> 2mol H₂ 与 2mol O₂ 反应生成水(2H₂+O₂=2H₂O)。n(H₂)/2=1,n(O₂)/1=2。1&lt;2,H₂对应的比值更小 → <b>H₂不足量</b>,O₂过量。按 H₂ 算:生成 H₂O = 2mol;消耗 O₂ = 1mol,剩余 O₂ = 2−1 = 1mol。</p>
+      <p class="trap">⚠ 千万别直接比较 n(A) 和 n(B) 的大小就下过量结论——一定要<b>除以各自的化学计量数</b>再比,计量数不同时直接比较原始量会判断反了。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚗️ 互动 3 — 过量判断滑块:拖两反应物的量,自动判断谁过量、产物量、剩余量</div>
+      <svg id="exSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>n(H₂) mol <input id="exA" type="range" min="0.5" max="6" value="2" step="0.5"></label>
+        <label>n(O₂) mol <input id="exB" type="range" min="0.5" max="6" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>n(H₂)/2</b><span id="exRa">1</span></div>
+        <div><b>n(O₂)/1</b><span id="exRb">2</span></div>
+        <div><b>不足量(基准)</b><span id="exLim">H₂</span></div>
+        <div><b>生成 H₂O(mol)</b><span id="exProd">2</span></div>
+      </div>
+      <p class="verdict" id="exNote">H₂ 不足量，O₂ 过量，剩余 O₂=1mol</p>
+      <p class="small">反应 2H₂+O₂=2H₂O。拖动两个滑块，系统实时算 n(H₂)/2 与 n(O₂)/1，较小者对应的反应物是不足量(限量剂)，产物按它计算，过量的一方算出剩余多少。</p>
+    </div>
+
+    <h2 class="o">④ 关系式法:多步反应,首尾直接定比例</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>适用场景:</b> 题目给出<b>连续多步反应</b>(A→B→C→D),但只问<b>第一种反应物 A</b> 和<b>最后产物 D</b> 之间的数量关系,中间的 B、C 完全不需要求出来。</p>
+      <p style="margin:8px 0"><b>做法:</b> 把各步反应方程式按<b>需要"消去中间物质"的倍数</b>叠加(或直接根据元素守恒/电子守恒建立首尾关系),写出一个"关系式"(不是真实反应式,只是数量关系式),</p>
+      <div class="mono">如:C(碳,起点) ~ CO₂(某步中间体) ~ CaCO₃(终点),由 C→CO₂→CaCO₃ 都保留1个C,得关系式 C ~ CaCO₃(1:1)</div>
+      <p style="margin:8px 0"><b>例:</b> 硫经过多步反应最终全部转化为 BaSO₄沉淀(S→SO₂→SO₃→H₂SO₄→BaSO₄),每步都不增不减 S 原子,所以直接建立关系式 <b>S ~ BaSO₄</b>(1:1)。已知生成 BaSO₄ 0.1mol,则原硫为 0.1mol,不需要写出中间四步方程式各自配平。</p>
+      <p class="trap">⚠ 关系式法的前提是"中间体里那个关键元素的原子个数没有增减",本质是元素守恒的简化写法。若中间步骤有该元素的损失(如生成沉淀被过滤掉一部分、气体逸出未被吸收),就不能直接首尾相连,要按实际过程扣除。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 5 — 关系式链条:多步反应首尾定比,点击展开/折叠中间步骤</div>
+      <svg id="chainSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="chainToggle">▶ 展开中间步骤</button>
+        <label>起点 n(S) mol <input id="chainN" type="range" min="0.05" max="1" value="0.1" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>n(S) 起点</b><span id="chN0">0.1</span></div>
+        <div><b>n(SO₂)</b><span id="chN1">0.1</span></div>
+        <div><b>n(SO₃)</b><span id="chN2">0.1</span></div>
+        <div><b>n(BaSO₄) 终点</b><span id="chN3">0.1</span></div>
+      </div>
+      <p class="small">S→SO₂→SO₃→H₂SO₄→BaSO₄，每一步 S 原子个数都是 1:1 传递，不增不减。展开看中间每步都相等；折叠后只需记关系式 S ~ BaSO₄，直接从起点跳到终点。</p>
+    </div>
+
+    <h2 class="v">⑤ 混合物计算:设未知数,列二元方程组</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>适用场景:</b> 题目给的是<b>合金、混合气体、混合溶液</b>等由两种(或以上)组分构成的体系,只知道"总质量"或"总物质的量"等<b>整体数据</b>,要求各组分含量。</p>
+      <p style="margin:8px 0"><b>标准做法:</b> 设两种组分的物质的量(或质量)分别为 x、y,根据题目条件列<b>两个独立方程</b>(通常一个是"总量"方程,另一个是"反应消耗量/生成量"方程),解二元一次方程组。</p>
+      <div class="mono">方程①(总量):x + y = 总质量(或总mol数)　方程②(反应关系):由化学方程式得到的量的关系</div>
+      <p style="margin:8px 0"><b>例:</b> Na₂CO₃ 和 NaHCO₃ 混合物共 10g,与足量盐酸反应生成 CO₂ 2.24L(标况,0.1mol)。设 Na₂CO₃ 为 x mol,NaHCO₃ 为 y mol。① 106x+84y=10;② x+y=0.1(每种都是1个碳酸根1步生成1个CO₂)。联立解得 x、y,进而求各自质量分数。</p>
+      <p class="trap">⚠ 混合物题最容易在"设未知数的单位"上翻车:统一用 mol 还是用 g,两个方程必须<b>单位一致</b>;而且一定要确认"每种组分与目标产物的计量关系"是否相同(本例中 Na₂CO₃ 和 NaHCO₃ 都是 1mol 组分生成 1mol CO₂,但换成别的反应不一定 1:1)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 4 — 混合物二元方程求解器:输入总质量/总气体量→解两组分</div>
+      <svg id="mixSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>混合物总质量(g) <input id="mixM" type="range" min="5" max="20" value="10" step="0.5"></label>
+        <label>生成 CO₂ (mol) <input id="mixG" type="range" min="0.05" max="0.2" value="0.1" step="0.01"></label>
+      </div>
+      <div class="live">
+        <div><b>x=n(Na₂CO₃) mol</b><span id="mixX">0</span></div>
+        <div><b>y=n(NaHCO₃) mol</b><span id="mixY">0</span></div>
+        <div><b>Na₂CO₃ 质量分数</b><span id="mixWx">0%</span></div>
+        <div><b>是否有解</b><span id="mixOk">✓</span></div>
+      </div>
+      <p class="small">方程组:106x+84y=总质量；x+y=总CO₂(mol)。svg 左侧画出两条方程对应的"配比线"，交点即 (x,y) 解。拖动总质量或总气体量，观察交点移动、解是否落在合理区间(x≥0,y≥0)。</p>
+    </div>
+
+    <h2 class="b">⑥ 标准状况(STP)与气体摩尔体积:22.4 L/mol 的适用边界</h2>
+    <div class="card">
+      <div class="eq">V(气体,STP) = n × 22.4 L/mol　　仅当 T=0℃(273K)、p=101kPa 时成立</div>
+      <p style="margin:8px 0">22.4 L/mol 是<b>标准状况下</b>气体摩尔体积的近似值,只在<b>0℃、101kPa</b>这一组条件下才成立。题目一旦出现"常温常压""25℃""高压""加热到...""压强为2×101kPa"等字样,就<b>不是标准状况</b>,不能直接套 22.4。</p>
+      <table>
+        <tr><th>题目条件</th><th>能否用 22.4 L/mol</th></tr>
+        <tr><td>标准状况下(STP,0℃,101kPa)</td><td>✓ 能用</td></tr>
+        <tr><td>常温常压(25℃,101kPa)</td><td>✗ 不能,此条件下 Vm≈24.5L/mol(需按理想气体方程另算或题目给定)</td></tr>
+        <tr><td>没有说明温度压强</td><td>✗ 不能想当然按标况处理,除非题目明确"标准状况下"</td></tr>
+        <tr><td>物质在标况下不是气体(如 H₂O、SO₃在某些温度)</td><td>✗ 不能用,22.4只对标况下真实呈气态的物质成立</td></tr>
+      </table>
+      <p class="trap">⚠ 高频失分点:题目给"标准状况下 2.24L CO₂",可以直接除以22.4得0.1mol;但如果给"常温常压下2.24L CO₂"或根本没提条件,绝不能除以22.4——这是阅卷严查的送分陷阱题眼。另外注意:H₂O、乙醇等在标况下是液态或固态,即使写"标况下"也不能对它们用22.4L/mol。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌡️ 互动 6 — 标况判断器:切换条件，看能否用 22.4 L/mol</div>
+      <svg id="stpSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="stpcase on" data-c="0">标准状况(0℃,101kPa)</button>
+        <button class="stpcase" data-c="1">常温常压(25℃,101kPa)</button>
+        <button class="stpcase" data-c="2">未说明条件</button>
+        <button class="stpcase" data-c="3">标况下的水(液态)</button>
+      </div>
+      <div class="verdict" id="stpNote"></div>
+      <p class="small">四种常见出题条件，点按钮切换。只有第一种(真·标况+真·气态)才能放心用 V=n×22.4；其余三种都要么换算方式不同，要么根本不能用这个公式。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 差量法(质量差/气体体积差)</h3>
+      <p><b class="tag">触发信号:</b>"金属加入盐溶液后固体质量变化""加热晶体失重""反应前后气体体积变化",给了"差值"而非绝对量。</p>
+      <p><b class="tag">标准动作:</b>写出反应方程式,算出"1个计量数单位对应的理论差值",与实际差值列比例,求出参与反应的物质的量。</p>
+      <p><b class="tag">示例(带解):</b>某铁架浸入 CuSO₄ 溶液,取出后固体增重 0.8g。Fe+CuSO₄=FeSO₄+Cu,理论上每 1mol Fe 反应固体增重 8g。n(Fe反应)=0.8/8=0.1mol,生成 Cu=0.1mol=6.4g。</p>
+      <p class="trap">陷阱:算错"理论差值"(用错计量数或漏乘摩尔质量);把"增重"和"总质量"搞混;差量法用在计量数比不是1:1的反应时忘记按比例折算。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 电子守恒配平/计算</h3>
+      <p><b class="tag">触发信号:</b>氧化还原反应,给氧化剂、还原剂的量或浓度,求另一方的量,或"多步氧化还原求总电子转移数"。</p>
+      <p><b class="tag">标准动作:</b>标出化合价升降,n(失)×升高值=n(得)×降低值,直接建立方程求解;多步反应只需比较<b>最初和最终</b>的化合价。</p>
+      <p><b class="tag">示例(带解):</b>0.1mol Na₂SO₃ 被 KMnO₄ 氧化为 Na₂SO₄(S:+4→+6,失2e⁻/个),MnO₄⁻→Mn²⁺(+7→+2,得5e⁻/个)。失电子总数=0.1×2=0.2mol,需 n(MnO₄⁻)=0.2/5=0.04mol。</p>
+      <p class="trap">陷阱:化合价算错(尤其是含多种可变价元素的化合物);把"转移电子数"当成"参与反应的原子数";多步反应逐步算漏了中间的电子转移次数。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 过量判断与计算</h3>
+      <p><b class="tag">触发信号:</b>题目同时给出两种反应物的量(mol、g、体积等),要求生成物或剩余物的量,却没有明说"恰好完全反应"。</p>
+      <p><b class="tag">标准动作:</b>换算为 mol,除以各自计量数比大小,判断不足量;按不足量算生成物;过量方 剩余=原量−消耗量。</p>
+      <p><b class="tag">示例(带解):</b>3mol Na 与 2mol Cl₂(2Na+Cl₂=2NaCl)反应。n(Na)/2=1.5,n(Cl₂)/1=2。1.5&lt;2,Na不足量。生成 NaCl=3mol;消耗 Cl₂=1.5mol,剩余 Cl₂=2−1.5=0.5mol。</p>
+      <p class="trap">陷阱:直接比较 3mol 和 2mol 的大小就下结论(未除以计量数);算剩余量时忘记先求"消耗量"而直接用总量相减。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 关系式法(多步反应求首尾关系)</h3>
+      <p><b class="tag">触发信号:</b>题目描述"经过多步反应最终生成某沉淀/气体",只问起点和终点的量,中间物质繁多但都不直接问。</p>
+      <p><b class="tag">标准动作:</b>确认关键元素在中间各步是否等量传递(无损耗),建立"起点~终点"关系式,直接列比例,跳过中间步骤。</p>
+      <p><b class="tag">示例(带解):</b>含硫化合物经氧化、酸化最终以 BaSO₄形式沉淀,已知生成 BaSO₄ 4.66g(0.02mol),则原硫元素为 0.02mol(关系式 S~BaSO₄,1:1)。</p>
+      <p class="trap">陷阱:中间有元素损失(如气体未被完全吸收)却仍直接首尾连比例;搞错关键元素的传递比例(不是所有链条都是1:1)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 混合物计算(方程组)</h3>
+      <p><b class="tag">触发信号:</b>"合金""混合气体""某比例混合的两种盐",给总质量/总体积/总反应生成量,求各组分含量或质量分数。</p>
+      <p><b class="tag">标准动作:</b>设两个未知数(通常为 mol),列"总量"方程和"反应生成量"方程,解二元一次方程组,再换算成质量分数等所求量。</p>
+      <p><b class="tag">示例(带解):</b>Na₂CO₃、NaHCO₃ 混合物 10g,与盐酸反应生成 CO₂ 0.1mol。106x+84y=10;x+y=0.1。解得 x≈0.0364mol,y≈0.0636mol,Na₂CO₃质量分数≈(0.0364×106)/10≈38.6%。</p>
+      <p class="trap">陷阱:两个方程单位不统一(一个用g一个用mol却混用系数);漏掉"每种组分与目标产物的计量关系不一定是1:1"这一前提检查。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 标准状况气体摩尔体积陷阱</h3>
+      <p><b class="tag">触发信号:</b>题目给气体体积,要求换算成物质的量(或反之),里面涉及"标准状况""常温常压"等条件描述,或压根没提条件。</p>
+      <p><b class="tag">标准动作:</b>先确认是否为"标准状况(0℃,101kPa)"且物质在该条件下确为气态,是则 n=V/22.4;否则用理想气体方程 pV=nRT 或题目给定的摩尔体积另算,绝不能想当然套22.4。</p>
+      <p><b class="tag">示例(带解):</b>标准状况下 4.48L CO₂,n=4.48/22.4=0.2mol。若题目改为"常温常压下4.48L CO₂",则不能除以22.4,须用题目另给的摩尔体积或pV=nRT计算。</p>
+      <p class="trap">陷阱:看到"升"就习惯性除以22.4,不管标况与否;对标况下呈液/固态的物质(如水)错误套用22.4。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 22.4 L/mol <b>只在标准状况(0℃,101kPa)且物质确为气态</b>时才能用,常温常压、未说明条件、或该物质标况下非气态,一律不能直接套用。</p>
+      <p class="trap">② 过量判断要<b>除以化学计量数</b>后再比大小,不能直接比较两反应物的原始物质的量或质量。</p>
+      <p class="trap">③ 电荷守恒是"<b>浓度×电荷数</b>"相加,系数不为1的离子(如 SO₄²⁻、Al³⁺)要乘上对应电荷数,不能直接把浓度相加。</p>
+      <p class="trap">④ 电子守恒看<b>化合价变化了多少</b>,不是看转移了几个原子;多步氧化还原只需比较<b>最初还原剂</b>和<b>最终氧化产物</b>的化合价即可,中间态可跳过。</p>
+      <p class="trap">⑤ 差量法必须先明确"理论差值"对应的<b>化学计量数</b>,并把摩尔质量、体积等单位换算准确,不能直接套用别的反应的差值。</p>
+      <p class="trap">⑥ 关系式法的前提是<b>中间元素无损耗、无分流</b>,若气体部分逸出、沉淀部分过滤流失,首尾就不能直接1:1连比例。</p>
+      <p class="trap">⑦ 混合物方程组两个方程<b>单位必须统一</b>(同为mol或同为g),且要检查解出的 x、y 是否满足<b>非负</b>这一物理意义上的约束。</p>
+      <p class="trap">⑧ 有效数字/精度:化学计算中间过程尽量保留分数或多位小数,只在<b>最终结果</b>按题目要求保留有效数字,中途四舍五入会累积误差。</p>
+      <p class="trap">⑨ 单位换算陷阱:g与mol不能直接相加减,必须先统一;体积单位L与mL、mol与mmol要看清题目给的是哪个量级。</p>
+      <p class="trap">⑩ 质量守恒用于"整体质量"计算时,前提是<b>密闭体系</b>,若有气体逸出体系外(如敞口加热),体系质量会减少,不能简单套用总质量不变。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 五种方法本质都是"守恒思想"的变体:</b> 差量法是"质量/体积的差值守恒于计量数比例"，守恒法是"总量守恒"，关系式法是"元素守恒的链式简化"，过量判断是"谁先耗尽守恒地决定产物量"。理解了"守恒"这一条主线,五种方法不再是孤立的技巧,而是同一思想在不同场景下的应用。</p>
+      <p style="margin:8px 0"><b>② 选方法的第一反应应该是"看题目给了什么、问什么":</b> 给了"变化量/差值"→差量法;给了"氧化还原信息或离子浓度"→守恒法;给了"两种反应物的具体量"→先判过量;给了"多步反应+只问首尾"→关系式法;给了"总量+一个整体反应结果"→混合物方程组。练到位后,读题15秒就该锁定方法,不需要现场试错。</p>
+      <p style="margin:8px 0"><b>③ 22.4 L/mol 的边界是命题者最爱设的"送分变送命"题眼:</b> 越是简单的公式,越容易被出题人在"适用条件"上做文章。看到"升"这个单位,第一反应不是除以22.4，而是先问自己"标况吗?气态吗?"——这一步习惯养成后,能避免整题因小失大。</p>
+      <p style="margin:8px 0"><b>④ 电子守恒是处理复杂多步氧化还原的"抄近道神器":</b> 不管中间产物多复杂、反应步骤多长，只要抓住"起点化合价"和"终点化合价"，一步电子守恒方程就能跳过所有中间步骤。这跟关系式法的"首尾连接"思路是同一逻辑在不同守恒量(电子数 vs 原子数)上的应用。</p>
+      <p style="margin:8px 0"><b>⑤ 混合物方程组要养成"设、列、验"三步习惯:</b> 设未知数时明确单位；列方程时检查两个方程是否真的独立(不能是同一条件的两种写法)；解出后一定<b>代回验证</b>(x、y是否非负、是否满足总质量或总气体量)。这一步"验"是尖子生和普通学生最大的差距——普通学生算出数字就交卷，尖子生会反查数字是否合理。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 计算方法五件套:差量、守恒、过量、关系式、混合物</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:差量法可视化 ===== */
+(function(){
+  const svg=document.getElementById('dcSvg');
+  const Ms=document.getElementById('dcM');
+  const oTheory=document.getElementById('dcTheory'),oActual=document.getElementById('dcActual'),oN=document.getElementById('dcN'),oCu=document.getElementById('dcCu');
+  function sync(){draw();}
+  Ms.oninput=sync;
+  function draw(){
+    clr(svg);
+    const dm=+Ms.value;
+    const n=dm/8;
+    const cuMass=n*64;
+    oTheory.textContent='8';oActual.textContent=dm.toFixed(1);oN.textContent=n.toFixed(3);oCu.textContent=cuMass.toFixed(2);
+    const X0=100,baseY=220,barW=110,scale=14;
+    const before=56; // arbitrary base solid mass for illustration (per 1 mol basis, scaled)
+    const after=before+dm;
+    const hBefore=before*0.9, hAfter=after*0.9;
+    // before bar
+    el(svg,'rect',{x:X0,y:baseY-hBefore,width:barW,height:hBefore,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:X0+barW/2,y:baseY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='反应前固体';
+    el(svg,'text',{x:X0+barW/2,y:baseY-hBefore-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=before.toFixed(1)+'g(基准)';
+    // after bar with highlighted delta
+    const X1=420;
+    el(svg,'rect',{x:X1,y:baseY-hBefore,width:barW,height:hBefore,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+    el(svg,'rect',{x:X1,y:baseY-hAfter,width:barW,height:hAfter-hBefore,fill:'rgba(224,56,42,0.35)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X1+barW/2,y:baseY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='反应后固体';
+    el(svg,'text',{x:X1+barW/2,y:baseY-hAfter-8,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='Δm='+dm.toFixed(1)+'g';
+    // bracket for delta
+    el(svg,'line',{x1:X1+barW+16,y1:baseY-hBefore,x2:X1+barW+16,y2:baseY-hAfter,stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X1+barW+22,y:baseY-(hBefore+hAfter)/2+5,'font-size':12.5,'font-weight':900,fill:RED}).textContent='差值';
+    // title
+    el(svg,'text',{x:350,y:26,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Fe+CuSO₄=FeSO₄+Cu　理论:1mol Fe反应 → 固体增重8g';
+    el(svg,'text',{x:350,y:48,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='n(Fe反应)=Δm实际/8='+n.toFixed(3)+'mol，生成Cu='+cuMass.toFixed(2)+'g';
+    el(svg,'line',{x1:60,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+  }
+  sync();
+})();
+
+/* ===== 互动2:电子守恒天平 ===== */
+(function(){
+  const svg=document.getElementById('ebSvg');
+  const As=document.getElementById('ebA');
+  const oLose=document.getElementById('ebLose'),oNeed=document.getElementById('ebNeed'),oGain=document.getElementById('ebGain'),oOk=document.getElementById('ebOk');
+  function sync(){draw();}
+  As.oninput=sync;
+  function draw(){
+    clr(svg);
+    const nFe=+As.value;
+    const loseE=nFe*1;
+    const needMn=loseE/5;
+    const gainE=needMn*5;
+    oLose.textContent=loseE.toFixed(1);oNeed.textContent=needMn.toFixed(2);oGain.textContent=gainE.toFixed(1);oOk.textContent='✓ 配平';
+    // balance beam
+    const cx=350,pivotY=60,beamLen=260;
+    el(svg,'line',{x1:cx-beamLen/2,y1:pivotY,x2:cx+beamLen/2,y2:pivotY,stroke:INK,'stroke-width':5});
+    el(svg,'polygon',{points:(cx-10)+','+(pivotY+10)+' '+(cx+10)+','+(pivotY+10)+' '+cx+','+(pivotY-14),fill:INK});
+    // left pan (lose electrons)
+    const leftH=Math.min(150,loseE*14);
+    const leftX=cx-beamLen/2-40;
+    el(svg,'line',{x1:cx-beamLen/2,y1:pivotY,x2:leftX+40,y2:pivotY+30,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:leftX,y:pivotY+30,width:80,height:leftH,fill:'rgba(224,56,42,0.3)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:leftX+40,y:pivotY+30+leftH+22,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='失电子='+loseE.toFixed(1);
+    el(svg,'text',{x:leftX+40,y:pivotY+16,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=nFe.toFixed(1)+'mol Fe²⁺';
+    // right pan (gain electrons)
+    const rightH=Math.min(150,gainE*14);
+    const rightX=cx+beamLen/2-40;
+    el(svg,'line',{x1:cx+beamLen/2,y1:pivotY,x2:rightX+40,y2:pivotY+30,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:rightX,y:pivotY+30,width:80,height:rightH,fill:'rgba(30,158,134,0.3)',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:rightX+40,y:pivotY+30+rightH+22,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='得电子='+gainE.toFixed(1);
+    el(svg,'text',{x:rightX+40,y:pivotY+16,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=needMn.toFixed(2)+'mol MnO₄⁻';
+    el(svg,'text',{x:cx,y:24,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='5Fe²⁺+MnO₄⁻+8H⁺=5Fe³⁺+Mn²⁺+4H₂O(电子守恒天平)';
+    el(svg,'text',{x:cx,y:230,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='天平两侧高度始终相等：失电子总数=得电子总数（配平的本质）';
+  }
+  sync();
+})();
+
+/* ===== 互动3:过量判断滑块 ===== */
+(function(){
+  const svg=document.getElementById('exSvg');
+  const As=document.getElementById('exA'),Bs=document.getElementById('exB');
+  const oRa=document.getElementById('exRa'),oRb=document.getElementById('exRb'),oLim=document.getElementById('exLim'),oProd=document.getElementById('exProd');
+  const note=document.getElementById('exNote');
+  function sync(){draw();}
+  As.oninput=Bs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const nH2=+As.value, nO2=+Bs.value;
+    const ra=nH2/2, rb=nO2/1;
+    let limName,prod,leftoverName,leftoverAmt;
+    if(ra<=rb){limName='H₂';prod=nH2;leftoverName='O₂';leftoverAmt=nO2-nH2/2;}
+    else{limName='O₂';prod=nO2*2;leftoverName='H₂';leftoverAmt=nH2-nO2*2;}
+    oRa.textContent=ra.toFixed(2);oRb.textContent=rb.toFixed(2);oLim.textContent=limName;oProd.textContent=prod.toFixed(2);
+    note.textContent=limName+' 不足量，'+leftoverName+' 过量，剩余 '+leftoverName+'='+leftoverAmt.toFixed(2)+'mol，生成 H₂O='+prod.toFixed(2)+'mol';
+    note.style.borderColor=INK;
+    // bars comparing ra and rb
+    const baseY=200,scale=28,barW=90;
+    const haA=Math.min(160,ra*scale),haB=Math.min(160,rb*scale);
+    el(svg,'rect',{x:150,y:baseY-haA,width:barW,height:haA,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:150+barW/2,y:baseY+22,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='n(H₂)/2';
+    el(svg,'text',{x:150+barW/2,y:baseY-haA-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=ra.toFixed(2);
+    el(svg,'rect',{x:420,y:baseY-haB,width:barW,height:haB,fill:'rgba(232,106,23,0.25)',stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:420+barW/2,y:baseY+22,'font-size':13,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='n(O₂)/1';
+    el(svg,'text',{x:420+barW/2,y:baseY-haB-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=rb.toFixed(2);
+    el(svg,'line',{x1:60,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:26,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='2H₂+O₂=2H₂O　比值较小者=不足量(限量剂)';
+    // mark the smaller one
+    const markX = ra<=rb? 150+barW/2 : 420+barW/2;
+    el(svg,'text',{x:markX,y:50,'font-size':20,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='★不足量';
+  }
+  sync();
+})();
+
+/* ===== 互动4:混合物二元方程求解器 ===== */
+(function(){
+  const svg=document.getElementById('mixSvg');
+  const Ms=document.getElementById('mixM'),Gs=document.getElementById('mixG');
+  const oX=document.getElementById('mixX'),oY=document.getElementById('mixY'),oWx=document.getElementById('mixWx'),oOk=document.getElementById('mixOk');
+  function sync(){draw();}
+  Ms.oninput=Gs.oninput=sync;
+  function solve(totalMass,totalGas){
+    // 106x + 84y = totalMass ; x + y = totalGas
+    // => 106x + 84(totalGas - x) = totalMass => 22x = totalMass - 84*totalGas => x = (totalMass-84*totalGas)/22
+    const x=(totalMass-84*totalGas)/22;
+    const y=totalGas-x;
+    return {x:x,y:y};
+  }
+  function draw(){
+    clr(svg);
+    const M=+Ms.value,G=+Gs.value;
+    const sol=solve(M,G);
+    const valid = sol.x>=0 && sol.y>=0;
+    oX.textContent=sol.x.toFixed(4);oY.textContent=sol.y.toFixed(4);
+    const wx = valid ? ((sol.x*106)/M*100) : NaN;
+    oWx.textContent = valid ? wx.toFixed(1)+'%' : 'N/A';
+    oOk.textContent = valid ? '✓ 有解' : '✗ 无物理解(负值)';
+    // plot two lines: 106x+84y=M  and x+y=G, in x-y plane
+    const X0=90,Y0=210,W=520,H=180;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0-H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0+W,y2:Y0,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W+8,y:Y0+5,'font-size':13,'font-weight':900,fill:INK}).textContent='x';
+    el(svg,'text',{x:X0-8,y:Y0-H-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    const maxAxis=0.25; // mol scale
+    const sx=W/maxAxis, sy=H/maxAxis;
+    // line1: x+y=G  -> y=G-x
+    function toPix(xv,yv){return [X0+xv*sx, Y0-yv*sy];}
+    let p1=toPix(0,G), p2=toPix(G,0);
+    el(svg,'line',{x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1],stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:p2[0]+6,y:p2[1],'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='x+y='+G.toFixed(2);
+    // line2: 106x+84y=M -> y=(M-106x)/84
+    let xA=0, yA=M/84;
+    let xB=M/106, yB=0;
+    let q1=toPix(Math.min(xA,maxAxis), Math.min(yA,maxAxis));
+    let q2=toPix(Math.min(xB,maxAxis), Math.max(0,yB));
+    el(svg,'line',{x1:q1[0],y1:q1[1],x2:q2[0],y2:q2[1],stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:q2[0]+6,y:q2[1]-6,'font-size':11.5,'font-weight':800,fill:ORANGE}).textContent='106x+84y='+M.toFixed(1);
+    // intersection point
+    if(valid && sol.x<=maxAxis && sol.y<=maxAxis){
+      const pt=toPix(sol.x,sol.y);
+      el(svg,'circle',{cx:pt[0],cy:pt[1],r:7,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:pt[0]+10,y:pt[1]-10,'font-size':12.5,'font-weight':900,fill:RED}).textContent='解('+sol.x.toFixed(3)+','+sol.y.toFixed(3)+')';
+    }
+    el(svg,'text',{x:X0+W/2,y:24,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Na₂CO₃(x mol)+NaHCO₃(y mol)　两方程交点=解';
+  }
+  sync();
+})();
+
+/* ===== 互动5:关系式链条 ===== */
+(function(){
+  const svg=document.getElementById('chainSvg');
+  const Ns=document.getElementById('chainN');
+  const toggleBtn=document.getElementById('chainToggle');
+  const oN0=document.getElementById('chN0'),oN1=document.getElementById('chN1'),oN2=document.getElementById('chN2'),oN3=document.getElementById('chN3');
+  let expanded=false;
+  toggleBtn.onclick=()=>{expanded=!expanded;toggleBtn.textContent=expanded?'▶ 折叠(只看首尾)':'▶ 展开中间步骤';draw();};
+  Ns.oninput=draw;
+  function draw(){
+    clr(svg);
+    const n=+Ns.value;
+    oN0.textContent=n.toFixed(2);oN1.textContent=n.toFixed(2);oN2.textContent=n.toFixed(2);oN3.textContent=n.toFixed(2);
+    const labels=['S','SO₂','SO₃','H₂SO₄','BaSO₄'];
+    const showIdx = expanded ? [0,1,2,3,4] : [0,4];
+    const y=100;
+    const positions = expanded ? [80,220,360,500,620] : [100,600];
+    positions.forEach((x,i)=>{
+      const idx=showIdx[i];
+      el(svg,'circle',{cx:x,cy:y,r:34,fill:'rgba(122,63,242,0.18)',stroke:VIO,'stroke-width':3});
+      el(svg,'text',{x:x,y:y-2,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=labels[idx];
+      el(svg,'text',{x:x,y:y+16,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=n.toFixed(2)+'mol';
+      if(i<positions.length-1){
+        const x2=positions[i+1];
+        el(svg,'line',{x1:x+38,y1:y,x2:x2-38,y2:y,stroke:INK,'stroke-width':3});
+        el(svg,'polygon',{points:(x2-38)+','+(y-6)+' '+(x2-26)+','+y+' '+(x2-38)+','+(y+6),fill:INK});
+        el(svg,'text',{x:(x+x2)/2,y:y-14,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='1:1';
+      }
+    });
+    const title = expanded ? 'S→SO₂→SO₃→H₂SO₄→BaSO₄　每步S原子数不变' : 'S ~ BaSO₄（关系式：跳过中间，直接1:1）';
+    el(svg,'text',{x:350,y:34,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    el(svg,'text',{x:350,y:180,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点击"展开/折叠"按钮切换视图；无论展开与否，起点终点的物质的量始终相等';
+  }
+  draw();
+})();
+
+/* ===== 互动6:标况判断器 ===== */
+(function(){
+  const svg=document.getElementById('stpSvg');
+  const note=document.getElementById('stpNote');
+  let c=0;
+  document.querySelectorAll('.stpcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.stpcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    let title,ok,msg,col;
+    if(c===0){title='标准状况(0℃,101kPa)，气体CO₂';ok=true;msg='✓ 可以直接用 V=n×22.4L/mol（或 n=V/22.4）。这是唯一能直接套用的场景。';col=GREEN;}
+    else if(c===1){title='常温常压(25℃,101kPa)，气体CO₂';ok=false;msg='✗ 不是标准状况！不能用22.4。此条件下需用理想气体方程 pV=nRT，或题目会给出对应摩尔体积(约24.5L/mol)。';col=RED;}
+    else if(c===2){title='题目未说明温度压强条件';ok=false;msg='✗ 绝不能默认为标况！必须题目明确写"标准状况下"才能用22.4，否则条件不定，无法确定气体摩尔体积。';col=RED;}
+    else {title='标准状况下的水（H₂O，液态）';ok=false;msg='✗ 22.4L/mol只对标况下真实呈气态的物质成立。水在0℃、101kPa下是液态（或固态），不能用22.4L/mol换算体积。';col=RED;}
+    el(svg,'text',{x:350,y:34,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title;
+    // big check/cross icon
+    const cx=350,cy=110;
+    el(svg,'circle',{cx:cx,cy:cy,r:60,fill:ok?'rgba(30,158,134,0.15)':'rgba(224,56,42,0.15)',stroke:col,'stroke-width':4});
+    if(ok){
+      el(svg,'polyline',{points:(cx-25)+','+cy+' '+(cx-8)+','+(cy+20)+' '+(cx+30)+','+(cy-22),fill:'none',stroke:GREEN,'stroke-width':8,'stroke-linecap':'round','stroke-linejoin':'round'});
+    } else {
+      el(svg,'line',{x1:cx-22,y1:cy-22,x2:cx+22,y2:cy+22,stroke:RED,'stroke-width':8,'stroke-linecap':'round'});
+      el(svg,'line',{x1:cx+22,y1:cy-22,x2:cx-22,y2:cy+22,stroke:RED,'stroke-width':8,'stroke-linecap':'round'});
+    }
+    el(svg,'text',{x:350,y:190,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=ok?'能用 V=n×22.4':'不能用 22.4L/mol';
+    note.textContent=msg;
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 差量法的核心原理是什么？为什么可以跳过中间步骤？",a:"反应前后某物理量(质量/体积/物质的量)的变化量(差值)与化学计量数成正比。只要知道差值和对应的理论计量数比例，就能直接列比例求解，不需要知道反应物、生成物各自的绝对量。"},
+ {q:"2. Fe+CuSO₄=FeSO₄+Cu，若固体增重4g，求参与反应的Fe的物质的量。",a:"理论上每1mol(56g)Fe反应生成1mol(64g)Cu，固体净增重8g。n(Fe)=4/8=0.5mol。"},
+ {q:"3. 电荷守恒怎么列？NaCl溶液中c(Na⁺)、c(Cl⁻)、c(H⁺)、c(OH⁻)之间的关系式是什么？",a:"电荷守恒是阳离子浓度×电荷数之和=阴离子浓度×电荷数之和。NaCl溶液(都是1价离子)：c(Na⁺)+c(H⁺)=c(Cl⁻)+c(OH⁻)。"},
+ {q:"4. 电子守恒的表达式是什么？多步氧化还原反应可以怎么简化？",a:"n(失电子)×化合价升高值=n(得电子)×化合价降低值。多步反应只需比较最初还原剂和最终氧化产物的化合价变化，中间过程可以跳过。"},
+ {q:"5. 3mol Na和2mol Cl₂反应(2Na+Cl₂=2NaCl)，谁过量？生成多少NaCl？",a:"n(Na)/2=1.5，n(Cl₂)/1=2。1.5<2，Na不足量。按Na计算：生成NaCl=3mol；消耗Cl₂=1.5mol，剩余Cl₂=0.5mol。"},
+ {q:"6. 判断过量时，为什么不能直接比较两反应物的物质的量大小？",a:"因为要考虑化学计量数不同的情况。必须把各自的物质的量除以对应的化学计量数，比值较小的才是不足量(限量剂)，直接比较原始量会得出错误结论。"},
+ {q:"7. 什么是关系式法？它的使用前提是什么？",a:"多步连续反应中，只关心起点和终点物质的数量关系时，通过元素守恒(或电子守恒)直接建立首尾的比例关系式，跳过中间产物。前提是关键元素在中间各步传递时没有损耗或分流。"},
+ {q:"8. 含硫化合物最终转化为BaSO₄沉淀0.02mol，原硫元素是多少mol？用的是什么方法？",a:"用关系式法：S~BaSO₄(1:1，S原子个数守恒)，所以原硫元素为0.02mol。"},
+ {q:"9. 混合物计算(如Na₂CO₃和NaHCO₃混合物)一般怎么解？",a:"设两组分的物质的量分别为x、y，根据总质量(或总mol数)列一个方程，根据反应生成的气体/沉淀量列另一个方程，联立解二元一次方程组，再求质量分数等。"},
+ {q:"10. 22.4L/mol在什么条件下才能使用？举一个不能使用的场景。",a:"只有在标准状况(0℃,101kPa)且该物质确实呈气态时才能用V=n×22.4。不能用的场景：常温常压下(如25℃)的气体；题目未说明温度压强；标况下呈液态或固态的物质(如水)。"},
+ {q:"11. 标准状况下2.24L SO₃，能不能直接用22.4L/mol算物质的量？为什么？",a:"不能。SO₃的沸点约45℃，在标准状况(0℃)下实际上是液态或固态，不是气体，所以即使写了'标准状况下'，也不能对SO₃使用22.4L/mol。"},
+ {q:"12. 用方程组解出Na₂CO₃为x=-0.02mol，这个解说明什么问题？",a:"物质的量不能为负数，说明这组数据本身有矛盾(比如题目给的总质量和总气体量不匹配某个混合比例)，或者计算过程中方程列错了，需要重新检查条件和方程式。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

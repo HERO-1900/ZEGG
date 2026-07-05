@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电容器与平行板电容器 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电容器与平行板电容器</h1>
+    <p class="lead">电容器这一章的命门只有一句话:<b>电容 C 是电容器自己的「容量属性」,由结构(S、d、εr)决定,不随 Q、U 的变化而变化</b>。几乎所有陷阱都来自没分清楚题目是「电容器始终接在电池上(U 不变)」还是「充电后断开电池(Q 不变)」——这两种情形下,改变 d、S、εr 会引出完全不同的连锁反应。把这条主线抓牢,平行板、场强、粒子偏转全都能推出来。</p>
+
+    <div class="say">🗣️ <b>电容器(人话版):</b> 电容器就像一个「电荷仓库」,C 是仓库的「容积系数」——仓库多大(S 大)、隔板多薄(d 小)、隔板材料好(εr 大),都能让它一次性存住更多电荷。但仓库的容积系数本身<b>不取决于你往里存了多少东西</b>,就像杯子的容积不取决于你倒了多少水。U=Q/C 只是「存了多少电荷、两极板电势差多大」的<b>比值关系</b>,C 本身该是多少还是多少。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>C = Q/U</b>(定义式,比值,C 与 Q、U 无关)。平行板电容器:<b>C = εr·S/(4πk·d)</b>(S=正对面积,d=板间距,εr=相对介电常数,k=静电力常量)。板间匀强场:<b>E = U/d</b>。解题第一步永远是:<b>先看电容器是「接着电池」还是「断开电池」——这决定了 U 不变还是 Q 不变</b>。</div>
+
+    <h2>① 电容 C:比值定义,与 Q、U 无关</h2>
+    <div class="card">
+      <div class="eq">C = Q/U　(单位:法拉 F;常用 微法 μF=10⁻⁶F、皮法 pF=10⁻¹²F)</div>
+      <p style="margin:8px 0">电容 C 描述的是「电容器容纳电荷的本领」,是电容器<b>结构本身</b>的属性——由两极板的形状、正对面积、间距、中间介质决定。C=Q/U 只是给这个属性一个<b>可测量的定义式</b>(就像密度 ρ=m/V,ρ 是材料属性,不因为你取的体积大小而变)。</p>
+      <table>
+        <tr><th>量</th><th>能不能因为「充了更多电」而变?</th></tr>
+        <tr><td>C(电容)</td><td><b>不能</b>——只由结构(S、d、εr)决定</td></tr>
+        <tr><td>Q(电荷量)</td><td>能——充电越多 Q 越大</td></tr>
+        <tr><td>U(电压)</td><td>能——随外部电路或充电程度变化</td></tr>
+      </table>
+      <p class="trap">⚠ 头号陷阱:「Q 变大了,C 是不是也变大了?」——<b>错!</b> Q 和 U 会同时按比例变化,比值 C=Q/U 恒定不变(前提是结构没变)。C 变化只能通过改变 S、d、εr 这类<b>结构参数</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 1 — C=Q/U 比值定义演示:改 Q 同时改 U,C 恒定不变</div>
+      <svg id="cquSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cquGo">▶ 充电到下一级</button><button id="cquReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>电荷 Q (μC)</b><span id="cquQ">0</span></div>
+        <div><b>电压 U (V)</b><span id="cquU">0</span></div>
+        <div><b>比值 C=Q/U (μF)</b><span id="cquC">0</span></div>
+        <div><b>结构是否变了</b><span id="cquS">否</span></div>
+      </div>
+      <p class="small">每点一次「充电」,Q 和 U 都会同步增大(充电越多、电压越高),但只要电容器结构没变,C=Q/U 这个比值<b>永远不变</b>——图中蓝线斜率恒定就是 C。</p>
+    </div>
+
+    <h2 class="b">② 平行板电容公式:C = εr·S/(4πk·d)</h2>
+    <div class="card">
+      <div class="eq">C = εr·S / (4πk·d)　(k 为静电力常量,εr 为电介质相对介电常数)</div>
+      <p style="margin:8px 0">平行板电容器的电容由三个结构参数决定:</p>
+      <table>
+        <tr><th>参数</th><th>增大它 → C 怎么变</th><th>物理原因</th></tr>
+        <tr><td><b>正对面积 S</b></td><td>C 增大(正比)</td><td>板越大,能承载的电荷越多</td></tr>
+        <tr><td><b>板间距 d</b></td><td>C <b>减小</b>(反比)</td><td>板靠得越近,相互吸引束缚电荷能力越强</td></tr>
+        <tr><td><b>相对介电常数 εr</b>(插入电介质)</td><td>C 增大(正比)</td><td>电介质被极化,削弱内部场强,同样 U 能容纳更多 Q</td></tr>
+      </table>
+      <p style="margin:8px 0">插入电介质(如玻璃、云母、油)后 εr>1,电容变大——这是提高电容器容量最常用的手段(真空/空气 εr≈1)。</p>
+      <p class="trap">⚠ 只有 S、d、εr 才能改变 C。改变 Q 或 U(比如多充点电、换个电源电压)<b>都不会改变 C</b>——这是本节和第①节要反复对照的地方。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 2 — 平行板交互:拖 d/S、插入电介质εr → 实时算 C</div>
+      <svg id="pcSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>正对面积 S <input id="pcS" type="range" min="30" max="100" value="60" step="5"></label>
+        <label>板间距 d <input id="pcD" type="range" min="10" max="60" value="30" step="2"></label>
+        <label>介电常数 εr <input id="pcE" type="range" min="1" max="6" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>面积 S(相对值)</b><span id="pcOutS">0</span></div>
+        <div><b>间距 d(相对值)</b><span id="pcOutD">0</span></div>
+        <div><b>εr</b><span id="pcOutE">0</span></div>
+        <div><b>C ∝ εrS/d(相对值)</b><span id="pcOutC">0</span></div>
+      </div>
+      <p class="small">拖动滑块:S 越大、d 越小、εr 越大,C 越大。中间黄色区域代表电介质,插入后(εr>1)极板间的场强被削弱,等效电容变大。</p>
+    </div>
+
+    <h2 class="g">③ 核心难点:两大情形的动态分析</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是本章<b>最容易失分</b>的地方。同样是「改变 d」,结果完全不同,关键看电容器所处的电路状态:</p>
+      <table>
+        <tr><th>情形</th><th>不变的量</th><th>改 d(变大)后的连锁反应</th></tr>
+        <tr><td><b>情形①:始终接着电池</b></td><td><b>U 不变</b>(电池钳住电压)</td><td>C=εrS/4πkd ↓(d↑)→ Q=CU ↓(U不变,C变小)→ E=U/d ↓(U不变,d变大)</td></tr>
+        <tr><td><b>情形②:充电后断开电池</b></td><td><b>Q 不变</b>(电荷无处可去)</td><td>C=εrS/4πkd ↓(d↑)→ U=Q/C ↑(Q不变,C变小)→ E=U/d = 不变!(见下)</td></tr>
+      </table>
+      <div class="mono">判断口诀:先问「电池还连着吗?」连着 → U 是锚点;断开了 → Q 是锚点。</div>
+      <h3>情形②里 E 与 d 的关系(高频考点、极易搞反)</h3>
+      <p style="margin:8px 0">断开电池后 Q 不变,表面看 E=U/d,而 U 又随 d 变,好像很复杂。但对平行板匀强电场还有另一个更本质的表达式:</p>
+      <div class="eq">E = Q / (εr·ε0·S) = 4πk·Q / (εr·S)　——只含 Q、S、εr,<b>与 d 无关!</b></div>
+      <p style="margin:8px 0">这是因为平行板间场强本质由电荷面密度 σ=Q/S 决定,与两板距离无关(理想匀强场近似下)。所以<b>断开电池、只改变 d</b> 时:Q 不变、S 不变、εr 不变 ⇒ <b>E 也不变</b>!你用 E=U/d 算,会发现 U 和 d 同比例变化,商依然不变,殊途同归。</p>
+      <p class="trap">⚠ 最容易翻车的两处:① 把「连电池,U 不变」和「断开电池,Q 不变」记反,导致所有后续推导全错;② 断开电池改变 d 时,误以为 E=U/d 里 d 变了 E 就一定变——其实 U 和 d 同步变化,E 保持不变。判断 E 是否变,永远优先用 E=4πkQ/(εrS) 这个只含 Q、S、εr 的表达式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 3 — 两情形切换器:连电池(U不变) / 断开电池(Q不变) → 改 d 后各量变化,红色高亮"哪个不变"</div>
+      <svg id="caseSvg" viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="caseMode on" data-m="0">情形① 连电池(U不变)</button>
+        <button class="caseMode" data-m="1">情形② 断开电池(Q不变)</button>
+        <label>板间距 d <input id="caseD" type="range" min="10" max="60" value="30" step="2"></label>
+      </div>
+      <div class="live">
+        <div><b>C(相对值)</b><span id="caC">0</span></div>
+        <div><b>Q(相对值)</b><span id="caQ">0</span></div>
+        <div><b>U(相对值)</b><span id="caU">0</span></div>
+        <div><b>E(相对值)</b><span id="caE">0</span></div>
+      </div>
+      <div class="verdict" id="caseNote"></div>
+      <p class="small">拖动 d,观察哪个量被红框锁定「不变」。情形①里 U 被锁定;情形②里 Q 被锁定,并且此时 E 也几乎不随 d 变化(只由 Q、S、εr 决定)。</p>
+    </div>
+
+    <h2 class="o">④ 板间场强 E=U/d 与带电粒子偏转</h2>
+    <div class="card">
+      <div class="eq">板间匀强电场:E = U/d　(方向由正极板指向负极板)</div>
+      <p style="margin:8px 0">平行板间是<b>匀强电场</b>(忽略边缘效应),场强处处相等、方向不变。带电粒子垂直于场强方向射入板间,会像<b>平抛运动</b>一样偏转:</p>
+      <table>
+        <tr><th>方向</th><th>受力/运动</th><th>公式</th></tr>
+        <tr><td>沿初速度方向(设为 x)</td><td>匀速直线</td><td>x = v₀t</td></tr>
+        <tr><td>垂直方向(设为 y,即偏转方向)</td><td>匀加速直线(类比自由落体)</td><td>a=qE/m=qU/(md)，y=½at²</td></tr>
+      </table>
+      <div class="mono">类平抛核心:t=x/v₀ 代入 y=½at²，得到偏转量 y=qU·x²/(2·m·d·v₀²)</div>
+      <p style="margin:8px 0">这与力学中的平抛运动完全同构:重力场里 a=g,电场里 a=qE/m=qU/(md);两者的"射入速度、偏转距离、偏转角"处理方法一模一样,只是加速度来源不同。</p>
+      <p class="trap">⚠ 别忘了粒子重力有时可忽略(带电量大、质量小,如电子),有时不能忽略(题目明确给出质量、要求比较 mg 与 qE)——看题目是否要求考虑重力。此外 E=U/d 只在<b>忽略边缘效应的匀强场</b>近似下成立。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 4 — 板间带电粒子偏转(类平抛轨迹)</div>
+      <svg id="deflSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="deflGo">▶ 发射粒子</button><button id="deflReset">↺ 重置</button>
+        <label>电压 U <input id="deflU" type="range" min="20" max="100" value="60" step="10"></label>
+        <label>初速度 v₀ <input id="deflV" type="range" min="4" max="12" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>场强 E=U/d</b><span id="deflE">0</span></div>
+        <div><b>加速度 a=qE/m</b><span id="deflA">0</span></div>
+        <div><b>穿出时间 t=x/v₀</b><span id="deflT">0</span></div>
+        <div><b>偏转量 y=½at²</b><span id="deflY">0</span></div>
+      </div>
+      <p class="small">粒子从左侧水平射入板间,受竖直方向电场力做类平抛运动。提高电压 U → 场强 E 增大 → 加速度 a 增大 → 偏转量 y 增大;提高初速度 v₀ → 穿越时间变短 → 偏转量反而减小。</p>
+    </div>
+
+    <h2 class="v">⑤ E=U/d:场强与板距的关系(区分两种情形)</h2>
+    <div class="card">
+      <p style="margin:6px 0">E=U/d 表面上是一个简单公式,但「d 变大,E 怎么变」这个问题<b>没有统一答案</b>——必须先确定 U 是否随 d 变化,这又回到第③节的两大情形:</p>
+      <table>
+        <tr><th>情形</th><th>d 增大时 U 的变化</th><th>E=U/d 的结果</th></tr>
+        <tr><td>连电池(U 不变)</td><td>U 恒定(电池钳住)</td><td>E=U/d，<b>d 增大 → E 减小</b>(U 不变、分母变大)</td></tr>
+        <tr><td>断开电池(Q 不变)</td><td>U=Q/C=Q·4πkd/(εrS)，随 d <b>线性增大</b></td><td>E=U/d=4πkQ/(εrS)，<b>与 d 无关,恒定不变</b></td></tr>
+      </table>
+      <p class="trap">⚠ 千万别看到 E=U/d 就直接判断「d 增大、E 一定减小」——这只在 U 不变(连电池)的情形下成立。断电池情形下 U 也在跟着变,两者变化抵消,E 反而不变。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 5 — E=U/d 场强与板距关系:两种情形下 E 随 d 的变化曲线对比</div>
+      <svg id="edSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="edMode on" data-m="0">连电池(U不变)</button>
+        <button class="edMode" data-m="1">断开电池(Q不变)</button>
+      </div>
+      <div class="verdict" id="edNote"></div>
+      <p class="small">横轴为板间距 d,纵轴为场强 E。蓝色曲线:连电池时 E 随 d 增大而<b>下降</b>(反比);绿色曲线:断开电池时 E 是一条<b>水平线</b>,不随 d 变化。</p>
+    </div>
+
+    <h2 class="b">⑥ 电容器的充放电过程</h2>
+    <div class="card">
+      <p style="margin:6px 0">电容器接入电路开始充电时,电流并不是一直恒定的——电荷在极板上逐渐堆积,极板间电压逐渐升高,充电电流逐渐减小,直至电容器两端电压等于电源电压时,电流趋于 0(充电完成)。放电时电流方向相反,同样逐渐减小到 0。</p>
+      <table>
+        <tr><th>阶段</th><th>电流方向</th><th>电流大小随时间</th><th>能量</th></tr>
+        <tr><td>充电</td><td>从电源正极流向电容器正极板(常规电流方向)</td><td>从最大值逐渐<b>减小到 0</b></td><td>电源做功,一部分转化为电容器所储的电场能,一部分在电阻上生热</td></tr>
+        <tr><td>放电</td><td>与充电时相反</td><td>从最大值逐渐<b>减小到 0</b></td><td>电容器储存的电场能释放,转化为电阻热能等</td></tr>
+      </table>
+      <div class="mono">电容器在稳定的直流电路中:充电完成后电压不再变化 ⇒ 电流为 0 ⇒ 电容器支路相当于断路(隔直流)</div>
+      <p style="margin:8px 0">这就是电容器「隔直流、通交流」特性的由来——直流电路稳定后电容器不再有电流通过,而交流电压不断变化,电容器持续充放电,呈现出"导通"的表观效果。</p>
+      <p class="trap">⚠ 充放电过程中电流不是恒定的,不能用 I=U/R 这种稳态公式贸然代入充电瞬间;电容器稳定后的支路电流一定为 0,这条常被用来判断电路中某支路是否通电流。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 6 — 充放电电流曲线:电流从最大值指数衰减到 0</div>
+      <svg id="chgSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="chgGo">▶ 充电</button><button id="chgDis">▶ 放电</button><button id="chgReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前电流(相对值)</b><span id="chgI">0</span></div>
+        <div><b>当前极板电压(相对值)</b><span id="chgU">0</span></div>
+        <div><b>过程</b><span id="chgP">静止</span></div>
+        <div><b>是否达到稳定</b><span id="chgS">是</span></div>
+      </div>
+      <p class="small">充电时电流(红色曲线)从最大值逐渐衰减到 0,同时极板电压(蓝色曲线)从 0 逐渐升高到电源电压;放电时正好相反。稳定后电容器支路电流为 0,相当于断路。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 电容定义式的直接应用与陷阱识别</h3>
+      <p><b class="tag">触发信号:</b>给出电容器充入不同 Q、U 的数据,要求判断 C 是否变化,或直接用 C=Q/U 求电容。</p>
+      <p><b class="tag">标准动作:</b>先确认电容器结构(S、d、εr)是否变化。结构不变 ⇒ 不管 Q、U 怎么变,C 恒定;用任意一组对应的 Q、U 代入 C=Q/U 都得到同一个 C。</p>
+      <p><b class="tag">示例(带解):</b>某平行板电容器充电到 Q₁=4μC 时 U₁=2V,继续充电到 Q₂=8μC。求此时电压 U₂ 及电容 C。解:结构不变,C=Q₁/U₁=4/2=2μF 恒定;U₂=Q₂/C=8/2=4V。</p>
+      <p class="trap">陷阱:以为 Q 变大后 C 也变大,直接认为「电容器容量增加了」;实际 C 不变,是 U 跟着 Q 同比例变化。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 平行板电容公式与结构参数改变</h3>
+      <p><b class="tag">触发信号:</b>题目描述"拉开/靠近极板""改变正对面积""插入/抽出电介质",求 C 如何变化。</p>
+      <p><b class="tag">标准动作:</b>直接代入 C=εrS/(4πkd),判断 S↑、d↓、εr↑ 分别使 C 增大;逐个分析每个参数变化对 C 的独立影响(其余参数不变)。</p>
+      <p><b class="tag">示例(带解):</b>平行板电容器间距增大为原来 2 倍,正对面积减小为原来一半,其余不变,求新电容与原电容之比。解:C'=εr·(S/2)/(4πk·2d)=¼·(εrS/4πkd)=C/4。新电容是原来的 1/4。</p>
+      <p class="trap">陷阱:多个参数同时变化时漏乘某一个比例因子;把 εr 变化的方向搞反(插入电介质 εr 增大,C 增大,不是减小)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 连电池情形(U 不变)的动态分析</h3>
+      <p><b class="tag">触发信号:</b>题目明确"电容器始终与电源相连""保持电压不变",然后改变 d 或 S 或 εr。</p>
+      <p><b class="tag">标准动作:</b>锁定 U 不变 ⇒ 先算 C 的变化,再用 Q=CU 算 Q 的变化(与 C 同向变化),用 E=U/d 算 E 的变化(U 不变时看 d)。</p>
+      <p><b class="tag">示例(带解):</b>平行板电容器接电源电压 U=100V 不变,将间距 d 增大为原来 2 倍。求 C、Q、E 各变为原来的几倍。解:C'=C/2;Q'=C'U=Q/2;E'=U/d'=E/2。三者都变为原来的一半。</p>
+      <p class="trap">陷阱:误用 Q 不变去算新的 U(那是断电池情形的做法);混淆两种情形导致全盘皆错。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 断开电池情形(Q 不变)的动态分析,重点看 E</h3>
+      <p><b class="tag">触发信号:</b>题目明确"充电后断开电源""保持电荷量不变",然后改变 d 或 S 或 εr。</p>
+      <p><b class="tag">标准动作:</b>锁定 Q 不变 ⇒ 先算 C 的变化,再用 U=Q/C 算 U 的变化(与 C 反向变化);判断 E 优先用 E=4πkQ/(εrS)(与 d 无关),若 d 是唯一变化的量,E 不变;若 S 或 εr 也变了,E 会随之变化。</p>
+      <p><b class="tag">示例(带解):</b>平行板电容器充电后断开电源,Q=6μC 保持不变,将间距 d 增大为原来 2 倍(S、εr 不变)。求 C、U、E 各变为原来的几倍。解:C'=C/2;U'=Q/C'=2U(增大为2倍);E'=4πkQ/(εrS)不含 d,<b>与原 E 相同,不变</b>(可验算:E'=U'/d'=2U/2d=U/d=E,一致)。</p>
+      <p class="trap">陷阱:看到 d 变大就直接说 E=U/d 中 d 增大、E 减小,却忘了 U 也同时增大了 2 倍,两者抵消,E 实际不变。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 带电粒子在板间的偏转(类平抛)</h3>
+      <p><b class="tag">触发信号:</b>粒子(电子、油滴、带电小球)以初速度水平射入平行板间,求偏转量、穿出时的速度方向,或求打在极板上与否。</p>
+      <p><b class="tag">标准动作:</b>分解为 x 方向匀速(x=v₀t)、y 方向匀加速(a=qU/md,y=½at²);先用几何关系求穿越板间所需时间 t=L/v₀(L 为板长),再代入 y。若 y 超过 d/2(以中线射入),说明粒子打在极板上,穿不出去。</p>
+      <p><b class="tag">示例(带解):</b>电子以 v₀=2×10⁷m/s 沿中线水平射入长 L=0.1m、间距 d=0.02m、电压 U=200V 的平行板间。a=eU/(md)。t=L/v₀=5×10⁻⁹s。代入求 y,并与 d/2=0.01m 比较,判断能否飞出。</p>
+      <p class="trap">陷阱:忘记先求穿越时间 t 就直接代入 y=½at²；把 d 当成板长、L 当成板间距,物理量弄反。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 充放电过程与"隔直流"特性</h3>
+      <p><b class="tag">触发信号:</b>电路中含有电容器支路,问稳定后该支路电流、某电阻上是否有电流、电容器起什么作用。</p>
+      <p><b class="tag">标准动作:</b>直流电路稳定后,电容器支路电流恒为 0(电容器视为断路);先按"电容器支路断开"重新画等效电路求出各处稳定电流和电压,再用 U=Q/C 或 C=εrS/4πkd 求电容器所带电荷量或两端电压。</p>
+      <p><b class="tag">示例(带解):</b>电源经电阻 R 给电容器 C 充电,稳定后电容器支路电流为 0,则电容器两端电压等于其所在支路两端(去掉与之串联、无其余电流通路的电阻上没有压降的)对应节点电压;若电容器与某电阻并联,则电容器电压=该电阻两端电压(此时该电阻若在无其他电流通路的支路上,压降为0,需结合具体电路判断)。</p>
+      <p class="trap">陷阱:把充电瞬间的电流当成稳定电流代入计算;忽略电容器稳定后断路这一关键结论,导致误算某电阻的电流。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① C=Q/U 是<b>比值定义式</b>,C 由电容器结构(S、d、εr)决定,<b>与 Q、U 无关</b>。别被"充电越多,Q 越大,C 也越大"这种直觉带偏。</p>
+      <p class="trap">② 只有 S、d、εr 三个结构参数能改变 C。改变外加电压或充电量都不改变 C 本身。</p>
+      <p class="trap">③ 连电池 ⇒ <b>U 不变</b>(电池钳住电压);断开电池 ⇒ <b>Q 不变</b>(电荷无处可去)。把两者记反,后面全错。</p>
+      <p class="trap">④ 连电池时改变 d,E=U/d 中 U 不变,d 增大则 E <b>减小</b>。</p>
+      <p class="trap">⑤ 断开电池时改变 d,E 应优先用 E=4πkQ/(εrS) 判断——只含 Q、S、εr,<b>与 d 无关</b>,d 单独变化时 E 不变。</p>
+      <p class="trap">⑥ 插入电介质(εr>1)使 C <b>增大</b>,别记反成"介质阻碍电场所以 C 减小"。</p>
+      <p class="trap">⑦ 单位换算:1F=10⁶μF=10¹²pF。审题看清单位,μF 和 pF 差 6 个数量级,代入公式前先统一单位。</p>
+      <p class="trap">⑧ 平行板间是<b>匀强电场</b>,场强处处相等,粒子偏转按<b>类平抛</b>处理,先求穿越时间 t=L/v₀,再求偏转 y=½at²，顺序不能反。</p>
+      <p class="trap">⑨ 电容器充放电电流<b>不是恒定值</b>,是从最大值逐渐衰减到 0 的过程,不能套用稳态电路的 I=U/R 公式描述充电瞬间。</p>
+      <p class="trap">⑩ 直流电路稳定后,电容器支路电流恒为 <b>0</b>,电容器相当于断路,这是分析含容电路的关键突破口。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① C=Q/U 的本质是"结构函数",不是"变量间的因果":</b> 就像密度 ρ=m/V 不因为你多取了一些材料而改变,C=Q/U 只是让你能通过测量 Q、U 反推出这个结构常数。判断题目里 C 是否变化,永远回到"结构(S、d、εr)有没有变"这一根本问题,而不是盯着 Q、U 的数值大小。</p>
+      <p style="margin:8px 0"><b>② 两大情形的本质是"电路给电容器施加的边界条件不同":</b> 连电池相当于给电容器一个"电压源边界"(U 被外部钳定);断开电池相当于给它一个"电荷守恒边界"(Q 被孤立、无法流失)。所有推导的起点都是先确定这个边界条件,再用 C=Q/U 和 C=εrS/4πkd 联立求解剩下的量。</p>
+      <p style="margin:8px 0"><b>③ E=4πkQ/(εrS) 与 d 无关,是"无限大平行板"近似的必然结果:</b> 从更本质的角度看,匀强电场的场强只取决于电荷面密度 σ=Q/S 及周围介质,不取决于你站在两板之间的哪个位置或两板隔多远。这解释了为什么断开电池、单独改变 d 不影响 E——d 这个变量根本没有出现在决定 E 的物理量里。</p>
+      <p style="margin:8px 0"><b>④ 类平抛处理是"力学与电学的统一视角":</b> 重力场里 a=g 是恒量,电场里 a=qE/m=qU/(md) 同样是恒量(只要没改变电压和间距),两套问题的数学结构完全相同——分解运动、先算时间再算位移。真正的难点从来不是数学,而是准确识别"匀强场""恒定加速度"这些物理条件是否成立。</p>
+      <p style="margin:8px 0"><b>⑤ "隔直流、通交流"是电容器最重要的工程直觉:</b> 直流稳态电流为 0 这一结论,是分析任何含电容器的复杂电路的第一刀——先把电容器支路当断路求出稳定值,再单独用 Q=CU 反推电容器状态。交流电路里电容器持续充放电、表观导通,这是后续学习交流电路、滤波电路的基础。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 电容器与平行板电容器</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:C=Q/U 比值定义 ===== */
+(function(){
+  const svg=document.getElementById('cquSvg');
+  const oQ=document.getElementById('cquQ'),oU=document.getElementById('cquU'),oC=document.getElementById('cquC'),oS=document.getElementById('cquS');
+  const Cfixed=2; // uF, fixed by structure
+  let step=0;
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=560,H=180;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='Q';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U';
+    const Umax=10,Qmax=Umax*Cfixed;
+    const sx=W/Umax, sy=H/Qmax;
+    // line Q = C*U
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+Umax*sx,y2:Y0+H-Qmax*sy,stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:X0+Umax*sx-70,y:Y0+H-Qmax*sy-10,'font-size':13,'font-weight':900,fill:BLUE}).textContent='Q=C·U (斜率=C 恒定)';
+    // current point
+    const U=2+step*2, Q=Cfixed*U;
+    const px=X0+U*sx, py=Y0+H-Q*sy;
+    el(svg,'circle',{cx:px,cy:py,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px,y1:py,x2:px,y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'line',{x1:px,y1:py,x2:X0,y2:py,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:px+8,y:py-8,'font-size':12.5,'font-weight':900,fill:RED}).textContent='第'+(step+1)+'级:Q='+Q.toFixed(0)+'μC, U='+U.toFixed(0)+'V';
+    oQ.textContent=Q.toFixed(1);oU.textContent=U.toFixed(1);oC.textContent=(Q/U).toFixed(2);oS.textContent='否(结构未变)';
+  }
+  document.getElementById('cquGo').onclick=()=>{step=(step+1)%5;draw();};
+  document.getElementById('cquReset').onclick=()=>{step=0;draw();};
+  draw();
+})();
+
+/* ===== 互动2:平行板交互 C=εrS/4πkd ===== */
+(function(){
+  const svg=document.getElementById('pcSvg');
+  const Ss=document.getElementById('pcS'),Ds=document.getElementById('pcD'),Es=document.getElementById('pcE');
+  const oS=document.getElementById('pcOutS'),oD=document.getElementById('pcOutD'),oE=document.getElementById('pcOutE'),oC=document.getElementById('pcOutC');
+  function draw(){
+    clr(svg);
+    const S=+Ss.value,D=+Ds.value,ER=+Es.value;
+    const cx=350,cy=130;
+    const plateW=S*2, gap=D;
+    const x1=cx-gap/2, x2=cx+gap/2;
+    // top/bottom plates (drawn as vertical plates facing each other horizontally for clarity)
+    el(svg,'rect',{x:x1-8,y:cy-plateW/2,width:8,height:plateW,fill:INK});
+    el(svg,'rect',{x:x2,y:cy-plateW/2,width:8,height:plateW,fill:INK});
+    el(svg,'text',{x:x1-8,y:cy-plateW/2-10,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='极板+';
+    el(svg,'text',{x:x2+8,y:cy-plateW/2-10,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='极板−';
+    // dielectric
+    if(ER>1){
+      el(svg,'rect',{x:x1,y:cy-plateW/2,width:gap,height:plateW,fill:'rgba(243,192,14,0.45)',stroke:ORANGE,'stroke-width':2});
+      el(svg,'text',{x:cx,y:cy+plateW/2+22,'font-size':12,'font-weight':800,fill:'#b8860b','text-anchor':'middle'}).textContent='电介质 εr='+ER;
+    } else {
+      el(svg,'rect',{x:x1,y:cy-plateW/2,width:gap,height:plateW,fill:'rgba(20,80,200,0.06)',stroke:'#ccc','stroke-width':1});
+      el(svg,'text',{x:cx,y:cy+plateW/2+22,'font-size':12,'font-weight':800,fill:'#888','text-anchor':'middle'}).textContent='真空/空气 εr=1';
+    }
+    // field lines
+    const nlines=6;
+    for(let i=0;i<nlines;i++){
+      const fy=cy-plateW/2+plateW*(i+0.5)/nlines;
+      el(svg,'line',{x1:x1,y1:fy,x2:x2,y2:fy,stroke:RED,'stroke-width':1.5,'marker-end':''});
+      el(svg,'polygon',{points:(x2-6)+','+(fy-4)+' '+x2+','+fy+' '+(x2-6)+','+(fy+4),fill:RED});
+    }
+    el(svg,'text',{x:cx,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='C = εr·S / (4πk·d)';
+    const Cval=(ER*S/D);
+    el(svg,'text',{x:cx,y:220,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='S='+S+'　d='+D+'　εr='+ER+'　⇒　C ∝ '+Cval.toFixed(2);
+    oS.textContent=S;oD.textContent=D;oE.textContent=ER;oC.textContent=Cval.toFixed(2);
+  }
+  Ss.oninput=Ds.oninput=Es.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:两情形切换器 ===== */
+(function(){
+  const svg=document.getElementById('caseSvg');const note=document.getElementById('caseNote');
+  const Ds=document.getElementById('caseD');
+  const oC=document.getElementById('caC'),oQ=document.getElementById('caQ'),oU=document.getElementById('caU'),oE=document.getElementById('caE');
+  let mode=0;
+  const S0=60, d0=30, ER=1, U0=100, Q0=(ER*S0/d0)*U0; // baseline
+  document.querySelectorAll('.caseMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.caseMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    const D=+Ds.value;
+    const C=(ER*S0/D); // relative
+    let Q,U,E,lockLabel;
+    if(mode===0){ // U fixed
+      U=U0; Q=C*U; E=U/D; lockLabel='U';
+    } else { // Q fixed
+      Q=Q0; U=Q/C; E=(4*3.14159*1*Q0)/(ER*S0); // E = 4πkQ/(εrS), k taken as 1 unit for relative comparison
+      lockLabel='Q';
+    }
+    // draw plates
+    const cx=350,cy=110,plateH=100;
+    const x1=cx-D/2, x2=cx+D/2;
+    el(svg,'rect',{x:x1-8,y:cy-plateH/2,width:8,height:plateH,fill:INK});
+    el(svg,'rect',{x:x2,y:cy-plateH/2,width:8,height:plateH,fill:INK});
+    el(svg,'text',{x:cx,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(mode===0?'情形①连电池:电池钳住 U':'情形②断开电池:Q 被孤立');
+    // battery symbol if mode0
+    if(mode===0){
+      el(svg,'line',{x1:x1-8,y1:cy+plateH/2+10,x2:x1-8,y2:cy+plateH/2+40,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:x2+8,y1:cy+plateH/2+10,x2:x2+8,y2:cy+plateH/2+40,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:x1-8,y1:cy+plateH/2+40,x2:x2+8,y2:cy+plateH/2+40,stroke:INK,'stroke-width':3});
+      el(svg,'rect',{x:cx-14,y:cy+plateH/2+34,width:10,height:14,fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'rect',{x:cx+4,y:cy+plateH/2+30,width:6,height:22,fill:INK});
+      el(svg,'text',{x:cx,y:cy+plateH/2+62,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='电源(始终连接)';
+    } else {
+      el(svg,'line',{x1:x1-8,y1:cy+plateH/2+10,x2:x1-8,y2:cy+plateH/2+30,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:x2+8,y1:cy+plateH/2+10,x2:x2+8,y2:cy+plateH/2+30,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:cy+plateH/2+46,'font-size':16,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='✂ 已断开';
+    }
+    // readouts with lock highlight
+    const items=[['C',C.toFixed(2)],['Q',Q.toFixed(1)],['U',U.toFixed(1)],['E',E.toFixed(2)]];
+    let bx=60;
+    items.forEach(function(it){
+      const isLock=(it[0]===lockLabel);
+      el(svg,'rect',{x:bx,y:230,width:140,height:40,fill:isLock?'#ffe1de':'#fff',stroke:isLock?RED:INK,'stroke-width':isLock?4:2});
+      el(svg,'text',{x:bx+70,y:245,'font-size':12,'font-weight':800,fill:isLock?RED:INK,'text-anchor':'middle'}).textContent=it[0]+(isLock?' (锁定不变)':'');
+      el(svg,'text',{x:bx+70,y:263,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it[1];
+      bx+=150;
+    });
+    oC.textContent=C.toFixed(2);oQ.textContent=Q.toFixed(1);oU.textContent=U.toFixed(1);oE.textContent=E.toFixed(2);
+    if(mode===0){
+      note.innerHTML='连电池:U 恒定不变(红色锁定)。d 增大 → C 减小 → Q=CU 随之减小 → E=U/d 减小(U不变、d变大)。';
+      note.style.borderColor=BLUE;
+    } else {
+      note.innerHTML='断开电池:Q 恒定不变(红色锁定)。d 增大 → C 减小 → U=Q/C 随之增大;而 E=4πkQ/(εrS) 只含 Q、S、εr,<b>与 d 无关,基本不变</b>。';
+      note.style.borderColor=GREEN;
+    }
+  }
+  Ds.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:带电粒子偏转(类平抛) ===== */
+(function(){
+  const svg=document.getElementById('deflSvg');
+  const Us=document.getElementById('deflU'),Vs=document.getElementById('deflV');
+  const oE=document.getElementById('deflE'),oA=document.getElementById('deflA'),oT=document.getElementById('deflT'),oY=document.getElementById('deflY');
+  const d=0.02, L=0.12, qm=6e10; // q/m ratio (relative, tuned for visual scale)
+  let anim=0,running=false;
+  function sync(){}
+  Us.oninput=Vs.oninput=()=>{anim=1;draw();};
+  function draw(){
+    clr(svg);
+    const U=+Us.value, v0=+Vs.value*1e6;
+    const E=U/d;
+    const a=qm*E;
+    const t=L/v0;
+    const y=0.5*a*t*t;
+    oE.textContent=E.toExponential(2);oA.textContent=a.toExponential(2);oT.textContent=t.toExponential(2);oY.textContent=y.toExponential(2);
+    // draw plates (horizontal, top/bottom)
+    const X0=60,X1=620,cy=130,halfGap=70;
+    el(svg,'rect',{x:X0,y:cy-halfGap-10,width:X1-X0,height:10,fill:INK});
+    el(svg,'rect',{x:X0,y:cy+halfGap,width:X1-X0,height:10,fill:INK});
+    el(svg,'text',{x:X0,y:cy-halfGap-16,'font-size':12,'font-weight':800,fill:INK}).textContent='+ 极板';
+    el(svg,'text',{x:X0,y:cy+halfGap+26,'font-size':12,'font-weight':800,fill:INK}).textContent='− 极板';
+    // field arrows
+    for(let i=0;i<5;i++){
+      const fx=X0+60+i*110;
+      el(svg,'line',{x1:fx,y1:cy-halfGap,x2:fx,y2:cy+halfGap,stroke:RED,'stroke-width':1.2,'stroke-dasharray':'4 3'});
+      el(svg,'polygon',{points:(fx-4)+','+(cy+halfGap-8)+' '+fx+','+(cy+halfGap)+' '+(fx+4)+','+(cy+halfGap-8),fill:RED});
+    }
+    // trajectory (parabola), scale visually: yMaxVisual maps to halfGap
+    const yRatioMax=1.4e-2; // reference max y for scaling (tuneable)
+    const a_progress=anim;
+    const stepsN=40;
+    let pts='';
+    for(let i=0;i<=stepsN;i++){
+      const frac=(i/stepsN)*a_progress;
+      const xx=X0+40+(X1-X0-80)*frac;
+      const tt=frac*t;
+      const yy=0.5*a*tt*tt;
+      const yVis=cy - (yy/yRatioMax)*halfGap*0.85; // deflect upward toward + plate visually (electron attracted to +)
+      pts+=xx+','+Math.max(cy-halfGap+6,yVis)+' ';
+    }
+    el(svg,'polyline',{points:pts.trim(),fill:'none',stroke:BLUE,'stroke-width':4});
+    if(a_progress>0){
+      const lastX=X0+40+(X1-X0-80)*a_progress;
+      const lastT=a_progress*t;
+      const lastY=0.5*a*lastT*lastT;
+      const lastYVis=cy-(lastY/yRatioMax)*halfGap*0.85;
+      el(svg,'circle',{cx:lastX,cy:Math.max(cy-halfGap+6,lastYVis),r:7,fill:RED,stroke:INK,'stroke-width':2});
+    }
+    el(svg,'text',{x:X0,y:30,'font-size':13,'font-weight':900,fill:INK}).textContent='粒子做类平抛:x=v₀t（匀速），y=½at²（匀加速，a=qU/md）';
+  }
+  function loop(){if(!running)return;anim+=0.02;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('deflGo').onclick=()=>{anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('deflReset').onclick=()=>{anim=1;draw();};
+  draw();
+})();
+
+/* ===== 互动5:E=U/d 与 d 关系对比 ===== */
+(function(){
+  const svg=document.getElementById('edSvg');const note=document.getElementById('edNote');
+  let mode=0;
+  document.querySelectorAll('.edMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.edMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=560,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='E';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='d';
+    const dMax=10;
+    const sx=W/dMax;
+    let pts='';
+    if(mode===0){
+      // E = U/d, U fixed=1 (relative), hyperbola-like decreasing curve
+      for(let i=1;i<=100;i++){
+        const dd=(i/100)*dMax;
+        const E=1/Math.max(dd,0.3);
+        const y=Y0+H-Math.min(E,5)*(H/5);
+        pts+=(X0+dd*sx)+','+y+' ';
+      }
+      el(svg,'polyline',{points:pts.trim(),fill:'none',stroke:BLUE,'stroke-width':4});
+      el(svg,'text',{x:X0+120,y:Y0+50,'font-size':13,'font-weight':900,fill:BLUE}).textContent='连电池:E=U/d（U不变）随 d 增大而下降';
+      note.innerHTML='连电池情形:U 被电池钳定不变,E=U/d 随 d 增大单调<b>下降</b>——曲线是反比例衰减。';
+      note.style.borderColor=BLUE;
+    } else {
+      const Eflat=Y0+H-2.5*(H/5);
+      el(svg,'line',{x1:X0+0.3*sx,y1:Eflat,x2:X0+dMax*sx,y2:Eflat,stroke:GREEN,'stroke-width':4});
+      el(svg,'text',{x:X0+120,y:Eflat-14,'font-size':13,'font-weight':900,fill:GREEN}).textContent='断开电池:E=4πkQ/(εrS)（与 d 无关）恒定';
+      note.innerHTML='断开电池情形:Q 不变,E=4πkQ/(εrS) 不含 d,曲线是<b>水平直线</b>——d 无论怎么变,E 都不变。';
+      note.style.borderColor=GREEN;
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='场强 E 随板间距 d 的变化(两种情形对比)';
+  }
+  draw();
+})();
+
+/* ===== 互动6:充放电电流曲线 ===== */
+(function(){
+  const svg=document.getElementById('chgSvg');
+  const oI=document.getElementById('chgI'),oU=document.getElementById('chgU'),oP=document.getElementById('chgP'),oS=document.getElementById('chgS');
+  let mode=0; // 0=idle,1=charging,2=discharging
+  let anim=0,running=false;
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=560,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='I,U';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const Tmax=1,steps=100;
+    let Ipts='',Upts='';
+    for(let i=0;i<=steps;i++){
+      const tt=(i/steps)*Tmax;
+      let Iv,Uv;
+      if(mode===1){ Iv=Math.exp(-4*tt); Uv=1-Math.exp(-4*tt); }
+      else if(mode===2){ Iv=Math.exp(-4*tt); Uv=Math.exp(-4*tt); }
+      else { Iv=0; Uv=0; }
+      const frac=Math.min(tt/Tmax,anim);
+      if(tt<=anim*Tmax+1e-9){
+        const px=X0+tt*W;
+        const py1=Y0+H-Iv*H*0.85;
+        const py2=Y0+H-Uv*H*0.85;
+        Ipts+=px+','+py1+' ';
+        Upts+=px+','+py2+' ';
+      }
+    }
+    if(Ipts) el(svg,'polyline',{points:Ipts.trim(),fill:'none',stroke:RED,'stroke-width':4});
+    if(Upts) el(svg,'polyline',{points:Upts.trim(),fill:'none',stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:X0+W-90,y:Y0+30,'font-size':12.5,'font-weight':900,fill:RED}).textContent='电流 I(t)';
+    el(svg,'text',{x:X0+W-90,y:Y0+H-10,'font-size':12.5,'font-weight':900,fill:BLUE}).textContent='电压 U(t)';
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(mode===1?'充电:I 从最大衰减到0，U 从0升高到最大':mode===2?'放电:I、U 都从最大衰减到0':'点击"充电"或"放电"查看过程');
+    const curI = mode===1? Math.exp(-4*Math.min(anim,1)) : mode===2? Math.exp(-4*Math.min(anim,1)) : 0;
+    const curU = mode===1? 1-Math.exp(-4*Math.min(anim,1)) : mode===2? Math.exp(-4*Math.min(anim,1)) : 0;
+    oI.textContent=curI.toFixed(2);oU.textContent=curU.toFixed(2);
+    oP.textContent=(mode===1?'充电中':mode===2?'放电中':'静止');
+    oS.textContent=(anim>=1)?'是(电流≈0)':'否';
+  }
+  function loop(){if(!running)return;anim+=0.02;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('chgGo').onclick=()=>{mode=1;anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('chgDis').onclick=()=>{mode=2;anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('chgReset').onclick=()=>{mode=0;anim=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 电容 C 的定义式是什么?它由什么决定,与什么无关?",a:"C=Q/U。C 由电容器结构(极板形状、正对面积、间距、中间介质)决定,与 Q、U 的具体数值无关——它们只是比值关系,不是因果关系。"},
+ {q:"2. 平行板电容器的电容公式是什么?改变 S、d、εr 分别怎样影响 C?",a:"C=εrS/(4πkd)。S 增大 → C 增大(正比);d 增大 → C 减小(反比);εr 增大(插入电介质)→ C 增大(正比)。"},
+ {q:"3. 电容器始终接在电池上,改变间距 d,哪个量保持不变?为什么?",a:"U(电压)保持不变,因为电池钳定了两端电压。C、Q、E 都会随 d 变化而变化。"},
+ {q:"4. 电容器充电后断开电源,改变间距 d,哪个量保持不变?为什么?",a:"Q(电荷量)保持不变,因为断开电源后电荷无路可去,不能增减。C、U 会变化。"},
+ {q:"5. 连电池情形下,d 增大,场强 E=U/d 怎么变?",a:"E 减小。因为 U 不变、d 增大,分母变大,E=U/d 随之减小。"},
+ {q:"6. 断开电池情形下,单独增大 d(S、εr 不变),场强 E 怎么变?",a:"E 不变。因为断电池后 E=4πkQ/(εrS),只含 Q、S、εr,不含 d;Q、S、εr 都没变,E 自然不变(可验算 U 与 d 同比例增大，U/d 抵消)。"},
+ {q:"7. 为什么平行板间场强可以写成 E=4πkQ/(εrS)? 这个式子和 E=U/d 是什么关系?",a:"这是从电荷面密度 σ=Q/S 出发得到的、只与 Q、S、εr 有关的表达式，反映了匀强场的本质。它与 E=U/d 完全等价，只是变量不同：前者直接看电荷分布，后者看电压和间距的比值，两者算出的 E 必须一致。"},
+ {q:"8. 带电粒子垂直初速度方向射入平行板间做什么运动?怎么求偏转量?",a:"做类平抛运动:沿初速度方向匀速(x=v₀t),垂直方向匀加速(a=qU/md，y=½at²)。先用 t=L/v₀ 求穿越时间，再代入 y=½at² 求偏转量。"},
+ {q:"9. 电容器充电过程中,电流是恒定的吗?充电完成后电流是多少?",a:"不是恒定的，充电电流从最大值逐渐衰减到 0。充电完成(稳定)后电流为 0，此时电容器相当于断路（隔直流）。"},
+ {q:"10. 1F、1μF、1pF 之间的换算关系是什么?",a:"1F=10⁶μF=10¹²pF（即 1μF=10⁻⁶F，1pF=10⁻¹²F）。"},
+ {q:"11. 某电容器 Q 从 4μC 增大到 8μC 时 U 从 2V 增大到 4V，电容变了吗？为什么？",a:"没变。C=Q/U 前后都等于 2μF，说明这只是充电程度变化（Q、U 同比例变化），电容器结构没变，C 恒定。"},
+ {q:"12. 插入电介质（εr>1）后，电容器的 C 是变大还是变小？如果是连电池情形，插入介质后 Q 会怎么变？",a:"C 变大（C=εrS/4πkd，εr↑则C↑）。连电池情形 U 不变，插入介质后 C 增大 ⇒ Q=CU 随之增大（电容器会从电源吸收更多电荷）。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有机反应类型与判断 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>有机反应类型与判断</h1>
+    <p class="lead">同一个方程式,写出来是「取代」还是「加成」还是「消去」,判据不在试剂长什么样,而在<b>断了什么键、生成了什么键、分子是变大变小还是原子被替换</b>。这一页把八种反应类型(取代、加成、消去、氧化、还原、酯化、加聚、缩聚)的判据钉死,再把最容易混淆的几组(卤代烃水解vs消去、加聚vs缩聚、酯化机理)单独拆开讲清楚。</p>
+
+    <div class="say">🗣️ <b>反应类型判断(人话版):</b> 先看<b>反应物和产物的原子/基团有没有「替换」</b>——有,是取代(可能兼酯化/水解);再看<b>是否有不饱和键(C=C、C≡C)参与</b>——不饱和键被「打开」变饱和,是加成;饱和的分子「脱掉一个小分子」变出不饱和键或环,是消去;再看<b>化合价变没变</b>——升了是被氧化,降了是被还原;最后看<b>是否有小分子(水/醇/卤化氢等)一起脱出且反复来回</b>——那是酯化/水解这一对可逆反应。聚合看单体:双键打开手拉手→加聚;两种单体各出一部分、脱水/脱卤化氢成键→缩聚。</div>
+
+    <div class="keybox"><b>八字判断口诀:</b> <b>官能团变没变、原子换没换、饱和键开没开、化合价升没升</b>。四个问题问完,反应类型基本锁定。取代看「换」,加成看「开」,消去看「脱出小分子、留下不饱和键」,氧化还原看「化合价」。</div>
+
+    <h2>① 取代反应:基团被替换,分子数不变(或+1)</h2>
+    <div class="card">
+      <div class="eq">R−X + Y− → R−Y + X−　(一个原子/基团换成另一个)</div>
+      <p style="margin:8px 0"><b>判据:</b> 反应物中<b>某个原子或原子团被另一个原子或原子团替换</b>,其余骨架不变。取代反应通常生成<b>两种</b>产物(一个主产物+一个被替换下来的小分子/离子)。</p>
+      <table>
+        <tr><th>类型</th><th>反应式</th><th>条件</th></tr>
+        <tr><td><b>卤代</b>(烷烃)</td><td>CH₄+Cl₂→CH₃Cl+HCl</td><td>光照,逐步取代(可到CCl₄)</td></tr>
+        <tr><td><b>硝化</b>(苯环)</td><td>C₆H₆+HNO₃→C₆H₅NO₂+H₂O</td><td>浓硫酸催化,50~60℃水浴</td></tr>
+        <tr><td><b>卤代烃水解</b></td><td>R−X+NaOH(水)→R−OH+NaX</td><td>NaOH<b>水溶液</b>,加热</td></tr>
+        <tr><td><b>酯化</b></td><td>R COOH+R′OH⇌R COOR′+H₂O</td><td>浓硫酸催化,Δ,可逆</td></tr>
+        <tr><td><b>酯水解</b></td><td>R COOR′+H₂O⇌R COOH+R′OH</td><td>酸或碱催化,碱性水解不可逆</td></tr>
+      </table>
+      <p class="trap">⚠ 酯化、水解、卤代烃水解、卤代、硝化<b>本质都是取代</b>——很多同学把酯化单独当成一类,忘了它归属取代反应,只是因为太重要才单独讲机理。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🕸️ 互动 1 — 官能团转化网络图:点箭头看试剂/条件/反应类型</div>
+      <svg id="netSvg" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="netNote">👆 点击图上任意一条箭头,查看该步骤的试剂、条件与反应类型</div>
+      <p class="small">节点:烯烃、卤代烃、醇、醛、羧酸、酯。每条箭头代表一步官能团转化,箭头颜色对应反应类型(取代=蓝、加成=绿、消去=橙、氧化=红)。这是有机推断题的核心地图。</p>
+    </div>
+
+    <h2 class="b">② 加成反应:不饱和键被"打开"</h2>
+    <div class="card">
+      <div class="eq">C=C + X−Y → C(X)−C(Y)　(双键/三键打开,两个原子各连一端)</div>
+      <p style="margin:8px 0"><b>判据:</b> 反应物含<b>不饱和键</b>(C=C、C≡C、苯环特殊、醛基C=O),不饱和键<b>打开</b>变成饱和键,试剂的两部分分别加到原来双键/三键的两个碳上。产物<b>只有一种</b>,原子全部保留(不脱除任何小分子)。</p>
+      <table>
+        <tr><th>反应物</th><th>试剂</th><th>产物/条件</th></tr>
+        <tr><td>烯烃 C=C</td><td>H₂</td><td>催化剂(Ni),加成为烷烃</td></tr>
+        <tr><td>烯烃 C=C</td><td>X₂(Br₂等)</td><td>直接加成→邻二卤代烷(可用于检验碳碳双键)</td></tr>
+        <tr><td>烯烃 C=C</td><td>HX、H₂O</td><td>酸催化,加成为卤代烃/醇(马氏规则)</td></tr>
+        <tr><td>炔烃 C≡C</td><td>H₂/X₂/HX(过量)</td><td>可连续加成两次,先烯后烷</td></tr>
+        <tr><td>醛基 −CHO</td><td>H₂</td><td>催化加氢→伯醇(还原反应)</td></tr>
+      </table>
+      <p class="trap">⚠ 苯环虽然可以与H₂加成(生成环己烷),但苯环<b>不能使溴水/酸性KMnO4褪色</b>——苯环特殊的大π键很稳定,不是普通碳碳双键,别把苯环的加成条件和烯烃混为一谈(苯需催化剂+高温高压)。</p>
+    </div>
+
+    <h2 class="o">③ 消去反应:脱去小分子,生成不饱和键</h2>
+    <div class="card">
+      <div class="eq">−C(H)−C(X)− → C=C + HX　(邻碳脱去小分子HX/H₂O,留下双键)</div>
+      <p style="margin:8px 0"><b>判据:</b> 饱和的分子(醇或卤代烃)<b>脱去一个小分子</b>(H₂O或HX),同时在原来相连的两个碳之间<b>形成不饱和键</b>。硬性条件:被脱去的两个原子必须在<b>相邻</b>的碳上,且这个相邻碳(β碳)上必须<b>有氢原子</b>可脱——邻碳无氢就不能消去。</p>
+      <table>
+        <tr><th>反应物</th><th>条件</th><th>产物</th></tr>
+        <tr><td>乙醇</td><td>浓硫酸,<b>170℃</b></td><td>乙烯 + H₂O(分子内脱水)</td></tr>
+        <tr><td>乙醇(两分子)</td><td>浓硫酸,<b>140℃</b></td><td>乙醚(分子间脱水,取代反应,非消去!)</td></tr>
+        <tr><td>卤代烃 R−CH₂−CH₂X</td><td>NaOH,<b>醇溶液</b>,Δ</td><td>烯烃 + NaX + H₂O</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>同一温度両条路:</b> 乙醇+浓硫酸,<b>170℃消去</b>生成乙烯;<b>140℃取代/分子间脱水</b>生成乙醚——温度是分水岭,牢记170消去、140成醚。</p>
+      <p class="trap">⚠ 消去反应对分子结构有要求:卤原子(或羟基)所连碳的<b>邻碳必须有氢</b>。比如(CH₃)₃C−CH₂X 若相邻碳无氢则不能消去。判断消去能不能发生,先画出邻碳,看有没有H可脱。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚗️ 互动 2 — 卤代烃:水解(NaOH水溶液)vs 消去(NaOH醇溶液)条件对比</div>
+      <svg id="haloSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="halomode on" data-m="0">NaOH 水溶液 · 水解</button>
+        <button class="halomode" data-m="1">NaOH 醇溶液 · 消去</button>
+      </div>
+      <div class="verdict" id="haloNote"></div>
+      <p class="small">同一个溴乙烷 CH₃CH₂Br,换一个"溶剂"(水 vs 乙醇),产物完全不同:水溶液促进−Br被−OH取代(水解,生成醇);醇溶液促进邻碳脱H和脱Br(消去,生成烯烃)。这是最常考的条件对比题。</p>
+    </div>
+
+    <h2 class="g">④ 氧化反应与还原反应:化合价升降</h2>
+    <div class="card">
+      <div class="eq">醇 --[氧化,-2H]--&gt; 醛 --[氧化,+O]--&gt; 羧酸　　(碳的化合价逐级升高)</div>
+      <p style="margin:8px 0"><b>氧化反应判据:</b> 有机物<b>加氧</b>或<b>去氢</b>(碳的化合价升高)。常见:醇被O₂/Cu催化氧化为醛、醛被O₂或酸性KMnO4氧化为羧酸、任何有机物燃烧(完全氧化为CO₂和H₂O)。</p>
+      <p style="margin:8px 0"><b>还原反应判据:</b> 有机物<b>加氢</b>或<b>去氧</b>(碳的化合价降低)。常见:烯烃/炔烃/醛加H₂催化加氢。</p>
+      <table>
+        <tr><th>反应</th><th>类型</th><th>条件/现象</th></tr>
+        <tr><td>2CH₃CH₂OH+O₂→2CH₃CHO+2H₂O</td><td>氧化(催化氧化)</td><td>Cu作催化剂,Δ</td></tr>
+        <tr><td>CH₃CHO被O₂氧化→CH₃COOH</td><td>氧化</td><td>催化剂</td></tr>
+        <tr><td>醇/醛使酸性KMnO4褪色</td><td>氧化(醇/醛被氧化,KMnO4被还原)</td><td>常温即可,现象:紫色褪去</td></tr>
+        <tr><td>醛与银氨溶液(银镜反应)</td><td>氧化(醛被氧化为羧酸)</td><td>水浴加热,现象:银镜</td></tr>
+        <tr><td>CH₂=CH₂+H₂→CH₃CH₃</td><td>还原(同时也是加成)</td><td>催化剂Ni</td></tr>
+        <tr><td>有机物 + O₂ → CO₂+H₂O</td><td>氧化(燃烧,完全氧化)</td><td>点燃</td></tr>
+      </table>
+      <p class="trap">⚠ 加成反应与还原反应可以<b>重叠</b>(比如烯烃加H₂,既是加成也是还原),但加成不一定是还原(比如烯烃加Br₂、加H₂O,没有加氢也不算还原)。判断还原/氧化只看<b>化合价</b>,判断加成只看<b>不饱和键打没打开</b>,两把尺子不能混用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪜 互动 3 — 醇氧化梯子:醇→醛→酸,逐级点击氧化,看碳的化合价变化</div>
+      <svg id="ladderSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ladderNext">▶ 下一步氧化</button><button id="ladderReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前物质</b><span id="ladStage">乙醇</span></div>
+        <div><b>官能团</b><span id="ladGroup">−OH</span></div>
+        <div><b>反应类型</b><span id="ladType">—</span></div>
+        <div><b>试剂/条件</b><span id="ladCond">—</span></div>
+      </div>
+      <p class="small">乙醇 --Cu催化,-2H--&gt; 乙醛 --+[O]--&gt; 乙酸。每一步都是"氧化"(去氢或加氧),碳原子上连接的氧越来越多,化合价逐级升高。醛是承上启下的关键中间体,既能继续氧化成酸,也能被还原回醇。</p>
+    </div>
+
+    <h2 class="v">⑤ 酯化反应机理:"酸脱羟基,醇脱氢"</h2>
+    <div class="card">
+      <div class="eq">CH₃CO−OH + H−O−CH₂CH₃ --浓硫酸,Δ--&gt; CH₃CO−O−CH₂CH₃ + H₂O</div>
+      <p style="margin:8px 0"><b>机理口诀:</b> <b>酸脱羟基、醇脱氢</b>——羧酸分子脱掉的是它的−OH(整个羟基),醇分子脱掉的是它−OH上的那个H(只脱氢原子)。两者结合成一个水分子,剩下的部分连接成酯键 −C(=O)−O−。</p>
+      <p style="margin:8px 0"><b>¹⁸O同位素示踪实验:</b> 用含放射性/重同位素¹⁸O标记的乙醇(CH₃CH₂¹⁸OH)与普通乙酸反应,实验测得生成的<b>酯里含有¹⁸O</b>,而生成的水是普通的H₂¹⁶O。这直接证明了断键位置在<b>羧酸的C−OH键</b>断裂(羧酸脱去−OH),而不是醇的O−H键断裂——即"酸脱羟基,醇脱氢"这一机理是有实验证据的,不是想当然的规定。</p>
+      <p style="margin:8px 0"><b>反应特点:</b> ①<b>可逆</b>(酯化的逆反应就是酯的水解,二者同时存在,达到平衡);②<b>浓硫酸</b>既是<b>催化剂</b>又是<b>吸水剂</b>(促使平衡正向移动,提高产率);③加热(Δ)提供能量、加快速率。</p>
+      <p class="trap">⚠ 常见误区:以为酯化是醇脱羟基、酸脱氢——记反了。正确记忆:羧酸的"酸性OH"整体离开(脱羟基),醇上的H离开(脱氢),两者结合成水。用¹⁸O实验结果倒推一遍能加深记忆:酯中的¹⁸O来自醇,说明醇的O留下了,只脱了醇的H。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 4 — 酯化 ¹⁸O 同位素示踪动画:标记氧原子的最终去向</div>
+      <svg id="esterSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="esterGo">▶ 播放反应过程</button><button id="esterReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="esterNote">乙醇中的氧(标记为¹⁸O,红色)将会去哪里?点击播放查看</div>
+      <p class="small">乙酸(CH₃COOH)与¹⁸O标记的乙醇(CH₃CH₂¹⁸OH)反应。动画显示:羧酸脱去整个−OH(黑色氧),醇脱去−H,标记的¹⁸O原子(红色)留在了酯分子里,而不是进入水分子——这就是"酸脱羟基、醇脱氢"的实验证据。</p>
+    </div>
+
+    <h2 class="r">⑥ 加聚反应 vs 缩聚反应</h2>
+    <div class="card">
+      <h3>加聚反应:双键打开,首尾相连,无小分子生成</h3>
+      <div class="eq">nCH₂=CH₂ --催化剂,压强--&gt; ÷CH₂−CH₂÷ₙ　(聚乙烯)</div>
+      <p style="margin:6px 0">单体必须含<b>不饱和键</b>(C=C 或共轭双键)。聚合方式:双键打开,分子间以共价键首尾相连,重复连接成长链。<b>加聚不生成任何小分子</b>,产物只有聚合物一种,原子全部保留在链上(符合"加成"的本质——键打开、无消去)。</p>
+      <h3>缩聚反应:官能团间脱去小分子,交替连接成链</h3>
+      <div class="eq">nHOOC−C₆H₄−COOH + nHOCH₂CH₂OH → 聚酯 + (2n−1)H₂O</div>
+      <p style="margin:6px 0">单体一般含<b>两个或以上官能团</b>(如二元酸+二元醇,或氨基酸自身),缩聚时官能团间反复发生"取代式"缩合(相当于连续酯化或酰胺化),<b>每生成一个新键就脱去一个小分子</b>(通常是H₂O,也可以是HCl等)。产物是聚合物<b>加上</b>大量小分子副产物。</p>
+      <table>
+        <tr><th></th><th>加聚</th><th>缩聚</th></tr>
+        <tr><td>单体要求</td><td>含C=C(或C≡C)</td><td>含≥2个官能团(如−OH、−COOH、−NH₂)</td></tr>
+        <tr><td>是否脱小分子</td><td>否</td><td>是(如H₂O)</td></tr>
+        <tr><td>产物组成</td><td>单体的原子全部保留,重复单元=单体去掉双键</td><td>聚合物 + 小分子副产物</td></tr>
+        <tr><td>典型键</td><td>C−C 主链</td><td>酯键(−COO−)、肽键/酰胺键(−CONH−)</td></tr>
+        <tr><td>实例</td><td>聚乙烯、聚氯乙烯、聚苯乙烯</td><td>聚酯纤维(涤纶)、尼龙-66、蛋白质(肽键)</td></tr>
+      </table>
+      <p class="trap">⚠ 拆解聚合物找单体时,先看重复单元里有没有酯键/肽键这种"缩合"痕迹——有,说明是缩聚,拆开时要把小分子(通常是H₂O)加回去复原官能团;没有这种键、只是碳链首尾相接,就是加聚,直接从重复单元还原出双键。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧩 互动 5 — 加聚/缩聚:单体 ↔ 聚合物 拆分交互</div>
+      <svg id="polySvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="polymode on" data-m="0">加聚:聚乙烯</button>
+        <button class="polymode" data-m="1">缩聚:聚酯(涤纶)</button>
+        <button id="polyToggle">🔄 单体 ⇌ 聚合物</button>
+      </div>
+      <div class="verdict" id="polyNote"></div>
+      <p class="small">点击"单体⇌聚合物"切换正反两个方向:由单体推聚合物(看双键怎么打开首尾相连,或官能团怎么缩合脱水),或由聚合物拆单体(先找重复单元,缩聚要记得把脱去的小分子加回来)。</p>
+    </div>
+
+    <h2 class="b">⑦ 反应类型判别小测:给方程式判类型</h2>
+    <div class="card">
+      <p style="margin:6px 0">看一个方程式,先问四个问题:①有没有基团被替换?②有没有不饱和键被打开?③有没有邻碳脱小分子生成不饱和键?④化合价有没有升降?下面的互动题练习快速判型。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 6 — 反应类型判别小测:看方程式,选类型,即时判对错</div>
+      <svg id="quizSvg" viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="chips" id="quizChips"></div>
+      <div class="verdict" id="quizNote">👆 先看清方程式,再点击你认为正确的反应类型</div>
+      <div class="ctrl"><button id="quizNext">下一题 →</button><button id="quizReset">↺ 重新开始</button></div>
+      <div class="live">
+        <div><b>题号</b><span id="quizIdx">1/8</span></div>
+        <div><b>答对</b><span id="quizRight">0</span></div>
+        <div><b>答错</b><span id="quizWrong">0</span></div>
+        <div><b>正确率</b><span id="quizAcc">0%</span></div>
+      </div>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断单步反应的类型</h3>
+      <p><b class="tag">触发信号:</b> 给一个反应方程式(或结构简式变化),问"该反应属于什么反应类型"。</p>
+      <p><b class="tag">标准动作:</b> 按顺序问:①有基团替换吗(取代)?②有不饱和键打开吗(加成,若同时加氢也是还原)?③邻碳脱小分子生成不饱和键吗(消去)?④化合价升降吗(氧化/还原)?⑤是可逆的酸醇脱水成酯吗(酯化,取代的一种)?</p>
+      <p><b class="tag">示例(带解):</b> CH₃CH₂OH + HBr → CH₃CH₂Br + H₂O。−OH被−Br替换,骨架不变,判为<b>取代反应</b>(具体说是醇与氢卤酸的取代,类似酯化机理但产物是卤代烃)。</p>
+      <p class="trap">陷阱:看到有H₂O生成就误判为"消去"或"缩聚"——脱水不等于消去,消去必须有不饱和键生成;这里没有双键生成,是取代。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 卤代烃水解 vs 消去条件辨析</h3>
+      <p><b class="tag">触发信号:</b> 题目给R−X遇NaOH,要求判断产物,关键看"水溶液"还是"醇溶液"。</p>
+      <p><b class="tag">标准动作:</b> NaOH<b>水溶液</b>,Δ → 水解(取代),产物为醇;NaOH<b>醇溶液</b>,Δ → 消去,产物为烯烃。若邻碳无氢,即使用醇溶液也不能消去,只能水解。</p>
+      <p><b class="tag">示例(带解):</b> (CH₃)₂CHCH₂Br分别与NaOH水溶液、NaOH乙醇溶液反应:水溶液→(CH₃)₂CHCH₂OH(取代);乙醇溶液,Δ→(CH₃)₂C=CH₂(消去,邻碳CH有H可脱)。</p>
+      <p class="trap">陷阱:把"醇溶液"看成"醇类物质参与反应"——醇溶液只是溶剂,反应实质是NaOH中的OH⁻夺取邻碳的H(消去);忽视邻碳有无氢就下消去结论。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 加成与还原重叠辨析</h3>
+      <p><b class="tag">触发信号:</b> 不饱和键(C=C、C≡C、醛基)与H₂反应,问"是加成还是还原,还是都是"。</p>
+      <p><b class="tag">标准动作:</b> 只要不饱和键被打开就是加成;若加的是H₂(碳的化合价降低)则同时也是还原。加Br₂、加H₂O是加成但不是还原(没有加氢)。</p>
+      <p><b class="tag">示例(带解):</b> CH₂=CH₂ + H₂ → CH₃CH₃,既是加成反应(双键打开)也是还原反应(碳化合价从−2降到−3,加了氢);而CH₂=CH₂ + Br₂ → CH₂BrCH₂Br只是加成,不是还原/氧化(没有化合价变化)。</p>
+      <p class="trap">陷阱:凡加成必还原——错,只有"加氢"的加成才是还原,加卤素、加水都不涉及化合价变化。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 酯化机理与¹⁸O示踪</h3>
+      <p><b class="tag">触发信号:</b> 给出同位素标记的醇或酸,问生成的酯/水中¹⁸O在哪。</p>
+      <p><b class="tag">标准动作:</b> 记住"酸脱羟基、醇脱氢"——羧酸的−OH整体离去,醇只脱−H。若标记在<b>醇</b>的氧上,则¹⁸O进入<b>酯</b>;若标记在<b>羧酸</b>的羟基氧上,则¹⁸O进入<b>水</b>。</p>
+      <p><b class="tag">示例(带解):</b> CH₃CH₂¹⁸OH + CH₃COOH → CH₃CO¹⁸OCH₂CH₃ + H₂O。醇的¹⁸O保留在酯里,证明断裂的是羧酸的C−OH键,不是醇的O−H键。</p>
+      <p class="trap">陷阱:记反机理方向(以为醇脱羟基);把可逆反应当成单向反应,忽略浓硫酸的"吸水剂+催化剂"双重作用。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 加聚/缩聚:由单体判产物、由产物拆单体</h3>
+      <p><b class="tag">触发信号:</b>给出单体结构求聚合物,或给出高分子结构简式(重复单元)求单体。</p>
+      <p><b class="tag">标准动作:</b> 单体含碳碳双键→加聚,重复单元直接由双键打开首尾相连;单体是二元酸+二元醇(或含氨基和羧基)→缩聚,重复单元中出现酯键/肽键,拆分时把断键处补上−OH和−H(相当于加回一个H₂O)。</p>
+      <p><b class="tag">示例(带解):</b> 由聚酯纤维重复单元 ÷OC−C₆H₄−COO−CH₂CH₂O÷ₙ 拆单体:找到酯键−COO−处打断,一边加H(变成−COOH),一边加OH(变成−OH),复原出对苯二甲酸 HOOC−C₆H₄−COOH 和乙二醇 HOCH₂CH₂OH。</p>
+      <p class="trap">陷阱:缩聚拆分时忘记补回脱去的小分子,导致写出的单体缺一个O或多写/少写H;把加聚的重复单元也当成缩聚来拆(先检查有没有酯键/肽键这种缩合痕迹)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 官能团转化路线综合推断</h3>
+      <p><b class="tag">触发信号:</b>有机推断题给出转化框图(A→B→C→D…),每步注明或省略试剂,要求写结构简式和判断每步反应类型。</p>
+      <p><b class="tag">标准动作:</b> 先给每个物质定官能团,再给每一步按"取代/加成/消去/氧化/还原/酯化"归类,尤其注意条件(浓硫酸+170℃是消去,浓硫酸+Δ+醇是酯化,NaOH水/醇溶液的区别)。</p>
+      <p><b class="tag">示例(带解):</b> 乙烯--H₂O,催化剂,加成-->乙醇--Cu,O₂,氧化-->乙醛--O₂,催化剂,氧化-->乙酸--乙醇,浓硫酸,Δ,酯化(取代)-->乙酸乙酯。四步依次是加成、氧化、氧化、取代(酯化)。</p>
+      <p class="trap">陷阱:把"乙烯水化成乙醇"错记成取代(其实是加成,H−OH整体加到双键上);把两步氧化(醇→醛→酸)当成一步;漏写酯化的可逆符号⇌。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 消去反应<b>要求邻碳有氢</b>——没有氢的邻碳,卤原子/羟基所在碳无法消去,只能走取代路线。</p>
+      <p class="trap">② 卤代烃 NaOH<b>水溶液</b>→水解(取代);NaOH<b>醇溶液</b>→消去。溶剂决定产物,别记反。</p>
+      <p class="trap">③ 乙醇+浓硫酸:<b>170℃消去</b>成乙烯,<b>140℃取代</b>(分子间脱水)成乙醚——温度是分水岭。</p>
+      <p class="trap">④ 加成不等于还原:加H₂是加成+还原,加Br₂/加H₂O只是加成,没有化合价变化。</p>
+      <p class="trap">⑤ 酯化机理"酸脱羟基、醇脱氢"——¹⁸O示踪证明标记在醇上的氧留在酯里,不进入水。别记反方向。</p>
+      <p class="trap">⑥ 苯环能与H₂加成生成环己烷(需高温高压催化剂),但<b>不能</b>使溴水/酸性KMnO4褪色——苯环的化学性质区别于普通碳碳双键。</p>
+      <p class="trap">⑦ 加聚不生成小分子,产物只有聚合物;缩聚会生成小分子(通常H₂O),产物是聚合物+副产物,拆单体时记得把小分子加回去。</p>
+      <p class="trap">⑧ 燃烧、催化氧化、被酸性KMnO4/银氨溶液氧化,本质都是"氧化反应"——化合价升高是共同特征,不要按"现象"分类,要按"化合价"分类。</p>
+      <p class="trap">⑨ 酯化、水解、卤代、硝化<b>都是取代反应</b>的子类型,别把它们当成与取代并列的独立大类。</p>
+      <p class="trap">⑩ 判断反应类型要看<b>整个分子层面</b>的变化,不能只盯着某个原子——例如苯环上取代与侧链上的加成可以同时发生在同一分子的不同部位,要分部位分别判断。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 消去与加成互为逆过程,取代与消去常是"竞争"关系:</b> 卤代烃遇NaOH,水解(取代)与消去是<b>竞争关系</b>,谁占优取决于溶剂极性、温度、卤代烃结构(邻碳氢的数目和空间位阻)。理解这层"竞争"关系,才能解释为什么换个溶剂产物就完全不同,而不是死记硬背两条规则。</p>
+      <p style="margin:8px 0"><b>② 加聚/缩聚的本质区别是"原子经济性":</b> 加聚反应中单体的每一个原子都保留在聚合物里(100%原子利用率),这是因为双键打开不需要断掉任何C−H或C−O键;缩聚必然伴随小分子脱除,原子利用率低于100%。这也是为什么工业上更偏爱加聚工艺(如聚乙烯)做大宗材料。</p>
+      <p style="margin:8px 0"><b>③ 官能团转化网络要"双向"记忆:</b> 烯烃→卤代烃(加HX)→醇(水解)→醛(氧化)→酸(氧化)→酯(酯化),每一步都有逆向操作(酯水解回酸+醇、醛加氢回醇、卤代烃消去回烯烃)。把网络画成双向箭头图,任何"由后往前"推断单体/原料的题都能秒切入口。</p>
+      <p style="margin:8px 0"><b>④ ¹⁸O示踪不仅证明酯化机理,更示范了"用同位素追踪化学键断裂位置"这一实验方法:</b> 只要在反应物某个特定原子上做标记,看标记最终去哪个产物,就能反推是哪个键断的。这个思路后延可用于任何机理类推断题(比如水解到底断哪个键)。</p>
+      <p style="margin:8px 0"><b>⑤ 化合价升降和"加氢去氢/加氧去氧"是同一件事的两种语言:</b> 判断氧化还原,数电荷太麻烦,有机化学里更快的办法是数<b>碳上连接的氢和氧原子数目变化</b>——氢减少或氧增加,就是氧化;氢增加或氧减少,就是还原。醇→醛→酸这条链每一步都能用这条捷径秒判。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 有机反应类型与判断</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:官能团转化网络图 ===== */
+(function(){
+  const svg=document.getElementById('netSvg');
+  const note=document.getElementById('netNote');
+  const nodes=[
+    {id:'alkene',x:100,y:60,label:'烯烃\nC=C'},
+    {id:'halo',x:350,y:60,label:'卤代烃\nR-X'},
+    {id:'alcohol',x:350,y:200,label:'醇\nR-OH'},
+    {id:'aldehyde',x:350,y:340,label:'醛\nR-CHO'},
+    {id:'acid',x:580,y:340,label:'羧酸\nR-COOH'},
+    {id:'ester',x:580,y:200,label:'酯\nR-COOR′'}
+  ];
+  const edges=[
+    {from:'alkene',to:'halo',label:'加HX,加成',type:'加成',color:GREEN},
+    {from:'halo',to:'alcohol',label:'NaOH水溶液·Δ,取代(水解)',type:'取代',color:BLUE},
+    {from:'alcohol',to:'halo',label:'HX,取代',type:'取代',color:BLUE},
+    {from:'alcohol',to:'alkene',label:'浓H2SO4·170℃,消去',type:'消去',color:ORANGE},
+    {from:'alcohol',to:'aldehyde',label:'Cu·O2·Δ,氧化(催化氧化)',type:'氧化',color:RED},
+    {from:'aldehyde',to:'alcohol',label:'H2,催化剂,还原(加成)',type:'还原',color:GREEN},
+    {from:'aldehyde',to:'acid',label:'O2/酸性KMnO4,氧化',type:'氧化',color:RED},
+    {from:'acid',to:'ester',label:'醇,浓H2SO4·Δ,取代(酯化)',type:'取代(酯化)',color:BLUE},
+    {from:'ester',to:'acid',label:'H2O,酸/碱催化,取代(水解)',type:'取代(水解)',color:BLUE}
+  ];
+  function nodeById(id){return nodes.find(n=>n.id===id);}
+  function draw(){
+    clr(svg);
+    // draw edges first
+    edges.forEach((e,idx)=>{
+      const a=nodeById(e.from),b=nodeById(e.to);
+      // offset parallel edges slightly
+      let dx=b.x-a.x,dy=b.y-a.y;
+      const len=Math.sqrt(dx*dx+dy*dy);
+      const ux=dx/len,uy=dy/len;
+      const perp=(a.id==='alcohol'&&b.id==='halo')||(a.id==='aldehyde'&&b.id==='alcohol')||(a.id==='ester'&&b.id==='acid')?12:-12;
+      const ox=-uy*perp*0.6, oy=ux*perp*0.6;
+      const x1=a.x+ux*36+ox, y1=a.y+uy*20+oy;
+      const x2=b.x-ux*36+ox, y2=b.y-uy*20+oy;
+      const mx=(x1+x2)/2, my=(y1+y2)/2;
+      const line=el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:e.color,'stroke-width':4,style:'cursor:pointer'});
+      const dir=Math.atan2(y2-y1,x2-x1);
+      const ah=8;
+      el(svg,'polygon',{points:x2+','+y2+' '+(x2-ah*Math.cos(dir-0.4))+','+(y2-ah*Math.sin(dir-0.4))+' '+(x2-ah*Math.cos(dir+0.4))+','+(y2-ah*Math.sin(dir+0.4)),fill:e.color});
+      const hit=el(svg,'circle',{cx:mx,cy:my,r:11,fill:e.color,opacity:0.85,style:'cursor:pointer'});
+      hit.onclick=()=>{note.innerHTML='<b>'+e.from2label(e)+'</b>　反应类型:<b style="color:'+e.color+'">'+e.type+'</b>　条件/试剂:'+e.label;note.style.borderColor=e.color;};
+      line.onclick=()=>hit.onclick();
+    });
+    // helper to build label text
+    edges.forEach(e=>{e.from2label=function(ee){return nodeById(ee.from).label.replace('\n','')+' → '+nodeById(ee.to).label.replace('\n','');};});
+    // draw nodes on top
+    nodes.forEach(n=>{
+      el(svg,'rect',{x:n.x-46,y:n.y-22,width:92,height:44,fill:'#fff',stroke:INK,'stroke-width':3});
+      const lines=n.label.split('\n');
+      lines.forEach((ln,i)=>{
+        el(svg,'text',{x:n.x,y:n.y-4+i*16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=ln;
+      });
+    });
+  }
+  draw();
+})();
+
+/* ===== 互动2:卤代烃水解vs消去对比 ===== */
+(function(){
+  const svg=document.getElementById('haloSvg');const note=document.getElementById('haloNote');
+  let m=0;
+  document.querySelectorAll('.halomode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.halomode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH3CH2Br + NaOH  →  ?';
+    if(m===0){
+      // hydrolysis: substitution, OH replaces Br
+      el(svg,'text',{x:350,y:60,'font-size':13,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='溶剂:水　条件:Δ';
+      // reactant
+      drawMol(svg,140,130,['CH3','CH2','Br'],[BROWN,INK,ORANGE]);
+      el(svg,'text',{x:280,y:135,'font-size':22,'font-weight':900,fill:BLUE}).textContent='→';
+      drawMol(svg,420,130,['CH3','CH2','OH'],[BROWN,INK,RED]);
+      el(svg,'text',{x:560,y:130,'font-size':15,'font-weight':900,fill:INK}).textContent='+ NaBr';
+      el(svg,'rect',{x:60,y:170,width:580,height:50,fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+      el(svg,'text',{x:350,y:200,'font-size':13.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='本质:取代反应(水解)——OH⁻ 直接替换 Br';
+      note.innerHTML='💧 <b>NaOH水溶液,Δ</b> → OH⁻进攻C-Br所在碳,直接把Br取代下来,生成<b>乙醇</b>(取代反应/水解)。';
+      note.style.borderColor=BLUE;
+    } else {
+      el(svg,'text',{x:350,y:60,'font-size':13,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='溶剂:乙醇　条件:Δ';
+      drawMol(svg,140,130,['CH3','CH2','Br'],[BROWN,INK,ORANGE]);
+      el(svg,'text',{x:280,y:135,'font-size':22,'font-weight':900,fill:ORANGE}).textContent='→';
+      // product ethylene
+      el(svg,'line',{x1:400,y1:130,x2:460,y2:130,stroke:INK,'stroke-width':6});
+      el(svg,'text',{x:400,y:112,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH2';
+      el(svg,'text',{x:460,y:112,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH2';
+      el(svg,'text',{x:430,y:150,'font-size':11,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='(C=C 双键)';
+      el(svg,'text',{x:560,y:130,'font-size':15,'font-weight':900,fill:INK}).textContent='+ NaBr + H2O';
+      el(svg,'rect',{x:60,y:170,width:580,height:50,fill:'rgba(232,106,23,0.12)',stroke:ORANGE,'stroke-width':3});
+      el(svg,'text',{x:350,y:200,'font-size':13.5,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='本质:消去反应——邻碳(CH3上的H)与Br一起脱去,生成C=C';
+      note.innerHTML='🔥 <b>NaOH醇溶液,Δ</b> → OH⁻夺取邻碳(甲基)上的H,同时脱去Br,邻碳间生成双键,产物为<b>乙烯</b>(消去反应)。';
+      note.style.borderColor=ORANGE;
+    }
+  }
+  function drawMol(svg,cx,cy,groups,colors){
+    const w=60;
+    groups.forEach((g,i)=>{
+      const x=cx+(i-1)*w;
+      el(svg,'rect',{x:x-26,y:cy-18,width:52,height:36,fill:'#fff',stroke:colors[i],'stroke-width':3});
+      el(svg,'text',{x:x,y:cy+5,'font-size':12.5,'font-weight':900,fill:colors[i],'text-anchor':'middle'}).textContent=g;
+      if(i>0){el(svg,'line',{x1:x-w+26,y1:cy,x2:x-26,y2:cy,stroke:INK,'stroke-width':3});}
+    });
+  }
+  draw();
+})();
+
+/* ===== 互动3:醇氧化梯子 ===== */
+(function(){
+  const svg=document.getElementById('ladderSvg');
+  const stageEl=document.getElementById('ladStage'),groupEl=document.getElementById('ladGroup'),typeEl=document.getElementById('ladType'),condEl=document.getElementById('ladCond');
+  const stages=[
+    {name:'乙醇',formula:'CH3CH2OH',group:'-OH',type:'—',cond:'—'},
+    {name:'乙醛',formula:'CH3CHO',group:'-CHO',type:'氧化(催化氧化,去2H)',cond:'Cu作催化剂,O2,Δ'},
+    {name:'乙酸',formula:'CH3COOH',group:'-COOH',type:'氧化(加O)',cond:'O2/酸性KMnO4,催化剂'}
+  ];
+  let idx=0;
+  function draw(){
+    clr(svg);
+    const stepW=220;
+    stages.forEach((s,i)=>{
+      const x=70+i*stepW, y=180-i*55;
+      const active=i<=idx;
+      el(svg,'rect',{x:x,y:y-30,width:150,height:60,fill:active?'#fff':'#eee',stroke:active?INK:'#bbb','stroke-width':3});
+      el(svg,'text',{x:x+75,y:y-5,'font-size':14,'font-weight':900,fill:active?INK:'#999','text-anchor':'middle'}).textContent=s.name;
+      el(svg,'text',{x:x+75,y:y+16,'font-size':12,'font-weight':800,fill:active?RED:'#999','text-anchor':'middle'}).textContent=s.formula;
+      if(i>0){
+        const px=70+(i-1)*stepW+150, py=180-(i-1)*55;
+        const arrowActive=i<=idx;
+        el(svg,'line',{x1:px,y1:py,x2:x,y2:y,stroke:arrowActive?RED:'#ccc','stroke-width':4});
+        el(svg,'polygon',{points:x+','+y+' '+(x-10)+','+(y-6)+' '+(x-10)+','+(y+6),fill:arrowActive?RED:'#ccc'});
+        el(svg,'text',{x:(px+x)/2,y:(py+y)/2-10,'font-size':11,'font-weight':900,fill:arrowActive?RED:'#ccc','text-anchor':'middle'}).textContent='氧化';
+      }
+    });
+    const s=stages[idx];
+    stageEl.textContent=s.name;groupEl.textContent=s.group;typeEl.textContent=s.type;condEl.textContent=s.cond;
+  }
+  document.getElementById('ladderNext').onclick=()=>{idx=Math.min(2,idx+1);draw();};
+  document.getElementById('ladderReset').onclick=()=>{idx=0;draw();};
+  draw();
+})();
+
+/* ===== 互动4:酯化18O同位素示踪 ===== */
+(function(){
+  const svg=document.getElementById('esterSvg');const note=document.getElementById('esterNote');
+  let phase=0,running=false;
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH3COOH + CH3CH2(18O)H  --浓H2SO4,Δ-->  酯 + H2O';
+    // acid molecule
+    el(svg,'rect',{x:40,y:60,width:150,height:44,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:115,y:78,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH3-C(=O)-OH';
+    el(svg,'text',{x:115,y:94,'font-size':10.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='(乙酸,黑色O)';
+    // alcohol molecule with red 18O
+    el(svg,'rect',{x:230,y:60,width:150,height:44,fill:'#fff',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:305,y:78,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='CH3-CH2-18OH';
+    el(svg,'text',{x:305,y:94,'font-size':10.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='(标记乙醇,红色18O)';
+    el(svg,'text',{x:460,y:82,'font-size':20,'font-weight':900,fill:INK}).textContent='+';
+    // plus sign already; draw arrow below when phase>=1
+    if(phase===0){
+      note.innerHTML='乙醇中的氧(标记为18O,红色)将会去哪里?点击播放查看';
+      note.style.borderColor=INK;
+    } else {
+      // show breaking bond: acid loses -OH (black), alcohol loses -H
+      el(svg,'text',{x:350,y:130,'font-size':22,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='↓';
+      el(svg,'text',{x:130,y:150,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='酸脱 -OH(黑)';
+      el(svg,'text',{x:330,y:150,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='醇脱 -H';
+      // product ester with red O retained
+      el(svg,'rect',{x:120,y:180,width:230,height:46,fill:'#fff',stroke:RED,'stroke-width':3});
+      el(svg,'text',{x:235,y:198,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH3-C(=O)-18O-CH2CH3';
+      el(svg,'text',{x:235,y:214,'font-size':10.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='乙酸乙酯(18O留在酯里,红色)';
+      el(svg,'rect',{x:400,y:180,width:160,height:46,fill:'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:480,y:198,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='H2O(黑色O)';
+      el(svg,'text',{x:480,y:214,'font-size':10.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='(水中是普通氧)';
+      note.innerHTML='✅ 结论:¹⁸O(红色)最终留在<b>酯</b>里,不是水里 → 证明断裂的是<b>羧酸的C-OH键</b>(酸脱羟基),而醇只是脱去了-H(醇脱氢)。';
+      note.style.borderColor=RED;
+    }
+  }
+  document.getElementById('esterGo').onclick=()=>{phase=1;draw();};
+  document.getElementById('esterReset').onclick=()=>{phase=0;draw();};
+  draw();
+})();
+
+/* ===== 互动5:加聚/缩聚 单体<->聚合物 ===== */
+(function(){
+  const svg=document.getElementById('polySvg');const note=document.getElementById('polyNote');
+  let mode=0, showPolymer=false;
+  document.querySelectorAll('.polymode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.polymode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  document.getElementById('polyToggle').onclick=()=>{showPolymer=!showPolymer;draw();};
+  function draw(){
+    clr(svg);
+    if(mode===0){
+      el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='加聚:聚乙烯(无小分子生成)';
+      if(!showPolymer){
+        // monomers
+        for(let i=0;i<3;i++){
+          const x=100+i*180;
+          el(svg,'line',{x1:x-20,y1:120,x2:x+20,y2:120,stroke:GREEN,'stroke-width':6});
+          el(svg,'text',{x:x-20,y:100,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH2';
+          el(svg,'text',{x:x+20,y:100,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH2';
+          el(svg,'text',{x:x,y:145,'font-size':10.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='(单体n个)';
+        }
+        note.innerHTML='单体:CH2=CH2(乙烯),含碳碳双键。点击"⇌"看双键如何打开、首尾相连生成聚乙烯。';
+        note.style.borderColor=GREEN;
+      } else {
+        el(svg,'text',{x:60,y:120,'font-size':16,'font-weight':900,fill:INK}).textContent='÷';
+        for(let i=0;i<4;i++){
+          const x=90+i*100;
+          el(svg,'line',{x1:x,y1:120,x2:x+90,y2:120,stroke:INK,'stroke-width':4});
+          el(svg,'text',{x:x+15,y:105,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH2';
+          el(svg,'text',{x:x+75,y:105,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='CH2';
+        }
+        el(svg,'text',{x:490,y:120,'font-size':16,'font-weight':900,fill:INK}).textContent='÷n';
+        el(svg,'text',{x:300,y:170,'font-size':12,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='重复单元 -CH2-CH2- ，无任何小分子副产物';
+        note.innerHTML='聚合物:÷CH2-CH2÷n(聚乙烯)。原子100%保留,没有脱去任何小分子,这是加聚的本质特征。';
+        note.style.borderColor=GREEN;
+      }
+    } else {
+      el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='缩聚:聚酯(涤纶)——每成一个酯键脱一个H2O';
+      if(!showPolymer){
+        el(svg,'rect',{x:40,y:80,width:180,height:44,fill:'#fff',stroke:VIO,'stroke-width':3});
+        el(svg,'text',{x:130,y:98,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='HOOC-C6H4-COOH';
+        el(svg,'text',{x:130,y:114,'font-size':10,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='对苯二甲酸(二元酸)';
+        el(svg,'text',{x:250,y:105,'font-size':18,'font-weight':900,fill:INK}).textContent='+';
+        el(svg,'rect',{x:280,y:80,width:170,height:44,fill:'#fff',stroke:VIO,'stroke-width':3});
+        el(svg,'text',{x:365,y:98,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='HO-CH2CH2-OH';
+        el(svg,'text',{x:365,y:114,'font-size':10,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='乙二醇(二元醇)';
+        note.innerHTML='单体:二元酸+二元醇,各含两个官能团。点击"⇌"看缩合成酯键、同时脱出H2O。';
+        note.style.borderColor=VIO;
+      } else {
+        el(svg,'text',{x:40,y:120,'font-size':14,'font-weight':900,fill:INK}).textContent='÷';
+        el(svg,'rect',{x:60,y:95,width:260,height:44,fill:'#fff',stroke:VIO,'stroke-width':3});
+        el(svg,'text',{x:190,y:113,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='OC-C6H4-CO-O-CH2CH2-O';
+        el(svg,'text',{x:340,y:120,'font-size':14,'font-weight':900,fill:INK}).textContent='÷n';
+        el(svg,'text',{x:530,y:110,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='+ (2n-1)H2O';
+        el(svg,'text',{x:300,y:170,'font-size':12,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='重复单元含酯键 -COO-，拆分时需把H2O"加回去"复原官能团';
+        note.innerHTML='聚合物:÷OC-C6H4-CO-O-CH2CH2-O÷n(涤纶)。每形成一个酯键就脱去一个H2O,产物=聚合物+多个水分子。';
+        note.style.borderColor=VIO;
+      }
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动6:反应类型判别小测 ===== */
+(function(){
+  const svg=document.getElementById('quizSvg');
+  const chipsBox=document.getElementById('quizChips');
+  const note=document.getElementById('quizNote');
+  const idxEl=document.getElementById('quizIdx'),rightEl=document.getElementById('quizRight'),wrongEl=document.getElementById('quizWrong'),accEl=document.getElementById('quizAcc');
+  const questions=[
+    {eq:'CH2=CH2 + Br2 → CH2BrCH2Br',ans:'加成',opts:['取代','加成','消去','氧化']},
+    {eq:'CH3CH2Br + NaOH(水) --Δ--> CH3CH2OH + NaBr',ans:'取代',opts:['取代','加成','消去','还原']},
+    {eq:'CH3CH2OH --浓H2SO4,170℃--> CH2=CH2 + H2O',ans:'消去',opts:['取代','消去','加成','氧化']},
+    {eq:'2CH3CH2OH + O2 --Cu,Δ--> 2CH3CHO + 2H2O',ans:'氧化',opts:['氧化','还原','消去','取代']},
+    {eq:'CH3COOH + CH3CH2OH ⇌ CH3COOCH2CH3 + H2O',ans:'取代(酯化)',opts:['加成','取代(酯化)','消去','氧化']},
+    {eq:'nCH2=CHCl --催化剂--> ÷CH2-CHCl÷n',ans:'加聚',opts:['缩聚','加聚','取代','消去'] },
+    {eq:'CH3CHO + H2 --催化剂--> CH3CH2OH',ans:'还原(加成)',opts:['氧化','消去','还原(加成)','取代']},
+    {eq:'nHOOC-COOH + nHO-CH2CH2-OH → 聚酯 + H2O',ans:'缩聚',opts:['加聚','缩聚','取代','加成']}
+  ];
+  let idx=0,right=0,wrong=0,answered=false;
+  function drawEq(){
+    clr(svg);
+    el(svg,'text',{x:350,y:55,'font-size':14.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=questions[idx].eq;
+  }
+  function drawChips(){
+    chipsBox.innerHTML='';
+    questions[idx].opts.forEach(o=>{
+      const c=document.createElement('span');c.className='chip';c.textContent=o;
+      c.onclick=()=>{
+        if(answered)return;
+        answered=true;
+        const correct=(o===questions[idx].ans);
+        if(correct){right++;c.style.background=GREEN;c.style.color='#fff';note.innerHTML='✅ 正确!'+questions[idx].eq+'　属于<b>'+questions[idx].ans+'</b>反应。';note.style.borderColor=GREEN;}
+        else{wrong++;c.style.background=RED;c.style.color='#fff';note.innerHTML='❌ 不对。正确答案是<b>'+questions[idx].ans+'</b>。'+questions[idx].eq;note.style.borderColor=RED;}
+        updateStats();
+      };
+      chipsBox.appendChild(c);
+    });
+  }
+  function updateStats(){
+    idxEl.textContent=(idx+1)+'/'+questions.length;
+    rightEl.textContent=right;wrongEl.textContent=wrong;
+    const total=right+wrong;
+    accEl.textContent=total>0?Math.round(right/total*100)+'%':'0%';
+  }
+  function next(){
+    idx=(idx+1)%questions.length;
+    answered=false;
+    note.innerHTML='👆 先看清方程式,再点击你认为正确的反应类型';
+    note.style.borderColor=INK;
+    drawEq();drawChips();updateStats();
+  }
+  function resetAll(){
+    idx=0;right=0;wrong=0;answered=false;
+    note.innerHTML='👆 先看清方程式,再点击你认为正确的反应类型';
+    note.style.borderColor=INK;
+    drawEq();drawChips();updateStats();
+  }
+  document.getElementById('quizNext').onclick=next;
+  document.getElementById('quizReset').onclick=resetAll;
+  drawEq();drawChips();updateStats();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 判断反应类型的四个核心问题是什么?",a:"①有没有基团被替换(取代)?②有没有不饱和键被打开(加成)?③有没有邻碳脱小分子生成不饱和键(消去)?④化合价有没有升降(氧化/还原)?"},
+ {q:"2. 卤代烃遇NaOH水溶液和醇溶液分别发生什么反应?",a:"NaOH水溶液,Δ→水解(取代反应),生成醇;NaOH醇溶液,Δ→消去反应,生成烯烃(要求邻碳有氢)。"},
+ {q:"3. 乙醇与浓硫酸反应,170℃和140℃分别生成什么?各是什么反应类型?",a:"170℃分子内脱水生成乙烯(消去反应);140℃分子间脱水生成乙醚(取代反应)。"},
+ {q:"4. 酯化反应的机理口诀是什么?",a:"酸脱羟基,醇脱氢——羧酸整体脱去-OH,醇只脱去-OH上的H,两者结合成水,其余部分连成酯键。"},
+ {q:"5. ¹⁸O同位素示踪实验怎么证明酯化机理?",a:"用¹⁸O标记乙醇的氧,反应后¹⁸O出现在生成的酯里而不是水里,证明断裂的是羧酸的C-OH键(酸脱羟基),醇的O留下只脱了H。"},
+ {q:"6. 加成反应和还原反应是什么关系?举例说明。",a:"加成不一定是还原:烯烃加H2既是加成也是还原(化合价降低);烯烃加Br2、加H2O只是加成,没有化合价变化,不是还原。"},
+ {q:"7. 消去反应发生的结构条件是什么?",a:"被脱去的两个原子/基团必须在相邻的碳上,且该邻碳(β碳)上必须有氢原子可脱——邻碳无氢则不能消去。"},
+ {q:"8. 加聚反应和缩聚反应最本质的区别是什么?",a:"加聚不生成任何小分子,原子全部保留在聚合物里;缩聚在生成新键(如酯键、肽键)的同时脱去小分子(通常是H2O),产物是聚合物+小分子副产物。"},
+ {q:"9. 醇氧化为醛、醛氧化为酸,分别用什么试剂/条件?判断依据是什么?",a:"醇→醛:Cu作催化剂,O2,Δ(催化氧化);醛→酸:O2或酸性KMnO4氧化。判断依据是碳原子上氢减少或氧增加,化合价升高,即为氧化。"},
+ {q:"10. 苯环能否与H2、Br2(水)发生加成反应?为什么苯环不能使溴水褪色?",a:"苯环可在高温高压催化剂条件下与H2加成生成环己烷;但苯环不能使溴水/酸性KMnO4常温褪色,因为苯环的大π键结构特殊,化学性质稳定,区别于普通碳碳双键的加成活性。"},
+ {q:"11. 如何从聚合物的重复单元反推单体?加聚和缩聚拆分方法有何不同?",a:"加聚:重复单元直接还原出碳碳双键即为单体。缩聚:先找到重复单元中的酯键/肽键等缩合键,在此处断开,并把脱去的小分子(通常H2O)加回去,补全官能团(如-COOH、-OH)。"},
+ {q:"12. 为什么说酯化、水解、卤代、硝化本质都是同一类反应?",a:"因为它们都表现为分子中某个原子/基团被另一个原子/基团替换、骨架基本不变,符合取代反应的定义,只是具体试剂和产物不同,是取代反应的不同子类型。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

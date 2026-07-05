@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>传送带模型(水平·倾斜) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>传送带模型(水平·倾斜)</h1>
+    <p class="lead">传送带题看着眼花,其实<b>永远按一套流程走</b>:先比较物块和带的速度谁快谁慢,判断谁"蹭"谁——摩擦力永远指向"让相对滑动消失"的方向;再用牛顿第二定律求加速度;最后判断"共速"那一刻会不会发生,共速之后物块是继续加速、匀速、还是减速。把这套流程刻进肌肉记忆,水平带、倾斜带、上行下行,全部通杀。</p>
+
+    <div class="say">🗣️ <b>传送带模型(人话版):</b> 把传送带想成一条"会自己跑的地面"。你(物块)踩上去,如果你比地面慢,地面会"拽着你"往前搓;如果你比地面快,地面会"拖着你"往后拽。这个"搓/拽"的力,就是滑动摩擦力,它的方向永远是<b>相对运动</b>的反方向——不是看你自己往哪走,而是看你相对传送带往哪走。等你俩速度一样了,摩擦力可能消失、也可能变身成静摩擦继续出力,这就是题目真正的分水岭。</div>
+
+    <div class="keybox"><b>分析总纲(五步走):</b> ①比较物块速度 v物 与带速度 v带 → ②判断相对滑动方向(v物−v带 指向哪,摩擦力就指向哪的<b>反方向</b>) → ③列牛顿第二定律 ΣF=ma 求加速度 → ④算出多久共速(或位移多长时共速),判断共速是否真的能发生 → ⑤共速之后,再重新判断能不能"一起走"(比较所需摩擦力与最大静摩擦力)。<b>五步一步都不能跳。</b></div>
+
+    <h2>① 摩擦力方向判断:相对滑动决定一切</h2>
+    <div class="card">
+      <p style="margin:8px 0">滑动摩擦力方向的唯一判据:<b>与"物块相对传送带的运动方向"相反</b>。千万不要直接看物块相对地面的运动方向去猜摩擦力——传送带模型里"地面"本身在动,你必须站在传送带的参考系上看物块往哪蹭。</p>
+      <table>
+        <tr><th>比较</th><th>相对滑动方向(物块相对带)</th><th>摩擦力方向</th></tr>
+        <tr><td>v物 &lt; v带(物块比带慢)</td><td>物块相对带向后滑</td><td>摩擦力向前(带"拽"物块加速)</td></tr>
+        <tr><td>v物 &gt; v带(物块比带快)</td><td>物块相对带向前滑</td><td>摩擦力向后(带"拖"物块减速)</td></tr>
+        <tr><td>v物 = v带(共速)</td><td>无相对滑动</td><td>看能否靠静摩擦维持共速,若不能则重新出现相对滑动</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>解题口诀:</b>"慢了带拽你向前,快了带拖你向后,一样快了看静摩擦够不够。"这一步做对,后面的加速度、共速时刻全部迎刃而解。</p>
+      <p class="trap">⚠ 最容易翻车的地方:摩擦力方向会在"共速"那一刻发生<b>突变</b>——从滑动摩擦(方向由相对滑动定)切换成静摩擦(方向由需要多大的力去维持共速定,可能反向、可能消失)。很多同学到共速后还用原来的摩擦力方向继续算,直接算错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎬 互动 1 — 水平传送带动画:物块+转动的带,实时摩擦方向箭头 + v-t 双线</div>
+      <canvas id="beltCv" width="700" height="230"></canvas>
+      <svg id="beltVt" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="beltGo">▶ 开始运动</button><button id="beltReset">↺ 重置</button>
+        <label>物块初速 v₀ <input id="beltV0" type="range" min="0" max="8" value="1" step="1"></label>
+        <label>带速 v带 <input id="beltVb" type="range" min="0" max="8" value="5" step="1"></label>
+        <label>动摩擦因数 μ <input id="beltMu" type="range" min="1" max="6" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>物块速度 v (m/s)</b><span id="beltVo">0</span></div>
+        <div><b>加速度 a (m/s²)</b><span id="beltA">0</span></div>
+        <div><b>摩擦方向</b><span id="beltDir">-</span></div>
+        <div><b>状态</b><span id="beltSt">未共速</span></div>
+      </div>
+      <p class="small">物块(红方块)初速 v₀ 上带,带(灰色,箭头表示带速方向)以 v带 匀速运动。摩擦方向箭头随相对滑动实时切换。下方 v-t 图:红线=物块,蓝线=带,<b>交点=共速时刻</b>。</p>
+    </div>
+
+    <h2 class="b">② 水平传送带:加速或减速趋向带速</h2>
+    <div class="card">
+      <p style="margin:6px 0">水平传送带上,只要物块速度 v物 与带速 v带 不相等,摩擦力就会持续作用,使物块<b>加速或减速趋向带速</b>。一旦达到共速,水平方向没有其他水平力,摩擦力需求为 0(维持匀速不需要力),于是相对滑动消失、<b>之后物块随带一起匀速运动</b>,不再需要摩擦力(或摩擦力为 0)。</p>
+      <div class="eq">物块慢于带:a = μg(加速度方向与带同向,数值 a=μg)</div>
+      <div class="eq">物块快于带:a = −μg(摩擦力反向,物块减速)</div>
+      <p style="margin:8px 0"><b>关键结论:</b> 水平传送带上,一旦物块与带共速,由于水平方向不需要额外的力就能维持匀速,摩擦力自动变为 0(不需要静摩擦力),此后物块和带<b>一起匀速运动,不再有相对滑动、不再生热</b>。这是水平传送带与倾斜传送带最大的不同点。</p>
+      <p class="trap">⚠ 陷阱:不能想当然认为物块会一直加速到超过带速再减速——一旦达到带速,加速度立刻归零,后面就是匀速,除非题目还有别的外力介入。</p>
+    </div>
+
+    <h2 class="g">③ 倾斜传送带:共速后看 mg sinθ 与 μmg cosθ 的较量</h2>
+    <div class="card">
+      <p style="margin:6px 0">倾斜传送带比水平传送带多了一个"重力沿斜面分量" mg sinθ,这个力<b>不会消失</b>,所以共速时刻不再是终点,而是<b>新一轮判断的起点</b>。</p>
+      <h3>共速前:先按滑动摩擦力方向判断规则,列牛顿第二定律</h3>
+      <p style="margin:6px 0">沿斜面方向:合力 = mg sinθ ± μmg cosθ(摩擦力方向取决于相对滑动方向,符号可正可负,要具体分析每种工况)。</p>
+      <h3>共速后:比较 mg sinθ 与最大静摩擦力 μmg cosθ</h3>
+      <table>
+        <tr><th>比较结果</th><th>共速后物块的运动</th></tr>
+        <tr><td>mg sinθ &lt; μmg cosθ(即 tanθ &lt; μ)</td><td>静摩擦力足以"扛住"重力分量 → 物块与带<b>一起匀速</b>运动</td></tr>
+        <tr><td>mg sinθ = μmg cosθ(即 tanθ = μ)</td><td>临界情况,静摩擦恰好等于 mg sinθ → 仍能一起匀速</td></tr>
+        <tr><td>mg sinθ &gt; μmg cosθ(即 tanθ &gt; μ)</td><td>静摩擦不够 → 物块相对带继续下滑(若上行带,物块开始比带慢,重新出现相对滑动,摩擦方向重新判断;若下行带,物块继续加速下滑,但滑动摩擦方向已固定为沿斜面向上)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>四种常见工况速览:</b></p>
+      <p style="margin:6px 0"><b>(1)带向上运行,物块初速为 0 由顶端放上 / 或初速小于带速上行:</b> 物块比带慢 → 摩擦力沿斜面向上 → 判断 μg cosθ 与 g sinθ 大小决定物块是否被"拽着"加速上行,还是仍下滑但减速。达到共速后再看 tanθ 与 μ 的关系决定后续。</p>
+      <p style="margin:6px 0"><b>(2)带向下运行,物块从顶端静止释放:</b> 物块开始比带慢(0 &lt; v带)→ 摩擦力沿斜面向下(与重力分量同向)→ 加速度 a=g sinθ+μg cosθ,一直到共速;共速后若 tanθ&gt;μ,摩擦力不够、物块继续比带快,变为摩擦力向上,加速度变小为 a=g sinθ−μg cosθ,仍加速但变慢;若 tanθ≤μ,共速后一起匀速。</p>
+      <p style="margin:6px 0"><b>(3)带向上运行,重物在底端被拉上:</b> 常见于"传送货物上高处"场景,需要先看初速与带速关系定摩擦方向,再判断能否被带送到顶端。</p>
+      <p style="margin:6px 0"><b>(4)带静止(v带=0)当作特例:</b> 相当于普通斜面摩擦问题,物块相对地面滑动方向就是相对带滑动方向,没有"变身"过程。</p>
+      <p class="trap">⚠ 倾斜传送带的最大陷阱:很多同学在物块与带"共速"那一刻就以为万事大吉、直接判断为匀速——但只要 tanθ &gt; μ,共速只是"昙花一现",马上又会出现相对滑动,加速度重新非零。倾斜传送带的共速<b>必须验证</b>,水平传送带的共速<b>不需要验证</b>(因为水平方向没有持续外力)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 2 — 三阶段拆解:加速(或减速)→ 共速 → (匀速 / 继续变速)动画分解</div>
+      <svg id="stageSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="stageGo">▶ 播放三阶段</button><button id="stageReset">↺ 重置</button>
+        <label>阶段2是否能维持共速 <input id="stageMode" type="checkbox"></label>
+      </div>
+      <div class="verdict" id="stageNote"></div>
+      <p class="small">勾选框决定共速后 tanθ 与 μ 的关系:不勾=tanθ&gt;μ(共速后继续下滑,重新变速);勾选=tanθ≤μ(共速后一起匀速)。看清楚阶段2到阶段3的"衔接方式"。</p>
+    </div>
+
+    <h2 class="o">④ 倾斜传送带情形切换:上行/下行/带速大小</h2>
+    <div class="card">
+      <p style="margin:6px 0">同一个 θ、μ 的斜面传送带,只要<b>带的运行方向</b>和<b>带速大小</b>不同,物块的运动过程就完全不同。下面的互动让你切换四种典型工况,直接看动画走一遍。</p>
+      <div class="chips">
+        <span class="chip">带上行·物块顶端释放</span><span class="chip">带下行·物块顶端释放</span><span class="chip">带上行·物块初速大于带速</span><span class="chip">带下行·物块初速为0且tanθ&gt;μ</span>
+      </div>
+      <p class="trap">⚠ 上行带把物块"放上去"时最容易漏掉一种情形:如果物块初速为 0,而带向上运行,那么一开始物块必然比带慢(0 &lt; v带),摩擦力沿斜面向上;这时要比较 μg cosθ 与 g sinθ 的大小才能确定物块究竟是"被拽着往上冲"还是"一边被拽一边仍往下滑但减速下滑"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎢 互动 3 — 倾斜传送带情形切换器:上行/下行/带速大小 → 全过程动画 + 受力标注</div>
+      <canvas id="inclineCv" width="700" height="280"></canvas>
+      <div class="ctrl">
+        <button class="incCase on" data-c="0">带上行·顶端释放</button>
+        <button class="incCase" data-c="1">带下行·顶端释放</button>
+        <button class="incCase" data-c="2">带上行·初速大于带速</button>
+      </div>
+      <div class="ctrl">
+        <button id="incGo">▶ 播放</button><button id="incReset">↺ 重置</button>
+        <label>θ(°) <input id="incTheta" type="range" min="20" max="50" value="37" step="1"></label>
+        <label>μ×10 <input id="incMu" type="range" min="1" max="10" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>tanθ</b><span id="incTan">0</span></div>
+        <div><b>μ</b><span id="incMuv">0</span></div>
+        <div><b>共速后</b><span id="incAfter">-</span></div>
+        <div><b>当前加速度</b><span id="incA">0</span></div>
+      </div>
+      <p class="small">调节 θ 和 μ,看 tanθ 与 μ 的关系如何决定"共速后"一栏的结论。三种工况分别演示带上行释放、带下行释放、上行带遇到"initial更快"的物块。</p>
+    </div>
+
+    <h2 class="v">⑤ 相对位移:划痕长度与摩擦生热</h2>
+    <div class="card">
+      <div class="eq">Δs相对 = |s物块 − s传送带|(同一时间段内,两者对地位移之差的绝对值)</div>
+      <p style="margin:8px 0"><b>为什么不能直接用物块的位移当"划痕长度"?</b> 因为传送带自己也在动。物块在带上留下的划痕,量的是物块<b>相对传送带表面</b>挪动了多远,而不是物块相对地面挪了多远。必须先分别算出物块对地位移 s物 和传送带对地位移 s带,再作差取绝对值。</p>
+      <div class="eq">摩擦生热:Q = f · Δs相对　(f 为滑动摩擦力大小)</div>
+      <p style="margin:8px 0">生热公式里的位移,同样必须是<b>相对位移</b> Δs相对,而不是物块自己的位移,也不是带自己的位移——用错了位移,算出来的"热量"会差一大截。只有在物块与带之间存在<b>相对滑动</b>的那段时间/那段过程,才会产生摩擦热;一旦共速且不再打滑,后续没有相对滑动的匀速阶段不再生热。</p>
+      <p class="trap">⚠ 三大高频失误:①用物块位移当划痕长度(该用相对位移);②生热 Q 直接用物块位移乘摩擦力(该用相对位移);③共速之后如果确实一起匀速了,这段时间不再有相对滑动、不再生热,不能把全程时间都算进 Δs相对。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 相对位移与划痕长度可视化:物块位移 vs 带位移 vs 划痕</div>
+      <svg id="relSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="relGo">▶ 播放</button><button id="relReset">↺ 重置</button>
+        <label>物块初速 v₀ <input id="relV0" type="range" min="0" max="6" value="0" step="1"></label>
+        <label>带速 v带 <input id="relVb" type="range" min="2" max="8" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>物块位移 s物</b><span id="relS1">0</span></div>
+        <div><b>传送带位移 s带</b><span id="relS2">0</span></div>
+        <div><b>相对位移=划痕</b><span id="relDs">0</span></div>
+        <div><b>共速用时 t</b><span id="relT">0</span></div>
+      </div>
+      <p class="small">上方两条刻度尺分别记录物块与带各自"走了多远"(对地位移),下方红色区块=划痕长度=两者位移之差的绝对值。共速前两者位移增速不同,划痕持续增长;共速后(若一起走)划痕不再增长。</p>
+    </div>
+
+    <h2 class="b">⑥ 摩擦生热计算器:Q = f·Δs相对</h2>
+    <div class="card">
+      <p style="margin:6px 0">滑动摩擦力大小 f=μmg cosθ(倾斜时,水平传送带 θ=0 则 f=μmg)。只要拿到 f 和 Δs相对,生热 Q 就是一步乘法——但 Δs相对 这一步的计算(见上一节)才是真正的难点,大部分错误出在位移算错,而不是公式记错。</p>
+      <div class="eq">Q = f · Δs相对 = μmg cosθ · |s物 − s带|</div>
+      <p class="trap">⚠ 常见混淆:如果全程物块都在打滑(一直没有共速,或共速后仍然打滑),Δs相对 要按"打滑那一段过程"来算,不能用总时间内两者各自的位移简单相减而不加分析——尤其当运动方向发生变化(比如物块先减速到0又反向)时,位移是矢量,要看清楚正负号,不能直接用速度×时间当成位移的绝对值处理。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔥 互动 5 — 摩擦生热计算器:改变 μ、m、Δs相对,看 Q 如何变化</div>
+      <svg id="heatSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>质量 m (kg) <input id="heatM" type="range" min="1" max="10" value="2" step="1"></label>
+        <label>μ×10 <input id="heatMu" type="range" min="1" max="8" value="4" step="1"></label>
+        <label>相对位移 Δs (m) <input id="heatDs" type="range" min="0" max="10" value="4" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>摩擦力 f=μmg (N)</b><span id="heatF">0</span></div>
+        <div><b>相对位移 Δs (m)</b><span id="heatDsv">0</span></div>
+        <div><b>生热 Q=f·Δs (J)</b><span id="heatQ">0</span></div>
+        <div><b>条形高度</b><span id="heatBar">0</span></div>
+      </div>
+      <p class="small">水平传送带简化情形(θ=0,cosθ=1)。柱状图高度正比于 Q。留意:m 或 μ 增大都让 f 变大,Q 随之等比放大;Δs相对 增大,Q 也线性放大。</p>
+    </div>
+
+    <h2 class="g">⑦ v-t 图双线分析法:交点=共速</h2>
+    <div class="card">
+      <p style="margin:6px 0">解传送带题,画一张 v-t 图往往比死算文字更直观:<b>物块线</b>(初速出发,按加速度变化的斜率画)与<b>带线</b>(水平直线,代表带速恒定)。两线的<b>交点</b>就是"共速时刻"。交点之前两线之间的"面积差"就是相对位移(划痕长度),交点之后如果两线重合延伸,说明共速后一起匀速;如果带线之后物块线又斜率改变、脱离带线,说明共速只是短暂的,之后又分道扬镳。</p>
+      <div class="eq">交点前 Δs相对 = |物块线与带线之间围成的面积|</div>
+      <p style="margin:8px 0"><b>读图三要点:</b> ①物块线的<b>斜率</b>就是加速度,斜率变化说明摩擦力方向变了(通常发生在交点处);②带线永远是水平直线(带速恒定);③交点处若两线之后<b>重合</b>,说明共速后一起走;若交点后物块线<b>再次分离</b>,说明共速不能维持,又要重新分析摩擦力方向。</p>
+      <p class="trap">⚠ 画图陷阱:交点前后如果物块的加速度方向变化(比如从"加速摩擦力向前"变成"共速后摩擦力消失"),v-t 图上物块线在交点处的<b>斜率会突变</b>,不是一条直线画到底——很多同学习惯性地把物块线画成一条不转折的直线,这是错的。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 6 — v-t 图交互:拖动带速滑块,实时看交点(共速点)如何移动</div>
+      <svg id="vtSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>物块初速 v₀ <input id="vtV0" type="range" min="0" max="8" value="2" step="1"></label>
+        <label>带速 v带(拖动我) <input id="vtVb" type="range" min="0" max="8" value="6" step="1"></label>
+        <label>加速度大小 a <input id="vtA" type="range" min="1" max="6" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>共速时刻 t共 (s)</b><span id="vtT">0</span></div>
+        <div><b>共速时速度 (m/s)</b><span id="vtVc">0</span></div>
+        <div><b>共速前相对位移 (m)</b><span id="vtDs">0</span></div>
+        <div><b>物块线斜率</b><span id="vtK">0</span></div>
+      </div>
+      <p class="small">红线=物块速度随时间变化(斜率=加速度,方向指向带速);蓝色水平线=带速。两线交点就是"共速时刻"t共=|v带−v₀|/a。阴影三角形面积=共速前的相对位移(划痕长度)。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 水平传送带·物块加速/减速趋向带速</h3>
+      <p><b class="tag">触发信号:</b> 水平传送带,给出物块初速和带速,问物块何时与带共速、共速后如何运动、传送带对物块做的功或摩擦生热。</p>
+      <p><b class="tag">标准动作:</b> 比较 v物与v带 → 定摩擦方向 → a=μg → 算共速时间/位移 → 共速后水平方向摩擦力为0、一起匀速。</p>
+      <p><b class="tag">示例(带解):</b> 物块质量2kg以v₀=1m/s滑上水平传送带,带速v带=5m/s,μ=0.2,g取10。物块比带慢→摩擦力向前→a=μg=2m/s²(加速)。共速时间t=(5−1)/2=2s,此过程物块位移s物=v₀t+½at²=1×2+½×2×4=6m,带位移s带=v带×t=5×2=10m,相对位移Δs=|6−10|=4m,即划痕长度4m,生热Q=f·Δs=μmg×Δs=0.2×2×10×4=16J。共速后无相对滑动,一起匀速运动。</p>
+      <p class="trap">陷阱:忘记共速后摩擦力消失继续按a=μg算下去;生热用物块位移6m而非相对位移4m。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 倾斜传送带·共速后是否维持匀速</h3>
+      <p><b class="tag">触发信号:</b> 给出倾斜角θ、μ,问物块能否被送到顶端,或问共速后物块的运动状态。</p>
+      <p><b class="tag">标准动作:</b> 先按初速比较定摩擦方向 → 列ΣF=ma求共速前加速度 → 算共速时刻 → 比较 tanθ 与 μ 判断共速后是一起匀速还是重新变速。</p>
+      <p><b class="tag">示例(带解):</b> θ=37°(sin37°=0.6,cos37°=0.8),带以v带=4m/s向上运行,物块质量1kg从底端以v₀=0(静止放上)开始,μ=0.5。物块比带慢(0&lt;4)→摩擦力沿斜面向上→a=μg cosθ−g sinθ=0.5×10×0.8−10×0.6=4−6=−2m/s²(负,说明重力分量更大,物块实际上仍沿斜面向下加速,即向下滑动加速)。此时物块根本无法与带共速(带向上、物块反而向下加速),要重新审视物块最终能否被送上去。</p>
+      <p class="trap">陷阱:忽略了加速度算出来为负、方向与假设不符的情况,必须回头重新判断物理图景,而不是硬套下去。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 倾斜传送带·带下行释放物块</h3>
+      <p><b class="tag">触发信号:</b> 物块从传送带顶端由静止释放,带向下运行,问物块滑到底端所用时间或末速度。</p>
+      <p><b class="tag">标准动作:</b> 初始v物=0&lt;v带(带向下)→摩擦力沿斜面向下→a₁=g sinθ+μg cosθ(加速)直到共速→共速后比较tanθ与μ:若tanθ&gt;μ则继续加速但摩擦力变向上、a₂=g sinθ−μg cosθ(变小的加速度);若tanθ≤μ则共速后一起匀速下滑。</p>
+      <p><b class="tag">示例(带解):</b> θ=37°,μ=0.5,tanθ=0.75&gt;μ=0.5 → 共速后摩擦力不足以扛住重力分量,物块继续加速下滑,但加速度从 a₁=g(sinθ+μcosθ)=10×(0.6+0.4)=10 m/s² 变为共速后 a₂=g(sinθ−μcosθ)=10×(0.6−0.4)=2 m/s²,是"加速度突然变小的继续加速"过程。</p>
+      <p class="trap">陷阱:算出共速时刻就直接判定"之后匀速",没有检验 tanθ 与 μ 的大小关系。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 相对位移与划痕长度</h3>
+      <p><b class="tag">触发信号:</b>「传送带上留下多长的划痕」「物块相对传送带滑动的距离」。</p>
+      <p><b class="tag">标准动作:</b> 分别求出打滑那段时间内物块对地位移 s物 和传送带对地位移 s带,Δs相对=|s物−s带|,即为划痕长度。共速且能维持匀速之后的位移不计入划痕。</p>
+      <p><b class="tag">示例(带解):</b> 承题型A数据:共速前2s内,s物=6m,s带=10m,划痕长度=|6−10|=4m。共速后一起匀速,不再新增划痕,所以全程划痕长度就是4m,不随后续匀速运动的时间继续增长。</p>
+      <p class="trap">陷阱:把共速之后继续运动的位移也算进划痕长度;混淆物块位移与相对位移。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 摩擦生热 Q=f·Δs相对</h3>
+      <p><b class="tag">触发信号:</b>「传送带因摩擦产生多少热量」「系统因摩擦损失的机械能」。</p>
+      <p><b class="tag">标准动作:</b> 先求滑动摩擦力 f=μmg cosθ,再求相对位移 Δs相对(只算存在相对滑动的那段过程),Q=f·Δs相对。可与能量守恒(电动机多做的功=物块动能增量+摩擦生热)配合验证。</p>
+      <p><b class="tag">示例(带解):</b> 承题型A,f=μmg=0.2×2×10=4N,Δs相对=4m,Q=4×4=16J。可验证:电动机为克服摩擦多做的功=f×s带=4×10=40J,物块获得动能=½×2×5²−½×2×1²=25−1=24J,差值40−24=16J=Q,吻合。</p>
+      <p class="trap">陷阱:生热公式里的位移错用成物块位移或带位移单独一个;共速后若一起匀速,不再产生新的热量。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — v-t 图读图与反推</h3>
+      <p><b class="tag">触发信号:</b> 给出物块的v-t图(或让你自己画),要求读出共速时刻、加速度、相对位移。</p>
+      <p><b class="tag">标准动作:</b> 图中水平线为带速,斜线为物块速度,交点的横坐标即为共速时刻 t共=|v带−v₀|/a;斜线斜率的绝对值就是加速度a;交点之前两线与坐标轴围成的面积之差就是相对位移。</p>
+      <p><b class="tag">示例(带解):</b> 物块线从(0,1)以斜率2上升,带线为y=5的水平线,交点t=(5−1)/2=2s,此时v=5m/s。共速前物块位移=1×2+½×2×2²=6,带位移=5×2=10,面积差(相对位移)=4m,与题型A结果一致——图和代数应互相印证。</p>
+      <p class="trap">陷阱:把物块线画成过原点的直线而忽略初速v₀不为0;忘记交点后可能斜率再次改变(倾斜带情形)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 摩擦力方向看的是<b>物块相对传送带</b>的滑动方向,不是物块相对地面的运动方向。</p>
+      <p class="trap">② 共速那一刻摩擦力可能<b>突变</b>(滑动摩擦→静摩擦,甚至方向反转),不能沿用共速前的加速度继续计算。</p>
+      <p class="trap">③ 水平传送带共速后摩擦力自动为0、一起匀速,<b>不需要额外验证</b>;倾斜传送带共速后必须比较 tanθ 与 μ,<b>必须验证</b>能否维持匀速。</p>
+      <p class="trap">④ 划痕长度、摩擦生热都要用<b>相对位移</b> Δs相对=|s物−s带|,绝不能直接用物块自己的位移或带自己的位移。</p>
+      <p class="trap">⑤ 共速后若确实一起匀速,后续阶段<b>没有相对滑动</b>,不产生新的划痕,也不再生热。</p>
+      <p class="trap">⑥ v-t图里,带速永远画成水平直线;物块线的斜率若在共速点前后不同,要画出<b>转折点</b>,不能画成一条直线到底。</p>
+      <p class="trap">⑦ 倾斜传送带上,重力沿斜面分量 mg sinθ 是<b>持续存在</b>的力,不会随共速而消失,这是与水平传送带最本质的区别。</p>
+      <p class="trap">⑧ 算加速度时要看清摩擦力和重力分量是<b>同向还是反向</b>叠加,符号搞反会导致加速度大小、方向全错。</p>
+      <p class="trap">⑨ 物块速度为0被放上运行中的传送带时,不能忽略"一开始物块一定比带慢(或与带反向)"这一步的判断,不能想当然认为摩擦力方向和最终方向一致。</p>
+      <p class="trap">⑩ 生热 Q=f·Δs相对 只对"打滑阶段"成立,若全程分为多个阶段(打滑→共速匀速→又打滑),要分段计算再求和,不能一个公式套全程。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 传送带模型的本质是"参考系里的追及问题":</b> 把传送带看成一个恒速运动的参考系,物块相对这个参考系有一个初始的"相对速度",摩擦力做的事情就是不断消灭这个相对速度,直到相对速度归零(共速)。这样理解,你会发现传送带模型和"追及相遇"问题在数学结构上是同构的——只是这里"追及"的对象是速度而非位置。</p>
+      <p style="margin:8px 0"><b>② 水平与倾斜的本质差异在于"共速点是不是稳定平衡点":</b> 水平传送带上,共速后合力为0,这是一个稳定平衡——扰动消失后系统留在共速状态。倾斜传送带上,共速后若 tanθ&gt;μ,重力分量总能压垮静摩擦上限,共速只是一个"不稳定的瞬间",系统必然离开这一状态继续演化。判断"稳不稳"就是比较 mg sinθ 与 μmg cosθ 的临界关系,这是整个模型的核心分岔点。</p>
+      <p style="margin:8px 0"><b>③ 用能量守恒检验摩擦生热,是最可靠的自查手段:</b> 电动机为维持带匀速运行额外多做的功,等于物块动能的增量加上摩擦生热(Q=f·Δs相对)。如果你独立算出的 Q 和用能量守恒反推出的 Q 对不上,说明相对位移或摩擦力算错了,这是考场上检验答案的黄金公式:W电动机额外 = ΔEk物块 + Q。</p>
+      <p style="margin:8px 0"><b>④ v-t图上,"面积"永远是位移的几何化身:</b> 物块线下的面积是物块位移,带线下的面积是带位移,两者面积之差(共速前)就是相对位移。把这套"图像面积=物理量"的思维方式推广开,以后不管是恒力还是变力、水平还是倾斜,你都能不列积分式子、只靠画图就估算出位移关系。</p>
+      <p style="margin:8px 0"><b>⑤ 传送带问题最终考的是"分段思维":</b> 把全程按"摩擦力方向/大小是否改变"切成若干段,每段内摩擦力恒定、加速度恒定,可以用匀变速直线运动公式;段与段的分界点永远是"相对滑动状态发生变化"的时刻(共速、或从静摩擦重新变为滑动摩擦)。找准分段点,复杂的传送带题就会被拆成几道简单的匀变速小题。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 传送带模型(水平·倾斜)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GREY="#7a7a7a";
+
+/* ===== 互动1:水平传送带动画 + v-t 双线 ===== */
+(function(){
+  const cv=document.getElementById('beltCv');const ctx=cv.getContext('2d');
+  const vt=document.getElementById('beltVt');
+  const V0s=document.getElementById('beltV0'),VBs=document.getElementById('beltVb'),MUs=document.getElementById('beltMu');
+  const oV=document.getElementById('beltVo'),oA=document.getElementById('beltA'),oDir=document.getElementById('beltDir'),oSt=document.getElementById('beltSt');
+  const g=10;
+  let v0=1,vb=5,mu=0.2,t=0,v=0,x=60,belt=0,running=false,history=[];
+  function sync(){v0=+V0s.value;vb=+VBs.value;mu=+MUs.value/10;reset();}
+  V0s.oninput=VBs.oninput=MUs.oninput=sync;
+  function reset(){t=0;v=v0;x=60;belt=0;running=false;history=[];update();draw();drawVt();}
+  function accel(vv){
+    if(Math.abs(vv-vb)<0.02) return 0;
+    return vv<vb ? mu*g : -mu*g;
+  }
+  function update(){
+    const a=accel(v);
+    oV.textContent=v.toFixed(2);
+    oA.textContent=a.toFixed(2);
+    oDir.textContent = a>0.01?'向前(拽物块加速)': a<-0.01?'向后(拖物块减速)':'无(已共速)';
+    oSt.textContent = Math.abs(v-vb)<0.05?'已共速':'未共速';
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // belt
+    const beltY=170,beltH=30;
+    ctx.fillStyle='#b9b0a0';ctx.fillRect(40,beltY,620,beltH);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(40,beltY,620,beltH);
+    // belt tick marks moving to show belt motion direction
+    ctx.fillStyle='#8a8070';
+    for(let i=0;i<20;i++){
+      let bx=((i*35 + belt*30) % 660) + 40 - 30;
+      if(bx>40 && bx<660) ctx.fillRect(bx,beltY+6,4,beltH-12);
+    }
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('传送带 v带='+vb+'m/s →',44,beltY-8);
+    // block
+    const bx=Math.min(640,x);
+    ctx.fillStyle=RED;ctx.fillRect(bx-16,beltY-32,32,32);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(bx-16,beltY-32,32,32);
+    // friction arrow
+    const a=accel(v);
+    if(Math.abs(a)>0.01){
+      const dir=a>0?1:-1;
+      ctx.strokeStyle=GREEN;ctx.lineWidth=4;
+      ctx.beginPath();ctx.moveTo(bx,beltY-46);ctx.lineTo(bx+dir*30,beltY-46);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx+dir*30,beltY-46);ctx.lineTo(bx+dir*20,beltY-52);ctx.lineTo(bx+dir*20,beltY-40);ctx.closePath();
+      ctx.fillStyle=GREEN;ctx.fill();
+      ctx.fillStyle=GREEN;ctx.font='bold 12px sans-serif';ctx.fillText('f',bx+dir*34,beltY-42);
+    }
+    // velocity arrow of block
+    ctx.strokeStyle=BLUE;ctx.lineWidth=3;
+    const vlen=v*6;
+    ctx.beginPath();ctx.moveTo(bx,beltY-16);ctx.lineTo(bx+vlen,beltY-16);ctx.stroke();
+    ctx.fillStyle=BLUE;ctx.font='bold 11px sans-serif';ctx.fillText('v='+v.toFixed(1),bx-10,beltY+16);
+  }
+  function drawVt(){
+    clr(vt);
+    const X0=60,Y0=20,W=600,H=150;
+    el(vt,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(vt,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(vt,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(vt,'text',{x:X0+W,y:Y0+H+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const vMax=9,tMax=8;
+    const sy=H/vMax, sx=W/tMax;
+    // belt speed horizontal line
+    const ybelt=Y0+H-vb*sy;
+    el(vt,'line',{x1:X0,y1:ybelt,x2:X0+W,y2:ybelt,stroke:BLUE,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(vt,'text',{x:X0+W-70,y:ybelt-6,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='带速 v带';
+    // block line from history
+    if(history.length>1){
+      let d='M'+(X0+history[0].t*sx)+','+(Y0+H-history[0].v*sy);
+      for(let i=1;i<history.length;i++){d+=' L'+(X0+history[i].t*sx)+','+(Y0+H-history[i].v*sy);}
+      el(vt,'path',{d:d,fill:'none',stroke:RED,'stroke-width':4});
+    }
+    el(vt,'text',{x:X0+8,y:Y0+16,'font-size':11.5,'font-weight':900,fill:RED}).textContent='红线=物块 v-t';
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.05;
+    const a=accel(v);
+    v=v+a*dt; if(a>0 && v>vb) v=vb; if(a<0 && v<vb) v=vb;
+    t+=dt;
+    x+=v*10*dt;
+    belt+=vb*10*dt;
+    history.push({t:t,v:v});
+    if(t>7.5) running=false;
+    update();draw();drawVt();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('beltGo').onclick=()=>{sync();running=true;requestAnimationFrame(loop);};
+  document.getElementById('beltReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动2:三阶段拆解 ===== */
+(function(){
+  const svg=document.getElementById('stageSvg');const note=document.getElementById('stageNote');
+  const modeChk=document.getElementById('stageMode');
+  let stage=0,running=false,frac=0;
+  function draw(){
+    clr(svg);
+    const canMaintain=modeChk.checked;
+    const stages=['阶段1: 相对滑动,摩擦力方向由相对运动定,匀变速','阶段2: 共速瞬间(v物=v带)','阶段3: '+(canMaintain?'tanθ≤μ,静摩擦够用,一起匀速':'tanθ>μ,静摩擦不够,重新出现相对滑动、加速度非零')];
+    // three panels
+    for(let i=0;i<3;i++){
+      const px=30+i*230;
+      el(svg,'rect',{x:px,y:20,width:210,height:210,fill:i===stage?'rgba(224,56,42,0.12)':'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:px+105,y:42,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='阶段'+(i+1);
+      // incline
+      el(svg,'line',{x1:px+30,y1:200,x2:px+180,y2:100,stroke:BROWN,'stroke-width':5});
+      el(svg,'line',{x1:px+30,y1:200,x2:px+180,y2:200,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});
+      // block position depends on stage
+      let bx,by;
+      if(i===0){bx=px+70+frac*(i===stage?30:30);by=170-frac*(i===stage?12:12);}
+      else if(i===1){bx=px+105;by=140;}
+      else{bx=px+ (canMaintain?130: 90 + (i===stage?frac*20:15) );by= canMaintain?128:150- (i===stage?frac*10:8);}
+      el(svg,'rect',{x:bx-12,y:by-12,width:24,height:24,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:px+105,y:238,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=stages[i].split(':')[0];
+    }
+    note.innerHTML=stages[stage];
+    note.style.borderColor= stage===2 ? (canMaintain?GREEN:RED) : INK;
+  }
+  function loop(){
+    if(!running)return;
+    frac+=0.04;
+    if(frac>=1){frac=0;stage++;if(stage>2){stage=2;running=false;}}
+    draw();
+    if(running) requestAnimationFrame(loop);
+  }
+  document.getElementById('stageGo').onclick=()=>{stage=0;frac=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('stageReset').onclick=()=>{stage=0;frac=0;running=false;draw();};
+  modeChk.onchange=draw;
+  draw();
+})();
+
+/* ===== 互动3:倾斜传送带情形切换 ===== */
+(function(){
+  const cv=document.getElementById('inclineCv');const ctx=cv.getContext('2d');
+  const thetaS=document.getElementById('incTheta'),muS=document.getElementById('incMu');
+  const oTan=document.getElementById('incTan'),oMu=document.getElementById('incMuv'),oAfter=document.getElementById('incAfter'),oA=document.getElementById('incA');
+  const g=10;
+  let caseNum=0,theta=37,mu=0.5,running=false,t=0,pos=0.15,vBlock=0,phase=0;
+  document.querySelectorAll('.incCase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.incCase').forEach(x=>x.classList.remove('on'));b.classList.add('on');caseNum=+b.dataset.c;reset();
+  });
+  function sync(){theta=+thetaS.value;mu=+muS.value/10;reset();}
+  thetaS.oninput=muS.oninput=sync;
+  function vband(){ // belt speed & direction per case; return signed (positive = up-slope)
+    if(caseNum===0) return 4; // up
+    if(caseNum===1) return -4; // down
+    return 3; // up, but block starts faster
+  }
+  function reset(){
+    t=0;phase=0;running=false;
+    pos = caseNum===2? 0.5 : 0.15;
+    vBlock = caseNum===2? 6 : 0;
+    updateStats();
+    draw();
+  }
+  function updateStats(){
+    const tanT=Math.tan(theta*Math.PI/180);
+    oTan.textContent=tanT.toFixed(2);
+    oMu.textContent=mu.toFixed(2);
+    oAfter.textContent = tanT>mu? '继续变速(打滑)' : '一起匀速';
+    const sinT=Math.sin(theta*Math.PI/180),cosT=Math.cos(theta*Math.PI/180);
+    const vb=vband();
+    let a;
+    if(Math.abs(vBlock-vb)<0.05){
+      a = tanT>mu ? g*(sinT-mu*cosT) : 0;
+    } else if(vBlock<vb){
+      a = g*(mu*cosT - sinT); // friction up-slope helps if positive; could be negative meaning still net down
+    } else {
+      a = -g*(sinT+mu*cosT);
+    }
+    oA.textContent=a.toFixed(2);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const theta_r=theta*Math.PI/180;
+    const x0=60,y0=250,L=560;
+    const x1=x0+L*Math.cos(theta_r),y1=y0-L*Math.sin(theta_r);
+    // incline surface
+    ctx.strokeStyle=BROWN;ctx.lineWidth=6;
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x0+L,y0);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('θ='+theta+'°',x0+40,y0-10);
+    // belt direction arrow along incline
+    const vb=vband();
+    const dir=vb>0?1:-1;
+    const midx=(x0+x1)/2,midy=(y0+y1)/2;
+    ctx.strokeStyle=GREY;ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(midx-dir*40*Math.cos(theta_r),midy+dir*40*Math.sin(theta_r));
+    ctx.lineTo(midx+dir*40*Math.cos(theta_r),midy-dir*40*Math.sin(theta_r));ctx.stroke();
+    ctx.fillStyle=GREY;ctx.font='bold 12px sans-serif';
+    ctx.fillText('带 '+(vb>0?'上行':'下行')+' |v带|='+Math.abs(vb),midx-20,midy-20);
+    // block on incline at pos (0..1 along incline, 0=bottom,1=top)
+    const bx=x0+pos*L*Math.cos(theta_r), by=y0-pos*L*Math.sin(theta_r);
+    ctx.save();ctx.translate(bx,by);ctx.rotate(-theta_r);
+    ctx.fillStyle=RED;ctx.fillRect(-14,-26,28,26);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(-14,-26,28,26);
+    ctx.restore();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('v物='+vBlock.toFixed(1),bx-30,by-34);
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.05;t+=dt;
+    const theta_r=theta*Math.PI/180;
+    const sinT=Math.sin(theta_r),cosT=Math.cos(theta_r),tanT=Math.tan(theta_r);
+    const vb=vband();
+    let a;
+    if(Math.abs(vBlock-vb)<0.05){
+      vBlock=vb;
+      a = tanT>mu ? g*(sinT-mu*cosT) : 0;
+    } else if(vBlock<vb){
+      a = g*(mu*cosT - sinT);
+    } else {
+      a = -g*(sinT+mu*cosT);
+    }
+    vBlock += a*dt;
+    if((a>0 && vBlock>vb && Math.abs(vBlock-vb)<0.3)) vBlock=vb;
+    pos += (vBlock*dt)/12;
+    if(pos>1){pos=1;running=false;}
+    if(pos<0){pos=0;running=false;}
+    updateStats();draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('incGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('incReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动4:相对位移与划痕长度 ===== */
+(function(){
+  const svg=document.getElementById('relSvg');
+  const V0s=document.getElementById('relV0'),VBs=document.getElementById('relVb');
+  const oS1=document.getElementById('relS1'),oS2=document.getElementById('relS2'),oDs=document.getElementById('relDs'),oT=document.getElementById('relT');
+  const g=10,mu=0.2;
+  let v0=0,vb=6,t=0,running=false,vNow=0,sBlock=0,sBelt=0,tCommon=0;
+  function sync(){v0=+V0s.value;vb=+VBs.value;reset();}
+  V0s.oninput=VBs.oninput=sync;
+  function reset(){
+    t=0;vNow=v0;sBlock=0;sBelt=0;running=false;
+    tCommon = Math.abs(vb-v0)/(mu*g);
+    oT.textContent=tCommon.toFixed(2)+'s';
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    const X0=50,W=600;
+    // block ruler
+    el(svg,'text',{x:X0,y:30,'font-size':13,'font-weight':900,fill:RED}).textContent='物块位移 s物='+sBlock.toFixed(2)+'m';
+    el(svg,'rect',{x:X0,y:40,width:Math.min(W,sBlock*15),height:26,fill:'rgba(224,56,42,0.35)',stroke:RED,'stroke-width':3});
+    el(svg,'rect',{x:X0,y:40,width:W,height:26,fill:'none',stroke:INK,'stroke-width':2});
+    // belt ruler
+    el(svg,'text',{x:X0,y:100,'font-size':13,'font-weight':900,fill:BLUE}).textContent='传送带位移 s带='+sBelt.toFixed(2)+'m';
+    el(svg,'rect',{x:X0,y:110,width:Math.min(W,sBelt*15),height:26,fill:'rgba(20,80,200,0.30)',stroke:BLUE,'stroke-width':3});
+    el(svg,'rect',{x:X0,y:110,width:W,height:26,fill:'none',stroke:INK,'stroke-width':2});
+    // relative displacement (scratch) bar
+    const ds=Math.abs(sBlock-sBelt);
+    el(svg,'text',{x:X0,y:170,'font-size':13,'font-weight':900,fill:INK}).textContent='相对位移(划痕长度)Δs='+ds.toFixed(2)+'m';
+    el(svg,'rect',{x:X0,y:180,width:Math.min(W,ds*15),height:34,fill:'rgba(122,63,242,0.35)',stroke:VIO,'stroke-width':3});
+    el(svg,'rect',{x:X0,y:180,width:W,height:34,fill:'none',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0,y:242,'font-size':12,'font-weight':800,fill: t>=tCommon?GREEN:INK}).textContent = t>=tCommon? '已共速 → 划痕不再增长' : '尚未共速 → 划痕持续增长中 (t='+t.toFixed(2)+'s)';
+    oS1.textContent=sBlock.toFixed(2);oS2.textContent=sBelt.toFixed(2);oDs.textContent=ds.toFixed(2);
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.04;
+    if(t<tCommon){
+      const a = vNow<vb? mu*g : -mu*g;
+      vNow+=a*dt;
+      sBlock+=vNow*dt;
+    } else {
+      vNow=vb;
+      sBlock+=vNow*dt;
+    }
+    sBelt+=vb*dt;
+    t+=dt;
+    if(t>tCommon+2.5) running=false;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('relGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('relReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动5:摩擦生热计算器 ===== */
+(function(){
+  const svg=document.getElementById('heatSvg');
+  const Ms=document.getElementById('heatM'),MUs=document.getElementById('heatMu'),DSs=document.getElementById('heatDs');
+  const oF=document.getElementById('heatF'),oDs=document.getElementById('heatDsv'),oQ=document.getElementById('heatQ'),oBar=document.getElementById('heatBar');
+  const g=10;
+  function sync(){draw();}
+  Ms.oninput=MUs.oninput=DSs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const m=+Ms.value,mu=+MUs.value/10,ds=+DSs.value;
+    const f=mu*m*g;
+    const Q=f*ds;
+    oF.textContent=f.toFixed(1);oDs.textContent=ds.toFixed(1);oQ.textContent=Q.toFixed(1);
+    const maxQ=8*10*10; // rough max
+    const h=Math.min(150,(Q/maxQ)*150);
+    oBar.textContent=h.toFixed(0)+'px';
+    el(svg,'rect',{x:300,y:180-h,width:100,height:h,fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:196,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Q='+Q.toFixed(1)+'J';
+    el(svg,'line',{x1:80,y1:180,x2:620,y2:180,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Q = f·Δs相对 = μmg·Δs相对';
+    el(svg,'text',{x:350,y:52,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='m='+m+'kg, μ='+mu.toFixed(1)+', f='+f.toFixed(1)+'N, Δs='+ds.toFixed(1)+'m';
+  }
+  draw();
+})();
+
+/* ===== 互动6:v-t 图交互 ===== */
+(function(){
+  const svg=document.getElementById('vtSvg');
+  const V0s=document.getElementById('vtV0'),VBs=document.getElementById('vtVb'),As=document.getElementById('vtA');
+  const oT=document.getElementById('vtT'),oVc=document.getElementById('vtVc'),oDs=document.getElementById('vtDs'),oK=document.getElementById('vtK');
+  function sync(){draw();}
+  V0s.oninput=VBs.oninput=As.oninput=sync;
+  function draw(){
+    clr(svg);
+    const v0=+V0s.value,vb=+VBs.value,a=+As.value;
+    const X0=60,Y0=20,W=600,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const vMax=10,tMax=8;
+    const sx=W/tMax, sy=H/vMax;
+    const tCommon = a===0? 0 : Math.abs(vb-v0)/a;
+    const tClamped=Math.min(tCommon,tMax);
+    // belt horizontal line
+    const yb=Y0+H-vb*sy;
+    el(svg,'line',{x1:X0,y1:yb,x2:X0+W,y2:yb,stroke:BLUE,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:X0+W-90,y:yb-8,'font-size':12,'font-weight':900,fill:BLUE}).textContent='带速 v带='+vb;
+    // block line: from (0,v0) with slope a toward vb, then flat
+    const y0=Y0+H-v0*sy;
+    const xC=X0+tClamped*sx;
+    let d='M'+X0+','+y0+' L'+xC+','+yb;
+    if(tClamped<tMax){ d+=' L'+(X0+W)+','+yb; }
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':4});
+    el(svg,'text',{x:X0+8,y:Y0+16,'font-size':12,'font-weight':900,fill:RED}).textContent='红线=物块 v-t（斜率='+(v0<vb? a : -a)+'）';
+    // shaded triangle = relative displacement region (area between lines before common point)
+    if(tClamped>0.05){
+      el(svg,'polygon',{points:X0+','+y0+' '+X0+','+yb+' '+xC+','+yb,fill:'rgba(122,63,242,0.20)',stroke:VIO,'stroke-width':2});
+    }
+    // marker at common point
+    el(svg,'circle',{cx:xC,cy:yb,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:xC+8,y:yb-10,'font-size':12,'font-weight':900,fill:INK}).textContent='共速点 t='+tCommon.toFixed(2)+'s';
+    // stats
+    const dsRel=0.5*Math.abs(vb-v0)*tCommon; // triangle area = relative displacement magnitude
+    oT.textContent=tCommon.toFixed(2);
+    oVc.textContent=vb.toFixed(1);
+    oDs.textContent=dsRel.toFixed(2);
+    oK.textContent=(v0<vb?'+':'-')+a;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 判断传送带上滑动摩擦力方向的依据是什么?",a:"看物块相对传送带的滑动方向,摩擦力方向与之相反。不是看物块相对地面的运动方向。"},
+ {q:"2. 水平传送带上,物块与带共速之后会怎样?为什么不需要再验证?",a:"共速后摩擦力自动变为0,物块与带一起匀速运动。因为水平方向没有其他持续作用的水平力,维持匀速不需要摩擦力,所以不用验证能否维持。"},
+ {q:"3. 倾斜传送带上,共速之后为什么必须验证能否维持匀速?判据是什么?",a:"因为重力沿斜面分量mg sinθ持续存在,不会随共速消失。判据:比较mg sinθ与最大静摩擦μmg cosθ,即比较tanθ与μ。tanθ≤μ则一起匀速;tanθ>μ则重新出现相对滑动。"},
+ {q:"4. 划痕长度和摩擦生热该用哪个位移?为什么不能直接用物块的位移?",a:"都要用相对位移Δs相对=|s物−s带|。因为传送带自己也在运动,划痕/生热反映的是物块相对传送带表面挪动了多远,不是物块相对地面的位移。"},
+ {q:"5. 摩擦生热的公式是什么?对全程都成立吗?",a:"Q=f·Δs相对(f为滑动摩擦力大小)。只对存在相对滑动的阶段成立;一旦共速且能维持匀速,后续不再产生新的热量。"},
+ {q:"6. v-t图中,物块线和带线的交点代表什么?交点前的面积代表什么?",a:"交点代表共速时刻。交点前物块线与带线之间围成的面积(即位移之差)就是共速前的相对位移(划痕长度)。"},
+ {q:"7. 物块以2kg、v₀=1m/s滑上水平传送带,带速5m/s,μ=0.2,g=10,求共速时间、相对位移和生热。",a:"摩擦力向前,a=μg=2m/s²。共速时间t=(5−1)/2=2s。共速前s物=1×2+½×2×4=6m,s带=5×2=10m,相对位移=4m。生热Q=μmg×Δs=0.2×2×10×4=16J。"},
+ {q:"8. 倾斜传送带,θ=37°,μ=0.5,tanθ=0.75>μ,带向下运行,物块从顶端静止释放,共速后会怎样?",a:"共速前摩擦力沿斜面向下,a₁=g(sinθ+μcosθ)=10。共速后由于tanθ>μ,静摩擦不足以扛住重力分量,物块继续加速下滑,但摩擦力变为沿斜面向上,加速度减小为a₂=g(sinθ−μcosθ)=2m/s²。"},
+ {q:"9. 为什么说传送带模型在数学结构上类似「追及问题」?",a:"可以把传送带看作一个恒速参考系,物块相对这个参考系有一个初始的相对速度,摩擦力的作用就是不断消灭这个相对速度直到归零(共速),这和追及问题中位置差被逐渐消灭的结构是同构的。"},
+ {q:"10. 如何用能量守恒检验传送带摩擦生热算得对不对?",a:"用公式:电动机为维持带匀速多做的功 = 物块动能增量 + 摩擦生热,即 W电动机额外=ΔEk物块+Q。若独立算出的Q与此不符,说明相对位移或摩擦力算错了。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

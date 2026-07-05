@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>晶胞与均摊法计算 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>晶胞与均摊法计算</h1>
+    <p class="lead">晶体是微粒在空间<b>周期性重复堆砌</b>的结果,而「晶胞」就是这个重复的最小单元——像瓷砖图案里的「一块瓷砖」。这一页只解决一件事:<b>怎么从一个立方体的晶胞图,准确数出它「真正拥有」多少个微粒</b>,并用这个数字去反推化学式、算密度、找配位数、求微粒间最短距离。核心工具只有一个:<b>均摊法</b>。</p>
+
+    <div class="say">🗣️ <b>均摊法(人话版):</b> 画在晶胞角上、棱上、面上的微粒,不是「整颗」属于这一个晶胞——它同时被相邻的晶胞「共享」。顶点被 8 个晶胞共用,一个晶胞只能分到 1/8；棱上被 4 个晶胞共用,分到 1/4；面上被 2 个晶胞共用,分到 1/2；只有在体心内部,才整颗归这一个晶胞,记 1。把晶胞里每一类位置的微粒数乘上各自的分摊系数再相加,就得到这个晶胞「真正拥有」的微粒数 <b>Z</b>。Z 一算对,后面的化学式、密度全都是代公式。</div>
+
+    <div class="keybox"><b>均摊系数表(背到肌肉记忆):</b> <b>顶点 1/8　棱上 1/4　面上 1/2　体内 1</b>。判断依据是「这个位置被几个晶胞共用」——顶点是 8 个晶胞的交点、棱是 4 个晶胞的交线、面是 2 个晶胞的交面、体内不与任何相邻晶胞共享。数错这四个分数,后面全盘皆输。</div>
+
+    <h2>① 均摊法:怎么数出晶胞真正拥有的微粒数 Z</h2>
+    <div class="card">
+      <div class="eq">Z = (顶点数×1/8) + (棱上数×1/4) + (面上数×1/2) + (体内数×1)</div>
+      <p style="margin:8px 0">立方晶胞的位置只有四类,数清楚<b>每一类各有几个微粒</b>,乘以对应分摊系数再相加即可。一个立方体固定有:<b>8 个顶点、12 条棱、6 个面、1 个体心</b>——这是几何常数,不随晶体种类变化,变的只是每类位置上摆了什么微粒、摆了几个。</p>
+      <table>
+        <tr><th>位置</th><th>被几个晶胞共用</th><th>分摊系数</th><th>立方体该类位置总数</th></tr>
+        <tr><td>顶点(角上)</td><td>8 个晶胞</td><td>1/8</td><td>8</td></tr>
+        <tr><td>棱上(边线中点)</td><td>4 个晶胞</td><td>1/4</td><td>12</td></tr>
+        <tr><td>面上(面心)</td><td>2 个晶胞</td><td>1/2</td><td>6</td></tr>
+        <tr><td>体内(体心)</td><td>1 个晶胞(不共享)</td><td>1</td><td>1</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> 若某晶胞 8 个顶点都是 A 原子、1 个体心是 B 原子,则 Z(A)=8×1/8=1,Z(B)=1×1=1,化学式为 <b>AB</b>(CsCl 型)。</p>
+      <p class="trap">⚠ 最容易错的不是系数,而是<b>数错「总数」</b>——比如以为面心只有几个面摆了微粒就漏算,或把棱上的 12 条棱数漏了几条。数的时候按「顶点→棱→面→体」顺序逐类扫一遍,别跳着数。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📦 互动 1 — 晶胞投影切换:NaCl / CsCl / 金刚石 / 铜,高亮顶点/棱/面/体心,显示均摊贡献</div>
+      <svg id="cellSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cellmode on" data-m="nacl">NaCl(面心)</button>
+        <button class="cellmode" data-m="cscl">CsCl(体心)</button>
+        <button class="cellmode" data-m="diamond">金刚石</button>
+        <button class="cellmode" data-m="cu">金属铜(面心立方)</button>
+      </div>
+      <div class="live">
+        <div><b>顶点微粒</b><span id="cellVertex">0</span></div>
+        <div><b>棱上微粒</b><span id="cellEdge">0</span></div>
+        <div><b>面上微粒</b><span id="cellFace">0</span></div>
+        <div><b>体内微粒</b><span id="cellBody">0</span></div>
+      </div>
+      <p class="small" id="cellNote">切换按钮看不同晶体的均摊贡献如何相加,得到最终化学式或每胞原子数 Z。</p>
+    </div>
+
+    <h2 class="b">② 均摊计数交互:点微粒累加 Z,推化学式</h2>
+    <div class="card">
+      <p style="margin:8px 0">下面是一个抽象的简单晶胞(顶点=红色阳离子、面心=蓝色阴离子,类似 NaCl 结构),<b>点击每一类微粒</b>,右侧会按均摊系数累加计数,直到把 8 个顶点、6 个面心都点完,自动得出阴阳离子个数比与化学式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🖱️ 互动 2 — 点击累加均摊法:点完所有顶点/面心微粒,自动推化学式</div>
+      <svg id="tapSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="tapReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>已点顶点(阳离子)</b><span id="tapV">0/8</span></div>
+        <div><b>已点面心(阴离子)</b><span id="tapF">0/6</span></div>
+        <div><b>Z(阳离子)</b><span id="tapZv">0</span></div>
+        <div><b>Z(阴离子)</b><span id="tapZf">0</span></div>
+      </div>
+      <div class="verdict" id="tapNote">点击图中的红色顶点球和蓝色面心球,开始累加。</div>
+      <p class="small">顶点每点一个记 +1/8,面心每点一个记 +1/2。点完全部 8 顶点、6 面心后,Z(阳)=8×1/8=1,Z(阴)=6×1/2=3? 不——本例面心只放 6 个,配合顶点 1 个得到比例;具体比例以计数结果为准,体会「点得越多、分摊加总越准」的过程。</p>
+    </div>
+
+    <h2 class="g">③ 由晶胞确定化学式(阴阳离子个数比)</h2>
+    <div class="card">
+      <p style="margin:6px 0">拿到 Z(阳离子)和 Z(阴离子)之后,化学式就是它们的<b>最简整数比</b>。这是均摊法最直接的应用出口。</p>
+      <table>
+        <tr><th>晶体</th><th>阳离子位置</th><th>阴离子位置</th><th>Z 计算</th><th>化学式</th></tr>
+        <tr><td>NaCl</td><td>顶点8+棱心12(或等价面心排布)</td><td>面心6+体心1(等价)</td><td>Z(Na⁺)=Z(Cl⁻)=4</td><td>NaCl</td></tr>
+        <tr><td>CsCl</td><td>顶点 8 个 Cs⁺</td><td>体心 1 个 Cl⁻</td><td>Z(Cs⁺)=8×1/8=1,Z(Cl⁻)=1×1=1</td><td>CsCl</td></tr>
+        <tr><td>干冰 CO₂</td><td colspan="2">顶点8+面心6,均为 CO₂ 分子(分子晶体)</td><td>Z=8×1/8+6×1/2=1+3=4</td><td>CO₂(每胞4个分子)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>NaCl 型详解(高频):</b> 以 Na⁺ 占顶点(8个)和面心(6个)为例,Z(Na⁺)=8×1/8+6×1/2=1+3=<b>4</b>;Cl⁻ 占棱心(12个)和体心(1个),Z(Cl⁻)=12×1/4+1×1=3+1=<b>4</b>。比例 4:4=1:1,化学式 NaCl,与常识吻合。</p>
+      <p class="trap">⚠ 不同晶胞取法(原点选在阳离子还是阴离子上)会让「顶点摆的是谁」互换,但只要均摊算到底,最终比例<b>一定不变</b>——比例不变是检验计算是否正确的试金石。</p>
+    </div>
+
+    <h2 class="o">④ 密度计算 ρ = ZM/(NA·a³) 与单位换算陷阱</h2>
+    <div class="card">
+      <div class="eq">ρ = Z·M / (NA · a³)</div>
+      <p style="margin:8px 0">Z 是一个晶胞真正拥有的微粒数(或「化学式单元」数),M 是摩尔质量(g/mol),NA=6.02×10²³/mol 是阿伏加德罗常数,a 是晶胞边长(棱长)。分子 Z·M 是「一个晶胞的质量(按摩尔计)」,除以 NA 得到「一个晶胞的实际质量(g)」,再除以晶胞体积 a³(cm³),就是密度(g/cm³)。</p>
+      <h3>单位换算是本考点第一号陷阱</h3>
+      <div class="mono">晶胞边长 a 常以 pm(皮米)给出：1 pm = 10⁻¹⁰ cm，必须先换成 cm 再算 a³！</div>
+      <p style="margin:8px 0">题目给 a=562 pm 这类数据时,要先换算:a = 562×10⁻¹⁰ cm = 5.62×10⁻⁸ cm,再代入 a³ = (5.62×10⁻⁸)³ cm³。<b>a³ 的单位是 cm³</b>,这样算出的 ρ 才是标准的 g/cm³。若忘记换算直接拿 pm 数值三次方,结果会离谱地错误(数量级差 10 的三十次方量级)。</p>
+      <table>
+        <tr><th>符号</th><th>意义</th><th>常见单位</th></tr>
+        <tr><td>Z</td><td>晶胞实际拥有的微粒数(或化学式单元数)</td><td>无量纲(个数)</td></tr>
+        <tr><td>M</td><td>摩尔质量</td><td>g/mol</td></tr>
+        <tr><td>NA</td><td>阿伏加德罗常数</td><td>6.02×10²³ /mol</td></tr>
+        <tr><td>a</td><td>晶胞棱长(换算后)</td><td>cm(原始常给 pm)</td></tr>
+        <tr><td>ρ</td><td>密度</td><td>g/cm³</td></tr>
+      </table>
+      <p class="trap">⚠ 三大陷阱:① Z 算错(均摊没数对);② a 的 pm→cm 换算漏做或换算系数用错(记住 1pm=10⁻¹⁰cm，不是10⁻¹²cm的cm换算——1pm=10⁻¹²m=10⁻¹⁰cm);③ NA 应该放在<b>分母</b>(除以 NA,不是乘以 NA)——因为 M 是「1 摩尔」的质量,要除以 NA 才能得到「1 个晶胞」对应的真实质量。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 3 — 密度计算器:输入 Z / M / a(pm)→ 自动换算 pm→cm 并算 ρ</div>
+      <svg id="densSvg" viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>Z <input id="densZ" type="range" min="1" max="8" value="4" step="1"></label>
+        <label>M(g/mol) <input id="densM" type="range" min="20" max="200" value="58.5" step="0.5"></label>
+        <label>a(pm) <input id="densA" type="range" min="200" max="700" value="562" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>a 换算后(cm)</b><span id="densAcm">0</span></div>
+        <div><b>a³(cm³)</b><span id="densA3">0</span></div>
+        <div><b>Z·M(g/mol)</b><span id="densZM">0</span></div>
+        <div><b>ρ(g/cm³)</b><span id="densRho">0</span></div>
+      </div>
+      <p class="small">默认值对应 NaCl(Z=4,M≈58.5,a≈562pm),算出的密度应接近真实值(约 2.2 g/cm³)。拖动滑块体会:a 稍微变大,密度会明显变小(a³ 在分母)。</p>
+    </div>
+
+    <h2 class="v">⑤ 配位数:最近邻等距离微粒的数法</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>配位数</b>定义:与某一个微粒<b>距离最近且相等</b>的<b>异种(或同种,视晶体类型而定)微粒数目</b>。数配位数不用管晶胞怎么画,只需要盯住一个微粒,数它周围「等距离、最近」的邻居有几个。</p>
+      <table>
+        <tr><th>晶体</th><th>配位数</th><th>怎么数</th></tr>
+        <tr><td>NaCl</td><td>6</td><td>每个 Na⁺ 上下左右前后各紧邻 1 个 Cl⁻,共 6 个(八面体分布)</td></tr>
+        <tr><td>CsCl</td><td>8</td><td>体心的 Cs⁺ 与 8 个顶点的 Cl⁻ 距离都等于体对角线的一半,共 8 个</td></tr>
+        <tr><td>金刚石</td><td>4</td><td>每个 C 原子与相邻 4 个 C 以正四面体方式连接(sp³杂化)</td></tr>
+        <tr><td>金属铜(面心立方)</td><td>12</td><td>每个铜原子周围紧邻 12 个铜原子(面心立方最密堆积特征数)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>干冰 CO₂ 分子晶体:</b> 讨论的是「与某个 CO₂ 分子距离最近的 CO₂ 分子数」,面心立方排列下同样是 <b>12</b>(分子间靠范德华力,不是化学键配位,但数法相同——数最近等距离邻居)。</p>
+      <p class="trap">⚠ 配位数不是「晶胞里有几个」,而是「以晶体内部某一个微粒为中心,数它周围最近的」——边界效应会让晶胞图上看起来数量对不上,一定要脑补成无限重复的晶体来数,而不是只看画出来的这一个孤立晶胞。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 4 — 配位数展示:点中心微粒,高亮最近邻(可切换 NaCl/CsCl/金刚石/铜)</div>
+      <svg id="coordSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="coordmode on" data-c="nacl">NaCl(配位6)</button>
+        <button class="coordmode" data-c="cscl">CsCl(配位8)</button>
+        <button class="coordmode" data-c="diamond">金刚石(配位4)</button>
+        <button class="coordmode" data-c="cu">金属铜(配位12)</button>
+      </div>
+      <div class="verdict" id="coordNote"></div>
+      <p class="small">红色为中心微粒,绿色高亮为「距离最近且相等」的邻居——数一数绿色球有几个,就是配位数。</p>
+    </div>
+
+    <h2 class="r">⑥ 原子分数坐标基础</h2>
+    <div class="card">
+      <p style="margin:6px 0">为了精确描述晶胞内每个微粒的位置,常用<b>分数坐标</b> (x, y, z),三个坐标都取 0~1 之间的小数,表示微粒沿三条棱方向、占棱长的<b>比例</b>位置(不是绝对长度)。</p>
+      <table>
+        <tr><th>位置</th><th>典型分数坐标</th></tr>
+        <tr><td>顶点(以该顶点为原点)</td><td>(0,0,0)</td>
+        </tr>
+        <tr><td>体心</td><td>(1/2, 1/2, 1/2)</td></tr>
+        <tr><td>面心(如 xy 面上下两面)</td><td>(1/2, 1/2, 0) 和 (1/2, 1/2, 1)</td></tr>
+        <tr><td>棱心(如 x 轴方向棱的中点)</td><td>(1/2, 0, 0)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>金刚石的典型坐标(常考):</b> 除顶点、面心的碳(面心立方骨架)外,还有 4 个碳位于体内,分数坐标形如 (1/4,1/4,1/4)、(3/4,3/4,1/4)、(3/4,1/4,3/4)、(1/4,3/4,3/4)——这 4 个都是「完全在体内、不与其他晶胞共享」的位置,均摊系数为 1。</p>
+      <p class="trap">⚠ 分数坐标是「比例」不是「实际长度」,不要跟棱长 a 的具体数值(如 pm)混着代入;分数坐标只用来判断该位置属于顶点/棱/面/体的哪一类,从而确定均摊系数。</p>
+    </div>
+
+    <h2 class="b">⑦ 最近距离的几何关系:面对角线、体对角线</h2>
+    <div class="card">
+      <p style="margin:6px 0">立方晶胞的棱长为 a,由勾股定理:</p>
+      <div class="eq">面对角线 = √2·a　　体对角线 = √3·a</div>
+      <p style="margin:8px 0">很多「求最近距离」的题目,本质是把两个微粒之间的连线,归结为<b>棱长、面对角线、体对角线</b>之一(或其一半)的长度。判断方法:先在脑中(或图上)标出两个微粒所在位置,看连线落在哪条边、哪个面、还是贯穿体内。</p>
+      <table>
+        <tr><th>典型情形</th><th>最近距离</th></tr>
+        <tr><td>面心立方(如金属铜)相邻原子最近距离</td><td>面对角线的一半 = (√2/2)a</td></tr>
+        <tr><td>CsCl 中 Cs⁺ 与 Cl⁻ 最近距离</td><td>体对角线的一半 = (√3/2)a</td></tr>
+        <tr><td>NaCl 中 Na⁺ 与 Cl⁻ 最近距离</td><td>棱长的一半 = a/2</td></tr>
+        <tr><td>金刚石中 C-C 键长</td><td>体对角线的 1/4 = (√3/4)a</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>面对角线推导:</b> 在正方形面上,对角线² = a²+a² = 2a²,故对角线 = √2·a。<b>体对角线推导:</b> 体对角线² = a²+(面对角线)² = a²+2a² = 3a²,故体对角线 = √3·a。</p>
+      <p class="trap">⚠ 别把「面对角线」和「体对角线」搞反——面对角线只涉及一个正方形面(2条棱),体对角线要贯穿整个立方体(涉及3条棱的矢量和)。判断最近距离时先确定两个微粒是「面对角关系」还是「体对角关系」,再选对应公式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 5 — 最近距离几何:面对角线=√2a、体对角线=√3a 的勾股关系演示</div>
+      <svg id="diagSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="diagmode on" data-d="edge">棱长 a</button>
+        <button class="diagmode" data-d="face">面对角线 √2a</button>
+        <button class="diagmode" data-d="body">体对角线 √3a</button>
+        <label>棱长 a(设为1) <input id="diagA" type="range" min="1" max="3" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>棱长 a</b><span id="diagVa">0</span></div>
+        <div><b>面对角线 √2a</b><span id="diagVf">0</span></div>
+        <div><b>体对角线 √3a</b><span id="diagVb">0</span></div>
+        <div><b>当前高亮长度</b><span id="diagVc">0</span></div>
+      </div>
+      <p class="small">切换三个按钮,看棱长、面对角线、体对角线在立方体(2.5D投影)里分别是哪一条线,以及它们之间的勾股关系。</p>
+    </div>
+
+    <h2 class="g">⑧ 常见晶体结构速查</h2>
+    <div class="card">
+      <table>
+        <tr><th>晶体</th><th>晶胞类型</th><th>微粒排布</th><th>配位数</th><th>晶体类型</th></tr>
+        <tr><td>NaCl</td><td>面心立方(阴阳离子各自面心立方,相互穿插)</td><td>Na⁺、Cl⁻ 各 Z=4</td><td>6</td><td>离子晶体</td></tr>
+        <tr><td>CsCl</td><td>体心立方(简单立方+体心)</td><td>顶点 Cs⁺、体心 Cl⁻,各 Z=1</td><td>8</td><td>离子晶体</td></tr>
+        <tr><td>干冰 CO₂</td><td>面心立方</td><td>顶点+面心均为 CO₂ 分子,Z=4</td><td>12(分子间)</td><td>分子晶体</td></tr>
+        <tr><td>金刚石</td><td>面心立方骨架+4个体内碳</td><td>每胞 Z=8 个 C</td><td>4</td><td>原子晶体(共价)</td></tr>
+        <tr><td>石墨</td><td>层状(层内正六边形,层间范德华力)</td><td>层内每 C 与 3 个 C 共价键连接</td><td>层内3(层间另计)</td><td>混合型(层内共价,层间分子力)</td></tr>
+        <tr><td>金属铜</td><td>面心立方最密堆积</td><td>顶点8+面心6,Z=4</td><td>12</td><td>金属晶体</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>石墨的特殊性:</b> 层内碳原子以共价键连成正六边形网状平面,每个 C 只与 3 个 C 直接键连(不是4个,因为石墨中碳是 sp² 杂化,多出的电子形成离域 π 键);层与层之间靠较弱的范德华力堆叠,层间距远大于层内 C-C 键长,所以石墨capable of良好导电、层间易滑动(润滑、铅笔芯)。</p>
+      <p class="trap">⚠ 金刚石每个 C 是 4 配位(sp³),石墨每个 C 是 3 配位(sp²)——同种元素,杂化方式不同,晶体性质(硬度、导电性)天差地别,这是「同素异形体结构决定性质」的经典例子。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 均摊法数 Z(晶胞真正拥有的微粒数)</h3>
+      <p><b class="tag">触发信号:</b>给出晶胞示意图(顶点/棱/面/体心分布不同颜色小球),问「该晶胞中 A 原子数为多少」「求化学式」。</p>
+      <p><b class="tag">标准动作:</b>按顶点→棱→面→体的顺序,数清每类位置各有几个该种微粒,乘以 1/8、1/4、1/2、1,再相加。</p>
+      <p><b class="tag">示例(带解):</b>某晶胞顶点、棱心各有 A,面心、体心各有 B。顶点 8 个、棱 12 条都是 A:Z(A)=8×1/8+12×1/4=1+3=4。面 6 个、体心 1 个都是 B:Z(B)=6×1/2+1×1=3+1=4。比例1:1,化学式 AB。</p>
+      <p class="trap">陷阱:漏数某一类位置(比如漏看棱上还有微粒);把面心系数当成 1/4 用(应为 1/2);顶点系数当成 1/4 用(应为 1/8)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由 Z 推化学式(阴阳离子个数比)</h3>
+      <p><b class="tag">触发信号:</b>「写出该晶体的化学式」「阴阳离子个数比为多少」。</p>
+      <p><b class="tag">标准动作:</b>分别算出各微粒的 Z,再求最简整数比,直接写成化学式下标。</p>
+      <p><b class="tag">示例(带解):</b>某离子晶体中,阳离子 M 位于顶点(8个)与体心(1个),阴离子 X 位于 12 条棱上。Z(M)=8×1/8+1×1=1+1=2,Z(X)=12×1/4=3。比例 M:X=2:3,化学式为 M₂X₃。</p>
+      <p class="trap">陷阱:忘记化简比例(如算出 4:4 没约成 1:1);把阴阳离子的位置看反,导致比例颠倒。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 密度计算(含单位换算)</h3>
+      <p><b class="tag">触发信号:</b>给出晶胞棱长 a(常以 pm 给出)、摩尔质量 M,「求晶体密度」或反过来「已知密度求 a」。</p>
+      <p><b class="tag">标准动作:</b>先均摊法求 Z → 换算 a 的单位(pm→cm,乘 10⁻¹⁰) → 代入 ρ=ZM/(NA·a³) → 注意 NA 在分母。</p>
+      <p><b class="tag">示例(带解):</b>NaCl 晶胞 a=562pm,M=58.5g/mol,Z=4。a=562×10⁻¹⁰cm=5.62×10⁻⁸cm,a³≈1.775×10⁻²²cm³。ρ=4×58.5/(6.02×10²³×1.775×10⁻²²)=234/106.9≈2.19 g/cm³。</p>
+      <p class="trap">陷阱:忘记 pm→cm 换算直接三次方;把 NA 乘到分子上;Z 算错导致整个密度错误;换算系数记成 10⁻¹²(那是 pm→m 的一部分,pm→cm 应为 10⁻¹⁰)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 配位数判断</h3>
+      <p><b class="tag">触发信号:</b>「某离子的配位数是多少」「与其距离最近且相等的微粒有几个」。</p>
+      <p><b class="tag">标准动作:</b>选定一个微粒为中心,想象晶体向各方向无限延伸(不要被单个晶胞边界迷惑),数出与它距离最近、且距离都相等的邻居数目。</p>
+      <p><b class="tag">示例(带解):</b>CsCl 中体心的 Cs⁺,与 8 个顶点的 Cl⁻ 距离都等于体对角线的一半(√3a/2),这 8 个距离相等且最近,故配位数为 8。</p>
+      <p class="trap">陷阱:只数出画在这一个晶胞里能看到的邻居,漏算相邻晶胞里的等距离邻居;把「配位数」误当成「晶胞里该微粒的总个数」。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 最近距离/键长计算(面对角线、体对角线)</h3>
+      <p><b class="tag">触发信号:</b>「求两个最近原子的距离」「求 C-C 键长」「求相邻金属原子间距离」,给出棱长 a。</p>
+      <p><b class="tag">标准动作:</b>判断两微粒的连线走的是棱、面对角线还是体对角线(或其分数),套用 a、√2a、√3a 及其分数,代入具体 a 值求数值。</p>
+      <p><b class="tag">示例(带解):</b>金属铜面心立方,棱长 a,相邻两个铜原子(一个顶点、一个面心)最近距离为面对角线的一半:d=(√2/2)a=(√2a)/2。若 a=361pm,则 d≈255pm。</p>
+      <p class="trap">陷阱:把面对角线和体对角线公式用反(√2a vs √3a);忘记「最近距离」常是对角线的<b>一半</b>而不是整条对角线。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 晶体类型与结构综合判断</h3>
+      <p><b class="tag">触发信号:</b>给出某晶体的晶胞图或结构描述,问「属于哪种晶体类型」「导电性/硬度/熔点如何」。</p>
+      <p><b class="tag">标准动作:</b>先看微粒种类(离子/原子/分子/金属阳离子+自由电子),再结合均摊法得到的化学式和配位数,综合判断晶体类型及对应物理性质(熔沸点高低、导电性、硬度)。</p>
+      <p><b class="tag">示例(带解):</b>某晶胞顶点和面心都是同种非金属原子,且每个原子周围有 4 个最近邻(正四面体),可判断为原子晶体(如金刚石型),推测硬度大、熔点极高、不导电。</p>
+      <p class="trap">陷阱:把分子晶体(如干冰,微粒间范德华力)误判为原子晶体(共价键连接);忽略配位数与杂化方式的对应关系(4配位常对应sp³)。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 均摊系数背反:顶点是 <b>1/8</b> 不是 1/4;棱上是 <b>1/4</b> 不是 1/8;面上是 <b>1/2</b> 不是 1/4;体内是 <b>1</b>(整个属于该晶胞)。</p>
+      <p class="trap">② 数「总数」时漏数——立方体固定有 8 顶点、12 棱、6 面、1 体心,数微粒前先确认这些位置各摆了多少个目标微粒,不要凭直觉估计。</p>
+      <p class="trap">③ 密度公式 ρ=ZM/(NA·a³) 中,<b>NA 在分母</b>,不是乘在分子上——因为 M 是摩尔(NA个)微粒的质量,要除以 NA 换算成「单个晶胞对应的质量」。</p>
+      <p class="trap">④ 单位换算:晶胞边长 a 常以 <b>pm</b> 给出,必须先换算成 <b>cm</b>(1pm=10⁻¹⁰cm)才能代入,且要对<b>换算后的 cm 值</b>做三次方,而不是先三次方再换算单位。</p>
+      <p class="trap">⑤ 配位数不是「晶胞图里数出来的个数」,而要脑补晶体在空间无限重复后,某个微粒周围「距离最近且相等」的邻居数——注意边界效应会误导。</p>
+      <p class="trap">⑥ 面对角线 <b>√2a</b> 与体对角线 <b>√3a</b> 不要混:面对角线只涉及一个面(2条棱的矢量和),体对角线贯穿整个立方体(3条棱的矢量和)。</p>
+      <p class="trap">⑦ 「最近距离」很多时候是对角线的<b>一半</b>,不是整条对角线——比如 CsCl 中 Cs⁺-Cl⁻ 最近距离是体对角线的 1/2,不是 √3a 本身。</p>
+      <p class="trap">⑧ 化学式的阴阳离子比例要<b>化到最简整数比</b>,不要直接写未化简的 Z 值(如 4:4 要写成 1:1,即 NaCl 而非 Na₄Cl₄)。</p>
+      <p class="trap">⑨ 金刚石每个 C 是 4 配位(sp³杂化),石墨每个 C 层内是 3 配位(sp²杂化)——同种元素不同结构,配位数不同,不要混淆两种碳的同素异形体。</p>
+      <p class="trap">⑩ 分子晶体(如干冰)晶胞里摆的是<b>整个分子</b>(如 CO₂),均摊法算的是「分子数」,不要拆开成单个原子来均摊。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 均摊法的本质是「周期性边界条件」:</b> 晶体是微粒在空间无限周期重复的结构,晶胞只是人为切出来的一个「重复单元」。切割的刀恰好切在顶点、棱、面上时,被切开的微粒自然要按「切开的比例」分摊给相邻单元——这不是死记的规则,而是「无限重复结构必须自洽」这一物理事实的数学表达。理解了这一点,任何切法诡异的晶胞(不只是立方)你都能自己判断分摊系数。</p>
+      <p style="margin:8px 0"><b>② 密度公式是「摩尔质量」与「单胞质量」之间的桥梁:</b> ρ=ZM/(NA·a³) 的分子 ZM 本质是「NA个该晶胞的总质量」,除以 NA 就是「1个晶胞的质量」,再除以 1个晶胞的体积 a³,就是密度定义 ρ=质量/体积的直接应用。把这条公式拆开看,而不是死背,遇到非立方晶胞(如六方)一样能类推(此时体积公式换成对应的几何体积)。</p>
+      <p style="margin:8px 0"><b>③ 配位数与堆积方式一一对应:</b> 面心立方最密堆积配位数12(立方最密堆积,ABCABC堆叠),六方最密堆积配位数也是12(ABAB堆叠),体心立方配位数8,简单立方配位数6——配位数越大,堆积效率(空间利用率)通常越高。金属晶体几乎都朝着「配位数最大化」的方向排列,这是金属键各向同性、不像共价键有方向性的直接后果。</p>
+      <p style="margin:8px 0"><b>④ 用「立方体顶点矢量和」统一记忆对角线公式:</b> 把棱长方向设为三个正交单位矢量 a、b、c(模长都是a),面对角线是两个矢量之和,模长√(a²+a²)=√2a;体对角线是三个矢量之和,模长√(a²+a²+a²)=√3a。任何「求两点间距离」的题,本质都是把连接两点的位移矢量,用棱长方向的分量分解,再套勾股定理——不必死记具体晶体的距离结论,现推更稳。</p>
+      <p style="margin:8px 0"><b>⑤ 化学式的「等价晶胞」检验法:</b> 同一晶体换一个原点(比如把原点从阳离子挪到阴离子),晶胞里顶点、棱、面、体心摆放的微粒种类会互换,但均摊法算出的化学式比例必须<b>不变</b>——这是检验你是否正确应用均摊法的黄金准则。如果换个原点算出的比例不一样,说明某一步数错了。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 物质结构选修:晶胞与均摊法计算</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GREY="#7a7a7a";
+
+/* ===== 2.5D isometric cube projection helper ===== */
+/* project a point in unit-cube coords (x,y,z in [0,1]) to 2D screen coords */
+function iso(x,y,z,ox,oy,scale){
+  const ang=Math.PI/6; // 30 degrees
+  const sx=ox + (x - z)*Math.cos(ang)*scale;
+  const sy=oy + (x + z)*Math.sin(ang)*scale - y*scale;
+  return [sx,sy];
+}
+function drawCubeFrame(svg,ox,oy,scale,color){
+  const pts={};
+  const verts=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+  const P=verts.map(v=>iso(v[0],v[1],v[2],ox,oy,scale));
+  const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  edges.forEach(function(e){
+    el(svg,'line',{x1:P[e[0]][0],y1:P[e[0]][1],x2:P[e[1]][0],y2:P[e[1]][1],stroke:color||INK,'stroke-width':2.5});
+  });
+  return P;
+}
+function dot(svg,x,y,z,ox,oy,scale,r,fill,label){
+  const p=iso(x,y,z,ox,oy,scale);
+  el(svg,'circle',{cx:p[0],cy:p[1],r:r,fill:fill,stroke:INK,'stroke-width':2});
+  if(label){el(svg,'text',{x:p[0],y:p[1]-r-5,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=label;}
+  return p;
+}
+
+/* ===== 互动1: 晶胞投影切换 ===== */
+(function(){
+  const svg=document.getElementById('cellSvg');
+  const oV=document.getElementById('cellVertex'),oE=document.getElementById('cellEdge'),oF=document.getElementById('cellFace'),oB=document.getElementById('cellBody');
+  const note=document.getElementById('cellNote');
+  let mode='nacl';
+  document.querySelectorAll('.cellmode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.cellmode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=b.dataset.m;draw();
+    };
+  });
+  function draw(){
+    clr(svg);
+    const ox=280,oy=280,scale=170;
+    drawCubeFrame(svg,ox,oy,scale,INK);
+    const vs=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+    let vN=8,eN=0,fN=0,bN=0,msg='';
+    if(mode==='nacl'){
+      vs.forEach(function(v){dot(svg,v[0],v[1],v[2],ox,oy,scale,10,RED,null);});
+      const faces=[[0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]];
+      faces.forEach(function(f){dot(svg,f[0],f[1],f[2],ox,oy,scale,9,BLUE,null);});
+      vN=8;eN=0;fN=6;bN=0;
+      msg='NaCl:阳离子(红)占顶点8个,阴离子(蓝)占面心6个 → Z(顶点类)=8×1/8=1,Z(面心类)=6×1/2=3(实际NaCl中Na/Cl各自另有棱心/体心配合,凑齐Z=4:4=1:1)。配位数6。';
+    } else if(mode==='cscl'){
+      vs.forEach(function(v){dot(svg,v[0],v[1],v[2],ox,oy,scale,10,RED,null);});
+      dot(svg,0.5,0.5,0.5,ox,oy,scale,12,BLUE,null);
+      vN=8;eN=0;fN=0;bN=1;
+      msg='CsCl:顶点8个Cs⁺(红,均摊1/8×8=1)+体心1个Cl⁻(蓝,均摊1×1=1) → 比例1:1,化学式CsCl。配位数8。';
+    } else if(mode==='diamond'){
+      vs.forEach(function(v){dot(svg,v[0],v[1],v[2],ox,oy,scale,9,GREEN,null);});
+      const faces=[[0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]];
+      faces.forEach(function(f){dot(svg,f[0],f[1],f[2],ox,oy,scale,9,GREEN,null);});
+      const inner=[[0.25,0.25,0.25],[0.75,0.75,0.25],[0.75,0.25,0.75],[0.25,0.75,0.75]];
+      inner.forEach(function(p){dot(svg,p[0],p[1],p[2],ox,oy,scale,9,ORANGE,null);});
+      vN=8;eN=0;fN=6;bN=4;
+      msg='金刚石:顶点8+面心6构成面心立方骨架(绿,Z=8×1/8+6×1/2=1+3=4),另有4个C完全在体内(橙,均摊系数1,Z=4) → 每晶胞共Z=8个C。每个C配位数4。';
+    } else {
+      vs.forEach(function(v){dot(svg,v[0],v[1],v[2],ox,oy,scale,10,ORANGE,null);});
+      const faces=[[0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]];
+      faces.forEach(function(f){dot(svg,f[0],f[1],f[2],ox,oy,scale,9,ORANGE,null);});
+      vN=8;eN=0;fN=6;bN=0;
+      msg='金属铜(面心立方):顶点8个(均摊1/8×8=1)+面心6个(均摊1/2×6=3) → Z=1+3=4。每个铜原子配位数12,是金属晶体中最典型的最密堆积。';
+    }
+    oV.textContent=vN;oE.textContent=eN;oF.textContent=fN;oB.textContent=bN;
+    note.textContent=msg;
+  }
+  draw();
+})();
+
+/* ===== 互动2: 点击累加均摊法 ===== */
+(function(){
+  const svg=document.getElementById('tapSvg');
+  const oV=document.getElementById('tapV'),oF=document.getElementById('tapF'),oZv=document.getElementById('tapZv'),oZf=document.getElementById('tapZf');
+  const note=document.getElementById('tapNote');
+  const vertVerts=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+  const faceVerts=[[0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]];
+  let vClicked=new Array(8).fill(false);
+  let fClicked=new Array(6).fill(false);
+  const ox=280,oy=280,scale=170;
+  function draw(){
+    clr(svg);
+    drawCubeFrame(svg,ox,oy,scale,INK);
+    vertVerts.forEach(function(v,i){
+      const p=iso(v[0],v[1],v[2],ox,oy,scale);
+      const c=el(svg,'circle',{cx:p[0],cy:p[1],r:11,fill:vClicked[i]?'#f7a89a':RED,stroke:INK,'stroke-width':2,style:'cursor:pointer'});
+      c.onclick=function(){vClicked[i]=!vClicked[i];update();};
+    });
+    faceVerts.forEach(function(f,i){
+      const p=iso(f[0],f[1],f[2],ox,oy,scale);
+      const c=el(svg,'circle',{cx:p[0],cy:p[1],r:10,fill:fClicked[i]?'#a9c3f7':BLUE,stroke:INK,'stroke-width':2,style:'cursor:pointer'});
+      c.onclick=function(){fClicked[i]=!fClicked[i];update();};
+    });
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':800,fill:INK}).textContent='点红球(顶点,系数1/8)与蓝球(面心,系数1/2)累加均摊数';
+  }
+  function update(){
+    draw();
+    const nV=vClicked.filter(Boolean).length;
+    const nF=fClicked.filter(Boolean).length;
+    const zv=nV*(1/8);
+    const zf=nF*(1/2);
+    oV.textContent=nV+'/8';oF.textContent=nF+'/6';
+    oZv.textContent=zv.toFixed(3);oZf.textContent=zf.toFixed(3);
+    if(nV===8&&nF===6){
+      note.textContent='全部点完!Z(顶点类)=8×1/8=1,Z(面心类)=6×1/2=3。比例1:3,若为离子晶体则化学式形如 AB₃。';
+    } else {
+      note.textContent='已点顶点'+nV+'个、面心'+nF+'个 → 当前 Z(顶点类)='+zv.toFixed(3)+'，Z(面心类)='+zf.toFixed(3)+'。继续点完全部球看最终比例。';
+    }
+  }
+  document.getElementById('tapReset').onclick=function(){
+    vClicked=new Array(8).fill(false);fClicked=new Array(6).fill(false);update();
+  };
+  update();
+})();
+
+/* ===== 互动3: 密度计算器 ===== */
+(function(){
+  const svg=document.getElementById('densSvg');
+  const Zs=document.getElementById('densZ'),Ms=document.getElementById('densM'),As=document.getElementById('densA');
+  const oAcm=document.getElementById('densAcm'),oA3=document.getElementById('densA3'),oZM=document.getElementById('densZM'),oRho=document.getElementById('densRho');
+  const NA=6.02e23;
+  function sync(){draw();}
+  Zs.oninput=Ms.oninput=As.oninput=sync;
+  function draw(){
+    clr(svg);
+    const Z=+Zs.value,M=+Ms.value,apm=+As.value;
+    const acm=apm*1e-10;
+    const a3=Math.pow(acm,3);
+    const zm=Z*M;
+    const rho=zm/(NA*a3);
+    oAcm.textContent=acm.toExponential(3);
+    oA3.textContent=a3.toExponential(3);
+    oZM.textContent=zm.toFixed(1);
+    oRho.textContent=rho.toFixed(3);
+    el(svg,'text',{x:20,y:30,'font-size':15,'font-weight':900,fill:INK}).textContent='ρ = Z·M / (NA·a³) = '+zm.toFixed(1)+' / (6.02×10²³ × '+a3.toExponential(2)+') = '+rho.toFixed(3)+' g/cm³';
+    el(svg,'text',{x:20,y:60,'font-size':13,'font-weight':800,fill:'#6b5d3a'}).textContent='换算:a='+apm+'pm = '+apm+'×10⁻¹⁰cm = '+acm.toExponential(3)+'cm，a³='+a3.toExponential(3)+'cm³';
+    el(svg,'text',{x:20,y:88,'font-size':13,'font-weight':800,fill:RED}).textContent='陷阱提醒:若直接用 '+apm+'³ (pm数值不换算) 三次方，结果会错很多个数量级!';
+    // bar showing rho relative
+    const bw=Math.min(560,rho*150);
+    el(svg,'rect',{x:20,y:105,width:bw,height:26,fill:'rgba(232,106,23,0.35)',stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:26,y:123,'font-size':12.5,'font-weight':900,fill:INK}).textContent='密度条(比例示意)：ρ≈'+rho.toFixed(2)+' g/cm³';
+  }
+  draw();
+})();
+
+/* ===== 互动4: 配位数展示 ===== */
+(function(){
+  const svg=document.getElementById('coordSvg');
+  const note=document.getElementById('coordNote');
+  let mode='nacl';
+  document.querySelectorAll('.coordmode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.coordmode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=b.dataset.c;draw();
+    };
+  });
+  function draw(){
+    clr(svg);
+    const ox=280,oy=280,scale=170;
+    drawCubeFrame(svg,ox,oy,scale,'#ccc');
+    let centerP,neighbors=[],cnt=0,desc='';
+    if(mode==='nacl'){
+      // center at body, 6 neighbors at face centers (octahedral)
+      centerP=[0.5,0.5,0.5];
+      neighbors=[[0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]];
+      cnt=6;
+      desc='NaCl:中心离子(红)与6个面心方向的异种离子(绿)距离都等于 a/2,构成八面体配位,配位数=6。';
+    } else if(mode==='cscl'){
+      centerP=[0.5,0.5,0.5];
+      neighbors=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+      cnt=8;
+      desc='CsCl:体心的Cs⁺(红)与8个顶点的Cl⁻(绿)距离都等于体对角线之半(√3a/2),配位数=8。';
+    } else if(mode==='diamond'){
+      centerP=[0.25,0.25,0.25];
+      neighbors=[[0,0,0],[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5]];
+      cnt=4;
+      desc='金刚石:体内碳(红)与4个最近的碳(绿)以正四面体方式连接,键长为体对角线的1/4,配位数=4。';
+    } else {
+      // Cu face-centered cubic, center at a face, neighbors = 12 nearest in infinite lattice
+      // approximate by showing center at a face and highlighting 4 face-diagonal neighbors within this cell + note extension
+      centerP=[0.5,0.5,0];
+      neighbors=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0.5,0,0.5],[0.5,1,0.5],[0.5,0.5,1]];
+      cnt=12;
+      desc='金属铜(面心立方最密堆积):图中只能画出本晶胞内的部分最近邻(绿),真实配位数需把晶体向各方向延伸后数满,共12个等距离最近邻——这是面心立方堆积效率最高的体现。';
+    }
+    // draw non-highlighted vertices lightly
+    const allV=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+    allV.forEach(function(v){
+      const isNb=neighbors.some(function(n){return n[0]===v[0]&&n[1]===v[1]&&n[2]===v[2];});
+      if(!isNb){dot(svg,v[0],v[1],v[2],ox,oy,scale,6,'#ddd',null);}
+    });
+    neighbors.forEach(function(n){dot(svg,n[0],n[1],n[2],ox,oy,scale,10,GREEN,null);});
+    dot(svg,centerP[0],centerP[1],centerP[2],ox,oy,scale,12,RED,null);
+    // draw lines from center to neighbors
+    const cp=iso(centerP[0],centerP[1],centerP[2],ox,oy,scale);
+    neighbors.forEach(function(n){
+      const np=iso(n[0],n[1],n[2],ox,oy,scale);
+      el(svg,'line',{x1:cp[0],y1:cp[1],x2:np[0],y2:np[1],stroke:GREEN,'stroke-width':2,'stroke-dasharray':'4 3'});
+    });
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='配位数 = '+cnt+'（绿色球数目）';
+    note.textContent=desc;
+  }
+  draw();
+})();
+
+/* ===== 互动5: 最近距离几何(面对角线/体对角线) ===== */
+(function(){
+  const svg=document.getElementById('diagSvg');
+  const As=document.getElementById('diagA');
+  const oVa=document.getElementById('diagVa'),oVf=document.getElementById('diagVf'),oVb=document.getElementById('diagVb'),oVc=document.getElementById('diagVc');
+  let mode='edge',a=1;
+  document.querySelectorAll('.diagmode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.diagmode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=b.dataset.d;draw();
+    };
+  });
+  As.oninput=function(){a=+As.value;draw();};
+  function draw(){
+    clr(svg);
+    const ox=300,oy=260,scale=160;
+    const P=drawCubeFrame(svg,ox,oy,scale,'#999');
+    const sqrt2a=Math.SQRT2*a, sqrt3a=Math.sqrt(3)*a;
+    oVa.textContent=a.toFixed(2);
+    oVf.textContent=sqrt2a.toFixed(3);
+    oVb.textContent=sqrt3a.toFixed(3);
+    let cur='',highlightPts=[];
+    if(mode==='edge'){
+      // highlight one edge: vertex0 to vertex1
+      el(svg,'line',{x1:P[0][0],y1:P[0][1],x2:P[1][0],y2:P[1][1],stroke:RED,'stroke-width':5});
+      cur=a.toFixed(2)+'（棱长 a）';
+    } else if(mode==='face'){
+      // face diagonal: vertex0 to vertex2 (across bottom face)
+      el(svg,'line',{x1:P[0][0],y1:P[0][1],x2:P[2][0],y2:P[2][1],stroke:ORANGE,'stroke-width':5});
+      cur=sqrt2a.toFixed(3)+'（面对角线 √2a）';
+    } else {
+      // body diagonal: vertex0 to vertex6
+      el(svg,'line',{x1:P[0][0],y1:P[0][1],x2:P[6][0],y2:P[6][1],stroke:VIO,'stroke-width':5});
+      cur=sqrt3a.toFixed(3)+'（体对角线 √3a）';
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='棱长 a='+a.toFixed(2)+'　面对角线=√2a='+sqrt2a.toFixed(3)+'　体对角线=√3a='+sqrt3a.toFixed(3);
+    el(svg,'text',{x:20,y:310,'font-size':13,'font-weight':800,fill:'#6b5d3a'}).textContent='勾股关系:面对角线²=a²+a²=2a²；体对角线²=a²+面对角线²=3a²';
+    oVc.textContent=cur;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 均摊法四个位置的分摊系数分别是多少?",a:"顶点1/8、棱上1/4、面上1/2、体内1。判断依据是该位置被几个晶胞共用(8个、4个、2个、1个不共享)。"},
+ {q:"2. 一个立方体晶胞固定有几个顶点、几条棱、几个面?",a:"8个顶点、12条棱、6个面、1个体心。这是几何常数,不随晶体种类变化。"},
+ {q:"3. CsCl晶胞中,顶点是Cs⁺(8个)、体心是Cl⁻(1个),求Z(Cs⁺)和Z(Cl⁻),写出化学式。",a:"Z(Cs⁺)=8×1/8=1，Z(Cl⁻)=1×1=1。比例1:1，化学式CsCl。"},
+ {q:"4. 密度公式ρ=ZM/(NA·a³)中,NA应该放在分子还是分母?为什么?",a:"分母。因为M是摩尔质量(NA个微粒的质量),要除以NA才能得到单个晶胞对应的实际质量。"},
+ {q:"5. 晶胞棱长a给出时常用什么单位?换算成cm的系数是多少?",a:"常给pm(皮米)。1pm=10⁻¹⁰cm,必须先换算成cm再代入a³,否则密度会错很多个数量级。"},
+ {q:"6. 配位数的定义是什么?数配位数时最容易忽略什么?",a:"与某微粒距离最近且相等的邻居数目。容易忽略的是:要脑补晶体向空间无限延伸后再数,不能只看单个晶胞画出的边界内的邻居,否则会漏数。"},
+ {q:"7. NaCl、CsCl、金刚石、金属铜(面心立方)的配位数分别是多少?",a:"NaCl配位数6;CsCl配位数8;金刚石配位数4;金属铜(面心立方最密堆积)配位数12。"},
+ {q:"8. 面对角线和体对角线用棱长a怎么表示?怎么推导?",a:"面对角线=√2a(正方形对角线²=a²+a²=2a²);体对角线=√3a(体对角线²=a²+面对角线²=a²+2a²=3a²)。"},
+ {q:"9. CsCl中Cs⁺与Cl⁻的最近距离是多少(用a表示)?",a:"体对角线的一半,即(√3/2)a。体心的Cs⁺到顶点Cl⁻的距离正好是体对角线长度的一半。"},
+ {q:"10. 金刚石和石墨都是碳的同素异形体,但配位数不同,为什么?",a:"金刚石中碳是sp³杂化,每个C与4个C以正四面体键连,配位数4;石墨中碳是sp²杂化,层内每个C只与3个C共价键连(层间靠范德华力),配位数(层内)3。杂化方式不同导致结构和性质(硬度、导电性)差异巨大。"},
+ {q:"11. 某晶胞顶点是A(8个)、棱心是B(12个)、面心是A(6个)、体心是B(1个)。求Z(A)、Z(B)及化学式。",a:"Z(A)=8×1/8+6×1/2=1+3=4；Z(B)=12×1/4+1×1=3+1=4。比例1:1，化学式AB。"},
+ {q:"12. 若已知NaCl晶胞棱长a=562pm、M=58.5g/mol、Z=4,如何计算密度?(写出代入前的单位换算)",a:"先换算a=562×10⁻¹⁰cm=5.62×10⁻⁸cm,再算a³≈1.775×10⁻²²cm³。代入ρ=ZM/(NA·a³)=4×58.5/(6.02×10²³×1.775×10⁻²²)≈2.19 g/cm³。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){
+  const d=document.createElement('div');
+  d.style.cssText='margin:12px 0;font-weight:700';
+  d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';
+  d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};
+  quiz.appendChild(d);
+});
+</script>
+</body>
+</html>

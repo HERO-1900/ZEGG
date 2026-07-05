@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>滑块—木板模型(板块模型) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>滑块—木板模型(板块模型)</h1>
+    <p class="lead">板块模型的核心麻烦在于:<b>两个物体、两个接触面</b>。滑块和木板之间有一个摩擦面(上表面),木板和地面之间可能还有一个摩擦面(下表面)。绝大多数丢分不是不会列牛顿第二定律,而是<b>漏看了某个摩擦力</b>,或者<b>没搞清楚谁跟谁一起运动</b>。这一页把「隔离分析 + 假设共速校核 + 相对位移」三件套讲透。</p>
+
+    <div class="say">🗣️ <b>板块模型(人话版):</b> 想象你站在一块滑板上,滑板下面是地板。你脚底(你和滑板之间)有摩擦,滑板底部(滑板和地板之间)也可能有摩擦。你俩到底是「焊死一起走」还是「你在板上打滑」,取决于:让你俩<b>共同加速</b>所需要的摩擦力,你脚底的摩擦<b>够不够</b>。够,就一起走(共速);不够,就打滑(你和板各走各的加速度),这时候摩擦力必须按<b>滑动摩擦</b>算,不能再假设它等于需要多少给多少。</div>
+
+    <div class="keybox"><b>解题总纲:</b> ① 隔离滑块、隔离木板,分别画受力图(重点是上下两个摩擦面);② 先假设「整体不打滑、共同加速度」,把系统当一个物体求 a;③ 校核:维持共速所需的摩擦力(通常是滑块受到的静摩擦)是否超过最大静摩擦力 f_max=μ₁N;④ 没超过→共速成立,各自受力也用这个 a 反算;超过→打滑,滑动摩擦 f=μ₁N 代入,滑块和木板分别列式,加速度不同。</div>
+
+    <h2>① 隔离分析:两个物体、两个摩擦面</h2>
+    <div class="card">
+      <p style="margin:8px 0">板块模型最容易漏的就是<b>下表面</b>(木板与地面之间)的摩擦力。一旦地面不是光滑的,木板要单独承受来自地面的摩擦,这个力还与「木板+滑块的总重力」有关(压力是两者之和),而不是只有木板自重。</p>
+      <h3>滑块(上面的物体)受力</h3>
+      <table>
+        <tr><th>力</th><th>说明</th></tr>
+        <tr><td>重力 mg</td><td>竖直向下</td></tr>
+        <tr><td>木板对滑块的支持力 N₁</td><td>竖直向上,N₁=mg(滑块只在竖直方向不加速时)</td></tr>
+        <tr><td>木板对滑块的摩擦力 f₁</td><td>沿接触面(水平),方向由<b>滑块相对木板</b>的运动趋势/运动方向决定,与之相反</td></tr>
+        <tr><td>(可能)外力 F</td><td>若拉力直接作用在滑块上</td></tr>
+      </table>
+      <h3>木板(下面的物体)受力</h3>
+      <table>
+        <tr><th>力</th><th>说明</th></tr>
+        <tr><td>重力 Mg</td><td>竖直向下</td></tr>
+        <tr><td>滑块对木板的反作用摩擦力 f₁′</td><td>与 f₁ 大小相等、方向相反(牛顿第三定律),作用在木板上表面</td></tr>
+        <tr><td>滑块对木板的压力 N₁′</td><td>=mg,方向向下(压在木板上)</td></tr>
+        <tr><td>地面对木板的支持力 N₂</td><td>竖直向上,N₂=(M+m)g(要扛住滑块和木板的总重)</td></tr>
+        <tr><td>地面对木板的摩擦力 f₂</td><td>沿接触面,方向由<b>木板相对地面</b>的运动趋势/运动方向决定,大小 f₂=μ₂N₂=μ₂(M+m)g(若地面摩擦是滑动摩擦)</td></tr>
+        <tr><td>(可能)外力 F</td><td>若拉力直接作用在木板上</td></tr>
+      </table>
+      <p class="trap">⚠ 头号漏洞:只画了滑块和木板之间的摩擦(上表面),忘了木板和地面之间还有一对摩擦力(下表面)。凡题目没说「地面光滑」,下表面摩擦必须画、必须算,而且压力是<b>总重力</b> (M+m)g,不是 Mg。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 1 — 受力分解:上/下表面摩擦力箭头,切换「力加在滑块」/「力加在木板」</div>
+      <svg id="fbdSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="fbdmode on" data-m="0">力 F 加在滑块上</button>
+        <button class="fbdmode" data-m="1">力 F 加在木板上</button>
+        <label>地面摩擦 <input id="fbdGround" type="checkbox"></label>
+      </div>
+      <div class="verdict" id="fbdNote"></div>
+      <p class="small">红箭=拉力 F;橙箭=上表面摩擦(滑块↔木板);紫箭=下表面摩擦(木板↔地面,仅当勾选「地面摩擦」时出现)。对比两种加力方式,谁在被"直接拖动"、谁靠摩擦"被带动"。</p>
+    </div>
+
+    <h2 class="b">② 先假设共速,再校核是否打滑</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>标准三步走(遇到板块模型先做这个):</b></p>
+      <div class="mono">第1步:假设滑块和木板不发生相对滑动,整体共同加速度 a,把 (M+m) 看成一个物体,用整体所受合外力(通常是外力 F 减地面摩擦 f₂)除以总质量求 a。</div>
+      <div class="mono">第2步:隔离滑块,用这个共同加速度 a 反推滑块所需要的摩擦力 f₁需=ma(滑块只受 f₁ 提供水平方向的力时)。</div>
+      <div class="mono">第3步:校核 f₁需 是否 ≤ 最大静摩擦力 f₁max(≈μ₁mg)。若 f₁需≤f₁max → 共速假设成立,两者以同一 a 运动;若 f₁需>f₁max → 假设不成立,滑块与木板打滑,摩擦力必须换成<b>滑动摩擦</b> f₁=μ₁mg 代入,滑块、木板分别列牛顿第二定律,求出<b>两个不同的加速度</b>。</div>
+      <p style="margin:8px 0"><b>为什么这样做?</b> 静摩擦力是「被动的」——它按需要多大给多大,但有上限(最大静摩擦力,通常取约等于滑动摩擦 μ₁mg)。只要需要的摩擦没超过上限,系统就能「同步走」;一旦超过,滑块的摩擦已经拉到最大还不够,滑块就会相对木板打滑,之后摩擦力变成固定值 μ₁mg(滑动摩擦不再看需要多少)。</p>
+      <p class="trap">⚠ 千万别一上来就设「一定打滑」或「一定不打滑」,必须先假设共速求 a,再用最大静摩擦去校核,校核通不过才能改用滑动摩擦分别列式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 2 — 拖动力 F 滑块判定器:改变 F,看是否超过校核、是否打滑</div>
+      <svg id="checkSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>外力 F(N) <input id="ckF" type="range" min="0" max="40" value="10" step="1"></label>
+        <label>滑块质量 m(kg) <input id="ckM" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>木板质量 M(kg) <input id="ckMM" type="range" min="1" max="8" value="4" step="1"></label>
+        <label>μ₁(上表面) <input id="ckMu1" type="range" min="0.1" max="0.6" value="0.3" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>共同加速度 a(m/s²)</b><span id="ckA">0</span></div>
+        <div><b>滑块所需摩擦 f需(N)</b><span id="ckFneed">0</span></div>
+        <div><b>最大静摩擦 f_max(N)</b><span id="ckFmax">0</span></div>
+        <div><b>结论</b><span id="ckResult">-</span></div>
+      </div>
+      <p class="small">力 F 加在木板上,地面视为光滑。共同加速度 a=F/(M+m);滑块所需摩擦 f需=ma;最大静摩擦 f_max=μ₁mg。f需≤f_max→共速;f需>f_max→打滑(此时滑块加速度=μ₁g,木板加速度另算)。</p>
+    </div>
+
+    <h2 class="g">③ 临界问题:恰好不发生相对滑动</h2>
+    <div class="card">
+      <p style="margin:6px 0">「临界」就是<b>等号成立</b>的那一刻:滑块所需的摩擦力<b>恰好等于</b>最大静摩擦力 f₁max=μ₁mg,再大一点点就要打滑了。</p>
+      <div class="eq">临界条件:f₁需 = f₁max = μ₁mg　⟹　a_临界 = μ₁g</div>
+      <p style="margin:8px 0"><b>常见问法:</b> 「木板上的滑块恰好不滑动,求最大加速度」或「力加在木板上,求能使两者保持相对静止的最大拉力 F」。</p>
+      <div class="mono">第1步:滑块受的水平力只有上表面摩擦 f₁,由 f₁=ma 且临界时 f₁=μ₁mg,得 a_临界=μ₁g(与滑块质量无关!)。</div>
+      <div class="mono">第2步:把 a_临界 代回「整体」的牛顿第二定律,求此时对应的外力 F。若地面光滑:F_max=(M+m)·a_临界=(M+m)μ₁g；若地面有摩擦,F_max=(M+m)a_临界+μ₂(M+m)g。</div>
+      <p style="margin:8px 0"><b>力加在滑块上时呢?</b> 若外力 F 直接拉滑块,木板靠滑块传来的摩擦 f₁′ 带动。临界时木板的加速度 a=f₁′/M=μ₁mg/M,这与力加在木板上时的临界加速度 μ₁g(不含 M)<b>是不同的表达式</b>——因为这时候「被摩擦带动」的是木板而不是滑块,质量分母变了。</p>
+      <p class="trap">⚠ 临界加速度 a_临界=μ₁g 只在「滑块靠摩擦被动跟着走、木板被直接施力」的情形下成立且与滑块质量无关;如果是木板靠摩擦被动跟随(力加在滑块上),临界加速度要用木板的质量 M 重新推,不能直接套 μ₁g。做题前一定要看清楚<b>力加在哪个物体上、谁是"主动"谁是"被动"</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 3 — 临界加速度求解:拖动力 F 从小到大,标出恰好打滑的临界点</div>
+      <svg id="critSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="critGo">▶ 逐渐增大 F</button><button id="critReset">↺ 重置</button>
+        <label>μ₁ <input id="critMu" type="range" min="0.1" max="0.6" value="0.25" step="0.05"></label>
+        <label>m(kg) <input id="critM" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>M(kg) <input id="critMM" type="range" min="1" max="8" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 F(N)</b><span id="crF">0</span></div>
+        <div><b>a=F/(M+m)</b><span id="crA">0</span></div>
+        <div><b>a_临界=μ₁g</b><span id="crAc">0</span></div>
+        <div><b>状态</b><span id="crSt">-</span></div>
+      </div>
+      <p class="small">曲线是共同加速度 a 随 F 线性增长;水平虚线是临界加速度 μ₁g。曲线越过虚线的那一刻(F_max=(M+m)μ₁g),滑块开始相对木板打滑,之后滑块加速度锁定在 μ₁g 不再随 F 增大。</p>
+    </div>
+
+    <h2 class="o">④ 相对位移 = 板长:滑块从板一端滑到另一端</h2>
+    <div class="card">
+      <p style="margin:6px 0">一旦打滑,滑块和木板的加速度不同,两者的位移也不同。<b>滑块相对木板的位移</b> Δs相对 = |s滑块 − s木板|(对地位移之差),这是解「滑块滑到板的另一端」「滑块滑离木板」这类题的关键量。</p>
+      <div class="eq">Δs相对 = 板长 L　(滑块恰好从板的一端滑到另一端/滑离木板时)</div>
+      <table>
+        <tr><th>物理量</th><th>含义</th><th>用途</th></tr>
+        <tr><td>s滑块(对地)</td><td>滑块相对地面的位移</td><td>用滑块的 a、v、t 算</td></tr>
+        <tr><td>s木板(对地)</td><td>木板相对地面的位移</td><td>用木板的 a、v、t 算</td></tr>
+        <tr><td>Δs相对 = s滑块−s木板</td><td>滑块相对木板挪动了多远</td><td>=板长 L(滑到头/滑离);求摩擦生热 Q=f·Δs相对</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>典型问法:</b> 「滑块最终能否从木板上滑落」「木板长度至少多长才能不让滑块滑出去」→ 本质都是求两者各自的位移(常配合 v-t 图或运动学公式),再相减得到 Δs相对,与板长 L 比较。</p>
+      <p class="trap">⚠ 最容易混的就是<b>相对位移</b>与<b>对地位移</b>:相对位移是"滑块在木板上挪了多远"(决定滑没滑出去、摩擦生热多少);对地位移是"滑块/木板各自走了多远"(决定摩擦力做的功、动能变化)。求板长必须用<b>相对</b>位移,不能直接拿滑块对地位移当板长。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 相对位移=板长可视化:滑块在木板上滑动,底部相对位移条实时显示</div>
+      <canvas id="relCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="relGo">▶ 播放</button><button id="relReset">↺ 重置</button>
+        <label>木板长 L(m) <input id="relL" type="range" min="1" max="3" value="1.5" step="0.1"></label>
+        <label>滑块加速度(m/s²) <input id="relA1" type="range" min="1" max="4" value="1" step="0.5"></label>
+        <label>木板加速度(m/s²) <input id="relA2" type="range" min="1" max="6" value="3" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>滑块对地位移(m)</b><span id="relS1">0</span></div>
+        <div><b>木板对地位移(m)</b><span id="relS2">0</span></div>
+        <div><b>相对位移(m)</b><span id="relDs">0</span></div>
+        <div><b>状态</b><span id="relSt">-</span></div>
+      </div>
+      <p class="small">设滑块初速较大、木板初速为 0(常见情形:滑块以初速滑上静止木板)。滑块减速(a₁)、木板加速(a₂),两者速度趋近后相对位移不再变化。当相对位移达到板长 L 时,滑块正好滑到板的末端(或滑离)。</p>
+    </div>
+
+    <h2 class="v">⑤ v-t 图双线分析:交点=共速时刻</h2>
+    <div class="card">
+      <p style="margin:6px 0">板块模型的 v-t 图通常画<b>两条线</b>:一条是滑块的 v-t,一条是木板的 v-t。两线<b>斜率</b>=各自加速度,两线<b>相交</b>的点表示"此刻两者速度相等"。</p>
+      <table>
+        <tr><th>图像特征</th><th>物理意义</th></tr>
+        <tr><td>两线斜率不同</td><td>滑块、木板加速度不同 → 存在相对滑动(摩擦按滑动摩擦算)</td></tr>
+        <tr><td>两线相交</td><td>交点处两者速度相等 = 达到<b>共速</b>时刻</td></tr>
+        <tr><td>交点后两线重合(平行且贴合)</td><td>共速后若不再打滑,两者一起做匀速或匀加速运动</td></tr>
+        <tr><td>两线之间围成的面积(交点前)</td><td>=滑块与木板的位移之差 = <b>相对位移 Δs相对</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>共速之后怎么办?</b> 交点之后要重新判断:共速瞬间摩擦力是否能维持两者继续同速(即检验是否需要切换回"整体共同运动"的分析,可能需要地面摩擦或外力配合)。若能,两线之后重合;若不能,两者会再次分离,加速度方向可能改变。</p>
+      <p class="trap">⚠ v-t 图上,两线之间的<b>面积</b>才是相对位移,不是简单看纵轴读数之差在乘时间——如果加速度是变化的或分段的,必须分段计算面积(或用位移公式分别算 s滑块、s木板 再相减)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 5 — v-t 图双线:滑块(红)与木板(蓝)速度曲线,交点=共速</div>
+      <svg id="vtSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>滑块初速 v₀(m/s) <input id="vtV0" type="range" min="2" max="10" value="8" step="1"></label>
+        <label>滑块加速度(减速,m/s²) <input id="vtA1" type="range" min="0.5" max="4" value="2" step="0.5"></label>
+        <label>木板加速度(加速,m/s²) <input id="vtA2" type="range" min="0.5" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>共速时刻 t*(s)</b><span id="vtT">0</span></div>
+        <div><b>共同速度 v*(m/s)</b><span id="vtVstar">0</span></div>
+        <div><b>阴影面积=相对位移(m)</b><span id="vtArea">0</span></div>
+        <div><b>说明</b><span id="vtNote2">-</span></div>
+      </div>
+      <p class="small">滑块以 v₀ 滑上静止木板,滑块摩擦减速(红线下降)、木板摩擦加速(蓝线上升),交点即共速时刻 t*=v₀/(a₁+a₂)。两线间夹的阴影面积就是滑块相对木板滑过的距离。</p>
+    </div>
+
+    <h2 class="b">⑥ 地面有摩擦 vs 无摩擦:差异在哪</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多题会问「若地面光滑」和「若地面粗糙」两种情形,差异体现在<b>木板受到的合外力</b>和<b>整体共同加速度</b>上。</p>
+      <table>
+        <tr><th></th><th>地面光滑(无摩擦)</th><th>地面粗糙(有摩擦)</th></tr>
+        <tr><td>木板下表面受力</td><td>只有 N₂(支持力),无 f₂</td><td>多一个摩擦力 f₂=μ₂(M+m)g,方向与木板运动趋势相反</td></tr>
+        <tr><td>整体共同加速度(力 F 加在木板上)</td><td>a=F/(M+m)</td><td>a=[F−μ₂(M+m)g]/(M+m)</td></tr>
+        <tr><td>木板能否被"轻轻一推就动"</td><td>能,只要 F>0 且能带动滑块</td><td>F 必须先克服地面摩擦阻力才能让木板启动</td></tr>
+        <tr><td>系统最终归宿(外力撤去后)</td><td>若无地面摩擦,共速后整体匀速运动不停</td><td>共速后整体在地面摩擦作用下做减速运动直至停止</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>做题提醒:</b> 看到题目没写「地面光滑」,默认地面<b>有摩擦</b>,必须把 f₂=μ₂(M+m)g 加入木板的受力方程;地面摩擦的压力是<b>系统总重</b>,不是木板自重 Mg,这是最容易漏乘的地方。</p>
+      <p class="trap">⚠ 别把地面摩擦的正压力算成 Mg——木板承受的是滑块和自身的<b>总重量</b>,压在地面上的力是 N₂=(M+m)g,f₂=μ₂(M+m)g。少算了滑块的重量分量,结果会系统性偏小。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🆚 互动 6 — 地面有/无摩擦对比:同样的 F,两种地面条件下的加速度对比</div>
+      <svg id="groundSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>外力 F(N) <input id="grF" type="range" min="5" max="50" value="25" step="1"></label>
+        <label>μ₂(地面) <input id="grMu2" type="range" min="0" max="0.4" value="0.2" step="0.05"></label>
+        <label>m(kg) <input id="grM" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>M(kg) <input id="grMM" type="range" min="1" max="8" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>地面摩擦 f₂(N)</b><span id="grF2">0</span></div>
+        <div><b>光滑地面 a(m/s²)</b><span id="grA1">0</span></div>
+        <div><b>粗糙地面 a(m/s²)</b><span id="grA2">0</span></div>
+        <div><b>加速度差</b><span id="grDiff">0</span></div>
+      </div>
+      <p class="small">力 F 加在木板上拖动整体。左柱=光滑地面时的共同加速度,右柱=粗糙地面时的共同加速度(已扣除地面摩擦阻力)。μ₂越大、总重越大,两者差距越明显,粗糙地面甚至可能让 F 不足以启动系统(a≤0)。</p>
+    </div>
+
+    <h2 class="r">⑦ 摩擦生热 Q = f·Δs相对</h2>
+    <div class="card">
+      <p style="margin:6px 0">只要滑块和木板之间发生了<b>相对滑动</b>,接触面就会摩擦生热,热量只与「滑动摩擦力大小」和「相对滑动的路程」有关。</p>
+      <div class="eq">Q = f₁ · Δs相对　(f₁=μ₁mg 为上表面滑动摩擦力,Δs相对=|s滑块−s木板|)</div>
+      <p style="margin:8px 0"><b>为什么不是 f·s滑块 或 f·s木板?</b> 因为摩擦生热的本质是"两个接触面之间发生了相对错动",错动的距离才是相对位移,而不是任何一个物体单独对地走了多远。这与「一对摩擦力分别对两个物体做的功」之和(功能关系)是一致的:Q = f·s滑块(摩擦对滑块做负功的大小,实际上方向要看谁被减速)+ f·s木板 的净效应,等价于 f·Δs相对。</p>
+      <p style="margin:8px 0"><b>若地面也有摩擦,是否也生热?</b> 只要木板相对地面也发生了滑动,下表面同样会摩擦生热 Q₂=f₂·s木板(此时木板对地位移就是下表面的相对滑动距离,因为地面不动)。两个接触面的生热要分开算,互不干扰。</p>
+      <p class="trap">⚠ 常见算错:直接拿滑块的对地位移乘摩擦力当作生热,漏了木板也在同方向运动这部分「抵消」的位移。必须先求两者对地位移之差(相对位移),再乘摩擦力。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔥 互动 7 — 摩擦生热 Q=f·Δs相对:滑动摩擦力与相对位移共同决定生热量</div>
+      <svg id="heatSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>滑动摩擦力 f₁(N) <input id="heatF" type="range" min="2" max="20" value="8" step="1"></label>
+        <label>相对位移 Δs(m) <input id="heatDs" type="range" min="0.2" max="3" value="1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>摩擦生热 Q(J)</b><span id="heatQ">0</span></div>
+        <div><b>f₁(N)</b><span id="heatF2">0</span></div>
+        <div><b>Δs相对(m)</b><span id="heatDs2">0</span></div>
+        <div><b>公式</b><span id="heatEq">Q=f·Δs</span></div>
+      </div>
+      <p class="small">矩形面积=Q=f₁×Δs相对,直观类比"力-位移图面积即为摩擦克服的能量"。拖动两个滑条,观察矩形随之变化,理解 Q 只依赖这两个量,与物体各自跑了多快、多远无关。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 隔离受力分析(两个物体、两个摩擦面)</h3>
+      <p><b class="tag">触发信号:</b>题目给出滑块放在木板上,问"滑块受几个力""木板受几个力""摩擦力大小方向"。</p>
+      <p><b class="tag">标准动作:</b>分别隔离滑块、木板画受力图。滑块:重力、支持力 N₁、上表面摩擦 f₁(+外力,若加在滑块上)。木板:重力、滑块压力 N₁′=mg、上表面反作用摩擦 f₁′、地面支持力 N₂=(M+m)g、地面摩擦 f₂=μ₂(M+m)g(若地面不光滑,+外力若加在木板上)。</p>
+      <p><b class="tag">示例(带解):</b>滑块 m=1kg 放在木板 M=3kg 上,μ₁=0.2(上表面),地面光滑。木板受滑块压力 N₁′=mg=10N;地面支持力 N₂=(M+m)g=40N;因地面光滑,f₂=0。</p>
+      <p class="trap">陷阱:漏画下表面摩擦;把木板的地面压力误算成 Mg 而非 (M+m)g;搞反摩擦力的作用对象(f₁作用在滑块上,f₁′=−f₁作用在木板上)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断共速还是打滑(假设法+校核)</h3>
+      <p><b class="tag">触发信号:</b>「二者是否发生相对滑动」「能否保持相对静止」「共同加速度是多少」。</p>
+      <p><b class="tag">标准动作:</b>先假设整体共速,把 (M+m) 当一个物体求 a整体;隔离滑块用 a整体 反推所需摩擦 f需=ma整体;比较 f需 与 f_max=μ₁mg:f需≤f_max→共速成立;f需>f_max→打滑,换用滑动摩擦 f=μ₁mg 分别对滑块、木板列牛二求两个不同加速度。</p>
+      <p><b class="tag">示例(带解):</b>F=15N 加在木板上,M=3kg,m=1kg,μ₁=0.3,地面光滑。假设共速:a=F/(M+m)=15/4=3.75m/s²。滑块所需摩擦 f需=ma=3.75N。最大静摩擦 f_max=μ₁mg=0.3×1×10=3N。f需(3.75N)>f_max(3N)→打滑!滑块 a₁=f_max/m=3m/s²;木板 a₂=(F−f_max)/M=(15−3)/3=4m/s²。</p>
+      <p class="trap">陷阱:忘记校核直接默认共速;校核时把 mg 写成 (M+m)g(上表面压力只是滑块的重量);打滑后仍用假设的共同 a 算力。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 临界问题(恰好不滑动,求最大 F 或最大 a)</h3>
+      <p><b class="tag">触发信号:</b>「恰好不发生相对滑动」「最大加速度」「最大拉力」「滑块不脱离木板的临界条件」。</p>
+      <p><b class="tag">标准动作:</b>临界时滑块所需摩擦=最大静摩擦,f₁需=μ₁mg,若滑块是被摩擦"带动"的一方,a_临界=μ₁g(与滑块质量无关);再代入整体牛二求对应的 F_max。若力加在滑块上、木板被动,则要用木板质量重新推临界式。</p>
+      <p><b class="tag">示例(带解):</b>木板 M=4kg 上放滑块 m=2kg,μ₁=0.25,地面光滑,力 F 加在木板上向右拖。临界加速度 a_临界=μ₁g=2.5m/s²。此时 F_max=(M+m)a_临界=6×2.5=15N。F≤15N 时二者共同以 a=F/6 加速;F>15N 时开始打滑。</p>
+      <p class="trap">陷阱:把临界加速度公式在"力加在滑块上"和"力加在木板上"两种情形下用混;忘记临界时上表面恰好是最大静摩擦(不是任意值)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 相对位移=板长(滑块滑到板端/滑离)</h3>
+      <p><b class="tag">触发信号:</b>「滑块最终能否留在木板上」「木板至少多长才不让滑块滑落」「滑块滑到木板的另一端所需时间」。</p>
+      <p><b class="tag">标准动作:</b>分别用运动学求滑块、木板各自的位移 s滑块、s木板(打滑阶段加速度不同);相对位移 Δs=|s滑块−s木板|;令 Δs=L(板长)解出所需时间或临界板长。若在共速前 Δs 已达到 L,滑块滑离木板;若共速时 Δs<L,滑块留在板上、之后随木板一起运动(或共同减速)。</p>
+      <p><b class="tag">示例(带解):</b>滑块以 v₀=6m/s 滑上静止长木板,滑块减速 a₁=2m/s²,木板加速 a₂=1m/s²。共速时刻 t*=v₀/(a₁+a₂)=2s,共速 v*=v₀−a₁t*=2m/s。此时 s滑块=v₀t*−½a₁t*²=6×2−½×2×4=8m,s木板=½a₂t*²=½×1×4=2m,Δs=8−2=6m。若板长 L≥6m,滑块恰好不滑落;L<6m 则滑块提前滑出木板(需要分段重新计算)。</p>
+      <p class="trap">陷阱:用滑块对地位移直接当板长;共速后没有检查是否需要切换到"整体运动"重新分析;时间用错(共速时刻要令两者速度相等,不是加速度相等)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — v-t 图读图(双线找交点、面积求相对位移)</h3>
+      <p><b class="tag">触发信号:</b>给出滑块和木板的 v-t 图像(两条线),问共速时刻、相对位移、谁先谁后。</p>
+      <p><b class="tag">标准动作:</b>两线斜率=加速度(方向看增减);两线交点的横坐标=共速时刻 t*,纵坐标=共同速度 v*;交点之前两线与坐标轴围成的面积差=相对位移(即摩擦生热要用的 Δs);交点之后线合并说明二者同速运动。</p>
+      <p><b class="tag">示例(带解):</b>滑块线从 v₀=8m/s 均匀降到与木板线相交于 t=2s、v=4m/s,木板线从 0 升到 4m/s。滑块位移=(8+4)/2×2=12m,木板位移=(0+4)/2×2=4m,相对位移=12−4=8m。</p>
+      <p class="trap">陷阱:把交点当成"二者位移相等"(交点只代表速度相等,不是位移相等);读图时面积算成单纯的高度差×时间(要用梯形面积或分段积分)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 摩擦生热与能量守恒综合</h3>
+      <p><b class="tag">触发信号:</b>「摩擦产生的热量」「因摩擦损失的机械能」，常与位移、速度综合出题。</p>
+      <p><b class="tag">标准动作:</b>先用运动学/牛二求出滑块、木板各自的位移，得到相对位移 Δs；再 Q=f₁·Δs(上表面)，若下表面也打滑，额外 Q₂=f₂·s木板；可用能量守恒校验:系统损失的机械能=外力做的功−系统动能增量，应等于摩擦生热之和(含上下两表面)。</p>
+      <p><b class="tag">示例(带解):</b>接题型D数据，m=1kg，μ₁=0.2 ⇒ f₁=μ₁mg=2N，Δs=6m，Q=f₁·Δs=12J。若地面光滑(f₂=0)，系统机械能损失恰好等于这 12J，可与动能变化对照验证。</p>
+      <p class="trap">陷阱:生热公式里的位移用错(必须是相对位移,不是任一物体的对地位移)；地面若也有摩擦，两处生热要分别计算不可合并成一个 Δs。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 漏画<b>下表面</b>(木板与地面之间)的摩擦力——只要题目没说地面光滑，这个力必须算，且压力是 (M+m)g，不是 Mg。</p>
+      <p class="trap">② 不做「假设共速→校核最大静摩擦」这一步，直接凭直觉判断是否打滑，容易判断错误。</p>
+      <p class="trap">③ 打滑之后仍然用共同加速度算力——一旦确认相对滑动，滑块和木板的加速度<b>必须分开算</b>，摩擦力也要换成滑动摩擦 μ₁mg(不再是需要多少给多少)。</p>
+      <p class="trap">④ 临界加速度公式 a_临界=μ₁g 只在"滑块被动、力加在木板上"的情形下成立，力加在滑块上时木板是被动方，临界式要用 M 重新推。</p>
+      <p class="trap">⑤ 把<b>相对位移</b>和<b>对地位移</b>混淆——求板长、求摩擦生热必须用相对位移 Δs=|s滑块−s木板|，不是任一物体单独的位移。</p>
+      <p class="trap">⑥ v-t 图上把两线的<b>交点</b>误认为"位移相等"，交点只代表"速度相等"(共速时刻)。</p>
+      <p class="trap">⑦ 摩擦生热 Q=f·Δs相对 中的 f 要用<b>滑动摩擦力</b>(打滑阶段)，且只在真正发生相对滑动的那段时间/那段相对路程内计算。</p>
+      <p class="trap">⑧ 共速之后没有重新判断系统的下一步运动——共速不代表运动结束，需要再检验此后摩擦能否维持共速(是否需要地面摩擦或外力配合)。</p>
+      <p class="trap">⑨ 力加在滑块上 vs 加在木板上，两者的隔离分析、共速判据、临界条件全都不同，读题时要先看清楚<b>力具体作用在哪个物体</b>。</p>
+      <p class="trap">⑩ 板长与相对位移的等式 Δs相对=L 只在"滑块恰好从一端滑到另一端(或滑离)"时成立，如果滑块还没到板端就已共速，则 Δs相对<L，不能强行令其等于 L。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 摩擦力的本质是"约束力"，静摩擦按需分配、有上限：</b> 把静摩擦力理解成一种"尽力而为"的约束——它会自动调整大小去尝试维持相对静止，但存在天花板 μmg。这就是为什么必须先假设共速求"需要多大摩擦"，再跟"能提供多大摩擦"比较，这本质上是一个不等式约束问题，而不是简单套公式。</p>
+      <p style="margin:8px 0"><b>② 隔离法 + 整体法要交替使用：</b> 求共同加速度用整体法(把系统当一个质点，只关心外力和总质量)最快；一旦要求某个接触面的内力(摩擦力、支持力)，必须隔离单个物体单独分析。判断打滑与否，正是"先整体求 a，再隔离验内力"的经典组合拳。</p>
+      <p style="margin:8px 0"><b>③ 相对位移的另一个视角——以木板为参考系：</b> 站在木板上看，滑块的运动是"滑块的加速度减去木板的加速度"这个相对加速度作用下的运动。相对位移、相对速度都可以在这个非惯性参考系里直接用运动学公式算，往往比在地面系分别算两个物体再相减更快(注意：非惯性系下不能直接用牛顿第二定律列力的方程，只能用来算运动学量)。</p>
+      <p style="margin:8px 0"><b>④ 摩擦生热 Q=f·Δs相对 的本质是"内力做的功之和"：</b> 一对摩擦力(f₁ 和 −f₁)分别对滑块、木板做正功和负功，其代数和 = f₁·s滑块的功 + (−f₁)·s木板的功 = f₁·(s滑块−s木板) = f₁·Δs相对。这解释了为什么只有真正"打滑"(有相对位移)才生热——若全程共速(Δs相对=0)，摩擦力做的是静摩擦，不生热，只是在传递动力。</p>
+      <p style="margin:8px 0"><b>⑤ 两种加力方式的本质差异是"谁主动、谁被动"：</b> 力加在滑块上时，滑块是主动加速的一方，木板靠滑块传来的摩擦力被"拖着走"；力加在木板上时，反过来。凡是"被动"的一方，它的运动完全由摩擦力这个唯一的水平力决定，临界加速度、最大摩擦这些关键节点都要围绕"被动方"来建立方程，主动方只是提供动力源。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 板块模型:隔离分析 + 假设共速校核 + 相对位移三件套</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GRAY="#8a8a8a";
+
+/* ===== 互动1:受力分解 ===== */
+(function(){
+  const svg=document.getElementById('fbdSvg');
+  const note=document.getElementById('fbdNote');
+  const groundCk=document.getElementById('fbdGround');
+  let mode=0;
+  document.querySelectorAll('.fbdmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.fbdmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  groundCk.onchange=draw;
+  function arrow(p,x,y,dx,dy,col,lab,lx,ly){
+    el(p,'line',{x1:x,y1:y,x2:x+dx,y2:y+dy,stroke:col,'stroke-width':5});
+    const ang=Math.atan2(dy,dx);
+    const ax=x+dx,ay=y+dy;
+    const a1x=ax-12*Math.cos(ang-0.4),a1y=ay-12*Math.sin(ang-0.4);
+    const a2x=ax-12*Math.cos(ang+0.4),a2y=ay-12*Math.sin(ang+0.4);
+    el(p,'polygon',{points:ax+','+ay+' '+a1x+','+a1y+' '+a2x+','+a2y,fill:col});
+    el(p,'text',{x:x+(lx||dx*0.5),y:y+(ly!==undefined?ly:dy*0.5)-8,'font-size':13,'font-weight':900,fill:col}).textContent=lab;
+  }
+  function draw(){
+    clr(svg);
+    const groundY=230, boardY=190, boardX=200, boardW=300, boardH=26;
+    const blockX=310, blockY=150, blockSize=40;
+    // ground
+    el(svg,'rect',{x:0,y:groundY,width:700,height:16,fill:'#cbbf9a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:10,y:groundY+34,'font-size':12,'font-weight':800,fill:INK}).textContent=groundCk.checked?'地面(粗糙,有摩擦 f₂)':'地面(光滑,无摩擦)';
+    // board
+    el(svg,'rect',{x:boardX,y:boardY,width:boardW,height:boardH,fill:BROWN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:boardX+boardW/2,y:boardY+boardH/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='木板 M';
+    // block
+    el(svg,'rect',{x:blockX,y:blockY,width:blockSize,height:blockSize,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:blockX+blockSize/2,y:blockY+blockSize/2+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='滑块 m';
+    const bx=blockX+blockSize/2, by=blockY, bx2=boardX+boardW*0.75;
+    // gravity arrows
+    arrow(svg,blockX+blockSize/2,blockY+blockSize+4,0,26,INK,'mg',10,20);
+    arrow(svg,boardX+boardW*0.25,boardY+boardH+4,0,26,INK,'Mg',10,20);
+    // upper surface friction f1 (on block) and f1' (on board, opposite)
+    const f1dir = mode===0? 1 : -1; // if F on block, block moves right relative to board -> friction on block acts left(-1)?? we choose direction for illustration
+    // choose consistent illustrative direction: friction on block opposes relative slide; draw f1 pointing left, f1' pointing right (reaction)
+    arrow(svg,blockX,blockY+blockSize/2,-45,0,ORANGE,'f₁(木板→滑块)',-70,-6);
+    arrow(svg,boardX+boardW*0.6,boardY,55,0,ORANGE,"f₁′(滑块→木板,反作用)",20,-8);
+    // applied force F
+    if(mode===0){
+      arrow(svg,blockX+blockSize,blockY+blockSize/2,70,0,RED,'F(加在滑块)',20,-8);
+    } else {
+      arrow(svg,boardX+boardW,boardY+boardH/2,70,0,RED,'F(加在木板)',20,-8);
+    }
+    // lower surface friction (ground <-> board)
+    if(groundCk.checked){
+      arrow(svg,boardX+boardW*0.3,groundY-2,-50,0,VIO,'f₂(地面→木板)',-80,-6);
+    }
+    // labels
+    el(svg,'text',{x:20,y:30,'font-size':14,'font-weight':900,fill:INK}).textContent=mode===0?'情形:力 F 直接拖动滑块,木板靠上表面摩擦 f₁′被带动':'情形:力 F 直接拖动木板,滑块靠上表面摩擦 f₁被带动';
+    let msg;
+    if(mode===0){
+      msg=groundCk.checked? '滑块主动、木板被动:木板受滑块传来的 f₁′ 驱动,同时要克服地面摩擦 f₂ 才能运动。' : '滑块主动、木板被动:木板仅靠 f₁′驱动(地面光滑,无阻力)。';
+    } else {
+      msg=groundCk.checked? '木板主动、滑块被动:滑块靠上表面摩擦 f₁被"拖着走",木板还要克服地面摩擦 f₂。' : '木板主动、滑块被动:滑块靠上表面摩擦 f₁被"拖着走"(地面光滑)。';
+    }
+    note.innerHTML=msg;
+  }
+  draw();
+})();
+
+/* ===== 互动2:判定共速/打滑 ===== */
+(function(){
+  const svg=document.getElementById('checkSvg');
+  const Fs=document.getElementById('ckF'),Ms=document.getElementById('ckM'),MMs=document.getElementById('ckMM'),Mu1s=document.getElementById('ckMu1');
+  const oA=document.getElementById('ckA'),oFneed=document.getElementById('ckFneed'),oFmax=document.getElementById('ckFmax'),oResult=document.getElementById('ckResult');
+  const g=10;
+  function sync(){draw();}
+  Fs.oninput=Ms.oninput=MMs.oninput=Mu1s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const F=+Fs.value,m=+Ms.value,M=+MMs.value,mu1=+Mu1s.value;
+    const a=F/(M+m);
+    const fneed=m*a;
+    const fmax=mu1*m*g;
+    const slip = fneed>fmax;
+    oA.textContent=a.toFixed(2);oFneed.textContent=fneed.toFixed(2);oFmax.textContent=fmax.toFixed(2);
+    oResult.textContent=slip?'打滑!':'共速';
+    oResult.style.color=slip?RED:GREEN;
+    // bar chart comparing fneed vs fmax
+    const X0=80,baseY=210,maxH=160,scale=maxH/Math.max(20,Math.max(fneed,fmax)+4);
+    el(svg,'line',{x1:X0-30,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    const h1=fneed*scale, h2=fmax*scale;
+    el(svg,'rect',{x:X0,y:baseY-h1,width:80,height:h1,fill: slip? RED: GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+40,y:baseY-h1-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='f需='+fneed.toFixed(1);
+    el(svg,'text',{x:X0+40,y:baseY+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='所需摩擦';
+    el(svg,'rect',{x:X0+180,y:baseY-h2,width:80,height:h2,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+220,y:baseY-h2-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='f_max='+fmax.toFixed(1);
+    el(svg,'text',{x:X0+220,y:baseY+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='最大静摩擦';
+    el(svg,'text',{x:420,y:60,'font-size':14,'font-weight':900,fill: slip? RED: GREEN,'text-anchor':'start'}).textContent= slip? '⚠ f需 > f_max → 相对滑动!':'✓ f需 ≤ f_max → 共同运动';
+    el(svg,'text',{x:420,y:90,'font-size':12.5,'font-weight':700,fill:INK}).textContent='共同加速度 a=F/(M+m)='+a.toFixed(2)+' m/s²';
+    if(slip){
+      const a1=fmax/m, a2=(F-fmax)/M;
+      el(svg,'text',{x:420,y:120,'font-size':12.5,'font-weight':700,fill:RED}).textContent='打滑后:滑块 a₁='+a1.toFixed(2)+'，木板 a₂='+a2.toFixed(2)+' m/s²';
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动3:临界加速度求解 ===== */
+(function(){
+  const svg=document.getElementById('critSvg');
+  const Mus=document.getElementById('critMu'),Ms=document.getElementById('critM'),MMs=document.getElementById('critMM');
+  const oF=document.getElementById('crF'),oA=document.getElementById('crA'),oAc=document.getElementById('crAc'),oSt=document.getElementById('crSt');
+  const g=10;
+  let F=0,running=false,Fmax_ui=40;
+  function params(){return {mu1:+Mus.value,m:+Ms.value,M:+MMs.value};}
+  function draw(){
+    clr(svg);
+    const {mu1,m,M}=params();
+    const ac=mu1*g;
+    const Fcrit=(M+m)*ac;
+    const X0=60,Y0=20,W=580,H=190;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='a';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='F';
+    const aMax=6, sy=H/aMax, sx=W/Fmax_ui;
+    // critical line (dashed horizontal)
+    const yc=Y0+H-ac*sy;
+    el(svg,'line',{x1:X0,y1:yc,x2:X0+W,y2:yc,stroke:RED,'stroke-width':3,'stroke-dasharray':'8 6'});
+    el(svg,'text',{x:X0+8,y:yc-6,'font-size':12,'font-weight':900,fill:RED}).textContent='a_临界=μ₁g='+ac.toFixed(2);
+    // a=F/(M+m) line, only valid up to Fcrit(clip after), plus flat line after (locked at ac)
+    const FcritX = Math.min(Fcrit,Fmax_ui);
+    let pts1=[[X0,Y0+H]];
+    for(let f=0; f<=FcritX; f+=1){
+      const a=f/(M+m);
+      pts1.push([X0+f*sx, Y0+H-a*sy]);
+    }
+    el(svg,'polyline',{points:pts1.map(p=>p.join(',')).join(' '),fill:'none',stroke:BLUE,'stroke-width':4});
+    if(Fcrit<Fmax_ui){
+      el(svg,'line',{x1:X0+Fcrit*sx,y1:yc,x2:X0+W,y2:yc,stroke:GREEN,'stroke-width':4});
+      el(svg,'circle',{cx:X0+Fcrit*sx,cy:yc,r:6,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0+Fcrit*sx+8,y:yc+18,'font-size':11.5,'font-weight':900,fill:INK}).textContent='F_max='+Fcrit.toFixed(1)+'N (临界点)';
+    }
+    // current F marker
+    const fx=Math.min(F,Fmax_ui);
+    const curA = F<=Fcrit? F/(M+m) : ac;
+    const cx=X0+fx*sx, cy=Y0+H-curA*sy;
+    el(svg,'circle',{cx:cx,cy:cy,r:7,fill: F>Fcrit? RED:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:Y0+H,x2:cx,y2:cy,stroke:INK,'stroke-width':2,'stroke-dasharray':'3 3'});
+    oF.textContent=F.toFixed(1);oA.textContent=curA.toFixed(2);oAc.textContent=ac.toFixed(2);
+    oSt.textContent = F<=Fcrit? '共同运动' : '已打滑(锁定 a₁=μ₁g)';
+    oSt.style.color = F<=Fcrit? GREEN: RED;
+  }
+  function loop(){
+    if(!running)return;
+    F+=0.4;
+    if(F>=Fmax_ui){F=Fmax_ui;running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('critGo').onclick=()=>{F=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('critReset').onclick=()=>{F=0;running=false;draw();};
+  Mus.oninput=Ms.oninput=MMs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:相对位移=板长 ===== */
+(function(){
+  const cv=document.getElementById('relCv');const ctx=cv.getContext('2d');
+  const Ls=document.getElementById('relL'),A1s=document.getElementById('relA1'),A2s=document.getElementById('relA2');
+  const oS1=document.getElementById('relS1'),oS2=document.getElementById('relS2'),oDs=document.getElementById('relDs'),oSt=document.getElementById('relSt');
+  let running=false,t=0,v0=6;
+  function params(){return {L:+Ls.value,a1:+A1s.value,a2:+A2s.value};}
+  function reset(){t=0;running=false;update();draw();}
+  Ls.oninput=A1s.oninput=A2s.oninput=reset;
+  function state(){
+    const {L,a1,a2}=params();
+    let v1=v0-a1*t; if(v1<0)v1=0;
+    let v2=a2*t;
+    let tcap=t;
+    // cap time at common speed
+    const tstar=v0/(a1+a2);
+    if(t>tstar){tcap=tstar;v1=v0-a1*tstar;v2=a2*tstar;}
+    const s1=v0*tcap-0.5*a1*tcap*tcap;
+    const s2=0.5*a2*tcap*tcap;
+    const ds=s1-s2;
+    return {L,s1,s2,ds,tstar,capped:t>tstar};
+  }
+  function update(){
+    const {L,s1,s2,ds,tstar,capped}=state();
+    oS1.textContent=s1.toFixed(2);oS2.textContent=s2.toFixed(2);oDs.textContent=Math.min(ds,L).toFixed(2);
+    if(ds>=L){oSt.textContent='滑到板端!';oSt.style.color=RED;}
+    else if(capped){oSt.textContent='已共速,不再相对滑动';oSt.style.color=GREEN;}
+    else{oSt.textContent='滑动中';oSt.style.color=INK;}
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const {L,s1,s2,ds}=state();
+    const groundY=210;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,groundY);ctx.lineTo(cv.width,groundY);ctx.stroke();
+    // board position moves with s2, scale
+    const scale=60;
+    const boardX0=60+s2*scale;
+    const boardW=Math.max(120,L*scale);
+    ctx.fillStyle=BROWN;ctx.fillRect(boardX0,groundY-20,boardW,20);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(boardX0,groundY-20,boardW,20);
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.fillText('木板 (L='+L.toFixed(1)+'m)',boardX0+8,groundY-6);
+    // block position: starts at left end of board, moves by ds relative to board (capped at boardW)
+    const relPx=Math.min(ds,L)*scale;
+    const blockX=boardX0+10+relPx;
+    ctx.fillStyle=YEL;ctx.fillRect(blockX,groundY-46,30,26);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(blockX,groundY-46,30,26);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText('滑块',blockX+2,groundY-30);
+    // relative displacement bar at bottom
+    const barY=250-30;
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(60,235,Math.max(120,L*scale),14);
+    ctx.fillStyle=ORANGE;
+    const fillW=Math.min(ds,L)/L*Math.max(120,L*scale);
+    ctx.fillRect(60,235,fillW,14);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText('相对位移进度条 Δs/L',60,232);
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.03;
+    const {ds,L,tstar}=state();
+    update();draw();
+    if(ds>=L || t>tstar+0.1){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('relGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('relReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:v-t 图双线 ===== */
+(function(){
+  const svg=document.getElementById('vtSvg');
+  const V0s=document.getElementById('vtV0'),A1s=document.getElementById('vtA1'),A2s=document.getElementById('vtA2');
+  const oT=document.getElementById('vtT'),oVstar=document.getElementById('vtVstar'),oArea=document.getElementById('vtArea'),oNote=document.getElementById('vtNote2');
+  function sync(){draw();}
+  V0s.oninput=A1s.oninput=A2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const v0=+V0s.value,a1=+A1s.value,a2=+A2s.value;
+    const tstar=v0/(a1+a2);
+    const vstar=v0-a1*tstar;
+    const s1=v0*tstar-0.5*a1*tstar*tstar;
+    const s2=0.5*a2*tstar*tstar;
+    const area=s1-s2;
+    oT.textContent=tstar.toFixed(2);oVstar.textContent=vstar.toFixed(2);oArea.textContent=area.toFixed(2);
+    oNote.textContent='交点即共速';
+    const X0=60,Y0=20,W=580,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const tMax=Math.max(4,tstar*1.6), vMax=Math.max(10,v0*1.15);
+    const sx=W/tMax, sy=H/vMax;
+    // block line: v0 -> vstar at tstar, then flat
+    const p1=[X0,Y0+H-v0*sy], p2=[X0+tstar*sx,Y0+H-vstar*sy], p3=[X0+tMax*sx,Y0+H-vstar*sy];
+    el(svg,'polyline',{points:p1.join(',')+' '+p2.join(',')+' '+p3.join(','),fill:'none',stroke:RED,'stroke-width':4});
+    // board line: 0 -> vstar at tstar, then flat
+    const q1=[X0,Y0+H], q2=[X0+tstar*sx,Y0+H-vstar*sy], q3=[X0+tMax*sx,Y0+H-vstar*sy];
+    el(svg,'polyline',{points:q1.join(',')+' '+q2.join(',')+' '+q3.join(','),fill:'none',stroke:BLUE,'stroke-width':4});
+    // shaded area between lines before tstar (triangle-ish region)
+    el(svg,'polygon',{points:X0+','+(Y0+H-v0*sy)+' '+(X0+tstar*sx)+','+(Y0+H-vstar*sy)+' '+(X0)+','+(Y0+H),fill:'rgba(224,56,42,0.15)',stroke:'none'});
+    // intersection marker
+    el(svg,'circle',{cx:X0+tstar*sx,cy:Y0+H-vstar*sy,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+tstar*sx+10,y:Y0+H-vstar*sy-8,'font-size':12,'font-weight':900,fill:GREEN}).textContent='共速 t*='+tstar.toFixed(2)+'s, v*='+vstar.toFixed(2);
+    el(svg,'text',{x:X0+8,y:Y0+18,'font-size':12.5,'font-weight':800,fill:RED}).textContent='红=滑块(减速)';
+    el(svg,'text',{x:X0+130,y:Y0+18,'font-size':12.5,'font-weight':800,fill:BLUE}).textContent='蓝=木板(加速)';
+  }
+  draw();
+})();
+
+/* ===== 互动6:地面有/无摩擦对比 ===== */
+(function(){
+  const svg=document.getElementById('groundSvg');
+  const Fs=document.getElementById('grF'),Mu2s=document.getElementById('grMu2'),Ms=document.getElementById('grM'),MMs=document.getElementById('grMM');
+  const oF2=document.getElementById('grF2'),oA1=document.getElementById('grA1'),oA2=document.getElementById('grA2'),oDiff=document.getElementById('grDiff');
+  const g=10;
+  function sync(){draw();}
+  Fs.oninput=Mu2s.oninput=Ms.oninput=MMs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const F=+Fs.value,mu2=+Mu2s.value,m=+Ms.value,M=+MMs.value;
+    const f2=mu2*(M+m)*g;
+    const a1=F/(M+m); // smooth ground
+    const a2=Math.max(0,(F-f2)/(M+m)); // rough ground
+    oF2.textContent=f2.toFixed(1);oA1.textContent=a1.toFixed(2);oA2.textContent=a2.toFixed(2);oDiff.textContent=(a1-a2).toFixed(2);
+    const X0=100,baseY=210,maxH=160;
+    const scale=maxH/Math.max(1,a1+1);
+    el(svg,'line',{x1:X0-40,y1:baseY,x2:600,y2:baseY,stroke:INK,'stroke-width':3});
+    const h1=a1*scale,h2=a2*scale;
+    el(svg,'rect',{x:X0,y:baseY-h1,width:90,height:h1,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+45,y:baseY-h1-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='a='+a1.toFixed(2);
+    el(svg,'text',{x:X0+45,y:baseY+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='地面光滑';
+    el(svg,'rect',{x:X0+200,y:baseY-h2,width:90,height:h2,fill: f2>=F? GRAY: ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+245,y:baseY-h2-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='a='+a2.toFixed(2);
+    el(svg,'text',{x:X0+245,y:baseY+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='地面粗糙';
+    if(f2>=F){
+      el(svg,'text',{x:420,y:80,'font-size':13,'font-weight':900,fill:RED}).textContent='F≤f₂,系统无法启动(a=0)!';
+    } else {
+      el(svg,'text',{x:420,y:80,'font-size':12.5,'font-weight':700,fill:INK}).textContent='f₂=μ₂(M+m)g='+f2.toFixed(1)+'N';
+      el(svg,'text',{x:420,y:105,'font-size':12.5,'font-weight':700,fill:INK}).textContent='粗糙地面 a=[F−f₂]/(M+m)';
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动7:摩擦生热 ===== */
+(function(){
+  const svg=document.getElementById('heatSvg');
+  const Fs=document.getElementById('heatF'),Dss=document.getElementById('heatDs');
+  const oQ=document.getElementById('heatQ'),oF=document.getElementById('heatF2'),oDs=document.getElementById('heatDs2');
+  function sync(){draw();}
+  Fs.oninput=Dss.oninput=sync;
+  function draw(){
+    clr(svg);
+    const f=+Fs.value,ds=+Dss.value;
+    const Q=f*ds;
+    oQ.textContent=Q.toFixed(2);oF.textContent=f.toFixed(1);oDs.textContent=ds.toFixed(2);
+    const X0=100,Y0=180;
+    const sxScale=140, syScale=8;
+    const w=ds*sxScale, h=f*syScale;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0-160,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0+400,y2:Y0,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0-166,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='f(N)';
+    el(svg,'text',{x:X0+410,y:Y0+4,'font-size':13,'font-weight':900,fill:INK}).textContent='Δs(m)';
+    el(svg,'rect',{x:X0,y:Y0-h,width:w,height:h,fill:'rgba(224,56,42,0.25)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X0+w/2,y:Y0-h/2+5,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Q='+Q.toFixed(1)+'J';
+    el(svg,'text',{x:X0+w+10,y:Y0-h-6,'font-size':12,'font-weight':800,fill:RED}).textContent='f='+f.toFixed(1)+'N';
+    el(svg,'text',{x:X0+w-8,y:Y0+20,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'end'}).textContent='Δs='+ds.toFixed(2)+'m';
+    el(svg,'text',{x:X0,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='矩形面积 = 摩擦力 × 相对位移 = 摩擦生热 Q';
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 板块模型中,滑块和木板之间(上表面)、木板和地面之间(下表面)分别可能存在什么力?",a:"上表面:滑块与木板之间的摩擦力(一对作用力与反作用力 f₁、f₁′)以及支持力/压力 N₁。下表面:木板与地面之间的摩擦力 f₂(若地面不光滑)以及地面支持力 N₂=(M+m)g(压力是滑块+木板的总重)。"},
+ {q:"2. 判断滑块和木板是否发生相对滑动,标准步骤是什么?",a:"①假设二者共同以同一加速度 a 运动(把系统当整体求 a);②隔离滑块,反推所需的摩擦力 f需=ma;③比较 f需 与最大静摩擦 f_max=μ₁mg:f需≤f_max→共速成立;f需>f_max→打滑,需换用滑动摩擦分别列式求两个不同加速度。"},
+ {q:"3. 什么是板块模型的临界条件?此时上表面摩擦力等于什么?",a:"临界条件是「恰好不发生相对滑动」,此时滑块所需的摩擦力恰好等于最大静摩擦力,即 f₁需=f₁max=μ₁mg。若力加在木板上、滑块是被动方,对应临界加速度 a_临界=μ₁g,与滑块质量无关。"},
+ {q:"4. 什么是「相对位移」?它和板长、摩擦生热分别是什么关系?",a:"相对位移 Δs相对=|s滑块−s木板|,是滑块相对木板挪动的距离。当滑块恰好从木板一端滑到另一端(或滑离)时,Δs相对=板长 L。摩擦生热 Q=f₁·Δs相对(f₁为滑动摩擦力)。"},
+ {q:"5. 地面光滑和地面有摩擦,对系统共同加速度的影响体现在哪?",a:"地面光滑时木板下表面无摩擦,共同加速度 a=F/(M+m)(F加在木板上)。地面有摩擦时,木板还要克服地面摩擦 f₂=μ₂(M+m)g,共同加速度 a=[F−μ₂(M+m)g]/(M+m),整体启动还需 F 大于 f₂。"},
+ {q:"6. 力加在滑块上和力加在木板上,分析上有什么本质不同?",a:"力加在滑块上时,滑块是主动方直接受力,木板靠上表面摩擦 f₁′被动带动;力加在木板上时反过来,木板主动、滑块靠 f₁被动带动。被动方的运动完全由摩擦力这个唯一水平力决定,临界条件的推导要围绕被动方的质量展开,两种情形公式不能混用。"},
+ {q:"7. v-t 图中滑块线和木板线的交点代表什么?交点前两线间的面积代表什么?",a:"交点的横坐标是二者速度相等的时刻(共速时刻 t*),纵坐标是共同速度 v*。交点不代表位移相等。交点之前两线与坐标轴围成的面积之差,等于滑块与木板对地位移之差,即相对位移 Δs相对。"},
+ {q:"8. 滑块 m=1kg 放在木板 M=3kg 上,μ₁=0.3,力 F=16N 加在木板上,地面光滑,判断是否打滑并求各自加速度。",a:"假设共速:a=F/(M+m)=16/4=4m/s²。滑块所需摩擦 f需=ma=4N。最大静摩擦 f_max=μ₁mg=0.3×1×10=3N。f需(4N)>f_max(3N)→打滑。滑块 a₁=f_max/m=3m/s²;木板 a₂=(F−f_max)/M=(16−3)/3≈4.33m/s²。"},
+ {q:"9. 为什么摩擦生热公式是 Q=f·Δs相对,而不是 f·s滑块 或 f·s木板?",a:"摩擦生热的本质是两个接触面之间发生了相对错动,错动的距离才是相对位移。用功能关系看:一对摩擦力分别对滑块做正功(或负功)f·s滑块、对木板做相反的功 −f·s木板,两者代数和恰好等于 f·(s滑块−s木板)=f·Δs相对,这才是真正转化为内能的部分。"},
+ {q:"10. 若地面也存在摩擦且木板相对地面也发生了滑动,下表面是否也会摩擦生热?怎么算?",a:"会。此时木板相对地面的滑动距离就是木板的对地位移 s木板(因为地面不动),下表面生热 Q₂=f₂·s木板。上下两个接触面的生热要分别计算,不能混合成一个相对位移来算。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光合作用与呼吸作用曲线分析 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>光合作用与呼吸作用曲线分析</h1>
+    <p class="lead">这一类题的题干换来换去(光照强度、CO₂浓度、温度、昼夜变化),但骨架永远是同一句话:<b>你测到的"净光合"不是植物真正制造的有机物量,真光合 = 净光合 + 呼吸消耗。</b>再加一条判断限制因素的通用逻辑——曲线还在<b>往上冲</b>,说明这个变量是"卡脖子"的那个;曲线已经<b>躺平</b>,说明别的因素才是瓶颈。把这两条吃透,这一类题基本封神。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 你拿传感器测到的"植物吸收了多少 CO₂""释放了多少 O₂",测的都是<b>净光合</b>——就是"光合作用做的减去呼吸作用花的"之后剩下的那一点。但植物真正靠光合作用<b>制造</b>了多少有机物(真光合/总光合),要把呼吸偷偷用掉的那部分<b>加回去</b>。公式就一句:<b>真光合 = 净光合 + 呼吸作用</b>,反过来<b>净光合 = 真光合 − 呼吸作用</b>。这道题的所有陷阱,几乎都是从"到底加没加呼吸"这个动作里长出来的。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>总(真)光合速率 = 净(表观)光合速率 + 呼吸作用速率</b>。黑暗中测到的 CO₂释放量/O₂消耗量 = 呼吸作用速率;光下测到的 CO₂净吸收量/O₂净释放量 = 净光合速率;两者相加才是真光合。<b>限制因素判断口诀:曲线在爬坡,自变量说了算;曲线已封顶,别的因素在卡脖子。</b></div>
+
+    <h2>① 净光合 vs 真光合:一加一减的关系</h2>
+    <div class="card">
+      <div class="eq">真(总)光合速率 = 净(表观)光合速率 + 呼吸作用速率</div>
+      <p style="margin:8px 0">植物细胞<b>时刻都在呼吸作用</b>(消耗有机物、消耗O₂、释放CO₂),而光合作用只在有光时进行。白天有光时,细胞内同时发生"光合制造"和"呼吸消耗"两件事,我们从<b>外界</b>能测到的气体变化,只是这两件事<b>相抵之后剩下的净差额</b>——这就是净光合(也叫表观光合)。</p>
+      <table>
+        <tr><th>速率名称</th><th>含义</th><th>怎么测</th></tr>
+        <tr><td><b>真(总)光合速率</b></td><td>光合作用实际制造有机物/消耗CO₂/释放O₂的速率</td><td>不能直接测,需要"净光合+呼吸"换算</td></tr>
+        <tr><td><b>净(表观)光合速率</b></td><td>真光合减去呼吸消耗后,细胞与外界实际交换的速率</td><td>光下直接测得(CO₂净吸收量/O₂净释放量)</td></tr>
+        <tr><td><b>呼吸作用速率</b></td><td>细胞呼吸消耗有机物/O₂、释放CO₂的速率</td><td>黑暗中测得(此时无光合,只有呼吸)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>换算口诀:</b> 净光合(测得的外界CO₂减少量/O₂增加量) <b>+</b> 呼吸作用(黑暗中测得的CO₂释放量/O₂消耗量) <b>=</b> 真光合。题目问"真正制造了多少有机物"——一定要把呼吸这部分<b>加回来</b>,因为呼吸偷偷用掉的有机物,细胞外根本看不出来。</p>
+      <p class="trap">⚠ 最高频失分点:题目问"光合作用制造的有机物总量(真光合)",却直接把"CO₂净吸收量"当答案交上去——漏加了呼吸消耗的那部分,少算了。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 1 — 净光合 = 真光合 − 呼吸:柱状分解(拖光照强度看三根柱子怎么联动)</div>
+      <svg id="barSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>光照强度 <input id="barLight" type="range" min="0" max="100" value="50" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>真光合速率</b><span id="barGross">0</span></div>
+        <div><b>呼吸速率</b><span id="barResp">0</span></div>
+        <div><b>净光合速率</b><span id="barNet">0</span></div>
+        <div><b>状态</b><span id="barState">-</span></div>
+      </div>
+      <p class="small">红柱=呼吸作用速率(固定不变,不随光照变化);蓝柱=真光合速率(随光照增强而升高,到一定强度封顶);黄柱=净光合=蓝−红。当蓝柱=红柱时,黄柱降到 0,这就是光补偿点。</p>
+    </div>
+
+    <h2 class="b">② 光补偿点与光饱和点</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>光补偿点:</b> 净光合速率 = 0 的光照强度,此时<b>真光合速率 = 呼吸作用速率</b>——光合制造的有机物恰好全部被呼吸消耗掉,细胞跟外界之间没有净的CO₂/O₂交换(但不代表光合作用没发生,只是"收支相抵")。</p>
+      <p style="margin:6px 0"><b>光饱和点:</b> 净光合速率不再随光照强度增大而升高的<b>最小</b>光照强度。此时光合速率已经被其他因素(通常是CO₂浓度、温度、酶数量、色素含量)限制住,再加光也没用。</p>
+      <div class="eq">光照强度 &lt; 光补偿点 → 净光合为负(白天也在耗有机物)</div>
+      <div class="eq">光照强度 = 光补偿点 → 净光合 = 0</div>
+      <div class="eq">光照强度 &gt; 光饱和点 → 净光合达到最大值,不再增加</div>
+      <p style="margin:8px 0"><b>阴生植物 vs 阳生植物:</b> 阴生植物(如吊兰)呼吸作用弱,光补偿点<b>低</b>,弱光下就能积累有机物;阳生植物呼吸作用强,光补偿点<b>高</b>,需要较强光照才能达到收支平衡。</p>
+      <p class="trap">⚠ 光补偿点不是"光合作用停止"的点,而是"净光合为零"的点——真光合仍在正常进行,只是全被呼吸抵消了。别把"净光合=0"误读成"光合作用=0"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 2 — 光照强度-光合速率曲线:拖动光照强度,同时看净光合与真光合两条线</div>
+      <svg id="lightSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>光照强度 <input id="lightX" type="range" min="0" max="100" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>真光合速率</b><span id="lGross">0</span></div>
+        <div><b>净光合速率</b><span id="lNet">0</span></div>
+        <div><b>呼吸速率(不变)</b><span id="lResp">0</span></div>
+        <div><b>所处位置</b><span id="lPos">-</span></div>
+      </div>
+      <p class="small">蓝色实线=真光合速率(从0开始随光照上升,到光饱和点后封顶);橙色虚线=净光合速率(=蓝线−呼吸,与横轴的交点就是<b>光补偿点</b>);两线之间的竖直距离恒等于呼吸作用速率。</p>
+    </div>
+
+    <h2 class="g">③ CO₂补偿点与CO₂饱和点</h2>
+    <div class="card">
+      <p style="margin:6px 0">道理跟光照完全对称,只是自变量换成<b>CO₂浓度</b>(其余条件,如光照、温度不变)。</p>
+      <table>
+        <tr><th>概念</th><th>含义</th></tr>
+        <tr><td><b>CO₂补偿点</b></td><td>净光合速率=0时的CO₂浓度,此时真光合=呼吸,细胞对外没有净CO₂交换</td></tr>
+        <tr><td><b>CO₂饱和点</b></td><td>净光合速率不再随CO₂浓度升高而增大的最小CO₂浓度,此时光合被其他因素(光照、温度、酶)限制</td></tr>
+      </table>
+      <p style="margin:8px 0">CO₂浓度<b>低于</b>CO₂补偿点时,光合制造的有机物不够呼吸消耗,细胞净损耗有机物;CO₂浓度<b>升高</b>会使CO₂补偿点、光补偿点都发生变化——温室大棚"通CO₂"提高产量,本质就是抬高CO₂浓度让净光合曲线整体上移。</p>
+      <p class="trap">⚠ CO₂补偿点、光补偿点是两个独立的坐标点,不能混着比较;题目问"CO₂补偿点对应的光照强度是多少"要看清楚题干给的是哪张曲线图、横轴是什么。</p>
+    </div>
+
+    <h2 class="o">④ 限制因素判断:看曲线的"坡"还是"平台"</h2>
+    <div class="card">
+      <div class="eq">曲线上升段 → 该自变量(横轴)是限制因素</div>
+      <div class="eq">曲线平台段(已封顶)→ 其他因素是限制因素(非横轴变量)</div>
+      <p style="margin:8px 0">这是整个专题最核心的判断逻辑,原理很简单:如果继续增大横轴变量,速率还在<b>跟着涨</b>,说明这个变量还没给够,它就是当前的"卡脖子"因素;如果继续增大横轴变量,速率<b>不再变化</b>(封顶/平台),说明限制已经转移到了其他条件——可能是CO₂浓度不够、温度不适宜、酶数量有限、色素含量不足等。</p>
+      <table>
+        <tr><th>曲线所处位置</th><th>限制因素是谁</th><th>常见追问</th></tr>
+        <tr><td>上升段(光照↑,速率↑)</td><td>光照强度本身</td><td>加光照,速率会继续升</td></tr>
+        <tr><td>平台段(光照↑,速率不变)</td><td>CO₂浓度、温度、酶(色素)等</td><td>加光照没用,要加CO₂或调温才能突破</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>解题动作:</b> ① 先看题目问的自变量对应曲线的哪一段;② 上升段直接回答"该自变量";③ 平台段要回答"除该自变量外的其他环境因素",常需结合题干提示(温度、CO₂浓度、光合色素含量等)具体点名。</p>
+      <p class="trap">⚠ 常见判断反的错误:看到曲线已经平台,却仍答"光照强度不足"——平台恰恰说明光照已经<b>足够</b>,继续加光没有意义,真正卡脖子的是别的条件。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 3 — 限制因素切换:改变光照/CO₂/温度,看曲线拐点怎么移动</div>
+      <svg id="limitSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="limitBtn on" data-f="co2">↑ 增大CO₂浓度</button>
+        <button class="limitBtn" data-f="temp">↑ 调到最适温度</button>
+        <button class="limitBtn" data-f="reset">↺ 还原</button>
+      </div>
+      <div class="verdict" id="limitNote"></div>
+      <p class="small">灰色曲线=原曲线(平台较低、较早封顶);彩色曲线=改变CO₂或温度后的新曲线。可以看到:平台段抬高了,说明原来限制光合的确实是CO₂浓度/温度,而不是光照——这就是"平台段找别的因素"的直观证据。</p>
+    </div>
+
+    <h2 class="v">⑤ 昼夜有机物积累:白天净光合,夜晚只呼吸</h2>
+    <div class="card">
+      <p style="margin:6px 0">一天24小时,植物细胞的呼吸作用<b>从不停止</b>;光合作用只在<b>有光的白天</b>进行。所以:</p>
+      <table>
+        <tr><th>时段</th><th>发生的过程</th><th>有机物变化</th></tr>
+        <tr><td>白天(有光)</td><td>光合+呼吸同时进行</td><td>净积累 = 净光合速率 × 白天时长(若净光合&gt;0)</td></tr>
+        <tr><td>夜晚(无光)</td><td>只有呼吸作用</td><td>净消耗 = 呼吸速率 × 夜晚时长</td></tr>
+      </table>
+      <div class="eq">一昼夜有机物净变化 = 白天净光合总量 − 夜间呼吸消耗总量</div>
+      <p style="margin:8px 0"><b>判断"一昼夜是否净积累有机物"的标准动作:</b> 分别算出"白天净光合总量"(白天净光合速率对时间积分,即曲线与横轴之间白天部分的面积)和"夜间呼吸消耗总量"(夜间呼吸速率×夜长,即夜晚那部分面积),两者相减:结果为正→净积累,为负→净消耗(即使白天在长,入不敷出照样掉重)。</p>
+      <p style="margin:8px 0"><b>图像上看:</b> 白天净光合曲线在横轴<b>上方</b>围成的面积代表白天积累的有机物;夜晚呼吸消耗对应横轴<b>下方</b>(或延伸的负值段)围成的面积。比较两块面积的大小,就是比较"存的"和"花的"谁多。</p>
+      <p class="trap">⚠ 常见算错:只看"白天净光合曲线在不在0以上"就下结论"净积累",却忘了要拿白天积累的总量去<b>减掉</b>整晚的呼吸消耗——如果夜长且呼吸旺盛,完全可能白天赚的还不够晚上亏的。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌗 互动 4 — 昼夜有机物积累曲线:面积法判断一昼夜是净积累还是净消耗</div>
+      <svg id="dayNightSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>白天净光合强度 <input id="dnDay" type="range" min="0" max="10" value="6" step="0.5"></label>
+        <label>夜晚呼吸强度 <input id="dnNight" type="range" min="1" max="10" value="4" step="0.5"></label>
+        <label>白天时长(h) <input id="dnHours" type="range" min="6" max="16" value="12" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>白天净积累总量</b><span id="dnGain">0</span></div>
+        <div><b>夜间消耗总量</b><span id="dnLoss">0</span></div>
+        <div><b>一昼夜净变化</b><span id="dnTotal">0</span></div>
+        <div><b>结论</b><span id="dnVerdict">-</span></div>
+      </div>
+      <p class="small">绿色阴影(横轴上方)=白天净光合累积的有机物;红色阴影(横轴下方)=夜晚呼吸消耗的有机物。拖动滑块看两块面积的拔河结果——面积相减才是"一昼夜到底是攒了还是亏了"。</p>
+    </div>
+
+    <h2 class="b">⑥ 黑白瓶法:三个瓶子推出真光合</h2>
+    <div class="card">
+      <p style="margin:6px 0">测定水生植物(如藻类)光合/呼吸速率的经典方法。取同一水体,分装三个瓶子:</p>
+      <table>
+        <tr><th>瓶子</th><th>处理</th><th>放置后测到的变化</th></tr>
+        <tr><td><b>初始瓶</b></td><td>立即测定,不放置</td><td>作为初始O₂/CO₂浓度基准</td></tr>
+        <tr><td><b>白瓶(透光)</b></td><td>放入原水层,光照下放置一段时间</td><td>O₂变化 = 净光合释放O₂ − 呼吸消耗O₂ = <b>净光合</b>的O₂净释放量</td></tr>
+        <tr><td><b>黑瓶(遮光)</b></td><td>完全避光放置同样时间</td><td>O₂减少量 = <b>呼吸作用</b>消耗的O₂量(黑暗中无光合)</td></tr>
+      </table>
+      <div class="eq">真光合(O₂产生总量) = 白瓶O₂增加量 + 黑瓶O₂减少量</div>
+      <p style="margin:8px 0"><b>换算逻辑:</b> 白瓶最终O₂ − 初始O₂ = 净光合释放的O₂(净光合速率);黑瓶初始O₂ − 黑瓶最终O₂ = 呼吸消耗的O₂(呼吸速率);把这两个数<b>相加</b>就得到真光合释放的O₂总量。同样的逻辑也能用CO₂变化来做(白瓶CO₂净减少=净光合,黑瓶CO₂增加=呼吸)。</p>
+      <p class="trap">⚠ 别把"黑瓶"当成没有变化的对照——黑瓶里呼吸作用照常进行,O₂照样在减少,这份减少量恰恰是拿来加回真光合的关键数据,不能漏掉或看错方向。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🍾 互动 5 — 黑白瓶实验:白瓶净光合、黑瓶呼吸、推算真光合</div>
+      <svg id="bottleSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>净光合速率(白瓶O₂↑) <input id="btWhite" type="range" min="1" max="10" value="6" step="0.5"></label>
+        <label>呼吸速率(黑瓶O₂↓) <input id="btBlack" type="range" min="1" max="8" value="3" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>白瓶O₂变化</b><span id="btW">0</span></div>
+        <div><b>黑瓶O₂变化</b><span id="btB">0</span></div>
+        <div><b>真光合O₂总量</b><span id="btG">0</span></div>
+        <div><b>换算式</b><span id="btEq">-</span></div>
+      </div>
+      <p class="small">三个瓶子并排:初始瓶(灰,基准线)、白瓶(蓝,液面比初始<b>升高</b>=净光合释放O₂)、黑瓶(黑,液面比初始<b>降低</b>=呼吸消耗O₂)。真光合 = 白瓶升高量 + 黑瓶降低量。</p>
+    </div>
+
+    <h2 class="g">⑦ 温度对光合与呼吸的不同影响</h2>
+    <div class="card">
+      <p style="margin:6px 0">温度通过影响<b>酶的活性</b>同时作用于光合作用(暗反应中的酶)和呼吸作用(呼吸酶),但两者的最适温度、对高温的敏感度<b>不一定相同</b>,题目常借此设置"温度升高,净光合反而下降"的曲线。</p>
+      <table>
+        <tr><th>温度变化</th><th>对光合速率的影响</th><th>对呼吸速率的影响</th><th>对净光合的影响</th></tr>
+        <tr><td>低温→适宜温度</td><td>酶活性增强,速率上升</td><td>酶活性增强,速率上升</td><td>通常净光合也上升(光合升幅更大)</td></tr>
+        <tr><td>超过最适温度继续升高</td><td>酶变性,光合速率<b>下降</b></td><td>呼吸酶耐受性通常更强,呼吸速率可能仍在上升或降幅更小</td><td>净光合可能<b>加速下降</b>(光合降、呼吸升,双向夹击)</td></tr>
+        <tr><td>0℃左右(接近冰点)</td><td>光合趋近于0</td><td>呼吸微弱但仍进行</td><td>净光合为负(只出不进)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>黑暗中只进行呼吸作用</b>——没有光反应提供的[H]和ATP,暗反应无法制造有机物,此时测到的气体变化<b>纯粹就是呼吸作用</b>,这也是黑瓶法、"黑暗中CO₂释放量"能直接代表呼吸速率的理论依据。</p>
+      <p class="trap">⚠ 不要默认"温度越高光合越强"——超过最适温度后光合速率会因酶变性而下降,而呼吸作用对高温相对更耐受,此时净光合下降的速度会比单看光合曲线更快。</p>
+    </div>
+
+    <h2 class="r">⑧ 多因素交互:先增后平台的普遍规律</h2>
+    <div class="card">
+      <p style="margin:6px 0">真实情境往往是<b>多个因素同时起作用</b>——光照、CO₂浓度、温度中的任意一个先增大,速率都会先上升,直到被另一个因素"接管"限制而进入平台。看图时要问自己:<b>当前哪个因素在变?曲线是在爬坡还是已经躺平?</b></p>
+      <div class="eq">速率 = min(光照所能支持的速率, CO₂所能支持的速率, 温度所能支持的速率, …)</div>
+      <p style="margin:8px 0">可以把光合速率想象成被"最短的那块木板"卡住(类似木桶效应):无论其他因素多充裕,只要有一个因素不够,速率就卡在那个因素能支持的水平上。想突破平台,必须从<b>正在限制的那个因素</b>下手,单独加大其他因素没有意义。</p>
+      <p class="trap">⚠ 多因素图像题最容易犯的错:看到一条线两次拐弯,却只用一种因素解释全程——正确做法是把曲线分段,每一段单独判断"这一段谁在限制"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌐 互动 6 — 多因素交互曲线:同时调光照与CO₂浓度,观察哪个先"卡脖子"</div>
+      <svg id="multiSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>光照强度 <input id="mLight" type="range" min="0" max="100" value="60" step="1"></label>
+        <label>CO₂浓度 <input id="mCo2" type="range" min="0" max="100" value="60" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>光照能支持的速率</b><span id="mLightRate">0</span></div>
+        <div><b>CO₂能支持的速率</b><span id="mCo2Rate">0</span></div>
+        <div><b>实际光合速率</b><span id="mActual">0</span></div>
+        <div><b>当前限制因素</b><span id="mLimit">-</span></div>
+      </div>
+      <p class="small">蓝虚线=光照单独能支持的最高速率,绿虚线=CO₂单独能支持的最高速率,实心橙线=两者取较小值(木桶效应)。哪根虚线更低,谁就是当前的限制因素。</p>
+    </div>
+
+    <h2 class="o">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 净光合/真光合换算</h3>
+      <p><b class="tag">触发信号:</b>「测得CO₂吸收量/O₂释放量」「求真正光合作用制造的有机物」「呼吸作用消耗了多少」同时出现。</p>
+      <p><b class="tag">标准动作:</b>先判断题目给的数据是"光下测得"(=净光合)还是"暗处测得"(=呼吸)。真光合=净光合+呼吸;净光合=真光合−呼吸,按需换算,注意单位统一(CO₂/O₂/有机物质量之间可能需换算)。</p>
+      <p><b class="tag">示例(带解):</b>某植物光下每小时净吸收CO₂ 8mg,黑暗中每小时释放CO₂ 2mg。真光合速率(以CO₂计)=净光合+呼吸=8+2=10mg/h。若求呼吸消耗占真光合比例:2/10=20%。</p>
+      <p class="trap">陷阱:直接把净光合当真光合;漏加或加错呼吸值;暗处数据当成光下净光合来用。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 光补偿点/饱和点(CO₂同理)识别与应用</h3>
+      <p><b class="tag">触发信号:</b>给出光合速率-光照强度曲线,问"光补偿点对应的光照强度""此时呼吸速率是多少"。</p>
+      <p><b class="tag">标准动作:</b>光补偿点=净光合曲线与横轴的交点,此时真光合=呼吸;光饱和点=净光合曲线开始走平的最小横坐标。读图找交点/拐点即可,呼吸速率=光照强度为0时净光合的绝对值(黑暗中的读数)。</p>
+      <p><b class="tag">示例(带解):</b>某曲线在光照强度为0时净光合速率为−3(单位CO₂mg/h·100cm²叶),说明呼吸速率为3;曲线在光照强度2klx处与横轴相交,则光补偿点为2klx,此时真光合=呼吸=3。</p>
+      <p class="trap">陷阱:把"光照强度为0"处的负值直接当净光合(其实要取绝对值理解为呼吸速率);把光饱和点等同于光补偿点。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 限制因素判断(上升段/平台段)</h3>
+      <p><b class="tag">触发信号:</b>给出速率随某因素(光照/CO₂/温度)变化的曲线,问"此时限制光合速率的主要因素是"。</p>
+      <p><b class="tag">标准动作:</b>看该点是否在曲线的上升段还是平台段。上升段→自变量本身是限制因素;平台段→回答"其他环境因素"(结合题干具体点名CO₂浓度/温度/酶/色素等),并可用"若同时增大另一因素,平台是否被抬高"来验证。</p>
+      <p><b class="tag">示例(带解):</b>光照强度从0增至4klx过程中光合速率一直上升,4klx后维持不变。问4klx时限制因素:因为已进入平台段,不再是光照,而是CO₂浓度或温度等其他因素;问2klx时限制因素:此时仍在上升段,是光照强度本身。</p>
+      <p class="trap">陷阱:平台段仍答"光照不足";上升段却去猜"CO₂不够";忽略题干是否已明确其他条件为"适宜且充足"。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 昼夜有机物积累量计算</h3>
+      <p><b class="tag">触发信号:</b>给出一天中净光合速率随时间变化的曲线(含负值段代表夜晚呼吸),问"一昼夜有机物是增加还是减少""哪个时刻积累量最大"。</p>
+      <p><b class="tag">标准动作:</b>面积法——白天净光合曲线在横轴上方部分的面积(对时间积分)为积累量,夜晚(或曲线在横轴下方)部分的面积为消耗量,两者相减得一昼夜净变化。积累量最大的时刻通常是"由正转负"那一刻(即傍晚净光合刚好为0之前)。</p>
+      <p><b class="tag">示例(带解):</b>白天净光合速率均值为4(单位/h),持续12小时;夜晚呼吸速率为3(单位/h),持续12小时。白天净积累=4×12=48;夜晚消耗=3×12=36;一昼夜净变化=48−36=+12,净积累。有机物积累量最大出现在光照将熄、净光合刚降为0的时刻(此后转为纯消耗)。</p>
+      <p class="trap">陷阱:只看"白天净光合是正的"就断定"整体在积累",不去减夜间消耗;把"有机物积累量最大的时刻"误认为是净光合速率最大的中午。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 黑白瓶法数据处理</h3>
+      <p><b class="tag">触发信号:</b>题干出现「黑瓶」「白瓶」「初始瓶」「放入原水层」等实验描述,给O₂或CO₂浓度数据。</p>
+      <p><b class="tag">标准动作:</b>净光合(O₂)=白瓶末−初始瓶;呼吸(O₂)=初始瓶−黑瓶末(即黑瓶中O₂的减少量);真光合(O₂)=净光合+呼吸=白瓶末−黑瓶末。三者关系一步到位。</p>
+      <p><b class="tag">示例(带解):</b>初始瓶O₂=8mg/L,白瓶放置后O₂=12mg/L,黑瓶放置后O₂=5mg/L。净光合=12−8=4;呼吸=8−5=3;真光合=4+3=7(或直接用白瓶末−黑瓶末=12−5=7,验证一致)。</p>
+      <p class="trap">陷阱:黑瓶数据方向搞反(以为黑瓶O₂应该升高);漏掉初始瓶,直接拿白瓶减黑瓶当净光合(那其实是真光合的简便算法,不是净光合)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 温度/多因素综合分析</h3>
+      <p><b class="tag">触发信号:</b>给出光合速率、呼吸速率分别随温度变化的两条曲线,或要求综合光照、CO₂、温度多个变量分析净光合变化。</p>
+      <p><b class="tag">标准动作:</b>净光合=光合曲线纵坐标−呼吸曲线纵坐标(逐点相减),画出净光合的第三条曲线;找净光合最大值对应的温度(不一定是光合速率最大的温度,因为呼吸也在变)。多因素题按"木桶效应"逐个判断谁是短板。</p>
+      <p><b class="tag">示例(带解):</b>某温度下光合速率10、呼吸速率2,净光合=8;温度升高5℃后光合速率降为8(酶开始变性)、呼吸速率升为4,净光合=4。可见净光合的最适温度低于光合速率本身的最适温度。</p>
+      <p class="trap">陷阱:认为净光合最大值一定出现在光合速率最大值处;只看光合曲线不管呼吸曲线的变化趋势。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 净光合 ≠ 真光合!净光合是"外界能测到的",真光合要<b>加上呼吸消耗</b>才对:真光合=净光合+呼吸。</p>
+      <p class="trap">② 光补偿点是净光合=0,不是"光合作用停止"——此时真光合仍在正常进行,只是恰好被呼吸全部抵消。</p>
+      <p class="trap">③ 判断限制因素别看反:曲线<b>上升段</b>→自变量本身限制;曲线<b>平台段</b>→限制因素已转移到别的条件,不是自变量。</p>
+      <p class="trap">④ 判断"一昼夜是否净积累"必须<b>面积相减</b>(白天净光合总量−夜间呼吸总量),不能只看白天是不是正数。</p>
+      <p class="trap">⑤ 黑瓶不是"没变化"的对照,黑瓶里O₂照样在<b>减少</b>(呼吸消耗),这份数据要加回真光合里。</p>
+      <p class="trap">⑥ 黑暗中<b>只有呼吸作用</b>,没有光合作用;因此暗处测得的CO₂释放量/O₂消耗量就是呼吸速率,可以直接用。</p>
+      <p class="trap">⑦ 温度对光合和呼吸的影响<b>不同步</b>:超过最适温度,光合因酶变性下降更快,呼吸可能仍较强,净光合会加速下滑。</p>
+      <p class="trap">⑧ CO₂补偿点/饱和点与光补偿点/饱和点是两套独立的坐标,不要在读图时把横轴认错。</p>
+      <p class="trap">⑨ "净光合最大值对应的温度"不等于"光合速率最大值对应的温度"——一定要看净光合(光合减呼吸)这条曲线本身。</p>
+      <p class="trap">⑩ 多因素同时变化时,速率由<b>最短板</b>的那个因素决定,单独增大其他充裕的因素没有意义(木桶效应)。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 净光合/真光合本质是"记账口径"问题:</b> 细胞内光合和呼吸是两条独立进行的代谢通路,外界只能看到"资金流水的净额"。凡是题目给的是"细胞与外界的物质交换量"(CO₂/O₂变化),拿到的都是净光合;凡是要问"真正生产了多少",都要把呼吸这笔"隐藏支出"加回来。把这个"账本比喻"吃透,任何换算式都能秒推,不用死记。</p>
+      <p style="margin:8px 0"><b>② 限制因素分析本质是"偏导数"思维:</b> 曲线在某点对自变量的斜率不为0(上升段),说明速率对这个变量敏感,它是瓶颈;斜率为0(平台段),说明对这个变量已经"免疫",瓶颈转移到了未被列为横轴的变量身上。这也是为什么同一个实验换一个自变量重新作图,平台的高度会不同——平台高度记录的正是"另一个因素"的供给上限。</p>
+      <p style="margin:8px 0"><b>③ 昼夜积累是"净光合对时间的积分":</b> 别死记"白天速率×时长−夜晚速率×时长"这种匀速简化公式,遇到净光合速率本身在白天也是曲线(如中午前后先升后降)的题,要理解成"曲线与坐标轴围成的面积"才是真正的积累量——公式只是"面积恰好是矩形"时的特例。</p>
+      <p style="margin:8px 0"><b>④ 黑白瓶法的核心是"控制变量+可加性":</b> 黑瓶隔离出纯呼吸,白瓶保留光合+呼吸的叠加效果,两者是同一体系在"有光/无光"两种条件下的独立测量,因为呼吸速率在短时间内可视为不变,所以两组数据可以直接相加减——这正是它能拆分出"真光合"这个不可直接测量物理量的原因。</p>
+      <p style="margin:8px 0"><b>⑤ 温度双刃剑效应是命题人偏爱的"陷阱制造机":</b> 只要看到题目同时给了"光合酶最适温度"和"呼吸酶最适温度"两个不同的数值,几乎可以确定它是想考"净光合最适温度介于两者之间、且更靠近光合最适温度略低一侧"这种细节——遇到这种题,先把光合曲线和呼吸曲线都草绘出来,再逐点相减找净光合的峰值,不要凭直觉猜。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 主题:光合作用与呼吸作用曲线分析</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:净光合=真光合-呼吸 柱状分解 ===== */
+(function(){
+  const svg=document.getElementById('barSvg');
+  const Ls=document.getElementById('barLight');
+  const oGross=document.getElementById('barGross'),oResp=document.getElementById('barResp'),oNet=document.getElementById('barNet'),oState=document.getElementById('barState');
+  const RESP=4; // fixed respiration rate
+  function grossOf(light){ // saturating curve
+    const Lsat=70;
+    return 12*Math.min(1,light/Lsat);
+  }
+  function draw(){
+    const light=+Ls.value;
+    const gross=grossOf(light);
+    const net=gross-RESP;
+    clr(svg);
+    const baseY=230,scale=14;
+    const bars=[
+      {x:120,val:gross,col:BLUE,lab:'真光合'},
+      {x:320,val:RESP,col:RED,lab:'呼吸'},
+      {x:520,val:net,col:YEL,lab:'净光合'}
+    ];
+    el(svg,'line',{x1:40,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    bars.forEach(b=>{
+      const h=Math.abs(b.val)*scale;
+      const y=b.val>=0?baseY-h:baseY;
+      el(svg,'rect',{x:b.x-45,y:y,width:90,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x,y:b.val>=0?y-10:baseY+h+22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.val.toFixed(1);
+      el(svg,'text',{x:b.x,y:baseY+22,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+    });
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='真光合 = 呼吸 + 净光合　(净光合 = 真光合 − 呼吸)';
+    oGross.textContent=gross.toFixed(1);oResp.textContent=RESP.toFixed(1);oNet.textContent=net.toFixed(1);
+    oState.textContent = net>0.05 ? '净积累' : (net<-0.05 ? '净消耗' : '光补偿点');
+  }
+  Ls.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:光照强度-光合速率曲线,真光合/净光合两线 ===== */
+(function(){
+  const svg=document.getElementById('lightSvg');
+  const Xs=document.getElementById('lightX');
+  const oGross=document.getElementById('lGross'),oNet=document.getElementById('lNet'),oResp=document.getElementById('lResp'),oPos=document.getElementById('lPos');
+  const RESP=3;
+  const Lsat=65;
+  function grossOf(x){return 13*Math.min(1,x/Lsat);}
+  function draw(){
+    const X0=60,Y0=40,W=580,H=200,baseY=Y0+H*0.6;
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='光照强度';
+    el(svg,'text',{x:X0-10,y:Y0+10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='速率';
+    const xs=W/100,ys=9;
+    // gross curve (blue solid)
+    let gp=[],np=[];
+    for(let x=0;x<=100;x+=2){
+      const g=grossOf(x),n=g-RESP;
+      gp.push((X0+x*xs)+','+(baseY-g*ys));
+      np.push((X0+x*xs)+','+(baseY-n*ys));
+    }
+    el(svg,'polyline',{points:gp.join(' '),fill:'none',stroke:BLUE,'stroke-width':4});
+    el(svg,'polyline',{points:np.join(' '),fill:'none',stroke:ORANGE,'stroke-width':4,'stroke-dasharray':'8 5'});
+    // compensation point marker: g=RESP -> n=0
+    const compX = RESP/13*Lsat;
+    el(svg,'circle',{cx:X0+compX*xs,cy:baseY,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+compX*xs,y:baseY+20,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='光补偿点';
+    // saturation marker
+    el(svg,'line',{x1:X0+Lsat*xs,y1:Y0,x2:X0+Lsat*xs,y2:baseY,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+Lsat*xs,y:Y0-6,'font-size':11.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='光饱和点';
+    el(svg,'text',{x:X0+10,y:Y0+18,'font-size':12,'font-weight':900,fill:BLUE}).textContent='— 真光合';
+    el(svg,'text',{x:X0+110,y:Y0+18,'font-size':12,'font-weight':900,fill:ORANGE}).textContent='- - 净光合';
+    // current x marker
+    const x=+Xs.value;
+    const g=grossOf(x),n=g-RESP;
+    el(svg,'line',{x1:X0+x*xs,y1:Y0,x2:X0+x*xs,y2:baseY+40,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'circle',{cx:X0+x*xs,cy:baseY-g*ys,r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:X0+x*xs,cy:baseY-n*ys,r:6,fill:ORANGE,stroke:INK,'stroke-width':2});
+    oGross.textContent=g.toFixed(1);oNet.textContent=n.toFixed(1);oResp.textContent=RESP.toFixed(1);
+    oPos.textContent = x<compX-1 ? '补偿点以下(净消耗)' : (x>=Lsat ? '饱和点以上(平台)' : '上升段');
+  }
+  Xs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:限制因素切换 ===== */
+(function(){
+  const svg=document.getElementById('limitSvg');const note=document.getElementById('limitNote');
+  let mode='co2';
+  document.querySelectorAll('.limitBtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.limitBtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.f;draw();
+  });
+  function curve(satVal,riseK){
+    let pts=[];
+    for(let x=0;x<=100;x+=2){
+      const v=satVal*Math.min(1,x/(satVal>10?60:60)*riseK);
+      pts.push([x,Math.min(satVal, (satVal/60)*x*1.6)]);
+    }
+    return pts;
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=220,baseY=Y0+H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='光照强度';
+    el(svg,'text',{x:X0-10,y:Y0+10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='光合速率';
+    const xs=W/100,ys=14;
+    // original curve: saturates at 8, at x=40
+    function orig(x){return 8*Math.min(1,x/40);}
+    let op=[];
+    for(let x=0;x<=100;x+=2){op.push((X0+x*xs)+','+(baseY-orig(x)*ys));}
+    el(svg,'polyline',{points:op.join(' '),fill:'none',stroke:'#999', 'stroke-width':4});
+    el(svg,'text',{x:X0+70*xs,y:baseY-orig(70)*ys-10,'font-size':12,'font-weight':900,fill:'#777'}).textContent='原曲线(灰,较早封顶)';
+    let desc,col,newFn,newSatX;
+    if(mode==='co2'){
+      newFn=x=>12*Math.min(1,x/55);
+      col=GREEN;desc='增大CO₂浓度后,平台被抬高、封顶推迟——说明原来的平台是被CO₂浓度卡住的,不是光照的锅。';
+    } else if(mode==='temp'){
+      newFn=x=>11*Math.min(1,x/50);
+      col=ORANGE;desc='调到最适温度后,平台同样被抬高——说明原来的平台也可能是温度(酶活性)不够导致的。';
+    } else {
+      newFn=null;desc='还原:只有原曲线。观察上升段(光照本身限制)与平台段(其他因素限制)的分界点。';
+    }
+    if(newFn){
+      let np=[];
+      for(let x=0;x<=100;x+=2){np.push((X0+x*xs)+','+(baseY-newFn(x)*ys));}
+      el(svg,'polyline',{points:np.join(' '),fill:'none',stroke:col,'stroke-width':4});
+    }
+    // rising segment marker & plateau marker on original
+    el(svg,'text',{x:X0+15*xs,y:baseY-orig(15)*ys-14,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='上升段→光照是限制因素';
+    el(svg,'text',{x:X0+70*xs,y:baseY-orig(70)*ys+22,'font-size':11.5,'font-weight':900,fill:RED}).textContent='平台段→其他因素限制';
+    note.innerHTML='👉 '+desc;
+    note.style.borderColor=mode==='reset'?INK:col;
+  }
+  draw();
+})();
+
+/* ===== 互动4:昼夜有机物积累 ===== */
+(function(){
+  const svg=document.getElementById('dayNightSvg');
+  const Ds=document.getElementById('dnDay'),Ns=document.getElementById('dnNight'),Hs=document.getElementById('dnHours');
+  const oGain=document.getElementById('dnGain'),oLoss=document.getElementById('dnLoss'),oTotal=document.getElementById('dnTotal'),oVerdict=document.getElementById('dnVerdict');
+  function draw(){
+    const day=+Ds.value,night=+Ns.value,hoursDay=+Hs.value,hoursNight=24-hoursDay;
+    const gain=day*hoursDay, loss=night*hoursNight, total=gain-loss;
+    clr(svg);
+    const X0=50,Y0=30,W=600,H=220,baseY=Y0+H*0.55;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='时间(24h)';
+    const totalW=W;
+    const dayW=(hoursDay/24)*totalW, nightW=(hoursNight/24)*totalW;
+    const ys=8;
+    // day rectangle (green, above axis)
+    const dayH=day*ys;
+    el(svg,'rect',{x:X0,y:baseY-dayH,width:dayW,height:dayH,fill:'rgba(30,158,134,0.30)',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:X0+dayW/2,y:baseY-dayH-8,'font-size':12.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='白天净光合='+day+'/h × '+hoursDay+'h';
+    // night rectangle (red, below axis)
+    const nightH=night*ys;
+    el(svg,'rect',{x:X0+dayW,y:baseY,width:nightW,height:nightH,fill:'rgba(224,56,42,0.30)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X0+dayW+nightW/2,y:baseY+nightH+22,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='夜晚呼吸='+night+'/h × '+hoursNight+'h';
+    el(svg,'text',{x:X0,y:Y0-8,'font-size':13,'font-weight':900,fill:INK}).textContent='绿色面积(白天积累) vs 红色面积(夜晚消耗)——相减得一昼夜净变化';
+    oGain.textContent=gain.toFixed(1);oLoss.textContent=loss.toFixed(1);oTotal.textContent=total.toFixed(1);
+    oVerdict.textContent = total>0.05?'一昼夜净积累':(total<-0.05?'一昼夜净消耗':'收支持平');
+  }
+  Ds.oninput=Ns.oninput=Hs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:黑白瓶法 ===== */
+(function(){
+  const svg=document.getElementById('bottleSvg');
+  const Ws=document.getElementById('btWhite'),Bs=document.getElementById('btBlack');
+  const oW=document.getElementById('btW'),oB=document.getElementById('btB'),oG=document.getElementById('btG'),oEq=document.getElementById('btEq');
+  const initO2=10;
+  function draw(){
+    const netLight=+Ws.value, resp=+Bs.value;
+    const whiteO2=initO2+netLight;
+    const blackO2=initO2-resp;
+    const gross=netLight+resp;
+    clr(svg);
+    const baseY=210,scale=8;
+    const bottles=[
+      {x:130,val:initO2,label:'初始瓶',col:'#999'},
+      {x:350,val:whiteO2,label:'白瓶(光下)',col:BLUE},
+      {x:570,val:blackO2,label:'黑瓶(遮光)',col:INK}
+    ];
+    // baseline reference
+    el(svg,'line',{x1:60,y1:baseY-initO2*scale,x2:660,y2:baseY-initO2*scale,stroke:'#999','stroke-width':2,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:660,y:baseY-initO2*scale-8,'font-size':11.5,'font-weight':800,fill:'#777','text-anchor':'end'}).textContent='初始O₂基准线';
+    bottles.forEach(b=>{
+      const h=b.val*scale;
+      el(svg,'rect',{x:b.x-40,y:baseY-h,width:80,height:h,fill:b.col,opacity:0.75,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x,y:baseY-h-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='O₂='+b.val.toFixed(1);
+      el(svg,'text',{x:b.x,y:baseY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.label;
+    });
+    el(svg,'line',{x1:60,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    oW.textContent='+'+netLight.toFixed(1)+'(净光合)';
+    oB.textContent='-'+resp.toFixed(1)+'(呼吸)';
+    oG.textContent=gross.toFixed(1);
+    oEq.textContent='净光合('+netLight.toFixed(1)+')+呼吸('+resp.toFixed(1)+')='+gross.toFixed(1);
+  }
+  Ws.oninput=Bs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:多因素交互(木桶效应) ===== */
+(function(){
+  const svg=document.getElementById('multiSvg');
+  const Ls=document.getElementById('mLight'),Cs=document.getElementById('mCo2');
+  const oL=document.getElementById('mLightRate'),oC=document.getElementById('mCo2Rate'),oA=document.getElementById('mActual'),oLim=document.getElementById('mLimit');
+  function lightRate(x){return 14*Math.min(1,x/80);}
+  function co2Rate(x){return 14*Math.min(1,x/80);}
+  function draw(){
+    const lx=+Ls.value, cx=+Cs.value;
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=210,baseY=Y0+H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='强度(通用刻度)';
+    const xs=W/100, ys=12;
+    let lp=[],cp=[],ap=[];
+    for(let x=0;x<=100;x+=2){
+      const lr=lightRate(x), cr=co2Rate(x);
+      lp.push((X0+x*xs)+','+(baseY-lr*ys));
+      cp.push((X0+x*xs)+','+(baseY-cr*ys));
+    }
+    el(svg,'polyline',{points:lp.join(' '),fill:'none',stroke:BLUE,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'polyline',{points:cp.join(' '),fill:'none',stroke:GREEN,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+10,y:Y0+14,'font-size':12,'font-weight':900,fill:BLUE}).textContent='- - 光照能支持的速率';
+    el(svg,'text',{x:X0+10,y:Y0+30,'font-size':12,'font-weight':900,fill:GREEN}).textContent='- - CO₂能支持的速率';
+    const lr=lightRate(lx), cr=co2Rate(cx);
+    const actual=Math.min(lr,cr);
+    // actual point marker (orange)
+    const markX = X0 + Math.min(lx,cx)*xs;
+    el(svg,'circle',{cx:X0+lx*xs,cy:baseY-lr*ys,r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:X0+cx*xs,cy:baseY-cr*ys,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:X0,y1:baseY-actual*ys,x2:X0+W,y2:baseY-actual*ys,stroke:ORANGE,'stroke-width':4});
+    el(svg,'text',{x:X0+W-10,y:baseY-actual*ys-8,'font-size':13,'font-weight':900,fill:ORANGE,'text-anchor':'end'}).textContent='实际速率='+actual.toFixed(1)+'(取较小值)';
+    oL.textContent=lr.toFixed(1);oC.textContent=cr.toFixed(1);oA.textContent=actual.toFixed(1);
+    oLim.textContent = lr<cr ? '光照(短板)' : (cr<lr ? 'CO₂(短板)' : '两者相当');
+  }
+  Ls.oninput=Cs.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 真光合速率与净光合速率的关系是什么?外界CO₂吸收量测的是哪一个?",a:"真光合速率 = 净光合速率 + 呼吸作用速率。外界测得的CO₂吸收量/O₂释放量是净光合速率,要加上黑暗中测得的呼吸值才是真光合。"},
+ {q:"2. 光补偿点是什么意思?此时真光合和呼吸是什么关系?",a:"光补偿点是净光合速率=0的光照强度,此时真光合速率=呼吸作用速率(收支相抵),但真光合仍在正常进行,并非光合作用停止。"},
+ {q:"3. 曲线处于上升段和处于平台段,限制因素的判断分别是什么?",a:"上升段:该自变量(横轴,如光照强度)是限制因素。平台段:该自变量已充足,限制因素转移到了其他条件(如CO₂浓度、温度、酶/色素等)。"},
+ {q:"4. 怎么判断植物一昼夜是净积累有机物还是净消耗?",a:"要用面积法比较:白天净光合总量(白天净光合速率×白天时长,或曲线积分)与夜间呼吸总量(呼吸速率×夜长)相减,结果为正则净积累,为负则净消耗,不能只看白天是否为正。"},
+ {q:"5. 黑白瓶法中,黑瓶和白瓶分别测的是什么?怎么算真光合?",a:"白瓶(透光)放置后O₂增加量=净光合释放的O₂;黑瓶(遮光)放置后O₂减少量=呼吸消耗的O₂(黑暗中只有呼吸)。真光合(O₂产生总量)=白瓶O₂增加量+黑瓶O₂减少量。"},
+ {q:"6. 黑暗中植物进行光合作用吗?此时测得的气体变化代表什么?",a:"黑暗中没有光反应,暗反应无法进行,所以不进行光合作用,只进行呼吸作用。此时测得的CO₂释放量/O₂消耗量就是呼吸作用速率。"},
+ {q:"7. CO₂补偿点和CO₂饱和点分别是什么?",a:"CO₂补偿点:净光合速率=0时对应的CO₂浓度(真光合=呼吸);CO₂饱和点:净光合速率不再随CO₂浓度升高而增大的最小CO₂浓度,此时被其他因素(光照、温度等)限制。"},
+ {q:"8. 温度升高超过最适温度后,光合速率和呼吸速率会怎么变化?对净光合有什么影响?",a:"超过最适温度,光合酶开始变性,光合速率下降;呼吸酶相对更耐受,呼吸速率可能仍较高或降幅较小。两者夹击下,净光合速率会加速下降,净光合的最适温度往往低于光合速率本身的最适温度。"},
+ {q:"9. 多个因素(光照、CO₂、温度)同时可能限制光合作用时,该怎么判断实际速率由谁决定?",a:"遵循木桶效应:实际光合速率由当前最短板的那个因素决定(取各因素单独能支持的速率中的最小值)。单独增大其他已经充裕的因素,速率不会提高,必须找到并改善真正的限制因素。"},
+ {q:"10. 某植物光下测得CO₂净吸收量为6mg/h,黑暗中CO₂释放量为2mg/h,求真光合速率(以CO₂计),并说明呼吸消耗占真光合的比例。",a:"真光合速率=净光合+呼吸=6+2=8mg/h(以CO₂计)。呼吸消耗占真光合的比例=2/8=25%。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
