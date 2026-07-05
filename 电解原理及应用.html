@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电解原理及应用 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--green)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .seesaw-wrap{position:relative;height:170px;margin:6px 0}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .cons-eq{font-family:"SF Mono",Consolas,monospace;font-size:15px;font-weight:800;cursor:pointer;padding:8px 10px;border:3px solid var(--ink);margin:6px 0;background:var(--card)}
+  .cons-eq:hover{background:var(--yellow)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>电解原理及应用</h1>
+    <p class="lead">外接电源"逼着"离子跑、逼着不情愿的反应发生——这就是电解。从电解池构成、两极放电顺序、四类电解规律,到氯碱工业、电镀、精炼铜、电冶炼,再到电子守恒计算,一条链把电解题全打通。抓住『阳氧化、阴还原、放电有顺序、算量靠守恒』,压轴稳拿分。</p>
+
+    <div class="say">🗣️ <b>把电解想成"用电当鞭子赶离子":</b> 接上外接电源后,电源的正极像"抢电子的手",把电子从阳极抽走 → 阳极上有东西被<b>氧化</b>(失电子);电源的负极像"塞电子的手",把电子塞到阴极 → 阴极上有东西被<b>还原</b>(得电子)。<br>溶液里的离子也被赶着跑:<b>阳离子(带正)扑向阴极,阴离子(带负)扑向阳极</b>。到了电极谁先"放电"?不是谁多谁先,而是有一张<b>放电顺序表</b>说了算。记住『阳极看阴离子、阴极看阳离子,越容易失/得电子的越先放』,再用<b>电子守恒</b>把两极产物的量绑在一起算,电解题就成了送分题。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 电解池的构成 → ② 阳极:氧化与放电顺序 → ③ 阴极:还原与放电顺序 → ④ 四类电解规律 → ⑤ 电解应用(氯碱/电镀/精炼/冶炼) → ⑥ 电子守恒与法拉第计算 → ⑦ 全题型地图 → 易错集 → 尖子生拔高 → 自测 12 题。每节都配可拨动的可视化。</div>
+
+    <!-- ========================= 1 电解池构成 ========================= -->
+    <h2 class="b">① 电解池的构成(先认清"零件")</h2>
+    <p class="lead">电解池是把<b>电能转化为化学能</b>的装置。缺一不可的四大要素:</p>
+    <div class="card">
+      <table>
+        <tr><th>要素</th><th>作用 / 判定</th></tr>
+        <tr><td>外接直流电源</td><td>电解的"驱动力",区分电解池(有电源)与原电池(无电源、自发)的第一眼特征</td></tr>
+        <tr><td>阴、阳两极(电极)</td><td>接电源<b>正极</b>的叫<b>阳极</b>;接电源<b>负极</b>的叫<b>阴极</b>。与"活泼性"无关,只看接哪极!</td></tr>
+        <tr><td>电解质(溶液或熔融)</td><td>提供自由移动的离子,是导电与反应的"舞台"</td></tr>
+        <tr><td>闭合回路</td><td>导线 + 溶液离子共同构成通路,电流才能持续</td></tr>
+      </table>
+      <h3>电流与离子的走向(口诀:阳极氧化、阴极还原;阴阳相吸)</h3>
+      <p class="step">▸ 电子:从电源负极 → 阴极(经导线);阳极 → 电源正极。电子<b>不进入溶液</b>。</p>
+      <p class="step">▸ 电流方向:与电子相反(正极→阳极→溶液→阴极→负极)。</p>
+      <p class="step">▸ 离子:<b>阳离子奔阴极</b>(在阴极得电子被还原),<b>阴离子奔阳极</b>(在阳极失电子被氧化)。</p>
+      <p class="trap">⚠ 电解池 阳极=氧化=接正极;这与原电池"负极氧化"正好相反。判极别背混:电解池认"接哪极",原电池认"谁失电子"。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 电解池工作原理动画(离子移向 + 两极产物)</div>
+      <p class="step">这是电解 CuCl₂ 溶液的示意。点开始,看电子经导线走、阳离子(Cu²⁺)扑向阴极镀铜、阴离子(Cl⁻)扑向阳极放氯气。</p>
+      <canvas id="cCell" width="760" height="330"></canvas>
+      <div class="ctrl"><button class="vbtn" id="cellPlay">▶ 通电</button><button class="vbtn dark" id="cellStop">停</button></div>
+      <div class="legend"><span style="color:var(--red)"><span style="background:var(--red)"></span>Cu²⁺(阳离子→阴极)</span><span style="color:var(--green)"><span style="background:var(--green)"></span>Cl⁻(阴离子→阳极)</span><span style="color:var(--blue)"><span style="background:var(--blue)"></span>e⁻ 电子(走导线)</span></div>
+    </div>
+
+    <!-- ========================= 2 阳极 ========================= -->
+    <h2 class="r">② 阳极:氧化反应 + 放电顺序</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--red)">🗣️ <b>阳极接电源正极,发生氧化(失电子)。</b> 先问一句:电极是"活性"还是"惰性"?活性电极(除 Pt、Au、C 之外的金属,如 Cu、Fe、Ag)自己会先溶解;惰性电极(Pt、Au、石墨 C)自己不反应,就轮到溶液里的阴离子放电。</div>
+      <h3>阳极放电顺序(越靠左越先失电子)</h3>
+      <div class="mono">活性电极本身 > S²⁻ > I⁻ > Br⁻ > Cl⁻ > OH⁻ > 含氧酸根(NO₃⁻、SO₄²⁻等,水溶液中一般不放)</div>
+      <p class="step">▸ <b>活性电极</b>(Cu、Ag、Fe…):电极金属自身先溶解,如 Cu − 2e⁻ → Cu²⁺,溶液里的阴离子轮不到放电。</p>
+      <p class="step">▸ <b>惰性电极</b>(Pt、Au、C):看溶液阴离子按上表顺序放电。若只有含氧酸根(如 SO₄²⁻),则是 OH⁻(水)放电:2H₂O − 4e⁻ → O₂↑ + 4H⁺。</p>
+      <p class="trap">⚠ 含氧酸根(SO₄²⁻、NO₃⁻)在水溶液里"太稳",不会放电,真正放电的是 OH⁻(即水)。但在<b>熔融</b>态无水时另当别论(如电解熔融 Al₂O₃)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 放电顺序判别器(给离子组合 → 两极放什么)</div>
+      <p class="step">选电极材料和溶液,判别器会按放电顺序告诉你:阳极实际放电的是谁、写出电极反应式;阴极同理。这是判产物的核心工具。</p>
+      <div class="ctrl"><span>阳极材料:</span></div>
+      <div class="chips" id="anodeMat"></div>
+      <div class="ctrl"><span>电解质溶液:</span></div>
+      <div class="chips" id="solChips"></div>
+      <div class="verdict" id="dischargeAnode"></div>
+      <div class="verdict" id="dischargeCathode"></div>
+    </div>
+
+    <!-- ========================= 3 阴极 ========================= -->
+    <h2 class="g">③ 阴极:还原反应 + 放电顺序</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--green)">🗣️ <b>阴极接电源负极,发生还原(得电子)。</b> 阴极电极材料<b>永远不参与</b>反应(不管惰性还是活性),只看溶液中<b>阳离子</b>谁先来抢电子。</div>
+      <h3>阴极放电顺序(越靠左越先得电子)</h3>
+      <div class="mono">Ag⁺ > Cu²⁺ > H⁺ > Fe²⁺ > Zn²⁺ > (Al³⁺、Mg²⁺、Na⁺、Ca²⁺、K⁺ 在水溶液中不放电)</div>
+      <p class="step">▸ Ag⁺、Cu²⁺ 等不活泼金属离子先放电,在阴极析出金属:Cu²⁺ + 2e⁻ → Cu。</p>
+      <p class="step">▸ 轮到 H⁺ 放电时:酸性溶液 2H⁺ + 2e⁻ → H₂↑;中性/碱性溶液中是水放氢:2H₂O + 2e⁻ → H₂↑ + 2OH⁻。</p>
+      <p class="step">▸ <b>K⁺、Ca²⁺、Na⁺、Mg²⁺、Al³⁺ 在水溶液中一律不放电</b>(它们太活泼,水会抢先放氢)。要得到这些金属只能电解其<b>熔融</b>盐/氧化物。</p>
+      <p class="trap">⚠ "放氢生碱":当阴极是 H₂O 放氢时,会在阴极附近产生 OH⁻,使阴极区溶液变碱性——这是氯碱工业出 NaOH 的关键,也是判 pH 变化的高频点。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 电解饱和食盐水(氯碱工业)</div>
+      <p class="step">惰性电极电解饱和 NaCl 溶液。点通电,看阳极冒黄绿色 Cl₂、阴极冒 H₂ 并生成 NaOH。这是氯碱工业的核心装置。</p>
+      <canvas id="cBrine" width="760" height="330"></canvas>
+      <div class="ctrl"><button class="vbtn" id="brinePlay">▶ 通电电解</button><button class="vbtn dark" id="brineStop">停</button></div>
+      <div class="verdict" id="brineNote">阳极:2Cl⁻ − 2e⁻ → Cl₂↑　　阴极:2H₂O + 2e⁻ → H₂↑ + 2OH⁻　　总:2NaCl + 2H₂O --电解--> 2NaOH + H₂↑ + Cl₂↑</div>
+    </div>
+
+    <!-- ========================= 4 四类规律 ========================= -->
+    <h2 class="o">④ 四类电解规律(惰性电极下的"四种结局")</h2>
+    <div class="card">
+      <p class="lead">用惰性电极电解时,按"两极放的到底是水还是电解质本身",分四类。这是判 pH 变化、复原方案的总纲。</p>
+      <table>
+        <tr><th>类型</th><th>特征 / 例子</th><th>实质与 pH 变化</th><th>复原方法</th></tr>
+        <tr><td><b>电解水型</b></td><td>含氧酸(H₂SO₄)、强碱(NaOH)、活泼金属含氧酸盐(Na₂SO₄)</td><td>实为电解水:阴放 H₂、阳放 O₂。溶质不变、浓度增大;酸性↑碱性↑,中性盐 pH 基本不变</td><td>加<b>适量水</b></td></tr>
+        <tr><td><b>电解电解质型</b></td><td>无氧酸(HCl)、不活泼金属无氧酸盐(CuCl₂)</td><td>电解的就是电解质本身。如 CuCl₂→Cu+Cl₂;HCl→H₂+Cl₂</td><td>加回被电解的<b>电解质</b>(如加 CuCl₂ / 通 HCl)</td></tr>
+        <tr><td><b>放氢生碱型</b></td><td>活泼金属的无氧酸盐(NaCl)</td><td>阴极放 H₂(水放氢)、阳极放 Cl₂,阴极区生 NaOH,溶液<b>变碱、pH↑</b></td><td>通入 <b>HCl</b>(补回 H 和 Cl)</td></tr>
+        <tr><td><b>放氧生酸型</b></td><td>不活泼金属的含氧酸盐(CuSO₄)</td><td>阴极析 Cu、阳极放 O₂(水放氧),生成 H₂SO₄,溶液<b>变酸、pH↓</b></td><td>加 <b>CuO</b> 或 CuCO₃(补回 Cu 和 O)</td></tr>
+      </table>
+      <p class="trap">⚠ 复原口诀:<b>"析出什么就补什么"</b>——分析两极实际"跑掉"的原子,把它们以化合物形式加回去,使溶液恢复原样。切忌盲目加水。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 电解四类型总览(选溶液看类型、产物、pH、复原)</div>
+      <p class="step">点一种电解质溶液(惰性电极),看它属于哪一类、两极产物、pH 往哪变、以及"复原"该加什么。</p>
+      <div class="chips" id="typeChips"></div>
+      <svg id="typeSvg" viewBox="0 0 760 180"></svg>
+      <div class="verdict" id="typeNote"></div>
+    </div>
+
+    <!-- ========================= 5 应用 ========================= -->
+    <h2 class="v">⑤ 电解的四大应用</h2>
+    <div class="card">
+      <h3>㈠ 氯碱工业(电解饱和食盐水)</h3>
+      <p class="step">惰性电极电解饱和 NaCl 溶液,得三大产品:<b>NaOH、Cl₂(阳极)、H₂(阴极)</b>。工业用离子交换膜隔开阴阳极区,防止 Cl₂ 与 NaOH 反应。</p>
+      <div class="mono">阳:2Cl⁻ − 2e⁻ → Cl₂↑　阴:2H₂O + 2e⁻ → H₂↑ + 2OH⁻　总:2NaCl + 2H₂O --电解--> 2NaOH + H₂↑ + Cl₂↑</div>
+      <h3>㈡ 电镀(在金属表面镀一层金属)</h3>
+      <p class="step">口诀:<b>"镀什么金属做阳极,镀件做阴极,镀层金属盐做电解液"</b>。如铁上镀铜:阳极=纯铜(溶解补充 Cu²⁺),阴极=铁件(析出铜),电解液=CuSO₄。电镀时电解液浓度<b>基本不变</b>(阳极溶多少、阴极镀多少)。</p>
+      <h3>㈢ 电解精炼铜(粗铜提纯)</h3>
+      <p class="step"><b>粗铜做阳极</b>(溶解),<b>纯铜做阴极</b>(析出高纯铜),CuSO₄ 溶液做电解液。比 Cu 活泼的杂质(Zn、Fe、Ni)进溶液不沉积;比 Cu 不活泼的(Ag、Au、Pt)不溶解,以"<b>阳极泥</b>"沉在阳极下。</p>
+      <p class="trap">⚠ 精炼时 c(Cu²⁺) 会略<b>减小</b>:因为阳极除了溶 Cu 还溶了 Zn、Fe 等,消耗电量而阴极只沉 Cu,故 Cu²⁺ 供不应求略降。这与理想电镀"浓度不变"是对比考点。</p>
+      <h3>㈣ 电冶炼活泼金属(熔融电解)</h3>
+      <p class="step">Na、Mg、Al、K、Ca 等太活泼,水溶液里得不到(水抢先放氢),必须电解其<b>熔融</b>盐/氧化物。</p>
+      <div class="mono">电解熔融 NaCl:阴 2Na⁺+2e⁻→2Na；阳 2Cl⁻−2e⁻→Cl₂↑　　电解熔融 Al₂O₃(加冰晶石助熔):阴 Al³⁺+3e⁻→Al；阳 2O²⁻−4e⁻→O₂↑</div>
+      <p class="trap">⚠ 冶炼 Al 用熔融 <b>Al₂O₃</b> 而不是 AlCl₃(AlCl₃ 是共价化合物,熔融不导电)。石墨阳极会被生成的 O₂ 消耗需定期更换。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 电镀 / 电解精炼铜 装置对比</div>
+      <p class="step">切换"电镀铜"与"精炼铜"。看阳极溶解、阴极沉积、Cu²⁺ 浓度变化,以及精炼中"阳极泥"的产生。</p>
+      <div class="chips" id="plateChips"></div>
+      <canvas id="cPlate" width="760" height="330"></canvas>
+      <div class="ctrl"><button class="vbtn" id="platePlay">▶ 通电</button><button class="vbtn dark" id="plateStop">停</button></div>
+      <div class="verdict" id="plateNote"></div>
+    </div>
+
+    <!-- ========================= 6 计算 ========================= -->
+    <h2 class="b">⑥ 电解计算:电子守恒 + 法拉第</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0">🗣️ <b>电解计算只有一条命根子:电子守恒。</b> 串联电路里流过每个电极、每条支路的电子数<b>完全相等</b>。阳极失去的电子 = 阴极得到的电子。把各极产物都换算成"转移电子的物质的量",一等式全绑住。</div>
+      <h3>核心公式</h3>
+      <div class="mono">n(e⁻) = Q / F = I·t / F　　(F = 96500 C/mol,即 1 mol 电子的电量)</div>
+      <p class="step">▸ 某物质放电的量:n(物质) = n(e⁻) / 该反应转移电子数。如 Cu²⁺+2e⁻→Cu,则 n(Cu) = n(e⁻)/2。</p>
+      <p class="step">▸ 气体在标况:V = n × 22.4 L/mol。</p>
+      <p class="step">▸ <b>串联多池</b>:各电解池通过的电子数相同,可用一池已知量求另一池未知量。</p>
+      <p class="step">▸ 电极增重/减重:阴极析金属→增重;活性阳极溶解→减重,质量差都能换算成 n(e⁻)。</p>
+      <p class="trap">⚠ 别忘了每个反应"转移电子数"不同:析 1 mol Cu 转移 2 mol e⁻,放 1 mol Cl₂ 转移 2 mol e⁻,放 1 mol O₂ 转移 4 mol e⁻,放 1 mol H₂ 转移 2 mol e⁻。同样电量下,产物的物质的量之比 = 转移电子数的倒数比。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 电解计算器(电子守恒求各极产物量)</div>
+      <p class="step">以惰性电极电解 CuSO₄ 溶液为例。拖动"通电电子的物质的量 n(e⁻)",看阴极析出 Cu、阳极放出 O₂ 的量如何按电子守恒同步算出。</p>
+      <canvas id="cCalc" width="760" height="230"></canvas>
+      <div class="ctrl"><span>转移电子 n(e⁻):<b id="calcNe">—</b> mol</span><input id="calcSlide" type="range" min="1" max="80" value="20"></div>
+      <div class="readout">
+        <div><b>阴极 Cu (mol)</b><span id="calcCu">—</span></div>
+        <div><b>阳极 O₂ (mol)</b><span id="calcO2">—</span></div>
+        <div><b>O₂ 标况体积 (L)</b><span id="calcV">—</span></div>
+      </div>
+      <p class="trap" id="calcNote" style="margin-top:6px"></p>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑦ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑧ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. 惰性 vs 活性阳极混淆:惰性(Pt/Au/C)看溶液阴离子放电;活性(Cu/Fe/Ag)是电极本身先溶解,阴离子轮不到放电。</p>
+      <p class="trap">2. 阴阳极判反:电解池"接正极=阳极=氧化",与原电池"负极=氧化"方向相反,别串台。</p>
+      <p class="trap">3. 阴极材料参与反应——错!阴极材料永不反应,只看溶液阳离子放电顺序。</p>
+      <p class="trap">4. 含氧酸根(SO₄²⁻、NO₃⁻)在水溶液中放电——错!它们不放,真正放的是 OH⁻(水放氧)。</p>
+      <p class="trap">5. pH 变化判错:电解水型看酸碱本身浓缩;放氢生碱型 pH↑;放氧生酸型 pH↓;别只盯一极。</p>
+      <p class="trap">6. 复原乱加水:应"析出什么补什么"。CuSO₄ 电解后加 CuO 而非加水或加 CuSO₄。</p>
+      <p class="trap">7. 电镀 vs 精炼浓度:理想电镀 Cu²⁺ 浓度不变;精炼铜因阳极还溶了 Zn/Fe 等,Cu²⁺ 略减小。</p>
+      <p class="trap">8. 想在水溶液里电解得 Na/Al——错!活泼金属离子水溶液不放电,须电解熔融态。</p>
+      <p class="trap">9. 电子守恒忘乘转移电子数:同电量下 n(H₂):n(Cl₂):n(O₂)=1:1:½(即 O₂ 少一半)。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>一切归到 e⁻ 守恒:</b> 无论多复杂的串联、多池、多产物,阳极失电子总数=阴极得电子总数。把每个产物折算成 n(e⁻),列一个总等式,压轴量的关系瞬间打通。</p>
+      <p class="step">▸ <b>"放什么"= 竞争氧化还原能力:</b> 放电顺序本质是电极电势高低。阳极选最易失电子(还原性最强)的先放,阴极选最易得电子(氧化性最强)的先放。理解本质就不必死记表。</p>
+      <p class="step">▸ <b>pH 变化的统一分析法:</b> 只需盯两件事——两极是否放了 H⁺/OH⁻(水),以及生成物是酸是碱。放氢→阴极生 OH⁻(变碱);放氧→阳极生 H⁺(变碱区局部酸)。全局 pH 看净得失。</p>
+      <p class="step">▸ <b>惰性电极四类型 = 一张判定树:</b> 先看阳离子能否放电(不活泼金属离子→电解质型/生酸型;活泼金属离子→水放氢),再看阴离子能否放电(无氧酸根→电解质型;含氧酸根→水放氧)。两极叠加,类型自明。</p>
+      <p class="step">▸ <b>电解 vs 原电池连做:</b> 有的题把原电池当电源驱动电解池。先认清哪个是"发电"(原电池,自发)、哪个是"用电"(电解池),再串电子守恒,是压轴常见组合。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:水溶液离子平衡 / 化学能与电能(原电池)</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function sup(n){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>map[c]||c).join('');}
+
+/* ============ 交互1 电解池工作原理动画 ============ */
+(function(){
+  const cv=document.getElementById('cCell'),ctx=cv.getContext('2d');
+  const W=760,H=330;
+  let ions=[],electrons=[],raf=null,running=false;
+  function seed(){
+    ions=[];electrons=[];
+    for(let i=0;i<9;i++){ions.push({type:'Cu',x:180+Math.random()*400,y:150+Math.random()*120,tx:230});}
+    for(let i=0;i<9;i++){ions.push({type:'Cl',x:180+Math.random()*400,y:150+Math.random()*120,tx:530});}
+    for(let i=0;i<7;i++){electrons.push({p:Math.random()});}
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    /* 电源 */
+    ctx.fillStyle='#16120A';ctx.fillRect(330,18,100,44);
+    ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.fillText('直流电源',344,44);
+    ctx.fillStyle='#E0382A';ctx.font='bold 16px sans-serif';ctx.fillText('+',318,44);
+    ctx.fillStyle='#1450C8';ctx.fillText('−',438,44);
+    /* 导线 */
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(330,40);ctx.lineTo(230,40);ctx.lineTo(230,120);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(430,40);ctx.lineTo(530,40);ctx.lineTo(530,120);ctx.stroke();
+    /* 溶液槽 */
+    ctx.fillStyle='rgba(20,80,200,0.08)';ctx.fillRect(140,120,480,180);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(140,120,480,180);
+    /* 电极 */
+    ctx.fillStyle='#8a8a8a';ctx.fillRect(220,110,20,140);
+    ctx.fillStyle='#c07a3a';ctx.fillRect(520,110,20,140);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+    ctx.fillText('阳极(+)',192,270);ctx.fillText('石墨 C',204,286);
+    ctx.fillText('阴极(−)',494,270);ctx.fillText('镀 Cu',516,286);
+    ctx.fillText('CuCl₂ 溶液',350,315);
+    /* 电子沿导线 */
+    ctx.fillStyle='#1450C8';
+    electrons.forEach(e=>{
+      /* 路径:阳极(230,120)->上->电源+ ... 但电子实际 电源- ->阴极 ; 画 电源- (430,40)->阴极(530,120) 与 阳极(230,120)->电源+(330,40) */
+      let x,y;const p=e.p;
+      if(p<0.5){const t=p/0.5;/* 阳极上行到电源正极 */
+        if(t<0.5){x=230;y=120-(120-40)*(t/0.5);}else{x=230+(330-230)*((t-0.5)/0.5);y=40;}
+      }else{const t=(p-0.5)/0.5;/* 电源负极下行到阴极 */
+        if(t<0.5){x=430+(530-430)*(t/0.5);y=40;}else{x=530;y=40+(120-40)*((t-0.5)/0.5);}
+      }
+      ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();
+    });
+    /* 离子 */
+    ions.forEach(io=>{
+      ctx.beginPath();ctx.arc(io.x,io.y,11,0,7);
+      ctx.fillStyle=io.type==='Cu'?'#E0382A':'#1E9E86';ctx.fill();
+      ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle='#fff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';
+      ctx.fillText(io.type==='Cu'?'Cu²⁺':'Cl⁻',io.x,io.y+3);ctx.textAlign='left';
+    });
+  }
+  function step(){
+    ions.forEach(io=>{
+      io.x+=(io.tx-io.x)*0.02;
+      if(Math.abs(io.x-io.tx)<10){io.x=180+Math.random()*400;io.y=150+Math.random()*120;}
+    });
+    electrons.forEach(e=>{e.p+=0.01;if(e.p>1)e.p-=1;});
+    draw();
+    if(running)raf=requestAnimationFrame(step);
+  }
+  seed();draw();
+  document.getElementById('cellPlay').onclick=function(){if(running)return;running=true;raf=requestAnimationFrame(step);};
+  document.getElementById('cellStop').onclick=function(){running=false;if(raf){cancelAnimationFrame(raf);raf=null;}};
+})();
+
+/* ============ 交互2 放电顺序判别器 ============ */
+(function(){
+  const anodeMats=[
+    {k:'惰性电极(Pt/C)',inert:true},
+    {k:'活性电极(Cu)',inert:false,ex:'Cu − 2e⁻ → Cu²⁺(电极本身溶解)'}
+  ];
+  const sols=[
+    {k:'CuCl₂ 溶液',anion:'Cl',cation:'Cu'},
+    {k:'饱和 NaCl 溶液',anion:'Cl',cation:'Na'},
+    {k:'CuSO₄ 溶液',anion:'SO4',cation:'Cu'},
+    {k:'稀 H₂SO₄',anion:'SO4',cation:'H'},
+    {k:'AgNO₃ 溶液',anion:'NO3',cation:'Ag'},
+    {k:'NaOH 溶液',anion:'OH',cation:'Na'}
+  ];
+  const anodeRule={
+    Cl:'2Cl⁻ − 2e⁻ → Cl₂↑(氯气,黄绿色)',
+    SO4:'2H₂O − 4e⁻ → O₂↑ + 4H⁺(含氧酸根不放,水放氧)',
+    NO3:'2H₂O − 4e⁻ → O₂↑ + 4H⁺(NO₃⁻ 不放,水放氧)',
+    OH:'4OH⁻ − 4e⁻ → O₂↑ + 2H₂O(放氧)'
+  };
+  const cathodeRule={
+    Cu:'Cu²⁺ + 2e⁻ → Cu(析出铜)',
+    Ag:'Ag⁺ + e⁻ → Ag(析出银)',
+    H:'2H⁺ + 2e⁻ → H₂↑(酸中放氢)',
+    Na:'2H₂O + 2e⁻ → H₂↑ + 2OH⁻(Na⁺ 不放,水放氢生碱)'
+  };
+  let mat=0,sol=0;
+  const matBox=document.getElementById('anodeMat'),solBox=document.getElementById('solChips');
+  anodeMats.forEach((m,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=m.k;b.onclick=()=>{[...matBox.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');mat=i;render();};matBox.appendChild(b);});
+  sols.forEach((s,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=s.k;b.onclick=()=>{[...solBox.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');sol=i;render();};solBox.appendChild(b);});
+  function render(){
+    const m=anodeMats[mat],s=sols[sol];
+    const aEl=document.getElementById('dischargeAnode'),cEl=document.getElementById('dischargeCathode');
+    if(m.inert){aEl.innerHTML='<b>阳极(氧化):</b>'+anodeRule[s.anion];aEl.style.borderColor='var(--red)';}
+    else{aEl.innerHTML='<b>阳极(活性电极,氧化):</b>'+m.ex+' —— 电极本身先溶解,溶液阴离子轮不到放电。';aEl.style.borderColor='var(--red)';}
+    cEl.innerHTML='<b>阴极(还原):</b>'+cathodeRule[s.cation];cEl.style.borderColor='var(--green)';
+  }
+  render();
+})();
+
+/* ============ 交互3 电解饱和食盐水 ============ */
+(function(){
+  const cv=document.getElementById('cBrine'),ctx=cv.getContext('2d');
+  const W=760,H=330;let bubblesA=[],bubblesC=[],raf=null,running=false;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    /* 溶液槽 */
+    ctx.fillStyle='rgba(30,158,134,0.07)';ctx.fillRect(120,80,520,220);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(120,80,520,220);
+    /* 电极 */
+    ctx.fillStyle='#8a8a8a';ctx.fillRect(230,60,18,180);
+    ctx.fillStyle='#8a8a8a';ctx.fillRect(512,60,18,180);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+    ctx.fillText('阳极(+)',196,275);ctx.fillText('阴极(−)',478,275);
+    ctx.fillText('饱和 NaCl 溶液',330,315);
+    /* 气体标签 */
+    ctx.fillStyle='#1E9E86';ctx.font='bold 13px sans-serif';ctx.fillText('Cl₂ ↑ 黄绿色',180,52);
+    ctx.fillStyle='#1450C8';ctx.fillText('H₂ ↑',498,52);
+    ctx.fillStyle='#E0382A';ctx.font='bold 12px sans-serif';ctx.fillText('阴极区生成 NaOH(变碱)',430,300);
+    /* 气泡 */
+    ctx.strokeStyle='#16120A';ctx.lineWidth=1.5;
+    bubblesA.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fillStyle='rgba(30,158,134,0.55)';ctx.fill();ctx.stroke();});
+    bubblesC.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fillStyle='rgba(20,80,200,0.5)';ctx.fill();ctx.stroke();});
+  }
+  function step(){
+    if(Math.random()<0.35)bubblesA.push({x:239+(Math.random()*10-5),y:235,r:3+Math.random()*3});
+    if(Math.random()<0.35)bubblesC.push({x:521+(Math.random()*10-5),y:235,r:3+Math.random()*3});
+    bubblesA.forEach(b=>b.y-=1.4);bubblesC.forEach(b=>b.y-=1.4);
+    bubblesA=bubblesA.filter(b=>b.y>50);bubblesC=bubblesC.filter(b=>b.y>50);
+    draw();
+    if(running)raf=requestAnimationFrame(step);
+  }
+  draw();
+  document.getElementById('brinePlay').onclick=function(){if(running)return;running=true;raf=requestAnimationFrame(step);};
+  document.getElementById('brineStop').onclick=function(){running=false;if(raf){cancelAnimationFrame(raf);raf=null;}};
+})();
+
+/* ============ 交互4 电解四类型 ============ */
+(function(){
+  const data=[
+    {k:'稀 H₂SO₄',type:'电解水型',an:'O₂↑',ca:'H₂↑',ph:'pH↓(酸浓缩)',restore:'加适量水',note:'含氧酸,实为电解水。阴放 H₂、阳放 O₂,H₂SO₄ 被浓缩、酸性增强。复原加水。',c:'#1450C8'},
+    {k:'Na₂SO₄ 溶液',type:'电解水型',an:'O₂↑',ca:'H₂↑',ph:'pH≈不变',restore:'加适量水',note:'活泼金属含氧酸盐,阴阳离子都不放电,实为电解水。溶质不变、浓度增大,中性盐 pH 基本不变。复原加水。',c:'#1450C8'},
+    {k:'CuCl₂ 溶液',type:'电解电解质型',an:'Cl₂↑',ca:'Cu',ph:'—',restore:'加 CuCl₂',note:'不活泼金属无氧酸盐。电解的就是电解质本身:阴析 Cu、阳放 Cl₂。复原加回 CuCl₂。',c:'#7A3FF2'},
+    {k:'盐酸 HCl',type:'电解电解质型',an:'Cl₂↑',ca:'H₂↑',ph:'pH↑(酸变稀)',restore:'通入 HCl',note:'无氧酸,电解电解质本身:阴 H₂、阳 Cl₂,HCl 减少、酸性减弱。复原通 HCl。',c:'#7A3FF2'},
+    {k:'饱和 NaCl 溶液',type:'放氢生碱型',an:'Cl₂↑',ca:'H₂↑',ph:'pH↑(变碱)',restore:'通入 HCl',note:'活泼金属无氧酸盐。阴极水放氢生 OH⁻ → 生成 NaOH,溶液变碱。复原通 HCl。氯碱工业原理。',c:'#1E9E86'},
+    {k:'CuSO₄ 溶液',type:'放氧生酸型',an:'O₂↑',ca:'Cu',ph:'pH↓(变酸)',restore:'加 CuO',note:'不活泼金属含氧酸盐。阴析 Cu、阳水放氧生 H⁺ → 生成 H₂SO₄,溶液变酸。复原加 CuO(补 Cu 和 O)。',c:'#E0382A'}
+  ];
+  const chips=document.getElementById('typeChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('typeSvg');
+  function render(){
+    const d=data[cur];
+    let s='';
+    s+='<rect x="20" y="20" width="720" height="140" fill="none" stroke="#16120A" stroke-width="3"/>';
+    s+='<rect x="30" y="30" width="200" height="120" fill="'+d.c+'" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="130" y="70" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">'+d.type+'</text>';
+    s+='<text x="130" y="100" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">'+d.k+'</text>';
+    s+='<text x="130" y="128" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">'+d.ph+'</text>';
+    /* 阳极 */
+    s+='<rect x="270" y="45" width="200" height="40" fill="#E0382A" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="370" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">阳极产物: '+d.an+'</text>';
+    /* 阴极 */
+    s+='<rect x="270" y="95" width="200" height="40" fill="#1E9E86" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="370" y="120" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">阴极产物: '+d.ca+'</text>';
+    /* 复原 */
+    s+='<rect x="500" y="45" width="230" height="90" fill="#F3C00E" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="615" y="80" text-anchor="middle" font-size="13" font-weight="900">复原方法</text>';
+    s+='<text x="615" y="108" text-anchor="middle" font-size="16" font-weight="900">'+d.restore+'</text>';
+    svg.innerHTML=s;
+    const nb=document.getElementById('typeNote');nb.textContent=d.note;nb.style.borderColor=d.c;
+  }
+  render();
+})();
+
+/* ============ 交互5 电镀/精炼铜 ============ */
+(function(){
+  const cv=document.getElementById('cPlate'),ctx=cv.getContext('2d');
+  const W=760,H=330;
+  const modes=[
+    {k:'电镀铜(铁上镀铜)',anode:'纯铜阳极(溶解)',cathode:'铁件阴极(镀铜)',conc:'Cu²⁺ 浓度基本不变',note:'镀件(铁)做阴极、镀层金属(铜)做阳极、CuSO₄ 做电解液。阳极溶多少 Cu²⁺、阴极就镀多少,浓度不变。',mud:false,c:'#7A3FF2'},
+    {k:'电解精炼铜(粗铜提纯)',anode:'粗铜阳极(溶 Cu 及 Zn/Fe 等)',cathode:'纯铜阴极(析高纯 Cu)',conc:'Cu²⁺ 浓度略减小',note:'粗铜做阳极、纯铜做阴极。活泼杂质(Zn/Fe)进溶液不沉;不活泼的(Ag/Au/Pt)不溶,成阳极泥沉底。因阳极还溶了杂质耗电,Cu²⁺ 略减。',mud:true,c:'#E86A17'}
+  ];
+  let cur=0,raf=null,running=false,mud=[],dep=0;
+  const chips=document.getElementById('plateChips');
+  modes.forEach((m,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=m.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;mud=[];dep=0;info();draw();};chips.appendChild(b);});
+  function info(){const m=modes[cur];const nb=document.getElementById('plateNote');nb.innerHTML='<b>'+m.k+'</b> ｜ '+m.anode+' ｜ '+m.cathode+' ｜ <b>'+m.conc+'</b><br>'+m.note;nb.style.borderColor=m.c;}
+  function draw(){
+    const m=modes[cur];ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#16120A';ctx.fillRect(330,18,100,40);
+    ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.fillText('直流电源',344,43);
+    ctx.fillStyle='#E0382A';ctx.font='bold 15px sans-serif';ctx.fillText('+',318,42);
+    ctx.fillStyle='#1450C8';ctx.fillText('−',438,42);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(330,38);ctx.lineTo(240,38);ctx.lineTo(240,110);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(430,38);ctx.lineTo(520,38);ctx.lineTo(520,110);ctx.stroke();
+    ctx.fillStyle='rgba(20,80,200,0.08)';ctx.fillRect(150,110,460,190);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(150,110,460,190);
+    /* 阳极(左, 会变瘦) */
+    const aw=Math.max(6,22-dep*0.5);
+    ctx.fillStyle='#c07a3a';ctx.fillRect(240-aw/2,100,aw,150);
+    /* 阴极(右, 会变粗) */
+    const cw=22+dep*0.5;
+    ctx.fillStyle='#d98f4e';ctx.fillRect(520-cw/2,100,cw,150);
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+    ctx.fillText('阳极(+)溶解',180,275);ctx.fillText('阴极(−)析出',462,275);
+    ctx.fillText('CuSO₄ 电解液',330,318);
+    /* 阳极泥 */
+    if(m.mud){ctx.fillStyle='#5a4a2a';mud.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,3,0,7);ctx.fill();});
+      ctx.fillStyle='#5a4a2a';ctx.font='bold 11px sans-serif';ctx.fillText('阳极泥(Ag/Au)',195,258);}
+  }
+  function step(){
+    dep+=0.12;if(dep>26)dep=26;
+    if(modes[cur].mud&&Math.random()<0.25&&mud.length<40)mud.push({x:236+Math.random()*10,y:245+Math.random()*3});
+    draw();
+    if(running)raf=requestAnimationFrame(step);
+  }
+  info();draw();
+  document.getElementById('platePlay').onclick=function(){if(running)return;running=true;raf=requestAnimationFrame(step);};
+  document.getElementById('plateStop').onclick=function(){running=false;if(raf){cancelAnimationFrame(raf);raf=null;}};
+})();
+
+/* ============ 交互6 电解计算器 ============ */
+(function(){
+  const cv=document.getElementById('cCalc'),ctx=cv.getContext('2d');
+  const W=760,H=230;
+  function draw(ne){
+    const nCu=ne/2,nO2=ne/4,vO2=nO2*22.4;
+    document.getElementById('calcNe').textContent=ne.toFixed(0);
+    document.getElementById('calcCu').textContent=nCu.toFixed(2);
+    document.getElementById('calcO2').textContent=nO2.toFixed(2);
+    document.getElementById('calcV').textContent=vO2.toFixed(2);
+    ctx.clearRect(0,0,W,H);
+    /* 说明公式 */
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+    ctx.fillText('阴极: Cu²⁺ + 2e⁻ → Cu　　阳极: 2H₂O − 4e⁻ → O₂↑ + 4H⁺',40,26);
+    ctx.fillText('电子守恒: n(e⁻) = 2·n(Cu) = 4·n(O₂)',40,48);
+    /* 三根条:e-, Cu, O2 */
+    const maxNe=80,base=200,scale=140/maxNe;
+    const bars=[
+      {lab:'n(e⁻)',v:ne,col:'#1450C8'},
+      {lab:'n(Cu)=n(e⁻)/2',v:nCu,col:'#E0382A'},
+      {lab:'n(O₂)=n(e⁻)/4',v:nO2,col:'#1E9E86'}
+    ];
+    bars.forEach((b,i)=>{
+      const x=110+i*220,h=b.v*scale;
+      ctx.fillStyle=b.col;ctx.fillRect(x,base-h,90,h);
+      ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.strokeRect(x,base-h,90,h);
+      ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText(b.lab,x-6,base+18);
+      ctx.font='bold 13px sans-serif';ctx.fillText(b.v.toFixed(2)+' mol',x+2,base-h-6);
+    });
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(60,base);ctx.lineTo(720,base);ctx.stroke();
+    document.getElementById('calcNote').textContent='⚠ 同电量下:n(Cu):n(O₂) = 2:1(转移电子数倒数比)。析 '+nCu.toFixed(2)+' mol Cu 需转移 '+ne.toFixed(0)+' mol e⁻,同时放出 '+nO2.toFixed(2)+' mol O₂。';
+  }
+  document.getElementById('calcSlide').oninput=function(e){draw(+e.target.value);};
+  draw(20);
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'判断电解池 / 阴阳极',sig:'装置有『外接电源』;问哪极是阳极、哪极是阴极、电子/电流/离子走向。',act:'接电源正极=阳极(氧化);接负极=阴极(还原)。阳离子奔阴极、阴离子奔阳极;电子走导线不入液。',ex:'电解池中与电源正极相连的电极是阳极,发生氧化反应,阴离子向它移动。',trap:'与原电池"负极氧化"方向相反,别背混。'},
+    {t:'判两极产物 / 写电极反应',sig:'给电极材料 + 电解质,问两极生成什么、写电极方程式。',act:'先看阳极是否活性:活性→电极自身溶解;惰性→阴离子按 S²⁻>I⁻>Br⁻>Cl⁻>OH⁻>含氧酸根 放。阴极看阳离子 Ag⁺>Cu²⁺>H⁺>Fe²⁺>Zn²⁺。',ex:'惰性电极电解 CuSO₄:阴 Cu²⁺+2e⁻→Cu,阳 2H₂O−4e⁻→O₂↑+4H⁺。',trap:'含氧酸根不放电,真正放的是 OH⁻(水放氧)。'},
+    {t:'放电顺序 / 竞争放电',sig:'溶液含多种阴(或阳)离子,问先放谁、离子放完顺序。',act:'阳极最易失电子者先放(还原性强),阴极最易得电子者先放(氧化性强)。按顺序表逐一。',ex:'含 Cu²⁺ 和 H⁺ 的液,阴极先析 Cu(Cu²⁺ 排 H⁺ 前),Cu²⁺ 放完再放 H₂。',trap:'不是"谁浓度大谁先放",而是看放电顺序。'},
+    {t:'电解后溶液复原',sig:'电解一段时间后,问加什么可使溶液恢复原状。',act:'分析两极实际"跑掉"的原子,以化合物形式补回。析出什么补什么。',ex:'电解 CuSO₄ 后加 CuO(补 Cu 和 O),恢复原溶液。电解 NaCl 后通 HCl。',trap:'不要一律加水;电解水型才加水。'},
+    {t:'pH 变化判断',sig:'电解后问溶液 pH 升高、降低还是不变。',act:'放氢生碱型 pH↑;放氧生酸型 pH↓;电解水型看酸碱本身被浓缩;电解质型看酸减少与否。',ex:'电解饱和 NaCl:阴极生 NaOH → pH↑;电解 CuSO₄:阳极生 H₂SO₄ → pH↓。',trap:'只盯一极会判错,要看净酸碱得失。'},
+    {t:'氯碱工业',sig:'电解饱和食盐水、离子交换膜、三大产品、检验。',act:'阳极 Cl₂、阴极 H₂ 与 NaOH;交换膜隔开防 Cl₂ 与 NaOH 反应。总:2NaCl+2H₂O=2NaOH+H₂↑+Cl₂↑。',ex:'阴极区滴酚酞变红(生成 NaOH),阳极湿润淀粉碘化钾试纸变蓝(Cl₂)。',trap:'两极产物不能混合;阳极不能用活性金属。'},
+    {t:'电镀',sig:'在金属件上镀一层金属,问阴阳极材料、电解液、浓度变化。',act:'镀层金属做阳极(溶解)、镀件做阴极(析出)、镀层金属盐做电解液。理想下浓度不变。',ex:'铁上镀铜:阳极纯铜、阴极铁件、电解液 CuSO₄,Cu²⁺ 浓度不变。',trap:'阳极溶解量=阴极析出量,故浓度不变。'},
+    {t:'电解精炼铜',sig:'粗铜提纯,阳极泥、Cu²⁺ 浓度变化。',act:'粗铜阳极、纯铜阴极、CuSO₄ 电解液。活泼杂质进溶液,不活泼杂质成阳极泥。',ex:'粗铜含 Zn/Fe/Ag/Au:Zn/Fe 溶入液,Ag/Au 成阳极泥。',trap:'Cu²⁺ 浓度略减小(阳极还溶了杂质耗电),别答"不变"。'},
+    {t:'电冶炼活泼金属',sig:'冶炼 Na、Mg、Al 等活泼金属。',act:'必须电解熔融盐/氧化物(水溶液得不到)。Al 用熔融 Al₂O₃ 加冰晶石。',ex:'电解熔融 NaCl 得 Na;电解熔融 Al₂O₃ 得 Al。',trap:'冶炼 Al 不用 AlCl₃(共价,熔融不导电);Na 不能电解水溶液。'},
+    {t:'电解计算(电子守恒/串联)',sig:'给电流·时间或某极产物量,求另一极产物、串联各池关系。',act:'n(e⁻)=It/F(F=96500);各产物换算成 n(e⁻),阳失=阴得。串联各池 n(e⁻) 相同。',ex:'转移 4 mol e⁻:阴析 2 mol Cu,阳放 1 mol O₂(标况 22.4 L)。',trap:'各反应转移电子数不同:O₂ 是 4e⁻、Cl₂/H₂/Cu 是 2e⁻,别漏乘。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(m=>{const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 电解池中,接电源正极的电极叫什么?发生什么反应?阴离子向哪极移动?',a:'叫阳极,发生氧化反应(失电子)。阴离子(带负)向阳极移动。'},
+    {q:'2. 用惰性电极电解 CuCl₂ 溶液,写出两极电极反应式。',a:'阳极:2Cl⁻ − 2e⁻ → Cl₂↑;阴极:Cu²⁺ + 2e⁻ → Cu。'},
+    {q:'3. 用铜作阳极、铁作阴极电解 CuSO₄ 溶液,阳极发生什么反应?',a:'活性电极:阳极铜本身溶解 Cu − 2e⁻ → Cu²⁺,SO₄²⁻ 不放电。阴极 Cu²⁺+2e⁻→Cu。'},
+    {q:'4. 惰性电极电解稀 H₂SO₄,两极产物是什么?溶液 pH 如何变?属哪类?',a:'阴放 H₂、阳放 O₂(实为电解水),H₂SO₄ 被浓缩,pH 减小(酸性增强)。属电解水型。'},
+    {q:'5. 电解饱和食盐水,为什么阴极区溶液变碱?写总反应。',a:'阴极水放氢 2H₂O+2e⁻→H₂↑+2OH⁻,生成 NaOH 故变碱。总:2NaCl+2H₂O --电解--> 2NaOH+H₂↑+Cl₂↑。'},
+    {q:'6. 惰性电极电解 CuSO₄ 溶液后,想恢复原溶液应加什么?为什么不能加水?',a:'加 CuO(或 CuCO₃)。因电解跑掉了 Cu 和 O(阴析 Cu、阳放 O₂),需补回这两种元素;加水补不回 Cu。'},
+    {q:'7. 电镀铜时 Cu²⁺ 浓度如何变?电解精炼铜时又如何变?为什么不同?',a:'电镀:阳极溶 Cu²⁺=阴极析 Cu,浓度基本不变。精炼:阳极还溶了 Zn/Fe 等杂质耗电,阴极只沉 Cu,故 Cu²⁺ 略减小。'},
+    {q:'8. 为什么不能用电解 NaCl 水溶液的方法制取金属钠?',a:'Na⁺ 太活泼,水溶液中不放电,阴极是水放氢。要得 Na 须电解熔融 NaCl。'},
+    {q:'9. 工业电解冶炼铝为什么用熔融 Al₂O₃ 而不用 AlCl₃?',a:'AlCl₃ 是共价化合物,熔融态不电离、不导电,无法电解;Al₂O₃ 是离子化合物,熔融导电。故用熔融 Al₂O₃(加冰晶石助熔)。'},
+    {q:'10. 惰性电极电解足量 CuSO₄,转移 4 mol 电子,阴极析多少 mol Cu?阳极放多少 mol O₂(标况多少 L)?',a:'阴 Cu²⁺+2e⁻→Cu,n(Cu)=4/2=2 mol;阳 O₂ 每分子 4e⁻,n(O₂)=4/4=1 mol,标况 22.4 L。'},
+    {q:'11. 同一电路串联两电解池,通过的电子数有何关系?',a:'串联时流过各电极的电子数完全相同,可用一池已知量求另一池未知量(电子守恒)。'},
+    {q:'12. 同电量下电解水放出的 H₂ 与 O₂ 的物质的量之比是多少?为什么?',a:'n(H₂):n(O₂)=2:1。H₂ 每分子转移 2e⁻、O₂ 每分子转移 4e⁻,同电量下物质的量与转移电子数成反比。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

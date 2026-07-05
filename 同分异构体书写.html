@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>同分异构体的判断与书写 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#7A3FF2;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--green)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .seesaw-wrap{position:relative;height:170px;margin:6px 0}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .cons-eq{font-family:"SF Mono",Consolas,monospace;font-size:15px;font-weight:800;cursor:pointer;padding:8px 10px;border:3px solid var(--ink);margin:6px 0;background:var(--card)}
+  .cons-eq:hover{background:var(--yellow)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>同分异构体的判断与书写</h1>
+    <p class="lead">分子式一样、结构不一样——这就是同分异构体。它既是有机推断题的"必考骨架",又是最容易"漏写、重写"的丢分点。学会有序思维、等效氢法、限定条件筛选,你就能在书写题里把每一分都拿稳。</p>
+
+    <div class="say">🗣️ <b>把同分异构体想成同一堆积木的不同拼法:</b> 给你固定数量的 C、H、O 积木(分子式相同),你可以拼成一条直链、一条带杈的链(碳链异构),可以把官能团挪到不同位置(位置异构),甚至换一种官能团(官能团异构)。<br>只要拼出来的是<b>不同的结构</b>,就是一种同分异构体。考试就考两件事:<b>数出来有几种</b>、<b>按条件写出来</b>。而拿满分的唯一秘诀,就是<b>有序思维——先定碳链、再定官能团位置,不重不漏</b>。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 什么是同分异构体 → ② 四大异构类型 → ③ 常见官能团异构关系 → ④ 有序书写三步法 → ⑤ 等效氢法数一氯代物 → ⑥ 限定条件下的书写与筛选 → ⑦ 芳香族同分异构。每节都配可动手拨的可视化。</div>
+
+    <!-- ========================= 1 概念 ========================= -->
+    <h2 class="v">① 什么是同分异构体</h2>
+    <p class="lead">概念只有一句话,但要抠死两个字:</p>
+    <div class="card">
+      <div class="eq">分子式相同 <span class="arrow">→</span> 结构不同 <span class="arrow">→</span> 同分异构体</div>
+      <p class="step"><b>同分:</b> 分子式完全一样(同种原子、同样数目),因此相对分子质量也相同。</p>
+      <p class="step"><b>异构:</b> 原子的<b>连接方式或空间排布不同</b>,导致是不同的物质、性质往往不同。</p>
+      <h3>三个易混概念一次分清</h3>
+      <table>
+        <tr><th>概念</th><th>关系</th><th>例子</th></tr>
+        <tr><td>同分异构体</td><td>分子式相同、结构不同</td><td>正丁烷 与 异丁烷(都是 C₄H₁₀)</td></tr>
+        <tr><td>同系物</td><td>结构相似、通式相同、差若干 CH₂</td><td>CH₄ 与 C₂H₆</td></tr>
+        <tr><td>同素异形体</td><td>同种元素组成的不同单质</td><td>O₂ 与 O₃、金刚石与石墨</td></tr>
+      </table>
+      <p class="trap">⚠ 判断"是否为同分异构体"必须两步:先看分子式是否<b>完全相同</b>,再看结构是否<b>确实不同</b>。分子式不同、或结构其实一样(只是写法不同),都不算。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 四大异构类型一次看懂</div>
+      <p class="step">点一种异构类型,看两个分子式相同、结构不同的例子并排出现,以及它们"差在哪"。</p>
+      <div class="chips" id="typeChips"></div>
+      <svg id="typeSvg" viewBox="0 0 760 230"></svg>
+      <div class="verdict" id="typeVerdict"></div>
+    </div>
+
+    <!-- ========================= 2 四大类型 ========================= -->
+    <h2 class="b">② 四大异构类型详解</h2>
+    <div class="card">
+      <h3>① 碳链异构(骨架不同)</h3>
+      <p class="step">碳原子的连接顺序不同:直链 vs 支链。如 C₅H₁₂ 有三种:正戊烷、异戊烷(2-甲基丁烷)、新戊烷(2,2-二甲基丙烷)。</p>
+      <h3>② 位置异构(官能团/取代基位置不同)</h3>
+      <p class="step">碳骨架相同,但官能团或取代基"挂"的位置不同。如 1-丙醇 与 2-丙醇;1-丁烯 与 2-丁烯;邻/间/对二甲苯。</p>
+      <h3>③ 官能团异构(类别不同)</h3>
+      <p class="step">分子式相同,但属于<b>不同类别的物质</b>——官能团不同。如 C₂H₆O 既可以是乙醇(CH₃CH₂OH,醇),又可以是甲醚(CH₃OCH₃,醚)。这是推断题的高频陷阱。</p>
+      <h3>④ 顺反异构(空间构型不同)</h3>
+      <p class="step">因 C=C 双键不能自由旋转,双键两端的取代基有"同侧/异侧"之分。如 2-丁烯有顺-2-丁烯与反-2-丁烯。属于立体(空间)异构。</p>
+      <p class="trap">⚠ 前三种是<b>构造异构</b>(原子连接方式不同),顺反异构是<b>立体异构</b>(连接方式相同、空间排布不同)。数同分异构体时四类都要考虑,但高考对顺反异构一般只在明确要求时才计入。</p>
+    </div>
+
+    <!-- ========================= 3 官能团异构关系 ========================= -->
+    <h2 class="o">③ 常见官能团异构关系(必背对照表)</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--orange)">🗣️ <b>看到一个分子式,先想它"还能是别的什么类"。</b> 官能团异构是"换类别"的异构,记住这几对关系,推断题里就不会漏掉隐藏的可能性。</div>
+      <table>
+        <tr><th>通式 / 分子式特征</th><th>互为官能团异构的两类</th><th>典型例子(分子式)</th></tr>
+        <tr><td>CₙH₂ₙ₊₂O(饱和一元)</td><td><b>醇 ↔ 醚</b></td><td>乙醇 CH₃CH₂OH ↔ 甲醚 CH₃OCH₃(C₂H₆O)</td></tr>
+        <tr><td>CₙH₂ₙO(饱和一元)</td><td><b>醛 ↔ 酮</b>(n≥3)</td><td>丙醛 CH₃CH₂CHO ↔ 丙酮 CH₃COCH₃(C₃H₆O)</td></tr>
+        <tr><td>CₙH₂ₙO₂(饱和一元)</td><td><b>羧酸 ↔ 酯</b></td><td>乙酸 CH₃COOH ↔ 甲酸甲酯 HCOOCH₃(C₂H₄O₂)</td></tr>
+        <tr><td>CₙH₂ₙ(n≥3)</td><td><b>烯烃 ↔ 环烷烃</b></td><td>丙烯 CH₃CH=CH₂ ↔ 环丙烷(C₃H₆)</td></tr>
+        <tr><td>C₆H₁₂O₆</td><td><b>葡萄糖 ↔ 果糖</b></td><td>葡萄糖(多羟基醛)↔ 果糖(多羟基酮)</td></tr>
+      </table>
+      <p class="step"><b>补充:</b> 二糖 C₁₂H₂₂O₁₁ 中,蔗糖 ↔ 麦芽糖也互为同分异构体(蔗糖无还原性,麦芽糖有)。</p>
+      <p class="trap">⚠ 醛↔酮要求 n≥3(乙醛 C₂H₄O 没有对应的酮);羧酸↔酯里甲酸酯要小心:HCOOCH₃ 既含酯基又保留了醛基性质(能发生银镜反应),是常考陷阱。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 官能团异构关系图</div>
+      <p class="step">点一个分子式,看它能"变身"成哪几类物质、官能团怎么换。理解"同分子式、不同类别"。</p>
+      <div class="chips" id="fgChips"></div>
+      <svg id="fgSvg" viewBox="0 0 760 240"></svg>
+      <div class="verdict" id="fgVerdict"></div>
+    </div>
+
+    <!-- ========================= 4 有序书写三步法 ========================= -->
+    <h2 class="g">④ 有序书写三步法(不重不漏的核心)</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--green)">🗣️ <b>书写同分异构体最怕两件事:漏了、写重了。</b> 治它俩的唯一办法就是"有序"——像查字典一样按固定顺序来,不靠灵感。</div>
+      <h3>三步法(以饱和一元醇 CₙH₂ₙ₊₁OH 为例)</h3>
+      <p class="step"><b>第一步 · 先定碳链(碳骨架):</b> 用"减碳法"把碳链从最长的直链开始,逐步缩短主链、把碳变成支链,列出所有不同的碳骨架。C₅ 骨架有 3 种(直链、单甲基支链、双甲基/乙基支链)。</p>
+      <p class="step"><b>第二步 · 再定官能团位置:</b> 在每一种碳骨架上,把 —OH(或其它官能团)依次挂到<b>所有不等价的位置</b>上。要用"等效氢法"判断哪些位置是等价的,避免重复。</p>
+      <p class="step"><b>第三步 · 检查去重与合理性:</b> 把画出来的结构互相比对,凡是"旋转/翻转后能重合"的算同一种;再检查每个碳是否都是四价、结构是否合理。</p>
+      <div class="mono">口诀:主链由长到短 → 支链由整到散 → 位置由心到边 → 对称去重复</div>
+      <h3>减碳法示意(碳链异构枚举)</h3>
+      <p class="step">以 C₅H₁₂(戊烷)为例:①5 碳直链 → 正戊烷;②主链缩为 4 碳、1 个甲基支链(甲基只能在 2 号位,3 号位与 2 号位等价)→ 异戊烷;③主链缩为 3 碳、2 个甲基都在中间碳 → 新戊烷。共 <b>3 种</b>。</p>
+      <p class="trap">⚠ 减碳时支链不能加在链<b>端点</b>(那等于延长主链)、也不能让支链比"剩下的主链"还长(否则主链选错了)。这两条是"数骨架"最常翻车的地方。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · C₄ / C₅ 醇的同分异构枚举</div>
+      <p class="step">选碳数,看程序按"先碳骨架、再 —OH 位置"逐个把醇画出来,并标出总数。体会有序思维怎么保证不重不漏。</p>
+      <div class="chips" id="alcChips"></div>
+      <svg id="alcSvg" viewBox="0 0 760 300"></svg>
+      <div class="verdict" id="alcVerdict"></div>
+    </div>
+
+    <!-- ========================= 5 等效氢法 ========================= -->
+    <h2 class="r">⑤ 等效氢法 · 数一氯代物 / 二氯代物</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--red)">🗣️ <b>一氯代物有几种,就看这分子里有几种『不等价』的氢。</b> 换掉哪种氢,就得到一种一氯代物。所以问题变成:数这个分子有几种不同环境的氢(等效氢)。</div>
+      <h3>如何判断两个氢"等效"(处于同一环境)</h3>
+      <p class="step">① <b>同一碳上的氢</b>一定等效(如同一个 —CH₃ 上的 3 个 H);</p>
+      <p class="step">② <b>分子中处于对称位置</b>(镜面对称、旋转对称)的碳上的氢彼此等效;</p>
+      <p class="step">③ 判据:把某个 H 换成 Cl 后,若得到的是<b>同一种</b>产物,则这些 H 等效。</p>
+      <h3>核心结论</h3>
+      <div class="mono">一氯代物的种数 = 分子中『等效氢』的种数</div>
+      <p class="step"><b>经典例:</b> 新戊烷 C(CH₃)₄——四个甲基完全等价,只有 1 种氢 → 一氯代物只有 <b>1 种</b>。正戊烷有 3 种等效氢 → 一氯代物 <b>3 种</b>。异戊烷有 4 种等效氢 → 一氯代物 <b>4 种</b>。</p>
+      <p class="trap">⚠ 二氯代物更难:要"先固定第一个 Cl,再数在此基础上第二个 Cl 的不等价位置",最后去掉重复。对称性越高,重复越多,越要小心。利用对称性(如苯环、新戊烷)能大幅简化。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 等效氢法数一氯代物</div>
+      <p class="step">选一个分子,看它的每个碳被按"等效氢种类"上色,不同颜色 = 不同环境的氢 = 不同的一氯代物。种数一目了然。</p>
+      <div class="chips" id="hChips"></div>
+      <svg id="hSvg" viewBox="0 0 760 220"></svg>
+      <div class="readout">
+        <div><b>等效氢种类</b><span id="hKinds">—</span></div>
+        <div><b>一氯代物种数</b><span id="hMono">—</span></div>
+        <div><b>说明</b><span id="hDesc" style="font-size:12px">—</span></div>
+      </div>
+    </div>
+
+    <!-- ========================= 6 限定条件书写 ========================= -->
+    <h2 class="v">⑥ 限定条件下的同分异构体书写</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--violet)">🗣️ <b>限定条件其实是在帮你缩小范围。</b> 每个条件都对应一个明确的结构特征。把条件翻译成"必须含什么、不能含什么",符合的才留下。</div>
+      <h3>常见条件 → 结构翻译对照</h3>
+      <table>
+        <tr><th>题目条件</th><th>翻译成结构特征</th></tr>
+        <tr><td>能发生<b>银镜反应</b> / 与新制 Cu(OH)₂ 加热变砖红</td><td>含 <b>—CHO 醛基</b>(甲酸及其酯 HCOO— 也可以)</td></tr>
+        <tr><td>能与 <b>NaHCO₃ 反应放出气体</b></td><td>含 <b>—COOH 羧基</b></td></tr>
+        <tr><td>能与 <b>Na 反应放氢</b>、但不与 NaHCO₃/Na₂CO₃ 反应</td><td>含 <b>—OH</b>(醇羟基或酚羟基),不含 —COOH</td></tr>
+        <tr><td>能<b>水解</b></td><td>含 <b>酯基 —COO—</b>(或卤代烃、酰胺等)</td></tr>
+        <tr><td>遇 <b>FeCl₃ 显紫色</b> / 能与 NaOH 反应但不与 Na₂CO₃ 放气</td><td>含 <b>酚羟基</b>(—OH 直接连苯环)</td></tr>
+        <tr><td>含<b>苯环</b> / 能使溴水或酸性 KMnO₄ 褪色</td><td>含苯环 / 含 C=C、C≡C 或醛基等</td></tr>
+        <tr><td>核磁氢谱只有 <b>n 组峰(比例 a:b:…)</b></td><td>分子有 <b>n 种等效氢</b>,且个数比为该比例</td></tr>
+      </table>
+      <p class="step"><b>书写流程:</b> 先写出满足全部条件的"骨架/官能团组合",再在剩下的自由度里有序枚举位置,最后核对分子式与所有条件。</p>
+      <p class="trap">⚠ 别把"能与 Na 反应"当成"含 —COOH":—OH 和 —COOH 都能与 Na 放氢!区分它俩要用 NaHCO₃(只有 —COOH 放 CO₂)。这是限定条件里最经典的坑。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 限定条件筛选器</div>
+      <p class="step">题干:分子式 C₃H₆O₂ 的同分异构体。勾选题目给的条件,看哪些结构被筛掉、哪些留下。多选条件同时满足。</p>
+      <div class="chips" id="filtChips"></div>
+      <div id="filtList"></div>
+      <div class="verdict" id="filtVerdict"></div>
+    </div>
+
+    <!-- ========================= 7 芳香族同分异构 ========================= -->
+    <h2 class="b">⑦ 芳香族化合物的同分异构</h2>
+    <div class="card">
+      <p class="step"><b>苯环上取代基的位置异构:</b> 二取代苯有<b>邻(1,2)、间(1,3)、对(1,4)三种</b>。这是最基础的"3 种"必记结论。</p>
+      <p class="step"><b>侧链异构:</b> 侧链本身也可以有碳链/官能团异构。如 C₈H₁₀ 的芳香烃有 4 种:乙苯、邻/间/对二甲苯。</p>
+      <h3>数芳香族异构体的通用思路(分而治之)</h3>
+      <p class="step">① <b>先分官能团组合:</b> 确定苯环上要挂哪些基团(如 1 个 —OH + 1 个 —CH₃,还是 1 个 —CH₂OH,等);<br>② <b>再定苯环上位置:</b> 二取代按邻/间/对(3 种),三取代按 (1,2,3)/(1,2,4)/(1,3,5) 也是 3 种;<br>③ <b>最后算侧链内部异构。</b></p>
+      <p class="step"><b>经典例:</b> 分子式 C₇H₈O 的芳香族化合物有 <b>5 种</b>——邻/间/对甲基苯酚(3 种)、苯甲醇(C₆H₅CH₂OH)、苯甲醚(C₆H₅OCH₃),共 5 种。</p>
+      <p class="trap">⚠ 三取代苯只有 3 种位置(连、偏、均),别数成更多;另外像 C₇H₈O 这种题,容易漏掉"醚"(苯甲醚)或把苯甲醇与甲基苯酚混淆——它们官能团不同(醇 vs 酚)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 顺反异构判断</div>
+      <p class="step">给一个 C=C 双键,拖动切换双键两端的取代基。看什么时候"存在顺反异构"、什么时候不存在。</p>
+      <div class="chips" id="cisChips"></div>
+      <svg id="cisSvg" viewBox="0 0 760 250"></svg>
+      <div class="verdict" id="cisVerdict"></div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑧ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑨ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. <b>不重不漏做不到:</b> 随手乱写导致漏项或重复。必须用"先碳链、再位置"的有序思维,画完互相比对旋转翻转后是否重合。</p>
+      <p class="trap">2. <b>限定条件筛错:</b> 把"能与 Na 放氢"当成一定含 —COOH。—OH 也能;区分要靠 NaHCO₃(只有 —COOH 放 CO₂)。</p>
+      <p class="trap">3. <b>等效氢数错:</b> 忽略分子对称性,把等价的氢当成不同种(或反之)。判据:换 Cl 后是否为同一产物。</p>
+      <p class="trap">4. <b>顺反异构条件不清:</b> 只要 C=C 双键<b>某一端两个基团相同</b>,就没有顺反异构(如 1-丁烯 CH₂=CHCH₂CH₃ 无顺反,因为 =CH₂ 端两个都是 H)。</p>
+      <p class="trap">5. <b>官能团异构漏类:</b> 见 C₂H₆O 只想到乙醇,漏了甲醚;见 CₙH₂ₙO₂ 只想到羧酸,漏了酯。要背熟对照表。</p>
+      <p class="trap">6. <b>甲酸酯的陷阱:</b> HCOOCH₃ 含酯基但也含醛基结构(HCOO—),既能水解又能发生银镜反应。</p>
+      <p class="trap">7. <b>三取代苯数成太多:</b> 三取代(相同基团)只有连(1,2,3)、偏(1,2,4)、均(1,3,5)3 种。</p>
+      <p class="trap">8. <b>把同系物/同素异形体当同分异构体:</b> 差 CH₂ 是同系物;同元素不同单质是同素异形体。三者别混。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>把"数目"转成"可数的量":</b> 一氯代物种数=等效氢种数;二取代产物种数用组合思想(先固定一个、再数另一个的不等价位置、再去重)。把结构问题化成计数问题。</p>
+      <p class="step">▸ <b>对称性是最强工具:</b> 分子越对称,等效氢/等价位置越少,异构体也越少。先找分子的对称轴/对称面,能瞬间砍掉大量重复。新戊烷、苯、对二取代苯都是高对称典型。</p>
+      <p class="step">▸ <b>核磁氢谱(¹H-NMR)反推结构:</b> "几组峰"=几种等效氢;"峰面积比"=各种氢的个数比。给出 n 组峰、比例 a:b:c,就能大幅锁定结构。这是新高考的高频信息给法。</p>
+      <p class="step">▸ <b>不饱和度(缺氢指数)先行:</b> Ω=(2×C+2+N−H−X)/2。一个 Ω 对应一个环或一个双键,苯环占 4(1环+3双键)。先算 Ω 能立刻判断"有没有苯环/双键/羰基",框定异构范围。</p>
+      <p class="step">▸ <b>分而治之写复杂异构:</b> 官能团组合 × 碳骨架 × 位置,三个维度分别枚举再相乘(注意去重)。把大问题拆成互相独立的小计数。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:有机物的结构与命名 / 有机推断</p>
+  </div>
+
+<script>
+/* ============ 工具 ============ */
+function atom(x,y,txt,fill){return '<circle cx="'+x+'" cy="'+y+'" r="16" fill="'+(fill||'#16120A')+'" stroke="#16120A" stroke-width="2.5"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">'+txt+'</text>';}
+function bond(x1,y1,x2,y2,w){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#16120A" stroke-width="'+(w||4)+'" stroke-linecap="round"/>';}
+function dbond(x1,y1,x2,y2){var dx=y2-y1,dy=x1-x2,L=Math.sqrt(dx*dx+dy*dy)||1;dx=dx/L*4;dy=dy/L*4;return bond(x1+dx,y1+dy,x2+dx,y2+dy,3)+bond(x1-dx,y1-dy,x2-dx,y2-dy,3);}
+
+/* ============ 交互1 四大异构类型 ============ */
+(function(){
+  const data=[
+    {k:'碳链异构',note:'正丁烷(直链)与异丁烷(带一个支链)——分子式都是 C₄H₁₀,差别在碳骨架的连接方式。',
+     draw:function(){
+       let s='<text x="190" y="30" text-anchor="middle" font-size="14" font-weight="900">正丁烷 C₄H₁₀</text>';
+       s+=bond(90,120,160,120)+bond(160,120,230,120)+bond(230,120,300,120);
+       s+=atom(90,120,'C')+atom(160,120,'C')+atom(230,120,'C')+atom(300,120,'C');
+       s+='<text x="570" y="30" text-anchor="middle" font-size="14" font-weight="900">异丁烷 C₄H₁₀</text>';
+       s+=bond(490,120,560,120)+bond(560,120,630,120)+bond(560,120,560,60);
+       s+=atom(490,120,'C')+atom(560,120,'C')+atom(630,120,'C')+atom(560,60,'C');
+       s+='<text x="380" y="200" text-anchor="middle" font-size="13" font-weight="800" fill="#7A3FF2">差别:碳链是直链还是有支链</text>';
+       return s;}},
+    {k:'位置异构',note:'1-丙醇与2-丙醇——碳骨架相同,只是 —OH 挂的位置不同(挂在1号碳 vs 2号碳)。',
+     draw:function(){
+       let s='<text x="190" y="30" text-anchor="middle" font-size="14" font-weight="900">1-丙醇 C₃H₈O</text>';
+       s+=bond(90,120,160,120)+bond(160,120,230,120)+bond(90,120,90,60);
+       s+=atom(90,120,'C')+atom(160,120,'C')+atom(230,120,'C')+atom(90,60,'OH','#E86A17');
+       s+='<text x="570" y="30" text-anchor="middle" font-size="14" font-weight="900">2-丙醇 C₃H₈O</text>';
+       s+=bond(490,120,560,120)+bond(560,120,630,120)+bond(560,120,560,60);
+       s+=atom(490,120,'C')+atom(560,120,'C')+atom(630,120,'C')+atom(560,60,'OH','#E86A17');
+       s+='<text x="380" y="200" text-anchor="middle" font-size="13" font-weight="800" fill="#7A3FF2">差别:—OH 官能团挂的位置不同</text>';
+       return s;}},
+    {k:'官能团异构',note:'乙醇(醇,含 —OH)与甲醚(醚,含 C—O—C)——分子式都是 C₂H₆O,但官能团/类别完全不同。',
+     draw:function(){
+       let s='<text x="190" y="30" text-anchor="middle" font-size="14" font-weight="900">乙醇 C₂H₆O(醇)</text>';
+       s+=bond(110,120,180,120)+bond(180,120,250,120);
+       s+=atom(110,120,'C')+atom(180,120,'C')+atom(250,120,'OH','#E86A17');
+       s+='<text x="570" y="30" text-anchor="middle" font-size="14" font-weight="900">甲醚 C₂H₆O(醚)</text>';
+       s+=bond(470,120,540,120)+bond(540,120,610,120);
+       s+=atom(470,120,'C')+atom(540,120,'O','#1450C8')+atom(610,120,'C');
+       s+='<text x="380" y="200" text-anchor="middle" font-size="13" font-weight="800" fill="#7A3FF2">差别:官能团不同 → 属于不同类别</text>';
+       return s;}},
+    {k:'顺反异构',note:'顺-2-丁烯与反-2-丁烯——两个 —CH₃ 在双键同侧(顺)还是异侧(反)。C=C 不能自由旋转才产生。',
+     draw:function(){
+       let s='<text x="190" y="30" text-anchor="middle" font-size="14" font-weight="900">顺-2-丁烯</text>';
+       s+=dbond(140,120,240,120)+bond(140,120,110,70)+bond(240,120,270,70);
+       s+=atom(110,70,'C')+atom(270,70,'C')+atom(140,120,'C')+atom(240,120,'C');
+       s+='<text x="570" y="30" text-anchor="middle" font-size="14" font-weight="900">反-2-丁烯</text>';
+       s+=dbond(520,120,620,120)+bond(520,120,490,70)+bond(620,120,650,170);
+       s+=atom(490,70,'C')+atom(650,170,'C')+atom(520,120,'C')+atom(620,120,'C');
+       s+='<text x="380" y="220" text-anchor="middle" font-size="13" font-weight="800" fill="#7A3FF2">差别:两甲基同侧(顺) vs 异侧(反)</text>';
+       return s;}}
+  ];
+  const chips=document.getElementById('typeChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('typeSvg');
+  function render(){const d=data[cur];svg.innerHTML=d.draw();document.getElementById('typeVerdict').textContent=d.note;}
+  render();
+})();
+
+/* ============ 交互2 等效氢法 ============ */
+(function(){
+  const palette=['#E0382A','#1450C8','#1E9E86','#E86A17','#7A3FF2'];
+  const data=[
+    {k:'甲烷 CH₄',kinds:1,desc:'只有 1 种氢(4 个等价 H)。',
+     nodes:[[380,110,0,'C']],bonds:[]},
+    {k:'新戊烷 C(CH₃)₄',kinds:1,desc:'四个甲基完全等价,只有 1 种氢 → 一氯代物仅 1 种。高对称典型。',
+     nodes:[[380,120,-1,'C'],[380,50,0,'C'],[380,190,0,'C'],[310,120,0,'C'],[450,120,0,'C']],
+     bonds:[[0,1],[0,2],[0,3],[0,4]]},
+    {k:'正戊烷 C₅H₁₂',kinds:3,desc:'两端甲基(1种)、次端 CH₂(1种)、中间 CH₂(1种)=3 种 → 一氯代物 3 种。',
+     nodes:[[130,120,0,'C'],[240,120,1,'C'],[350,120,2,'C'],[460,120,1,'C'],[570,120,0,'C']],
+     bonds:[[0,1],[1,2],[2,3],[3,4]]},
+    {k:'异戊烷 C₅H₁₂',kinds:4,desc:'CH₃×2(支端,1种)、支链甲基(1种)、CH(1种)、CH₂(1种)、末端CH₃(1种)——实为 4 种等效氢 → 一氯代物 4 种。',
+     nodes:[[150,120,0,'C'],[270,120,1,'C'],[270,50,2,'C'],[390,120,3,'C'],[510,120,0,'C']],
+     bonds:[[0,1],[1,2],[1,3],[3,4]]},
+    {k:'2,2-二甲基丁烷',kinds:3,desc:'季碳上三个等价甲基(1种)、CH₂(1种)、末端CH₃(1种)=3 种 → 一氯代物 3 种。',
+     nodes:[[200,120,0,'C'],[200,50,0,'C'],[130,170,0,'C'],[320,120,1,'C'],[440,120,2,'C']],
+     bonds:[[0,1],[0,2],[0,3],[3,4]]}
+  ];
+  const chips=document.getElementById('hChips');let cur=1;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===1?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('hSvg');
+  function render(){
+    const d=data[cur];let s='';
+    d.bonds.forEach(b=>{const a=d.nodes[b[0]],c=d.nodes[b[1]];s+=bond(a[0],a[1],c[0],c[1]);});
+    d.nodes.forEach(n=>{s+=atom(n[0],n[1],'C',palette[n[2]]);});
+    s+='<text x="380" y="30" text-anchor="middle" font-size="13" font-weight="900">同色碳 = 同种(等效)氢环境</text>';
+    svg.innerHTML=s;
+    document.getElementById('hKinds').textContent=d.kinds+' 种';
+    document.getElementById('hMono').textContent=d.kinds+' 种';
+    document.getElementById('hDesc').textContent=d.desc;
+  }
+  render();
+})();
+
+/* ============ 交互3 限定条件筛选器 (C₃H₆O₂) ============ */
+(function(){
+  // C3H6O2 的主要同分异构体
+  const isomers=[
+    {name:'丙酸 CH₃CH₂COOH',cooh:true,ester:false,cho:false,tag:'羧酸'},
+    {name:'甲酸乙酯 HCOOCH₂CH₃',cooh:false,ester:true,cho:true,tag:'酯(含甲酸酯→有醛性)'},
+    {name:'乙酸甲酯 CH₃COOCH₃',cooh:false,ester:true,cho:false,tag:'酯'},
+    {name:'羟基丙醛 HOCH₂CH₂CHO',cooh:false,ester:false,cho:true,tag:'羟基醛'},
+    {name:'2-羟基丙醛 CH₃CH(OH)CHO',cooh:false,ester:false,cho:true,tag:'羟基醛'}
+  ];
+  const conds=[
+    {k:'能与 NaHCO₃ 放气(含—COOH)',test:x=>x.cooh},
+    {k:'能水解(含酯基)',test:x=>x.ester},
+    {k:'能银镜反应(含—CHO)',test:x=>x.cho}
+  ];
+  const chips=document.getElementById('filtChips');const sel=[false,false,false];
+  conds.forEach((c,i)=>{const b=document.createElement('div');b.className='chip';b.textContent=c.k;b.onclick=()=>{sel[i]=!sel[i];b.classList.toggle('on');render();};chips.appendChild(b);});
+  const list=document.getElementById('filtList');
+  function render(){
+    let html='';let cnt=0;
+    isomers.forEach(x=>{
+      let ok=true;conds.forEach((c,i)=>{if(sel[i]&&!c.test(x))ok=false;});
+      if(ok)cnt++;
+      html+='<div class="ex" style="opacity:'+(ok?1:0.28)+';border-color:'+(ok?'#7A3FF2':'#999')+'"><b>'+(ok?'✔':'✗')+'</b> '+x.name+' <span style="color:#6b5d3a">['+x.tag+']</span></div>';
+    });
+    list.innerHTML=html;
+    const any=sel.some(s=>s);
+    document.getElementById('filtVerdict').textContent=any?('满足所勾选条件的共 '+cnt+' 种(高亮项)。'):('未选条件:C₃H₆O₂ 共列出 '+isomers.length+' 种代表性异构体,勾选条件开始筛选。');
+  }
+  render();
+})();
+
+/* ============ 交互4 官能团异构关系图 ============ */
+(function(){
+  const data=[
+    {k:'C₂H₆O',center:'C₂H₆O',branches:[['乙醇 CH₃CH₂OH','醇 —OH','#E86A17'],['甲醚 CH₃OCH₃','醚 C—O—C','#1450C8']],
+     note:'C₂H₆O:醇(乙醇)↔ 醚(甲醚)。这是最经典的官能团异构对。'},
+    {k:'C₃H₆O',center:'C₃H₆O',branches:[['丙醛 CH₃CH₂CHO','醛 —CHO','#E0382A'],['丙酮 CH₃COCH₃','酮 C=O','#7A3FF2']],
+     note:'C₃H₆O(n≥3):醛 ↔ 酮。乙醛 C₂H₄O 没有对应的酮,所以要求碳数 ≥3。'},
+    {k:'C₂H₄O₂',center:'C₂H₄O₂',branches:[['乙酸 CH₃COOH','羧酸 —COOH','#1E9E86'],['甲酸甲酯 HCOOCH₃','酯 —COO—','#1450C8']],
+     note:'CₙH₂ₙO₂:羧酸 ↔ 酯。注意甲酸甲酯含醛基结构,能银镜反应。'},
+    {k:'C₃H₆',center:'C₃H₆',branches:[['丙烯 CH₃CH=CH₂','烯烃 C=C','#E0382A'],['环丙烷 △','环烷烃','#1E9E86']],
+     note:'CₙH₂ₙ(n≥3):烯烃 ↔ 环烷烃。都是不饱和度为 1。'},
+    {k:'C₆H₁₂O₆',center:'C₆H₁₂O₆',branches:[['葡萄糖','多羟基醛','#E0382A'],['果糖','多羟基酮','#7A3FF2']],
+     note:'C₆H₁₂O₆:葡萄糖(多羟基醛)↔ 果糖(多羟基酮)。生物里的重要一对。'}
+  ];
+  const chips=document.getElementById('fgChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('fgSvg');
+  function render(){
+    const d=data[cur];let s='';
+    const cx=380,cy=120;
+    d.branches.forEach((br,i)=>{const bx=i===0?150:610;s+=bond(cx,cy,bx,cy,4);});
+    d.branches.forEach((br,i)=>{const bx=i===0?150:610;
+      s+='<rect x="'+(bx-120)+'" y="'+(cy-38)+'" width="240" height="76" rx="8" fill="'+br[2]+'" stroke="#16120A" stroke-width="3"/>';
+      s+='<text x="'+bx+'" y="'+(cy-8)+'" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">'+br[0]+'</text>';
+      s+='<text x="'+bx+'" y="'+(cy+18)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">'+br[1]+'</text>';});
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="46" fill="#16120A" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="15" font-weight="900" fill="#F3C00E">'+d.center+'</text>';
+    s+='<text x="'+cx+'" y="'+(cy-58)+'" text-anchor="middle" font-size="12" font-weight="800">同一分子式,可以是 →</text>';
+    svg.innerHTML=s;
+    document.getElementById('fgVerdict').textContent=d.note;
+  }
+  render();
+})();
+
+/* ============ 交互5 醇的同分异构枚举 ============ */
+(function(){
+  const data={
+    'C₄H₉OH (丁醇)':{count:4,items:[
+      {name:'正丁醇 1-丁醇',draw:g=>chain(g,[0,1,2,3],3,-1)},
+      {name:'2-丁醇',draw:g=>chain(g,[0,1,2,3],1,-1)},
+      {name:'异丁醇 (2-甲基-1-丙醇)',draw:g=>iso(g,0)},
+      {name:'叔丁醇 (2-甲基-2-丙醇)',draw:g=>iso(g,1)}
+    ],note:'C₄H₉OH 共 4 种:先分两种碳骨架(正丁基链、异丁基/2-甲基丙基),再各挂 —OH 到不等价位置。'},
+    'C₃H₇OH (丙醇)':{count:2,items:[
+      {name:'1-丙醇',draw:g=>chain3(g,0)},
+      {name:'2-丙醇',draw:g=>chain3(g,1)}
+    ],note:'C₃H₇OH 只有 1 种碳骨架(3碳直链),—OH 有 2 个不等价位置(1号=3号等价,2号)→ 共 2 种。'}
+  };
+  function chain(g,cs,ohPos,_){let s='';const y=g+40;for(let i=0;i<4;i++){const x=90+i*70;if(i<3)s+=bond(x,y,x+70,y);}
+    for(let i=0;i<4;i++){const x=90+i*70;s+=atom(x,y,'C');}
+    const ox=90+ohPos*70;s+=bond(ox,y,ox,y-45)+atom(ox,y-45,'OH','#E86A17');return s;}
+  function chain3(g,ohPos){let s='';const y=g+40;for(let i=0;i<3;i++){const x=110+i*70;if(i<2)s+=bond(x,y,x+70,y);}
+    for(let i=0;i<3;i++){const x=110+i*70;s+=atom(x,y,'C');}
+    const ox=110+ohPos*70;s+=bond(ox,y,ox,y-45)+atom(ox,y-45,'OH','#E86A17');return s;}
+  function iso(g,which){let s='';const y=g+55;
+    // isobutyl skeleton: central C with CH3, CH3(top), and a CH2/branch
+    const cx=180;
+    s+=bond(cx,y,cx-70,y)+bond(cx,y,cx,y-55)+bond(cx,y,cx+70,y);
+    s+=atom(cx-70,y,'C')+atom(cx,y-55,'C')+atom(cx,y,'C')+atom(cx+70,y,'C');
+    if(which===0){s+=bond(cx-70,y,cx-70,y-45)+atom(cx-70,y-45,'OH','#E86A17');}
+    else{s+=bond(cx,y,cx,y+45)+atom(cx,y+45,'OH','#E86A17');}
+    return s;}
+  const chips=document.getElementById('alcChips');const keys=Object.keys(data);let cur=0;
+  keys.forEach((k,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('alcSvg');
+  function render(){
+    const d=data[keys[cur]];let s='';
+    const cols=2;
+    d.items.forEach((it,i)=>{
+      const col=i%cols,row=Math.floor(i/cols);
+      const gx=col*380,gy=row*140;
+      s+='<g transform="translate('+gx+','+gy+')">';
+      s+='<text x="20" y="24" font-size="13" font-weight="900" fill="#7A3FF2">'+(i+1)+'. '+it.name+'</text>';
+      s+=it.draw(0);
+      s+='</g>';
+    });
+    svg.innerHTML=s;
+    document.getElementById('alcVerdict').textContent='共 '+d.count+' 种。'+d.note;
+  }
+  render();
+})();
+
+/* ============ 交互6 顺反异构判断 ============ */
+(function(){
+  // 每个案例:双键左端两取代基 la,lb ; 右端 ra,rb ; 是否有顺反
+  const data=[
+    {k:'2-丁烯 CH₃CH=CHCH₃',la:'CH₃',lb:'H',ra:'CH₃',rb:'H',has:true,
+     note:'左端 CH₃≠H,右端 CH₃≠H → 两端都『不对称』→ 有顺反异构(顺-2-丁烯 / 反-2-丁烯)。'},
+    {k:'1-丁烯 CH₂=CHCH₂CH₃',la:'H',lb:'H',ra:'C₂H₅',rb:'H',has:false,
+     note:'左端两个都是 H(=CH₂),这一端两个基团相同 → 没有顺反异构。'},
+    {k:'1,1-二氯乙烯 CCl₂=CH₂',la:'Cl',lb:'Cl',ra:'H',rb:'H',has:false,
+     note:'左端两个 Cl 相同、右端两个 H 相同 → 两端都对称 → 没有顺反异构。'},
+    {k:'1,2-二氯乙烯 CHCl=CHCl',la:'Cl',lb:'H',ra:'Cl',rb:'H',has:true,
+     note:'左端 Cl≠H,右端 Cl≠H → 两端都不对称 → 有顺反异构。'}
+  ];
+  const chips=document.getElementById('cisChips');let cur=0;
+  data.forEach((d,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=d.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  const svg=document.getElementById('cisSvg');
+  function grp(x,y,txt,hot){return '<rect x="'+(x-26)+'" y="'+(y-16)+'" width="52" height="32" rx="6" fill="'+(hot?'#7A3FF2':'#EBE4D2')+'" stroke="#16120A" stroke-width="2.5"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="12" font-weight="800" fill="'+(hot?'#fff':'#16120A')+'">'+txt+'</text>';}
+  function render(){
+    const d=data[cur];let s='';
+    const lc=300,rc=460,cy=140;
+    s+=dbond(lc,cy,rc,cy);
+    s+='<circle cx="'+lc+'" cy="'+cy+'" r="15" fill="#16120A"/><text x="'+lc+'" y="'+(cy+5)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">C</text>';
+    s+='<circle cx="'+rc+'" cy="'+cy+'" r="15" fill="#16120A"/><text x="'+rc+'" y="'+(cy+5)+'" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">C</text>';
+    // left substituents (up/down)
+    const lSame=d.la===d.lb, rSame=d.ra===d.rb;
+    s+=bond(lc,cy,lc-40,cy-60,3)+grp(lc-60,cy-70,d.la,!lSame);
+    s+=bond(lc,cy,lc-40,cy+60,3)+grp(lc-60,cy+70,d.lb,!lSame);
+    s+=bond(rc,cy,rc+40,cy-60,3)+grp(rc+60,cy-70,d.ra,!rSame);
+    s+=bond(rc,cy,rc+40,cy+60,3)+grp(rc+60,cy+70,d.rb,!rSame);
+    s+='<text x="380" y="30" text-anchor="middle" font-size="13" font-weight="900">紫色=该端两基团不同(判据高亮)</text>';
+    const col=d.has?'#1E9E86':'#E0382A';
+    s+='<text x="380" y="245" text-anchor="middle" font-size="15" font-weight="900" fill="'+col+'">'+(d.has?'✔ 存在顺反异构':'✗ 不存在顺反异构')+'</text>';
+    svg.innerHTML=s;
+    const v=document.getElementById('cisVerdict');v.textContent=d.note;v.style.borderColor=col;
+  }
+  render();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  const maps=[
+    {t:'数同分异构体总数',sig:'『共有几种同分异构体』『分子式 CₓHᵧOᵤ 有多少种』,不加或少加限定。',act:'有序思维:①先算不饱和度框定范围;②先定碳骨架(减碳法);③再定官能团/取代基位置;④对称去重。四类异构逐一考虑。',ex:'C₅H₁₂ 有几种?→ 正戊烷、异戊烷、新戊烷,共 3 种碳链异构。',trap:'漏项或重复;别忘官能团异构与位置异构;顺反异构按题目要求计入。'},
+    {t:'限定条件书写',sig:'给分子式 + 若干条件(能银镜、含苯环、能水解、核磁 n 组峰…),让『写出符合的结构』。',act:'把每个条件翻译成结构特征(必须含/不能含什么);先锁死官能团,再有序枚举剩余位置;最后核对分子式与全部条件。',ex:'写出含苯环、能银镜反应、C₈H₈O₂ 的同分异构体 → 含苯环+—CHO+…,逐一排布。',trap:'条件翻译出错(Na 与 NaHCO₃ 别混);漏掉某种官能团组合。'},
+    {t:'一氯代物 / 二氯代物种数',sig:'『一氯代物有几种』『二氯代物有几种』『核磁几组峰』。',act:'一氯代物种数=等效氢种数;用对称性判等效氢。二氯代物:固定第一个 Cl,再数第二个的不等价位置,去重。',ex:'新戊烷一氯代物 1 种(全等价);正戊烷 3 种;异戊烷 4 种。',trap:'忽略对称性把等价氢数成多种;二氯代物忘了去重。'},
+    {t:'官能团异构判断',sig:'给出两个结构或分子式,问『是否互为同分异构体 / 属于什么异构』。',act:'先核对分子式是否完全相同;再看官能团类别是否不同(官能团异构)、位置是否不同(位置异构)、骨架(碳链异构)、空间(顺反)。',ex:'CH₃CH₂OH 与 CH₃OCH₃:分子式同 C₂H₆O、官能团不同 → 官能团异构。',trap:'把同系物(差CH₂)或同素异形体误判为同分异构体。'},
+    {t:'芳香族同分异构',sig:'『含苯环的 CₙHₘ… 有几种/写出来』。',act:'分而治之:①定苯环上取代基组合;②定环上位置(二取代邻间对3种,三取代连偏均3种);③算侧链内部异构。',ex:'C₇H₈O 芳香族有 5 种:邻/间/对甲基苯酚 + 苯甲醇 + 苯甲醚。',trap:'三取代数成太多;漏掉醚或把醇酚混淆。'},
+    {t:'核磁氢谱反推结构',sig:'『¹H-NMR 有 n 组峰,峰面积比 a:b:c』求结构或异构体数。',act:'n 组峰=n 种等效氢;面积比=各种氢的个数比。结合分子式与不饱和度锁定结构。',ex:'C₂H₆O 只有 2 组峰(比 3:3?)提示对称的甲醚,而乙醇有 3 组峰。',trap:'把峰数与氢总数混淆;忽略活泼氢(—OH)的特殊性。'}
+  ];
+  const box=document.getElementById('map');
+  maps.forEach(m=>{const d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  const qs=[
+    {q:'1. 同分异构体的定义是什么?抠住哪两个关键?',a:'分子式相同、结构不同的化合物。关键:①分子式必须完全相同;②结构确实不同(连接方式或空间排布不同)。'},
+    {q:'2. 有机物同分异构分为哪四大类型?',a:'碳链异构(骨架不同)、位置异构(官能团位置不同)、官能团异构(类别不同)、顺反异构(空间构型不同)。前三种是构造异构,顺反是立体异构。'},
+    {q:'3. C₂H₆O 的两种同分异构体分别是什么?属于哪种异构?',a:'乙醇 CH₃CH₂OH(醇)与甲醚 CH₃OCH₃(醚),互为官能团异构。'},
+    {q:'4. C₅H₁₂ 有几种同分异构体?分别命名。',a:'3 种:正戊烷、异戊烷(2-甲基丁烷)、新戊烷(2,2-二甲基丙烷)。'},
+    {q:'5. 新戊烷 C(CH₃)₄ 的一氯代物有几种?为什么?',a:'只有 1 种。四个甲基完全等价,分子只有 1 种等效氢,替换任一 H 得到同一产物。'},
+    {q:'6. 正戊烷和异戊烷的一氯代物各有几种?',a:'正戊烷 3 种(3 种等效氢);异戊烷 4 种(4 种等效氢)。'},
+    {q:'7. 判断某有机物含 —COOH 而不是仅含 —OH,用什么试剂?',a:'用 NaHCO₃ 溶液:含 —COOH 会放出 CO₂ 气体,而 —OH 不与 NaHCO₃ 反应(但两者都能与 Na 放氢)。'},
+    {q:'8. 常见互为官能团异构的五对关系是什么?',a:'醇↔醚(CₙH₂ₙ₊₂O)、醛↔酮(CₙH₂ₙO,n≥3)、羧酸↔酯(CₙH₂ₙO₂)、烯烃↔环烷烃(CₙH₂ₙ,n≥3)、葡萄糖↔果糖(C₆H₁₂O₆)。'},
+    {q:'9. 为什么 1-丁烯 CH₂=CHCH₂CH₃ 没有顺反异构?',a:'因为双键的一端(=CH₂)连着两个相同的 H,只要有一端两个基团相同,就不存在顺反异构。'},
+    {q:'10. 二取代苯有几种位置异构?三取代(相同基团)呢?',a:'二取代:邻(1,2)、间(1,3)、对(1,4)共 3 种;三取代:连(1,2,3)、偏(1,2,4)、均(1,3,5)共 3 种。'},
+    {q:'11. C₇H₈O 的芳香族化合物有几种?写出来。',a:'5 种:邻甲基苯酚、间甲基苯酚、对甲基苯酚、苯甲醇(C₆H₅CH₂OH)、苯甲醚(C₆H₅OCH₃)。'},
+    {q:'12. 书写同分异构体做到"不重不漏"的核心方法是什么?',a:'有序思维:先定碳链(减碳法从长到短枚举骨架),再定官能团/取代基位置(用等效氢法找不等价位置),最后对称去重并核对分子式与四价。'}
+  ];
+  const quiz=document.getElementById('quiz');
+  qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

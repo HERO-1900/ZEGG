@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原电池原理与化学电源 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1E9E86;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:18px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* extra viz CSS */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px;margin:16px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0;font-weight:800;font-size:13.5px}
+  .ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--accent);height:6px}
+  .vbtn{background:var(--accent);color:#fff;border:3px solid var(--ink);padding:6px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .vbtn.alt{background:var(--green)}.vbtn.warn{background:var(--red)}.vbtn.dark{background:var(--ink)}
+  .pill{display:inline-block;border:3px solid var(--ink);padding:3px 10px;font-weight:900;font-size:13px;background:var(--yellow)}
+  .seesaw-wrap{position:relative;height:170px;margin:6px 0}
+  .map-card{border:3px solid var(--ink);background:#fff;padding:12px 14px;margin:12px 0;box-shadow:3px 3px 0 var(--ink)}
+  .map-card .tag2{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border:2px solid var(--ink);margin-bottom:4px}
+  .sig{font-weight:800;font-size:13.5px}.sig b{background:var(--yellow);padding:0 3px}
+  .step{font-size:13.5px;font-weight:700;margin:3px 0}
+  .ex{font-size:13px;font-weight:600;background:var(--paper);border:2px solid var(--ink);padding:8px 10px;margin:6px 0}
+  .readbig{font-size:26px;font-weight:900;text-align:center;font-family:"SF Mono",Consolas,monospace}
+  .legend{font-size:11.5px;font-weight:800;display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:11px;height:11px;margin-right:4px;vertical-align:-1px;border:2px solid var(--ink)}
+  .cons-eq{font-family:"SF Mono",Consolas,monospace;font-size:15px;font-weight:800;cursor:pointer;padding:8px 10px;border:3px solid var(--ink);margin:6px 0;background:var(--card)}
+  .cons-eq:hover{background:var(--yellow)}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>原电池原理与化学电源</h1>
+    <p class="lead">把一个自发的氧化还原反应"拆成两半",让电子被迫走外电路——这就是原电池。搞懂负极失电子、正极得电子、电子外走离子内动这条主线,再把干电池、铅蓄电池、燃料电池、锂电池一个个电极式写对,新型电池题就再也吓不住你。</p>
+
+    <div class="say">🗣️ <b>把原电池想成一场"隔空传电子":</b> 本来锌和铜盐溶液直接接触,电子"贴身"就交了,放出的能量全变成热白白浪费。原电池偏要把还原剂(负极)和氧化剂(正极)<b>分开放</b>,中间只用导线连着——电子想过去,<b>只能乖乖走导线</b>,一路上就能推动灯泡、马达做功。<br><b>一句话:负极送电子出门(氧化),电子走外电路到正极,正极收电子(还原);溶液里的离子则在内部定向搬运电荷,让回路闭合。</b>抓住"外电路电子 负→正、内电路离子定向移"这条命脉,所有电池题都是同一套路。</div>
+
+    <div class="keybox"><b>本包导航:</b> ① 原电池的构成条件 → ② 工作原理与电极判断 → ③ 原电池设计与盐桥 → ④ 化学电源(一次/二次/燃料/锂电池) → ⑤ 电极反应式与总反应书写。每节都配可拨动的可视化。</div>
+
+    <!-- ========================= 1 构成条件 ========================= -->
+    <h2 class="b">① 原电池的构成条件</h2>
+    <p class="lead">不是随便两根金属插进溶液就叫原电池。四个条件缺一不可,而"能自发进行的氧化还原反应"是根本前提。</p>
+    <div class="card">
+      <h3>四大构成条件(必背)</h3>
+      <table>
+        <tr><th>条件</th><th>说明</th><th>缺了会怎样</th></tr>
+        <tr><td>① 自发的氧化还原反应</td><td>本质是把一个能自发进行的放热氧化还原反应的化学能转化为电能</td><td>没有反应就没有电子转移,不成电池</td></tr>
+        <tr><td>② 两个活泼性不同的电极</td><td>两极(常为一金属+一较不活泼导体);活泼的作负极,较不活泼的作正极</td><td>两极相同则无电势差,不放电</td></tr>
+        <tr><td>③ 电解质溶液(或熔融电解质)</td><td>提供自由移动的离子,构成内电路</td><td>纯水/非电解质无法导电,回路断</td></tr>
+        <tr><td>④ 形成闭合回路</td><td>两极用导线连接并同时插入电解质(或用盐桥连通两半电池)</td><td>回路不闭合,电子无法定向移动</td></tr>
+      </table>
+      <p class="trap">⚠ "活泼性不同"是常规判据但不是死规定:关键看<b>哪个电极能与电解质发生氧化反应</b>。Mg-Al 电极插入 NaOH 溶液时,Al 能与碱反应,反而 Al 作负极——不要只背"活泼金属作负极"。</p>
+      <div class="keybox" style="margin-top:12px"><b>一句口诀:</b>"一自发、两电极、一溶液、一回路"。判断某装置是不是原电池,逐条对照即可。</div>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 1 · 原电池工作原理动画(Zn-Cu-稀硫酸)</div>
+      <p class="step">点"启动",看电子从负极 Zn 经导线 → 正极 Cu(外电路),同时溶液中阴阳离子定向移动(内电路)。负极 Zn 不断溶解变瘦,正极 Cu 上冒 H₂ 气泡。</p>
+      <canvas id="cCell" width="760" height="360"></canvas>
+      <div class="ctrl"><button class="vbtn" id="cellPlay">▶ 启动电池</button><button class="vbtn dark" id="cellStop">暂停</button><span>电子方向:<b>负极(Zn) → 正极(Cu)</b></span></div>
+      <div class="legend"><span style="color:var(--blue)"><span style="background:var(--blue)"></span>电子 e⁻(外电路)</span><span style="color:var(--red)"><span style="background:var(--red)"></span>阳离子(移向正极)</span><span style="color:var(--green)"><span style="background:var(--green)"></span>阴离子(移向负极)</span></div>
+      <div class="verdict" id="cellNote">负极:Zn − 2e⁻ → Zn²⁺(氧化)　正极:2H⁺ + 2e⁻ → H₂↑(还原)　总:Zn + 2H⁺ → Zn²⁺ + H₂↑</div>
+    </div>
+
+    <!-- ========================= 2 工作原理与电极判断 ========================= -->
+    <h2 class="g">② 工作原理与电极判断</h2>
+    <div class="card">
+      <h3>工作原理主线(背下这四句)</h3>
+      <p class="step">① <b>负极</b>:发生<b>氧化</b>反应,失去电子(还原剂在此被氧化)。</p>
+      <p class="step">② <b>正极</b>:发生<b>还原</b>反应,得到电子(氧化剂在此被还原)。</p>
+      <p class="step">③ <b>外电路</b>:电子由<b>负极 → 正极</b>(电流方向恰好相反:正极 → 负极)。</p>
+      <p class="step">④ <b>内电路</b>:电解质溶液中<b>阳离子移向正极、阴离子移向负极</b>,与外电路一起构成闭合回路。</p>
+      <div class="mono">口诀:负失氧、正得还;电子外路负到正,离子内部各归位(阳→正、阴→负)。</div>
+      <h3>电极判断的五种入手角度</h3>
+      <table>
+        <tr><th>已知信息</th><th>判负极</th><th>判正极</th></tr>
+        <tr><td>电极活泼性</td><td>较活泼(一般)</td><td>较不活泼</td></tr>
+        <tr><td>电子/电流方向</td><td>电子流出端 / 电流流入端</td><td>电子流入端 / 电流流出端</td></tr>
+        <tr><td>反应类型</td><td>发生氧化反应</td><td>发生还原反应</td></tr>
+        <tr><td>电极现象</td><td>电极溶解、质量减小</td><td>有气泡 / 金属析出 / 质量增大</td></tr>
+        <tr><td>离子移动</td><td>阴离子移向的一极</td><td>阳离子移向的一极</td></tr>
+      </table>
+      <p class="trap">⚠ 负极不一定是更活泼的金属!要看"谁在此电解质里真正被氧化"。经典反例:Mg-Al 在 NaOH 溶液中 Al 作负极;Cu-Al 在浓硝酸中 Al 钝化,反而 Cu 作负极。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 5 · 电极判断器(给装置 → 判正负极)</div>
+      <p class="step">选一个电极组合与电解质,系统告诉你谁是负极、谁是正极、各自反应,并解释"为什么"。特别注意那几个"活泼性会骗人"的反例。</p>
+      <div class="chips" id="judgeChips"></div>
+      <svg id="judgeSvg" viewBox="0 0 760 200"></svg>
+      <div class="verdict" id="judgeVerdict"></div>
+    </div>
+
+    <!-- ========================= 3 设计与盐桥 ========================= -->
+    <h2 class="o">③ 原电池的设计与盐桥的作用</h2>
+    <div class="card">
+      <h3>把一个氧化还原反应设计成原电池</h3>
+      <p class="step">给定反应,如 <b>Zn + Cu²⁺ → Zn²⁺ + Cu</b>,设计三步走:</p>
+      <p class="step">① <b>拆半反应</b>:氧化半反应 Zn − 2e⁻ → Zn²⁺(负极);还原半反应 Cu²⁺ + 2e⁻ → Cu(正极)。</p>
+      <p class="step">② <b>定电极与电解质</b>:负极用 Zn 棒插入 ZnSO₄ 溶液;正极用 Cu 棒插入 CuSO₄ 溶液(电极材料一般选参与反应或惰性导体)。</p>
+      <p class="step">③ <b>连通</b>:两烧杯用<b>盐桥</b>连接,两电极用导线经电流表相连,即成双液原电池(丹尼尔电池)。</p>
+      <h3>盐桥的作用(高频简答)</h3>
+      <p class="step">盐桥内装饱和 KCl(或 KNO₃)琼脂。它有两大作用:</p>
+      <p class="step">① <b>沟通内电路、形成闭合回路</b>,使电流持续。</p>
+      <p class="step">② <b>平衡电荷、维持两溶液电中性</b>:负极区 Zn²⁺ 增多带正电,盐桥的<b>阴离子(Cl⁻)移向负极区</b>;正极区 Cu²⁺ 被消耗、SO₄²⁻ 过剩带负电,盐桥的<b>阳离子(K⁺)移向正极区</b>,从而中和多余电荷。</p>
+      <p class="trap">⚠ 用盐桥的<b>双液电池</b>比单液(锌铜都插同一硫酸)更持久、电流更稳,因为氧化剂与还原剂被隔开,避免锌直接与 Cu²⁺ 接触"内耗"、减少能量损失。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 2 · 盐桥作用演示(丹尼尔电池)</div>
+      <p class="step">点"接通盐桥",看两个半电池如何借盐桥闭合回路:左杯 Zn 溶解放出 e⁻、Zn²⁺ 增多 → Cl⁻ 补入;右杯 Cu²⁺ 得电子析出、SO₄²⁻ 过剩 → K⁺ 补入。断开盐桥则电流停止。</p>
+      <canvas id="cBridge" width="760" height="340"></canvas>
+      <div class="ctrl"><button class="vbtn" id="brOn">接通盐桥</button><button class="vbtn warn" id="brOff">断开盐桥</button><span id="brState">状态:盐桥已断,无电流</span></div>
+      <div class="verdict" id="brNote">盐桥接通后:K⁺ 移向正极区(CuSO₄)、Cl⁻ 移向负极区(ZnSO₄),平衡电荷、维持回路。</div>
+    </div>
+
+    <!-- ========================= 4 化学电源 ========================= -->
+    <h2 class="v">④ 化学电源(常见类型全览)</h2>
+    <div class="card">
+      <div class="say" style="margin:6px 0;border-left-color:var(--violet)">🗣️ <b>三大类电源:一次(用完扔)、二次(可充放)、燃料(边加料边发电)。</b> 万变不离其宗:先找谁是燃料/还原剂(负极)、谁是氧化剂(正极),再按介质写电极式。</div>
+      <h3>㈠ 一次电池 · 普通锌锰干电池</h3>
+      <p class="step">负极:Zn(锌筒);正极:石墨棒(周围填 MnO₂ 和 NH₄Cl 糊状电解质)。放电后不能复原,一次性。</p>
+      <div class="mono">负极:Zn − 2e⁻ → Zn²⁺　正极:2MnO₂ + 2NH₄⁺ + 2e⁻ → Mn₂O₃ + 2NH₃ + H₂O</div>
+      <h3>㈡ 二次电池 · 铅蓄电池(可充电)</h3>
+      <p class="step">负极 Pb、正极 PbO₂,电解质为稀硫酸。<b>放电</b>时是原电池;<b>充电</b>时接外电源作电解池,反应逆向进行。放电正负极的固体产物都是 PbSO₄。</p>
+      <div class="mono">放电 负极:Pb + SO₄²⁻ − 2e⁻ → PbSO₄</div>
+      <div class="mono">放电 正极:PbO₂ + 4H⁺ + SO₄²⁻ + 2e⁻ → PbSO₄ + 2H₂O</div>
+      <div class="mono">放电总:Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O　(充电为上式逆反应)</div>
+      <p class="trap">⚠ 充电时"正接正、负接负":蓄电池正极接电源正极(作阳极),负极接电源负极(作阴极)。充电电极反应是放电反应的完全逆过程。</p>
+      <h3>㈢ 燃料电池 · 氢氧 / 甲烷(介质决定产物!)</h3>
+      <p class="step">燃料(H₂、CH₄、甲醇等)在负极被氧化,O₂ 在正极被还原。<b>电解质是酸性还是碱性,直接改变电极式的写法。</b></p>
+      <div class="mono">H₂-O₂(酸性)负:2H₂ − 4e⁻ → 4H⁺　正:O₂ + 4H⁺ + 4e⁻ → 2H₂O</div>
+      <div class="mono">H₂-O₂(碱性)负:2H₂ + 4OH⁻ − 4e⁻ → 4H₂O　正:O₂ + 2H₂O + 4e⁻ → 4OH⁻</div>
+      <h3>㈣ 锂电池(高比能)</h3>
+      <p class="step">锂/锂离子电池以金属锂或含锂化合物为负极活性物,能量密度高、电压高,广泛用于手机、电动车。负极是 Li 失电子(Li − e⁻ → Li⁺),用有机电解质或固体电解质(锂活泼,不能用水溶液)。</p>
+      <p class="trap">⚠ 锂电池不用水作电解质——锂会与水剧烈反应。这是"为什么用有机电解质"的常考解释点。</p>
+      <table>
+        <tr><th>类型</th><th>代表</th><th>能否充电</th><th>负极</th><th>正极</th></tr>
+        <tr><td>一次电池</td><td>锌锰干电池</td><td>否</td><td>Zn</td><td>石墨/MnO₂</td></tr>
+        <tr><td>二次电池</td><td>铅蓄电池</td><td>可</td><td>Pb</td><td>PbO₂</td></tr>
+        <tr><td>燃料电池</td><td>氢氧燃料电池</td><td>持续供料</td><td>通 H₂ 一极</td><td>通 O₂ 一极</td></tr>
+        <tr><td>锂电池</td><td>锂离子电池</td><td>多为可充</td><td>Li / 嵌锂碳</td><td>含锂氧化物</td></tr>
+      </table>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 3 · 燃料电池电极式生成器(选燃料 + 介质)</div>
+      <p class="step">选一种燃料和电解质介质,自动写出配平的负极、正极与总反应式。重点体会:同一燃料,酸性和碱性介质的电极式完全不同,产物形态也变。</p>
+      <div class="ctrl"><span>燃料:</span><div class="chips" id="fuelChips" style="margin:0"></div></div>
+      <div class="ctrl"><span>介质:</span><div class="chips" id="mediumChips" style="margin:0"></div></div>
+      <div class="mono" id="fcNeg">负极:—</div>
+      <div class="mono" id="fcPos">正极:—</div>
+      <div class="mono" id="fcTot">总反应:—</div>
+      <div class="verdict" id="fcNote"></div>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 4 · 一次电池 vs 二次电池(铅蓄电池充放电)</div>
+      <p class="step">切换"放电 / 充电",看铅蓄电池两极上的物质怎样在 Pb / PbO₂ 与 PbSO₄ 之间来回转化,以及电子流向反转。放电=原电池对外供电;充电=电解池被外电源"倒灌"。</p>
+      <canvas id="cLead" width="760" height="320"></canvas>
+      <div class="ctrl"><button class="vbtn" id="ldDischarge">放电(原电池)</button><button class="vbtn alt" id="ldCharge">充电(电解池)</button></div>
+      <div class="verdict" id="ldNote"></div>
+    </div>
+
+    <!-- ========================= 5 电极反应式书写 ========================= -->
+    <h2 class="g">⑤ 电极反应式与总反应的书写</h2>
+    <div class="card">
+      <h3>书写四步法(通用)</h3>
+      <p class="step">① <b>定正负极、定得失</b>:负极物质被氧化写在左边失 e⁻;正极物质被还原得 e⁻。</p>
+      <p class="step">② <b>配电子守恒</b>:让负极失去的电子数 = 正极得到的电子数。</p>
+      <p class="step">③ <b>按介质补微粒配电荷/原子守恒</b>:酸性介质补 H⁺、H₂O;碱性介质补 OH⁻、H₂O;溶液中若产物会与介质反应,要写成最终形态(如碱中 CO₂ 变 CO₃²⁻)。</p>
+      <p class="step">④ <b>两极相加验总反应</b>:正极式 + 负极式(消去 e⁻),得到的总反应应与原氧化还原反应一致、电荷与原子都守恒。</p>
+      <div class="keybox"><b>介质补料口诀:</b>缺氧补水、缺氢看介质——酸性缺 H 补 H⁺,碱性缺 H 那侧改用 OH⁻/H₂O。写完必查:①电子守恒 ②电荷守恒 ③原子守恒。</div>
+      <p class="trap">⚠ "已知总反应求电极式"的通法:先写出较易写的一极,再<b>用总反应减去该极</b>得到另一极(移项时电子、微粒都要跟着变号)。这是新型电池题的万能钥匙。</p>
+    </div>
+
+    <div class="viz">
+      <div class="pill">交互 6 · 电极反应式配平检查器</div>
+      <p class="step">选一个电极反应,系统逐项检查:原子是否守恒、电荷是否守恒、电子数是否与标注一致。看到 ✅ 说明配平正确;若是错误示例,会指出错在哪。</p>
+      <div class="chips" id="balChips"></div>
+      <div class="mono" id="balEq">—</div>
+      <div class="readout">
+        <div><b>原子守恒</b><span id="balAtom">—</span></div>
+        <div><b>电荷守恒</b><span id="balCharge">—</span></div>
+        <div><b>电子守恒</b><span id="balE">—</span></div>
+      </div>
+      <div class="verdict" id="balNote"></div>
+    </div>
+
+    <!-- ========================= 全题型地图 ========================= -->
+    <h2 class="o">⑥ 全题型地图(触发信号 → 标准动作 → 示例 → 陷阱)</h2>
+    <div id="map"></div>
+
+    <!-- ========================= 易错集 ========================= -->
+    <h2 class="r">⑦ 易错集(高频翻车点)</h2>
+    <div class="card">
+      <p class="trap">1. "负极一定是活泼金属"——错。看谁在该电解质里真正被氧化:Mg-Al/NaOH 中 Al 作负极;Cu-Al/浓硝酸中 Al 钝化,Cu 作负极。</p>
+      <p class="trap">2. 燃料电池不看介质就写电极式——酸性用 H⁺、碱性用 OH⁻;碱性正极是 O₂+2H₂O+4e⁻→4OH⁻,与酸性完全不同。产物也随介质改变(如 CH₄ 在碱中生成 CO₃²⁻)。</p>
+      <p class="trap">3. 搞反离子移动方向——原电池内电路里<b>阳离子移向正极、阴离子移向负极</b>(和电子外走方向"配合"闭合回路)。</p>
+      <p class="trap">4. 把电流方向与电子方向混为一谈——电子:负→正;电流:正→负,二者相反。</p>
+      <p class="trap">5. 铅蓄电池充电电极接反——充电时正极接电源正极(作阳极)、负极接电源负极(作阴极);充电是放电的逆反应。</p>
+      <p class="trap">6. 电极式不写介质微粒或不配平——酸碱介质要补 H⁺/OH⁻/H₂O,并同时满足电子、电荷、原子三守恒。</p>
+      <p class="trap">7. 锂电池用水作电解质——错,锂与水剧烈反应,必须用有机/固态电解质。</p>
+      <p class="trap">8. 把"原电池"与"电解池"混淆——原电池是自发反应、把化学能变电能(负极氧化);电解池是外加电源、消耗电能(阳极氧化)。</p>
+    </div>
+
+    <!-- ========================= 尖子生视角 ========================= -->
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p class="step">▸ <b>"总反应 − 一极 = 另一极":</b> 新型电池题给出陌生总反应时,先写出你最有把握的一极(通常是 O₂/H₂ 或金属那极),用总反应减去它即得另一极。这是最稳的通法,不必硬背陌生电极式。</p>
+      <p class="step">▸ <b>介质"隐形参与"的判断:</b> 产物在该介质中能否稳定存在决定写法。CO₂ 在碱性中不存在,要写成 CO₃²⁻;O²⁻ 在水溶液不存在,要结合 H⁺/H₂O。先问"这个产物在此介质里活得下去吗"。</p>
+      <p class="step">▸ <b>电荷守恒当"验算器":</b> 电极式两边电荷(含 e⁻)必须相等。写完用电荷守恒一验,能秒杀大部分配平错误。</p>
+      <p class="step">▸ <b>用 pH / 浓度变化反推:</b> 氢氧燃料电池酸性介质放电,H⁺ 被消耗、正极区 pH 升高;熔融碳酸盐、固体氧化物电池则考离子(CO₃²⁻、O²⁻)的定向迁移方向——迁移方向由"哪极需要补/去电荷"决定。</p>
+      <p class="step">▸ <b>能量视角:</b> 原电池是把自发放热反应的化学能"节流"成电能;双液(盐桥)结构通过隔离氧化剂与还原剂,减少直接接触的能量耗散,是提高效率的通用思路。</p>
+    </div>
+
+    <!-- ========================= 自测 ========================= -->
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 配套:电解池与电解原理 / 氧化还原反应</p>
+  </div>
+
+<script>
+/* ============ 交互1 原电池工作原理动画 ============ */
+(function(){
+  var cv=document.getElementById('cCell'),ctx=cv.getContext('2d');
+  var running=false,t=0,raf=null;
+  var znWidth=26;
+  function draw(){
+    ctx.clearRect(0,0,760,360);
+    /* 烧杯与溶液 */
+    ctx.fillStyle='rgba(30,158,134,0.10)';ctx.fillRect(150,150,460,170);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(150,150,460,170);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';
+    ctx.fillText('稀硫酸 H₂SO₄',330,340);
+    /* 导线与电流表 */
+    ctx.lineWidth=4;ctx.strokeStyle='#16120A';
+    ctx.beginPath();ctx.moveTo(220,150);ctx.lineTo(220,70);ctx.lineTo(340,70);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(540,150);ctx.lineTo(540,70);ctx.lineTo(420,70);ctx.stroke();
+    ctx.beginPath();ctx.arc(380,70,26,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#16120A';ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 15px sans-serif';ctx.fillText('A',372,76);
+    /* 负极 Zn(会变瘦) */
+    var w=running?Math.max(10,znWidth-(t*0.02)%16):znWidth;
+    ctx.fillStyle='#9aa0a6';ctx.fillRect(220-w/2,150,w,140);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.strokeRect(220-w/2,150,w,140);
+    ctx.fillStyle='#E0382A';ctx.font='bold 15px sans-serif';ctx.fillText('负极 Zn(−)',160,140);
+    ctx.font='bold 11px sans-serif';ctx.fillStyle='#16120A';ctx.fillText('Zn−2e⁻→Zn²⁺',158,308);
+    /* 正极 Cu */
+    ctx.fillStyle='#c8763a';ctx.fillRect(540-11,150,22,140);
+    ctx.strokeStyle='#16120A';ctx.strokeRect(540-11,150,22,140);
+    ctx.fillStyle='#1450C8';ctx.font='bold 15px sans-serif';ctx.fillText('正极 Cu(+)',490,140);
+    ctx.font='bold 11px sans-serif';ctx.fillStyle='#16120A';ctx.fillText('2H⁺+2e⁻→H₂↑',488,308);
+    /* 电子沿导线 负→正 (蓝) */
+    for(var i=0;i<4;i++){
+      var p=((t*0.6)+i*90)%360;var ex,ey;
+      if(p<80){ex=220;ey=150-p;}
+      else if(p<200){ex=220+(p-80);ey=70;}
+      else if(p<280){ex=540;ey=70+(p-200);}
+      else {ex=540;ey=150-0;ex=540;ey=70+80;}
+      if(p<80){ex=220;ey=150-p;}
+      else if(p<200){ex=220+(p-80);ey=70;}
+      else {ex=540;ey=70+(p-200);}
+      if(ey>150)ey=150;
+      ctx.beginPath();ctx.arc(ex,ey,5,0,7);ctx.fillStyle='#1450C8';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.stroke();
+    }
+    /* 内电路离子:阳离子(红)移向正极Cu,阴离子(绿)移向负极Zn */
+    for(var j=0;j<5;j++){
+      var q=((t*0.4)+j*70)%350;
+      var cx=210+q;var cyR=200+18*Math.sin(q*0.05);
+      ctx.beginPath();ctx.arc(cx,cyR,6,0,7);ctx.fillStyle='#E0382A';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.stroke();
+      var q2=((t*0.4)+j*70+35)%350;
+      var cx2=550-q2;var cyG=250+18*Math.cos(q2*0.05);
+      ctx.beginPath();ctx.arc(cx2,cyG,6,0,7);ctx.fillStyle='#1E9E86';ctx.fill();ctx.strokeStyle='#16120A';ctx.stroke();
+    }
+    ctx.fillStyle='#E0382A';ctx.font='bold 11px sans-serif';ctx.fillText('阳离子→正极',300,195);
+    ctx.fillStyle='#1E9E86';ctx.fillText('阴离子→负极',300,270);
+  }
+  function loop(){if(running){t++;}draw();raf=requestAnimationFrame(loop);}
+  document.getElementById('cellPlay').onclick=function(){running=true;};
+  document.getElementById('cellStop').onclick=function(){running=false;};
+  draw();loop();
+})();
+
+/* ============ 交互2 盐桥演示 ============ */
+(function(){
+  var cv=document.getElementById('cBridge'),ctx=cv.getContext('2d');
+  var on=false,t=0,raf=null;
+  function draw(){
+    ctx.clearRect(0,0,760,340);
+    /* 左杯 ZnSO4 */
+    ctx.fillStyle='rgba(30,158,134,0.10)';ctx.fillRect(60,150,250,160);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(60,150,250,160);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('ZnSO₄ 溶液',130,330);
+    /* 右杯 CuSO4 */
+    ctx.fillStyle='rgba(20,80,200,0.10)';ctx.fillRect(450,150,250,160);
+    ctx.strokeStyle='#16120A';ctx.strokeRect(450,150,250,160);
+    ctx.fillStyle='#16120A';ctx.fillText('CuSO₄ 溶液',520,330);
+    /* 盐桥 */
+    ctx.lineWidth=14;ctx.strokeStyle=on?'#F3C00E':'#c9c1a8';
+    ctx.beginPath();ctx.moveTo(300,165);ctx.quadraticCurveTo(380,110,460,165);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('盐桥 KCl',350,120);
+    /* 导线+电流表 */
+    ctx.lineWidth=4;ctx.strokeStyle='#16120A';
+    ctx.beginPath();ctx.moveTo(150,150);ctx.lineTo(150,60);ctx.lineTo(340,60);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(610,150);ctx.lineTo(610,60);ctx.lineTo(420,60);ctx.stroke();
+    ctx.beginPath();ctx.arc(380,60,24,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#16120A';ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';ctx.fillText('A',373,66);
+    /* 电极 Zn / Cu */
+    ctx.fillStyle='#9aa0a6';ctx.fillRect(140,150,20,130);ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.strokeRect(140,150,20,130);
+    ctx.fillStyle='#E0382A';ctx.font='bold 14px sans-serif';ctx.fillText('Zn 负极(−)',90,145);
+    ctx.fillStyle='#c8763a';ctx.fillRect(600,150,20,130);ctx.strokeStyle='#16120A';ctx.strokeRect(600,150,20,130);
+    ctx.fillStyle='#1450C8';ctx.font='bold 14px sans-serif';ctx.fillText('Cu 正极(+)',555,145);
+    if(on){
+      /* 外电路电子 负→正 */
+      for(var i=0;i<4;i++){
+        var p=((t*0.7)+i*95)%380;var ex,ey;
+        if(p<90){ex=150;ey=150-p;}
+        else if(p<290){ex=150+(p-90)*2.3;ey=60;}
+        else {ex=610;ey=60+(p-290);}
+        if(ey>150)ey=150;
+        ctx.beginPath();ctx.arc(ex,ey,5,0,7);ctx.fillStyle='#1450C8';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.stroke();
+      }
+      /* 盐桥内 K+ 向右(正极区)、Cl- 向左(负极区) */
+      for(var j=0;j<3;j++){
+        var q=((t*0.9)+j*60)%180;
+        var kx=300+q*0.9,ky=165-Math.sin(q/180*Math.PI)*55;
+        ctx.beginPath();ctx.arc(kx,ky,6,0,7);ctx.fillStyle='#E0382A';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.stroke();
+        var clx=460-q*0.9,cly=165-Math.sin(q/180*Math.PI)*55;
+        ctx.beginPath();ctx.arc(clx,cly,6,0,7);ctx.fillStyle='#1E9E86';ctx.fill();ctx.strokeStyle='#16120A';ctx.stroke();
+      }
+      ctx.fillStyle='#E0382A';ctx.font='bold 11px sans-serif';ctx.fillText('K⁺→正极区',400,105);
+      ctx.fillStyle='#1E9E86';ctx.fillText('Cl⁻→负极区',300,105);
+    }else{
+      ctx.fillStyle='#999';ctx.font='bold 14px sans-serif';ctx.fillText('盐桥断开:回路不闭合,无电流',250,225);
+    }
+  }
+  function loop(){if(on)t++;draw();raf=requestAnimationFrame(loop);}
+  document.getElementById('brOn').onclick=function(){on=true;document.getElementById('brState').textContent='状态:盐桥接通,电流持续';document.getElementById('brNote').textContent='盐桥接通后:K⁺ 移向正极区(CuSO₄)、Cl⁻ 移向负极区(ZnSO₄),平衡电荷、维持回路。左杯 Zn 溶解、右杯 Cu 析出。';};
+  document.getElementById('brOff').onclick=function(){on=false;document.getElementById('brState').textContent='状态:盐桥已断,无电流';document.getElementById('brNote').textContent='盐桥断开 → 内电路中断 → 回路不闭合 → 电子无法定向移动 → 电流为零。这说明盐桥『沟通内电路、构成闭合回路』的作用。';};
+  draw();loop();
+})();
+
+/* ============ 交互3 燃料电池电极式生成器 ============ */
+(function(){
+  var fuels=[
+    {k:'H₂',id:'H2'},
+    {k:'CH₄',id:'CH4'},
+    {k:'CH₃OH(甲醇)',id:'CH3OH'}
+  ];
+  var mediums=[
+    {k:'酸性',id:'acid'},
+    {k:'碱性',id:'base'}
+  ];
+  var data={
+    'H2':{
+      acid:{neg:'负极:2H₂ − 4e⁻ → 4H⁺',pos:'正极:O₂ + 4H⁺ + 4e⁻ → 2H₂O',tot:'总反应:2H₂ + O₂ → 2H₂O',note:'酸性介质:负极生成 H⁺,正极消耗 H⁺。总反应就是氢气燃烧生成水。'},
+      base:{neg:'负极:2H₂ + 4OH⁻ − 4e⁻ → 4H₂O',pos:'正极:O₂ + 2H₂O + 4e⁻ → 4OH⁻',tot:'总反应:2H₂ + O₂ → 2H₂O',note:'碱性介质:负极消耗 OH⁻ 生成 H₂O;正极生成 OH⁻。总反应与酸性相同,但电极式完全不同。'}
+    },
+    'CH4':{
+      acid:{neg:'负极:CH₄ + 2H₂O − 8e⁻ → CO₂↑ + 8H⁺',pos:'正极:2O₂ + 8H⁺ + 8e⁻ → 4H₂O',tot:'总反应:CH₄ + 2O₂ → CO₂ + 2H₂O',note:'酸性介质:CH₄ 被氧化为 CO₂,负极补 H₂O、放出 H⁺(8 电子)。'},
+      base:{neg:'负极:CH₄ + 10OH⁻ − 8e⁻ → CO₃²⁻ + 7H₂O',pos:'正极:2O₂ + 4H₂O + 8e⁻ → 8OH⁻',tot:'总反应:CH₄ + 2O₂ + 2OH⁻ → CO₃²⁻ + 3H₂O',note:'碱性介质:CO₂ 不能稳定存在,产物是 CO₃²⁻!这是碱性甲烷燃料电池的核心陷阱。'}
+    },
+    'CH3OH':{
+      acid:{neg:'负极:CH₃OH + H₂O − 6e⁻ → CO₂↑ + 6H⁺',pos:'正极:3/2 O₂ + 6H⁺ + 6e⁻ → 3H₂O',tot:'总反应:2CH₃OH + 3O₂ → 2CO₂ + 4H₂O',note:'酸性介质:甲醇失 6 电子被氧化为 CO₂。'},
+      base:{neg:'负极:CH₃OH + 8OH⁻ − 6e⁻ → CO₃²⁻ + 6H₂O',pos:'正极:3/2 O₂ + 3H₂O + 6e⁻ → 6OH⁻',tot:'总反应:2CH₃OH + 3O₂ + 4OH⁻ → 2CO₃²⁻ + 6H₂O',note:'碱性介质:甲醇氧化产物为 CO₃²⁻(而非 CO₂),介质决定产物形态。'}
+    }
+  };
+  var curFuel='H2',curMed='acid';
+  var fbox=document.getElementById('fuelChips'),mbox=document.getElementById('mediumChips');
+  fuels.forEach(function(f,i){var b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=f.k;b.onclick=function(){var cs=fbox.children;for(var k=0;k<cs.length;k++)cs[k].classList.remove('on');b.classList.add('on');curFuel=f.id;render();};fbox.appendChild(b);});
+  mediums.forEach(function(m,i){var b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=m.k;b.onclick=function(){var cs=mbox.children;for(var k=0;k<cs.length;k++)cs[k].classList.remove('on');b.classList.add('on');curMed=m.id;render();};mbox.appendChild(b);});
+  function render(){
+    var d=data[curFuel][curMed];
+    document.getElementById('fcNeg').textContent=d.neg;
+    document.getElementById('fcPos').textContent=d.pos;
+    document.getElementById('fcTot').textContent=d.tot;
+    document.getElementById('fcNote').textContent=d.note;
+  }
+  render();
+})();
+
+/* ============ 交互4 铅蓄电池充放电 ============ */
+(function(){
+  var cv=document.getElementById('cLead'),ctx=cv.getContext('2d');
+  var mode='discharge',t=0;
+  function draw(){
+    ctx.clearRect(0,0,760,320);
+    ctx.fillStyle='rgba(224,56,42,0.06)';ctx.fillRect(120,120,520,170);
+    ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(120,120,520,170);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.fillText('稀硫酸 H₂SO₄',340,310);
+    var discharge=(mode==='discharge');
+    /* 外部:放电=电流表A,充电=电源 */
+    ctx.lineWidth=4;ctx.strokeStyle='#16120A';
+    ctx.beginPath();ctx.moveTo(200,120);ctx.lineTo(200,50);ctx.lineTo(330,50);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(560,120);ctx.lineTo(560,50);ctx.lineTo(430,50);ctx.stroke();
+    if(discharge){
+      ctx.beginPath();ctx.arc(380,50,24,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#16120A';ctx.stroke();
+      ctx.fillStyle='#16120A';ctx.font='bold 14px sans-serif';ctx.fillText('A',373,56);
+    }else{
+      ctx.fillStyle='#F3C00E';ctx.fillRect(356,34,48,32);ctx.strokeStyle='#16120A';ctx.strokeRect(356,34,48,32);
+      ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.fillText('外电源',360,54);
+      ctx.fillText('−',344,54);ctx.fillText('+',410,54);
+    }
+    /* 左电极 Pb / 右电极 PbO2 */
+    ctx.fillStyle='#7d7f83';ctx.fillRect(190,120,20,140);ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.strokeRect(190,120,20,140);
+    ctx.fillStyle='#3a3a3a';ctx.fillRect(550,120,20,140);ctx.strokeRect(550,120,20,140);
+    /* 极性与反应文字随模式变化 */
+    if(discharge){
+      ctx.fillStyle='#E0382A';ctx.font='bold 14px sans-serif';ctx.fillText('Pb 负极(−)',130,112);
+      ctx.fillStyle='#1450C8';ctx.fillText('PbO₂ 正极(+)',500,112);
+      ctx.fillStyle='#16120A';ctx.font='bold 11px sans-serif';
+      ctx.fillText('Pb+SO₄²⁻−2e⁻→PbSO₄',130,278);
+      ctx.fillText('PbO₂+4H⁺+SO₄²⁻+2e⁻→PbSO₄+2H₂O',430,278);
+    }else{
+      ctx.fillStyle='#7A3FF2';ctx.font='bold 14px sans-serif';ctx.fillText('阴极(接电源−)',110,112);
+      ctx.fillText('阳极(接电源+)',490,112);
+      ctx.fillStyle='#16120A';ctx.font='bold 11px sans-serif';
+      ctx.fillText('PbSO₄+2e⁻→Pb+SO₄²⁻',130,278);
+      ctx.fillText('PbSO₄+2H₂O−2e⁻→PbO₂+4H⁺+SO₄²⁻',420,278);
+    }
+    /* 电子方向箭头 */
+    var dir=discharge?1:-1;
+    for(var i=0;i<4;i++){
+      var p=((t*0.8*dir)+i*95+400)%380;var ex,ey;
+      if(p<70){ex=200;ey=120-p;}
+      else if(p<290){ex=200+(p-70)*1.63;ey=50;}
+      else {ex=560;ey=50+(p-290);}
+      if(ey>120)ey=120;
+      ctx.beginPath();ctx.arc(ex,ey,5,0,7);ctx.fillStyle=discharge?'#1450C8':'#7A3FF2';ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';
+    ctx.fillText(discharge?'放电:电子 Pb(负) → PbO₂(正),对外供电':'充电:外电源"倒灌",电子反向,PbSO₄ 还原/氧化再生',150,145);
+  }
+  function loop(){t++;draw();requestAnimationFrame(loop);}
+  document.getElementById('ldDischarge').onclick=function(){mode='discharge';document.getElementById('ldNote').textContent='放电(作原电池):负极 Pb 被氧化、正极 PbO₂ 被还原,两极都生成 PbSO₄,硫酸被消耗。总:Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O。';};
+  document.getElementById('ldCharge').onclick=function(){mode='charge';document.getElementById('ldNote').textContent='充电(作电解池):接外电源,原负极接电源负极作阴极(PbSO₄→Pb)、原正极接电源正极作阳极(PbSO₄→PbO₂),恰为放电的逆反应,硫酸再生。';};
+  document.getElementById('ldNote').textContent='放电(作原电池):负极 Pb 被氧化、正极 PbO₂ 被还原,两极都生成 PbSO₄,硫酸被消耗。总:Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O。';
+  draw();loop();
+})();
+
+/* ============ 交互5 电极判断器 ============ */
+(function(){
+  var cases=[
+    {k:'Zn-Cu / 稀硫酸',neg:'Zn',pos:'Cu',negC:'#E0382A',posC:'#1450C8',
+     note:'常规情形:Zn 比 Cu 活泼 → Zn 作负极(Zn−2e⁻→Zn²⁺,溶解变瘦);Cu 作正极(2H⁺+2e⁻→H₂↑,冒气泡)。'},
+    {k:'Mg-Al / NaOH 溶液',neg:'Al',pos:'Mg',negC:'#E0382A',posC:'#1450C8',
+     note:'陷阱!Mg 更活泼,但 Mg 不与 NaOH 反应、Al 能与 NaOH 反应 → Al 作负极(被氧化),Mg 作正极。判负极要看『谁真正被氧化』。'},
+    {k:'Cu-Al / 浓硝酸',neg:'Cu',pos:'Al',negC:'#E0382A',posC:'#1450C8',
+     note:'陷阱!Al 在浓硝酸中钝化(表面生成致密氧化膜),反而 Cu 被氧化作负极。活泼性不能机械套用。'},
+    {k:'Fe-C(碳) / 食盐水(吸氧腐蚀)',neg:'Fe',pos:'C',negC:'#E0382A',posC:'#1450C8',
+     note:'钢铁吸氧腐蚀:Fe 作负极(Fe−2e⁻→Fe²⁺),碳作正极,O₂ 得电子(O₂+2H₂O+4e⁻→4OH⁻)。这就是铁生锈的电化学本质。'}
+  ];
+  var chips=document.getElementById('judgeChips'),cur=0;
+  cases.forEach(function(c,i){var b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=c.k;b.onclick=function(){var cs=chips.children;for(var k=0;k<cs.length;k++)cs[k].classList.remove('on');b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  var svg=document.getElementById('judgeSvg');
+  function render(){
+    var c=cases[cur];
+    var s='';
+    s+='<rect x="180" y="70" width="400" height="90" fill="rgba(30,158,134,0.10)" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="380" y="150" text-anchor="middle" font-size="13" font-weight="700">电解质溶液</text>';
+    /* 负极块 左 */
+    s+='<rect x="230" y="70" width="26" height="70" fill="'+c.negC+'" stroke="#16120A" stroke-width="2"/>';
+    s+='<text x="243" y="55" text-anchor="middle" font-size="15" font-weight="900" fill="'+c.negC+'">负极(−)</text>';
+    s+='<text x="243" y="185" text-anchor="middle" font-size="16" font-weight="900">'+c.neg+'</text>';
+    /* 正极块 右 */
+    s+='<rect x="504" y="70" width="26" height="70" fill="'+c.posC+'" stroke="#16120A" stroke-width="2"/>';
+    s+='<text x="517" y="55" text-anchor="middle" font-size="15" font-weight="900" fill="'+c.posC+'">正极(+)</text>';
+    s+='<text x="517" y="185" text-anchor="middle" font-size="16" font-weight="900">'+c.pos+'</text>';
+    /* 导线与e- */
+    s+='<path d="M243 70 L243 25 L517 25 L517 70" fill="none" stroke="#16120A" stroke-width="3"/>';
+    s+='<text x="380" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="#1450C8">e⁻ 负 → 正</text>';
+    svg.innerHTML=s;
+    var v=document.getElementById('judgeVerdict');
+    v.innerHTML='<b>负极 = '+c.neg+'　正极 = '+c.pos+'</b><br>'+c.note;
+  }
+  render();
+})();
+
+/* ============ 交互6 电极反应式配平检查 ============ */
+(function(){
+  var items=[
+    {k:'Zn 负极(正确)',eq:'Zn − 2e⁻ → Zn²⁺',atom:true,charge:true,e:true,
+     note:'✅ 全部守恒:左 Zn(0价)失 2e⁻ 变 Zn²⁺;原子各 1 个 Zn;电荷:左 0−(−2)=+2,右 +2,相等。'},
+    {k:'氢氧燃料正极·酸性(正确)',eq:'O₂ + 4H⁺ + 4e⁻ → 2H₂O',atom:true,charge:true,e:true,
+     note:'✅ 原子:左 O₂+4H = 2H₂O 的 2O、4H,守恒;电荷:左 +4+(−4)=0,右 0,守恒;转移 4 电子。'},
+    {k:'甲烷负极·碱性(正确)',eq:'CH₄ + 10OH⁻ − 8e⁻ → CO₃²⁻ + 7H₂O',atom:true,charge:true,e:true,
+     note:'✅ 碱性介质产物是 CO₃²⁻。C:1=1;H:4+10=14=7×2;O:10=3+7;电荷:左 −10−(−8)=−2,右 −2;8 电子。'},
+    {k:'氢氧燃料正极(错误示例)',eq:'O₂ + 2H⁺ + 4e⁻ → 2H₂O',atom:false,charge:false,e:true,
+     note:'❌ 错!H 与 O 都不守恒(右边需 4 个 H),电荷也不平。正确应为 O₂+4H⁺+4e⁻→2H₂O。'},
+    {k:'Zn 负极(错误示例)',eq:'Zn − e⁻ → Zn²⁺',atom:true,charge:false,e:false,
+     note:'❌ 错!Zn 变 Zn²⁺ 应失 2 个电子而非 1 个。电子数与电荷都不守恒。'}
+  ];
+  var chips=document.getElementById('balChips'),cur=0;
+  items.forEach(function(it,i){var b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=it.k;b.onclick=function(){var cs=chips.children;for(var k=0;k<cs.length;k++)cs[k].classList.remove('on');b.classList.add('on');cur=i;render();};chips.appendChild(b);});
+  function mark(id,ok){var el=document.getElementById(id);el.textContent=ok?'✅ 守恒':'❌ 不守恒';el.style.color=ok?'#1E9E86':'#E0382A';}
+  function render(){
+    var it=items[cur];
+    document.getElementById('balEq').textContent=it.eq;
+    mark('balAtom',it.atom);mark('balCharge',it.charge);mark('balE',it.e);
+    document.getElementById('balNote').textContent=it.note;
+  }
+  render();
+})();
+
+/* ============ 题型地图 ============ */
+(function(){
+  var maps=[
+    {t:'是否构成原电池 / 电极判断',sig:'给一个装置图,问能否形成原电池、谁正谁负;或问电子/电流/离子方向。',act:'逐条对四条件;负极=被氧化/电子流出/溶解变瘦/阴离子移向端;电子外走负→正、阳离子内移向正极。',ex:'Zn-Cu 稀硫酸中 Zn 溶解 → Zn 负极;Cu 冒气泡 → Cu 正极。',trap:'负极不一定更活泼(Mg-Al/NaOH 中 Al 负极);电流方向与电子方向相反。'},
+    {t:'写电极反应式(给装置/给总反应)',sig:'要求写负极、正极或某一极反应式;或给总反应求单极。',act:'定得失→配电子→按介质补 H⁺/OH⁻/H₂O→两极相加验总反应;给总反应用『总−一极=另一极』。',ex:'碱性 H₂-O₂ 正极:O₂+2H₂O+4e⁻→4OH⁻。',trap:'不看介质就写;产物要写介质中的稳定形态(碱中 CO₂→CO₃²⁻)。'},
+    {t:'新型电池分析(陌生体系)',sig:'给出陌生的燃料/电解质/离子传导膜,问电极、离子迁移、pH 变化。',act:'找燃料(负极还原剂)与氧化剂(正极);用总反应减法写电极式;离子迁移由『哪极需补电荷』定。',ex:'熔融碳酸盐燃料电池中 CO₃²⁻ 向负极迁移;固体氧化物电池中 O²⁻ 向负极迁移。',trap:'迁移的是电池内部离子,方向服务于电荷平衡,别照搬水溶液结论。'},
+    {t:'盐桥双液电池',sig:'出现两个烧杯 + 盐桥,问盐桥作用、离子移动、比单液优点。',act:'盐桥沟通内电路+平衡电荷:阳离子入正极区、阴离子入负极区;双液隔离更持久稳定。',ex:'丹尼尔电池:盐桥 K⁺→CuSO₄ 侧、Cl⁻→ZnSO₄ 侧。',trap:'盐桥断则无电流;别把盐桥离子方向说反。'},
+    {t:'化学电源类型辨析',sig:'区分一次/二次/燃料/锂电池;判断能否充电、负极材料、应用。',act:'一次不可逆;二次可充(充电=放电逆);燃料持续供料;锂电池用有机电解质。',ex:'铅蓄电池可充,充电是放电的完全逆反应,两极放电产物皆 PbSO₄。',trap:'锂电池不能用水作电解质;充电正接正、负接负。'},
+    {t:'充放电与电解池衔接',sig:'二次电池充电部分,问阴阳极、接线、电极反应。',act:'放电看原电池(负极氧化);充电看电解池(阳极氧化),原正极→阳极、原负极→阴极。',ex:'铅蓄充电阴极:PbSO₄+2e⁻→Pb+SO₄²⁻。',trap:'充放电电极名称切换别混:放电叫正负极,充电叫阴阳极。'},
+    {t:'电极质量/气体/pH 定量计算',sig:'求某极质量变化、放出气体体积、转移电子数、溶液 pH 变化。',act:'以转移电子数为桥梁(守恒),按电极式计量比换算质量/体积/浓度。',ex:'转移 2 mol e⁻,Zn 负极溶解 65 g、正极放出 1 mol H₂(22.4 L,标况)。',trap:'气体要看是否标况;酸碱介质中 H⁺/OH⁻ 被消耗会引起 pH 变化。'},
+    {t:'金属腐蚀与防护',sig:'钢铁生锈、牺牲阳极保护法、外加电流保护法。',act:'吸氧腐蚀 Fe 作负极被氧化;牺牲阳极法接更活泼金属作负极保护被保护金属。',ex:'轮船外壳接锌块:Zn 作负极优先被腐蚀,保护铁船体。',trap:'牺牲的『阳极』其实是原电池的负极(更活泼金属),概念别搞反。'}
+  ];
+  var box=document.getElementById('map');
+  maps.forEach(function(m){var d=document.createElement('div');d.className='map-card';
+    d.innerHTML='<span class="tag2">'+m.t+'</span>'
+      +'<div class="sig">🔔 触发信号:'+m.sig+'</div>'
+      +'<div class="step">✅ 标准动作:'+m.act+'</div>'
+      +'<div class="ex">📝 示例:'+m.ex+'</div>'
+      +'<div class="trap">⚠ 陷阱:'+m.trap+'</div>';
+    box.appendChild(d);});
+})();
+
+/* ============ 自测 ============ */
+(function(){
+  var qs=[
+    {q:'1. 构成原电池的四个条件是什么?',a:'① 有能自发进行的氧化还原反应;② 两个活泼性不同的电极;③ 电解质溶液(或熔融电解质);④ 形成闭合回路(导线连接+插入电解质,或用盐桥)。'},
+    {q:'2. 原电池中电子和离子分别怎样移动?',a:'外电路:电子由负极流向正极(电流方向相反,正→负)。内电路:阳离子移向正极,阴离子移向负极,共同构成闭合回路。'},
+    {q:'3. 负极一定是较活泼的金属吗?举一反例。',a:'不一定。要看谁在该电解质中真正被氧化。反例:Mg-Al 插入 NaOH 溶液,Al 能与碱反应被氧化,故 Al 作负极(Mg 作正极)。'},
+    {q:'4. 写出 Zn-Cu-稀硫酸原电池的两极反应和总反应。',a:'负极:Zn−2e⁻→Zn²⁺;正极:2H⁺+2e⁻→H₂↑;总反应:Zn+2H⁺→Zn²⁺+H₂↑(即 Zn+H₂SO₄→ZnSO₄+H₂↑)。'},
+    {q:'5. 盐桥有哪两大作用?其中离子怎样移动?',a:'① 沟通内电路、构成闭合回路使电流持续;② 平衡电荷、维持两液电中性:阳离子(K⁺)移向正极区,阴离子(Cl⁻)移向负极区。'},
+    {q:'6. 写出氢氧燃料电池在碱性介质中的正、负极反应式。',a:'负极:2H₂+4OH⁻−4e⁻→4H₂O;正极:O₂+2H₂O+4e⁻→4OH⁻。总反应:2H₂+O₂→2H₂O。'},
+    {q:'7. 甲烷燃料电池在碱性介质中负极产物为什么是 CO₃²⁻ 而不是 CO₂?',a:'因为 CO₂ 在碱性溶液中不能稳定存在,会与 OH⁻ 反应生成 CO₃²⁻。负极:CH₄+10OH⁻−8e⁻→CO₃²⁻+7H₂O。'},
+    {q:'8. 铅蓄电池放电时负极、正极反应式和总反应各是什么?',a:'负极:Pb+SO₄²⁻−2e⁻→PbSO₄;正极:PbO₂+4H⁺+SO₄²⁻+2e⁻→PbSO₄+2H₂O;总:Pb+PbO₂+2H₂SO₄→2PbSO₄+2H₂O。'},
+    {q:'9. 铅蓄电池充电时如何接线?电极叫什么?',a:'正极接外电源正极(作阳极),负极接外电源负极(作阴极)。充电反应是放电反应的完全逆过程,硫酸再生。'},
+    {q:'10. 为什么锂电池不用水作电解质?',a:'锂化学性质极活泼,会与水剧烈反应,故锂电池采用有机电解质或固态电解质,以获得高电压和高能量密度。'},
+    {q:'11. 已知某燃料电池总反应,如何快速写出未知的一极反应式?',a:'先写出较易的一极(通常是 O₂ 或 H₂ 那极),再用『总反应 − 已写电极 = 另一极』移项求得,注意电子和微粒随移项变号。'},
+    {q:'12. 钢铁的吸氧腐蚀中,铁和碳分别作什么极?正极反应式是什么?',a:'铁作负极(Fe−2e⁻→Fe²⁺),碳(杂质)作正极。正极:O₂+2H₂O+4e⁻→4OH⁻。这是铁在中性/弱酸潮湿环境生锈的电化学本质。'}
+  ];
+  var quiz=document.getElementById('quiz');
+  qs.forEach(function(o){var d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+})();
+</script>
+</body>
+</html>

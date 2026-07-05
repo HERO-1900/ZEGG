@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高考数学:统计(抽样·数字特征·回归与独立性检验) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--blue);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.r::before{background:var(--red)}h2.v::before{background:var(--violet)}h2.o::before{background:var(--orange)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 6px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--blue);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:19px;font-weight:900;margin:8px 0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--blue)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* visualization extras */
+  .viz{background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;margin:16px 0}
+  .viz canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--ink)}
+  .ctrls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:10px 0 4px}
+  .ctrls label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--blue);width:160px}
+  .pill{display:inline-block;background:var(--blue);color:#fff;font-weight:900;font-size:12px;padding:3px 9px;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+  .pill.g{background:var(--green)}.pill.r{background:var(--red)}.pill.v{background:var(--violet)}.pill.o{background:var(--orange)}
+  .stepbtns{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .info{font-size:14px;font-weight:700;margin:6px 0;min-height:22px}
+  .draggable{cursor:grab}
+  .ex{background:#fff;border-left:10px solid var(--green);border:3px solid var(--ink);padding:10px 14px;margin:10px 0;font-size:14.5px;font-weight:600}
+  .ex b{font-weight:900}
+  .sub{font-size:13px;color:#6b5d3a;font-weight:700}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 统计攻坚包</div>
+    <h1>统计(抽样 · 数字特征 · 回归与独立性检验)</h1>
+    <p class="lead">高考里最「稳」的送分板块:公式固定、套路清晰、几乎不需要巧思,却每年必考一道大题。这一页把抽样、频率分布直方图、样本数字特征、线性回归、独立性检验讲成人话,再用动画让你「看见」方差怎么衡量离散、回归直线怎么过样本中心、χ² 怎么判断关联。把公式记牢、步骤走全,这道题就是白送的分。</p>
+
+    <div class="say">🗣️ <b>一句话总览:</b> 统计做的事只有一件——<b>用一小撮样本去猜整个总体</b>。① 先想办法把样本抽得「有代表性」(抽样方法);② 把样本的分布画出来、算出来(直方图、平均数 x̄、方差 s²);③ 再用样本去估计总体、找变量间的关系(回归、独立性检验)。<br>🗣️ <b>大题的套路只有一句:</b> 照公式一步步代数字,过程分给全,答案对不对反而是次要——<b>步骤全 = 分全</b>。</div>
+
+    <!-- ===================== 核心原理 ===================== -->
+    <h2 class="b">一、三种抽样方法:简单随机 · 系统 · 分层</h2>
+    <p class="lead">抽样的目标是「有代表性」。三种方法各有适用场景,考点集中在<b>分层抽样按比例</b>。切换方法,看它们从总体里抽样本的方式有何不同。</p>
+    <div class="card">
+      <table>
+        <tr><th>方法</th><th>怎么抽</th><th>适用场景</th><th>关键点</th></tr>
+        <tr><td><b>简单随机抽样</b></td><td>抽签 / 随机数表,逐个等可能抽取</td><td>总体<b>数量少</b>、个体差异不大</td><td>每个个体被抽概率相等</td></tr>
+        <tr><td><b>系统抽样</b></td><td>先分段(间隔 k=N/n),每段固定位置抽一个</td><td>总体<b>数量大</b>、排列有序</td><td>间隔 k = 总体N / 样本n(取整)</td></tr>
+        <tr><td><b>分层抽样</b></td><td>先按特征分层,各层<b>按比例</b>抽取</td><td>总体由<b>差异明显的几层</b>组成</td><td>各层抽样比 = 样本n / 总体N(全体统一)</td></tr>
+      </table>
+    </div>
+    <div class="keybox"><b>分层抽样核心公式(必考):</b> 抽样比 = 样本容量 n / 总体容量 N(所有层共用同一个比)。<br>某层应抽人数 = 该层总人数 × (n / N)。<br>👉 换句话说:<b>某层抽的人数 / 该层总人数 = n / N</b>,对每一层都成立。</div>
+
+    <h2 class="b">二、分层抽样:比例计算器</h2>
+    <p class="lead">分层抽样只有一个道理:<b>大层多抽、小层少抽,按人头比例分配</b>。拖动样本总量 n,看每一层各该抽几个,以及那条「所有层共用」的抽样比。</p>
+    <div class="viz">
+      <canvas id="cStrat" width="760" height="360"></canvas>
+      <div class="ctrls">
+        <label>样本总量 n = <input id="sN" type="range" min="10" max="150" value="50"> <span id="valN" class="pill">n</span></label>
+      </div>
+      <span class="info" id="stratInfo"></span>
+      <p class="sub">总体:高一 300 人、高二 200 人、高三 100 人,共 N=600。各层柱高 ∝ 人数,数字 = 该层应抽人数 = 层人数 × (n / N)。</p>
+    </div>
+
+    <h2 class="b">三、频率分布直方图:把样本「画」出来</h2>
+    <p class="lead">直方图是统计大题的第一号常客。它把数据分成若干组,<b>纵轴是「频率 / 组距」而不是频率本身</b>——这是最高频的坑。每个矩形的面积 = 频率,所有矩形面积之和 = 1。</p>
+    <div class="viz">
+      <canvas id="cHist" width="760" height="420"></canvas>
+      <div class="ctrls">
+        <label>拖动最高的那组 → 频率/组距 = <input id="sBar" type="range" min="4" max="60" value="34"> <span id="valBar" class="pill v">h</span></label>
+      </div>
+      <span class="info" id="histInfo"></span>
+      <div class="readout" style="margin-top:10px">
+        <div><b>平均数 x̄(估计)</b><span id="hMean">–</span></div>
+        <div><b>中位数(估计)</b><span id="hMed">–</span></div>
+        <div><b>众数(估计)</b><span id="hMode">–</span></div>
+      </div>
+      <p class="sub">组距均为 10。拖动滑块改变第 3 组的高度,系统自动调整第 4 组使「所有频率之和 = 1」,并实时估计平均数、中位数、众数。</p>
+    </div>
+    <div class="keybox"><b>直方图三件套(务必背):</b><br>• <b>纵轴 = 频率 / 组距</b>,所以每个矩形<b>面积</b> = (频率/组距) × 组距 = 频率;<b>所有面积之和 = 1</b>。<br>• <b>频数</b> = 频率 × 样本容量;某组<b>频率</b> = (频率/组距) × 组距。<br>• <b>众数</b> = 最高矩形的组中值;<b>平均数</b> ≈ ∑(组中值 × 频率);<b>中位数</b> = 面积累加到 0.5 处对应的横坐标(用比例插值算)。</div>
+
+    <h2 class="b">四、样本数字特征:x̄ · 中位数 · 众数 · 方差 s²</h2>
+    <p class="lead">数字特征分两类:<b>反映「集中位置」</b>的(平均数、中位数、众数),和<b>反映「离散/稳定程度」</b>的(方差、标准差)。方差越小,数据越集中、越稳定。</p>
+    <div class="card">
+      <table>
+        <tr><th>量</th><th>公式 / 定义</th><th>反映什么</th><th>抗极端值?</th></tr>
+        <tr><td><b>平均数 x̄</b></td><td>x̄ = (1/n)∑xᵢ = (x₁+x₂+…+xₙ)/n</td><td>数据的平均水平</td><td>不抗(易被极端值拉动)</td></tr>
+        <tr><td><b>中位数</b></td><td>排序后正中间的数(偶数个取中间两数平均)</td><td>数据的中间位置</td><td>抗(极端值不影响)</td></tr>
+        <tr><td><b>众数</b></td><td>出现次数最多的数</td><td>最常见的取值</td><td>抗</td></tr>
+        <tr><td><b>方差 s²</b></td><td>s² = (1/n)∑(xᵢ − x̄)²</td><td>离散程度 / 波动大小</td><td>不抗</td></tr>
+        <tr><td><b>标准差 s</b></td><td>s = √(s²)(方差开平方,与数据同单位)</td><td>离散程度(同量纲)</td><td>不抗</td></tr>
+      </table>
+    </div>
+    <div class="keybox"><b>数据变换公式(高频考点):</b> 若每个数据都做变换 xᵢ → axᵢ + b,则:<br>• 新平均数 = <b>a·x̄ + b</b>(平移 + 缩放都影响均值);<br>• 新方差 = <b>a²·s²</b>(只有缩放 a 影响方差,<b>平移 b 不改变方差</b>!);<br>• 新标准差 = <b>|a|·s</b>。<br>👉 一句话:<b>加常数不改变方差,乘常数方差乘平方</b>。</div>
+
+    <h2 class="b">五、方差 / 标准差:两组数据谁更稳?</h2>
+    <p class="lead">方差是「离散程度」的度量。两组数据平均数可能相同,但一组集中、一组分散——<b>方差小的更稳定</b>。这在「选谁参赛」「哪台机器更可靠」的应用题里几乎必考。拖动「离散程度」,看方差怎么随数据散开而变大。</p>
+    <div class="viz">
+      <canvas id="cVar" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <label>甲组离散程度 = <input id="sSpread" type="range" min="0" max="100" value="20"> <span id="valSpread" class="pill">甲</span></label>
+      </div>
+      <span class="info" id="varInfo"></span>
+      <p class="sub">两组数据平均数都是 <b>60</b>(黑色虚线)。乙组固定较分散;拖动滑块改变甲组的散开程度。方差 = (1/n)∑(xᵢ−x̄)²,点离均值线越远、贡献越大。</p>
+    </div>
+
+    <h2 class="b">六、线性回归:散点 · 相关系数 r · 最小二乘直线</h2>
+    <p class="lead">当两个变量看起来「大致成直线关系」,就用<b>最小二乘法</b>拟合一条回归直线 ŷ = b̂x + â,用来<b>预测</b>。这条直线有一条铁律:<b>必过样本中心点 (x̄, ȳ)</b>。</p>
+    <div class="viz">
+      <canvas id="cReg" width="760" height="440"></canvas>
+      <div class="ctrls">
+        <button class="btn" id="regAdd">随机加一个点</button>
+        <button class="btn" id="regReset">重置数据</button>
+      </div>
+      <span class="info" id="regInfo"></span>
+      <div class="readout" style="margin-top:10px">
+        <div><b>斜率 b̂</b><span id="rB">–</span></div>
+        <div><b>截距 â</b><span id="rA">–</span></div>
+        <div><b>相关系数 r</b><span id="rR">–</span></div>
+      </div>
+      <p class="sub">在图上<b>点击可加点</b>。绿线 = 回归直线 ŷ=b̂x+â,橙点 = 样本中心 (x̄,ȳ)——回归线永远穿过它。加点后 b̂、â、r 实时重算。</p>
+    </div>
+    <div class="keybox"><b>回归直线公式(会代入即可):</b><br>• 斜率 <b>b̂ = ∑(xᵢ−x̄)(yᵢ−ȳ) / ∑(xᵢ−x̄)²</b>;截距 <b>â = ȳ − b̂·x̄</b>(由「过中心点」直接推出)。<br>• 相关系数 <b>r = ∑(xᵢ−x̄)(yᵢ−ȳ) / √(∑(xᵢ−x̄)²·∑(yᵢ−ȳ)²)</b>,r∈[−1,1]。|r| 越接近 1 线性越强,r&gt;0 正相关、r&lt;0 负相关。<br>• 预测:把 x 值代入 ŷ=b̂x+â 得预测值(注意是「估计」而非精确值)。</div>
+
+    <h2 class="b">七、数据变换对均值/方差的影响</h2>
+    <p class="lead">「全班分数每人加 5 分」「单位从米换成厘米」——这些都是 xᵢ → axᵢ + b。用动画直观感受:<b>平移 b 只挪动位置(方差不变)</b>,<b>缩放 a 才拉伸离散(方差 ×a²)</b>。</p>
+    <div class="viz">
+      <canvas id="cTrans" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <label>缩放 a = <input id="sTa" type="range" min="5" max="250" value="100"> <span id="valTa" class="pill">a</span></label>
+        <label>平移 b = <input id="sTb" type="range" min="-120" max="120" value="0"> <span id="valTb" class="pill g">b</span></label>
+      </div>
+      <span class="info" id="transInfo"></span>
+      <p class="sub">灰点 = 原始数据(均值 x̄₀,方差 s₀²)。蓝点 = 变换后 axᵢ+b。观察:改 b 时蓝点整体平移、方差读数不变;改 a 时数据被拉伸、方差按 a² 变化。</p>
+    </div>
+
+    <h2 class="b">八、独立性检验:2×2 列联表与 χ²</h2>
+    <p class="lead">想判断「两个分类变量(如『吸烟』与『患病』)是否有关系」,用<b>独立性检验</b>。做一张 2×2 列联表,算出统计量 χ²(教材记作 K²),再和<b>临界值</b>比较:χ² 越大,越有理由认为两者<b>有关联</b>。</p>
+    <div class="viz">
+      <canvas id="cChi" width="760" height="380"></canvas>
+      <div class="ctrls">
+        <label>a(男·喜欢) = <input id="cA" type="range" min="0" max="60" value="40"> <span id="vA" class="pill">a</span></label>
+        <label>b(男·不喜欢) = <input id="cB" type="range" min="0" max="60" value="10"> <span id="vB" class="pill o">b</span></label>
+        <label>c(女·喜欢) = <input id="cC" type="range" min="0" max="60" value="20"> <span id="vC" class="pill g">c</span></label>
+        <label>d(女·不喜欢) = <input id="cD" type="range" min="0" max="60" value="30"> <span id="vD" class="pill v">d</span></label>
+      </div>
+      <span class="info" id="chiInfo"></span>
+      <p class="sub">χ² = n(ad−bc)² / [(a+b)(c+d)(a+c)(b+d)],其中 n=a+b+c+d。拖动四个格子的人数,系统实时算 χ² 并与常用临界值(3.841 / 6.635 / 10.828)比较给出结论。</p>
+    </div>
+    <div class="card">
+      <table>
+        <tr><th>2×2 列联表</th><th>喜欢</th><th>不喜欢</th><th>合计</th></tr>
+        <tr><td><b>男</b></td><td>a</td><td>b</td><td>a+b</td></tr>
+        <tr><td><b>女</b></td><td>c</td><td>d</td><td>c+d</td></tr>
+        <tr><td><b>合计</b></td><td>a+c</td><td>b+d</td><td>n=a+b+c+d</td></tr>
+      </table>
+      <p class="eq">χ² = n(ad − bc)² / [(a+b)(c+d)(a+c)(b+d)]</p>
+      <table>
+        <tr><th>临界值表(常用)</th><th>α=0.05</th><th>α=0.01</th><th>α=0.001</th></tr>
+        <tr><td>χ² 临界值 x<sub>α</sub></td><td>3.841</td><td>6.635</td><td>10.828</td></tr>
+        <tr><td>结论(若 χ² &gt; 临界值)</td><td>有 95% 把握有关</td><td>有 99% 把握有关</td><td>有 99.9% 把握有关</td></tr>
+      </table>
+    </div>
+    <div class="keybox"><b>独立性检验四步走:</b> ① 列出 2×2 列联表(算好各行列合计);② 提出假设 H₀:两变量<b>无关</b>;③ 代公式算 χ²;④ 与临界值比:<b>χ² &gt; 临界值 → 推翻 H₀,认为有关</b>(把握 = 1−α);χ² ≤ 临界值 → 没有充分证据说有关。</div>
+
+    <h2 class="b">九、用样本估计总体 · 正态分布简介(3σ)</h2>
+    <p class="lead">统计的终极目的是「用样本估计总体」:样本的平均数、方差、频率,分别是总体对应量的估计值。当数据近似「中间多、两边少」的钟形对称分布时,就是<b>正态分布 N(μ, σ²)</b>。</p>
+    <div class="keybox"><b>正态分布 3σ 原则(记结论即可):</b> 若 X ~ N(μ, σ²),则:<br>• P(μ−σ &lt; X ≤ μ+σ) ≈ <b>0.6827</b>;<br>• P(μ−2σ &lt; X ≤ μ+2σ) ≈ <b>0.9545</b>;<br>• P(μ−3σ &lt; X ≤ μ+3σ) ≈ <b>0.9973</b>。<br>曲线关于 x=μ 对称,μ 决定位置、σ 决定「胖瘦」(σ 越大越矮胖、越分散)。对称性 P(X&lt;μ)=P(X&gt;μ)=0.5 是选填题的秒杀武器。</div>
+
+    <!-- ===================== 全题型地图 ===================== -->
+    <h2 class="g">十、全题型地图(触发信号 → 标准动作 → 陷阱)</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型</th><th>触发信号</th><th>标准动作</th></tr>
+        <tr><td><b>分层抽样</b></td><td>「按比例」「各层抽多少」「分层」</td><td>算抽样比 n/N → 各层人数 × (n/N)</td></tr>
+        <tr><td><b>直方图求特征</b></td><td>给出直方图,求频率/频数/平均/中位</td><td>面积=频率、频率之和=1 补缺项 → 组中值加权算特征</td></tr>
+        <tr><td><b>方差比较</b></td><td>「谁更稳定/整齐」「选谁参赛」</td><td>先算 x̄,再算 s²=(1/n)∑(xᵢ−x̄)²,方差小者更稳</td></tr>
+        <tr><td><b>回归方程与预测</b></td><td>「求回归直线」「预测 x=… 时的 y」</td><td>算 x̄,ȳ → b̂,â → 代 x 预测</td></tr>
+        <tr><td><b>独立性检验</b></td><td>「是否有关」「有多大把握」「列联表」</td><td>补全表格 → χ² 公式 → 比临界值下结论</td></tr>
+      </table>
+    </div>
+
+    <h3>题型精讲(带解例题 + 陷阱)</h3>
+
+    <div class="ex"><b>① 分层抽样:</b> 某校高一 400、高二 300、高三 300 人,共 1000 人,用分层抽样抽 50 人,各年级抽几人?<br>抽样比 = 50/1000 = 1/20。高一 400×1/20=<b>20</b>,高二 300×1/20=<b>15</b>,高三 300×1/20=<b>15</b>(合计 50 ✓)。<span class="trap">⚠ 陷阱:抽样比对所有层是同一个 n/N,不要每层重算不同的比。</span></div>
+
+    <div class="ex"><b>② 直方图求特征:</b> 五组频率/组距为 0.010, 0.020, 0.030, 0.028, 0.012,组距均 10,求缺项与平均数。<br>先验:(0.010+0.020+0.030+0.028+0.012)×10 = 1.00 ✓(若缺一项则用「和为1」补)。组中值 5,15,25,35,45。<br>x̄ ≈ 5×0.1+15×0.2+25×0.3+35×0.28+45×0.12 = 0.5+3+7.5+9.8+5.4 = <b>26.2</b>。<span class="trap">⚠ 纵轴是频率/组距,频率 = 高 × 组距,别把高直接当频率。</span></div>
+
+    <div class="ex"><b>③ 方差比较:</b> 甲射击环数 7,8,8,9,8;乙 5,8,9,10,8。谁更稳定?<br>x̄甲 = 40/5 = 8,x̄乙 = 40/5 = 8(平均相同)。<br>s²甲 = (1+0+0+1+0)/5 = 0.4;s²乙 = (9+0+1+4+0)/5 = 2.8。<br>s²甲 &lt; s²乙 → <b>甲更稳定</b>。<span class="trap">⚠ 先比平均数,平均相同时才用方差比稳定性;方差衡量的是波动,不是水平高低。</span></div>
+
+    <div class="ex"><b>④ 回归方程与预测:</b> 数据 (x,y):(1,2),(2,3),(3,5),(4,6),(5,9)。求回归直线并预测 x=6。<br>x̄=3,ȳ=5。∑(xᵢ−x̄)(yᵢ−ȳ)=(−2)(−3)+(−1)(−2)+0+(1)(1)+(2)(4)=6+2+0+1+8=17。∑(xᵢ−x̄)²=4+1+0+1+4=10。<br>b̂=17/10=1.7,â=ȳ−b̂x̄=5−1.7×3=−0.1。ŷ=1.7x−0.1。x=6 时 ŷ=1.7×6−0.1=<b>10.1</b>。<span class="trap">⚠ â 用「过中心点」推:â=ȳ−b̂x̄,别死记另一个繁公式;预测值是估计,不是确定值。</span></div>
+
+    <div class="ex"><b>⑤ 独立性检验:</b> 列联表 a=40,b=10,c=20,d=30,n=100,判断「性别」与「喜欢」是否有关。<br>χ² = 100×(40×30−10×20)² / (50×50×60×40) = 100×(1200−200)² / 6000000 = 100×1000000/6000000 = <b>16.67</b>。<br>16.67 &gt; 10.828 → <b>有 99.9% 的把握认为两者有关</b>。<span class="trap">⚠ 分母是四个「边缘合计」相乘 (a+b)(c+d)(a+c)(b+d),别漏项或用错行列合计。</span></div>
+
+    <h2 class="r">十一、易错集</h2>
+    <div class="card">
+      <p class="trap">⚠ ① <b>分层抽样按比例</b>:所有层共用同一个抽样比 n/N,某层抽 = 层人数 × (n/N),不是每层各定一个比。</p>
+      <p class="trap">⚠ ② <b>直方图纵轴是「频率/组距」</b>,不是频率!频率 = 高 × 组距,频数 = 频率 × 样本容量。所有矩形<b>面积</b>之和 = 1(不是高之和)。</p>
+      <p class="trap">⚠ ③ <b>方差衡量稳定性/波动</b>,不是衡量水平高低。比稳定先看平均数是否相同,再用方差;方差小 = 更稳定/整齐。</p>
+      <p class="trap">⚠ ④ <b>回归直线必过样本中心点 (x̄, ȳ)</b>。截距用 â = ȳ − b̂x̄ 求;算错 x̄ 或 ȳ 会连累整条直线。</p>
+      <p class="trap">⚠ ⑤ <b>χ² 越大,关联越强</b>(把握越大)。χ² 与临界值比较:大于才能下「有关」结论;χ² 小不代表「无关」,只是「证据不足」。</p>
+      <p class="trap">⚠ ⑥ <b>数据变换</b>:xᵢ→axᵢ+b,均值 → ax̄+b,方差 → a²s²(加常数 b 不改方差!)。这是最爱考的细节。</p>
+      <p class="trap">⚠ ⑦ <b>相关系数 r 的符号 = 斜率 b̂ 的符号</b>;|r| 大只说明线性强,不代表因果。r 接近 0 只是「线性不强」,可能有非线性关系。</p>
+    </div>
+
+    <h2 class="v">十二、尖子生拔高视角</h2>
+    <div class="card">
+      <p><b>① 平均数被极端值「绑架」,中位数不会:</b> 收入、房价这类右偏数据,平均数远高于中位数。看到「有极端值/长尾」优先想到用中位数描述「一般水平」——这也是新高考情境题爱设的辨析点。</p>
+      <p><b>② 方差的两个等价算法:</b> s² = (1/n)∑(xᵢ−x̄)² = (1/n)∑xᵢ² − x̄²(「平方的均值 − 均值的平方」)。数据多时后者更快;还可先减去一个公共常数(平移不改方差)简化计算。</p>
+      <p><b>③ 回归的本质是「最小化残差平方和」:</b> b̂、â 让 ∑(yᵢ−ŷᵢ)² 最小。相关系数 r² 表示 y 的变异中被 x「解释」的比例;r 只说线性强弱,<b>相关 ≠ 因果</b>,别被情境题带偏。</p>
+      <p><b>④ 独立性检验是「反证法」的统计版:</b> 先假设「无关」(H₀),若在此假设下出现当前数据的概率极小(χ² 超临界值),就推翻假设。所谓「有 99% 把握」= 犯错概率(显著性水平 α)只有 1%。</p>
+      <p><b>⑤ 正态分布的对称性 + 3σ 是选填秒杀器:</b> 已知 μ 和某段概率,用对称 P(X&lt;μ)=0.5 与「区间对称相减」两步即可求任意区间概率,不必查表硬算。σ 越大曲线越「矮胖」(数据越分散)。</p>
+    </div>
+
+    <h2 class="o">十三、自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学统计攻坚包 · 下一块:概率与随机变量 / 立体几何向量法</p>
+  </div>
+
+<script>
+/* ---------- 通用画布工具 ---------- */
+function axes(ctx,W,H,ox,oy,sx,sy){
+  ctx.strokeStyle='#cdbf9a';ctx.lineWidth=1;
+  for(let gx=ox%sx; gx<W; gx+=sx){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+  for(let gy=oy%sy; gy<H; gy+=sy){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+  ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+}
+function dot(ctx,x,y,col,r){r=r||6;ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();}
+
+/* ---------- 1. 分层抽样比例 ---------- */
+(function(){
+  const c=document.getElementById('cStrat'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const layers=[{name:'高一',pop:300,col:'#1450C8'},{name:'高二',pop:200,col:'#1E9E86'},{name:'高三',pop:100,col:'#E86A17'}];
+  const N=layers.reduce((s,l)=>s+l.pop,0);
+  const sN=document.getElementById('sN');
+  function draw(){
+    let n=parseInt(sN.value);
+    ctx.clearRect(0,0,W,H);
+    const base=H-56, top=40, maxPop=300;
+    const bw=120, gap=90, startX=110;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(60,base);ctx.lineTo(W-30,base);ctx.stroke();
+    ctx.font='bold 15px sans-serif';
+    layers.forEach((l,i)=>{
+      const x=startX+i*(bw+gap);
+      const h=(l.pop/maxPop)*(base-top);
+      ctx.fillStyle=l.col;ctx.fillRect(x,base-h,bw,h);
+      ctx.strokeStyle='#16120A';ctx.lineWidth=3;ctx.strokeRect(x,base-h,bw,h);
+      const pick=Math.round(l.pop*n/N);
+      ctx.fillStyle='#16120A';ctx.textAlign='center';
+      ctx.fillText(l.name+' '+l.pop+'人',x+bw/2,base+22);
+      ctx.fillStyle='#fff';ctx.font='bold 22px sans-serif';
+      ctx.fillText('抽 '+pick,x+bw/2,base-h+30);
+      ctx.font='bold 15px sans-serif';
+    });
+    ctx.fillStyle='#16120A';ctx.textAlign='left';ctx.font='bold 16px sans-serif';
+    ctx.fillText('总体 N = '+N+' 人   →   样本 n = '+n+' 人',60,26);
+    document.getElementById('valN').textContent='n = '+n;
+    let s1=Math.round(300*n/N),s2=Math.round(200*n/N),s3=Math.round(100*n/N);
+    document.getElementById('stratInfo').innerHTML='抽样比 = n/N = '+n+'/'+N+' = <b>'+(n/N).toFixed(4)+'</b>(所有层共用)。各层:高一 300×'+(n/N).toFixed(3)+'≈<b>'+s1+'</b>,高二 <b>'+s2+'</b>,高三 <b>'+s3+'</b>。';
+  }
+  sN.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 2. 频率分布直方图 ---------- */
+(function(){
+  const c=document.getElementById('cHist'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  // 5 groups, width 10 each, from 0..50. heights = freq/组距 (per unit). area sum must =1
+  const sBar=document.getElementById('sBar');
+  const dw=10; // 组距
+  // fixed heights (freq/组距 in 0.001 units later). We store as "per 10-unit-freq"? use fractions.
+  // base heights (freq/组距), we let group3 vary via slider, group4 absorbs to keep sum=1
+  function draw(){
+    // heights in units of freq/组距 (e.g. 0.030). slider 4..60 -> 0.004..0.060
+    let h3=parseInt(sBar.value)/1000;
+    let h0=0.010,h1=0.020,h4v=0.012;
+    // freq of each group = h*dw. sum of freq must=1 => sum h*10 =1 => sum h =0.1
+    // fixed h0,h1,h3(slider),h4v ; solve h2 to make total=0.1
+    let h2=0.1-(h0+h1+h3+h4v);
+    if(h2<0.002){h2=0.002;} // clamp for display safety
+    const hs=[h0,h1,h2,h3,h4v];
+    const mids=[5,15,25,35,45];
+    ctx.clearRect(0,0,W,H);
+    const base=H-50, top=30, left=70, right=W-30;
+    const plotW=right-left;
+    const xForVal=v=>left+(v/50)*plotW;
+    const maxH=0.062;
+    const yForH=h=>base-(h/maxH)*(base-top);
+    // grid + axes
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(left,top-4);ctx.lineTo(left,base);ctx.lineTo(right,base);ctx.stroke();
+    // y ticks
+    ctx.fillStyle='#6b5d3a';ctx.font='11px sans-serif';ctx.textAlign='right';
+    for(let t=0;t<=0.06;t+=0.01){const y=yForH(t);ctx.strokeStyle='#e2d8bd';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillStyle='#6b5d3a';ctx.fillText(t.toFixed(3),left-6,y+4);}
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.textAlign='left';
+    ctx.fillText('频率/组距',left-46,top-8);
+    // bars
+    const cols=['#1450C8','#1E9E86','#7A3FF2','#E86A17','#1450C8'];
+    hs.forEach((h,i)=>{
+      const x0=xForVal(i*10),x1=xForVal(i*10+10);
+      ctx.fillStyle=(i===3)?'#7A3FF2':'rgba(20,80,200,0.5)';
+      if(i===3){ctx.fillStyle='#7A3FF2';}else{ctx.fillStyle='rgba(20,80,200,0.35)';}
+      const y=yForH(h);
+      ctx.fillRect(x0,y,x1-x0,base-y);
+      ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x0,y,x1-x0,base-y);
+    });
+    // x labels
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+    for(let v=0;v<=50;v+=10){ctx.fillText(v,xForVal(v),base+18);}
+    // compute statistics
+    const freqs=hs.map(h=>h*dw); // 频率
+    const total=freqs.reduce((s,f)=>s+f,0);
+    const mean=mids.reduce((s,m,i)=>s+m*freqs[i],0)/total; // normalize by total (~1)
+    // mode = midpoint of tallest bar
+    let mi=0;hs.forEach((h,i)=>{if(h>hs[mi])mi=i;});
+    const mode=mids[mi];
+    // median: cumulative freq reach 0.5
+    let cum=0,med=0;
+    for(let i=0;i<5;i++){
+      if(cum+freqs[i]>=0.5*total){ const need=0.5*total-cum; med=i*10+ (need/freqs[i])*10; break;}
+      cum+=freqs[i];
+    }
+    // draw median line
+    const mx=xForVal(med);
+    ctx.strokeStyle='#E0382A';ctx.lineWidth=2;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(mx,top-2);ctx.lineTo(mx,base);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#E0382A';ctx.font='bold 12px sans-serif';ctx.fillText('中位数',mx,top-6);
+    document.getElementById('valBar').textContent='h = '+h3.toFixed(3);
+    document.getElementById('hMean').textContent=mean.toFixed(2);
+    document.getElementById('hMed').textContent=med.toFixed(2);
+    document.getElementById('hMode').textContent=mode;
+    document.getElementById('histInfo').innerHTML='各组频率 = 高×组距,累加 = <b>'+total.toFixed(2)+'</b>(恒为 1)。第3组高度自动使总和守恒。众数=最高矩形组中值,中位数=面积累加到 0.5 处。';
+  }
+  sBar.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 3. 方差 / 标准差 对比 ---------- */
+(function(){
+  const c=document.getElementById('cVar'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sl=document.getElementById('sSpread');
+  const meanVal=60;
+  // base offsets (symmetric around 0) for 7 points
+  const baseA=[-3,-2,-1,0,1,2,3];
+  const dataB=[60-22,60-10,60-4,60,60+5,60+12,60+20]; // fixed spread group
+  function stats(arr){const m=arr.reduce((s,x)=>s+x,0)/arr.length;const v=arr.reduce((s,x)=>s+(x-m)*(x-m),0)/arr.length;return {m,v};}
+  function draw(){
+    const spread=parseInt(sl.value)/10; // 0..10
+    const dataA=baseA.map(o=>meanVal+o*spread);
+    ctx.clearRect(0,0,W,H);
+    const left=70,right=W-30,plotW=right-left;
+    const yA=110,yB=250;
+    const vmin=20,vmax=100;
+    const xFor=v=>left+((v-vmin)/(vmax-vmin))*plotW;
+    // mean line
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(xFor(meanVal),40);ctx.lineTo(xFor(meanVal),H-40);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#16120A';ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('平均数 x̄ = 60',xFor(meanVal),30);
+    // axes for two rows
+    [['甲组',yA,'#1450C8',dataA],['乙组',yB,'#E86A17',dataB]].forEach(row=>{
+      const [name,y,col,data]=row;
+      ctx.strokeStyle='#cdbf9a';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();
+      ctx.fillStyle='#16120A';ctx.textAlign='right';ctx.font='bold 14px sans-serif';
+      ctx.fillText(name,left-10,y+5);
+      // deviation segments
+      data.forEach(v=>{
+        ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([2,3]);
+        ctx.beginPath();ctx.moveTo(xFor(v),y);ctx.lineTo(xFor(meanVal),y);ctx.stroke();ctx.setLineDash([]);
+      });
+      data.forEach(v=>dot(ctx,xFor(v),y,col,7));
+    });
+    const sA=stats(dataA),sB=stats(dataB);
+    document.getElementById('valSpread').textContent='甲 s²='+sA.v.toFixed(1);
+    let verdict = sA.v<sB.v ? '甲组更稳定(方差小)' : (sA.v>sB.v?'乙组更稳定(方差小)':'两组一样稳定');
+    document.getElementById('varInfo').innerHTML='甲组 方差 s²=<b>'+sA.v.toFixed(1)+'</b>(标准差 s='+Math.sqrt(sA.v).toFixed(2)+');乙组 方差 s²=<b>'+sB.v.toFixed(1)+'</b>。→ <b>'+verdict+'</b>。虚线越长 = 离均值越远 = 对方差贡献越大。';
+  }
+  sl.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 4. 线性回归 ---------- */
+(function(){
+  const c=document.getElementById('cReg'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const left=70,right=W-30,bottom=H-50,top=30;
+  const xmin=0,xmax=10,ymin=0,ymax=10;
+  const xFor=x=>left+((x-xmin)/(xmax-xmin))*(right-left);
+  const yFor=y=>bottom-((y-ymin)/(ymax-ymin))*(bottom-top);
+  const invX=px=>xmin+((px-left)/(right-left))*(xmax-xmin);
+  const invY=py=>ymin+((bottom-py)/(bottom-top))*(ymax-ymin);
+  let pts=[];
+  function reset(){pts=[[1,2],[2,2.6],[3,4],[4,4.3],[5,6],[6,5.8],[7,7.4]];draw();}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // grid
+    ctx.strokeStyle='#e2d8bd';ctx.lineWidth=1;
+    for(let g=0;g<=10;g++){ctx.beginPath();ctx.moveTo(xFor(g),top);ctx.lineTo(xFor(g),bottom);ctx.stroke();ctx.beginPath();ctx.moveTo(left,yFor(g));ctx.lineTo(right,yFor(g));ctx.stroke();}
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(left,top-4);ctx.lineTo(left,bottom);ctx.lineTo(right,bottom);ctx.stroke();
+    ctx.fillStyle='#16120A';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+    ctx.fillText('x',right-6,bottom+22);ctx.fillText('y',left-14,top+4);
+    const n=pts.length;
+    let mx=0,my=0;pts.forEach(p=>{mx+=p[0];my+=p[1];});mx/=n;my/=n;
+    let sxy=0,sxx=0,syy=0;
+    pts.forEach(p=>{sxy+=(p[0]-mx)*(p[1]-my);sxx+=(p[0]-mx)*(p[0]-mx);syy+=(p[1]-my)*(p[1]-my);});
+    let b = sxx>1e-9? sxy/sxx : 0;
+    let a = my - b*mx;
+    let r = (sxx>1e-9&&syy>1e-9)? sxy/Math.sqrt(sxx*syy) : 0;
+    // regression line
+    ctx.strokeStyle='#1E9E86';ctx.lineWidth=3.5;
+    const y0=a+b*xmin, y1=a+b*xmax;
+    ctx.beginPath();ctx.moveTo(xFor(xmin),yFor(y0));ctx.lineTo(xFor(xmax),yFor(y1));ctx.stroke();
+    // points
+    pts.forEach(p=>dot(ctx,xFor(p[0]),yFor(p[1]),'#1450C8',6));
+    // center point
+    dot(ctx,xFor(mx),yFor(my),'#E86A17',8);
+    ctx.fillStyle='#E86A17';ctx.font='bold 12px sans-serif';ctx.textAlign='left';
+    ctx.fillText('(x̄,ȳ)',xFor(mx)+10,yFor(my)-8);
+    document.getElementById('rB').textContent=b.toFixed(3);
+    document.getElementById('rA').textContent=a.toFixed(3);
+    document.getElementById('rR').textContent=r.toFixed(3);
+    document.getElementById('regInfo').innerHTML='回归直线 ŷ = <b>'+b.toFixed(2)+'</b>x + ('+a.toFixed(2)+'),样本中心 (x̄,ȳ)=('+mx.toFixed(2)+','+my.toFixed(2)+')——绿线恒过橙点。r='+r.toFixed(3)+' → '+(r>0?'正相关':(r<0?'负相关':'无线性'))+',|r|='+Math.abs(r).toFixed(3)+(Math.abs(r)>0.75?'(线性强)':'(线性一般)');
+  }
+  c.addEventListener('click',e=>{
+    const rect=c.getBoundingClientRect();
+    const px=(e.clientX-rect.left)*(c.width/rect.width);
+    const py=(e.clientY-rect.top)*(c.height/rect.height);
+    const x=invX(px),y=invY(py);
+    if(x>=0&&x<=10&&y>=0&&y<=10){pts.push([+x.toFixed(2),+y.toFixed(2)]);draw();}
+  });
+  document.getElementById('regAdd').onclick=()=>{const x=Math.random()*10,y=0.7*x+1+(Math.random()-0.5)*3;pts.push([+x.toFixed(2),+Math.max(0,Math.min(10,y)).toFixed(2)]);draw();};
+  document.getElementById('regReset').onclick=reset;
+  reset();
+})();
+
+/* ---------- 5. 数据变换对均值/方差 ---------- */
+(function(){
+  const c=document.getElementById('cTrans'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const sTa=document.getElementById('sTa'),sTb=document.getElementById('sTb');
+  const raw=[2,3,3.5,4,5,6,6.5,7,8]; // original data
+  function stats(arr){const m=arr.reduce((s,x)=>s+x,0)/arr.length;const v=arr.reduce((s,x)=>s+(x-m)*(x-m),0)/arr.length;return {m,v};}
+  function draw(){
+    const a=parseInt(sTa.value)/100; // 0.05..2.5
+    const b=parseInt(sTb.value)/20;  // -6..6
+    ctx.clearRect(0,0,W,H);
+    const left=60,right=W-30,plotW=right-left;
+    const yRaw=110,yNew=250;
+    const vmin=-8,vmax=25;
+    const xFor=v=>left+((v-vmin)/(vmax-vmin))*plotW;
+    // zero line
+    ctx.strokeStyle='#cdbf9a';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(xFor(0),40);ctx.lineTo(xFor(0),H-30);ctx.stroke();
+    ctx.fillStyle='#6b5d3a';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText('0',xFor(0),H-16);
+    const s0=stats(raw);
+    const newData=raw.map(x=>a*x+b);
+    const s1=stats(newData);
+    // mean markers
+    [['原始数据',yRaw,'#8a7f66',raw,s0],['变换后 axᵢ+b',yNew,'#1450C8',newData,s1]].forEach(row=>{
+      const [name,y,col,data,st]=row;
+      ctx.strokeStyle='#cdbf9a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();
+      ctx.fillStyle='#16120A';ctx.textAlign='left';ctx.font='bold 13px sans-serif';ctx.fillText(name,left,y-14);
+      // mean line
+      ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([5,4]);
+      ctx.beginPath();ctx.moveTo(xFor(st.m),y-24);ctx.lineTo(xFor(st.m),y+24);ctx.stroke();ctx.setLineDash([]);
+      data.forEach(v=>dot(ctx,xFor(v),y,col,6));
+    });
+    document.getElementById('valTa').textContent='a = '+a.toFixed(2);
+    document.getElementById('valTb').textContent='b = '+b.toFixed(2);
+    // theoretical check
+    const meanTheo=a*s0.m+b, varTheo=a*a*s0.v;
+    document.getElementById('transInfo').innerHTML='原始:x̄₀='+s0.m.toFixed(2)+',s₀²='+s0.v.toFixed(2)+'。变换后:x̄=<b>'+s1.m.toFixed(2)+'</b>(=a·x̄₀+b='+meanTheo.toFixed(2)+' ✓),s²=<b>'+s1.v.toFixed(2)+'</b>(=a²·s₀²='+varTheo.toFixed(2)+' ✓)。改 b→均值移、<b>方差不变</b>;改 a→方差按 a² 变。';
+  }
+  sTa.addEventListener('input',draw);sTb.addEventListener('input',draw);draw();
+})();
+
+/* ---------- 6. 独立性检验 χ² ---------- */
+(function(){
+  const c=document.getElementById('cChi'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  const cA=document.getElementById('cA'),cB=document.getElementById('cB'),cC=document.getElementById('cC'),cD=document.getElementById('cD');
+  function draw(){
+    const a=parseInt(cA.value),b=parseInt(cB.value),cc=parseInt(cC.value),d=parseInt(cD.value);
+    const n=a+b+cc+d;
+    ctx.clearRect(0,0,W,H);
+    // draw 2x2 table
+    const tx=50,ty=40,cw=150,ch=54;
+    const cells=[['','喜欢','不喜欢','合计'],['男',a,b,a+b],['女',cc,d,cc+d],['合计',a+cc,b+d,n]];
+    const colors=[null,'#1450C8','#E86A17',null];
+    ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    for(let i=0;i<4;i++){for(let j=0;j<4;j++){
+      const x=tx+j*cw,y=ty+i*ch;
+      let fill='#fffdf6';
+      if(i===0||j===0)fill='#16120A';
+      if(i===1&&j===1)fill='rgba(20,80,200,0.25)';
+      if(i===1&&j===2)fill='rgba(232,106,23,0.25)';
+      if(i===2&&j===1)fill='rgba(30,158,134,0.25)';
+      if(i===2&&j===2)fill='rgba(122,63,242,0.22)';
+      ctx.fillStyle=fill;ctx.fillRect(x,y,cw,ch);
+      ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.strokeRect(x,y,cw,ch);
+      ctx.fillStyle=(i===0||j===0)?'#fff':'#16120A';
+      ctx.fillText(String(cells[i][j]),x+cw/2,y+ch/2);
+    }}
+    // compute chi-square
+    const denom=(a+b)*(cc+d)*(a+cc)*(b+d);
+    let chi = denom>0 ? n*Math.pow(a*d-b*cc,2)/denom : 0;
+    // verdict bar
+    const by=ty+4*ch+22;
+    ctx.textAlign='left';ctx.font='bold 15px sans-serif';ctx.fillStyle='#16120A';
+    ctx.fillText('χ² = n(ad−bc)² / [(a+b)(c+d)(a+c)(b+d)] = '+chi.toFixed(3),tx,by);
+    // threshold comparison
+    const crit=[{v:3.841,t:'95%',c:'#F3C00E'},{v:6.635,t:'99%',c:'#E86A17'},{v:10.828,t:'99.9%',c:'#E0382A'}];
+    let concl='χ² ≤ 3.841 → 没有充分证据认为两者有关',ccol='#6b5d3a';
+    if(chi>10.828){concl='χ² > 10.828 → 有 99.9% 把握认为两者有关';ccol='#E0382A';}
+    else if(chi>6.635){concl='χ² > 6.635 → 有 99% 把握认为两者有关';ccol='#E86A17';}
+    else if(chi>3.841){concl='χ² > 3.841 → 有 95% 把握认为两者有关';ccol='#B8930A';}
+    // number line
+    const nlx=tx,nlw=W-tx-40,nly=by+40;
+    const chiMaxScale=14;
+    const xForC=v=>nlx+Math.min(v,chiMaxScale)/chiMaxScale*nlw;
+    ctx.strokeStyle='#16120A';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(nlx,nly);ctx.lineTo(nlx+nlw,nly);ctx.stroke();
+    crit.forEach(k=>{const x=xForC(k.v);ctx.strokeStyle=k.c;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,nly-10);ctx.lineTo(x,nly+10);ctx.stroke();ctx.fillStyle=k.c;ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(k.v.toFixed(3),x,nly+24);ctx.fillText(k.t,x,nly-16);});
+    // chi marker
+    const mxp=xForC(chi);
+    ctx.fillStyle='#1450C8';ctx.beginPath();ctx.moveTo(mxp,nly-4);ctx.lineTo(mxp-8,nly-20);ctx.lineTo(mxp+8,nly-20);ctx.closePath();ctx.fill();ctx.strokeStyle='#16120A';ctx.lineWidth=2;ctx.stroke();
+    document.getElementById('vA').textContent='a='+a;document.getElementById('vB').textContent='b='+b;
+    document.getElementById('vC').textContent='c='+cc;document.getElementById('vD').textContent='d='+d;
+    document.getElementById('chiInfo').innerHTML='n='+n+',χ² = <b>'+chi.toFixed(3)+'</b>。结论:<b style="color:'+ccol+'">'+concl+'</b>。χ² 越大 → 关联越强(蓝三角越靠右)。';
+  }
+  [cA,cB,cC,cD].forEach(s=>s.addEventListener('input',draw));draw();
+})();
+
+/* ---------- 自测 ---------- */
+const qs=[
+ {q:"1. 分层抽样中,某层应抽人数怎么算?",a:"抽样比 = n/N(全体统一);某层抽人数 = 该层人数 × (n/N)。"},
+ {q:"2. 频率分布直方图的纵轴是什么?每个矩形的面积代表什么?",a:"纵轴 = 频率/组距;矩形面积 = 频率;所有矩形面积之和 = 1。"},
+ {q:"3. 某组频率/组距 = 0.03,组距 = 10,样本容量 200,该组频数是多少?",a:"频率 = 0.03×10 = 0.3;频数 = 0.3×200 = 60。"},
+ {q:"4. 平均数、中位数、众数中哪个最抗极端值?",a:"中位数(和众数)抗极端值;平均数不抗,易被极端值拉动。"},
+ {q:"5. 方差公式?它反映什么?",a:"s²=(1/n)∑(xᵢ−x̄)²;反映数据的离散程度/波动大小,方差小=更稳定。"},
+ {q:"6. 甲乙平均数相同,s²甲=0.4,s²乙=2.8,谁更稳定?",a:"甲(方差小者更稳定/整齐)。"},
+ {q:"7. 数据每个都变为 axᵢ+b,新均值、新方差各是多少?",a:"新均值 = a·x̄+b;新方差 = a²·s²(加常数 b 不改变方差)。"},
+ {q:"8. 回归直线 ŷ=b̂x+â 一定经过哪个点?",a:"样本中心点 (x̄, ȳ);由 â=ȳ−b̂x̄ 保证。"},
+ {q:"9. 斜率公式 b̂ = ?",a:"b̂ = ∑(xᵢ−x̄)(yᵢ−ȳ) / ∑(xᵢ−x̄)²;â = ȳ − b̂x̄。"},
+ {q:"10. 相关系数 r 越接近 1 说明什么?r 的符号由什么决定?",a:"|r| 越接近 1 线性相关越强;r 的符号与斜率 b̂ 同号(r>0 正相关)。"},
+ {q:"11. 独立性检验的 χ² 公式?越大说明什么?",a:"χ²=n(ad−bc)²/[(a+b)(c+d)(a+c)(b+d)];χ² 越大越有把握认为两变量有关。"},
+ {q:"12. χ²=16.67,常用临界值 10.828,能下什么结论?",a:"16.67>10.828 → 有 99.9% 的把握认为两分类变量有关。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

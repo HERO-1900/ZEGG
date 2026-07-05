@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天体质量与密度的测量(万有引力应用) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>天体质量与密度的测量(万有引力应用)</h1>
+    <p class="lead">「称量地球」「测太阳质量」这类题看着高大上,其实全靠一个套路:让万有引力提供向心力,列一个等式,把中心天体的质量 M 解出来。这页专攻<b>测中心天体的 M 和 ρ</b>,给你两条黄金关系、五种题型的秒杀套路,再用动画把每个公式拨给你看。(卫星变轨、宇宙速度请看《万有引力》那一页。)</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 你站在一个星球旁边,想知道它有多重(M)、多密(ρ),但没法拿秤称。怎么办?<b>找一颗绕它转的卫星</b>(月亮、人造卫星都行),测出这颗卫星转一圈要多久(周期 T)、离中心多远(轨道半径 r),中心天体的引力全用来「拉」卫星做圆周运动 → 一列等式,M 就出来了。要密度?再知道星球自己的半径 R,ρ=M÷体积。特别地:如果卫星<b>贴着星球表面飞</b>,连 r 和 R 都不用测,<b>只要一个周期 T</b> 就能算出密度!这就是本页的王炸公式。</div>
+
+    <div class="keybox"><b>两条黄金关系(全章命根):</b><br>① <b>环绕关系</b>——万有引力提供向心力:GMm/r² = mv²/r = mω²r = m(4π²/T²)r。<b>只要天体在绕中心转,就用它。</b><br>② <b>黄金代换</b>——地表/近地时物体重力≈引力:mg = GMm/R² ⟹ <b>GM = gR²</b>。<b>题目给了 g 和 R,就能替换掉 GM,连引力常量 G 都能消掉。</b></div>
+
+    <h2>① 核心原理:两条基本关系</h2>
+    <div class="card">
+      <h3>关系一 · 万有引力提供向心力(环绕天体)</h3>
+      <p style="margin:6px 0">一颗质量 m 的卫星,绕中心天体(质量 M)做半径 r 的匀速圆周运动。它受到的万有引力,<b>恰好</b>就是维持圆周运动所需的向心力:</p>
+      <div class="eq">GMm/r² = mv²/r = mω²r = m(4π²/T²)r</div>
+      <p style="margin:6px 0"><b>四种向心力写法任选一种</b>,看题目给了什么就用什么:给线速度 v 用 mv²/r;给角速度 ω 用 mω²r;<b>给周期 T(最常见)用 m(4π²/T²)r</b>。注意小卫星质量 m 会被<b>约掉</b>——中心天体质量 M 的求解<b>与卫星自身质量无关</b>。</p>
+      <h3>关系二 · 黄金代换 GM = gR²</h3>
+      <p style="margin:6px 0">在天体<b>表面</b>(或近地表),质量 m 的物体所受重力,近似等于该处的万有引力(忽略自转):</p>
+      <div class="eq">mg = GMm/R² ⟹ GM = gR²</div>
+      <p style="margin:6px 0">这里 <b>R 是天体自己的半径</b>(表面到中心)。这条式子把 GM 整体换成 gR²,好处是:<b>只要题目给了表面重力加速度 g 和天体半径 R,不需要卫星、不需要引力常量 G</b>,就能求 M。这叫「黄金代换」,是选择题秒杀神器。</p>
+      <p class="trap">⚠ 用哪条?口诀:<b>给卫星的 T、r → 用关系一;给表面 g、R → 用关系二。</b>两条都通向 M。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🛰️ 互动 1 — 卫星绕天体:调 r / T,看四个向心力表达式与 M 如何关联</div>
+      <svg id="orbitSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="orbGo">▶ 播放/暂停</button>
+        <label>轨道半径 r <input id="orbR" type="range" min="60" max="130" value="95" step="1"></label>
+        <label>周期 T <input id="orbT" type="range" min="2" max="8" value="4" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>ω = 2π/T</b><span id="orbW">0</span></div>
+        <div><b>v = ωr</b><span id="orbV">0</span></div>
+        <div><b>向心加速度 a=ω²r</b><span id="orbA">0</span></div>
+        <div><b>推得 M ∝ r³/T²</b><span id="orbM">0</span></div>
+      </div>
+      <p class="small">引力(橙箭头)始终指向中心,充当向心力。四个向心力写法算的是同一个力。由 GMm/r²=m(4π²/T²)r 解出 M=4π²r³/(GT²)——同一 M 与卫星质量 m 无关。</p>
+    </div>
+
+    <h2 class="b">② 测中心天体的质量 M</h2>
+    <div class="card">
+      <h3>路线甲 · 用环绕卫星的 T 和 r(最通用)</h3>
+      <p style="margin:6px 0">由 GMm/r² = m(4π²/T²)r,两边约去 m,解出:</p>
+      <div class="eq">M = 4π²r³ / (G·T²)</div>
+      <p style="margin:6px 0">只要能测出<b>一颗绕它转的卫星</b>的轨道半径 r 和周期 T(引力常量 G 已知),就能算出中心天体质量。测太阳质量:用地球公转 T=1年、r=1.5×10¹¹ m;测地球质量:用月球或人造卫星。</p>
+      <div class="mono">若给的是 v 和 r:M=v²r/G;给 ω 和 r:M=ω²r³/G。本质同一式换向心力写法。</div>
+      <h3>路线乙 · 用表面 g 和天体半径 R(黄金代换)</h3>
+      <p style="margin:6px 0">由 mg = GMm/R²,解出:</p>
+      <div class="eq">M = gR² / G</div>
+      <p style="margin:6px 0">不需要卫星!只要知道站在星球表面的重力加速度 g 和星球半径 R。这是「称量地球」的经典法(g=9.8,R=6.4×10⁶ m,G=6.67×10⁻¹¹ → M≈6×10²⁴ kg)。</p>
+      <p class="trap">⚠ 路线甲里的 <b>r 是卫星轨道半径</b>(卫星到中心);路线乙里的 <b>R 是天体自身半径</b>。<b>r 和 R 千万别混!</b>只有近地卫星才有 r≈R。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 2 — 测质量计算器:两条路线,输入即算出 M</div>
+      <div class="ctrl" style="margin-bottom:4px"><b style="font-size:13px">路线甲(卫星 T、r):</b></div>
+      <div class="ctrl">
+        <label>周期 T (s) <input id="mT" type="number" value="5400" step="100" style="width:110px"></label>
+        <label>轨道半径 r (m) <input id="mR" type="number" value="7.0e6" style="width:120px"></label>
+      </div>
+      <div class="ctrl" style="margin-bottom:4px"><b style="font-size:13px">路线乙(表面 g、R):</b></div>
+      <div class="ctrl">
+        <label>表面 g (m/s²) <input id="mg" type="number" value="9.8" step="0.1" style="width:90px"></label>
+        <label>天体半径 R (m) <input id="mRR" type="number" value="6.4e6" style="width:120px"></label>
+        <button id="mCalc">▶ 计算 M</button>
+      </div>
+      <div class="verdict" id="mOut">输入参数后点「计算 M」。G=6.67×10⁻¹¹ N·m²/kg²。</div>
+      <p class="small">两条路线互相独立、结果可对照。若同一天体两法都给,可交叉验证。M=4π²r³/(GT²) 或 M=gR²/G。</p>
+    </div>
+
+    <h2 class="g">③ 测中心天体的密度 ρ</h2>
+    <div class="card">
+      <h3>通法 · 先求 M,再除以天体体积</h3>
+      <p style="margin:6px 0">密度就是质量除以体积,天体近似为球:V = (4/3)πR³(<b>R 是天体半径,不是轨道半径</b>)。</p>
+      <div class="eq">ρ = M / V = M / [(4/3)πR³]</div>
+      <p style="margin:6px 0">把路线甲的 M=4π²r³/(GT²) 代入:</p>
+      <div class="eq">ρ = 3πr³ / (G·T²·R³)</div>
+      <h3>王炸 · 近地卫星「贴着表面转」时 r ≈ R</h3>
+      <p style="margin:6px 0">如果卫星轨道很低,几乎贴着天体表面飞,则轨道半径 r ≈ 天体半径 R,上式里的 r³/R³ ≈ 1,直接化简为:</p>
+      <div class="eq">ρ = 3π / (G·T²)</div>
+      <p style="margin:6px 0"><b>只需要一个量——近地卫星的周期 T!</b>连天体半径 R、轨道半径 r 都不用测。这是本专题最漂亮、考频最高的结论。物理意义:一颗贴地卫星的周期,完全由中心天体的平均密度决定。</p>
+      <p class="trap">⚠ ρ=3π/(GT²) 的<b>适用条件是 r≈R</b>(近地/贴地卫星)!一般高轨卫星必须用 ρ=3πr³/(GT²R³),不能偷懒。看到「近地卫星」「贴着表面」「最小周期」才能用王炸式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌍 互动 3 — 测密度计算器:近地卫星只要一个周期 T</div>
+      <svg id="densSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>近地卫星周期 T (s) <input id="dT" type="number" value="5100" step="50" style="width:110px"></label>
+        <button id="dCalc">▶ 算密度 ρ</button>
+      </div>
+      <div class="live">
+        <div><b>ρ = 3π/(GT²)</b><span id="dRho">0</span></div>
+        <div><b>单位</b><span>kg/m³</span></div>
+        <div><b>对比:水</b><span>1000</span></div>
+        <div><b>对比:地球</b><span>≈5500</span></div>
+      </div>
+      <p class="small">拖动/输入贴地卫星周期,直接得平均密度。T 越短 → ρ 越大(星球越密,贴地卫星转得越快)。ρ 只和 T 有关,与半径无关!</p>
+    </div>
+
+    <h2 class="o">④ 求天体表面重力加速度 g</h2>
+    <div class="card">
+      <p style="margin:6px 0">反过来,若已知中心天体的 M 和半径 R,由黄金代换直接得表面重力加速度:</p>
+      <div class="eq">g = GM / R²</div>
+      <p style="margin:6px 0">若已知的是<b>密度 ρ</b> 和半径 R(M=ρ·(4/3)πR³ 代入):</p>
+      <div class="eq">g = (4/3)πGρR</div>
+      <p style="margin:6px 0"><b>意义:同密度的星球,半径越大,表面 g 越大(g ∝ R)。</b>不在表面而在离中心 h 高处的重力加速度:g' = GM/(R+h)²。「同一物体在不同星球重力之比」类题,直接用 g=GM/R² 作比即可。</p>
+      <p class="trap">⚠ 表面 g 用天体半径 R;高空 g' 用轨道半径 (R+h)。别把两个半径搞混。求「另一星球上的 g」用比值法最快:g₁/g₂=(M₁/M₂)·(R₂/R₁)²。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 4 — 黄金代换 GM=gR² 演示:两种视角算同一个引力效应</div>
+      <svg id="goldSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>天体半径 R (×10⁶ m) <input id="gR" type="range" min="2" max="12" value="6.4" step="0.1"></label>
+        <label>质量 M (×10²⁴ kg) <input id="gM" type="range" min="1" max="12" value="6" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>左式 GM/R²</b><span id="gL">0</span></div>
+        <div><b>= 表面 g</b><span id="gVal">0</span></div>
+        <div><b>验证 gR²</b><span id="gGM">0</span></div>
+        <div><b>= GM</b><span id="gGM2">0</span></div>
+      </div>
+      <p class="small">左边台面上的物体只受重力 g;右边同一物体被中心当作引力 GMm/R² 拉住。两者相等 ⟹ GM=gR²。改 R 或 M,看 g 随之变(g∝M,g∝1/R²)。</p>
+    </div>
+
+    <h2 class="v">⑤ 双星系统:求总质量</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>双星:两颗质量相当的星,靠彼此的万有引力互相吸引,绕<u>公共质心</u>做同周期、同角速度</b>的圆周运动。两星的<b>周期 T、角速度 ω 相同</b>,轨道半径 r₁、r₂ 不同(离质心近的转小圈),且 <b>m₁r₁ = m₂r₂</b>(质心不动)。设两星间距 L = r₁ + r₂。</p>
+      <p style="margin:6px 0">对每颗星:彼此的万有引力 = 各自的向心力。</p>
+      <div class="eq">Gm₁m₂/L² = m₁ω²r₁ = m₂ω²r₂</div>
+      <p style="margin:6px 0">两式相加消去个体质量,得<b>总质量</b>公式:</p>
+      <div class="eq">m₁ + m₂ = 4π²L³ / (G·T²)</div>
+      <p style="margin:6px 0">形式和单星测质量的 M=4π²r³/(GT²) 一模一样,只是把「轨道半径 r」换成「<b>两星间距 L</b>」,把「中心质量 M」换成「<b>总质量 m₁+m₂</b>」。这是记忆诀窍。</p>
+      <p class="trap">⚠ 双星里引力用的距离是<b>两星间距 L</b>(万有引力按 L 算);向心力用的是各自到质心的半径 r₁、r₂。公式给的是<b>总质量</b>,不是单颗质量。要单颗还需配合 m₁r₁=m₂r₂。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✨ 互动 5 — 双星系统:两星绕公共质心,r₁/r₂ 与质量成反比</div>
+      <svg id="binSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="binGo">▶ 播放/暂停</button>
+        <label>质量比 m₁:m₂ <input id="binRatio" type="range" min="1" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>m₁ : m₂</b><span id="binR">2 : 1</span></div>
+        <div><b>r₁ : r₂</b><span id="binRr">1 : 2</span></div>
+        <div><b>周期 T</b><span id="binT">相同</span></div>
+        <div><b>角速度 ω</b><span id="binW">相同</span></div>
+      </div>
+      <p class="small">两星永远在质心(白点)两侧、连线成一直线、同步转。质量大的星离质心近、转小圈(m₁r₁=m₂r₂)。总质量 m₁+m₂=4π²L³/(GT²)。</p>
+    </div>
+
+    <h2 class="b">⑥ r 还是 R?轨道半径 vs 天体半径</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是本专题的<b>头号失分点</b>。两个「半径」意义完全不同,用错必错:</p>
+      <table>
+        <tr><th>符号</th><th>含义</th><th>用在哪</th></tr>
+        <tr><td><b>r</b>(轨道半径)</td><td>卫星到<b>中心天体中心</b>的距离</td><td>引力/向心力式:GMm/r²=m(4π²/T²)r。求 M 用它</td></tr>
+        <tr><td><b>R</b>(天体半径)</td><td>中心天体<b>自身</b>的半径(表面到中心)</td><td>黄金代换 GM=gR²、体积 V=(4/3)πR³、求密度用它</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键关系:r = R + h</b>(h 是卫星离地面的高度)。只有<b>近地/贴地卫星</b>(h≈0)才有 <b>r ≈ R</b>,这时才能把两者当同一个用,才能得 ρ=3π/(GT²)。</p>
+      <p class="trap">⚠ 高轨卫星 r > R,绝不能令 r=R!密度必须用 ρ=3πr³/(GT²R³)。地球同步卫星 r≈4.2×10⁷ m,而地球 R≈6.4×10⁶ m,差了六倍多。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 6 — r vs R 概念对比:拖高度看轨道半径与天体半径的关系</div>
+      <svg id="rrSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>卫星高度 h <input id="rrH" type="range" min="0" max="120" value="60" step="1"></label>
+        <button id="rrNear">贴地(h→0,r≈R)</button>
+      </div>
+      <div class="verdict" id="rrOut"></div>
+      <p class="small">蓝色实线=天体半径 R(固定);橙色=轨道半径 r=R+h。把 h 拖到 0,r 就压到 R——此刻(且仅此刻)可用 ρ=3π/(GT²)。</p>
+    </div>
+
+    <h2 class="o">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求中心天体质量 M</h3>
+      <p><b class="tag">触发信号:</b>给了一颗环绕卫星的周期 T 和轨道半径 r(或 v、ω),问中心天体质量;或给表面 g 和天体半径 R。</p>
+      <p><b class="tag">标准动作:</b>有卫星 → GMm/r²=m(4π²/T²)r 约去 m → M=4π²r³/(GT²)。给 g、R → mg=GMm/R² → M=gR²/G。</p>
+      <p><b class="tag">示例(带解):</b>人造卫星 r=7.0×10⁶ m,T=5.8×10³ s。M=4π²r³/(GT²)=4π²×(7×10⁶)³/(6.67×10⁻¹¹×(5800)²)≈6.0×10²⁴ kg(地球)。</p>
+      <p class="trap">陷阱:把卫星质量 m 当未知去解(其实约掉了);r 用成了天体半径 R。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 求中心天体密度 ρ</h3>
+      <p><b class="tag">触发信号:</b>问平均密度;给了卫星 T、r 以及天体半径 R(高轨),或给近地卫星 T(贴地)。</p>
+      <p><b class="tag">标准动作:</b>先 M=4π²r³/(GT²),再 ρ=M/[(4/3)πR³]=3πr³/(GT²R³)。若 r≈R(近地)→ ρ=3π/(GT²)。</p>
+      <p><b class="tag">示例(带解):</b>近地卫星 T=5100 s。ρ=3π/(GT²)=3π/(6.67×10⁻¹¹×5100²)≈5.4×10³ kg/m³(接近地球平均密度)。</p>
+      <p class="trap">陷阱:高轨卫星硬套 ρ=3π/(GT²);体积用轨道半径 r 而非天体半径 R。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 近地卫星只需 T 求密度(王炸)</h3>
+      <p><b class="tag">触发信号:</b>题干出现「近地卫星」「贴近表面」「最低轨道」「绕表面飞行」+ 周期,问密度。</p>
+      <p><b class="tag">标准动作:</b>直接 r=R,ρ=3π/(GT²)。一步到位,连 R、G 之外别的都不用。</p>
+      <p><b class="tag">示例(带解):</b>某星球近地卫星周期 T=2h=7200 s。ρ=3π/(6.67×10⁻¹¹×7200²)≈2.7×10³ kg/m³。</p>
+      <p class="trap">陷阱:忘了「近地」这个前提就乱用;把 T 的单位没化成秒。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — g 与 G 的换算(黄金代换)</h3>
+      <p><b class="tag">触发信号:</b>题目不给 G,只给表面 g 和半径 R;或求另一星球上的表面重力、比值。</p>
+      <p><b class="tag">标准动作:</b>用 GM=gR² 整体替换 GM,消掉 G;比值题用 g=GM/R² 作比 g₁/g₂=(M₁/M₂)(R₂/R₁)²。</p>
+      <p><b class="tag">示例(带解):</b>某星质量为地球 2 倍、半径为地球 2 倍。g星/g地=(2)/(2²)=1/2 → g星=4.9 m/s²。</p>
+      <p class="trap">陷阱:比值里 R 用错次方(应是平方,且在分母);把 GM 拆开又去找 G。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 双星系统求总质量</h3>
+      <p><b class="tag">触发信号:</b>两颗星互相绕转、绕「公共质心」、给出间距 L 和共同周期 T。</p>
+      <p><b class="tag">标准动作:</b>引力按间距 L 算,两式相加 → m₁+m₂=4π²L³/(GT²)。要单颗再用 m₁r₁=m₂r₂。</p>
+      <p><b class="tag">示例(带解):</b>双星间距 L=2×10¹¹ m,周期 T=1×10⁸ s。m₁+m₂=4π²L³/(GT²)=4π²×(2×10¹¹)³/(6.67×10⁻¹¹×10¹⁶)≈4.7×10³⁰ kg。</p>
+      <p class="trap">陷阱:引力距离误用 r₁ 或 r₂(应是间距 L);把总质量当单颗;以为两星周期不同。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 估算问题</h3>
+      <p><b class="tag">触发信号:</b>要求「估算」中心天体质量/密度,数据不全或需用近似(如近地、只给 g 或只给 T)。</p>
+      <p><b class="tag">标准动作:</b>抓住黄金关系挑最省数据的路线:只给 g、R → M=gR²/G、ρ=3g/(4πGR);只给近地 T → ρ=3π/(GT²)。</p>
+      <p><b class="tag">示例(带解):</b>已知地表 g、地球 R,估地球密度:ρ=M/V=(gR²/G)/[(4/3)πR³]=3g/(4πGR)。代入得 ≈5.5×10³ kg/m³。</p>
+      <p class="trap">陷阱:估算题也要单位统一;近似条件(近地、忽略自转)没交代就乱用。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>r 是轨道半径,R 是天体半径,别混!</b>求 M 用 r,求密度体积/黄金代换用 R,r=R+h。</p>
+      <p class="trap">② 只有<b>近地/贴地卫星</b>才有 r≈R,才能用 ρ=3π/(GT²);高轨卫星必须 ρ=3πr³/(GT²R³)。</p>
+      <p class="trap">③ <b>黄金代换 GM=gR²</b> 里的 R 是天体半径;它能消掉引力常量 G,题目不给 G 时首选。</p>
+      <p class="trap">④ 密度公式 ρ=M/[(4/3)πR³] 的体积用<b>天体半径 R</b>,绝不是轨道半径 r。</p>
+      <p class="trap">⑤ 中心天体质量 M 与<b>环绕卫星质量 m 无关</b>(m 被约掉);别把 m 当变量。</p>
+      <p class="trap">⑥ 周期 T、半径等<b>单位必须统一到 SI</b>(T→秒,r/R→米),否则数量级全错。</p>
+      <p class="trap">⑦ 双星:引力距离用<b>两星间距 L</b>,公式给的是<b>总质量</b>,不是单颗。</p>
+      <p class="trap">⑧ 表面 g 用天体半径 R;离地 h 高处 g'=GM/(R+h)²,分母是轨道半径。</p>
+      <p class="trap">⑨ 四种向心力写法是同一个力的不同表达,给什么量用什么式,别重复列多余方程。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切归结为一条主方程。</b> 测 M、测 ρ、求 g、双星总质量——本质都是「引力=向心力」这一条式子的变形。养成先写 GMm/r²=m(4π²/T²)r,再按题目问什么去解的习惯,不背一堆公式,只推一条式子,永远不会用错。</p>
+      <p style="margin:8px 0"><b>② ρ=3π/(GT²) 揭示深刻物理:贴地卫星周期只由中心天体平均密度决定,与半径无关。</b> 所以太阳系里密度相近的行星,其贴地卫星周期也相近(都约 1.4 小时量级)。理解「周期↔密度」这层对应,选择题里估算周期/密度可以秒答。</p>
+      <p style="margin:8px 0"><b>③ 黄金代换的真正威力是「消 G」。</b> 高考很多题故意不给引力常量 G,就是逼你用 GM=gR² 把 G 替换掉。凡是题干出现表面 g 和半径 R 却不给 G,条件反射就是黄金代换。</p>
+      <p style="margin:8px 0"><b>④ 比值法避免大数计算。</b> 「甲星 M 是乙星几倍」「另一星球上 g 多大」这类题,把两星的同一式子相除,天体质量/半径以比值形式约掉常数,几秒出答案,还不易算错数量级。</p>
+      <p style="margin:8px 0"><b>⑤ 双星记忆:换汤不换药。</b> 单星 M=4π²r³/(GT²) 与双星 m₁+m₂=4π²L³/(GT²) 结构全同——r→间距 L、M→总质量。理解「谁提供引力、谁做向心运动、距离取哪个」三问,双星、三星、卫星全部一网打尽。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:《万有引力(卫星/宇宙速度/变轨)》</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const G=6.674e-11;
+function fmtE(x){ // 科学计数
+  if(x===0)return "0";
+  const e=Math.floor(Math.log10(Math.abs(x)));
+  const m=x/Math.pow(10,e);
+  return m.toFixed(2)+"×10"+sup(e);
+}
+function sup(n){const map={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};return (""+n).split("").map(c=>map[c]||c).join("");}
+
+/* ===== 互动1:卫星绕天体 ===== */
+(function(){
+  const svg=document.getElementById('orbitSvg');
+  const R=document.getElementById('orbR'),T=document.getElementById('orbT');
+  const oW=document.getElementById('orbW'),oV=document.getElementById('orbV'),oA=document.getElementById('orbA'),oM=document.getElementById('orbM');
+  const cx=350,cy=150;let ang=0,running=true;
+  function stats(){
+    const r=+R.value, Tv=+T.value;
+    const w=2*Math.PI/Tv;
+    const v=w*r;
+    const a=w*w*r;
+    // M ∝ r³/T² (相对量,任意单位)
+    const Mrel=Math.pow(r,3)/(Tv*Tv)/1e5;
+    oW.textContent=w.toFixed(2);
+    oV.textContent=v.toFixed(1);
+    oA.textContent=a.toFixed(1);
+    oM.textContent=Mrel.toFixed(2);
+  }
+  function draw(){
+    clr(svg);
+    const r=+R.value;
+    // 轨道虚线
+    el(svg,'circle',{cx:cx,cy:cy,r:r,fill:'none',stroke:'#bbb','stroke-width':2,'stroke-dasharray':'6 6'});
+    // 中心天体
+    el(svg,'circle',{cx:cx,cy:cy,r:34,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+5,'font-size':15,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='M';
+    // 卫星位置
+    const sx=cx+r*Math.cos(ang), sy=cy+r*Math.sin(ang);
+    // 引力箭头(指向中心)
+    const ux=(cx-sx), uy=(cy-sy), ul=Math.hypot(ux,uy);
+    const a1x=sx+ux/ul*30, a1y=sy+uy/ul*30;
+    el(svg,'line',{x1:sx,y1:sy,x2:a1x,y2:a1y,stroke:ORANGE,'stroke-width':4});
+    el(svg,'polygon',{points:arrowHead(sx,sy,a1x,a1y),fill:ORANGE});
+    // 速度箭头(切向)
+    const tx=-Math.sin(ang), ty=Math.cos(ang);
+    const b1x=sx+tx*36, b1y=sy+ty*36;
+    el(svg,'line',{x1:sx,y1:sy,x2:b1x,y2:b1y,stroke:GREEN,'stroke-width':4});
+    el(svg,'polygon',{points:arrowHead(sx,sy,b1x,b1y),fill:GREEN});
+    // 卫星
+    el(svg,'circle',{cx:sx,cy:sy,r:12,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:sx,y:sy+4,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m';
+    // r 标注
+    el(svg,'text',{x:(cx+sx)/2,y:(cy+sy)/2-6,'font-size':13,'font-weight':900,fill:INK}).textContent='r';
+    // 图例
+    el(svg,'text',{x:20,y:24,'font-size':12.5,'font-weight':800,fill:ORANGE}).textContent='橙 = 引力(向心力)';
+    el(svg,'text',{x:20,y:44,'font-size':12.5,'font-weight':800,fill:GREEN}).textContent='绿 = 线速度 v';
+    el(svg,'text',{x:20,y:284,'font-size':12.5,'font-weight':900,fill:INK}).textContent='GMm/r² = mv²/r = mω²r = m(4π²/T²)r';
+  }
+  function arrowHead(fx,fy,tx,ty){
+    const ang=Math.atan2(ty-fy,tx-fx);const l=9;
+    const x1=tx-l*Math.cos(ang-0.4),y1=ty-l*Math.sin(ang-0.4);
+    const x2=tx-l*Math.cos(ang+0.4),y2=ty-l*Math.sin(ang+0.4);
+    return tx+','+ty+' '+x1+','+y1+' '+x2+','+y2;
+  }
+  function loop(){
+    if(running){const Tv=+T.value;ang+=2*Math.PI/Tv*0.02*3;}
+    draw();stats();requestAnimationFrame(loop);
+  }
+  R.oninput=T.oninput=()=>{stats();};
+  document.getElementById('orbGo').onclick=()=>{running=!running;};
+  stats();loop();
+})();
+
+/* ===== 互动2:测质量计算器 ===== */
+(function(){
+  const mT=document.getElementById('mT'),mR=document.getElementById('mR'),mg=document.getElementById('mg'),mRR=document.getElementById('mRR');
+  const out=document.getElementById('mOut');
+  document.getElementById('mCalc').onclick=()=>{
+    const T=parseFloat(mT.value), r=parseFloat(mR.value), g=parseFloat(mg.value), R=parseFloat(mRR.value);
+    let html="";
+    if(T>0&&r>0){
+      const M1=4*Math.PI*Math.PI*Math.pow(r,3)/(G*T*T);
+      html+="路线甲(T,r): M = 4π²r³/(GT²) = <b>"+fmtE(M1)+" kg</b><br>";
+    }
+    if(g>0&&R>0){
+      const M2=g*R*R/G;
+      html+="路线乙(g,R): M = gR²/G = <b>"+fmtE(M2)+" kg</b>";
+    }
+    if(!html)html="请至少填一条路线的两个量。";
+    out.innerHTML=html;
+  };
+})();
+
+/* ===== 互动3:测密度计算器 + 星球图 ===== */
+(function(){
+  const svg=document.getElementById('densSvg');
+  const dT=document.getElementById('dT'),dRho=document.getElementById('dRho');
+  function draw(rho){
+    clr(svg);
+    // 星球
+    const cx=180,cy=110;
+    el(svg,'circle',{cx:cx,cy:cy,r:70,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='R';
+    // 贴地轨道
+    el(svg,'circle',{cx:cx,cy:cy,r:76,fill:'none',stroke:ORANGE,'stroke-width':3,'stroke-dasharray':'5 5'});
+    el(svg,'circle',{cx:cx+76,cy:cy,r:9,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx,y:cy-88,'font-size':12.5,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='近地卫星 r≈R';
+    // 密度条对比
+    const bx=340,bw=320;
+    el(svg,'text',{x:bx,y:34,'font-size':12.5,'font-weight':900,fill:INK}).textContent='平均密度对比(0–7000 kg/m³)';
+    function bar(y,val,col,lab){
+      const frac=Math.min(1,val/7000);
+      el(svg,'rect',{x:bx,y:y,width:bw,height:20,fill:'none',stroke:INK,'stroke-width':2});
+      el(svg,'rect',{x:bx,y:y,width:bw*frac,height:20,fill:col});
+      el(svg,'text',{x:bx,y:y-4,'font-size':11,'font-weight':800,fill:INK}).textContent=lab;
+    }
+    bar(58,1000,BLUE,'水 1000');
+    bar(98,5500,BROWN,'地球 ≈5500');
+    bar(138,rho,ORANGE,'本星球 '+(rho?rho.toFixed(0):'—'));
+    el(svg,'text',{x:bx,y:190,'font-size':12.5,'font-weight':900,fill:INK}).textContent='ρ = 3π/(GT²)';
+  }
+  function calc(){
+    const T=parseFloat(dT.value);
+    if(!(T>0)){dRho.textContent='—';draw(0);return;}
+    const rho=3*Math.PI/(G*T*T);
+    dRho.textContent=rho.toFixed(0);
+    draw(rho);
+  }
+  document.getElementById('dCalc').onclick=calc;
+  dT.oninput=calc;
+  calc();
+})();
+
+/* ===== 互动4:黄金代换 GM=gR² ===== */
+(function(){
+  const svg=document.getElementById('goldSvg');
+  const gR=document.getElementById('gR'),gM=document.getElementById('gM');
+  const gL=document.getElementById('gL'),gVal=document.getElementById('gVal'),gGM=document.getElementById('gGM'),gGM2=document.getElementById('gGM2');
+  function draw(g,GM){
+    clr(svg);
+    // 左视角:表面物体 + 重力箭头
+    el(svg,'text',{x:170,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='视角① 表面:只见重力 g';
+    // 地面
+    el(svg,'line',{x1:60,y1:150,x2:280,y2:150,stroke:INK,'stroke-width':4});
+    el(svg,'rect',{x:150,y:118,width:40,height:32,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:170,y:139,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='m';
+    el(svg,'line',{x1:170,y1:150,x2:170,y2:210,stroke:RED,'stroke-width':5});
+    el(svg,'polygon',{points:'170,222 162,206 178,206',fill:RED});
+    el(svg,'text',{x:186,y:200,'font-size':13,'font-weight':900,fill:RED}).textContent='mg';
+    // 右视角:引力 GMm/R²
+    el(svg,'text',{x:530,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='视角② 引力:GMm/R²';
+    el(svg,'circle',{cx:530,cy:150,r:44,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:530,y:155,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='M';
+    el(svg,'rect',{x:512,y:60,width:36,height:26,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:530,y:78,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='m';
+    el(svg,'line',{x1:530,y1:88,x2:530,y2:104,stroke:ORANGE,'stroke-width':5});
+    el(svg,'polygon',{points:'530,112 522,96 538,96',fill:ORANGE});
+    el(svg,'text',{x:548,y:74,'font-size':10,'font-weight':800,fill:INK}).textContent='R';
+    el(svg,'line',{x1:530,y1:106,x2:530,y2:106,stroke:ORANGE,'stroke-width':2});
+    // R 标注线
+    el(svg,'line',{x1:568,y1:106,x2:568,y2:150,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:576,y:132,'font-size':12,'font-weight':900,fill:INK}).textContent='R';
+    // 等号
+    el(svg,'text',{x:350,y:150,'font-size':30,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='⟺';
+    el(svg,'text',{x:350,y:246,'font-size':17,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='GM = gR²';
+  }
+  function calc(){
+    const R=(+gR.value)*1e6, M=(+gM.value)*1e24;
+    const GM=G*M;
+    const g=GM/(R*R);
+    gL.textContent=g.toFixed(2);
+    gVal.textContent=g.toFixed(2)+" m/s²";
+    gGM.textContent=fmtE(g*R*R);
+    gGM2.textContent=fmtE(GM);
+    draw(g,GM);
+  }
+  gR.oninput=gM.oninput=calc;
+  calc();
+})();
+
+/* ===== 互动5:双星系统 ===== */
+(function(){
+  const svg=document.getElementById('binSvg');
+  const ratio=document.getElementById('binRatio');
+  const binR=document.getElementById('binR'),binRr=document.getElementById('binRr');
+  const cx=350,cy=150;let ang=0,running=true;
+  function draw(){
+    clr(svg);
+    const k=+ratio.value; // m1:m2 = k:1
+    // m1r1=m2r2 → r1:r2 = m2:m1 = 1:k
+    const L=190; // 间距
+    const r1=L*(1/(1+k)); // 离质心 m1 的距离 = m2/(m1+m2)*L
+    const r2=L*(k/(1+k));
+    // 半径大小 ∝ 质量^(1/3) 视觉
+    const rad1=10+8*Math.cbrt(k);
+    const rad2=10+8*Math.cbrt(1);
+    const x1=cx-r1*Math.cos(ang), y1=cy-r1*Math.sin(ang);
+    const x2=cx+r2*Math.cos(ang), y2=cy+r2*Math.sin(ang);
+    // 轨道
+    el(svg,'circle',{cx:cx,cy:cy,r:r1,fill:'none',stroke:'#ccc','stroke-width':1.5,'stroke-dasharray':'5 5'});
+    el(svg,'circle',{cx:cx,cy:cy,r:r2,fill:'none',stroke:'#ccc','stroke-width':1.5,'stroke-dasharray':'5 5'});
+    // 连线过质心
+    el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:INK,'stroke-width':2,'stroke-dasharray':'3 3'});
+    // 质心
+    el(svg,'circle',{cx:cx,cy:cy,r:5,fill:'#fff',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx,y:cy-12,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='质心';
+    // 两星
+    el(svg,'circle',{cx:x1,cy:y1,r:rad1,fill:VIO,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x1,y:y1+4,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m₁';
+    el(svg,'circle',{cx:x2,cy:y2,r:rad2,fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x2,y:y2+4,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m₂';
+    // L 标注
+    el(svg,'text',{x:cx,y:cy+r2+0,'font-size':11,'font-weight':800,fill:INK});
+    el(svg,'text',{x:20,y:24,'font-size':12.5,'font-weight':900,fill:INK}).textContent='紫大星离质心近(转小圈),橙小星转大圈,同步';
+    el(svg,'text',{x:20,y:284,'font-size':12.5,'font-weight':900,fill:INK}).textContent='m₁+m₂ = 4π²L³/(GT²)　(L=两星间距)';
+    // 更新读数
+    binR.textContent=k+' : 1';
+    // r1:r2 = 1:k
+    binRr.textContent='1 : '+k;
+  }
+  function loop(){if(running)ang+=0.02;draw();requestAnimationFrame(loop);}
+  ratio.oninput=draw;
+  document.getElementById('binGo').onclick=()=>{running=!running;};
+  loop();
+})();
+
+/* ===== 互动6:r vs R 对比 ===== */
+(function(){
+  const svg=document.getElementById('rrSvg');
+  const H=document.getElementById('rrH');
+  const out=document.getElementById('rrOut');
+  const cx=250,cy=160,Rbody=70;
+  function draw(){
+    clr(svg);
+    const h=+H.value;
+    const r=Rbody+h;
+    // 天体
+    el(svg,'circle',{cx:cx,cy:cy,r:Rbody,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='天体';
+    // R 半径线(蓝实线)
+    el(svg,'line',{x1:cx,y1:cy,x2:cx-Rbody,y2:cy,stroke:'#9fd0ff','stroke-width':5});
+    el(svg,'text',{x:cx-Rbody/2,y:cy-8,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='R';
+    // 轨道(橙虚线)
+    el(svg,'circle',{cx:cx,cy:cy,r:r,fill:'none',stroke:ORANGE,'stroke-width':2.5,'stroke-dasharray':'6 5'});
+    // r 半径线(橙)
+    el(svg,'line',{x1:cx,y1:cy,x2:cx+r*0.7071,y2:cy-r*0.7071,stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:cx+r*0.35,y:cy-r*0.35-6,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='r';
+    // 卫星
+    el(svg,'circle',{cx:cx+r*0.7071,cy:cy-r*0.7071,r:9,fill:RED,stroke:INK,'stroke-width':2});
+    // h 标注
+    if(h>4){
+      el(svg,'line',{x1:cx+Rbody,y1:cy+40,x2:cx+r,y2:cy+40,stroke:GREEN,'stroke-width':3});
+      el(svg,'text',{x:cx+Rbody+(r-Rbody)/2,y:cy+58,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='h';
+    }
+    el(svg,'text',{x:520,y:60,'font-size':13,'font-weight':900,fill:BLUE}).textContent='R = 天体半径';
+    el(svg,'text',{x:520,y:84,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='r = 轨道半径';
+    el(svg,'text',{x:520,y:108,'font-size':13,'font-weight':900,fill:GREEN}).textContent='r = R + h';
+    // verdict
+    if(h<=3){
+      out.innerHTML='h ≈ 0:<b>贴地卫星,r ≈ R</b> → 可用王炸式 ρ=3π/(GT²)';
+      out.style.borderColor=GREEN;
+    }else{
+      out.innerHTML='h &gt; 0:<b>r = R + h > R</b>,r≠R → 密度须用 ρ=3πr³/(GT²R³)';
+      out.style.borderColor=RED;
+    }
+  }
+  H.oninput=draw;
+  document.getElementById('rrNear').onclick=()=>{H.value=0;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 测中心天体质量的两条路线各是什么公式?各需要什么已知量?",a:"路线甲:用环绕卫星的 T、r → M=4π²r³/(GT²);路线乙:用表面 g、天体半径 R(黄金代换)→ M=gR²/G。"},
+ {q:"2. 为什么求出的中心天体质量 M 与环绕卫星的质量 m 无关?",a:"由 GMm/r²=m(4π²/T²)r,两边都含 m,约去后 M 只与 G、r、T 有关,与卫星自身质量 m 无关。"},
+ {q:"3. 黄金代换是哪条式子?最大用处是什么?",a:"GM=gR²(由 mg=GMm/R² 得)。用处:题目不给引力常量 G 时,用它把 GM 整体替换,消掉 G。R 是天体半径。"},
+ {q:"4. 测中心天体平均密度的通用公式?体积里的半径是 r 还是 R?",a:"ρ=M/[(4/3)πR³],体积用天体自身半径 R(不是轨道半径 r)。代入 M=4π²r³/(GT²) 得 ρ=3πr³/(GT²R³)。"},
+ {q:"5. 近地卫星测密度只需一个周期 T,公式是什么?适用条件?",a:"ρ=3π/(GT²)。适用条件:卫星贴着天体表面飞,r≈R,此时 r³/R³≈1。高轨卫星不能用!"},
+ {q:"6. 近地卫星 T=5100 s,求中心天体平均密度。",a:"ρ=3π/(GT²)=3×3.14/(6.67×10⁻¹¹×5100²)≈5.4×10³ kg/m³(接近地球)。"},
+ {q:"7. r 和 R 有什么区别与联系?什么时候 r≈R?",a:"r 是卫星轨道半径(卫星到中心),R 是天体自身半径。关系 r=R+h。只有近地/贴地卫星(h≈0)时 r≈R。"},
+ {q:"8. 已知表面 g 与天体半径 R,如何估天体平均密度(不给 M)?",a:"ρ=M/V=(gR²/G)/[(4/3)πR³]=3g/(4πGR)。用黄金代换消去 M 与 G 中的一部分,只留 g、R。"},
+ {q:"9. 双星系统求总质量的公式?其中距离用哪个?",a:"m₁+m₂=4π²L³/(GT²),L 是两星间距(万有引力按 L 算)。给的是总质量,不是单颗。要单颗配合 m₁r₁=m₂r₂。"},
+ {q:"10. 双星中两星的周期、角速度、轨道半径,哪些相同哪些不同?",a:"周期 T、角速度 ω 相同(同步绕质心);轨道半径 r₁、r₂ 不同,且与质量成反比 m₁r₁=m₂r₂(质量大的转小圈)。"},
+ {q:"11. 某星质量为地球 2 倍、半径为地球 2 倍,其表面 g 是地球的几倍?",a:"g=GM/R²,g星/g地=(2)/(2²)=1/2。即表面重力加速度为地球的一半(约 4.9 m/s²)。"},
+ {q:"12. 用密度 ρ 和半径 R 表示天体表面重力加速度 g?",a:"g=GM/R²,M=ρ·(4/3)πR³,代入得 g=(4/3)πGρR。即同密度下 g∝R,星球越大表面 g 越大。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

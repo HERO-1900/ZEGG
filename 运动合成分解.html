@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>运动的合成与分解(小船渡河/关联速度) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>运动的合成与分解</h1>
+    <p class="lead">小船渡河、绳子拉船、杆端速度——这些题看着吓人,底层就一句话:<b>运动是矢量,能像力一样合成与分解</b>。这页把「合运动怎么判、船头往哪指、绳速为什么要分解」讲透,再用动画把每个模型拨给你看。</p>
+
+    <div class="say">🗣️ <b>运动合成(人话版):</b> 一个物体同时参加两个运动(比如船:既被自己划着走,又被水推着走),它<b>真正走的路线</b>叫合运动,那两个「同时进行」的运动叫分运动。位移、速度、加速度都是<b>矢量</b>,合成时像拼力一样用<b>平行四边形定则</b>拼。三条铁律:两个分运动<b>同时开始同时结束</b>(等时性)、<b>互不干扰各走各的</b>(独立性)、拼起来<b>等于</b>真实运动(等效性)。</div>
+
+    <div class="keybox"><b>三句话锁死本章:</b> ① 合运动=物体<b>实际发生</b>的那个运动(相对地面看到的轨迹),分运动是你为了好算而拆出来的;② 小船渡河:<b>最短时间</b>看船头(正对对岸),<b>最短位移</b>看 v船 与 v水 的大小关系;③ 关联速度:绳/杆不可伸缩 → 沿绳/杆方向的<b>速度分量相等</b>(不是速度相等!)。</div>
+
+    <h2 class="b">① 核心原理:运动的合成与分解</h2>
+    <div class="card">
+      <h3>矢量 + 平行四边形定则</h3>
+      <p style="margin:8px 0">位移 s、速度 v、加速度 a <b>全是矢量</b>,合成与分解都遵循<b>平行四边形定则</b>(共起点作平行四边形,对角线=合矢量)。分运动可任意取正交两方向(一般取「沿河/垂直河」或「水平/竖直」)。</p>
+      <div class="eq">v合 = v₁ + v₂(矢量和)　|v合| = √(v₁² + v₂² + 2v₁v₂cosθ)</div>
+      <h3>合运动与分运动的三性</h3>
+      <table>
+        <tr><th>性质</th><th>含义</th><th>用处</th></tr>
+        <tr><td><b>等时性</b></td><td>分运动与合运动<b>历时相同</b>(同时开始/结束)</td><td>渡河时间只由「垂直河方向」的分运动决定</td></tr>
+        <tr><td><b>独立性</b></td><td>各分运动<b>互不影响</b>,各按自己规律进行</td><td>水流不改变船「过河」的快慢</td></tr>
+        <tr><td><b>等效性</b></td><td>分运动合起来<b>等效于</b>真实合运动</td><td>拆开算再拼回去,结果=实际</td></tr>
+      </table>
+      <p class="trap">⚠ 分解不是随便拆!要按「<b>实际效果</b>」或「计算方便」取方向。渡河题几乎都取<b>垂直河岸</b>与<b>沿河岸</b>两个正交方向——因为过河快慢只和垂直分量有关。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 运动合成动画:两个分运动 → 合运动轨迹</div>
+      <canvas id="compCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="cpGo">▶ 播放</button><button id="cpReset">↺ 重置</button>
+        <label>水平v₁ <input id="cpVx" type="range" min="1" max="6" value="4" step="1"></label>
+        <label>竖直v₂ <input id="cpVy" type="range" min="1" max="6" value="3" step="1"></label>
+      </div>
+      <p class="small">红点=水平分运动的投影,绿点=竖直分运动的投影,蓝点=真实合运动。两个匀速分运动合成一条<b>直线</b>轨迹,斜率由 v₂/v₁ 决定。</p>
+    </div>
+
+    <h2 class="g">② 合运动的判断:实际发生的才是合运动</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>判据一句话:</b> 物体<b>相对地面实际走出的轨迹/速度</b>,就是合运动;为分析而人为拆出的两个方向的运动是分运动。</p>
+      <div class="mono">找合运动:问「物体到底往哪走、多快?」——那个真实的位移/速度就是合的。</div>
+      <div class="mono">找分运动:问「我把它拆成了哪两个方向?」——那两个是分的,可自选方向。</div>
+      <p style="margin:8px 0"><b>典型:</b> 小船在流水中,合运动=<b>船相对岸的运动</b>(斜着过河那条实际路线);分运动=①船相对水的划行 v船 ②水相对岸的流动 v水。船桨给的是 v船(对水),水给的是 v水,二者合成才是船对岸的实际运动。</p>
+      <p class="trap">⚠ 别把「船头指向」当成实际运动方向!船头指向=v船(对水)的方向,而船真正走的方向是 v船+v水 的合方向,通常和船头不一致。</p>
+    </div>
+
+    <h2 class="o">③ 小船渡河:最短时间 vs 最短位移</h2>
+    <div class="card">
+      <p style="margin:6px 0">设河宽 d,水速 v水(沿河),船对水速度 v船(方向由船头决定,人可控)。<b>过河快慢只由「垂直河岸」的速度分量决定</b>(等时性)。</p>
+      <h3>情形一:最短时间(问「多久到对岸」)</h3>
+      <div class="eq">船头<b>正对对岸</b> → v船垂直分量最大 = v船 → t最短 = d / v船</div>
+      <p style="margin:6px 0">此时船被水冲向下游,合位移是斜的(位移不是最短,但时间最短)。<b>与 v水 大小无关</b>——水流不改变过河时间,只把你冲远。</p>
+      <h3>情形二:最短位移(问「走的路程最短」)</h3>
+      <p style="margin:6px 0"><b>要分两种情况看 v船 与 v水 的大小关系:</b></p>
+      <table>
+        <tr><th>条件</th><th>船头方向</th><th>最短位移</th></tr>
+        <tr><td><b>v船 &gt; v水</b></td><td>船头偏向上游,使<b>合速度垂直对岸</b></td><td>s最短 = d(直着过,等于河宽)</td></tr>
+        <tr><td><b>v船 &lt; v水</b></td><td>合速度无法垂直,让船头偏上游使<b>合速度尽量垂直</b></td><td>s最短 = d·v水/v船(&gt; d,冲不动正对)</td></tr>
+        <tr><td><b>v船 = v水</b></td><td>临界,合速度也无法垂直</td><td>s最短 = d·v水/v船 = d(极限贴近直过)</td></tr>
+      </table>
+      <div class="eq">v船 &gt; v水 时:cosθ = v水/v船(θ 为船头偏离上游与河岸法线夹角)</div>
+      <p style="margin:6px 0"><b>v船 &lt; v水 的几何法:</b> 以 v水 为定长(河岸方向),v船 长度固定但方向可转,合速度 = v水 + v船。让合速度与河岸夹角最大 → 当 v船 <b>垂直于合速度</b>时(v船 与 v水 夹角满足 cosα=v船/v水),偏角最大,位移最短,s最短 = d·v水/v船。</p>
+      <p class="trap">⚠ 最经典的坑:v船 &lt; v水 时<b>不可能垂直渡河</b>(横向永远被冲走),此时最短位移 &gt; 河宽;只有 v船 ≥ v水 才能直着过。别一律套「s=d」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛵ 互动 2 — 小船渡河模拟:调 v船/v水/船头角 → 合速度·轨迹·时间·位移(标最短)</div>
+      <canvas id="boatCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="btGo">▶ 渡河</button><button id="btReset">↺ 重置</button>
+        <label>v船 <input id="btVb" type="range" min="1" max="6" value="4" step="0.5"></label>
+        <label>v水 <input id="btVw" type="range" min="0" max="6" value="2" step="0.5"></label>
+        <label>船头角θ <input id="btTh" type="range" min="-80" max="80" value="0" step="5"></label>
+      </div>
+      <div class="ctrl">
+        <button id="btMinT">跳到「最短时间」</button>
+        <button id="btMinS">跳到「最短位移」</button>
+      </div>
+      <div class="live">
+        <div><b>过河时间 t (s)</b><span id="boT">0</span></div>
+        <div><b>实际位移 s (m)</b><span id="boS">0</span></div>
+        <div><b>下游漂移 (m)</b><span id="boD">0</span></div>
+        <div><b>合速度 (m/s)</b><span id="boV">0</span></div>
+      </div>
+      <p class="small">θ=0 是船头正对对岸。绿=v船(对水,沿船头),蓝=v水(沿河),红=合速度(实际运动)。河宽固定。看时间与位移怎么随 θ 变。</p>
+    </div>
+
+    <h2 class="v">④ 关联速度:沿绳/杆方向的速度分量相等</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>核心:</b> 绳(或杆)<b>不可伸长/缩短</b> → 绳两端物体<b>沿绳方向的速度分量必须相等</b>(否则绳会变长或松掉/顶断)。这叫<b>关联速度</b>,是「速度分解」的招牌应用。</p>
+      <div class="eq">v₁·cosα = v₂·cosβ　(两端速度沿绳方向的投影相等)</div>
+      <h3>分解口诀:一个平动,一个转动</h3>
+      <p style="margin:6px 0">把物体的<b>实际速度 v(合)</b>分解为两个效果:① <b>沿绳方向</b>——收/放绳(改变绳长)的分量;② <b>垂直绳方向</b>——绕定点<b>转动</b>绳的分量。绳收缩速度 = 沿绳分量。</p>
+      <h3>拉船模型(岸上匀速收绳)</h3>
+      <p style="margin:6px 0">人在岸上以速度 u 匀速收绳,船在水面。绳与水平方向夹角 θ。船的实际速度 v船 沿水面(水平),把它沿绳方向分解:</p>
+      <div class="eq">v船·cosθ = u　→　v船 = u/cosθ　(θ↑ 时 v船↑,船越靠近越快,是加速!)</div>
+      <p class="trap">⚠ 大错特错:直接写「v船 = u」。船速是<b>合速度</b>,收绳速度 u 只是它<b>沿绳的分量</b>,所以 v船 = u/cosθ ≥ u。越靠岸 θ 越大,cosθ 越小,船越快。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪢 互动 3 — 关联速度分解(拉船):沿绳分量相等,v船=u/cosθ</div>
+      <canvas id="pullCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="plGo">▶ 收绳</button><button id="plReset">↺ 重置</button>
+        <label>收绳速度u <input id="plU" type="range" min="1" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>绳与水平角θ (°)</b><span id="puTh">0</span></div>
+        <div><b>收绳速度u</b><span id="puU">0</span></div>
+        <div><b>船速v船</b><span id="puVb">0</span></div>
+        <div><b>v船/u = 1/cosθ</b><span id="puR">0</span></div>
+      </div>
+      <p class="small">绿=收绳速度u(沿绳,人匀速拉);红=船实际速度(水平)。红的<b>沿绳投影</b>=绿,所以 v船=u/cosθ。船越近 θ 越大,船越快。</p>
+    </div>
+
+    <h2 class="v">⑤ 关联速度:杆端速度</h2>
+    <div class="card">
+      <p style="margin:8px 0">硬杆同样不可伸缩,<b>杆两端沿杆方向速度分量相等</b>。经典:一根杆 A 端沿墙下滑(竖直),B 端沿地滑动(水平)。</p>
+      <div class="eq">v_A·cosα = v_B·cosβ　(α、β 分别为两端速度与杆的夹角)</div>
+      <p style="margin:6px 0"><b>靠墙滑杆:</b> A 沿竖直墙下滑速度 v_A,B 沿水平地面滑速度 v_B,杆与地面夹角 φ。A 端速度竖直,与杆夹角=(90°−φ);B 端速度水平,与杆夹角=φ。沿杆分量相等:</p>
+      <div class="eq">v_A·cos(90°−φ) = v_B·cosφ　→　v_A·sinφ = v_B·cosφ　→　v_B = v_A·tanφ</div>
+      <p class="trap">⚠ 判断哪端「快」:沿杆分量相等,谁的速度与杆<b>夹角大</b>(cos小),谁的速度就<b>大</b>。别默认两端一样快。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 杆端关联速度:靠墙滑杆,沿杆分量相等,v_B=v_A·tanφ</div>
+      <canvas id="rodCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="rdGo">▶ 下滑</button><button id="rdReset">↺ 重置</button>
+        <label>A端下滑v_A <input id="rdVa" type="range" min="1" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>杆与地夹角φ (°)</b><span id="roPhi">0</span></div>
+        <div><b>A端速度v_A</b><span id="roVa">0</span></div>
+        <div><b>B端速度v_B</b><span id="roVb">0</span></div>
+        <div><b>沿杆分量(相等)</b><span id="roC">0</span></div>
+      </div>
+      <p class="small">A(红)沿墙竖直下滑,B(蓝)沿地水平滑。橙=两端沿杆方向的速度分量(始终相等)。φ→90°时 v_B 飞快(tanφ→∞)。</p>
+    </div>
+
+    <h2 class="b">⑥ 平行四边形定则:合成的几何本质</h2>
+    <div class="card">
+      <p style="margin:8px 0">两个分速度共起点,作平行四边形,<b>对角线</b>就是合速度。夹角越大合速度越小;正交(90°)时 |v合|=√(v₁²+v₂²)。这是所有合成分解题的几何底座。</p>
+      <div class="eq">正交:|v合| = √(v₁² + v₂²)　方向 tanβ = v₂/v₁</div>
+    </div>
+    <div class="viz">
+      <div class="vlabel">▱ 互动 5 — 平行四边形定则合成:拖动滑块看合矢量</div>
+      <svg id="paraSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>v₁大小 <input id="paA" type="range" min="1" max="6" value="4" step="0.5"></label>
+        <label>v₂大小 <input id="paB" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>夹角θ <input id="paT" type="range" min="10" max="170" value="90" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>v₁</b><span id="paV1">0</span></div>
+        <div><b>v₂</b><span id="paV2">0</span></div>
+        <div><b>夹角θ (°)</b><span id="paTh">0</span></div>
+        <div><b>合速度|v合|</b><span id="paVr">0</span></div>
+      </div>
+      <p class="small">绿=v₁,蓝=v₂,红=对角线(合速度)。虚线补全平行四边形。夹角越大,合速度越短。</p>
+    </div>
+
+    <h2 class="o">⑦ 渡河图解 + 最短位移临界</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>速度矢量图法(万能):</b> 先画定长的 v水(沿河),再从 v水 末端(或起点)以 v船 为半径画圆(v船 大小定、方向可选)。合速度 = 从 v水 起点到 v船 末端的矢量。哪条合速度最「竖直」→ 位移最短。</p>
+      <p style="margin:6px 0"><b>临界看半径:</b> v船 ≥ v水,圆能碰到「垂直河岸」方向 → 可直渡(s=d);v船 &lt; v水,圆够不到竖直,合速度与河岸夹角最大时(v船 与合速度垂直,即 v船 与 v水 夹角 cosα=v船/v水),位移最短 = d·v水/v船。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 6 — 最短位移临界:v船 与 v水 大小关系决定能否直渡</div>
+      <svg id="critSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>v船 <input id="crVb" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>v水 <input id="crVw" type="range" min="1" max="6" value="2" step="0.5"></label>
+      </div>
+      <div class="verdict" id="crNote"></div>
+      <p class="small">灰圈=v船 能达到的所有合速度末端。若圈越过「竖直虚线」→ 能直渡(v船≥v水);够不到→ 最短位移&gt;河宽,取切线方向那个最竖直的合速度。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 运动的合成与分解(基础)</h3>
+      <p><b class="tag">触发信号:</b>物体同时参与两个运动,求合速度/合位移/轨迹(如渡河、平抛的两个分运动)。</p>
+      <p><b class="tag">标准动作:</b>取正交两方向(常取水平/竖直或沿河/垂直河)→ 各方向独立按运动学算 → 平行四边形合成 → 用等时性衔接时间。</p>
+      <p><b class="tag">示例(带解):</b>船以 v船=4m/s 正对渡河,水速 v水=3m/s,河宽 d=40m。垂直分量=4,t=40/4=10s;下游漂移=v水·t=3×10=30m;合位移 s=√(40²+30²)=50m。</p>
+      <p class="trap">陷阱:把船头方向当实际方向;时间误用合速度算(应只用垂直分量)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 小船渡河 · 最短时间</h3>
+      <p><b class="tag">触发信号:</b>问「最快多久到对岸」「怎样过河用时最短」。</p>
+      <p><b class="tag">标准动作:</b>船头<b>正对对岸</b>(v船全部用于过河)→ t最短=d/v船。<b>与 v水 无关</b>。再求漂移=v水·t、合位移。</p>
+      <p><b class="tag">示例(带解):</b>d=60m,v船=5m/s,v水=4m/s。船头正对:t=60/5=12s,漂移=4×12=48m,合位移=√(60²+48²)=√5904≈76.8m。</p>
+      <p class="trap">陷阱:误以为要「合速度最大」才最快——其实只看垂直分量最大,即船头正对。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 小船渡河 · 最短位移</h3>
+      <p><b class="tag">触发信号:</b>问「走的路程最短」「能否垂直到达正对岸」。</p>
+      <p><b class="tag">标准动作:</b>先比 v船 与 v水:v船&gt;v水 → 船头偏上游使合速度垂直,cosθ=v水/v船,s=d;v船&lt;v水 → 不能直渡,合速度尽量竖直(v船⊥合速度),s=d·v水/v船。</p>
+      <p><b class="tag">示例(带解):</b>d=30m,v船=5,v水=3(v船&gt;v水)。合速度=√(5²−3²)=4m/s(垂直),s=d=30m,t=30/4=7.5s。若 v船=3,v水=5(v船&lt;v水):s=d·v水/v船=30×5/3=50m。</p>
+      <p class="trap">陷阱:v船&lt;v水 也套 s=d(错,不可能直渡);cosθ 用错(最短位移取 v水/v船,不是 v船/v水)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 关联速度 · 拉船/绳连接</h3>
+      <p><b class="tag">触发信号:</b>绳绕过滑轮/定点,一端匀速收放,求另一端(船、物块)速度。</p>
+      <p><b class="tag">标准动作:</b>把物体<b>实际速度</b>沿绳方向分解 → 沿绳分量=收绳速度 → v物=u/cosθ(θ为实际速度与绳的夹角)。</p>
+      <p><b class="tag">示例(带解):</b>岸高处收绳速度 u=2m/s,某时刻绳与水平夹角 θ=37°(cos37°=0.8)。船速 v船=u/cosθ=2/0.8=2.5m/s。船越近 θ 越大,v船 越大(加速)。</p>
+      <p class="trap">陷阱:直接写 v船=u(把合速度当成分量);分解方向搞反(应沿绳分解,不是垂直)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 关联速度 · 杆端速度</h3>
+      <p><b class="tag">触发信号:</b>硬杆两端分别沿墙/地/轨道运动,求某端速度。</p>
+      <p><b class="tag">标准动作:</b>杆不可伸缩 → 两端沿杆方向分量相等:v_A·cosα=v_B·cosβ,解出未知端。</p>
+      <p><b class="tag">示例(带解):</b>靠墙滑杆,杆与地夹角 φ=53°,A端沿墙下滑 v_A=2m/s。v_B=v_A·tanφ=2×tan53°=2×(4/3)≈2.67m/s。</p>
+      <p class="trap">陷阱:误认两端速度相等;分解到「垂直杆」方向去比(应比沿杆分量)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 分解方向的选取</h3>
+      <p><b class="tag">触发信号:</b>题目没告诉你怎么拆,要自己选合适的分解方向。</p>
+      <p><b class="tag">标准动作:</b>按<b>实际效果</b>选方向:渡河取垂直河/沿河;关联速度取沿绳/垂直绳;平抛取水平/竖直。选得好,一个方向就能直接出答案。</p>
+      <p><b class="tag">示例(带解):</b>渡河求时间——取垂直河方向,t=d/(v船的垂直分量),沿河方向不参与,一步到位。</p>
+      <p class="trap">陷阱:乱取斜方向使两个分运动互相耦合,越算越乱;应取正交且贴合物理效果的方向。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>合运动=实际运动</b>(相对地面真实走的),分运动是人为拆的;别把船头方向当实际方向。</p>
+      <p class="trap">② <b>最短时间 vs 最短位移</b>是两回事:最短时间→船头正对对岸(t=d/v船,与水速无关);最短位移→看 v船 与 v水 大小关系。</p>
+      <p class="trap">③ 最短位移分两种:v船&gt;v水 可直渡 s=d;v船&lt;v水 不可能直渡,s=d·v水/v船 &gt; d。别一律 s=d。</p>
+      <p class="trap">④ 关联速度是<b>沿绳/杆分量相等</b>,不是<b>速度相等</b>!v船=u/cosθ ≥ u,不是 v船=u。</p>
+      <p class="trap">⑤ 分解方向要<b>按实际效果</b>选(渡河取垂直/沿河),别乱取斜方向。</p>
+      <p class="trap">⑥ 等时性:渡河时间只由垂直河岸的分运动决定,水流(沿河)不改变过河时间。</p>
+      <p class="trap">⑦ 拉船是<b>加速运动</b>:越靠岸 θ 越大,v船=u/cosθ 越大,即使匀速收绳船也在加速。</p>
+      <p class="trap">⑧ 最短位移公式里 cosθ=v水/v船(v船&gt;v水时),别写成 v船/v水。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切归结为「矢量三角形」:</b> 渡河、拉船、杆端本质都是画一个速度三角形。渡河:v船+v水=v合;拉船:v船的沿绳投影=u。养成「先画速度矢量图」的习惯,题目一半就解决了——图上的直角、切线就是临界。</p>
+      <p style="margin:8px 0"><b>② 最短位移的几何秒杀:</b> v水 定长(河岸方向),v船 是定半径的圆。合速度从 v水 起点连到圆上一点。求「合速度最竖直」= 从起点向圆作切线,切点即最优解。v船≥v水 时圆包住竖直方向(可直渡);v船&lt;v水 时取切线,切线⊥半径给出 v船⊥v合,直接读出 sinα=v船/v水。</p>
+      <p style="margin:8px 0"><b>③ 关联速度=速度的「效果分解」:</b> 把实际速度拆成「沿绳(改变绳长)+垂直绳(绕转)」两个效果。绳不可伸缩 ⇒ 沿绳分量守恒。这个视角统一了拉船、杆端、滑轮所有关联题——永远只需让「沿约束方向的分量」两端相等。</p>
+      <p style="margin:8px 0"><b>④ 分清「对水」与「对岸」两个参考系:</b> v船 是船<b>对水</b>的速度(船头方向),v水 是水<b>对岸</b>的速度,v合 是船<b>对岸</b>的速度。这就是速度合成 v船对岸 = v船对水 + v水对岸,与相对运动公式完全一致。理解这层,渡河题再不会晕方向。</p>
+      <p style="margin:8px 0"><b>⑤ 加速度也能合成分解:</b> 平抛=水平匀速+竖直自由落体,合加速度=g(竖直)。凡「一个方向匀速、另一方向匀变速」的曲线运动,都能用同样的分解框架拆开——运动合成是整个曲线运动章节的总钥匙。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+function arrowCanvas(ctx,x0,y0,x1,y1,col,w){
+  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w||3;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+  const ang=Math.atan2(y1-y0,x1-x0),L=10;
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  ctx.lineTo(x1-L*Math.cos(ang-0.4),y1-L*Math.sin(ang-0.4));
+  ctx.lineTo(x1-L*Math.cos(ang+0.4),y1-L*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+}
+
+/* ===== 互动1:运动合成动画(两分运动 → 合运动轨迹) ===== */
+(function(){
+  const cv=document.getElementById('compCv');const ctx=cv.getContext('2d');
+  let vx=4,vy=3,t=0,running=false;
+  const Vx=document.getElementById('cpVx'),Vy=document.getElementById('cpVy');
+  const OX=70,OY=250,scale=18,maxT=6; // 原点在左下,y向上
+  function sync(){vx=+Vx.value;vy=+Vy.value;}
+  Vx.oninput=Vy.oninput=()=>{sync();reset();};
+  function reset(){sync();t=0;running=false;draw();}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(OX,20);ctx.lineTo(OX,OY);ctx.lineTo(680,OY);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('y (竖直分运动)',OX+6,32);ctx.fillText('x (水平分运动)',560,OY+18);
+    // 合运动完整轨迹(直线,匀速+匀速)
+    const ex=OX+maxT*vx*scale, ey=OY-maxT*vy*scale;
+    ctx.strokeStyle='#c9bfa0';ctx.setLineDash([6,5]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(OX,OY);ctx.lineTo(ex,ey);ctx.stroke();ctx.setLineDash([]);
+    // 当前点
+    const px=OX+t*vx*scale, py=OY-t*vy*scale;
+    // 投影引导线
+    ctx.strokeStyle='#d9cfb0';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,OY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(OX,py);ctx.stroke();ctx.setLineDash([]);
+    // 水平分投影(红点,在x轴)
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(px,OY,7,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    // 竖直分投影(绿点,在y轴)
+    ctx.fillStyle=GREEN;ctx.beginPath();ctx.arc(OX,py,7,0,2*Math.PI);ctx.fill();ctx.stroke();
+    // 合运动点(蓝)
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(px,py,9,0,2*Math.PI);ctx.fill();ctx.stroke();
+    // 速度矢量(从原点)
+    arrowCanvas(ctx,OX,OY,OX+vx*scale*1.3,OY,RED,3);
+    arrowCanvas(ctx,OX,OY,OX,OY-vy*scale*1.3,GREEN,3);
+    arrowCanvas(ctx,OX,OY,OX+vx*scale*1.3,OY-vy*scale*1.3,BLUE,3);
+    ctx.fillStyle=RED;ctx.fillText('v₁='+vx,OX+vx*scale*1.3+4,OY-6);
+    ctx.fillStyle=GREEN;ctx.fillText('v₂='+vy,OX+6,OY-vy*scale*1.3-4);
+    const vr=Math.sqrt(vx*vx+vy*vy);
+    ctx.fillStyle=BLUE;ctx.fillText('v合='+vr.toFixed(2),OX+vx*scale*1.3+4,OY-vy*scale*1.3);
+  }
+  function loop(){if(!running)return;t+=0.03;if(t>=maxT){t=maxT;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('cpGo').onclick=()=>{if(t>=maxT)t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('cpReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动2:小船渡河模拟 ===== */
+(function(){
+  const cv=document.getElementById('boatCv');const ctx=cv.getContext('2d');
+  const Vb=document.getElementById('btVb'),Vw=document.getElementById('btVw'),Th=document.getElementById('btTh');
+  const boT=document.getElementById('boT'),boS=document.getElementById('boS'),boD=document.getElementById('boD'),boV=document.getElementById('boV');
+  const RB=40,RT=250; // 近岸y=250(下),对岸y=40(上);河宽 d(像素) => 物理宽度
+  const dPix=RT-RB; const dPhys=40; // 河宽40m 映射
+  const LX=90; // 出发x
+  let vb=4,vw=2,th=0; // th: 船头相对「正对对岸」偏向上游为正(度)
+  let running=false,prog=0; // prog: 已过河比例0..1
+  function sync(){vb=+Vb.value;vw=+Vw.value;th=+Th.value;}
+  Vb.oninput=Vw.oninput=Th.oninput=()=>{sync();reset();};
+  // 物理:正对对岸为 +y(向上过河)。船头偏上游(逆水,设水流向 +x 右)则船头有 -x 分量。
+  // 船头角 th(度):th=0 正对; th>0 船头偏上游(-x方向分量)
+  function comps(){
+    const a=th*Math.PI/180;
+    // 船对水速度:垂直分量(过河)= vb*cos(a);沿河分量 = -vb*sin(a)(上游为负x)
+    const vby=vb*Math.cos(a);         // 过河方向(必>0除非90)
+    const vbx=-vb*Math.sin(a);        // 船头沿河分量(偏上游为负)
+    const vx=vbx+vw;                  // 合速度x(水流 +x)
+    const vy=vby;                     // 合速度y(过河)
+    return {vx,vy,vby,vbx};
+  }
+  function metrics(){
+    const c=comps();
+    if(c.vy<=0.001){return {t:Infinity,drift:Infinity,s:Infinity,vr:Math.hypot(c.vx,c.vy)};}
+    const t=dPhys/c.vy;
+    const drift=c.vx*t;
+    const s=Math.hypot(dPhys,drift);
+    return {t,drift,s,vr:Math.hypot(c.vx,c.vy)};
+  }
+  function reset(){sync();prog=0;running=false;draw();update();}
+  function update(){
+    const m=metrics();
+    boT.textContent=isFinite(m.t)?m.t.toFixed(2):'∞';
+    boS.textContent=isFinite(m.s)?m.s.toFixed(1):'∞';
+    boD.textContent=isFinite(m.drift)?m.drift.toFixed(1):'∞';
+    boV.textContent=m.vr.toFixed(2);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 河水
+    ctx.fillStyle='#d5e6f4';ctx.fillRect(0,RB,cv.width,RT-RB);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(0,RB);ctx.lineTo(cv.width,RB);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,RT);ctx.lineTo(cv.width,RT);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('对岸',10,RB-6);ctx.fillText('出发岸  (水流 →)',10,RT+18);
+    // 水流箭头
+    for(let i=0;i<6;i++){arrowCanvas(ctx,140+i*90,RB+22,180+i*90,RB+22,'#7fb0d8',2);}
+    const c=comps();
+    // 实际轨迹(全程,细红虚线)
+    const m=metrics();
+    let endX=LX,endY=RB;
+    if(isFinite(m.drift)){ endX=LX+m.drift/dPhys*dPix; endY=RB; }
+    ctx.strokeStyle='#e0a59d';ctx.setLineDash([6,5]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(LX,RT);ctx.lineTo(endX,endY);ctx.stroke();ctx.setLineDash([]);
+    // 船当前位置
+    let bx=LX,by=RT;
+    if(isFinite(m.drift)){ bx=LX+prog*(m.drift/dPhys*dPix); by=RT-prog*dPix; }
+    // 船体
+    ctx.save();ctx.translate(bx,by);
+    ctx.fillStyle=BROWN;ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(-16,0);ctx.quadraticCurveTo(0,14,16,0);ctx.lineTo(12,-8);ctx.lineTo(-12,-8);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.restore();
+    // 速度矢量(以船为起点,放大)
+    const sc=16;
+    // v船(绿,沿船头) 分量 (vbx,vby) 但y向上 => 屏幕y取负
+    arrowCanvas(ctx,bx,by,bx+c.vbx*sc,by-c.vby*sc,GREEN,3);
+    // v水(蓝,+x)
+    arrowCanvas(ctx,bx+c.vbx*sc,by-c.vby*sc,bx+c.vbx*sc+vw*sc,by-c.vby*sc,BLUE,3);
+    // 合速度(红)
+    arrowCanvas(ctx,bx,by,bx+c.vx*sc,by-c.vy*sc,RED,3.5);
+    ctx.fillStyle=GREEN;ctx.font='bold 11px sans-serif';ctx.fillText('v船',bx+c.vbx*sc-8,by-c.vby*sc-4);
+    ctx.fillStyle=BLUE;ctx.fillText('v水',bx+c.vbx*sc+vw*sc*0.4,by-c.vby*sc-4);
+    ctx.fillStyle=RED;ctx.fillText('v合',bx+c.vx*sc+4,by-c.vy*sc+4);
+    if(!isFinite(m.drift)){ctx.fillStyle=RED;ctx.font='bold 14px sans-serif';ctx.fillText('过河分量≤0,无法过河!',260,150);}
+  }
+  function loop(){if(!running)return;const m=metrics();if(!isFinite(m.t)){running=false;return;}
+    prog+=0.012;if(prog>=1){prog=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('btGo').onclick=()=>{if(prog>=1)prog=0;const m=metrics();if(isFinite(m.t)){running=true;requestAnimationFrame(loop);}};
+  document.getElementById('btReset').onclick=reset;
+  document.getElementById('btMinT').onclick=()=>{Th.value=0;sync();reset();}; // 船头正对 => 最短时间
+  document.getElementById('btMinS').onclick=()=>{
+    sync();
+    // 最短位移:vb>vw 时 cos(偏上游角与法线)= vw/vb => th 使 vbx = -vw
+    if(vb>vw){ const a=Math.asin(vw/vb); Th.value=Math.round(a*180/Math.PI); }
+    else { // vb<=vw:合速度尽量竖直 => v船垂直合速度 => cos(v船,v水)=vb/vw
+      // 船头偏上游角 th 满足 sin(th)=vw/vb 不可能;取 v船⊥v合 => th 使 vb 垂直合速度
+      // 几何:th 使 cos(夹角 v船,v水方向)= vb/vw,船头与河岸法线夹角 => th=arccos(vb/vw)
+      const a=Math.acos(vb/vw); Th.value=Math.round(a*180/Math.PI);
+    }
+    sync();reset();
+  };
+  reset();
+})();
+
+/* ===== 互动3:关联速度分解(拉船) ===== */
+(function(){
+  const cv=document.getElementById('pullCv');const ctx=cv.getContext('2d');
+  const U=document.getElementById('plU');
+  const puTh=document.getElementById('puTh'),puU=document.getElementById('puU'),puVb=document.getElementById('puVb'),puR=document.getElementById('puR');
+  const PX=560,PY=60;   // 定滑轮/收绳点(岸上高处)
+  const WY=230;         // 水面y
+  let u=2, x=380, running=false; // x:船的水平位置(向左靠近岸)
+  const xMin=140, xMax=470;
+  function sync(){u=+U.value;}
+  U.oninput=()=>{sync();update();};
+  function theta(){ // 绳与水平方向夹角
+    const dx=x-PX, dy=WY-PY; return Math.atan2(Math.abs(dy),Math.abs(dx));
+  }
+  function reset(){sync();x=470;running=false;draw();update();}
+  function update(){
+    const th=theta();
+    const vb=u/Math.cos(th);
+    puTh.textContent=(th*180/Math.PI).toFixed(1);
+    puU.textContent=u.toFixed(2);
+    puVb.textContent=vb.toFixed(2);
+    puR.textContent=(1/Math.cos(th)).toFixed(2);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 水
+    ctx.fillStyle='#d5e6f4';ctx.fillRect(0,WY,cv.width,cv.height-WY);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,WY);ctx.lineTo(cv.width,WY);ctx.stroke();
+    // 岸(右侧柱)
+    ctx.fillStyle='#c8b98f';ctx.fillRect(PX+8,PY-8,60,WY-PY+8);ctx.strokeRect(PX+8,PY-8,60,WY-PY+8);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('岸(收绳点)',PX-6,PY-14);
+    // 滑轮
+    ctx.fillStyle=INK;ctx.beginPath();ctx.arc(PX,PY,7,0,2*Math.PI);ctx.fill();
+    // 船
+    const by=WY;
+    ctx.save();ctx.translate(x,by);
+    ctx.fillStyle=BROWN;ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(-22,0);ctx.quadraticCurveTo(0,16,22,0);ctx.lineTo(16,-9);ctx.lineTo(-16,-9);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.restore();
+    // 绳
+    ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(PX,PY);ctx.lineTo(x,by-6);ctx.stroke();
+    const th=theta();
+    const sc=26;
+    // 船实际速度(水平向岸,即 +x 向右)红
+    const vb=u/Math.cos(th);
+    arrowCanvas(ctx,x,by-6,x+vb*sc,by-6,RED,3.5);
+    // 沿绳分量(=u,绿):方向沿绳指向滑轮
+    const ux=(PX-x), uy=(PY-(by-6)); const uL=Math.hypot(ux,uy);
+    arrowCanvas(ctx,x,by-6,x+ux/uL*u*sc,by-6+uy/uL*u*sc,GREEN,3);
+    // 垂直绳分量(灰虚,示意)
+    ctx.font='bold 11px sans-serif';
+    ctx.fillStyle=RED;ctx.fillText('v船(实际,水平)',x+10,by-14);
+    ctx.fillStyle=GREEN;ctx.fillText('u(沿绳收绳)',x+ux/uL*u*sc+6,by-6+uy/uL*u*sc-6);
+    ctx.fillStyle=INK;ctx.fillText('θ='+(th*180/Math.PI).toFixed(0)+'°',x+40,by-6+22);
+    ctx.fillStyle=INK;ctx.fillText('v船·cosθ = u  →  v船 = u/cosθ',150,40);
+  }
+  function loop(){if(!running)return;
+    // 船以 vb=u/cosθ 向岸(x减小)移动;换算像素速度
+    const th=theta();const vb=u/Math.cos(th);
+    x-=vb*0.8;
+    if(x<=xMin){x=xMin;running=false;}
+    draw();update();requestAnimationFrame(loop);}
+  document.getElementById('plGo').onclick=()=>{if(x<=xMin)x=470;running=true;requestAnimationFrame(loop);};
+  document.getElementById('plReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:杆端关联速度(靠墙滑杆) ===== */
+(function(){
+  const cv=document.getElementById('rodCv');const ctx=cv.getContext('2d');
+  const Va=document.getElementById('rdVa');
+  const roPhi=document.getElementById('roPhi'),roVa=document.getElementById('roVa'),roVb=document.getElementById('roVb'),roC=document.getElementById('roC');
+  const WX=120, GY=250; // 墙x=120(竖直),地y=250(水平)
+  const L=190; // 杆长(像素)
+  let va=2, ay=60, running=false; // ay: A端在墙上的高度(距地面)
+  const ayMin=30, ayMax=185;
+  function sync(){va=+Va.value;}
+  Va.oninput=()=>{sync();update();};
+  // A端坐标(WX, GY-ay);B端在地面 (WX+bx, GY),杆长 L => bx=sqrt(L^2-ay^2)
+  function geom(){ const bx=Math.sqrt(Math.max(1,L*L-ay*ay)); return {Ax:WX,Ay:GY-ay,Bx:WX+bx,By:GY,phi:Math.atan2(ay,bx)}; }
+  function reset(){sync();ay=150;running=false;draw();update();}
+  function update(){
+    const g=geom();const phi=g.phi;
+    const vb=va*Math.tan(phi); // v_B = v_A * tanφ
+    const along=va*Math.cos(Math.PI/2-phi); // = va*sinφ (沿杆分量)
+    roPhi.textContent=(phi*180/Math.PI).toFixed(1);
+    roVa.textContent=va.toFixed(2);
+    roVb.textContent=vb.toFixed(2);
+    roC.textContent=along.toFixed(2);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // 墙与地
+    ctx.strokeStyle=INK;ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(WX,20);ctx.lineTo(WX,GY);ctx.lineTo(660,GY);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('墙',WX-30,120);ctx.fillText('地面',560,GY+18);
+    const g=geom();
+    // 杆
+    ctx.strokeStyle=BROWN;ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(g.Ax,g.Ay);ctx.lineTo(g.Bx,g.By);ctx.stroke();
+    ctx.strokeStyle=INK;ctx.lineWidth=1;
+    // A端(红点)
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(g.Ax,g.Ay,8,0,2*Math.PI);ctx.fill();ctx.stroke();
+    // B端(蓝点)
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(g.Bx,g.By,8,0,2*Math.PI);ctx.fill();ctx.stroke();
+    const phi=g.phi;const sc=22;
+    const vb=va*Math.tan(phi);
+    // A端速度(竖直向下,红)
+    arrowCanvas(ctx,g.Ax,g.Ay,g.Ax,g.Ay+va*sc,RED,3.5);
+    // B端速度(水平向右,蓝)
+    arrowCanvas(ctx,g.Bx,g.By,g.Bx+vb*sc,g.By,BLUE,3.5);
+    // 沿杆分量(橙),两端相等 = va*sinφ
+    const along=va*Math.sin(phi);
+    const ux=(g.Bx-g.Ax),uy=(g.By-g.Ay),uL=Math.hypot(ux,uy);
+    // A端沿杆分量
+    arrowCanvas(ctx,g.Ax,g.Ay,g.Ax+ux/uL*along*sc,g.Ay+uy/uL*along*sc,ORANGE,3);
+    // B端沿杆分量(方向沿杆同向)
+    arrowCanvas(ctx,g.Bx,g.By,g.Bx-ux/uL*along*sc,g.By-uy/uL*along*sc,ORANGE,3);
+    ctx.font='bold 11px sans-serif';
+    ctx.fillStyle=RED;ctx.fillText('v_A',g.Ax+6,g.Ay+va*sc);
+    ctx.fillStyle=BLUE;ctx.fillText('v_B',g.Bx+vb*sc+2,g.By-6);
+    ctx.fillStyle=ORANGE;ctx.fillText('沿杆分量(相等)',g.Ax+ux/uL*along*sc+4,g.Ay+uy/uL*along*sc+4);
+    ctx.fillStyle=INK;ctx.fillText('v_A·sinφ = v_B·cosφ  →  v_B = v_A·tanφ',260,40);
+    ctx.fillText('φ='+(phi*180/Math.PI).toFixed(0)+'°',g.Bx-70,g.By-10);
+  }
+  function loop(){if(!running)return;
+    // A端匀速下滑:ay 减小
+    ay-=va*1.1;
+    if(ay<=ayMin){ay=ayMin;running=false;}
+    draw();update();requestAnimationFrame(loop);}
+  document.getElementById('rdGo').onclick=()=>{if(ay<=ayMin)ay=ayMax;running=true;requestAnimationFrame(loop);};
+  document.getElementById('rdReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:平行四边形定则合成 ===== */
+(function(){
+  const svg=document.getElementById('paraSvg');
+  const A=document.getElementById('paA'),B=document.getElementById('paB'),T=document.getElementById('paT');
+  const paV1=document.getElementById('paV1'),paV2=document.getElementById('paV2'),paTh=document.getElementById('paTh'),paVr=document.getElementById('paVr');
+  const OX=180,OY=210,sc=26;
+  function draw(){
+    clr(svg);
+    const a=+A.value,b=+B.value,th=+T.value*Math.PI/180;
+    // v1 沿 +x;v2 与 v1 夹角 th
+    const v1x=a*sc, v1y=0;
+    const v2x=b*sc*Math.cos(th), v2y=-b*sc*Math.sin(th); // 屏幕y向下,故取负
+    const rx=v1x+v2x, ry=v1y+v2y;
+    // 平行四边形四点
+    const P0=[OX,OY], P1=[OX+v1x,OY+v1y], P2=[OX+v2x,OY+v2y], P3=[OX+rx,OY+ry];
+    // 定义箭头marker
+    function line(x1,y1,x2,y2,col,w,dash){const o={x1,y1,x2,y2,stroke:col,'stroke-width':w};if(dash)o['stroke-dasharray']=dash;el(svg,'line',o);}
+    function arrow(x1,y1,x2,y2,col,w){
+      line(x1,y1,x2,y2,col,w);
+      const ang=Math.atan2(y2-y1,x2-x1),L=12;
+      el(svg,'path',{d:'M'+x2+' '+y2+' L'+(x2-L*Math.cos(ang-0.4))+' '+(y2-L*Math.sin(ang-0.4))+' L'+(x2-L*Math.cos(ang+0.4))+' '+(y2-L*Math.sin(ang+0.4))+' Z',fill:col});
+    }
+    // 虚线补全平行四边形
+    line(P1[0],P1[1],P3[0],P3[1],'#b8ac86',2,'6 5');
+    line(P2[0],P2[1],P3[0],P3[1],'#b8ac86',2,'6 5');
+    // 矢量
+    arrow(OX,OY,P1[0],P1[1],GREEN,4);
+    arrow(OX,OY,P2[0],P2[1],BLUE,4);
+    arrow(OX,OY,P3[0],P3[1],RED,4.5);
+    el(svg,'text',{x:P1[0]+6,y:P1[1]+16,'font-size':13,'font-weight':900,fill:GREEN}).textContent='v₁';
+    el(svg,'text',{x:P2[0]-6,y:P2[1]-6,'font-size':13,'font-weight':900,fill:BLUE}).textContent='v₂';
+    el(svg,'text',{x:P3[0]+6,y:P3[1]-4,'font-size':13,'font-weight':900,fill:RED}).textContent='v合';
+    const vr=Math.sqrt(a*a+b*b+2*a*b*Math.cos(th));
+    paV1.textContent=a.toFixed(1);paV2.textContent=b.toFixed(1);paTh.textContent=(+T.value);paVr.textContent=vr.toFixed(2);
+  }
+  A.oninput=B.oninput=T.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:最短位移临界 ===== */
+(function(){
+  const svg=document.getElementById('critSvg');
+  const Vb=document.getElementById('crVb'),Vw=document.getElementById('crVw');
+  const note=document.getElementById('crNote');
+  const OX=200,OY=200,sc=30; // 起点(v水尾)
+  function draw(){
+    clr(svg);
+    const vb=+Vb.value, vw=+Vw.value;
+    function line(x1,y1,x2,y2,col,w,dash){const o={x1,y1,x2,y2,stroke:col,'stroke-width':w};if(dash)o['stroke-dasharray']=dash;el(svg,'line',o);}
+    function arrow(x1,y1,x2,y2,col,w){line(x1,y1,x2,y2,col,w);const ang=Math.atan2(y2-y1,x2-x1),L=12;el(svg,'path',{d:'M'+x2+' '+y2+' L'+(x2-L*Math.cos(ang-0.4))+' '+(y2-L*Math.sin(ang-0.4))+' L'+(x2-L*Math.cos(ang+0.4))+' '+(y2-L*Math.sin(ang+0.4))+' Z',fill:col});}
+    // 河岸方向 = 水平(x);过河法线 = 竖直(y向上,屏幕负)
+    // v水 从 OX,OY 沿 +x
+    const wx=OX+vw*sc, wy=OY;
+    // v船 圆:圆心在 v水 末端,半径 vb*sc,合速度 = v水 + v船 => 末端在圆上
+    const cx=wx, cy=wy, R=vb*sc;
+    // 竖直虚线(表示「合速度竖直」= 直渡方向),过起点 OX
+    line(OX,OY-160,OX,OY+30,'#999',2,'5 5');
+    el(svg,'text',{x:OX-70,y:OY-150,'font-size':12,'font-weight':800,fill:INK}).textContent='直渡方向(⊥河岸)';
+    // 河岸线(水平)
+    line(40,OY,660,OY,INK,3);
+    el(svg,'text',{x:600,y:OY+18,'font-size':12,'font-weight':900,fill:INK}).textContent='河岸(v水方向)';
+    // v水
+    arrow(OX,OY,wx,wy,BLUE,4);
+    el(svg,'text',{x:(OX+wx)/2-6,y:OY+18,'font-size':12,'font-weight':900,fill:BLUE}).textContent='v水';
+    // v船 可达圆(灰)
+    el(svg,'circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:'#bbb','stroke-width':2,'stroke-dasharray':'4 4'});
+    let msg,best;
+    if(vb>=vw){
+      // 能直渡:合速度竖直 => 末端在 (OX, OY - h), 其中 h = sqrt(vb^2-vw^2)*sc
+      const h=Math.sqrt(vb*vb-vw*vw)*sc;
+      best=[OX,OY-h];
+      // v船 从圆心到 best
+      arrow(cx,cy,best[0],best[1],GREEN,3.5);
+      // 合速度 从起点到 best
+      arrow(OX,OY,best[0],best[1],RED,4.5);
+      el(svg,'text',{x:best[0]+6,y:best[1]+4,'font-size':12,'font-weight':900,fill:RED}).textContent='v合(竖直)';
+      el(svg,'text',{x:cx+8,y:cy-h/2,'font-size':12,'font-weight':900,fill:GREEN}).textContent='v船';
+      msg='v船 ('+vb+') ≥ v水 ('+vw+'):可垂直渡河,最短位移 s = 河宽 d。船头偏上游,cosθ=v水/v船='+(vw/vb).toFixed(2)+'。';
+      note.style.borderColor=GREEN;
+    }else{
+      // 不能直渡:最竖直的合速度 = 从起点向圆作切线,切点即 best;v船⊥v合
+      // 起点O到圆心距离 dOc=vw*sc;切线长 = sqrt(dOc^2-R^2)? 需 dOc>R 即 vw*sc>vb*sc => vw>vb 成立
+      const dOc=vw*sc;
+      const tanLen=Math.sqrt(dOc*dOc-R*R);
+      // 切点方向:合速度与河岸夹角 α, sinα = R/dOc = vb/vw; 合速度长 = tanLen
+      const alpha=Math.asin(R/dOc);
+      // 合速度指向左上(偏离河岸 alpha,朝过河侧 -y)。取指向上游偏(x减小)那条更竖直? 两条对称,取过河方向。
+      // 合速度方向与 +x(v水)夹角 = 180-? 我们要过河(y分量向上=屏幕负)。合速度 = 从O出发,方向与河岸成 alpha,朝上
+      // 合速度水平分量必 >0(仍被冲下游,因 vb<vw),故方向为右上:角度 = -alpha (屏幕)
+      const cosA=Math.cos(alpha), sinA=Math.sin(alpha);
+      best=[OX+tanLen*cosA, OY-tanLen*sinA];
+      arrow(OX,OY,best[0],best[1],RED,4.5);
+      arrow(cx,cy,best[0],best[1],GREEN,3.5); // v船(切线,⊥半径)
+      el(svg,'text',{x:best[0]+6,y:best[1]-2,'font-size':12,'font-weight':900,fill:RED}).textContent='v合(最竖直)';
+      el(svg,'text',{x:(cx+best[0])/2+4,y:(cy+best[1])/2,'font-size':12,'font-weight':900,fill:GREEN}).textContent='v船';
+      msg='v船 ('+vb+') < v水 ('+vw+'):无法垂直渡河!合速度偏下游。最短位移 s = d·v水/v船 = d×'+(vw/vb).toFixed(2)+' > d。此时 v船⊥v合。';
+      note.style.borderColor=RED;
+    }
+    note.textContent=msg;
+  }
+  Vb.oninput=Vw.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 什么是合运动?什么是分运动?",a:"合运动=物体相对地面实际发生的运动(真实轨迹/速度);分运动=为便于分析人为拆出的两个方向的运动。分运动可自选方向,合起来等效于实际运动。"},
+ {q:"2. 合运动与分运动的三个性质?",a:"等时性(分运动与合运动历时相同)、独立性(各分运动互不影响)、等效性(分运动合起来等于实际运动)。"},
+ {q:"3. 小船渡河,怎样用时最短?时间与水速有关吗?",a:"船头正对对岸,v船全部用于过河,t最短=d/v船。与水速无关——水流只把船冲向下游,不改变过河时间。"},
+ {q:"4. 河宽d=40m,v船=4m/s正对渡河,v水=3m/s,求时间、漂移、合位移。",a:"t=d/v船=40/4=10s;下游漂移=v水·t=3×10=30m;合位移s=√(40²+30²)=√2500=50m。"},
+ {q:"5. 小船最短位移怎么求?为什么要分v船与v水大小?",a:"v船>v水:船头偏上游使合速度垂直对岸,能直渡,s=d;v船<v水:不可能直渡,合速度尽量竖直,s=d·v水/v船>d。故必须先比大小。"},
+ {q:"6. d=30m,v船=5m/s,v水=3m/s,求最短位移及所需时间。",a:"v船>v水可直渡:合速度=√(5²−3²)=4m/s(垂直对岸),s=d=30m,t=30/4=7.5s。船头偏上游cosθ=3/5。"},
+ {q:"7. d=30m,v船=3m/s,v水=5m/s,最短位移是多少?能垂直渡河吗?",a:"v船<v水,不能垂直渡河。最短位移s=d·v水/v船=30×5/3=50m>河宽。此时v船垂直于合速度。"},
+ {q:"8. 关联速度的核心结论是什么?为什么?",a:"绳/杆不可伸缩,两端沿绳(杆)方向的速度分量相等(不是速度相等)。否则绳会被拉长或松弛。"},
+ {q:"9. 岸上以u匀速收绳拉船,绳与水平夹角θ,船速多大?是匀速吗?",a:"v船=u/cosθ(船速是合速度,u只是它沿绳的分量)。船越靠近θ越大,cosθ越小,v船越大——是加速运动。"},
+ {q:"10. 收绳速度u=2m/s,某时刻绳与水平θ=37°(cos37°=0.8),求船速。",a:"v船=u/cosθ=2/0.8=2.5m/s。"},
+ {q:"11. 靠墙滑杆,杆与地夹角φ,A端沿墙下滑v_A,求B端沿地速度v_B。",a:"沿杆分量相等:v_A·sinφ=v_B·cosφ,得v_B=v_A·tanφ。φ=53°、v_A=2时,v_B=2×(4/3)≈2.67m/s。"},
+ {q:"12. 为什么不能直接说「拉船船速=收绳速度」「杆两端速度相等」?",a:"因为船速、杆端速度都是合速度;约束条件只保证『沿绳/沿杆方向的分量相等』。合速度还含垂直方向(转动)的分量,故合速度≥沿绳分量,一般不相等。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

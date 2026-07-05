@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>磁场·安培力与洛伦兹力 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#7A3FF2;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>磁场 · 安培力与洛伦兹力</h1>
+    <p class="lead">磁场对「电流」有力(安培力 F=BIL),对「运动的单个电荷」也有力(洛伦兹力 f=qvB)。这两个力其实是同一回事——安培力就是导线里无数运动电荷所受洛伦兹力的总和。这页把方向判断(左手定则)、大小公式、做功与否一次讲透,并用动画让你亲手转动手掌来定方向。<span class="small">(配套页「带电粒子在磁场中」专攻圆周运动、半径、周期;本页专攻「力」本身。)</span></p>
+
+    <div class="say">🗣️ <b>人话版:</b> 磁场看不见,但它会「推」两种东西——① 通电的导线(安培力),② 飞过来的带电粒子(洛伦兹力)。方向都用<b>左手定则</b>:摊平左手,让磁感线穿过手心(⊙从掌心射出、⊗从手背射入),四指指电流(或正电荷运动)方向,<b>大拇指</b>就指受力方向。大小:导线记 <b>F=BIL</b>(B⊥I时),粒子记 <b>f=qvB</b>(v⊥B时)。有夹角θ就乘 sinθ。记住两句狠的:<b>B∥I 时导线不受力</b>;<b>洛伦兹力永远不做功</b>(只拐弯,不加速)。</div>
+
+    <div class="keybox"><b>三条主干速记:</b> ① <b>安培力</b> F=BILsinθ,方向<b>左手定则</b>(四指指电流I);② <b>洛伦兹力</b> f=qvBsinθ,方向<b>左手定则</b>(四指指<b>正</b>电荷运动方向;负电荷反过来);③ <b>关系</b>:安培力 = 导线中全部自由电荷所受洛伦兹力的宏观合力。判死记:B∥I 无安培力;f⊥v 故洛伦兹力不做功。</div>
+
+    <h2>① 磁场与磁感应强度 B</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>磁场</b>是磁体、电流周围存在的一种物质,对放入其中的磁体、电流、运动电荷有力的作用。描述它的强弱和方向用<b>磁感应强度 B</b>(矢量,单位特斯拉 T)。</p>
+      <h3>B 的方向怎么定</h3>
+      <p style="margin:6px 0">在磁场中某点,<b>小磁针 N 极静止时所指的方向</b> = 该点 B 的方向。磁感线上每点的<b>切线方向</b>就是该点 B 的方向。</p>
+      <h3>磁感线(形象描述,并非真实存在)</h3>
+      <table>
+        <tr><th>规则</th><th>说明</th></tr>
+        <tr><td>方向</td><td>磁体外部:N极 → S极;内部:S → N(闭合曲线)</td></tr>
+        <tr><td>疏密</td><td>线越密 → B 越大(磁场越强)</td></tr>
+        <tr><td>不相交</td><td>任意两条磁感线永不相交(每点 B 方向唯一)</td></tr>
+      </table>
+      <h3>两种重要磁场</h3>
+      <p style="margin:6px 0"><b>匀强磁场:</b> 各点 B 大小相等、方向相同 → 磁感线是<b>等间距的平行直线</b>。(如蹄形磁铁两极间、通电长直螺线管内部。)</p>
+      <p style="margin:6px 0"><b>地磁场:</b> 地球本身是个大磁体,地磁 N 极在地理<b>南极</b>附近、地磁 S 极在地理<b>北极</b>附近(所以小磁针 N 极指北)。赤道上方地磁场方向水平指北。</p>
+      <div class="keybox" style="margin:8px 0"><b>垂直纸面符号:</b> <b>⊙</b> 表示 B(或电流/速度)<b>射出</b>纸面(箭头尖对着你),<b>⊗</b> 表示<b>射入</b>纸面(箭尾羽毛对着你)。这是判方向题的通用暗号,务必分清。</div>
+    </div>
+
+    <h2 class="b">② 磁通量 Φ = BS</h2>
+    <div class="card">
+      <div class="eq">Φ = B · S(B 与面垂直时)　　Φ = B · S · cosθ(一般)</div>
+      <p style="margin:8px 0"><b>磁通量 Φ</b>:穿过某个面的磁感线「条数」的度量,标量,单位韦伯(Wb),1 Wb = 1 T·m²。这里 S 是<b>与 B 垂直</b>的有效面积;若面法线与 B 成夹角,取 B 在法线方向的投影,或用有效面积 S·cosθ。</p>
+      <p class="trap">⚠ Φ 是<b>标量</b>(只有正负,无方向)。它在本页只是打基础(为电磁感应铺垫),本页重点是「力」——安培力和洛伦兹力。别把 Φ 和 B 混:B 是场的强弱(矢量),Φ 是穿过某面的总量(标量)。</p>
+    </div>
+
+    <h2 class="v">③ 安培力:磁场对电流的力</h2>
+    <div class="card">
+      <div class="eq">F = B I L(当 B ⊥ I 时)　　F = B I L sinθ(一般,θ 为 B 与 I 夹角)</div>
+      <p style="margin:8px 0"><b>大小:</b> L 是导线在磁场中的长度,I 是电流,θ 是 B 与电流 I 方向的夹角。B 与 I 垂直时力最大(F=BIL);<b>B 与 I 平行时 sinθ=0,力为零</b>。</p>
+      <h3>方向——左手定则</h3>
+      <div class="mono">摊平左手,让磁感线穿入手心(⊙对手心 / ⊗对手背),四指指电流 I 方向,竖起的大拇指方向 = 安培力 F 方向。</div>
+      <p style="margin:8px 0"><b>安培力的方向</b>总是<b>同时垂直于 B 和 I</b>(垂直于 B 和 I 所决定的平面)。即使 B 与 I 有夹角,力也垂直于二者构成的平面,而<b>不一定在磁场平面内</b>(见易错集)。</p>
+      <div class="keybox" style="margin:8px 0"><b>B∥I 特例:</b> 电流方向与磁场方向<b>平行(同向或反向)</b>时,θ=0° 或 180°,sinθ=0,<b>安培力 F=0</b>。这是选择题高频陷阱:导线沿磁感线放,不受力!</div>
+      <p class="trap">⚠ F=BIL 里的 L 必须是<b>垂直于 B 的那段有效长度</b>对应的导线,更稳妥地写作 F=BILsinθ。弯曲导线在匀强磁场中的安培力,等效为「首尾连线」那段直导线的力(有效长度 = 首尾直线距离)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✋ 互动 1 — 左手定则交互器:设 B、I 方向,自动定出安培力 F</div>
+      <svg id="lhSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>磁场 B:
+          <button class="bdir on" data-d="out">⊙ 射出纸面</button>
+          <button class="bdir" data-d="in">⊗ 射入纸面</button>
+        </label>
+      </div>
+      <div class="ctrl">
+        <label>电流 I:
+          <button class="idir on" data-d="up">↑ 向上</button>
+          <button class="idir" data-d="down">↓ 向下</button>
+          <button class="idir" data-d="left">← 向左</button>
+          <button class="idir" data-d="right">→ 向右</button>
+        </label>
+      </div>
+      <div class="verdict" id="lhVerdict"></div>
+      <p class="small">B 垂直纸面(⊙/⊗),I 在纸面内。安培力 F 也在纸面内,始终垂直于 I。变一个方向,F 立刻跟着转——这就是左手定则的手感。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">📏 互动 2 — 安培力大小:调 B、I、L、θ,看 F=BILsinθ 怎么变</div>
+      <svg id="magSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>B(T) <input id="magB" type="range" min="0.1" max="2" value="1" step="0.1"></label>
+        <label>I(A) <input id="magI" type="range" min="0.5" max="5" value="2" step="0.5"></label>
+      </div>
+      <div class="ctrl">
+        <label>L(m) <input id="magL" type="range" min="0.2" max="2" value="1" step="0.1"></label>
+        <label>θ(°) <input id="magT" type="range" min="0" max="180" value="90" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>B</b><span id="mvB">1.0</span></div>
+        <div><b>I</b><span id="mvI">2.0</span></div>
+        <div><b>sinθ</b><span id="mvS">1.00</span></div>
+        <div><b>F = BILsinθ</b><span id="mvF">2.00</span></div>
+      </div>
+      <p class="small">θ 是 B 与 I 的夹角。θ=90° 时 F 最大;θ=0°/180°(B∥I)时 F=0,导线不受力。绿色箭头长度 = F 大小。</p>
+    </div>
+
+    <h2 class="o">④ 安培力的应用</h2>
+    <div class="card">
+      <h3>A · 磁电式电流表(核心原理)</h3>
+      <p style="margin:6px 0">永磁铁间放一个可绕轴转动的<b>线圈</b>,通电后线圈两条边受<b>方向相反</b>的安培力,形成<b>力偶(转动的力矩)</b>,带动指针偏转。电流越大 → 安培力越大 → 力矩越大 → 偏角越大,所以刻度能读电流。游丝提供恢复力矩,平衡时偏角 ∝ 电流。</p>
+      <h3>B · 平行通电导线的相互作用</h3>
+      <p style="margin:6px 0">每根导线的电流在旁边产生磁场,另一根导线在这个磁场里受安培力。结果:<b>电流同向 → 相互吸引;电流反向 → 相互排斥</b>。(记忆:「同向相吸,异向相斥」,和电荷正好相反。)</p>
+      <h3>C · 通电线框在磁场中</h3>
+      <p style="margin:6px 0">矩形线框各边分别受安培力。<b>与 B 平行的两条边</b>可能不受力或受力相消;<b>与 B 垂直的两条边</b>受等大反向的力,若不共线则形成<b>力矩使线框转动</b>(电动机、电流表原理);若线框平面与 B 垂直(线框平面 ⊥ B),合力矩为零,达到稳定或临界位置。</p>
+      <p class="trap">⚠ 线框「合力」和「合力矩」是两回事。匀强磁场中闭合线框所受<b>合力为零</b>(不会平移),但<b>合力矩通常不为零</b>(会转动)。别把「不平移」当成「不转动」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 3 — 通电线框转动(磁电式电流表原理):调电流看偏转</div>
+      <svg id="coilSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="coilGo">▶ 通电偏转</button><button id="coilReset">↺ 复位</button>
+        <label>电流 I <input id="coilI" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="verdict" id="coilNote"></div>
+      <p class="small">线框左右两边受等大反向安培力(红箭头),形成力偶使线框转动,带动指针。电流越大,偏角越大——这就是指针式电流表能读数的原理。</p>
+    </div>
+
+    <h2 class="b">⑤ 洛伦兹力:磁场对运动电荷的力</h2>
+    <div class="card">
+      <div class="eq">f = q v B(当 v ⊥ B 时)　　f = q v B sinθ(一般,θ 为 v 与 B 夹角)</div>
+      <p style="margin:8px 0"><b>大小:</b> q 是电荷量,v 是电荷速度,θ 是 v 与 B 的夹角。v⊥B 时最大(f=qvB);<b>v∥B 时 f=0</b>(电荷顺着磁场飞,不受力,做匀速直线运动)。</p>
+      <h3>方向——左手定则(注意电荷正负!)</h3>
+      <div class="mono">摊平左手,B 穿入手心,四指指<b>正电荷</b>的运动方向 v,大拇指指洛伦兹力 f 方向。若是<b>负电荷</b>,四指改指「v 的反方向」,或所得结果反向。</div>
+      <p style="margin:8px 0"><b>关键性质:洛伦兹力永远不做功。</b> 因为 f 始终垂直于 v(f⊥v),力与位移方向垂直,W=f·s·cos90°=0。所以洛伦兹力<b>只改变速度方向,不改变速度大小</b>(不改变动能)——这正是带电粒子在匀强磁场中做匀速圆周运动的原因。</p>
+      <div class="keybox" style="margin:8px 0"><b>正负电荷对照:</b> 同样向右运动、B 射入纸面(⊗)。<b>正电荷</b>受力向上;<b>负电荷</b>受力向下。判负电荷有两种等价做法:① 四指指电荷实际运动的反方向;② 先当正电荷判,再把结果反过来。二者结果一致。</div>
+      <p class="trap">⚠ 洛伦兹力「不做功」是死结论,但它<b>能改变运动方向</b>(提供向心力)。别因为「不做功」就以为「没作用」。此外 f⊥v 且 f⊥B,所以 f 同时垂直于 v 和 B。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 4 — 洛伦兹力方向:切换正/负电荷与运动方向,左手定则实时判</div>
+      <svg id="lorSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电荷:
+          <button class="qsign on" data-q="pos">正电荷 +q</button>
+          <button class="qsign" data-q="neg">负电荷 −q</button>
+        </label>
+      </div>
+      <div class="ctrl">
+        <label>速度 v:
+          <button class="vdir on" data-d="right">→ 向右</button>
+          <button class="vdir" data-d="left">← 向左</button>
+          <button class="vdir" data-d="up">↑ 向上</button>
+          <button class="vdir" data-d="down">↓ 向下</button>
+        </label>
+        <label>B:
+          <button class="lbdir on" data-d="in">⊗ 入纸</button>
+          <button class="lbdir" data-d="out">⊙ 出纸</button>
+        </label>
+      </div>
+      <div class="verdict" id="lorVerdict"></div>
+      <p class="small">正电荷:四指指 v;负电荷:四指指 v 反向(或结果反向)。切换正↔负,力立刻掉头——这是最爱考的陷阱。</p>
+    </div>
+
+    <h2 class="g">⑥ 安培力与洛伦兹力的关系</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>一句话:安培力是洛伦兹力的宏观表现。</b> 导线里的电流,本质是大量自由电荷(金属中是自由电子)的定向移动。每个运动电荷都受洛伦兹力,这些洛伦兹力<b>累加</b>起来传给导线整体,就表现为我们测到的「安培力」。</p>
+      <div class="mono">推导脉络:导线长 L、截面 S、单位体积 n 个电荷、每个电荷 q、漂移速度 v。</div>
+      <div class="mono">电流 I = n q v S;每个电荷洛伦兹力 f = q v B;导线内电荷数 N = n S L。</div>
+      <div class="mono">合力 F = N·f = (nSL)(qvB) = (nqvS)(BL) = I·B·L = BIL ✓ 完美吻合!</div>
+      <p style="margin:8px 0">所以 <b>F=BIL 不是新公式,是 f=qvB 的求和结果</b>。理解这一点,两个力就统一成一个了。</p>
+      <p class="trap">⚠ 微妙点:单个电荷的洛伦兹力不做功,但整根导线的安培力<b>可以对导线做功</b>(如电动机)。这不矛盾——做功的能量来自电源/电场推电荷,洛伦兹力只是把「电荷的定向运动」转化为「导线的宏观运动」,自身仍不做功。高考只需记结论:洛伦兹力不做功,安培力可做功。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 5 — 微观放大:导线内每个电荷受洛伦兹力,合起来 = 安培力</div>
+      <canvas id="microCv" width="700" height="220"></canvas>
+      <div class="ctrl">
+        <button id="microGo">▶ 通电</button><button id="microReset">↺ 停</button>
+        <label>电流 I <input id="microI" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <p class="small">B 射入纸面(⊗)。蓝点是导线内定向移动的电荷,每个受向上的洛伦兹力(小红箭头)。全部相加 = 导线整体受的安培力(粗红箭头 F=BIL)。电流越大,漂移越快、合力越大。</p>
+    </div>
+
+    <h2 class="o">⑦ 平行电流相互作用:同向吸、异向斥</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>为什么?</b> 导线 1 的电流在导线 2 处产生磁场 B₁;导线 2 的电流 I₂ 在 B₁ 中受安培力。用右手定则定 B₁ 方向、左手定则定受力方向,一算便知:</p>
+      <table>
+        <tr><th>两电流方向</th><th>相互作用</th><th>记忆</th></tr>
+        <tr><td>同向(平行同方向)</td><td><b>相互吸引</b></td><td rowspan="2">和电荷相反:<br>电流同向相吸</td></tr>
+        <tr><td>反向(平行反方向)</td><td><b>相互排斥</b></td></tr>
+      </table>
+      <p class="trap">⚠ 别和「同种电荷相斥」搞混!<b>电流</b>是「同向相吸、异向相斥」,和电荷的规律正好相反。这是选择题最爱设的对比陷阱。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧲 互动 6 — 平行电流:切换同向/异向,看吸引与排斥</div>
+      <svg id="parSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="parToggle">切换:同向 ↔ 异向</button>
+        <button id="parGo">▶ 释放(看吸/斥)</button><button id="parReset">↺ 复位</button>
+      </div>
+      <div class="verdict" id="parNote"></div>
+      <p class="small">两根平行长直导线。同向电流 → 相互靠近(吸引);异向电流 → 相互远离(排斥)。箭头示意电流方向。</p>
+    </div>
+
+    <h2 class="v">⑧ 左手定则的使用(总口诀)</h2>
+    <div class="card">
+      <div class="keybox" style="margin:6px 0"><b>左手定则统一口诀:</b> 伸开<b>左手</b> → 让磁感线<b>穿入手心</b>(掌心朝向 B 的来向;⊙则手心朝你、⊗则手背朝你) → <b>四指</b>指向「电流 I」或「正电荷运动 v」 → <b>大拇指</b>(与四指垂直)指向「受力 F/f」。</div>
+      <table>
+        <tr><th>用它判</th><th>四指指什么</th><th>大拇指得到</th></tr>
+        <tr><td>安培力</td><td>电流 I 方向</td><td>安培力 F 方向</td></tr>
+        <tr><td>正电荷洛伦兹力</td><td>正电荷速度 v 方向</td><td>洛伦兹力 f 方向</td></tr>
+        <tr><td>负电荷洛伦兹力</td><td>v 的<b>反</b>方向</td><td>洛伦兹力 f 方向</td></tr>
+      </table>
+      <p class="trap">⚠ 三大手别混:<b>左手定则</b>判受力(安培力/洛伦兹力);<b>右手定则</b>判感应电流(切割磁感线)/直导线周围磁场;<b>右手螺旋</b>判螺线管/环形电流的磁场方向。本页全用<b>左手</b>。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 安培力大小与方向</h3>
+      <p><b class="tag">触发信号:</b>通电直导线放在匀强磁场里,给 B、I、L、θ,求安培力大小或方向。</p>
+      <p><b class="tag">标准动作:</b>大小 F=BILsinθ(先看 B 与 I 夹角);方向左手定则(四指指 I,拇指得 F)。若 B∥I 直接答 F=0。</p>
+      <p><b class="tag">示例(带解):</b>B=0.5T 水平向右,竖直导线 I=2A、L=0.4m、电流向上,B⊥I 故 F=BIL=0.5×2×0.4=0.4N。方向:左手四指向上、B 从左穿来(设 B 出纸不适用,此处 B 在纸面)→ 用空间左手定则,F 垂直于 B、I 所在平面,指向纸面外。</p>
+      <p class="trap">陷阱:忘乘 sinθ;B∥I 却硬算出非零;把 L 当成导线全长而非磁场内有效长度。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 左手定则定方向(⊙/⊗ 情形)</h3>
+      <p><b class="tag">触发信号:</b>B 垂直纸面(⊙或⊗),电流/速度在纸面内,问受力方向。</p>
+      <p><b class="tag">标准动作:</b>⊙→手心朝你,⊗→手背朝你;四指指 I(或正电荷 v);拇指方向即受力。负电荷记得反向。</p>
+      <p><b class="tag">示例(带解):</b>B 射入纸面(⊗),电流向右。左手手背朝你(让 B 入手心),四指向右,拇指向上 → 安培力方向<b>向上</b>。</p>
+      <p class="trap">陷阱:⊙/⊗ 分不清导致手心手背搞反;负电荷不反向。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 通电线框在磁场中(合力/合力矩)</h3>
+      <p><b class="tag">触发信号:</b>矩形/方形线框通电放磁场中,问受力、是否转动、力矩、稳定位置。</p>
+      <p><b class="tag">标准动作:</b>逐条边用左手定则定力方向;匀强磁场中合力=0(不平移);判两组对边的力是否共线,不共线→有力矩→转动;线框平面⊥B 时力矩为零(平衡位置)。</p>
+      <p><b class="tag">示例(带解):</b>竖直矩形线框,左右两竖边电流反向,在水平 B 中受等大反向的水平力,不共线 → 形成力偶 → 线框绕竖轴转动(电流表/电动机原理)。</p>
+      <p class="trap">陷阱:把「合力为零」误当「不动」(其实会转);漏判与 B 平行的边受力为零。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 洛伦兹力方向(正负电荷)</h3>
+      <p><b class="tag">触发信号:</b>单个带电粒子以速度 v 进入磁场,问所受洛伦兹力方向 / 偏转方向。</p>
+      <p><b class="tag">标准动作:</b>左手定则:正电荷四指指 v,负电荷四指指 v 反向;拇指得 f。f 指向即初始偏转方向(圆心方向)。</p>
+      <p><b class="tag">示例(带解):</b>负电荷向右运动,B 射入纸面(⊗)。当正电荷判:四指向右、拇指向上;因是负电荷→反向→f 向下,粒子向下偏转。</p>
+      <p class="trap">陷阱:负电荷不反向;把 f 方向当成运动方向(f 是向心方向,垂直于 v)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 力做功判断(安培力 vs 洛伦兹力)</h3>
+      <p><b class="tag">触发信号:</b>问某个力是否做功、能量如何转化、速率是否改变。</p>
+      <p><b class="tag">标准动作:</b>洛伦兹力→<b>永不做功</b>(f⊥v),速率不变、动能不变;安培力→可对导线做功(如电动机把电能转机械能)。粒子在纯磁场中速率恒定。</p>
+      <p><b class="tag">示例(带解):</b>带电粒子在匀强磁场中做圆周运动,洛伦兹力做功为 0,故速率 v 不变、动能不变、周期 T=2πm/(qB) 与速率无关。</p>
+      <p class="trap">陷阱:误认洛伦兹力做正功让粒子加速;把「不做功」等同「不起作用」(它提供向心力)。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 左手定则四指指的是<b>电流 I</b>(安培力)或<b>正电荷运动方向 v</b>(洛伦兹力),不是磁场方向。</p>
+      <p class="trap">② <b>负电荷</b>洛伦兹力方向要<b>反过来</b>:四指指 v 反向,或把正电荷结果掉头。</p>
+      <p class="trap">③ <b>B∥I 时安培力 F=0</b>;v∥B 时洛伦兹力 f=0。平行就没力,别硬算。</p>
+      <p class="trap">④ <b>洛伦兹力永远不做功</b>(f⊥v),只改变方向不改变速率/动能。</p>
+      <p class="trap">⑤ 安培力方向<b>不一定在磁场平面内</b>,但<b>一定同时垂直于 I 和 B</b>(垂直于二者构成的平面)。</p>
+      <p class="trap">⑥ 平行电流<b>同向相吸、异向相斥</b>,和「同种电荷相斥」正好相反,别记混。</p>
+      <p class="trap">⑦ 匀强磁场中闭合线框<b>合力为零</b>但<b>合力矩可不为零</b>(会转不会平移)。</p>
+      <p class="trap">⑧ F=BILsinθ / f=qvBsinθ 里 θ 是 <b>B 与 I</b>(或 <b>B 与 v</b>)的夹角,别用错角。</p>
+      <p class="trap">⑨ 左手判受力、右手判感应电流与直导线磁场、右手螺旋判螺线管磁场,三手别混用。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 把两个力看成「一个力的两副面孔」:</b> f=qvB(微观、对单个电荷)与 F=BIL(宏观、对导线)由 I=nqvS 一步打通。理解 F=BIL 是 f=qvB 的求和,你就不用把它们当两个孤立公式背——考场上任一忘了,可以现推另一个。</p>
+      <p style="margin:8px 0"><b>② 「不做功」是洛伦兹力的身份证:</b> 凡在<b>纯磁场</b>中运动的带电粒子,速率恒定、动能守恒、周期只由 m/(qB) 决定而与 v 无关。一旦题目说粒子加速/减速,必有电场或其他力在做功,洛伦兹力永远清白。这条能秒杀大量「速率是否变」的判断题。</p>
+      <p style="margin:8px 0"><b>③ 有效长度思想:</b> 匀强磁场中任意形状导线的安培力,只取决于电流「首尾两端的直线距离」(有效长度 L_eff)。弯的、绕的都等效成那段直线——闭合线框首尾重合,故有效长度 0,合力为零。这一句能瞬间搞定「弯导线求合力」类难题。</p>
+      <p style="margin:8px 0"><b>④ 方向的空间想象训练:</b> ⊙/⊗ 是把三维压进二维的暗号。练到看见 ⊗ 就自动「手背朝我」、看见 ⊙ 就「手心朝我」，方向题从此不用反复摆手。安培力、洛伦兹力、感应电流三类方向题都靠这套空间直觉提速。</p>
+      <p style="margin:8px 0"><b>⑤ 合力与合力矩分家:</b> 判线框行为时,先问「会不会平移」(看合力,匀强场中=0),再问「会不会转动」(看合力矩)。把这两个问题拆开,电流表、电动机、磁强计的原理题就都变成同一个模板:合力零、力矩非零 → 转动。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:带电粒子在磁场中(圆周运动) / 电磁感应攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+/* 箭头(SVG):从(x1,y1)到(x2,y2) */
+function arrow(svg,x1,y1,x2,y2,col,w){
+  el(svg,'line',{x1,y1,x2,y2,stroke:col,'stroke-width':w||4});
+  const ang=Math.atan2(y2-y1,x2-x1),h=10+((w||4)*1.2);
+  el(svg,'path',{d:'M'+x2+' '+y2+' L'+(x2-h*Math.cos(ang-0.4))+' '+(y2-h*Math.sin(ang-0.4))+' L'+(x2-h*Math.cos(ang+0.4))+' '+(y2-h*Math.sin(ang+0.4))+' Z',fill:col});
+}
+/* 画 B 场符号 ⊙/⊗ 网格 */
+function bfield(svg,x,y,w,h,dir){
+  const gx=40,gy=40;
+  for(let i=x+gx/2;i<x+w;i+=gx){for(let j=y+gy/2;j<y+h;j+=gy){
+    el(svg,'circle',{cx:i,cy:j,r:8,fill:'none',stroke:'#9aa',"stroke-width":2});
+    if(dir==='out'){el(svg,'circle',{cx:i,cy:j,r:2.4,fill:'#9aa'});}
+    else{el(svg,'line',{x1:i-5,y1:j-5,x2:i+5,y2:j+5,stroke:'#9aa','stroke-width':2});el(svg,'line',{x1:i-5,y1:j+5,x2:i+5,y2:j-5,stroke:'#9aa','stroke-width':2});}
+  }}
+}
+
+/* ===== 互动1:左手定则(安培力) ===== */
+(function(){
+  const svg=document.getElementById('lhSvg');const vd=document.getElementById('lhVerdict');
+  let bdir='out', idir='up';
+  document.querySelectorAll('.bdir').forEach(b=>b.onclick=()=>{document.querySelectorAll('.bdir').forEach(x=>x.classList.remove('on'));b.classList.add('on');bdir=b.dataset.d;draw();});
+  document.querySelectorAll('.idir').forEach(b=>b.onclick=()=>{document.querySelectorAll('.idir').forEach(x=>x.classList.remove('on'));b.classList.add('on');idir=b.dataset.d;draw();});
+  /* F = I × B 方向逻辑(B 沿 ±z:out=+z朝你,in=-z入纸;屏幕 x右+,y下+;
+     用右手系:z_out = 屏幕外。F = I×B。
+     以向量在屏幕坐标(x右,y上)计算再转屏幕。 */
+  function ivec(d){return d==='up'?[0,1]:d==='down'?[0,-1]:d==='left'?[-1,0]:[1,0];} // (x右, y上)
+  function compute(){
+    const I=ivec(idir); const bz = bdir==='out'?1:-1; // +z 朝你
+    // F = I × B, I=(Ix,Iy,0), B=(0,0,bz). cross = (Iy*bz-0, 0-Ix*bz, 0) = (Iy*bz, -Ix*bz,0)
+    const Fx=I[1]*bz, Fy=-I[0]*bz; // in (x右,y上)
+    return [Fx,Fy];
+  }
+  function draw(){
+    clr(svg);
+    bfield(svg,40,20,620,260,bdir);
+    const cx=350,cy=150;
+    // 电流导线(黄色粗线)带箭头
+    const I=ivec(idir);const len=95;
+    const ix2=cx+I[0]*len, iy2=cy-I[1]*len;
+    const ix1=cx-I[0]*len, iy1=cy+I[1]*len;
+    el(svg,'line',{x1:ix1,y1:iy1,x2:ix2,y2:iy2,stroke:INK,'stroke-width':11});
+    arrow(svg,cx,cy,ix2,iy2,YEL,7);
+    el(svg,'circle',{cx:ix2,cy:iy2,r:0});
+    el(svg,'text',{x:ix2+(I[0]>=0?10:-10),y:iy2-(I[1]>0?10:-18),'font-size':16,'font-weight':900,fill:INK,'text-anchor':I[0]<0?'end':'start'}).textContent='I';
+    // 安培力 F(绿箭头)
+    const F=compute();const fl=110;
+    const fx2=cx+F[0]*fl, fy2=cy-F[1]*fl;
+    arrow(svg,cx,cy,fx2,fy2,GREEN,7);
+    el(svg,'text',{x:fx2+(F[0]>=0?12:-12),y:fy2-(F[1]>0?12:-20),'font-size':17,'font-weight':900,fill:GREEN,'text-anchor':F[0]<0?'end':'start'}).textContent='F 安培力';
+    el(svg,'circle',{cx,cy,r:6,fill:INK});
+    // B 标注
+    el(svg,'text',{x:60,y:38,'font-size':14,'font-weight':900,fill:'#556'}).textContent='B '+(bdir==='out'?'⊙ 射出纸面':'⊗ 射入纸面');
+    // 文字判读
+    const fname={ '1,0':'向右','-1,0':'向左','0,1':'向上','0,-1':'向下' };
+    const iname={up:'向上',down:'向下',left:'向左',right:'向右'};
+    const key=F[0]+','+F[1];
+    vd.innerHTML='B '+(bdir==='out'?'⊙射出':'⊗射入')+',电流 I '+iname[idir]+' → 左手定则:安培力 F <b style="color:'+GREEN+'">'+(fname[key]||'')+'</b>';
+    vd.style.borderColor=VIO;
+  }
+  draw();
+})();
+
+/* ===== 互动2:安培力大小 F=BILsinθ ===== */
+(function(){
+  const svg=document.getElementById('magSvg');
+  const B=document.getElementById('magB'),I=document.getElementById('magI'),L=document.getElementById('magL'),T=document.getElementById('magT');
+  const mvB=document.getElementById('mvB'),mvI=document.getElementById('mvI'),mvS=document.getElementById('mvS'),mvF=document.getElementById('mvF');
+  function draw(){
+    const b=+B.value,i=+I.value,l=+L.value,th=+T.value;
+    const s=Math.sin(th*Math.PI/180);const F=b*i*l*s;
+    mvB.textContent=b.toFixed(1);mvI.textContent=i.toFixed(1);mvS.textContent=s.toFixed(2);mvF.textContent=F.toFixed(2);
+    clr(svg);
+    bfield(svg,40,15,620,210,'out');
+    const cx=250,cy=120;
+    // 电流方向:水平向右为参考;θ 是 B(出纸,不在纸面)与 I 的空间夹角——为可视化,用θ调制箭头透明/说明,导线画水平,力竖直
+    // 更严谨:B出纸,I在纸面时始终⊥(θ=90)。这里θ表示B与I的夹角,用长度体现sinθ对F的影响。
+    // 导线(黄)
+    el(svg,'line',{x1:cx-90,y1:cy,x2:cx+90,y2:cy,stroke:INK,'stroke-width':11});
+    arrow(svg,cx,cy,cx+90,cy,YEL,7);
+    el(svg,'text',{x:cx+96,y:cy-8,'font-size':15,'font-weight':900,fill:INK}).textContent='I';
+    // 力 F 竖直向上,长度∝F
+    const flen=Math.min(150,20+F*38);
+    arrow(svg,cx,cy,cx,cy-flen,GREEN,7);
+    el(svg,'text',{x:cx+8,y:cy-flen-4,'font-size':15,'font-weight':900,fill:GREEN}).textContent='F='+F.toFixed(2)+'N';
+    el(svg,'circle',{cx,cy,r:6,fill:INK});
+    // θ 弧标注
+    el(svg,'text',{x:60,y:36,'font-size':13.5,'font-weight':900,fill:'#556'}).textContent='B ⊙ 射出纸面';
+    el(svg,'text',{x:470,y:120,'font-size':14,'font-weight':900,fill:INK}).textContent='θ(B与I夹角)='+th+'°';
+    el(svg,'text',{x:470,y:145,'font-size':13,'font-weight':800,fill:s<0.02?RED:INK}).textContent='sinθ='+s.toFixed(2)+(s<0.02?'  → F=0(B∥I)':'');
+    el(svg,'text',{x:470,y:172,'font-size':13,'font-weight':800,fill:INK}).textContent='F=B·I·L·sinθ';
+  }
+  [B,I,L,T].forEach(x=>x.oninput=draw);draw();
+})();
+
+/* ===== 互动3:通电线框转动(电流表原理) ===== */
+(function(){
+  const svg=document.getElementById('coilSvg');const note=document.getElementById('coilNote');
+  const Is=document.getElementById('coilI');
+  let angle=0,target=0,running=false;
+  function draw(){
+    clr(svg);
+    // 磁极
+    el(svg,'rect',{x:30,y:60,width:70,height:180,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:65,y:158,'font-size':22,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='N';
+    el(svg,'rect',{x:600,y:60,width:70,height:180,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:635,y:158,'font-size':22,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='S';
+    // B 水平向右(N→S)几条线
+    for(let y=80;y<=230;y+=30){arrow(svg,110,y,590,y,'#c9c1a8',3);}
+    el(svg,'text',{x:350,y:52,'font-size':13,'font-weight':900,fill:'#8a815f','text-anchor':'middle'}).textContent='B(N → S)';
+    // 线框(俯视:一个矩形绕竖直轴转,用透视宽度表现 angle)
+    const cx=350,cy=150,axisH=90;
+    // 转轴
+    el(svg,'line',{x1:cx,y1:cy-axisH-18,x2:cx,y2:cy+axisH+18,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 4'});
+    const w=90*Math.cos(angle); // 线框在屏幕上投影宽度
+    const leftX=cx-w, rightX=cx+w;
+    // 线框上下边
+    el(svg,'line',{x1:leftX,y1:cy-axisH,x2:rightX,y2:cy-axisH,stroke:ORANGE,'stroke-width':5});
+    el(svg,'line',{x1:leftX,y1:cy+axisH,x2:rightX,y2:cy+axisH,stroke:ORANGE,'stroke-width':5});
+    // 两竖边(受安培力的边)
+    el(svg,'line',{x1:leftX,y1:cy-axisH,x2:leftX,y2:cy+axisH,stroke:ORANGE,'stroke-width':7});
+    el(svg,'line',{x1:rightX,y1:cy-axisH,x2:rightX,y2:cy+axisH,stroke:ORANGE,'stroke-width':7});
+    // 安培力箭头:左右边受垂直纸面方向的力(投影为上下),体现力偶
+    const push=28*Math.cos(angle);
+    arrow(svg,leftX,cy,leftX,cy-40-Math.abs(push),RED,5);
+    arrow(svg,rightX,cy,rightX,cy+40+Math.abs(push),RED,5);
+    el(svg,'text',{x:leftX-6,y:cy-46-Math.abs(push),'font-size':12,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='F';
+    el(svg,'text',{x:rightX+6,y:cy+56+Math.abs(push),'font-size':12,'font-weight':900,fill:RED}).textContent='F';
+    // 指针
+    const pa=-Math.PI/2 + angle*1.4;
+    const pl=70;
+    arrow(svg,cx,cy+axisH+40,cx+pl*Math.cos(pa),cy+axisH+40+pl*Math.sin(pa),INK,4);
+    el(svg,'circle',{cx,cy:cy+axisH+40,r:5,fill:INK});
+    el(svg,'text',{x:cx,y:cy+axisH+66,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='指针';
+  }
+  function loop(){if(!running)return;angle+=(target-angle)*0.12;if(Math.abs(target-angle)<0.001){running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('coilGo').onclick=()=>{const i=+Is.value;target=Math.min(1.0,i*0.18);running=true;note.innerHTML='电流 I='+i+'A → 安培力力矩使线框偏转,指针偏角 ∝ 电流。电流越大,偏角越大。';note.style.borderColor=ORANGE;requestAnimationFrame(loop);};
+  document.getElementById('coilReset').onclick=()=>{target=0;running=true;note.textContent='已复位。调电流后点『通电偏转』。';note.style.borderColor=INK;requestAnimationFrame(loop);};
+  Is.oninput=()=>{if(!running){note.textContent='电流设为 '+Is.value+'A,点『通电偏转』看效果。';}};
+  note.textContent='点『通电偏转』:线框受安培力力矩转动,带动指针。';note.style.borderColor=INK;
+  draw();
+})();
+
+/* ===== 互动4:洛伦兹力方向(正/负电荷) ===== */
+(function(){
+  const svg=document.getElementById('lorSvg');const vd=document.getElementById('lorVerdict');
+  let qsign='pos', vdir='right', bdir='in';
+  document.querySelectorAll('.qsign').forEach(b=>b.onclick=()=>{document.querySelectorAll('.qsign').forEach(x=>x.classList.remove('on'));b.classList.add('on');qsign=b.dataset.q;draw();});
+  document.querySelectorAll('.vdir').forEach(b=>b.onclick=()=>{document.querySelectorAll('.vdir').forEach(x=>x.classList.remove('on'));b.classList.add('on');vdir=b.dataset.d;draw();});
+  document.querySelectorAll('.lbdir').forEach(b=>b.onclick=()=>{document.querySelectorAll('.lbdir').forEach(x=>x.classList.remove('on'));b.classList.add('on');bdir=b.dataset.d;draw();});
+  function vvec(d){return d==='up'?[0,1]:d==='down'?[0,-1]:d==='left'?[-1,0]:[1,0];} // (x右,y上)
+  function compute(){
+    const v=vvec(vdir); const bz=bdir==='out'?1:-1; const q=qsign==='pos'?1:-1;
+    // f = q v × B, v=(vx,vy,0),B=(0,0,bz) → v×B=(vy*bz,-vx*bz,0); ×q
+    const fx=q*(v[1]*bz), fy=q*(-v[0]*bz); // (x右,y上)
+    return [fx,fy];
+  }
+  function draw(){
+    clr(svg);
+    bfield(svg,40,20,620,260,bdir);
+    const cx=350,cy=150;
+    const v=vvec(vdir);const len=100;
+    // 速度箭头(黄/蓝)
+    arrow(svg,cx,cy,cx+v[0]*len,cy-v[1]*len,BLUE,7);
+    el(svg,'text',{x:cx+v[0]*len+(v[0]>=0?12:-12),y:cy-v[1]*len-(v[1]>0?12:-20),'font-size':16,'font-weight':900,fill:BLUE,'text-anchor':v[0]<0?'end':'start'}).textContent='v';
+    // 电荷圆
+    const col=qsign==='pos'?RED:INK;
+    el(svg,'circle',{cx,cy,r:16,fill:col,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+6,'font-size':18,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=qsign==='pos'?'+':'−';
+    // 洛伦兹力(绿箭头)
+    const f=compute();const fl=105;
+    arrow(svg,cx,cy,cx+f[0]*fl,cy-f[1]*fl,GREEN,7);
+    el(svg,'text',{x:cx+f[0]*fl+(f[0]>=0?12:-12),y:cy-f[1]*fl-(f[1]>0?12:-20),'font-size':16,'font-weight':900,fill:GREEN,'text-anchor':f[0]<0?'end':'start'}).textContent='f 洛伦兹力';
+    el(svg,'text',{x:60,y:40,'font-size':14,'font-weight':900,fill:'#556'}).textContent='B '+(bdir==='out'?'⊙ 射出纸面':'⊗ 射入纸面');
+    const fname={ '1,0':'向右','-1,0':'向左','0,1':'向上','0,-1':'向下' };
+    const vname={up:'向上',down:'向下',left:'向左',right:'向右'};
+    const key=f[0]+','+f[1];
+    vd.innerHTML=(qsign==='pos'?'正电荷 +q':'负电荷 −q')+' 速度 '+vname[vdir]+',B '+(bdir==='out'?'⊙出':'⊗入')+' → 洛伦兹力 f <b style="color:'+GREEN+'">'+(fname[key]||'')+'</b>　(f⊥v,不做功)';
+    vd.style.borderColor=BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动5:微观放大(安培力=洛伦兹力合力) ===== */
+(function(){
+  const cv=document.getElementById('microCv');const ctx=cv.getContext('2d');
+  const Is=document.getElementById('microI');
+  let running=false;let charges=[];let I=3;
+  const wireY0=70,wireY1=150,wireX0=90,wireX1=560;
+  function initCharges(){charges=[];for(let k=0;k<26;k++){charges.push({x:wireX0+Math.random()*(wireX1-wireX0),y:wireY0+8+Math.random()*(wireY1-wireY0-16)});}}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // B 场 ⊗ 背景
+    ctx.strokeStyle='#c8c0a6';ctx.lineWidth=1.5;
+    for(let x=40;x<660;x+=44){for(let y=30;y<200;y+=40){ctx.beginPath();ctx.arc(x,y,7,0,2*Math.PI);ctx.stroke();ctx.beginPath();ctx.moveTo(x-4,y-4);ctx.lineTo(x+4,y+4);ctx.moveTo(x-4,y+4);ctx.lineTo(x+4,y-4);ctx.stroke();}}
+    ctx.fillStyle='#8a815f';ctx.font='bold 12px sans-serif';ctx.fillText('B ⊗ 射入纸面',48,22);
+    // 导线
+    ctx.fillStyle='#d8cba6';ctx.fillRect(wireX0,wireY0,wireX1-wireX0,wireY1-wireY0);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(wireX0,wireY0,wireX1-wireX0,wireY1-wireY0);
+    ctx.fillStyle=INK;ctx.fillText('导线(电流 I 向右)',wireX0+6,wireY1+20);
+    // 电荷 + 每个的小洛伦兹力(向上)
+    charges.forEach(c=>{
+      ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(c.x,c.y,5,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(c.x,c.y-12);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(c.x,c.y-12);ctx.lineTo(c.x-3,c.y-8);ctx.lineTo(c.x+3,c.y-8);ctx.closePath();ctx.fillStyle=RED;ctx.fill();
+    });
+    // 合力 = 安培力(粗红箭头,向上),长度∝I
+    const fx=(wireX0+wireX1)/2, fy=wireY0, flen=20+I*16;
+    ctx.strokeStyle=RED;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(fx,fy);ctx.lineTo(fx,fy-flen);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(fx,fy-flen);ctx.lineTo(fx-9,fy-flen+12);ctx.lineTo(fx+9,fy-flen+12);ctx.closePath();ctx.fillStyle=RED;ctx.fill();
+    ctx.fillStyle=RED;ctx.font='bold 14px sans-serif';ctx.fillText('安培力 F=BIL(全部洛伦兹力之和)',fx+16,fy-flen+8);
+  }
+  function loop(){
+    if(!running){return;}
+    const sp=I*0.9;
+    charges.forEach(c=>{c.x+=sp;if(c.x>wireX1-4){c.x=wireX0+4;c.y=wireY0+8+Math.random()*(wireY1-wireY0-16);}});
+    draw();requestAnimationFrame(loop);
+  }
+  Is.oninput=()=>{I=+Is.value;if(!running)draw();};
+  document.getElementById('microGo').onclick=()=>{I=+Is.value;if(!running){running=true;requestAnimationFrame(loop);}};
+  document.getElementById('microReset').onclick=()=>{running=false;draw();};
+  initCharges();I=+Is.value;draw();
+})();
+
+/* ===== 互动6:平行电流相互作用 ===== */
+(function(){
+  const svg=document.getElementById('parSvg');const note=document.getElementById('parNote');
+  let same=true, offset=0, target=0, running=false;
+  const baseGap=150; // 半间距
+  function draw(){
+    clr(svg);
+    const cx=350, top=30, bot=230;
+    const x1=cx-baseGap+offset, x2=cx+baseGap-offset;
+    // 导线1
+    el(svg,'line',{x1:x1,y1:top,x2:x1,y2:bot,stroke:INK,'stroke-width':9});
+    // 电流1 箭头(向上)
+    arrow(svg,x1,bot-10,x1,top+10,YEL,6);
+    el(svg,'text',{x:x1-14,y:top-4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='I₁';
+    // 导线2
+    el(svg,'line',{x1:x2,y1:top,x2:x2,y2:bot,stroke:INK,'stroke-width':9});
+    // 电流2:same→向上,异向→向下
+    if(same){arrow(svg,x2,bot-10,x2,top+10,YEL,6);}
+    else{arrow(svg,x2,top+10,x2,bot-10,YEL,6);}
+    el(svg,'text',{x:x2+14,y:top-4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='I₂';
+    // 受力箭头
+    const fy=130;
+    if(same){ // 吸引:互相指向对方(向内)
+      arrow(svg,x1+16,fy,x1+70,fy,RED,6);
+      arrow(svg,x2-16,fy,x2-70,fy,RED,6);
+    }else{ // 排斥:互相远离(向外)
+      arrow(svg,x1-16,fy,x1-70,fy,RED,6);
+      arrow(svg,x2+16,fy,x2+70,fy,RED,6);
+    }
+    el(svg,'text',{x:cx,y:270,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=same?'电流同向 → 相互吸引':'电流反向 → 相互排斥';
+  }
+  function loop(){if(!running)return;offset+=(target-offset)*0.1;if(Math.abs(target-offset)<0.3){running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('parToggle').onclick=()=>{same=!same;offset=0;target=0;running=false;draw();note.innerHTML=same?'当前:<b>同向电流</b>。点『释放』看它们相互靠近(吸引)。':'当前:<b>异向电流</b>。点『释放』看它们相互远离(排斥)。';note.style.borderColor=same?GREEN:ORANGE;};
+  document.getElementById('parGo').onclick=()=>{target=same?70:-70;running=true;note.innerHTML=same?'同向电流 <b style="color:'+GREEN+'">相互吸引</b>(和同种电荷相斥正好相反!)':'异向电流 <b style="color:'+ORANGE+'">相互排斥</b>。';note.style.borderColor=same?GREEN:ORANGE;requestAnimationFrame(loop);};
+  document.getElementById('parReset').onclick=()=>{offset=0;target=0;running=false;draw();};
+  note.innerHTML='当前:<b>同向电流</b>。点『释放』看相互作用。「电流同向相吸,异向相斥」。';note.style.borderColor=GREEN;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 安培力大小公式?什么时候最大、什么时候为零?",a:"F=BILsinθ(θ为B与I夹角)。B⊥I(θ=90°)时最大 F=BIL;B∥I(θ=0°或180°)时 sinθ=0,F=0,导线不受力。"},
+ {q:"2. 安培力方向用什么定则?四指指什么?",a:"左手定则。让磁感线穿入手心,四指指电流I方向,大拇指指安培力F方向。F同时垂直于B和I(垂直于二者构成的平面)。"},
+ {q:"3. 洛伦兹力大小公式?v∥B 时多大?",a:"f=qvBsinθ(θ为v与B夹角)。v⊥B时最大 f=qvB;v∥B时 f=0,电荷做匀速直线运动。"},
+ {q:"4. 判负电荷的洛伦兹力方向怎么做?",a:"左手定则时四指指『v的反方向』;或先当正电荷判出方向,再把结果反过来。两种做法结果一致。"},
+ {q:"5. 洛伦兹力做不做功?为什么?对速率有何影响?",a:"永远不做功。因为f始终垂直于v(f⊥v),W=fscos90°=0。所以只改变速度方向,不改变速率和动能——这正是匀速圆周运动的原因。"},
+ {q:"6. 安培力和洛伦兹力是什么关系?",a:"安培力是洛伦兹力的宏观表现。导线中大量运动电荷各受洛伦兹力,累加起来传给导线整体即安培力。由I=nqvS可推 F=N·qvB=BIL。"},
+ {q:"7. 平行通电导线:同向电流、异向电流各如何相互作用?",a:"同向电流相互吸引,异向电流相互排斥(『同向相吸,异向相斥』,与同种电荷相斥正好相反)。"},
+ {q:"8. B⊙、B⊗ 各表示什么?左手怎么摆?",a:"⊙表示B射出纸面(手心朝你),⊗表示B射入纸面(手背朝你)。让磁感线穿入手心后,四指指电流/正电荷运动方向。"},
+ {q:"9. 匀强磁场中通电闭合线框,合力和合力矩如何?",a:"合力为零(不会平移);但合力矩通常不为零(会转动)。这是电流表、电动机的原理:力偶使线框转动。"},
+ {q:"10. 磁通量 Φ 的公式?它是矢量还是标量?",a:"Φ=BS(B与面垂直时),一般 Φ=BScosθ。Φ是标量(只有正负,无方向),单位韦伯Wb。B才是矢量。"},
+ {q:"11. B=0.5T,导线L=0.4m、I=2A、B⊥I,安培力多大?",a:"F=BIL=0.5×2×0.4=0.4N。方向由左手定则,垂直于B和I构成的平面。"},
+ {q:"12. 负电荷向右运动,B射入纸面(⊗),洛伦兹力方向?",a:"当正电荷判:四指向右、B入手心、拇指向上;因是负电荷→反向→洛伦兹力向下,粒子向下偏转。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

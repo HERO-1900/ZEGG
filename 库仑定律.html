@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>库仑定律与电荷 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#1450C8;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>库仑定律与电荷</h1>
+    <p class="lead">电荷之间怎么互相『拉扯』?这页专攻<b>库仑定律</b>——两个点电荷之间的力多大、往哪指、怎么算。再把它和重力、绳子拉力拼起来解<b>平衡问题</b>(悬挂小球、三电荷共线)。场强/电势那套在『静电场』页,这里只认<b>电荷与力</b>。</p>
+
+    <div class="say">🗣️ <b>库仑定律(人话版):</b> 两个带电小球之间的力,就像『放大版的万有引力』——离得越近越猛(<b>反比于距离平方</b> r²),电荷越多越猛(<b>正比于两电荷乘积</b> q₁q₂)。唯一区别:引力只吸,电力<b>同种相斥、异种相吸</b>。方向永远<b>沿两球连线</b>。多个电荷?每一对单独算力,再<b>像力的合成一样加起来</b>(平行四边形)。</div>
+
+    <div class="keybox"><b>一句话核心:</b> F = k·q₁q₂/r²,k=9×10⁹ N·m²/C²。只对<b>真空中的点电荷</b>成立。方向沿连线,<b>同斥异吸</b>。多电荷用<b>矢量合成</b>。相同金属球接触后<b>总电荷平分</b>(先分电荷,再算力!)。</div>
+
+    <h2 class="b">① 电荷:两种电荷 · 元电荷 · 起电 · 守恒</h2>
+    <div class="card">
+      <h3>两种电荷 + 元电荷</h3>
+      <p style="margin:6px 0">自然界只有<b>正电荷</b>(丝绸摩擦过的玻璃棒)和<b>负电荷</b>(毛皮摩擦过的橡胶棒)两种。<b>同种相斥,异种相吸。</b></p>
+      <div class="eq">元电荷 e = 1.6×10⁻¹⁹ C</div>
+      <p style="margin:6px 0">元电荷是最小的电荷单元,任何带电体电荷量都是 e 的<b>整数倍</b>:Q = n·e。电子、质子带的电荷量大小都等于 e(电子带 −e,质子带 +e)。</p>
+      <div class="eq">比荷 = q/m　(电荷量与质量之比)</div>
+      <p style="margin:6px 0"><b>比荷</b>(荷质比)是电荷量与质量的比值,电子比荷 ≈ 1.76×10¹¹ C/kg,是描述带电粒子的重要参量。</p>
+      <h3>三种起电方式</h3>
+      <table>
+        <tr><th>方式</th><th>原理</th><th>结果</th></tr>
+        <tr><td><b>摩擦起电</b></td><td>两物摩擦,电子从一物转移到另一物</td><td>两物带<b>等量异种</b>电荷</td></tr>
+        <tr><td><b>接触起电</b></td><td>带电体与导体接触,电荷转移</td><td>两物带<b>同种</b>电荷(相同球则平分)</td></tr>
+        <tr><td><b>感应起电</b></td><td>带电体靠近导体,导体内电荷重新分布</td><td>近端异种、远端同种(不接触)</td></tr>
+      </table>
+      <div class="keybox" style="margin:12px 0 4px"><b>电荷守恒定律:</b> 电荷既不会创生也不会消灭,只能从一个物体<b>转移</b>到另一物体,或从物体一部分转移到另一部分;转移过程中电荷的<b>代数和保持不变</b>。三种起电方式本质都是电荷的转移,总电荷守恒。</div>
+      <p class="trap">⚠ 起电不是『创造电荷』,是电荷<b>转移/重新分布</b>。摩擦起电两物带等量异种电荷(总和仍为0);感应起电时导体不接触也能感应出电荷,但整体电荷守恒。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 1 — 三种起电方式对比(点按钮看电子怎么转移)</div>
+      <svg id="chargeSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cmode on" data-m="0">摩擦起电</button>
+        <button class="cmode" data-m="1">接触起电</button>
+        <button class="cmode" data-m="2">感应起电</button>
+        <button id="chGo">▶ 演示</button>
+      </div>
+      <div class="verdict" id="chNote"></div>
+      <p class="small">红=正电荷,蓝=负电荷。看电子(负)如何转移或重新分布;总电荷始终守恒。</p>
+    </div>
+
+    <h2 class="g">② 接触带电:相同金属球接触后电荷平分</h2>
+    <div class="card">
+      <h3>接触分电荷的铁律</h3>
+      <p style="margin:6px 0"><b>两个完全相同的金属球</b>(半径相同)接触后再分开,总电荷会<b>平均分配</b>到两球上。</p>
+      <div class="eq">接触后各球电荷 q′ = (Q₁ + Q₂) / 2　(代数和!带符号)</div>
+      <p style="margin:6px 0"><b>关键是代数和</b>:异种电荷接触会先中和。例如 +6C 和 −2C 接触 → 各带 (+6−2)/2 = +2C。</p>
+      <table>
+        <tr><th>接触前</th><th>代数和</th><th>接触后各球</th></tr>
+        <tr><td>+8C 与 0(不带电)</td><td>+8C</td><td>各 +4C</td></tr>
+        <tr><td>+6C 与 +2C</td><td>+8C</td><td>各 +4C</td></tr>
+        <tr><td>+6C 与 −2C</td><td>+4C</td><td>各 +2C</td></tr>
+        <tr><td>+3C 与 −3C</td><td>0</td><td>各 0(完全中和)</td></tr>
+      </table>
+      <p class="trap">⚠ 只有<b>完全相同(等大)</b>的金属球才平分!球大小不同时按比例分配(不是简单平分),中学题一般只考相同球。<b>做题第一步:先分电荷,再代入库仑定律算力!</b>很多题故意让球先接触改变电荷量。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔵 互动 2 — 接触带电电荷均分(拖滑块设初始电荷,看接触后平分)</div>
+      <svg id="shareSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>Q₁ <input id="shQ1" type="range" min="-6" max="6" value="6" step="1"></label>
+        <label>Q₂ <input id="shQ2" type="range" min="-6" max="6" value="-2" step="1"></label>
+        <button id="shGo">▶ 接触再分开</button><button id="shReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="shNote"></div>
+      <p class="small">两球相同。接触后各球电荷 = (Q₁+Q₂)/2(代数和,异种先中和)。</p>
+    </div>
+
+    <h2 class="r">③ 库仑定律:F = k·q₁q₂/r²</h2>
+    <div class="card">
+      <div class="eq">F = k · q₁q₂ / r²　,　k = 9×10⁹ N·m²/C²</div>
+      <p style="margin:8px 0"><b>文字表述:</b> 真空中两个点电荷之间的作用力,与它们电荷量的<b>乘积成正比</b>,与它们距离的<b>平方成反比</b>,作用力方向沿两点电荷的<b>连线</b>。</p>
+      <table>
+        <tr><th>要素</th><th>说明</th></tr>
+        <tr><td><b>适用条件</b></td><td>① <b>真空</b>中(空气中近似成立);② <b>点电荷</b>(电荷大小远小于间距)</td></tr>
+        <tr><td><b>大小</b></td><td>F = kq₁q₂/r²,q₁q₂ 取<b>电荷量大小</b>(代绝对值)</td></tr>
+        <tr><td><b>方向</b></td><td>沿两电荷<b>连线</b>;<b>同种相斥</b>(背离)、<b>异种相吸</b>(指向对方)</td></tr>
+        <tr><td><b>性质</b></td><td>一对相互作用力,<b>等大反向</b>(牛顿第三定律),与两电荷是否相等无关</td></tr>
+      </table>
+      <div class="keybox" style="margin:12px 0 4px"><b>r 平方的威力:</b> 距离变为原来的 2 倍,力变为原来的 1/4;距离减半,力变 4 倍。这个『平方反比』是库仑定律和万有引力共同的灵魂。</div>
+      <p class="trap">⚠ 库仑定律<b>只适用于点电荷</b>!两个带电大球靠得很近时不能直接用(电荷分布会变)。求力大小时 q₁、q₂ <b>代电荷量绝对值</b>,方向靠『同斥异吸』单独判断,别让负号进公式算出『负的力』。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧲 互动 3 — 库仑定律:拖电荷/调电荷量,看 F 大小与方向(同斥异吸)</div>
+      <svg id="coulSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>q₁ <input id="cq1" type="range" min="-4" max="4" value="2" step="1"></label>
+        <label>q₂ <input id="cq2" type="range" min="-4" max="4" value="3" step="1"></label>
+        <label>距离 r <input id="cr" type="range" min="80" max="480" value="300" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>q₁ (μC)</b><span id="cvq1">0</span></div>
+        <div><b>q₂ (μC)</b><span id="cvq2">0</span></div>
+        <div><b>r (cm)</b><span id="cvr">0</span></div>
+        <div><b>F (相对值)</b><span id="cvf">0</span></div>
+      </div>
+      <p class="small">箭头长度∝力大小。同种电荷→互相背离(斥);异种→互相指向(吸)。r 减半 F 变4倍,亲身拖动感受平方反比。</p>
+    </div>
+
+    <h2 class="o">④ 库仑力的矢量合成:多电荷受力</h2>
+    <div class="card">
+      <h3>叠加原理</h3>
+      <p style="margin:6px 0">一个电荷受多个电荷作用时,分别用库仑定律算出<b>每一个</b>对它的力,再按<b>力的合成</b>(平行四边形/正交分解)求合力。这叫<b>力的叠加原理</b>。</p>
+      <div class="mono">第1步:对目标电荷,逐个算 F₁=kq q₁/r₁²、F₂=kq q₂/r₂²…</div>
+      <div class="mono">第2步:定每个力的方向(同斥异吸,沿连线)。</div>
+      <div class="mono">第3步:平行四边形合成;夹角特殊时(90°/120°)用几何直接算。</div>
+      <p style="margin:8px 0"><b>常见几何:</b> 两力夹角 θ,合力 F = √(F₁²+F₂²+2F₁F₂cosθ)。等边三角形三电荷时夹角 60°;直角时 F = √(F₁²+F₂²)。</p>
+      <p class="trap">⚠ 库仑力是<b>矢量</b>,绝不能直接把大小相加!必须先定方向再合成。等大的两个力夹角 120° 时合力大小 = 单个力(常考陷阱)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">➕ 互动 4 — 多电荷受力合成(拖角度,看平行四边形合力)</div>
+      <svg id="sumSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>夹角 θ <input id="suTheta" type="range" min="0" max="180" value="90" step="5"></label>
+        <label>F₂/F₁ <input id="suRatio" type="range" min="0.5" max="2" value="1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>F₁</b><span id="svF1">0</span></div>
+        <div><b>F₂</b><span id="svF2">0</span></div>
+        <div><b>夹角 θ</b><span id="svTh">0</span></div>
+        <div><b>合力 F</b><span id="svF">0</span></div>
+      </div>
+      <p class="small">中心电荷受两个库仑力 F₁、F₂,夹角 θ。合力 F=√(F₁²+F₂²+2F₁F₂cosθ)。θ=120° 且等大时合力=F₁。</p>
+    </div>
+
+    <h2 class="v">⑤ 三电荷共线平衡:『近小远大』规律</h2>
+    <div class="card">
+      <h3>三点电荷平衡口诀</h3>
+      <p style="margin:6px 0">三个点电荷在一条直线上都处于平衡,存在两条铁律:</p>
+      <div class="keybox" style="margin:8px 0"><b>① 两同夹异,两异夹同:</b> 若两端电荷<b>同号</b>,中间必是<b>异号</b>;若两端<b>异号</b>,则第三个电荷在<b>两电荷连线的延长线外侧、靠近电荷量小的那个</b>。<br><b>② 近小远大:</b> 中间(或被平衡的)电荷,离<b>电荷量小</b>的那个<b>近</b>,离<b>电荷量大</b>的那个<b>远</b>(因为力平衡要求 kq₁q/r₁² = kq₂q/r₂²,q 大的 r 也大)。</div>
+      <p style="margin:8px 0"><b>经典模型:</b> 两个正电荷 Q₁、Q₂ 固定,中间放一个电荷 q 使 q 平衡。设 q 距 Q₁ 为 x,距 Q₂ 为 (L−x)。平衡条件:</p>
+      <div class="eq">kQ₁q/x² = kQ₂q/(L−x)²　→　x/(L−x) = √(Q₁/Q₂)</div>
+      <p style="margin:8px 0"><b>注意:</b> 中间电荷 q 的<b>正负和大小都不影响它自己的平衡位置</b>(位置只由 Q₁、Q₂ 决定)!但要让<b>三个电荷都平衡</b>,q 的符号有要求(两同夹异)。</p>
+      <p class="trap">⚠ 判位置:被平衡的电荷一定在『两同夹异』的中间或『异号』的外侧靠小电荷。x/(L−x)=√(Q₁/Q₂),离小电荷近。若问『q 取何值使三个都平衡』要另列 Q₁、Q₂ 各自的平衡方程。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 三点电荷共线平衡(调两端电荷比,自动找平衡位置)</div>
+      <svg id="eqSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>Q₁ <input id="eqQ1" type="range" min="1" max="9" value="1" step="1"></label>
+        <label>Q₂ <input id="eqQ2" type="range" min="1" max="9" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>Q₁</b><span id="evQ1">0</span></div>
+        <div><b>Q₂</b><span id="evQ2">0</span></div>
+        <div><b>x (距Q₁)</b><span id="evX">0</span></div>
+        <div><b>验证 F₁=F₂</b><span id="evChk">0</span></div>
+      </div>
+      <p class="small">中间电荷 q 的平衡位置满足 x/(L−x)=√(Q₁/Q₂)。看它总是<b>离小电荷更近</b>(近小远大)。两侧箭头等长=受力平衡。</p>
+    </div>
+
+    <h2 class="o">⑥ 库仑力 + 重力等结合的平衡(悬挂小球)</h2>
+    <div class="card">
+      <h3>悬挂带电小球模型</h3>
+      <p style="margin:6px 0">带电小球用<b>绝缘细线</b>悬挂,旁边另一个电荷使它偏离竖直方向,静止时受<b>三个力平衡</b>:重力 mg(竖直向下)、绳张力 T(沿绳)、库仑力 F(沿连线,水平方向常见)。</p>
+      <div class="eq">三力平衡 → 首尾相接构成<b>矢量三角形</b>(封闭三角形)</div>
+      <p style="margin:8px 0"><b>标准解法:</b> 若库仑力 F 水平、重力竖直,绳与竖直方向夹角 θ,则:</p>
+      <div class="eq">水平:T sinθ = F　　竖直:T cosθ = mg　→　tanθ = F/(mg)</div>
+      <p style="margin:8px 0">由此 F = mg·tanθ,再代库仑定律 F=kq₁q₂/r² 求电荷量或距离。也可直接用<b>相似三角形</b>:力三角形与几何三角形相似,对应边成比例。</p>
+      <p class="trap">⚠ 绳张力 T 不是已知量,别把 T 当 mg!用 tanθ=F/mg 消去 T 最快。若两球互相悬挂(对称),各自偏角相同,库仑力等大反向。别漏画重力或方向搞错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪝 互动 6 — 带电小球悬挂平衡(调库仑力,看绳偏角与力三角形)</div>
+      <svg id="ballSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>库仑力 F <input id="baF" type="range" min="0" max="90" value="40" step="2"></label>
+        <label>重力 mg <input id="baMg" type="range" min="30" max="90" value="60" step="2"></label>
+      </div>
+      <div class="live">
+        <div><b>F (水平)</b><span id="bvF">0</span></div>
+        <div><b>mg</b><span id="bvMg">0</span></div>
+        <div><b>偏角 θ</b><span id="bvTh">0</span></div>
+        <div><b>张力 T</b><span id="bvT">0</span></div>
+      </div>
+      <p class="small">左:小球被库仑力 F 推开,绳偏角 θ。右:重力、张力、库仑力构成封闭力三角形。tanθ=F/mg。</p>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 接触分电荷再算力</h3>
+      <p><b class="tag">触发信号:</b>『两相同金属球先接触后分开』『带电球接触不带电球』,然后问相距 r 时的库仑力。</p>
+      <p><b class="tag">标准动作:</b>① 先算接触后各球电荷 q′=(Q₁+Q₂)/2(代数和);② 再代库仑定律 F=kq′q′/r²。</p>
+      <p><b class="tag">示例(带解):</b>相同球 A 带 +6×10⁻⁶C,B 带 −2×10⁻⁶C,接触后分开相距 r=0.3m。接触后各带 q′=(6−2)/2=+2×10⁻⁶C。F=9×10⁹×(2×10⁻⁶)²/0.3²=9×10⁹×4×10⁻¹²/0.09=0.4N,同种电荷相斥。</p>
+      <p class="trap">陷阱:忘记先接触分电荷,直接拿原电荷算力;代数和忘记异号先中和。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 库仑力的矢量合成</h3>
+      <p><b class="tag">触发信号:</b>三个及以上电荷,求某一个电荷受到的『合力』;等边三角形/直角摆放。</p>
+      <p><b class="tag">标准动作:</b>逐对算库仑力 → 定方向(同斥异吸)→ 平行四边形或正交分解求合力大小与方向。</p>
+      <p><b class="tag">示例(带解):</b>等边三角形边长 a,三顶点各放 +q。任一电荷受另两个的斥力各 F=kq²/a²,夹角 60°,合力 F合=2F·cos30°=√3·kq²/a²,方向沿角平分线向外。</p>
+      <p class="trap">陷阱:把两个力大小直接相加;夹角判错;等大两力夹角 120° 合力=单个力没看出来。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 三电荷共线平衡</h3>
+      <p><b class="tag">触发信号:</b>三个点电荷在一条直线上都静止(平衡),求第三个电荷的位置/电荷量/符号。</p>
+      <p><b class="tag">标准动作:</b>用『两同夹异、近小远大』先定位置区间 → 列 kQ₁q/x²=kQ₂q/(L−x)² → x/(L−x)=√(Q₁/Q₂) 解位置;要三个都平衡再列两端电荷的方程定 q。</p>
+      <p><b class="tag">示例(带解):</b>Q₁=+q、Q₂=+4q 相距 L,中间放 Q₃ 使 Q₃ 平衡。x/(L−x)=√(1/4)=1/2 → x=L/3(离小电荷 Q₁ 近)。Q₃ 位置只由 Q₁、Q₂ 定,与其电荷无关。</p>
+      <p class="trap">陷阱:位置算成离大电荷近(反了);中间电荷符号:两端同号则中间放异号才能三者都平衡。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 带电小球平衡(库仑力+重力+绳)</h3>
+      <p><b class="tag">触发信号:</b>绝缘线悬挂带电小球,旁有电荷使其偏离竖直;求电荷量、距离、绳张力或偏角。</p>
+      <p><b class="tag">标准动作:</b>受力分析(mg、T、F 三力)→ 正交分解或矢量三角形 → tanθ=F/mg → 代库仑定律求未知量。</p>
+      <p><b class="tag">示例(带解):</b>小球 m=0.01kg,g=10,绳偏离竖直 45°,库仑力水平。F=mg·tan45°=0.01×10×1=0.1N。若另一电荷 q₂ 距离 r=0.3m,q₁=q₂=q,则 kq²/r²=0.1 → q²=0.1×0.09/(9×10⁹)=10⁻¹² → q=10⁻⁶C。</p>
+      <p class="trap">陷阱:把绳张力当成 mg;偏角对应的力关系搞反(tanθ=F/mg 不是 mg/F);漏画某个力。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>接触后电荷平分</b>只对『完全相同(等大)的金属球』成立,且分的是<b>代数和</b>(异号先中和)。做题先分电荷再算力!</p>
+      <p class="trap">② 库仑定律<b>只适用于真空中的点电荷</b>。大带电球靠很近时电荷分布改变,不能直接套公式。</p>
+      <p class="trap">③ 算力大小时 q₁、q₂ 代<b>电荷量绝对值</b>;方向用『同斥异吸』另判,别把负号代进去算出负力。</p>
+      <p class="trap">④ 库仑力是<b>矢量</b>,多电荷受力不能大小直接相加,必须<b>矢量合成</b>。</p>
+      <p class="trap">⑤ 三电荷平衡『<b>近小远大</b>』:被平衡电荷离小电荷近、离大电荷远;别记反。位置 x/(L−x)=√(Q₁/Q₂)。</p>
+      <p class="trap">⑥ 中间电荷的平衡位置<b>只由两端电荷决定</b>,与它自身电荷量、正负无关。</p>
+      <p class="trap">⑦ 悬挂小球:绳张力 T ≠ mg;用 tanθ=F/mg 消去 T。三力平衡要么正交分解要么用力三角形。</p>
+      <p class="trap">⑧ 库仑力方向永远<b>沿两电荷连线</b>,一对作用力等大反向(牛三),与两电荷是否相等无关。</p>
+      <p class="trap">⑨ 元电荷 e=1.6×10⁻¹⁹C 是电荷量最小单元,任何带电量是它的整数倍;别把 e 当成电子(e 是量,电子是粒子)。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 库仑定律与万有引力是『同一副骨架』:</b> F=kq₁q₂/r² 和 F=Gm₁m₂/r² 结构完全一样(平方反比、正比于两『源』之积)。区别只有:引力恒吸、库仑有斥;引力常量极小、库仑常量极大。把静电力当『会排斥的引力』,很多结论(如壳层定理、平方反比场的通量)可直接迁移。</p>
+      <p style="margin:8px 0"><b>② 平衡问题先『定性』再『定量』:</b> 三电荷平衡、悬挂小球,先用『同斥异吸+近小远大』判断出方向和大致位置,再列方程。定性判断对了,方程只是收尾;定性错了,方程再对也白搭。养成先画受力图、标方向的习惯。</p>
+      <p style="margin:8px 0"><b>③ 『先分电荷再算力』是接触类题的命门:</b> 题目让球接触往往是为了改变电荷量制造陷阱。看到『接触』两字,立刻写 q′=(Q₁+Q₂)/2,再往下算。相同球接触多次、或与多个球依次接触,一步步取代数和平分。</b></p>
+      <p style="margin:8px 0"><b>④ 力三角形 vs 正交分解——挑快的用:</b> 悬挂小球三力平衡,若给了角度用 tanθ=F/mg 最快;若给了边长比例(相似三角形),直接对应边成比例,连角度都不用求。识别题目给的是角还是长度,选对工具省一半时间。</p>
+      <p style="margin:8px 0"><b>⑤ 比例法秒杀选择题:</b> 库仑定律里 F∝q₁q₂/r²。电荷或距离成倍变化时,不必代 k 硬算,直接用比例:『电荷各翻倍、距离翻倍 → F 变 4/4=1 倍(不变)』。平方反比让 r 的变化被放大,这是估算的利器。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:静电场(场强/电势)攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+function txt(p,x,y,s,fill,anc,fw){const t=el(p,'text',{x:x,y:y,'font-size':s,'font-weight':fw||900,fill:fill||INK});if(anc)t.setAttribute('text-anchor',anc);return t;}
+
+/* ===== 互动1:三种起电方式 ===== */
+(function(){
+  const svg=document.getElementById('chargeSvg');const note=document.getElementById('chNote');
+  let mode=0,anim=0,running=false;
+  function sign(cx,cy,pos){el(svg,'circle',{cx:cx,cy:cy,r:9,fill:pos?RED:BLUE,stroke:INK,'stroke-width':2});txt(svg,cx,cy+4,12,'#fff','middle').textContent=pos?'+':'−';}
+  function body(x,y,w,h,fill,label){el(svg,'rect',{x:x,y:y,width:w,height:h,fill:fill,stroke:INK,'stroke-width':3,rx:8});txt(svg,x+w/2,y-8,13,INK,'middle').textContent=label;}
+  function draw(){
+    clr(svg);
+    // progress p: 0 before, 1 after
+    const p=running?anim:(anim);
+    if(mode===0){ // 摩擦:电子从玻璃棒转到毛皮 (示意:左物给右物电子)
+      body(120,90,120,70,'#dcd2b8','物体A(玻璃)');
+      body(400,90,120,70,'#c8b89a','物体B(毛皮)');
+      // A loses electrons -> becomes +, B gains -> becomes -
+      // draw electrons moving
+      const nA=3,nB=3;
+      for(let i=0;i<3;i++){
+        // stationary + on A grows as electrons leave
+        sign(150+i*30,120,true);
+      }
+      for(let i=0;i<3;i++){
+        const sx=150+i*30, sy=140, ex=430+i*30, ey=140;
+        const cx=sx+(ex-sx)*p, cy=sy;
+        sign(cx,cy,false);
+      }
+      for(let i=0;i<3;i++){sign(430+i*30,120, p>0.9? false : true===false? false:true);}
+      note.innerHTML=p<0.5?'摩擦中:电子从 A 转移到 B…':'⚡ <b>摩擦起电:</b> A 失去电子带<b>正电</b>,B 得到电子带<b>负电</b>。两物带等量异种电荷,总电荷守恒(和仍为0)。';
+      note.style.borderColor=ORANGE;
+    } else if(mode===1){ // 接触:带电球接触不带电导体,同种平分
+      el(svg,'circle',{cx:200,cy:130,r:38,fill:'#dcd2b8',stroke:INK,'stroke-width':3});txt(svg,200,180,13,INK,'middle').textContent='带电球A';
+      el(svg,'circle',{cx:460,cy:130,r:38,fill:'#dcd2b8',stroke:INK,'stroke-width':3});txt(svg,460,180,13,INK,'middle').textContent='导体B';
+      // A starts with 6 +, share to 3 each
+      const totA = p<0.5? 6 : 3; const totB = p<0.5? 0 : 3;
+      for(let i=0;i<totA;i++){const a=i/6*6.28; sign(200+22*Math.cos(a),130+22*Math.sin(a),true);}
+      for(let i=0;i<totB;i++){const a=i/6*6.28; sign(460+22*Math.cos(a),130+22*Math.sin(a),true);}
+      // contact bridge
+      if(p<0.5){el(svg,'line',{x1:238,y1:130,x2:422,y2:130,stroke:INK,'stroke-width':4,'stroke-dasharray':'6 5'});txt(svg,330,120,12,INK,'middle').textContent='接触';}
+      note.innerHTML=p<0.5?'接触中:正电荷从 A 流向 B…':'⚡ <b>接触起电:</b> 带电球与导体接触,电荷转移;相同球接触后<b>平分</b>(各带同种电荷)。总电荷守恒。';
+      note.style.borderColor=GREEN;
+    } else { // 感应:带电体靠近,导体近端异种远端同种,不接触
+      // charged rod (negative) on left
+      el(svg,'rect',{x:90,y:110,width:90,height:40,fill:'#c8b89a',stroke:INK,'stroke-width':3,rx:6});txt(svg,135,100,12,INK,'middle').textContent='带电棒(−)';
+      for(let i=0;i<3;i++)sign(105+i*30,130,false);
+      // conductor (metal bar) on right
+      el(svg,'rect',{x:300,y:100,width:220,height:60,fill:'#dcd2b8',stroke:INK,'stroke-width':3,rx:8});txt(svg,410,180,13,INK,'middle').textContent='导体(不接触)';
+      // induced: near end (left) positive, far end (right) negative
+      const shift = p; // 0..1 how much separation
+      const nearX = 320, farX=500;
+      for(let i=0;i<3;i++){
+        // + accumulate near, - accumulate far as p grows; before: mixed in middle
+        const px = 410 + (nearX-410)*shift + i*14 -14;
+        sign(px, 130, true);
+        const fx = 410 + (farX-410)*shift + i*14 -14;
+        sign(fx, 130, false);
+      }
+      note.innerHTML=p<0.4?'带电棒靠近,导体内电荷重新分布…':'⚡ <b>感应起电:</b> 带电棒(−)靠近,导体<b>近端感应出正电、远端负电</b>(异种被吸近)。不接触,导体整体仍电中性(电荷守恒)。';
+      note.style.borderColor=VIO;
+    }
+  }
+  function loop(){if(!running)return;anim+=0.03;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.querySelectorAll('.cmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.cmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;anim=0;running=false;draw();});
+  document.getElementById('chGo').onclick=()=>{anim=0;running=true;requestAnimationFrame(loop);};
+  draw();
+})();
+
+/* ===== 互动2:接触带电平分 ===== */
+(function(){
+  const svg=document.getElementById('shareSvg');const note=document.getElementById('shNote');
+  const Q1=document.getElementById('shQ1'),Q2=document.getElementById('shQ2');
+  let q1=6,q2=-2,phase=0,anim=0,running=false;
+  function ball(cx,q,label){
+    el(svg,'circle',{cx:cx,cy:120,r:44,fill:'#dcd2b8',stroke:INK,'stroke-width':4});
+    txt(svg,cx,175,14,INK,'middle').textContent=label;
+    const n=Math.min(Math.abs(q),6);const pos=q>0;
+    for(let i=0;i<n;i++){const a=i/6*6.28+0.4;const rr=26; if(q!==0)sign(cx+rr*Math.cos(a),120+rr*Math.sin(a),pos);}
+    txt(svg,cx,126,17,q>0?RED:(q<0?BLUE:INK),'middle').textContent=(q>0?'+':'')+q+'C';
+  }
+  function sign(cx,cy,pos){el(svg,'circle',{cx:cx,cy:cy,r:8,fill:pos?RED:BLUE,stroke:INK,'stroke-width':1.5});txt(svg,cx,cy+3.5,11,'#fff','middle').textContent=pos?'+':'−';}
+  function draw(){
+    clr(svg);
+    const after=(q1+q2)/2;
+    let showQ1=q1, showQ2=q2;
+    if(phase===1){showQ1=after;showQ2=after;}
+    const gap = running? 180 - anim*20 : (phase===1?180:180);
+    ball(230,showQ1,'球A');
+    ball(470,showQ2,'球B');
+    if(phase===1){
+      el(svg,'line',{x1:274,y1:120,x2:426,y2:120,stroke:INK,'stroke-width':3,'stroke-dasharray':'7 5'});
+      note.innerHTML='接触后各球 = ('+((q1>0?'+':'')+q1)+' + '+((q2>0?'+':'')+q2)+')/2 = <b>'+(after>0?'+':'')+after+'C</b>'+(after===0?'(完全中和)':'')+'。异号先中和,再平分代数和。';
+      note.style.borderColor=GREEN;
+    } else {
+      txt(svg,350,60,15,INK,'middle',900).textContent='接触前(点▶接触)';
+      note.innerHTML='设 Q₁、Q₂,点『接触再分开』看平分结果。规则:各球 = (Q₁+Q₂)/2。';
+      note.style.borderColor=INK;
+    }
+  }
+  function loop(){if(!running)return;anim+=0.05;if(anim>=1){running=false;phase=1;}draw();requestAnimationFrame(loop);}
+  Q1.oninput=Q2.oninput=()=>{q1=+Q1.value;q2=+Q2.value;phase=0;anim=0;running=false;draw();};
+  document.getElementById('shGo').onclick=()=>{q1=+Q1.value;q2=+Q2.value;phase=0;anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('shReset').onclick=()=>{phase=0;anim=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动3:库仑定律 ===== */
+(function(){
+  const svg=document.getElementById('coulSvg');
+  const Q1=document.getElementById('cq1'),Q2=document.getElementById('cq2'),R=document.getElementById('cr');
+  const vq1=document.getElementById('cvq1'),vq2=document.getElementById('cvq2'),vr=document.getElementById('cvr'),vf=document.getElementById('cvf');
+  const k=9e9;
+  function charge(cx,q,name){
+    const rr=14+Math.abs(q)*4;
+    const col=q>0?RED:(q<0?BLUE:'#999');
+    el(svg,'circle',{cx:cx,cy:140,r:rr,fill:col,stroke:INK,'stroke-width':3});
+    txt(svg,cx,145,15,'#fff','middle').textContent=(q>0?'+':(q<0?'−':''))+Math.abs(q);
+    txt(svg,cx,140+rr+18,13,INK,'middle').textContent=name;
+  }
+  function arrow(x,y,dx,col){
+    const x2=x+dx;
+    el(svg,'line',{x1:x,y1:y,x2:x2,y2:y,stroke:col,'stroke-width':5});
+    const s=dx>0?1:-1;
+    el(svg,'polygon',{points:(x2)+','+(y-8)+' '+(x2)+','+(y+8)+' '+(x2+s*13)+','+y,fill:col,stroke:INK,'stroke-width':1.5});
+  }
+  function draw(){
+    clr(svg);
+    const q1=+Q1.value,q2=+Q2.value,r=+R.value;
+    const cx=350;const x1=cx-r/2, x2=cx+r/2;
+    // baseline connecting line
+    el(svg,'line',{x1:60,y1:140,x2:640,y2:140,stroke:'#bbb','stroke-width':2,'stroke-dasharray':'4 4'});
+    // distance marker
+    el(svg,'line',{x1:x1,y1:200,x2:x2,y2:200,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:x1,y1:194,x2:x1,y2:206,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:x2,y1:194,x2:x2,y2:206,stroke:INK,'stroke-width':2});
+    txt(svg,cx,220,13,INK,'middle').textContent='r';
+    // force magnitude (relative). scale so F~ reasonable arrow length
+    let F=0,dir=0; // dir: +1 repel, -1 attract
+    if(q1!==0&&q2!==0){
+      const rm=r/100; // "meters"
+      F = k*Math.abs(q1*1e-6)*Math.abs(q2*1e-6)/(rm*rm); // Newtons-ish
+      dir = (q1*q2>0)? 1 : -1;
+    }
+    // arrow length: log-ish scale, clamp
+    let L = F>0? Math.min(140, 22*Math.pow(F/2,0.5)+18) : 0;
+    // on charge1: repel -> point left(-), attract -> point right(+toward q2)
+    const d1 = dir>0? -L : L;   // force on q1
+    const d2 = dir>0?  L : -L;  // force on q2 (opposite)
+    charge(x1,q1,'q₁');charge(x2,q2,'q₂');
+    if(F>0){
+      arrow(x1,90,d1,'#111');
+      arrow(x2,90,d2,'#111');
+      txt(svg,x1+d1/2,80,12,INK,'middle').textContent='F';
+      txt(svg,x2+d2/2,80,12,INK,'middle').textContent='F';
+      txt(svg,cx,45,15,dir>0?RED:GREEN,'middle',900).textContent=dir>0?'同种电荷 → 相斥(背离)':'异种电荷 → 相吸(指向对方)';
+    } else {
+      txt(svg,cx,45,14,'#999','middle').textContent='有一个电荷为 0,无库仑力';
+    }
+    vq1.textContent=q1;vq2.textContent=q2;vr.textContent=(r/10).toFixed(0);
+    vf.textContent=F>0?F.toExponential(1):'0';
+  }
+  Q1.oninput=Q2.oninput=R.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:矢量合成 ===== */
+(function(){
+  const svg=document.getElementById('sumSvg');
+  const TH=document.getElementById('suTheta'),RA=document.getElementById('suRatio');
+  const vF1=document.getElementById('svF1'),vF2=document.getElementById('svF2'),vTh=document.getElementById('svTh'),vF=document.getElementById('svF');
+  function arrow(p,x1,y1,x2,y2,col,w){
+    el(p,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':w||4});
+    const ang=Math.atan2(y2-y1,x2-x1);const s=13;
+    el(p,'polygon',{points:x2+','+y2+' '+(x2-s*Math.cos(ang-0.4))+','+(y2-s*Math.sin(ang-0.4))+' '+(x2-s*Math.cos(ang+0.4))+','+(y2-s*Math.sin(ang+0.4)),fill:col,stroke:INK,'stroke-width':1});
+  }
+  function draw(){
+    clr(svg);
+    const th=+TH.value*Math.PI/180;const ratio=+RA.value;
+    const ox=200,oy=180;const F1=110,F2=110*ratio;
+    // central charge
+    el(svg,'circle',{cx:ox,cy:oy,r:16,fill:VIO,stroke:INK,'stroke-width':3});txt(svg,ox,oy+5,13,'#fff','middle').textContent='q';
+    // F1 along +x (right); F2 at angle th above
+    const f1x=ox+F1, f1y=oy;
+    const f2x=ox+F2*Math.cos(th), f2y=oy-F2*Math.sin(th);
+    // resultant
+    const rx=ox+(F1+F2*Math.cos(th)), ry=oy-(F2*Math.sin(th));
+    // parallelogram guide lines
+    el(svg,'line',{x1:f1x,y1:f1y,x2:rx,y2:ry,stroke:'#bbb','stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'line',{x1:f2x,y1:f2y,x2:rx,y2:ry,stroke:'#bbb','stroke-width':2,'stroke-dasharray':'5 4'});
+    arrow(svg,ox,oy,f1x,f1y,BLUE,4);txt(svg,f1x+8,f1y+5,13,BLUE,'start').textContent='F₁';
+    arrow(svg,ox,oy,f2x,f2y,GREEN,4);txt(svg,f2x+6,f2y-6,13,GREEN,'start').textContent='F₂';
+    arrow(svg,ox,oy,rx,ry,RED,5);txt(svg,rx+6,ry-4,14,RED,'start').textContent='合力F';
+    const Fres=Math.sqrt(F1*F1+F2*F2+2*F1*F2*Math.cos(th));
+    vF1.textContent='1.0';vF2.textContent=ratio.toFixed(1);vTh.textContent=(+TH.value)+'°';
+    vF.textContent=(Fres/F1).toFixed(2);
+    if(Math.abs(+TH.value-120)<4&&Math.abs(ratio-1)<0.06){
+      txt(svg,350,40,14,RED,'middle',900).textContent='θ=120° 且等大 → 合力=单个力!(经典陷阱)';
+    }
+  }
+  TH.oninput=RA.oninput=draw;draw();
+})();
+
+/* ===== 互动5:三电荷共线平衡 ===== */
+(function(){
+  const svg=document.getElementById('eqSvg');
+  const Q1=document.getElementById('eqQ1'),Q2=document.getElementById('eqQ2');
+  const vQ1=document.getElementById('evQ1'),vQ2=document.getElementById('evQ2'),vX=document.getElementById('evX'),vChk=document.getElementById('evChk');
+  function draw(){
+    clr(svg);
+    const q1=+Q1.value,q2=+Q2.value;
+    const X0=90,X1=610,L=X1-X0;const y=130;
+    // baseline
+    el(svg,'line',{x1:X0-30,y1:y,x2:X1+30,y2:y,stroke:INK,'stroke-width':3});
+    // position: x/(L-x)=sqrt(q1/q2) -> x = L*sqrt(q1)/(sqrt(q1)+sqrt(q2))
+    const s1=Math.sqrt(q1),s2=Math.sqrt(q2);
+    const frac=s1/(s1+s2);
+    const px=X0+frac*L;
+    // end charges (both +)
+    const r1=12+q1*2, r2=12+q2*2;
+    el(svg,'circle',{cx:X0,cy:y,r:r1,fill:RED,stroke:INK,'stroke-width':3});txt(svg,X0,y+5,14,'#fff','middle').textContent='+';
+    txt(svg,X0,y+r1+18,13,INK,'middle').textContent='Q₁='+q1;
+    el(svg,'circle',{cx:X1,cy:y,r:r2,fill:RED,stroke:INK,'stroke-width':3});txt(svg,X1,y+5,14,'#fff','middle').textContent='+';
+    txt(svg,X1,y+r2+18,13,INK,'middle').textContent='Q₂='+q2;
+    // middle charge q (negative shown)
+    el(svg,'circle',{cx:px,cy:y,r:13,fill:BLUE,stroke:INK,'stroke-width':3});txt(svg,px,y+5,13,'#fff','middle').textContent='q';
+    txt(svg,px,y-24,12,INK,'middle').textContent='平衡位置';
+    // force arrows on q: both toward end charges if q negative(attracted). equal length shows balance
+    const AL=42;
+    // toward Q1 (left)
+    el(svg,'line',{x1:px,y1:y+40,x2:px-AL,y2:y+40,stroke:INK,'stroke-width':4});
+    el(svg,'polygon',{points:(px-AL)+','+(y+32)+' '+(px-AL)+','+(y+48)+' '+(px-AL-12)+','+(y+40),fill:INK});
+    el(svg,'line',{x1:px,y1:y+40,x2:px+AL,y2:y+40,stroke:INK,'stroke-width':4});
+    el(svg,'polygon',{points:(px+AL)+','+(y+32)+' '+(px+AL)+','+(y+48)+' '+(px+AL+12)+','+(y+40),fill:INK});
+    txt(svg,px,y+72,12,INK,'middle').textContent='两侧力等大 → 平衡';
+    // distances
+    txt(svg,(X0+px)/2,y-8,12,GREEN,'middle').textContent='x';
+    txt(svg,(px+X1)/2,y-8,12,ORANGE,'middle').textContent='L−x';
+    // near/far annotation
+    const smaller=q1<q2?'Q₁':(q2<q1?'Q₂':'相等');
+    txt(svg,350,40,14,VIO,'middle',900).textContent=q1===q2?'两端相等 → 平衡点在正中间':('近小远大:离小电荷 '+smaller+' 更近');
+    const xd=frac*L, ld=(1-frac)*L;
+    vQ1.textContent=q1;vQ2.textContent=q2;
+    vX.textContent=(frac*100).toFixed(0)+'%L';
+    // verify F1=F2 numerically: k q1 q /x^2 vs k q2 q /(L-x)^2 (relative)
+    const f1=q1/(xd*xd), f2=q2/(ld*ld);
+    vChk.textContent=(f1/f2).toFixed(2);
+  }
+  Q1.oninput=Q2.oninput=draw;draw();
+})();
+
+/* ===== 互动6:悬挂小球平衡 ===== */
+(function(){
+  const svg=document.getElementById('ballSvg');
+  const F=document.getElementById('baF'),MG=document.getElementById('baMg');
+  const vF=document.getElementById('bvF'),vMg=document.getElementById('bvMg'),vTh=document.getElementById('bvTh'),vT=document.getElementById('bvT');
+  function arrow(x1,y1,x2,y2,col,lab,lx,ly){
+    el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':4});
+    const ang=Math.atan2(y2-y1,x2-x1);const s=12;
+    el(svg,'polygon',{points:x2+','+y2+' '+(x2-s*Math.cos(ang-0.4))+','+(y2-s*Math.sin(ang-0.4))+' '+(x2-s*Math.cos(ang+0.4))+','+(y2-s*Math.sin(ang+0.4)),fill:col,stroke:INK,'stroke-width':1});
+    if(lab)txt(svg,lx,ly,13,col,'middle',900).textContent=lab;
+  }
+  function draw(){
+    clr(svg);
+    const f=+F.value,mg=+MG.value;
+    const theta=Math.atan2(f,mg); // tanθ=F/mg
+    const thDeg=theta*180/Math.PI;
+    // pivot
+    const px=180,py=40;const Lr=150;
+    el(svg,'line',{x1:60,y1:py,x2:300,y2:py,stroke:INK,'stroke-width':5});
+    for(let i=70;i<300;i+=18)el(svg,'line',{x1:i,y1:py,x2:i-10,y2:py-10,stroke:INK,'stroke-width':2});
+    // ball position
+    const bx=px+Lr*Math.sin(theta), by=py+Lr*Math.cos(theta);
+    // vertical dashed
+    el(svg,'line',{x1:px,y1:py,x2:px,y2:py+Lr+10,stroke:'#bbb','stroke-width':2,'stroke-dasharray':'5 4'});
+    // string
+    el(svg,'line',{x1:px,y1:py,x2:bx,y2:by,stroke:INK,'stroke-width':3});
+    // angle arc label
+    txt(svg,px+16,py+34,13,VIO,'start',900).textContent='θ='+thDeg.toFixed(0)+'°';
+    // ball
+    el(svg,'circle',{cx:bx,cy:by,r:16,fill:BLUE,stroke:INK,'stroke-width':3});txt(svg,bx,by+5,13,'#fff','middle').textContent='q';
+    // forces on ball
+    arrow(bx,by,bx,by+f*0.9,RED,'mg',bx-18,by+f*0.9);            // gravity down
+    arrow(bx,by,bx+f*0.9,by,ORANGE,'F',bx+f*0.9+8,by+4);          // coulomb horizontal (push right)
+    // tension along string toward pivot
+    const tlen=Math.sqrt(f*f+mg*mg)*0.9;
+    const tx=bx-(bx-px)/Lr*Math.min(tlen,Lr-10), ty=by-(by-py)/Lr*Math.min(tlen,Lr-10);
+    arrow(bx,by,tx,ty,GREEN,'T',(bx+tx)/2-10,(by+ty)/2);
+    // right: force triangle
+    const ox=460,oy=90;const sc=1.0;
+    txt(svg,540,55,13,INK,'middle',900).textContent='力三角形(封闭)';
+    // mg down
+    arrow(ox,oy,ox,oy+mg*sc,RED,null);txt(svg,ox-16,oy+mg*sc/2,12,RED,'middle',900).textContent='mg';
+    // F horizontal from bottom of mg
+    arrow(ox,oy+mg*sc,ox+f*sc,oy+mg*sc,ORANGE,null);txt(svg,ox+f*sc/2,oy+mg*sc+16,12,ORANGE,'middle',900).textContent='F';
+    // T closing (from tip of F back to start)
+    arrow(ox+f*sc,oy+mg*sc,ox,oy,GREEN,null);txt(svg,ox+f*sc/2+16,oy+mg*sc/2-6,12,GREEN,'middle',900).textContent='T';
+    txt(svg,540,oy+mg*sc+40,12,INK,'middle',700).textContent='tanθ = F / mg';
+    vF.textContent=f.toFixed(0);vMg.textContent=mg.toFixed(0);vTh.textContent=thDeg.toFixed(0)+'°';
+    vT.textContent=Math.sqrt(f*f+mg*mg).toFixed(0);
+  }
+  F.oninput=MG.oninput=draw;draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 库仑定律的内容与公式?适用条件是什么?",a:"真空中两点电荷间作用力与电荷量乘积成正比、与距离平方成反比,方向沿连线。F=kq₁q₂/r²,k=9×10⁹N·m²/C²。适用条件:真空(空气近似)中的点电荷。"},
+ {q:"2. 元电荷是多少?它和电子是一回事吗?",a:"元电荷 e=1.6×10⁻¹⁹C,是最小的电荷量单元,任何带电量都是它的整数倍。它是『电荷量』,电子是『粒子』,电子带的电荷量大小等于 e(为 −e)。"},
+ {q:"3. 三种起电方式各自的原理和结果?",a:"摩擦起电:电子转移,两物带等量异种电荷;接触起电:电荷转移,两物带同种电荷(相同球平分);感应起电:不接触,近端异种、远端同种。本质都是电荷转移/重新分布,总电荷守恒。"},
+ {q:"4. 两个相同金属球,+8C 与 −2C 接触后各带多少电荷?",a:"接触后各球 = (Q₁+Q₂)/2 = (8−2)/2 = +3C。异号先中和,再平分代数和(必须是相同的球)。"},
+ {q:"5. 库仑定律里 q₁、q₂ 代绝对值还是带符号?为什么?",a:"求力大小时代电荷量绝对值,方向另用『同种相斥、异种相吸』判断。别把负号代进公式算出『负的力』,方向靠判断而非符号。"},
+ {q:"6. 两个相同点电荷,距离变为原来的3倍,库仑力变为原来的几分之几?",a:"F∝1/r²,距离变3倍,力变为原来的 1/9(平方反比)。"},
+ {q:"7. 一个电荷同时受两个大小相等的库仑力,夹角120°,合力多大?",a:"F合=√(F²+F²+2F·F·cos120°)=√(2F²−F²)=F。合力等于单个力大小,方向沿两力角平分线。这是经典陷阱。"},
+ {q:"8. 三点电荷共线平衡,被平衡的电荷离大电荷近还是小电荷近?",a:"离小电荷近、离大电荷远(近小远大)。因为 kQ₁q/r₁²=kQ₂q/r₂² 要求 r∝√Q,即 x/(L−x)=√(Q₁/Q₂)。"},
+ {q:"9. Q₁=+q、Q₂=+4q 相距L,中间放电荷使其平衡,位置在哪?",a:"x/(L−x)=√(q/4q)=1/2 → x=L/3(离小电荷 Q₁ 近)。中间电荷的位置只由两端电荷决定,与它自身电荷量和正负无关。"},
+ {q:"10. 悬挂带电小球,库仑力水平、绳偏角θ,力关系是什么?",a:"三力(mg、T、F)平衡:水平 Tsinθ=F,竖直 Tcosθ=mg,所以 tanθ=F/mg。张力 T≠mg,用 tanθ 消去 T。"},
+ {q:"11. 小球 m=0.01kg,g=10,绳偏离竖直45°,库仑力水平,求库仑力F。",a:"F=mg·tan45°=0.01×10×1=0.1N。若再知距离可代 F=kq₁q₂/r² 求电荷。"},
+ {q:"12. 相同球 A(+6μC) 与 B(−2μC) 接触后相距 0.3m,求库仑力(k=9×10⁹)。",a:"接触后各带 q′=(6−2)/2=+2μC=2×10⁻⁶C。F=9×10⁹×(2×10⁻⁶)²/0.3²=9×10⁹×4×10⁻¹²/0.09=0.4N,同种相斥。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

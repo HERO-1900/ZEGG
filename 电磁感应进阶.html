@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电磁感应进阶(法拉第·自感·涡流) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E86A17;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}h2.r::before{background:var(--red)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电磁感应进阶(法拉第·自感·涡流)</h1>
+    <p class="lead">基础的「来拒去留」告诉你感应电流的<b>方向</b>;这一页往深里挖:感应电动势到底<b>多大</b>(法拉第定律定量)、切割磁感线的 ε=BLv、感应<b>电荷量</b> q=ΔΦ/R(和时间无关!)、通断电的自感现象、以及块状导体里的涡流。这些是电磁感应大题真正拉分的地方。</p>
+
+    <div class="say">🗣️ <b>一句人话总览:</b> 磁通量 Φ 就是「穿过线圈的磁感线条数」。<b>只要 Φ 在变,就会冒出感应电动势 ε</b>,变得越快 ε 越大——这就是法拉第定律 ε=nΔΦ/Δt。方向靠楞次定律(来拒去留)判。切割磁感线是它的特例 ε=BLv。自感是线圈<b>对自己电流变化的阻挠</b>(通电时不让你猛增、断电时不让你骤减),涡流是<b>整块金属</b>里转圈的感应电流。抓住一句:<b>ε 只认『Φ 变化的快慢』,不认 Φ 本身有多大。</b></div>
+
+    <div class="keybox"><b>五个核心量速记:</b> ① <b>磁通量 Φ=BS</b>(B⊥面时),单位 Wb;② <b>感应电动势 ε=nΔΦ/Δt</b>(平均值,用图像斜率取瞬时);③ <b>切割 ε=BLv</b>(v⊥B⊥L 时);④ <b>感应电荷 q=ΔΦ/R=nΔΦ/R</b>(只看 ΔΦ 和 R,与快慢无关!);⑤ <b>自感系数 L</b>,线圈储能 E=½LI²。方向永远靠楞次定律。</div>
+
+    <h2>① 磁通量 Φ 与它的变化 ΔΦ</h2>
+    <p class="lead">一切电磁感应的源头是<b>磁通量的变化</b>。先把 Φ 和 ΔΦ 分清楚——这是全章最容易混的两个量。</p>
+    <div class="card">
+      <div class="eq">Φ = B·S　(当 B 垂直穿过面积 S 时)</div>
+      <p style="margin:8px 0"><b>Φ 是状态量</b>(某一刻穿过的磁感线条数),<b>ΔΦ=Φ₂−Φ₁ 是变化量</b>(前后两个状态之差)。产生感应电动势的是 ΔΦ,不是 Φ!Φ 再大,只要不变,就没有 ε。</p>
+      <h3>让 Φ 变化的三种方式</h3>
+      <table>
+        <tr><th>方式</th><th>怎么变的</th><th>典型题</th></tr>
+        <tr><td>B 变</td><td>磁场强度随时间变(B-t 给定)</td><td>螺线管中放小线圈</td></tr>
+        <tr><td>S 变</td><td>回路面积变化(导体棒滑动)</td><td>导轨切割磁感线</td></tr>
+        <tr><td>夹角变</td><td>线圈转动,B 与面法线夹角 θ 变</td><td>交流发电机</td></tr>
+      </table>
+      <p style="margin:8px 0">一般式:<b>Φ = B·S·cosθ</b>(θ 是 B 与线圈平面法线的夹角)。B 平行于线圈平面时 θ=90°,Φ=0。</p>
+      <p class="trap">⚠ Φ 与 ΔΦ 是两码事!「磁通量最大时感应电动势最大」是错的——Φ 最大(线圈平面⊥B)时它<b>变化率反而为 0</b>,ε=0;Φ 过零(线圈平面∥B)时变化最快,ε 最大。</p>
+    </div>
+
+    <h2 class="b">② 法拉第电磁感应定律:ε 到底多大</h2>
+    <div class="card">
+      <div class="eq">ε = n·ΔΦ/Δt　(n 为匝数)</div>
+      <p style="margin:8px 0"><b>感应电动势的大小 = 匝数 × 磁通量的变化率</b>。核心是「<b>变化率</b>」——变得越快 ε 越大,和 Φ 本身多大无关。</p>
+      <h3>平均值 vs 瞬时值(必分清)</h3>
+      <p style="margin:6px 0"><b>① 平均 ε:</b>用 ΔΦ/Δt(一段时间内的平均变化率)。要「一段时间的平均电动势/平均电流/电荷量」就用它。</p>
+      <p style="margin:6px 0"><b>② 瞬时 ε:</b>某一时刻的值 = <b>Φ-t 图像在该点的切线斜率</b>×n。要「某时刻的电动势」就取斜率;线性变化时平均=瞬时。</p>
+      <div class="mono">ε = n·|Φ-t 图斜率|　→ 斜率越陡,ε 越大;斜率为 0(水平段),ε=0。</div>
+      <p class="trap">⚠ 图像题命门:Φ-t 图求 ε 用<b>斜率</b>(不是纵坐标值!);B-t 图若面积 S 不变,ε=n·S·|B-t 斜率|。别把 Φ 的值当成 ε。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 法拉第定律:Φ 变化 → ε,Φ-t 图斜率就是 ε</div>
+      <svg id="farSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="farmode on" data-m="0">Φ 匀速增大(斜率恒定)</button>
+        <button class="farmode" data-m="1">Φ 先快后慢(斜率变小)</button>
+        <button class="farmode" data-m="2">Φ 先增后不变(斜率→0)</button>
+      </div>
+      <label style="font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;margin-top:6px">拖动看某时刻 t: <input id="farT" type="range" min="0" max="100" value="30" step="1" style="accent-color:var(--accent);width:180px"></label>
+      <div class="live">
+        <div><b>此刻 Φ (Wb)</b><span id="farPhi">0</span></div>
+        <div><b>斜率 ΔΦ/Δt</b><span id="farSlope">0</span></div>
+        <div><b>瞬时 ε (V, n=1)</b><span id="farEps">0</span></div>
+        <div><b>状态</b><span id="farState">—</span></div>
+      </div>
+      <p class="small">上图 Φ-t,红点是当前 t,红切线的斜率;下条形是对应瞬时 ε。看清:Φ 大不代表 ε 大,斜率陡才 ε 大;水平段 ε=0。</p>
+    </div>
+
+    <h2 class="g">③ 导体切割磁感线:ε = BLv</h2>
+    <div class="card">
+      <div class="eq">ε = B·L·v　(v、B、L 三者两两垂直时)</div>
+      <p style="margin:8px 0">这是法拉第定律的<b>特例</b>:导体棒扫过面积的变化率 ΔS/Δt=L·v,所以 ε=B·ΔS/Δt=BLv。它是「S 变」这一类的定量公式。</p>
+      <h3>三垂直条件(缺一不可全用)</h3>
+      <p style="margin:6px 0">B ⊥ 运动平面、L ⊥ v、L ⊥ B 时,才是 ε=BLv。若 v 与 B 成角 θ,则取<b>垂直分量</b>:ε=BLv·sinθ(v 与 B 的夹角);棒斜着放要取有效长度。</p>
+      <div class="eq">一般:ε = B·L·v·sinθ　(θ 为 v 与 B 的夹角)</div>
+      <p style="margin:6px 0"><b>切割棒 = 电源:</b>切割的那根棒相当于内阻为 r 的电源,ε=BLv 是它的电动势;回路电流 I=ε/(R+r);棒受安培力 F=BIL 阻碍运动(楞次定律的力学体现)。</p>
+      <p class="trap">⚠ v 沿磁感线方向运动(v∥B)不切割,ε=0!只有「割断磁感线」才产生 ε。平动切割用 BLv,转动切割用 ε=½BL²ω(边缘线速度不均匀,取平均)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🛤 互动 2 — 导体切割 ε=BLv(调 B / L / v,看 ε 与电流)</div>
+      <canvas id="cutCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button id="cutGo">▶ 播放</button><button id="cutReset">↺ 重置</button>
+        <label>磁场 B <input id="cutB" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>棒长 L <input id="cutL" type="range" min="1" max="5" value="3" step="1"></label>
+        <label>速度 v <input id="cutV" type="range" min="1" max="6" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>ε = BLv (V)</b><span id="cutEps">0</span></div>
+        <div><b>电流 I=ε/R (A)</b><span id="cutI">0</span></div>
+        <div><b>安培力 F=BIL (N)</b><span id="cutF">0</span></div>
+        <div><b>方向(楞次)</b><span id="cutDir">—</span></div>
+      </div>
+      <p class="small">×表示磁场垂直纸面向里。棒(橙)向右切割,面积增大→Φ 增大→感应电流阻碍增大(逆时针,棒中电流向上)。ε 与 B、L、v 都成正比。</p>
+    </div>
+
+    <h2 class="o">④ 感应电流方向 & 感应电荷量 q=ΔΦ/R</h2>
+    <div class="card">
+      <h3>方向复习(两把尺子)</h3>
+      <p style="margin:6px 0"><b>① 楞次定律(来拒去留):</b>感应电流的磁场总要<b>阻碍</b>引起它的磁通量变化。Φ 增→反抗(反向),Φ 减→维持(同向)。这是万能判据。</p>
+      <p style="margin:6px 0"><b>② 右手定则(切割专用):</b>右手伸平,让磁感线穿过手心,拇指指 v(运动方向),四指指向就是棒中感应电流方向。切割题用它更快。</p>
+      <h3>感应电荷量 q(冷门但高频)</h3>
+      <div class="eq">q = ī·Δt = (ε̄/R)·Δt = n·ΔΦ/R</div>
+      <p style="margin:8px 0"><b>推导:</b>q=平均电流×时间=(ε̄/R)·Δt=(nΔΦ/Δt/R)·Δt,Δt 约掉,得 <b>q=nΔΦ/R</b>。</p>
+      <div class="keybox" style="margin:8px 0"><b>核心结论:</b> 感应电荷量 <b>q 只与磁通量变化 ΔΦ 和总电阻 R 有关,与变化的快慢(时间)无关!</b> 快慢影响的是 ε 和 I 的大小,但快电流大时间短、慢电流小时间长,电荷 q 恰好抵消不变。</div>
+      <p class="trap">⚠ 这是感应电荷题的唯一考点:问「通过某截面的电荷量」→直接 q=nΔΦ/R,别去算电流积分。ΔΦ 记得是变化量(始末磁通差),R 是回路总电阻。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 3 — 感应电荷 q=ΔΦ/R「与时间无关」演示(同样 ΔΦ,快慢不同,q 相同)</div>
+      <svg id="qSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="qGo">▶ 同时开始(慢 vs 快)</button><button id="qReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>慢过程 ε (V)</b><span id="qEpsA">0</span></div>
+        <div><b>快过程 ε (V)</b><span id="qEpsB">0</span></div>
+        <div><b>慢:q=∫I dt (C)</b><span id="qQA">0</span></div>
+        <div><b>快:q=∫I dt (C)</b><span id="qQB">0</span></div>
+      </div>
+      <p class="small">两条回路 ΔΦ 相同、R 相同,一条慢变一条快变。快的 ε 大、电流大但时间短;慢的反之。看两个电荷积分条<b>最终一样高</b>——q=ΔΦ/R 与时间无关!</p>
+    </div>
+
+    <h2 class="v">⑤ 自感现象:线圈对自己的『阻挠』</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>自感</b>:当线圈里的<b>电流变化</b>时,它自己产生的磁通量也在变,于是在<b>自己内部</b>产生感应电动势,来<b>阻碍这个电流变化</b>——线圈总是「拖后腿」的那个。</p>
+      <div class="eq">自感电动势 ε_L = L·ΔI/Δt　(L 为自感系数,单位亨利 H)</div>
+      <h3>两个经典现象</h3>
+      <p style="margin:6px 0"><b>① 通电自感——灯泡『缓亮』:</b>合开关瞬间电流要从 0 猛增,线圈反抗,产生反向自感电动势拖住电流,让电流<b>缓慢上升</b>→与线圈并联的灯泡<b>慢慢变亮</b>(不是一下子亮)。</p>
+      <p style="margin:6px 0"><b>② 断电自感——灯泡『闪亮』:</b>断开瞬间电流要从有到 0 骤减,线圈维持原电流,产生自感电动势驱动电流<b>继续流一小会儿</b>,常常经过灯泡放电,<b>灯泡先闪一下再熄灭</b>(电流可能比原来还大,所以闪得更亮)。</p>
+      <div class="keybox" style="margin:8px 0"><b>口诀:</b> 通电自感<b>阻碍电流增大</b>(缓亮)、断电自感<b>阻碍电流减小</b>(闪亮)。本质都是「反抗电流的变化」。<b>L 越大、变化越快,自感效应越强。</b></div>
+      <p style="margin:8px 0"><b>线圈储能:</b> E = ½LI²。断电时闪亮的能量就来自这里——线圈把储存的磁场能通过灯泡释放掉。</p>
+      <p class="trap">⚠ 自感不改变最终稳定电流(稳定后 ΔI/Δt=0,ε_L=0,线圈相当于纯导线),只影响<b>过渡过程</b>的快慢。断电闪亮说明能量守恒:磁场能→灯泡光热。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">💡 互动 4 — 自感:通电缓亮 / 断电闪亮(点开关看灯泡与电流曲线)</div>
+      <canvas id="selfCv" width="700" height="220"></canvas>
+      <div class="ctrl">
+        <button id="selfOn">🔌 合开关(通电自感)</button>
+        <button id="selfOff">✂ 断开关(断电自感)</button>
+        <button id="selfReset">↺ 重置</button>
+      </div>
+      <svg id="selfGraph" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small">线圈支路(紫)与灯泡支路(橙)并联。通电:电流缓升,灯泡缓亮。断电:线圈驱动电流经灯泡放电,灯泡先闪一下再灭。下图是灯泡电流随时间曲线。</p>
+    </div>
+
+    <h2 class="r">⑥ 涡流:整块金属里转圈的感应电流</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>涡流(涡电流)</b>:当<b>块状导体</b>处在变化的磁场中(或在磁场中运动),整块金属内部会产生<b>一圈圈闭合的感应电流</b>,像水的漩涡,故名涡流。本质仍是电磁感应,只是载体从「线圈」变成了「整块金属」。</p>
+      <h3>利与害</h3>
+      <table>
+        <tr><th>应用(利用发热)</th><th>危害(要抑制)</th></tr>
+        <tr><td><b>电磁炉:</b>高频变化磁场在锅底激起涡流,锅自己发热做饭</td><td><b>变压器/电机铁芯发热:</b>涡流白白消耗电能、发烫</td></tr>
+        <tr><td><b>感应冶炼炉:</b>涡流把金属熔化</td><td>抑制办法:铁芯做成<b>相互绝缘的薄硅钢片叠加</b>,切断涡流路径</td></tr>
+      </table>
+      <h3>电磁阻尼 / 电磁驱动</h3>
+      <p style="margin:6px 0"><b>电磁阻尼:</b>金属摆片在磁场中摆动,涡流产生的安培力阻碍运动,摆片<b>很快停下</b>(灵敏电流计的阻尼、磁刹车)。楞次定律:涡流总是阻碍相对运动。</p>
+      <p class="trap">⚠ 涡流发热是「利」也是「害」,看场合:电磁炉里是利用,变压器里是损耗。抑制涡流的关键是<b>增大电阻、切断回路</b>(薄片叠加、加绝缘层)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌀 互动 5 — 涡流:块状导体感应电流 + 电磁阻尼(摆片被涡流『刹住』)</div>
+      <canvas id="eddyCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <button id="eddyGo">▶ 让摆片摆动</button><button id="eddyReset">↺ 重置</button>
+        <button class="eddymode on" data-m="0">开磁场(有涡流,快停)</button>
+        <button class="eddymode" data-m="1">关磁场(无涡流,不停)</button>
+      </div>
+      <p class="small">金属摆片扫过磁场区(蓝),块内激起涡流(小圈),安培力阻碍运动→迅速衰减停下(电磁阻尼)。关掉磁场则一直摆。这就是磁刹车/电流计阻尼的原理。</p>
+    </div>
+
+    <h2 class="b">⑦ 电磁感应中的电路与能量转化</h2>
+    <div class="card">
+      <h3>把切割棒看成『电源』</h3>
+      <p style="margin:6px 0"><b>产生 ε 的导体(切割棒 / 变化磁场中的线圈)= 电源</b>,电动势 ε=BLv 或 nΔΦ/Δt,内阻是它自身电阻 r。外电路是其余电阻。</p>
+      <div class="eq">I = ε / (R + r)　,　U外 = I·R = ε − I·r</div>
+      <h3>能量转化(电磁感应的灵魂)</h3>
+      <div class="eq">外力做的功 = 电路消耗的电能 = 各电阻发热</div>
+      <p style="margin:6px 0">导体棒匀速切割:<b>拉力做的功 W=F·s 全部变成电能</b>,再变成电阻上的焦耳热 Q=I²R·t(内阻外阻按比例分)。若加速,还有一部分变动能。</p>
+      <div class="mono">功能关系:W拉 = ΔEk + Q电(各电阻焦耳热总和)</div>
+      <p class="trap">⚠ 匀速切割时安培力=拉力(合力为 0),拉力功=电能=总焦耳热;加速时拉力功=动能增量+电能。别漏了动能项或把内阻热忘掉。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 6 — Φ-t 图求瞬时/平均 ε(拖两点算平均斜率,点某处取切线)</div>
+      <svg id="graphSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="gmode on" data-m="0">瞬时:取某点切线斜率</button>
+        <button class="gmode" data-m="1">平均:两点间割线斜率</button>
+      </div>
+      <label style="font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;margin-top:6px">点/区间位置: <input id="gT" type="range" min="5" max="90" value="40" step="1" style="accent-color:var(--accent);width:180px"></label>
+      <div class="live">
+        <div><b>模式</b><span id="gMode">瞬时</span></div>
+        <div><b>斜率</b><span id="gSlope">0</span></div>
+        <div><b>ε (V, n=1)</b><span id="gEps">0</span></div>
+        <div><b>说明</b><span id="gNote" style="font-size:11px">—</span></div>
+      </div>
+      <p class="small">这是一条弯曲的 Φ-t 曲线(非线性)。瞬时模式取该点切线斜率;平均模式取区间两端连线(割线)斜率。曲线上瞬时≠平均,直线段才相等。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图(触发 + 动作 + 例题 + 陷阱)</h2>
+    <div class="card">
+      <h3>题型A — 法拉第定律求 ε(nΔΦ/Δt)</h3>
+      <p><b class="tag">触发信号:</b>给 B-t 或 Φ-t 变化,或线圈在变化磁场中,求感应电动势/电流。</p>
+      <p><b class="tag">标准动作:</b>先算 ΔΦ=Δ(BS)(哪个变算哪个)→ ε=nΔΦ/Δt(平均);要瞬时取 Φ-t 斜率;I=ε/R。</p>
+      <p><b class="tag">示例(带解):</b>n=100 匝线圈,面积 S=0.02 m²,磁场从 B₁=0.1 T 在 Δt=0.2 s 内匀升到 B₂=0.5 T。ΔΦ=S·ΔB=0.02×0.4=0.008 Wb,ε=nΔΦ/Δt=100×0.008/0.2=4 V。若 R=2 Ω,I=2 A。</p>
+      <p class="trap">陷阱:忘乘匝数 n;用 Φ 值而非 ΔΦ;线性变化平均=瞬时,非线性别拿平均当瞬时。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 切割磁感线 ε=BLv</h3>
+      <p><b class="tag">触发信号:</b>导轨上导体棒滑动、单棒双棒、求电动势/电流/安培力/功率。</p>
+      <p><b class="tag">标准动作:</b>ε=BLv(取有效长度、v⊥分量)→ I=ε/(R+r)→ 安培力 F=BIL → 匀速时拉力=安培力,功率 P=Fv=I²(R+r)。</p>
+      <p><b class="tag">示例(带解):</b>B=0.5 T,L=0.4 m,v=10 m/s,回路 R+r=2 Ω。ε=0.5×0.4×10=2 V,I=1 A,安培力 F=BIL=0.5×1×0.4=0.2 N。匀速拉力=0.2 N,输入功率 P=Fv=2 W=电功率 I²R。</p>
+      <p class="trap">陷阱:v∥B 不切割 ε=0;斜放取有效长度;双棒题两棒都可能是电源,相对切割速度才是关键。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 感应电荷量 q=ΔΦ/R</h3>
+      <p><b class="tag">触发信号:</b>问「通过某截面/电流计的电荷量」,常给磁场变化或线圈翻转、抽出。</p>
+      <p><b class="tag">标准动作:</b>直接 q=nΔΦ/R,算 ΔΦ=|Φ₂−Φ₁|(始末磁通差),不管过程快慢。</p>
+      <p><b class="tag">示例(带解):</b>n=50 匝、S=0.01 m² 线圈在 B=0.2 T 磁场中,从平面⊥B 翻转 90° 到平面∥B。Φ₁=BS=0.002 Wb,Φ₂=0,ΔΦ=0.002 Wb。R=5 Ω,q=nΔΦ/R=50×0.002/5=0.02 C。翻快翻慢结果都一样。</p>
+      <p class="trap">陷阱:去算电流×时间(白费);翻转 180° 时 ΔΦ=2BS(磁通反向,不是 0);漏匝数 n。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 自感通电/断电现象</h3>
+      <p><b class="tag">触发信号:</b>电路含大电感线圈(带铁芯),问合/断开关瞬间灯泡亮度变化。</p>
+      <p><b class="tag">标准动作:</b>通电→电流缓升,与电感并联的灯缓亮;断电→线圈维持电流经灯放电,灯先闪(可能更亮)再灭。判亮度看灯中电流怎么变。</p>
+      <p><b class="tag">示例(带解):</b>灯与线圈并联接电源,合开关:灯逐渐变亮到稳定;断开关:线圈中原电流经灯泡放电,灯突然闪亮一下(此刻电流可能大于稳态灯电流)再熄灭。</p>
+      <p class="trap">陷阱:以为通电时灯立即最亮(其实缓亮);断电闪亮是能量 ½LI² 的释放,不是电源供的;稳定后电感相当于纯导线。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 涡流应用与危害</h3>
+      <p><b class="tag">触发信号:</b>电磁炉、感应冶炼、变压器铁芯发热、电磁阻尼/磁刹车、跳环实验。</p>
+      <p><b class="tag">标准动作:</b>识别块状导体+变化磁场→涡流;判利/害;抑制靠薄片叠加、绝缘;阻尼/斥力用楞次定律(阻碍相对运动/变化)。</p>
+      <p><b class="tag">示例(带解):</b>变压器铁芯用薄硅钢片叠成并互相绝缘,目的是<b>增大涡流回路电阻、减小涡流,降低铁芯发热损耗</b>。电磁炉则反过来,故意用涡流给锅底加热。</p>
+      <p class="trap">陷阱:把涡流方向搞反(仍是楞次定律);铁芯做薄片是为减涡流不是减磁滞;电磁炉锅必须是导磁导电金属(铁磁),玻璃不行。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>Φ 与 ΔΦ 分清:</b>产生 ε 的是 ΔΦ(变化量),不是 Φ(状态量)。Φ 最大时 ε 常为 0(线圈⊥B,变化率为 0)。</p>
+      <p class="trap">② <b>平均 ε 用 ΔΦ/Δt,瞬时 ε 用斜率(或 BLv):</b>非线性变化时二者不等,别混。求某时刻用瞬时,求一段时间用平均。</p>
+      <p class="trap">③ <b>感应电荷 q=ΔΦ/R 与时间无关:</b>只看磁通变化和电阻,快慢不影响 q(影响的是 ε 和 I)。别去积分电流。</p>
+      <p class="trap">④ <b>自感方向:</b>通电自感阻碍电流<b>增大</b>(反向拖住)、断电自感阻碍电流<b>减小</b>(维持原方向)。本质都是反抗变化。</p>
+      <p class="trap">⑤ <b>v∥B 不切割:</b>ε=BLv 要求 v⊥B⊥L,平行磁场移动 ε=0;斜放取有效长度/垂直分量。</p>
+      <p class="trap">⑥ <b>忘乘匝数 n:</b>ε=nΔΦ/Δt、q=nΔΦ/R,多匝线圈务必乘 n。</p>
+      <p class="trap">⑦ <b>翻转 180° 时 ΔΦ=2BS:</b>磁通从 +BS 变到 −BS,变化量是 2BS 不是 0。</p>
+      <p class="trap">⑧ <b>能量转化别漏项:</b>匀速切割 W拉=总焦耳热;加速时 W拉=ΔEk+Q电。内阻的热也是热。</p>
+      <p class="trap">⑨ <b>自感稳定后无效:</b>电流稳定后 ΔI/Δt=0,自感电动势为 0,电感相当于纯导线。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切归到「Φ 的变化」这一个源头:</b>切割 BLv、法拉第 nΔΦ/Δt、自感 LΔI/Δt、涡流,表面五花八门,本质都是「磁通量在变→产生 ε→楞次定律定方向」。做题先问一句:<b>是谁的磁通量在变?变多快?</b>——抓住这条主线,题目就一通百通。</p>
+      <p style="margin:8px 0"><b>② 用图像斜率/面积做『上帝视角』:</b>Φ-t 图斜率=ε(瞬时);ε-t 图或 I-t 图面积=电荷 q;这样图像题不用硬算。Φ 曲线的拐点、水平段、过零点分别对应 ε 的极值、零点——一眼读出。</p>
+      <p style="margin:8px 0"><b>③ q=ΔΦ/R 是「过程无关」的守恒式:</b>它像冲量-动量那样只看始末状态。凡是问电荷量、问「无论快慢」都别陷进过程细节,直接始末磁通作差。这种「过程无关量」的意识是尖子生和普通生的分水岭。</p>
+      <p style="margin:8px 0"><b>④ 自感 = 电路里的『惯性』:</b>类比力学——电感对电流的作用就像质量对速度:不让电流突变(通电缓升、断电缓降),储能 ½LI² 恰似动能 ½mv²。用这个类比,自感现象和 LC 振荡都能秒懂。</p>
+      <p style="margin:8px 0"><b>⑤ 楞次定律的三重面孔:</b>①电流方向(反抗磁通变化)、②力的方向(安培力阻碍相对运动)、③能量(反抗即消耗外力做功→转成电能/热)。同一条定律,方向、力、能量三种语言都能说,遇到「阻碍」「变难」「更亮」等词就往楞次上靠。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:电磁感应(楞次定律基础)攻坚包 · 物理多过程攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:法拉第定律 Φ-t 斜率=ε ===== */
+(function(){
+  const svg=document.getElementById('farSvg');let m=0;
+  const T=document.getElementById('farT');
+  const oPhi=document.getElementById('farPhi'),oSlope=document.getElementById('farSlope'),oEps=document.getElementById('farEps'),oState=document.getElementById('farState');
+  // Φ(u), u in [0,1]; return {phi, slope} slope = dΦ/du (normalized units)
+  function model(u){
+    if(m===0){ // 匀速增大: Φ = u  (斜率恒定=1)
+      return {phi:u, slope:1};
+    }
+    if(m===1){ // 先快后慢: Φ = sqrt(u) 型 → 斜率随u减小
+      const phi=Math.sqrt(Math.max(u,0));
+      const slope=phi<1e-4?5:0.5/phi;
+      return {phi:phi, slope:Math.min(slope,5)};
+    }
+    // 先增后不变: Φ 前半段线性升,后半段水平
+    if(u<0.5){return {phi:u*2*0.9, slope:1.8};}
+    return {phi:0.9, slope:0};
+  }
+  function draw(){
+    clr(svg);const X0=54,Y0=24,W=590,H=200;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='Φ';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // curve
+    let d='';for(let k=0;k<=120;k++){const u=k/120;const p=model(u);const px=X0+u*W;const py=Y0+H-p.phi*H*0.9;d+=(k===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':4});
+    // current point
+    const u=+T.value/100;const p=model(u);
+    const px=X0+u*W, py=Y0+H-p.phi*H*0.9;
+    // tangent line (slope in screen: dφ/du scaled)
+    const scale=H*0.9/W; // Φ units to px vs t units to px factor
+    const dxu=0.16; // half width in u
+    const slopePx = -p.slope*(H*0.9)/(W); // dy/dx in px
+    const x1=px-dxu*W, x2=px+dxu*W;
+    const y1=py-slopePx*(x1-px), y2=py-slopePx*(x2-px);
+    el(svg,'line',{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:RED,'stroke-width':3.5,'stroke-dasharray':'2 0'});
+    el(svg,'circle',{cx:px.toFixed(1),cy:py.toFixed(1),r:7,fill:RED,stroke:INK,'stroke-width':3});
+    // epsilon bar below
+    const by=Y0+H+38, bw=590, bx=X0;
+    el(svg,'text',{x:X0,y:by-6,'font-size':12.5,'font-weight':800,fill:INK}).textContent='瞬时 ε ∝ 斜率:';
+    el(svg,'rect',{x:bx,y:by,width:bw,height:22,fill:'none',stroke:INK,'stroke-width':2.5});
+    const epsN=Math.min(p.slope/2.2,1);
+    el(svg,'rect',{x:bx,y:by,width:(bw*epsN).toFixed(1),height:22,fill:ORANGE});
+    el(svg,'text',{x:bx+bw*epsN+6,y:by+16,'font-size':12,'font-weight':900,fill:INK}).textContent=p.slope<0.02?'ε≈0':'ε';
+    // readouts
+    oPhi.textContent=(p.phi).toFixed(2);
+    oSlope.textContent=(p.slope).toFixed(2);
+    oEps.textContent=(p.slope).toFixed(2);
+    oState.textContent=p.slope<0.02?'水平段·ε=0':p.slope>2?'很陡·ε大':'变化中';
+  }
+  document.querySelectorAll('.farmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.farmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();});
+  T.oninput=draw;draw();
+})();
+
+/* ===== 互动2:切割 ε=BLv ===== */
+(function(){
+  const cv=document.getElementById('cutCv');const ctx=cv.getContext('2d');
+  const Bs=document.getElementById('cutB'),Ls=document.getElementById('cutL'),Vs=document.getElementById('cutV');
+  const oE=document.getElementById('cutEps'),oI=document.getElementById('cutI'),oF=document.getElementById('cutF'),oD=document.getElementById('cutDir');
+  const R=2;
+  let B=2,L=3,v=3,x=140,running=false;
+  function sync(){B=+Bs.value;L=+Ls.value;v=+Vs.value;
+    const eps=B*L*v/5; // scale to reasonable V
+    const I=eps/R; const F=B*I*L/5;
+    oE.textContent=eps.toFixed(2);oI.textContent=I.toFixed(2);oF.textContent=F.toFixed(2);oD.textContent='逆时针(棒中↑)';
+  }
+  Bs.oninput=Ls.oninput=Vs.oninput=()=>{sync();draw();};
+  function barTop(){return 120-L*14;} // longer L -> taller bar
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // field region with x marks (into page), intensity ~ B
+    const rx=60,ry=30,rw=580,rh=170;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(rx,ry,rw,rh);
+    ctx.fillStyle='rgba(20,80,200,'+(0.05+B*0.02)+')';ctx.fillRect(rx,ry,rw,rh);
+    ctx.fillStyle=BLUE;ctx.font='bold 13px sans-serif';
+    const cols=Math.round(4+B), rows=3;
+    for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){ctx.fillText('×',rx+30+i*(rw-60)/(cols-1),ry+40+j*(rh-70)/(rows-1));}
+    // rails (top & bottom of bar)
+    const bt=ry+30, bb=bt+L*24; // bar length scaled
+    ctx.strokeStyle=INK;ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(rx,bt);ctx.lineTo(rx+rw,bt);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(rx,bb);ctx.lineTo(rx+rw,bb);ctx.stroke();
+    // left resistor R
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(rx,bt);ctx.lineTo(rx,bb);ctx.stroke();
+    ctx.fillStyle=YEL;ctx.fillRect(rx-9,(bt+bb)/2-16,18,32);ctx.strokeRect(rx-9,(bt+bb)/2-16,18,32);
+    ctx.fillStyle=INK;ctx.fillText('R',rx-24,(bt+bb)/2+4);
+    // moving bar (orange)
+    const bx=rx+x;
+    ctx.strokeStyle=ORANGE;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,bt);ctx.lineTo(bx,bb);ctx.stroke();
+    // velocity arrow
+    ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(bx+6,(bt+bb)/2);ctx.lineTo(bx+36,(bt+bb)/2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(bx+36,(bt+bb)/2);ctx.lineTo(bx+28,(bt+bb)/2-5);ctx.lineTo(bx+28,(bt+bb)/2+5);ctx.closePath();ctx.fillStyle=RED;ctx.fill();
+    ctx.fillStyle=RED;ctx.fillText('v',bx+40,(bt+bb)/2+4);
+    // current arrows around loop (逆时针: up in bar)
+    ctx.fillStyle=GREEN;ctx.font='bold 15px sans-serif';
+    ctx.fillText('↑',bx-14,(bt+bb)/2+5); // bar current up
+    ctx.fillText('I',bx-16,bt-6);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('×:磁场垂直纸面向里',rx+8,ry+rh+22>cv.height?ry+rh-6:ry+16);
+  }
+  function loop(){if(!running)return;x+=v*0.9;if(x>500){running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('cutGo').onclick=()=>{x=140;running=true;requestAnimationFrame(loop);};
+  document.getElementById('cutReset').onclick=()=>{running=false;x=140;draw();};
+  sync();draw();
+})();
+
+/* ===== 互动3:感应电荷 q=ΔΦ/R 与时间无关 ===== */
+(function(){
+  const svg=document.getElementById('qSvg');
+  const oEA=document.getElementById('qEpsA'),oEB=document.getElementById('qEpsB'),oQA=document.getElementById('qQA'),oQB=document.getElementById('qQB');
+  const R=2, dPhi=4; // same ΔΦ and R for both
+  const TA=4.0, TB=1.0; // slow vs fast total time (units)
+  let t=0,running=false;
+  // slow: ε=dPhi/TA constant, I=ε/R; fast: ε=dPhi/TB
+  const epsA=dPhi/TA/R*R? dPhi/TA:0; // keep simple
+  const eA=dPhi/TA, eB=dPhi/TB; // emf
+  const iA=eA/R, iB=eB/R;
+  function draw(){
+    clr(svg);
+    const X0=60,W=560,baseY=40,h=150;
+    // two energy(charge) accumulation bars
+    // charge accumulates linearly: qA(t)=iA*min(t,TA), qB=iB*min(t,TB); final both = dPhi/R
+    const qFinal=dPhi/R;
+    const qA=iA*Math.min(t,TA), qB=iB*Math.min(t,TB);
+    // labels
+    el(svg,'text',{x:X0,y:26,'font-size':13,'font-weight':900,fill:INK}).textContent='慢过程(ΔΦ='+dPhi+', R='+R+', Δt='+TA+'s)';
+    el(svg,'text',{x:X0+300,y:26,'font-size':13,'font-weight':900,fill:INK}).textContent='快过程(同 ΔΦ, R, Δt='+TB+'s)';
+    // bar frame A
+    function bar(x,val,col,lab){
+      const bw=180,bh=150,by=40;
+      el(svg,'rect',{x:x,y:by,width:bw,height:bh,fill:'none',stroke:INK,'stroke-width':3});
+      const fill=Math.min(val/qFinal,1);
+      el(svg,'rect',{x:x,y:by+bh-bh*fill,width:bw,height:bh*fill,fill:col});
+      el(svg,'text',{x:x+bw/2,y:by+bh+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab+' q='+val.toFixed(2)+' C';
+      // final target line
+      el(svg,'line',{x1:x-4,y1:by,x2:x+bw+4,y2:by,stroke:RED,'stroke-width':2,'stroke-dasharray':'6 4'});
+    }
+    bar(X0,qA,BLUE,'慢:');
+    bar(X0+300,qB,ORANGE,'快:');
+    el(svg,'text',{x:X0+240,y:230,'font-size':12.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='红虚线 = q最终值 = ΔΦ/R = '+qFinal.toFixed(2)+' C(两者相同!)';
+    oEA.textContent=eA.toFixed(2);oEB.textContent=eB.toFixed(2);
+    oQA.textContent=qA.toFixed(2);oQB.textContent=qB.toFixed(2);
+  }
+  function loop(){if(!running)return;t+=0.03;if(t>=TA){t=TA;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('qGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('qReset').onclick=()=>{running=false;t=0;draw();};
+  draw();
+})();
+
+/* ===== 互动4:自感 通电缓亮 / 断电闪亮 ===== */
+(function(){
+  const cv=document.getElementById('selfCv');const ctx=cv.getContext('2d');
+  const gsvg=document.getElementById('selfGraph');
+  let mode='idle'; // 'on' charging, 'off' discharging
+  let t=0,running=false;
+  let lampCurr=0; // lamp current 0..1
+  const hist=[]; // {t, lamp}
+  const Iss=1.0; // steady lamp current
+  function reset(){mode='idle';t=0;running=false;lampCurr=0;hist.length=0;draw();graph();}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // circuit box
+    ctx.strokeStyle=INK;ctx.lineWidth=4;
+    // battery left
+    ctx.strokeRect(40,40,620,150);
+    // wires + branches (schematic)
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    // battery
+    ctx.beginPath();ctx.moveTo(70,60);ctx.lineTo(70,170);ctx.stroke();
+    ctx.fillText('电源',48,120);
+    // switch state
+    ctx.fillStyle=(mode==='on')?GREEN:RED;
+    ctx.fillText(mode==='on'?'开关: 合(通电)':mode==='off'?'开关: 断(断电)':'开关: 待操作',430,32<40?32:60);
+    // coil (violet)
+    ctx.strokeStyle=VIO;ctx.lineWidth=4;
+    let cx0=260;ctx.beginPath();ctx.moveTo(cx0,80);
+    for(let i=0;i<6;i++){ctx.arc(cx0+14+i*22,80,11,Math.PI,0,false);}
+    ctx.stroke();
+    ctx.fillStyle=VIO;ctx.fillText('线圈 L',cx0+40,64);
+    // lamp (orange) brightness ~ lampCurr
+    const bright=Math.min(lampCurr,1.6);
+    const lx=440,ly=150;
+    ctx.beginPath();ctx.arc(lx,ly,22,0,2*Math.PI);
+    ctx.fillStyle='rgba(232,106,23,'+(0.15+bright*0.55)+')';ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    // glow ring
+    if(bright>0.05){ctx.beginPath();ctx.arc(lx,ly,22+bright*10,0,2*Math.PI);ctx.strokeStyle='rgba(243,192,14,'+Math.min(bright*0.6,0.9)+')';ctx.lineWidth=3;ctx.stroke();}
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('灯泡',lx-16,ly+42);
+    // label current
+    ctx.fillStyle=INK;ctx.fillText('灯电流 ≈ '+lampCurr.toFixed(2),520,150);
+    // status text
+    ctx.font='bold 14px sans-serif';ctx.fillStyle=INK;
+    let msg=mode==='on'?'通电自感:电流缓升 → 灯缓亮':mode==='off'?'断电自感:线圈驱动电流经灯放电 → 灯先闪一下再灭':'点下面按钮:合开关看缓亮,断开关看闪亮';
+    ctx.fillText(msg,70,215>cv.height?cv.height-6:210>cv.height?cv.height-6:210);
+  }
+  function graph(){
+    clr(gsvg);const X0=46,Y0=12,W=600,H=130;
+    el(gsvg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(gsvg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(gsvg,'text',{x:X0-6,y:Y0+8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='I灯';
+    el(gsvg,'text',{x:X0+W,y:Y0+H+10,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    if(hist.length>1){
+      let d='';hist.forEach((p,i)=>{const px=X0+Math.min(p.t/6,1)*W;const py=Y0+H-Math.min(p.lamp/1.7,1)*H;d+=(i===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';});
+      el(gsvg,'path',{d:d,fill:'none',stroke:ORANGE,'stroke-width':3.5});
+    }
+    el(gsvg,'text',{x:X0+10,y:Y0+18,'font-size':11.5,'font-weight':800,fill:INK}).textContent=mode==='on'?'缓亮:S形上升到稳态':mode==='off'?'闪亮:骤升后指数衰减':'灯电流曲线';
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.045;
+    if(mode==='on'){
+      // charging: lamp current rises toward Iss (缓亮), 1-exp
+      lampCurr=Iss*(1-Math.exp(-t*1.1));
+    } else if(mode==='off'){
+      // discharging: quick spike then decay. spike above steady then decay
+      // model: starts at Iss, briefly the coil pushes current through lamp -> can exceed
+      const spike=1.5*Math.exp(-Math.pow((t-0.25),2)*6); // brief flash
+      const decay=Iss*Math.exp(-t*2.2);
+      lampCurr=Math.max(spike,decay);
+    }
+    hist.push({t:t,lamp:lampCurr});
+    if(t>6){running=false;}
+    draw();graph();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('selfOn').onclick=()=>{mode='on';t=0;lampCurr=0;hist.length=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('selfOff').onclick=()=>{mode='off';t=0;lampCurr=Iss;hist.length=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('selfReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:涡流 电磁阻尼 ===== */
+(function(){
+  const cv=document.getElementById('eddyCv');const ctx=cv.getContext('2d');
+  let mode=0; // 0 field on (damped), 1 field off (free)
+  let theta=0.9, omega=0, running=false;
+  const g=1.0, len=1;
+  const pivotX=350, pivotY=30, armLen=180;
+  function reset(){theta=0.9;omega=0;running=false;draw();}
+  document.querySelectorAll('.eddymode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.eddymode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;reset();});
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // field region (blue) that plate swings through
+    const fx=250,fy=150,fw=200,fh=100;
+    if(mode===0){
+      ctx.fillStyle='rgba(20,80,200,0.16)';ctx.fillRect(fx,fy,fw,fh);
+      ctx.strokeStyle=BLUE;ctx.lineWidth=3;ctx.strokeRect(fx,fy,fw,fh);
+      ctx.fillStyle=BLUE;ctx.font='bold 12px sans-serif';
+      for(let i=0;i<4;i++)for(let j=0;j<2;j++){ctx.fillText('×',fx+30+i*45,fy+30+j*45);}
+      ctx.fillText('磁场区(向里)',fx+52,fy-8);
+    } else {
+      ctx.strokeStyle='#bbb';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.strokeRect(fx,fy,fw,fh);ctx.setLineDash([]);
+      ctx.fillStyle='#999';ctx.font='bold 12px sans-serif';ctx.fillText('磁场已关',fx+70,fy-8);
+    }
+    // pivot
+    ctx.fillStyle=INK;ctx.beginPath();ctx.arc(pivotX,pivotY,6,0,2*Math.PI);ctx.fill();
+    // arm + plate
+    const px=pivotX+Math.sin(theta)*armLen;
+    const py=pivotY+Math.cos(theta)*armLen;
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(pivotX,pivotY);ctx.lineTo(px,py);ctx.stroke();
+    // metal plate at end
+    ctx.save();ctx.translate(px,py);ctx.rotate(-theta);
+    ctx.fillStyle='#c9c2ad';ctx.fillRect(-34,-24,68,48);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(-34,-24,68,48);
+    // eddy current loops if in field & moving & field on
+    const inField = (px>fx && px<fx+fw && py>fy && py<fy+fh);
+    if(mode===0 && inField && Math.abs(omega)>0.05){
+      ctx.strokeStyle=RED;ctx.lineWidth=2.2;
+      for(let k=0;k<2;k++){ctx.beginPath();ctx.arc(-14+k*28,0,10,0,2*Math.PI);ctx.stroke();
+        // arrow head
+        ctx.fillStyle=RED;ctx.beginPath();ctx.moveTo(-14+k*28+10,-2);ctx.lineTo(-14+k*28+14,0);ctx.lineTo(-14+k*28+10,4);ctx.closePath();ctx.fill();}
+    }
+    ctx.restore();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('金属摆片',px-24,py+44);
+    // status
+    ctx.font='bold 13px sans-serif';ctx.fillStyle=mode===0?RED:GREEN;
+    ctx.fillText(mode===0?'有涡流:安培力阻碍运动 → 迅速衰减停下(电磁阻尼)':'无涡流:一直摆动不停',40,24);
+  }
+  function loop(){
+    if(!running)return;
+    // pendulum dynamics
+    const alpha=-g*Math.sin(theta)*0.02;
+    omega+=alpha;
+    // eddy damping only when in field & field on
+    const px=pivotX+Math.sin(theta)*armLen, py=pivotY+Math.cos(theta)*armLen;
+    const fx=250,fy=150,fw=200,fh=100;
+    const inField=(px>fx&&px<fx+fw&&py>fy&&py<fy+fh);
+    if(mode===0 && inField){omega*=0.90;} // strong damping (eddy) in field
+    else {omega*=0.999;} // tiny air drag
+    theta+=omega;
+    draw();
+    if(Math.abs(omega)<0.002 && Math.abs(theta)<0.02){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('eddyGo').onclick=()=>{theta=0.9;omega=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('eddyReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动6:Φ-t 图求瞬时/平均 ε ===== */
+(function(){
+  const svg=document.getElementById('graphSvg');let m=0;
+  const T=document.getElementById('gT');
+  const oM=document.getElementById('gMode'),oS=document.getElementById('gSlope'),oE=document.getElementById('gEps'),oN=document.getElementById('gNote');
+  // nonlinear Φ(u): a smooth S-ish curve, u in [0,1]
+  function phi(u){return 0.15+0.75*(u - 0.25*Math.sin(2*Math.PI*u)/(2*Math.PI)*2);} // wavy monotonic-ish
+  function phiClean(u){ // ensure defined smoothly: use 0.1 + 0.8*u^1.6 mixed
+    return 0.1 + 0.85*(0.5*(1-Math.cos(Math.PI*u))); // raised-cosine S curve, slope 0 at ends
+  }
+  function slope(u){ // derivative of phiClean wrt u
+    return 0.85*0.5*Math.PI*Math.sin(Math.PI*u);
+  }
+  function draw(){
+    clr(svg);const X0=54,Y0=24,W=590,H=210;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='Φ';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // curve
+    let d='';for(let k=0;k<=140;k++){const u=k/140;const px=X0+u*W;const py=Y0+H-phiClean(u)*H*0.9;d+=(k===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':4});
+    const u=+T.value/100;
+    if(m===0){ // instantaneous tangent
+      const px=X0+u*W, py=Y0+H-phiClean(u)*H*0.9;
+      const sl=slope(u); // dΦ/du
+      const slPx=-sl*(H*0.9)/W;
+      const dw=0.16;
+      const x1=px-dw*W,x2=px+dw*W;
+      el(svg,'line',{x1:x1.toFixed(1),y1:(py-slPx*(x1-px)).toFixed(1),x2:x2.toFixed(1),y2:(py-slPx*(x2-px)).toFixed(1),stroke:RED,'stroke-width':3.5});
+      el(svg,'circle',{cx:px.toFixed(1),cy:py.toFixed(1),r:7,fill:RED,stroke:INK,'stroke-width':3});
+      oM.textContent='瞬时';oS.textContent=sl.toFixed(2);oE.textContent=sl.toFixed(2);
+      oN.textContent='切线斜率=ε瞬时';
+    } else { // average secant over [u-w, u+w]
+      const w=0.18;const uA=Math.max(0,u-w), uB=Math.min(1,u+w);
+      const xA=X0+uA*W, yA=Y0+H-phiClean(uA)*H*0.9;
+      const xB=X0+uB*W, yB=Y0+H-phiClean(uB)*H*0.9;
+      el(svg,'line',{x1:xA.toFixed(1),y1:yA.toFixed(1),x2:xB.toFixed(1),y2:yB.toFixed(1),stroke:GREEN,'stroke-width':3.5});
+      el(svg,'circle',{cx:xA.toFixed(1),cy:yA.toFixed(1),r:6,fill:GREEN,stroke:INK,'stroke-width':2.5});
+      el(svg,'circle',{cx:xB.toFixed(1),cy:yB.toFixed(1),r:6,fill:GREEN,stroke:INK,'stroke-width':2.5});
+      const avg=(phiClean(uB)-phiClean(uA))/(uB-uA);
+      oM.textContent='平均';oS.textContent=avg.toFixed(2);oE.textContent=avg.toFixed(2);
+      oN.textContent='割线斜率=ε平均';
+    }
+    el(svg,'text',{x:X0,y:Y0+H+40,'font-size':12.5,'font-weight':800,fill:INK}).textContent=m===0?'瞬时 ε = 该点切线斜率(红)':'平均 ε = 区间两端割线斜率(绿) — 曲线上≠瞬时';
+  }
+  document.querySelectorAll('.gmode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.gmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();});
+  T.oninput=draw;draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 磁通量 Φ 和它的变化量 ΔΦ 有什么区别?哪个产生感应电动势?",a:"Φ=BS 是状态量(某时刻穿过的磁感线条数);ΔΦ=Φ₂−Φ₁ 是变化量。产生感应电动势的是 ΔΦ(变化),不是 Φ 本身。Φ 再大只要不变就没有 ε。"},
+ {q:"2. 法拉第电磁感应定律?平均 ε 和瞬时 ε 怎么区分?",a:"ε=nΔΦ/Δt。求一段时间的平均值用 ΔΦ/Δt;求某时刻的瞬时值用 Φ-t 图该点的切线斜率(×n)。线性变化时二者相等。"},
+ {q:"3. n=100 匝、S=0.02 m² 线圈,B 在 0.2 s 内从 0.1 T 匀升到 0.5 T,求 ε。若 R=2 Ω 求 I。",a:"ΔΦ=S·ΔB=0.02×0.4=0.008 Wb;ε=nΔΦ/Δt=100×0.008/0.2=4 V;I=ε/R=4/2=2 A。"},
+ {q:"4. 导体切割磁感线 ε=BLv 的适用条件?v 沿磁场方向运动时 ε 多大?",a:"要求 v⊥B⊥L(三者两两垂直)。v 沿磁感线方向(v∥B)不切割磁感线,ε=0。一般情况取垂直分量 ε=BLv·sinθ。"},
+ {q:"5. B=0.5 T、L=0.4 m 的棒以 v=10 m/s 切割,回路总电阻 2 Ω,求 ε、I 和安培力 F。",a:"ε=BLv=0.5×0.4×10=2 V;I=ε/R=1 A;安培力 F=BIL=0.5×1×0.4=0.2 N(方向阻碍运动)。"},
+ {q:"6. 感应电荷量公式?为什么说它与时间(快慢)无关?",a:"q=nΔΦ/R。因为 q=ī·Δt=(nΔΦ/Δt/R)·Δt,Δt 约掉,只剩 ΔΦ 和 R。快慢改变的是 ε 和 I 的大小,但电荷量恰好抵消不变。"},
+ {q:"7. n=50 匝、S=0.01 m² 线圈在 B=0.2 T 中从平面⊥B 翻到平面∥B,R=5 Ω,求通过的电荷 q。",a:"Φ₁=BS=0.2×0.01=0.002 Wb,Φ₂=0,ΔΦ=0.002 Wb;q=nΔΦ/R=50×0.002/5=0.02 C。翻快翻慢结果相同。"},
+ {q:"8. 通电自感和断电自感现象分别是什么?口诀?",a:"通电自感:合开关电流从0猛增,线圈反抗,电流缓升,灯缓亮。断电自感:断开关电流骤减,线圈维持,电流经灯继续流一小会儿,灯先闪一下再灭。口诀:通电阻碍增大(缓亮)、断电阻碍减小(闪亮)。"},
+ {q:"9. 断电时灯泡『闪亮』的能量从哪来?线圈储能公式?",a:"来自线圈储存的磁场能 E=½LI²,断电时通过灯泡释放成光和热(能量守恒)。这也是为什么闪的一下可能比原来还亮。"},
+ {q:"10. 什么是涡流?举一个『利用』和一个『危害』的例子及抑制办法。",a:"涡流是块状导体在变化磁场中产生的一圈圈闭合感应电流。利用:电磁炉(涡流给锅底加热)、感应冶炼。危害:变压器/电机铁芯发热损耗;抑制办法是铁芯用相互绝缘的薄硅钢片叠成,切断涡流回路、增大电阻。"},
+ {q:"11. 金属摆片在磁场中摆动很快停下,这是什么现象?用什么定律解释?",a:"电磁阻尼。摆片切割磁感线产生涡流,涡流受到的安培力总是阻碍摆片的运动(楞次定律),把动能转化为涡流的焦耳热,摆片迅速停下。用于灵敏电流计的阻尼、磁刹车。"},
+ {q:"12. 导体棒匀速切割磁感线,拉力做的功变成了什么?功能关系式?",a:"匀速时安培力=拉力(合力为0),拉力做的功全部变成电能,再变成各电阻(内阻+外阻)的焦耳热。W拉=Q电=I²(R+r)t。若加速,则 W拉=ΔEk+Q电。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
