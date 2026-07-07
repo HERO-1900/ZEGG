@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>油膜法测分子直径 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .ctrl input[type=number]{width:88px;font-weight:800;font-size:13px;border:3px solid var(--ink);padding:4px 6px;font-family:"SF Mono",Consolas,monospace}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <a class="back" style="background:var(--blue);color:#fff;border-color:#16120A" href="分子动理论.html">← 分子动理论总览</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>油膜法测分子直径</h1>
+    <p class="lead">这是分子动理论里唯一一个「亲手把分子量出来」的实验。很多人卡在<b>为什么这么做</b>:为什么要稀释?为什么撒粉?为什么面积除一下就成了分子直径?这一页把每一步的<b>设计目的</b>讲透,让你不是背步骤,而是从一个念头 <b>d = V/S</b> 把整套实验推出来,做题时单位不慌、原理不虚。</p>
+
+    <div class="say">🗣️ <b>核心一句话(人话版):</b> 把油酸分子想成一个个小球。让油酸在水面上<b>尽量摊薄</b>,薄到只剩「一个分子那么厚」的一层膜(单分子膜)。那么这层膜的<b>厚度</b>,就正好是<b>一个油酸分子的直径 d</b>。而厚度 = 体积 ÷ 面积,所以只要量出油膜的<b>纯油酸体积 V</b> 和<b>油膜面积 S</b>,就有 <b>d = V / S</b>。全部原理,就这一句。</div>
+
+    <div class="keybox"><b>唯一的主公式:</b> <b>d = V / S</b>。V = 这滴油膜里<b>纯油酸</b>的体积(不是溶液体积!),S = 油膜铺开的<b>面积</b>。单位一定要统一到 SI:1 mL = 1×10⁻⁶ m³,1 cm² = 1×10⁻⁴ m²,算出的 d 数量级约 <b>10⁻¹⁰ m</b>。</div>
+
+    <h2>① 核心思想:厚度 = 体积 ÷ 面积</h2>
+    <div class="card">
+      <p style="margin:8px 0">想象你有一小坨油酸,把它在水面上使劲摊开、摊开、再摊开,一直摊到<b>不能再薄</b>——因为再薄就要把分子撕开了,这不可能。此时的膜,厚度恰好是<b>一层分子</b>,称为<b>单分子膜</b>。</p>
+      <div class="eq">油膜厚度 = 一个分子的直径 d</div>
+      <p style="margin:8px 0">而任何一块「薄板」的厚度,都等于它的体积除以它的底面积:</p>
+      <div class="eq">厚度 = 体积 / 面积　⟹　d = V / S</div>
+      <p style="margin:8px 0">这就是整个实验的灵魂。实验剩下的所有步骤(稀释、撒粉、描轮廓、数格子),都只是为了<b>准确地量出 V 和 S</b> 这两个数而已。把这句话记牢,你就抓住了主线。</p>
+      <p class="trap">⚠ V 必须是<b>纯油酸</b>的体积,不是那一滴溶液的体积!这是本实验第一大坑,后面第②节专门讲。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📦 互动 1 — 厚度 = 体积÷面积:同一坨油酸摊得越开,膜越薄,薄到极限=单分子厚(=直径 d)</div>
+      <svg id="thkSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>摊开面积 S <input id="thkS" type="range" min="1" max="10" value="3" step="1"></label>
+        <button id="thkMax">▶ 摊到单分子极限</button>
+      </div>
+      <div class="live">
+        <div><b>油酸体积 V(固定)</b><span id="thkV">0</span></div>
+        <div><b>油膜面积 S</b><span id="thkA">0</span></div>
+        <div><b>厚度 d=V/S</b><span id="thkD">0</span></div>
+        <div><b>是否单分子层</b><span id="thkNote">否</span></div>
+      </div>
+      <p class="small">同一块油酸(体积 V 不变),你把它摊得越开(S 越大),膜就越薄(d 越小)。摊到「只有一个分子那么厚」时就停住——再薄就要撕分子了。此刻 d=V/S 就是分子直径。</p>
+    </div>
+
+    <h2 class="b">② 为什么要稀释成「油酸酒精溶液」</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>问题:</b> 直接滴一滴<b>纯油酸</b>行不行?不行。一滴纯油酸体积太大(约 0.05 mL),就算它使劲摊开,也会堆成<b>好多层分子那么厚</b>,根本形不成「单分子膜」——那 d=V/S 就不成立了。</p>
+      <p style="margin:8px 0"><b>解决:</b> 把油酸溶进大量酒精里,配成很稀的<b>油酸酒精溶液</b>(油酸的体积分数很小,比如 0.04% 之类)。这样一滴溶液里,<b>真正的油酸只有极少极少一点点</b>。滴到水面后:</p>
+      <div class="mono">酒精 → 溶于水并挥发跑掉(它是"运输工具",用完就走)</div>
+      <div class="mono">油酸 → 极少量,才能恰好摊成"一个分子厚"的单分子膜</div>
+      <p style="margin:8px 0">酒精有两个作用:①把油酸<b>稀释</b>到极少量;②帮油酸<b>散布</b>到水面,自己再挥发/溶掉,不留下体积。</p>
+      <div class="keybox" style="margin:12px 0"><b>由此得到最关键的计算规则:</b> 算 V 时,<b>绝不能</b>拿溶液体积当油酸体积!必须 <b>V = 溶液体积 × 油酸的体积浓度(体积分数)</b>。漏乘浓度,V 会大出几千倍,d 直接算错。</div>
+      <p class="trap">⚠ 头号计算陷阱:把「一滴溶液的体积」直接当成 V 代入 d=V/S。一定要先乘浓度,把纯油酸体积抠出来。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🆚 互动 2 — 为什么要稀释:左=纯油酸一滴(厚厚多层),右=稀溶液一滴(酒精挥发后只剩薄薄单层)</div>
+      <canvas id="dilCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <button id="dilGo">▶ 播放:酒精挥发</button><button id="dilReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>纯油酸一滴 → 厚度</b><span id="dilT1">多层分子</span></div>
+        <div><b>稀溶液一滴 → 厚度</b><span id="dilT2">单分子</span></div>
+        <div><b>能否得单分子膜</b><span id="dilOk">只有右边能</span></div>
+        <div><b>结论</b><span id="dilMsg">必须稀释</span></div>
+      </div>
+      <p class="small">左:纯油酸太多,摊开也是厚厚一坨(多层),d=V/S 失效。右:稀溶液里油酸极少,酒精挥发后只剩薄薄一层单分子膜,这才是我们要的。</p>
+    </div>
+
+    <h2 class="g">③ 怎样量出「一滴」的纯油酸体积 V</h2>
+    <div class="card">
+      <p style="margin:8px 0">既然一滴的量极小,怎么知道一滴溶液到底多少体积?<b>用"数滴数"的办法把一滴量出来:</b></p>
+      <div class="mono">第1步:用滴管/注射器竖直滴,数出 1 mL 溶液是多少滴(设 n 滴)。</div>
+      <div class="mono">第2步:每滴溶液体积 = 1 mL ÷ n = (1/n) mL。</div>
+      <div class="mono">第3步:每滴纯油酸体积 V = 每滴溶液体积 × 油酸体积浓度 c。</div>
+      <div class="eq">V = (1 / n) × c　(mL)　＝ ... × 10⁻⁶ m³</div>
+      <p style="margin:8px 0">举例:1 mL 溶液是 <b>50 滴</b>,浓度 c = <b>0.04%</b>。每滴溶液 = 1/50 = 0.02 mL;每滴纯油酸 V = 0.02 × 0.0004 = 8×10⁻⁶ mL = <b>8×10⁻¹² m³</b>(记住 1 mL = 10⁻⁶ m³)。</p>
+      <p class="trap">⚠ "1 mL 是 n 滴"→ 每滴是 1/n mL,别写成 n mL。再乘浓度才是纯油酸。滴管要竖直、匀速,数滴才准。</p>
+    </div>
+
+    <h2 class="o">④ 撒粉与描轮廓:怎样量出面积 S</h2>
+    <div class="card">
+      <h3>第一件事:先在水面撒一层痱子粉</h3>
+      <p style="margin:6px 0">在滴油之前,先往水面<b>均匀撒一层痱子粉(或爽身粉、石膏粉)</b>。油膜滴上去后会向外扩张,<b>把粉推开</b>,于是油膜和外面的粉之间形成一条<b>清晰的边界线</b>——你就能看清油膜到底铺了多大。</p>
+      <p style="margin:6px 0"><b>注意粉的作用是"显示边界",不是"测面积本身"。</b>没有粉,油膜是透明的,你根本看不出它的轮廓,无从下手。</p>
+      <h3>第二件事:描轮廓 + 数格子</h3>
+      <div class="mono">1) 待油膜稳定不再扩张后,把油膜的轮廓描到玻璃板上。</div>
+      <div class="mono">2) 把玻璃板放到方格纸(坐标纸)上,数轮廓内的格子。</div>
+      <div class="mono">3) 数格规则:超过半格算一格,不足半格舍去。</div>
+      <div class="eq">S = 格数 × 每格面积</div>
+      <p style="margin:6px 0">若每个小格边长 a,则每格面积 = a²,S = 格数 × a²。别忘了单位:a 常给 cm,a² 是 cm²,最后要换成 m²(1 cm² = 10⁻⁴ m²)。</p>
+      <p class="trap">⚠ "超过半格算一格,不足半格舍去"是约定规则,别自作主张按面积估。粉的作用是显边界,不要说成"粉铺出了面积"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎬 互动 3 — 油膜形成全过程:滴溶液→酒精挥发→油酸向外推开痱子粉→形成有清晰边界的单分子膜</div>
+      <canvas id="filmCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="filmGo">▶ 播放全过程</button><button id="filmReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>阶段</b><span id="filmStage">待滴入</span></div>
+        <div><b>酒精</b><span id="filmAlc">未挥发</span></div>
+        <div><b>粉末边界</b><span id="filmEdge">未形成</span></div>
+        <div><b>油膜</b><span id="filmOk">—</span></div>
+      </div>
+      <p class="small">看清四步:①一滴油酸酒精溶液落到撒了粉的水面;②酒精溶于水/挥发跑掉;③剩下的油酸向外散开,把痱子粉推成一圈;④形成有清晰边界的单分子油膜,可以描轮廓了。</p>
+    </div>
+
+    <h2 class="v">⑤ 侧视图:为什么「膜厚 = 分子直径」</h2>
+    <div class="card">
+      <p style="margin:8px 0">从侧面看这层单分子膜:一排球形的油酸分子<b>紧挨着、平铺</b>在水面上,只有一层。这一层的<b>高度</b>,就是<b>一个分子的直径 d</b>。这就是"膜厚=分子直径"的直观图像。</p>
+      <p style="margin:8px 0">同时也暴露了实验用到的三条<b>近似假设</b>:</p>
+      <table>
+        <tr><th>假设</th><th>含义</th></tr>
+        <tr><td>①单分子层</td><td>膜只有一个分子那么厚(靠稀释保证)</td></tr>
+        <tr><td>②紧密排列</td><td>分子一个挨一个、无空隙,才能用面积除</td></tr>
+        <tr><td>③球形分子</td><td>把分子看作小球,直径就是膜厚</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>尖子生备注:</b> 油酸其实是<b>链状分子</b>,亲水的头扎进水里、疏水的尾竖起来,所以这样估出的其实更接近<b>分子的长度</b>,但<b>数量级(10⁻¹⁰ m)是正确的</b>,作为估算完全可用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 单分子层侧视图:一排球形分子紧挨着平铺,膜厚 = 一个分子直径 d</div>
+      <svg id="sideSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>分子个数 <input id="sideN" type="range" min="6" max="22" value="14" step="1"></label>
+        <button id="sideZoom">🔍 放大看一个分子</button>
+      </div>
+      <div class="live">
+        <div><b>膜的层数</b><span id="sideLayer">1 层(单分子)</span></div>
+        <div><b>膜厚</b><span id="sideThk">= 直径 d</span></div>
+        <div><b>排列</b><span id="sideArr">紧密无空隙</span></div>
+        <div><b>下方</b><span id="sideWater">水面</span></div>
+      </div>
+      <p class="small">水面上一排小球紧挨着,只有一层高。这一层的高度就是分子直径 d。正因为"只有一层",才能用 d=V/S 把它量出来。</p>
+    </div>
+
+    <h2 class="b">⑥ 单位换算与计算:d = V / S</h2>
+    <div class="card">
+      <p style="margin:8px 0">拿到 V 和 S,主公式一步到位:</p>
+      <div class="eq">d = V / S</div>
+      <p style="margin:8px 0"><b>单位统一到 SI 是本题成败的关键。</b>常见换算:</p>
+      <table>
+        <tr><th>量</th><th>常见单位</th><th>换成 SI</th></tr>
+        <tr><td>体积 V</td><td>mL(=cm³)</td><td>×10⁻⁶ → m³</td></tr>
+        <tr><td>面积 S</td><td>cm²</td><td>×10⁻⁴ → m²</td></tr>
+        <tr><td>直径 d</td><td>—</td><td>m,数量级约 10⁻¹⁰</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>完整算例:</b> V = 8×10⁻¹² m³,S = 80 cm² = 80×10⁻⁴ m² = 8×10⁻³ m²。则 d = V/S = (8×10⁻¹²)/(8×10⁻³) = <b>1×10⁻⁹ m</b>(约 10⁻⁹~10⁻¹⁰ m,合理)。</p>
+      <p class="trap">⚠ 若 V 用 m³、S 忘换还用 cm²,d 会差 10⁴ 倍,数量级立刻错。养成"代入前先全换 SI"的习惯。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 5 — 浓度换算计算器:每滴溶液体积 × 油酸体积分数 → 每滴纯油酸体积 V</div>
+      <svg id="volSvg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>1 mL = 几滴 n <input id="volN" type="number" value="50" step="1" min="1"></label>
+        <label>油酸体积分数 c(%) <input id="volC" type="number" value="0.04" step="0.01" min="0"></label>
+      </div>
+      <div class="live">
+        <div><b>每滴溶液体积(mL)</b><span id="volDrop">0</span></div>
+        <div><b>每滴纯油酸(mL)</b><span id="volVml">0</span></div>
+        <div><b>V(m³)</b><span id="volVm3">0</span></div>
+        <div><b>换算</b><span id="volNote">×10⁻⁶</span></div>
+      </div>
+      <p class="small">输入"1 mL 多少滴"和浓度。每滴溶液=1/n mL;再乘浓度 c 得每滴纯油酸体积 V。注意 V 通常极小(约 10⁻¹²~10⁻¹³ m³),这正是稀释的结果。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 6 — d=V/S 计算器:输入 V、S(含单位换算)→ 输出分子直径 d 与数量级</div>
+      <svg id="dSvg" viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>V 数值 <input id="dV" type="number" value="8" step="0.1"></label>
+        <label>V 单位
+          <select id="dVu" style="font-weight:800;border:3px solid var(--ink);padding:4px 6px">
+            <option value="1e-6">mL(×10⁻⁶ m³)</option>
+            <option value="1">m³</option>
+          </select>
+        </label>
+        <label>V 指数 ×10^ <input id="dVe" type="number" value="-12" step="1"></label>
+      </div>
+      <div class="ctrl">
+        <label>S 数值 <input id="dS" type="number" value="80" step="1"></label>
+        <label>S 单位
+          <select id="dSu" style="font-weight:800;border:3px solid var(--ink);padding:4px 6px">
+            <option value="1e-4">cm²(×10⁻⁴ m²)</option>
+            <option value="1">m²</option>
+          </select>
+        </label>
+      </div>
+      <div class="live">
+        <div><b>V(m³)</b><span id="dVout">0</span></div>
+        <div><b>S(m²)</b><span id="dSout">0</span></div>
+        <div><b>d=V/S(m)</b><span id="dOut">0</span></div>
+        <div><b>数量级</b><span id="dOrder">—</span></div>
+      </div>
+      <p class="small">全部换成 SI 后 d=V/S。合理的分子直径应落在 10⁻⁹~10⁻¹⁰ m。若算出的数量级离谱(如 10⁻⁵),多半是某个单位没换或漏乘浓度。</p>
+    </div>
+
+    <h2 class="o">⑦ 数格子测面积(动手数一数)</h2>
+    <div class="card">
+      <p style="margin:6px 0">把油膜轮廓放到方格纸上,按规则数:<b>轮廓内超过半格算一格,不足半格舍去</b>。数出的格数乘以每格面积,就是 S。下面这块交互让你亲手数一遍,体会规则怎么用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 7 — 数格子测面积:点击轮廓内的格子计数,内置"过半算一格、不足半格舍去"规则</div>
+      <svg id="gridSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="gridAuto">⚡ 自动按规则数</button><button id="gridClear">↺ 清空</button>
+        <label>每格边长 a(cm) <input id="gridA" type="number" value="1" step="0.5" min="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>已数格数</b><span id="gridCnt">0</span></div>
+        <div><b>每格面积(cm²)</b><span id="gridCell">1</span></div>
+        <div><b>S(cm²)</b><span id="gridScm">0</span></div>
+        <div><b>S(m²)</b><span id="gridSm">0</span></div>
+      </div>
+      <p class="small">红色闭合曲线是油膜轮廓。点击格子在"计入/不计入"间切换(绿色=计入)。"过半算一格、不足半格舍去"——点"自动按规则数"看标准答案。格数×a²=S。</p>
+    </div>
+
+    <h2 class="v">⑧ 误差分析:S 偏小 → d 偏大</h2>
+    <div class="card">
+      <p style="margin:8px 0">由 d = V/S,分母 S 一变,d 就反向变。抓住这条主线,误差方向一目了然:</p>
+      <table>
+        <tr><th>误差来源</th><th>对 S/V 的影响</th><th>对 d 的影响</th></tr>
+        <tr><td>油膜没充分散开就描轮廓</td><td>S 偏<b>小</b></td><td>d 偏<b>大</b></td></tr>
+        <tr><td>数一滴/数滴数不准</td><td>V 偏差</td><td>d 随之偏差</td></tr>
+        <tr><td>数格子规则用错(乱估)</td><td>S 偏差</td><td>d 偏差</td></tr>
+        <tr><td>酒精没完全挥发 / 浓度不准</td><td>V 偏<b>大</b></td><td>d 偏<b>大</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>记忆抓手:</b> d = V/S。<b>S 在分母</b>:S 偏小 → d 偏大;S 偏大 → d 偏小。<b>V 在分子</b>:V 偏大 → d 偏大。凡是让油膜"没摊够"的操作,都会让 S 偏小、d 偏大。</p>
+      <p class="trap">⚠ 别死记每条结论,回到 d=V/S 现推:先判断这条误差把 V 还是 S 弄大/弄小,再看它在分子还是分母,d 的方向自动出来。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 8 — 误差分析:拖"油膜散开程度"→ S 变小 → d 变大(直观看误差方向)</div>
+      <svg id="errSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>油膜散开程度 <input id="errSpread" type="range" min="30" max="100" value="100" step="1"></label>
+        <label><input id="errAlc" type="checkbox"> 酒精未完全挥发(V偏大)</label>
+      </div>
+      <div class="live">
+        <div><b>散开程度</b><span id="errPct">100%</span></div>
+        <div><b>油膜面积 S</b><span id="errS">100%</span></div>
+        <div><b>测得 d 相对真值</b><span id="errD">正常</span></div>
+        <div><b>方向</b><span id="errDir">—</span></div>
+      </div>
+      <p class="small">V 固定。把"散开程度"拖小,轮廓缩小 → S 变小 → 由 d=V/S,测得 d 偏大。再勾"酒精未挥发",V 偏大 → d 也偏大。两条误差方向都指向"d 偏大"。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求每滴纯油酸体积 V</h3>
+      <p><b class="tag">触发信号:</b>给"油酸酒精溶液浓度(体积分数)"和"1 mL 是多少滴"或"每滴多少 mL"。</p>
+      <p><b class="tag">标准动作:</b>每滴溶液体积 = 1/n mL(若给 1 mL=n 滴);再乘浓度 c 得纯油酸体积 V = (1/n)·c;换成 m³(×10⁻⁶)。</p>
+      <p><b class="tag">示例(带解):</b>1 mL 溶液 50 滴,浓度 0.04%。每滴溶液 1/50=0.02 mL,V=0.02×0.0004=8×10⁻⁶ mL=8×10⁻¹² m³。</p>
+      <p class="trap">陷阱:直接用溶液体积当 V(漏乘浓度);把"1 mL=n 滴"写成每滴 n mL。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 数格子求油膜面积 S</h3>
+      <p><b class="tag">触发信号:</b>给方格纸图、"油膜占约 N 格"、每格边长 a 或每格面积。</p>
+      <p><b class="tag">标准动作:</b>按"过半算一格、不足半格舍去"数出格数 N;S = N × a²;cm² 换 m²(×10⁻⁴)。</p>
+      <p><b class="tag">示例(带解):</b>油膜占 80 格,每格边长 1 cm。S=80×1²=80 cm²=80×10⁻⁴=8×10⁻³ m²。</p>
+      <p class="trap">陷阱:忘了每格面积是 a²(不是 a);cm² 没换 m²;数格规则乱用。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 主干题:d = V/S 求分子直径</h3>
+      <p><b class="tag">触发信号:</b>已能求出 V 和 S,问"油酸分子直径约为多少"。</p>
+      <p><b class="tag">标准动作:</b>V、S 全换 SI → d=V/S → 检查数量级是否在 10⁻⁹~10⁻¹⁰ m。</p>
+      <p><b class="tag">示例(带解):</b>V=8×10⁻¹² m³,S=8×10⁻³ m²。d=V/S=(8×10⁻¹²)/(8×10⁻³)=1×10⁻⁹ m。数量级合理。</p>
+      <p class="trap">陷阱:单位没统一(V 用 m³ 却 S 用 cm²);算完不检查数量级。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 误差方向判断(定性)</h3>
+      <p><b class="tag">触发信号:</b>"下列操作会使测量结果偏大还是偏小""某误差对 d 的影响"。</p>
+      <p><b class="tag">标准动作:</b>回到 d=V/S。先判断该操作使 V 还是 S 偏大/偏小,再看它在分子(V)还是分母(S),d 方向自动出。</p>
+      <p><b class="tag">示例(带解):</b>"油膜未充分散开就描"→ S 偏小 → S 在分母 → d 偏大。"浓度记大了"→ 算 V 偏大 → d 偏大。</p>
+      <p class="trap">陷阱:凭感觉背结论;忘了 S 在分母(S 小则 d 大是反向关系)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 综合数据一条龙(从头算到 d)</h3>
+      <p><b class="tag">触发信号:</b>一次给全:浓度、1 mL 多少滴、油膜格数、每格边长,问 d。</p>
+      <p><b class="tag">标准动作:</b>①V=(1/n)·c;②S=N·a²;③全换 SI;④d=V/S;⑤检查数量级。</p>
+      <p><b class="tag">示例(带解):</b>c=0.05%,1 mL=25 滴,油膜 100 格,每格 1 cm。V=(1/25)×0.0005=2×10⁻⁵ mL=2×10⁻¹¹ m³;S=100×1=100 cm²=1×10⁻² m²;d=2×10⁻¹¹/1×10⁻²=2×10⁻⁹ m。</p>
+      <p class="trap">陷阱:任一步单位没换;把溶液体积当 V;格面积漏平方。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 原理/假设/操作目的选择题</h3>
+      <p><b class="tag">触发信号:</b>"撒粉的目的""为什么要稀释""本实验基于哪些假设""膜厚为何等于直径"。</p>
+      <p><b class="tag">标准动作:</b>撒粉=显示边界;稀释=得到单分子膜;假设=单分子层/紧密排列/球形分子;膜厚=直径因单分子层。</p>
+      <p><b class="tag">示例(带解):</b>"撒痱子粉的作用是___"→ 答:使油膜边界清晰可见,便于描轮廓(不是测面积本身,也不是让油酸散开)。</p>
+      <p class="trap">陷阱:把撒粉说成"测面积";把稀释目的说成"节省油酸";忘了三条近似假设。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>V 是纯油酸体积,不是溶液体积!</b>必须 V=溶液体积×浓度,漏乘浓度是本实验头号错误。</p>
+      <p class="trap">② "1 mL 是 n 滴"→ 每滴 = 1/n mL,<b>不是 n mL</b>。方向别写反。</p>
+      <p class="trap">③ 单位不统一:V 用 mL/m³、S 用 cm²/m² 混着代,d 数量级立刻错。<b>代入前全换 SI</b>(1 mL=10⁻⁶ m³,1 cm²=10⁻⁴ m²)。</p>
+      <p class="trap">④ 每格面积是 <b>a²</b> 不是 a;S=格数×a²。</p>
+      <p class="trap">⑤ <b>撒粉是"显示边界"</b>,不是"测面积本身",更不是"让油酸散开"(散开靠油酸自己+酒精)。</p>
+      <p class="trap">⑥ 数格规则:超过半格算一格,不足半格舍去。别按面积乱估。</p>
+      <p class="trap">⑦ d=V/S 里 <b>S 在分母</b>:S 偏小 → d 偏<b>大</b>(反向)。油膜没摊够→S小→d大。</p>
+      <p class="trap">⑧ 算出的 d 数量级应约 <b>10⁻⁹~10⁻¹⁰ m</b>,若得 10⁻⁵ 之类必是哪步单位/浓度出错。</p>
+      <p class="trap">⑨ 三条假设不能忘:①单分子层 ②紧密排列无空隙 ③分子看作球形。</p>
+      <p class="trap">⑩ 油酸是<b>链状分子</b>,估出的更接近分子长度,但<b>数量级正确</b>,当作估算完全 OK——别以为实验"错了"。</p>
+      <p class="trap">⑪ 稀释目的是<b>得到单分子膜</b>(纯油酸太多会成多层),不是"节省油酸"。</p>
+      <p class="trap">⑫ 酒精的角色:稀释+帮散布,最后<b>挥发/溶掉不留体积</b>;若酒精没挥发完,V 偏大 → d 偏大。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 整套实验只有一个念头:d=V/S。</b> 把"厚度=体积/面积"这条几何常识,套到"厚度=一个分子直径"的单分子膜上,分子直径就被"量"出来了。稀释、撒粉、数格全是为了把 V、S 量准的配套工序。抓住主念头,任何变式题都能从头推。</p>
+      <p style="margin:8px 0"><b>② 稀释是"放大微观"的经典手法。</b> 一滴纯油酸的油酸量太大,无法单层铺开;用海量酒精把它稀释几千倍,一滴里油酸就少到能铺成单层,而酒精挥发后不留体积。这种"用可挥发溶剂把极小量摊薄"的思路,在很多微量测量里都通用。</p>
+      <p style="margin:8px 0"><b>③ 误差分析永远回到公式结构。</b> d=V/S,V 在分子、S 在分母。任何操作,先判断它把 V 还是 S 弄大弄小,再由分子/分母定 d 的方向。不用背表,一眼看穿"偏大偏小"。</p>
+      <p style="margin:8px 0"><b>④ 数量级意识是自检器。</b> 分子直径 ~10⁻¹⁰ m 是常识锚点。算完先看数量级:落在 10⁻⁹~10⁻¹⁰ 就大概率对,离谱就回头查单位换算和是否漏乘浓度。会用数量级自检的人,几乎不在这题丢分。</p>
+      <p style="margin:8px 0"><b>⑤ 模型的边界要心里有数。</b> 把链状油酸当球、把膜当理想单层紧密排列,都是<b>估算模型</b>——它给不出精确形状,但给对了<b>数量级</b>。物理估算的价值正在于"用极简模型抓住量级",这也是分子动理论"看不见却能算"的魅力。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:分子动理论总览 · 本页专攻「油膜法测分子直径」</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+function txt(p,x,y,s,sz,col,anc,w){const t=el(p,'text',{x:x,y:y,'font-size':sz||13,'font-weight':w||800,fill:col||INK,'text-anchor':anc||'start'});t.textContent=s;return t;}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",WATER="#bfe3f0",OIL="#f2c94c";
+
+/* ===== 互动1:厚度=体积/面积 ===== */
+(function(){
+  const svg=document.getElementById('thkSvg');
+  const Ss=document.getElementById('thkS');
+  const oV=document.getElementById('thkV'),oA=document.getElementById('thkA'),oD=document.getElementById('thkD'),oN=document.getElementById('thkNote');
+  const V=6; // fixed "volume" (arbitrary units, width*height stays const)
+  let S=3;
+  function sync(){S=+Ss.value;draw();}
+  Ss.oninput=sync;
+  document.getElementById('thkMax').onclick=()=>{Ss.value=10;S=10;draw();};
+  function draw(){
+    clr(svg);
+    const baseY=230,X0=70,maxW=560;
+    // water base line
+    el(svg,'line',{x1:X0-10,y1:baseY,x2:X0+maxW+10,y2:baseY,stroke:INK,'stroke-width':3});
+    txt(svg,X0-10,baseY+22,'水面',12,'#3a6a80','start');
+    // slab: width = S*scale, height = V/S*scale (area const)
+    const wScale=54; // px per S-unit
+    const w=Math.min(maxW,S*wScale);
+    const thick=V/S; // "d"
+    const hScale=40;
+    const h=thick*hScale;
+    // oil slab
+    el(svg,'rect',{x:X0,y:baseY-h,width:w,height:h,fill:OIL,stroke:INK,'stroke-width':3});
+    // molecule circles across thickness to show layers
+    const molR=Math.max(3,Math.min(14,h/2));
+    const layers=Math.max(1,Math.round(h/(molR*2)));
+    // dimension arrows
+    // width S
+    el(svg,'line',{x1:X0,y1:baseY+14,x2:X0+w,y2:baseY+14,stroke:BLUE,'stroke-width':2});
+    txt(svg,X0+w/2,baseY+30,'面积方向 S ='+S,12,BLUE,'middle');
+    // thickness d
+    el(svg,'line',{x1:X0-14,y1:baseY-h,x2:X0-14,y2:baseY,stroke:RED,'stroke-width':2});
+    txt(svg,X0-18,baseY-h/2,'d',13,RED,'end');
+    // top label
+    const single = S>=9;
+    txt(svg,X0+maxW/2,30,'V(油酸体积)不变 → 摊得越开(S↑),膜越薄(d↓)',13.5,INK,'middle');
+    txt(svg,X0,60,'厚度 d = V / S = '+V+' / '+S+' = '+thick.toFixed(2),15,INK,'start',900);
+    if(single){
+      txt(svg,X0,84,'★ 摊到极限 = 单分子层,d = 一个分子的直径',13,GREEN,'start',900);
+    }
+    oV.textContent=V+' (定值)';oA.textContent=S+'';oD.textContent=thick.toFixed(2);
+    oN.textContent=single?'是(单分子)':'否(还太厚)';
+  }
+  sync();
+})();
+
+/* ===== 互动2:为什么稀释 ===== */
+(function(){
+  const cv=document.getElementById('dilCv');const ctx=cv.getContext('2d');
+  let t=0,running=false;
+  const oMsg=document.getElementById('dilMsg');
+  function reset(){t=0;running=false;oMsg.textContent='必须稀释';draw();}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // titles
+    ctx.font='bold 14px sans-serif';ctx.fillStyle=INK;ctx.textAlign='center';
+    ctx.fillText('纯油酸一滴(不稀释)',175,24);
+    ctx.fillText('稀溶液一滴(酒精挥发后)',525,24);
+    // water surfaces
+    const wy=210;
+    ctx.fillStyle=WATER;ctx.fillRect(30,wy,300,34);ctx.fillRect(370,wy,300,34);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(30,wy,300,34);ctx.strokeRect(370,wy,300,34);
+    ctx.fillStyle='#3a6a80';ctx.font='bold 12px sans-serif';ctx.fillText('水',55,wy+22);ctx.fillText('水',395,wy+22);
+    // LEFT: pure oleic -> thick multilayer blob
+    const spreadL=0.15+0.85*t; // spreads a little
+    const halfW_L=40+50*spreadL;
+    const layersL=Math.max(3,Math.round(6-3*t)); // stays multi-layer (min 3)
+    const molR=7;
+    const cxL=180;
+    ctx.fillStyle=OIL;
+    for(let ly=0;ly<layersL;ly++){
+      const yy=wy-2-molR-ly*molR*1.7;
+      for(let mx=cxL-halfW_L;mx<=cxL+halfW_L;mx+=molR*1.9){
+        ctx.beginPath();ctx.arc(mx,yy,molR,0,2*Math.PI);ctx.fill();
+        ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();
+      }
+    }
+    ctx.fillStyle=RED;ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('厚厚一坨:多层分子',180,wy-molR*1.7*layersL-14);
+    ctx.fillText('✗ 不是单分子膜',180,258);
+    // RIGHT: dilute drop: alcohol evaporates, leaves thin single layer
+    const cxR=525;
+    // alcohol cloud fading
+    if(t<0.85){
+      ctx.fillStyle='rgba(122,63,242,'+(0.35*(1-t/0.85))+')';
+      ctx.beginPath();ctx.ellipse(cxR,wy-30,90*(0.4+t),50*(0.4+t),0,0,2*Math.PI);ctx.fill();
+      ctx.fillStyle=VIO;ctx.font='bold 11px sans-serif';ctx.fillText('酒精挥发↑',cxR,wy-92);
+    }
+    // single oil layer spreading wide
+    const halfW_R=30+120*t;
+    ctx.fillStyle=OIL;
+    for(let mx=cxR-halfW_R;mx<=cxR+halfW_R;mx+=molR*1.9){
+      ctx.beginPath();ctx.arc(mx,wy-2-molR,molR,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.stroke();
+    }
+    ctx.fillStyle=GREEN;ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    ctx.fillText('薄薄一层:单分子膜',cxR,wy-molR*2-16);
+    ctx.fillText('✓ 正是我们要的',cxR,258);
+  }
+  function loop(){if(!running)return;t+=0.012;if(t>=1){t=1;running=false;oMsg.textContent='右边才成膜';}draw();requestAnimationFrame(loop);}
+  document.getElementById('dilGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('dilReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动3:油膜形成全过程 ===== */
+(function(){
+  const cv=document.getElementById('filmCv');const ctx=cv.getContext('2d');
+  const oStage=document.getElementById('filmStage'),oAlc=document.getElementById('filmAlc'),oEdge=document.getElementById('filmEdge'),oOk=document.getElementById('filmOk');
+  let t=0,running=false;
+  const cx=350,wy=210;
+  // powder dots
+  const powder=[];
+  function initPowder(){powder.length=0;for(let i=0;i<260;i++){powder.push({a:Math.random()*Math.PI*2,r:20+Math.random()*300,base:0});} }
+  function reset(){t=0;running=false;initPowder();setLive();draw();}
+  function setLive(){
+    let stage,alc,edge,ok;
+    if(t<0.2){stage='滴入溶液';alc='未挥发';edge='未形成';ok='—';}
+    else if(t<0.5){stage='酒精挥发';alc='挥发中↑';edge='未形成';ok='—';}
+    else if(t<0.85){stage='油酸散开推粉';alc='已挥发';edge='形成中';ok='扩张中';}
+    else{stage='单分子膜稳定';alc='已挥发';edge='清晰!';ok='可描轮廓✓';}
+    oStage.textContent=stage;oAlc.textContent=alc;oEdge.textContent=edge;oOk.textContent=ok;
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // water tray
+    ctx.fillStyle=WATER;ctx.fillRect(20,60,660,220);
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.strokeRect(20,60,660,220);
+    // film radius grows after phase2
+    const filmR = t<0.4?0 : Math.min(150,(t-0.4)/0.45*150);
+    // powder: pushed outward beyond filmR
+    ctx.fillStyle='#e8e2d2';
+    for(const p of powder){
+      let r=p.r;
+      if(r<filmR+8) r=filmR+8+ (p.r%18); // pushed out to edge
+      const px=cx+Math.cos(p.a)*r, py=wy+Math.sin(p.a)*r*0.55;
+      if(px>28&&px<672&&py>66&&py<274){ctx.fillRect(px,py,2.6,2.6);}
+    }
+    // dropper + falling drop (phase0)
+    if(t<0.22){
+      ctx.fillStyle='#666';ctx.fillRect(cx-8,20,16,40);ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(cx-8,20,16,40);
+      const dy=60+(t/0.22)*(wy-70);
+      ctx.fillStyle=OIL;ctx.beginPath();ctx.arc(cx,dy,7,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('①一滴油酸酒精溶液',cx,16);
+    }
+    // alcohol vapor (phase1)
+    if(t>=0.2&&t<0.55){
+      const a=1-(t-0.2)/0.35;
+      ctx.fillStyle='rgba(122,63,242,'+(0.4*a)+')';
+      ctx.beginPath();ctx.ellipse(cx,wy-40,70,45,0,0,2*Math.PI);ctx.fill();
+      ctx.fillStyle=VIO;ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('②酒精挥发/溶于水↑',cx,wy-95);
+    }
+    // oil film disk
+    if(filmR>0){
+      ctx.fillStyle='rgba(242,201,76,0.85)';
+      ctx.beginPath();ctx.ellipse(cx,wy,filmR,filmR*0.55,0,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=t>=0.85?RED:'#c99a2b';ctx.lineWidth=t>=0.85?4:2;ctx.stroke();
+      if(t>=0.55&&t<0.85){ctx.fillStyle=ORANGE;ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('③油酸向外推开粉末',cx,wy-filmR*0.55-12);}
+    }
+    if(t>=0.85){
+      ctx.fillStyle=RED;ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+      ctx.fillText('④清晰边界的单分子油膜 → 可描轮廓',cx,wy-filmR*0.55-14);
+    }
+    // caption row
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.textAlign='left';
+    ctx.fillText('灰点=痱子粉(显示边界用)   黄=油膜   紫=酒精',30,296);
+  }
+  function loop(){if(!running)return;t+=0.006;if(t>=1){t=1;running=false;}setLive();draw();requestAnimationFrame(loop);}
+  document.getElementById('filmGo').onclick=()=>{t=0;initPowder();running=true;requestAnimationFrame(loop);};
+  document.getElementById('filmReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:单分子层侧视 ===== */
+(function(){
+  const svg=document.getElementById('sideSvg');
+  const Ns=document.getElementById('sideN');
+  let n=14,zoom=false;
+  function sync(){n=+Ns.value;draw();}
+  Ns.oninput=sync;
+  document.getElementById('sideZoom').onclick=()=>{zoom=!zoom;draw();};
+  function draw(){
+    clr(svg);
+    const waterY=170,X0=40,W=620;
+    // water
+    el(svg,'rect',{x:X0,y:waterY,width:W,height:70,fill:WATER,stroke:INK,'stroke-width':3});
+    txt(svg,X0+8,waterY+40,'水',13,'#3a6a80','start',900);
+    // molecules: single row of circles sitting on water
+    const gap=W/n;
+    const R=Math.min(gap/2*0.92,26);
+    for(let i=0;i<n;i++){
+      const cx=X0+gap*(i+0.5);
+      el(svg,'circle',{cx:cx,cy:waterY-R,r:R,fill:OIL,stroke:INK,'stroke-width':2.5});
+      // little head-tail hint
+      el(svg,'circle',{cx:cx,cy:waterY-R,r:R*0.28,fill:'#c99a2b'});
+    }
+    // thickness dimension = d = diameter
+    const cxD=X0+gap*0.5;
+    el(svg,'line',{x1:X0-18,y1:waterY,x2:X0-18,y2:waterY-2*R,stroke:RED,'stroke-width':3});
+    el(svg,'line',{x1:X0-24,y1:waterY,x2:X0-12,y2:waterY,stroke:RED,'stroke-width':3});
+    el(svg,'line',{x1:X0-24,y1:waterY-2*R,x2:X0-12,y2:waterY-2*R,stroke:RED,'stroke-width':3});
+    txt(svg,X0-30,waterY-R+5,'d',15,RED,'end',900);
+    txt(svg,X0+W/2,30,'单分子层侧视:一排球紧挨着,只有一层,膜厚 = 一个分子直径 d',13.5,INK,'middle');
+    txt(svg,X0+W/2,52,'(黄=油酸分子,看作小球;下方是水面)',12,'#6b5d3a','middle');
+    if(zoom){
+      // zoom bubble on one molecule
+      const zx=560,zy=90,zr=52;
+      el(svg,'circle',{cx:zx,cy:zy,r:zr,fill:'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'circle',{cx:zx,cy:zy,r:zr-8,fill:OIL,stroke:INK,'stroke-width':2.5});
+      el(svg,'line',{x1:zx-zr+8,y1:zy,x2:zx+zr-8,y2:zy,stroke:RED,'stroke-width':2.5});
+      txt(svg,zx,zy-zr-6,'放大:直径 = d',12,RED,'middle',900);
+      txt(svg,zx,zy+zr+18,'≈ 10⁻¹⁰ m',12,INK,'middle',900);
+    }
+  }
+  sync();
+})();
+
+/* ===== 互动5:浓度换算计算器 ===== */
+(function(){
+  const svg=document.getElementById('volSvg');
+  const Ns=document.getElementById('volN'),Cs=document.getElementById('volC');
+  const oDrop=document.getElementById('volDrop'),oVml=document.getElementById('volVml'),oVm3=document.getElementById('volVm3');
+  function fmt(x){ if(x===0)return '0'; const e=Math.floor(Math.log10(Math.abs(x))); const m=x/Math.pow(10,e); return m.toFixed(2)+'×10'+sup(e); }
+  function sup(e){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(e).split('').map(c=>map[c]||c).join('');}
+  function sync(){
+    const n=+Ns.value||1, c=(+Cs.value||0)/100;
+    const drop=1/n; // mL per drop
+    const vml=drop*c; // mL pure oleic per drop
+    const vm3=vml*1e-6; // m^3
+    oDrop.textContent=drop.toFixed(4);
+    oVml.textContent=fmt(vml)+' mL';
+    oVm3.textContent=fmt(vm3);
+    // svg flow
+    clr(svg);
+    txt(svg,20,30,'1 mL = '+n+' 滴',15,INK,'start',900);
+    txt(svg,20,58,'每滴溶液 = 1/'+n+' = '+drop.toFixed(4)+' mL',13.5,BLUE,'start',900);
+    txt(svg,20,90,'×  浓度 c = '+(+Cs.value)+'% = '+c,13.5,ORANGE,'start',900);
+    el(svg,'line',{x1:20,y1:104,x2:520,y2:104,stroke:INK,'stroke-width':2});
+    txt(svg,20,132,'每滴纯油酸 V = '+fmt(vml)+' mL = '+fmt(vm3)+' m³',15,GREEN,'start',900);
+    txt(svg,20,158,'(注意:V 极小,正是稀释的结果;1 mL=10⁻⁶ m³)',12,'#6b5d3a','start',800);
+  }
+  Ns.oninput=Cs.oninput=sync;
+  sync();
+})();
+
+/* ===== 互动6:d=V/S 计算器 ===== */
+(function(){
+  const svg=document.getElementById('dSvg');
+  const Vv=document.getElementById('dV'),Vu=document.getElementById('dVu'),Ve=document.getElementById('dVe');
+  const Sv=document.getElementById('dS'),Su=document.getElementById('dSu');
+  const oV=document.getElementById('dVout'),oS=document.getElementById('dSout'),oD=document.getElementById('dOut'),oO=document.getElementById('dOrder');
+  function sup(e){const map={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(e).split('').map(c=>map[c]||c).join('');}
+  function fmt(x){ if(!isFinite(x)||x===0)return '0'; const e=Math.floor(Math.log10(Math.abs(x))); const m=x/Math.pow(10,e); return m.toFixed(2)+'×10'+sup(e); }
+  function sync(){
+    const V=(+Vv.value)*Math.pow(10,+Ve.value)*(+Vu.value); // to m^3
+    const S=(+Sv.value)*(+Su.value); // to m^2
+    const d=S!==0?V/S:0;
+    oV.textContent=fmt(V);oS.textContent=fmt(S);oD.textContent=fmt(d);
+    const ord=d>0?Math.floor(Math.log10(d)):0;
+    oO.textContent='10'+sup(ord);
+    clr(svg);
+    txt(svg,20,30,'全部换成 SI 后:',13.5,INK,'start',900);
+    txt(svg,20,58,'V = '+fmt(V)+' m³',14,BLUE,'start',900);
+    txt(svg,20,84,'S = '+fmt(S)+' m²',14,ORANGE,'start',900);
+    el(svg,'line',{x1:20,y1:98,x2:520,y2:98,stroke:INK,'stroke-width':2});
+    txt(svg,20,126,'d = V / S = '+fmt(d)+' m',16,GREEN,'start',900);
+    const ok=(ord<=-9&&ord>=-11);
+    txt(svg,20,154,'数量级 10'+sup(ord)+(ok?'  ✓ 合理(分子直径~10⁻¹⁰ m)':'  ✗ 离谱,查单位/是否漏乘浓度'),13,ok?GREEN:RED,'start',900);
+  }
+  Vv.oninput=Vu.onchange=Ve.oninput=Sv.oninput=Su.onchange=sync;
+  sync();
+})();
+
+/* ===== 互动7:数格子测面积 ===== */
+(function(){
+  const svg=document.getElementById('gridSvg');
+  const As=document.getElementById('gridA');
+  const oCnt=document.getElementById('gridCnt'),oCell=document.getElementById('gridCell'),oScm=document.getElementById('gridScm'),oSm=document.getElementById('gridSm');
+  const cols=14,rows=12,cell=25,X0=30,Y0=20;
+  // outline: an irregular closed blob (ellipse-ish with wobble), in svg coords
+  const ccx=X0+cols*cell/2, ccy=Y0+rows*cell/2;
+  function boundR(a){return (110+22*Math.sin(3*a)+14*Math.cos(2*a+0.6))*0.92;}
+  function inside(px,py){
+    const dx=px-ccx, dy=(py-ccy)*1.15;
+    const a=Math.atan2(dy,dx);
+    const r=Math.hypot(dx,dy);
+    return r<=boundR(a);
+  }
+  // coverage fraction of a cell (sample grid)
+  function coverage(i,j){
+    let c=0,tot=0;
+    for(let sx=0;sx<4;sx++)for(let sy=0;sy<4;sy++){
+      const px=X0+i*cell+(sx+0.5)/4*cell, py=Y0+j*cell+(sy+0.5)/4*cell;
+      tot++; if(inside(px,py))c++;
+    }
+    return c/tot;
+  }
+  const state={}; // key "i,j" -> true counted
+  function key(i,j){return i+','+j;}
+  function draw(){
+    clr(svg);
+    const a=+As.value||1;
+    // grid + cells
+    let cnt=0;
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+      const cx=X0+i*cell, cy=Y0+j*cell;
+      const on=state[key(i,j)];
+      if(on){cnt++;el(svg,'rect',{x:cx,y:cy,width:cell,height:cell,fill:'rgba(30,158,134,0.45)'});}
+      el(svg,'rect',{x:cx,y:cy,width:cell,height:cell,fill:'none',stroke:'#c9c0a6','stroke-width':1});
+    }
+    // outline path
+    let d='';
+    for(let k=0;k<=60;k++){const ang=k/60*2*Math.PI;const r=boundR(ang);const px=ccx+Math.cos(ang)*r;const py=ccy+Math.sin(ang)*r/1.15;d+=(k===0?'M':'L')+px.toFixed(1)+' '+py.toFixed(1)+' ';}
+    d+='Z';
+    el(svg,'path',{d:d,fill:'rgba(242,201,76,0.28)',stroke:RED,'stroke-width':3});
+    // clickable overlay rects (transparent) on top
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+      const cx=X0+i*cell, cy=Y0+j*cell;
+      const rr=el(svg,'rect',{x:cx,y:cy,width:cell,height:cell,fill:'transparent',style:'cursor:pointer'});
+      rr.addEventListener('click',()=>{if(state[key(i,j)])delete state[key(i,j)];else state[key(i,j)]=true;draw();});
+    }
+    txt(svg,X0,Y0+rows*cell+22,'规则:超过半格算一格,不足半格舍去。点格子=计入/取消',12,INK,'start',800);
+    const cellArea=a*a;
+    oCnt.textContent=cnt;oCell.textContent=cellArea.toFixed(2);
+    oScm.textContent=(cnt*cellArea).toFixed(2);
+    oSm.textContent=(cnt*cellArea*1e-4).toExponential(2);
+  }
+  document.getElementById('gridAuto').onclick=()=>{
+    for(const k in state)delete state[k];
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){if(coverage(i,j)>0.5)state[key(i,j)]=true;}
+    draw();
+  };
+  document.getElementById('gridClear').onclick=()=>{for(const k in state)delete state[k];draw();};
+  As.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动8:误差分析 ===== */
+(function(){
+  const svg=document.getElementById('errSvg');
+  const Sp=document.getElementById('errSpread'),Alc=document.getElementById('errAlc');
+  const oPct=document.getElementById('errPct'),oS=document.getElementById('errS'),oD=document.getElementById('errD'),oDir=document.getElementById('errDir');
+  function draw(){
+    clr(svg);
+    const spread=+Sp.value/100; // 0.3..1
+    const alc=Alc.checked;
+    const cx=200,cy=160;
+    // true film outline (spread=1)
+    const Rtrue=110;
+    // measured film (smaller when not fully spread)
+    const R=Rtrue*Math.sqrt(spread); // area ~ spread
+    // true outline dashed
+    el(svg,'ellipse',{cx:cx,cy:cy,rx:Rtrue,ry:Rtrue*0.62,fill:'none',stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    txt(svg,cx,cy-Rtrue*0.62-8,'真实充分散开的边界(虚线)',12,'#6b5d3a','middle',800);
+    // measured outline
+    el(svg,'ellipse',{cx:cx,cy:cy,rx:R,ry:R*0.62,fill:'rgba(242,201,76,0.55)',stroke:RED,'stroke-width':3});
+    txt(svg,cx,cy+Rtrue*0.62+22,'测得油膜(实心) S = '+(spread*100).toFixed(0)+'% 真值',12,RED,'middle',800);
+    // right panel: d bar
+    const bx=470,baseY=230;
+    // d relative: d = V/S. V=1 (or 1.3 if alcohol), S=spread
+    const Vrel=alc?1.3:1;
+    const Srel=spread;
+    const dRel=Vrel/Srel; // relative to true (V=1,S=1 -> d=1)
+    txt(svg,bx-20,40,'测得 d 相对真值',13.5,INK,'start',900);
+    // true d reference bar
+    const h0=90; const scale=h0/1;
+    el(svg,'line',{x1:bx-30,y1:baseY-h0,x2:bx+150,y2:baseY-h0,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    txt(svg,bx+152,baseY-h0+4,'真值 d',11,'#6b5d3a','start',800);
+    const h=Math.min(200,dRel*scale);
+    const col=dRel>1.02?RED:(dRel<0.98?BLUE:GREEN);
+    el(svg,'rect',{x:bx+30,y:baseY-h,width:70,height:h,fill:col,stroke:INK,'stroke-width':3});
+    txt(svg,bx+65,baseY-h-8,dRel.toFixed(2)+'×',14,INK,'middle',900);
+    txt(svg,bx+65,baseY+18,'测得 d',12,INK,'middle',900);
+    el(svg,'line',{x1:bx-20,y1:baseY,x2:bx+180,y2:baseY,stroke:INK,'stroke-width':2});
+    // formula reminder
+    txt(svg,bx-20,270,'d = V / S:S在分母',12,INK,'start',900);
+    txt(svg,bx-20,288,'S↓ → d↑;V↑ → d↑',12,INK,'start',900);
+    oPct.textContent=(spread*100).toFixed(0)+'%';
+    oS.textContent=(spread*100).toFixed(0)+'%';
+    oD.textContent=dRel.toFixed(2)+'× 真值';
+    oDir.textContent=dRel>1.02?'偏大↑':(dRel<0.98?'偏小↓':'正常');
+  }
+  Sp.oninput=draw;Alc.onchange=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 本实验测的是什么?唯一的主公式是什么?",a:"测油酸分子的直径 d。主公式 d = V/S,其中 V 是这滴油膜里纯油酸的体积,S 是油膜面积。原理:单分子膜厚度=分子直径,而厚度=体积/面积。"},
+ {q:"2. 为什么要把油酸配成很稀的油酸酒精溶液?",a:"纯油酸一滴太多,摊开也是多层分子,形不成单分子膜。稀释后一滴里油酸极少,酒精挥发/溶掉后只剩极少油酸,才能铺成「只有一个分子厚」的单分子膜,d=V/S 才成立。"},
+ {q:"3. 计算 V 时最容易犯的错是什么?正确怎么算?",a:"最易错:直接把溶液体积当 V。正确:V = 溶液体积 × 油酸体积浓度(体积分数)。必须先乘浓度把纯油酸抠出来。"},
+ {q:"4. 怎样得到「一滴」的体积?",a:"用滴管数出 1 mL 溶液是多少滴(n 滴),每滴溶液体积=1/n mL;再乘浓度 c 得每滴纯油酸体积 V=(1/n)·c。"},
+ {q:"5. 撒痱子粉(爽身粉)的作用是什么?",a:"油膜滴上去把粉推开,形成清晰的油膜边界,便于看清并描下轮廓。粉的作用是「显示边界」,不是测面积本身,也不是让油酸散开。"},
+ {q:"6. 怎样测油膜面积 S?数格规则是什么?",a:"油膜稳定后把轮廓描到玻璃板,再放到方格纸上数格子。规则:超过半格算一格,不足半格舍去。S=格数×每格面积(每格面积=边长的平方 a²)。"},
+ {q:"7. 单位换算:1 mL = ? m³;1 cm² = ? m²;d 数量级?",a:"1 mL(=1 cm³)=1×10⁻⁶ m³;1 cm²=1×10⁻⁴ m²。油酸分子直径 d 数量级约 10⁻¹⁰ m(10⁻⁹~10⁻¹⁰)。代入 d=V/S 前必须全换 SI。"},
+ {q:"8. 本实验用到哪三条近似假设?",a:"①油膜是单分子层;②分子紧密排列、无空隙;③把分子看作球形。(油酸实为链状分子,估出的更接近分子长度,但数量级正确。)"},
+ {q:"9. 若油膜没充分散开就描轮廓,测得 d 偏大还是偏小?为什么?",a:"偏大。没散够→S 偏小;由 d=V/S,S 在分母,S 小则 d 大。"},
+ {q:"10. 若酒精未完全挥发,对 d 有何影响?",a:"残留酒精使算 V 时的油酸体积偏大(V 偏大),由 d=V/S,V 在分子,d 偏大。"},
+ {q:"11. 综合题:c=0.04%,1 mL=50 滴,油膜 80 格,每格边长 1 cm,求 d。",a:"每滴溶液=1/50=0.02 mL;V=0.02×0.0004=8×10⁻⁶ mL=8×10⁻¹² m³。S=80×1²=80 cm²=8×10⁻³ m²。d=V/S=8×10⁻¹²/8×10⁻³=1×10⁻⁹ m。数量级合理。"},
+ {q:"12. 算完 d 得到 10⁻⁵ m,说明什么?怎么排查?",a:"数量级离谱(应为 10⁻⁹~10⁻¹⁰)。多半是:①单位没统一(V 用 m³ 却 S 用 cm²);②漏乘浓度把溶液体积当 V;③每格面积漏平方。逐条检查。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

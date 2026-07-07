@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光的干涉与衍射 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <a class="back" style="background:var(--blue);color:#fff;border-color:#16120A" href="光学.html">← 光学总览</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>光的干涉与衍射</h1>
+    <p class="lead">这一页专治一件事:<b>「干涉和衍射的实验原理、做题思路不清楚」</b>。核心只有一句——光是波,波会<b>叠加</b>。两束相干光在屏上某点<b>路程差</b>是波长整数倍就<b>加强(亮)</b>,是半波长奇数倍就<b>减弱(暗)</b>。整章的公式、实验、题型,全从这一句长出来。读完这页,你会既懂<b>实验为什么这么做</b>,又懂<b>题目该怎么下手</b>。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 把光想成水波。两个「同步」的波源发出的波纹在水面相遇——波峰碰波峰,水面抬得更高(<b>亮</b>);波峰碰波谷,互相抵消,水面不动(<b>暗</b>)。屏上哪里亮、哪里暗,只看这一点<b>到两个波源的路程差</b>:差了整数个波长→步调一致→加强;差了半个波长的奇数倍→步调正好相反→抵消。双缝干涉的亮暗条纹、单缝衍射的花样、肥皂泡的彩色,全是这个「波峰碰波峰」的游戏。</div>
+
+    <div class="keybox"><b>三条命根子公式:</b><br>① 路程差判亮暗:<b>δ=r₂−r₁</b>,亮纹 <b>δ=kλ</b>(k=0,±1,±2…),暗纹 <b>δ=(2k+1)λ/2</b>。<br>② 相邻条纹间距:<b>Δy=(L/d)·λ</b>(L=双缝到屏距离,d=缝间距,λ=波长)。<br>③ 测波长:<b>λ=d·Δy/L</b>。三条其实是一条:所有题都在这三步里绕。</div>
+
+    <h2>① 相干光源:为什么要「先过单缝」</h2>
+    <div class="card">
+      <p style="margin:6px 0">两束光要能形成<b>稳定</b>的干涉条纹,必须是<b>相干光源</b>,三个条件缺一不可:</p>
+      <table>
+        <tr><th>相干条件</th><th>含义</th></tr>
+        <tr><td><b>① 频率相同</b></td><td>同一种颜色(同一波长),否则条纹会不断漂移</td></tr>
+        <tr><td><b>② 振动方向相同</b></td><td>两波的振动方向一致才能有效叠加</td></tr>
+        <tr><td><b>③ 相位差恒定</b></td><td>两波「步调差」不随时间变,屏上亮暗才能稳定不动</td></tr>
+      </table>
+      <h3>为什么双缝前要先放一个单缝?</h3>
+      <p style="margin:8px 0">普通光源(灯、太阳)上无数个发光点<b>各自独立、相位杂乱</b>,直接照双缝,两缝发出的光相位差瞬息万变→条纹一片模糊。<b>解决办法:</b>先让光通过<b>一个单缝</b>,得到一条极窄的<b>线光源</b>;这条线光源再照亮双缝时,<b>双缝是被同一个波前照亮的</b>,于是两缝射出的光<b>相位差恒定</b>——这就人为造出了两个相干光源。</p>
+      <div class="say">🗣️ 一句话:<b>单缝的作用是「把杂乱的光整理成一个统一的波源」</b>,让后面的双缝变成两个「同步」的喇叭。没有这个单缝,双缝里出来的两束光各吹各的,屏上就没有稳定条纹。</div>
+      <p class="trap">⚠ 别把单缝的作用说成「让光变单色」——单色是<b>滤光片</b>干的。单缝管的是<b>相干(相位统一)</b>。</p>
+    </div>
+
+    <h2 class="b">② 双缝干涉规律:路程差定亮暗</h2>
+    <div class="card">
+      <p style="margin:6px 0">屏上任取一点 P,它到两条缝 S₁、S₂ 的距离分别为 r₁、r₂,<b>路程差 δ=r₂−r₁</b>。两束光到达 P 时的「步调差」完全由 δ 决定:</p>
+      <div class="eq">亮纹(加强):δ = kλ　(k=0,±1,±2,…)</div>
+      <div class="eq">暗纹(减弱):δ = (2k+1)·λ/2　(k=0,±1,±2,…)</div>
+      <p style="margin:8px 0"><b>中央(δ=0)一定是亮纹</b>——P 到两缝一样远,两波同步到达,波峰叠波峰。从中央往两边,δ 依次等于 0、λ、2λ… 是一条条亮纹;δ 等于 λ/2、3λ/2… 是一条条暗纹。<b>亮暗交替、均匀排列。</b></p>
+      <table>
+        <tr><th>路程差 δ</th><th>结果</th><th>物理</th></tr>
+        <tr><td>0, λ, 2λ, 3λ …(整数倍 λ)</td><td><b>亮纹</b></td><td>波峰叠波峰,加强</td></tr>
+        <tr><td>λ/2, 3λ/2, 5λ/2 …(半波长奇数倍)</td><td><b>暗纹</b></td><td>波峰叠波谷,抵消</td></tr>
+      </table>
+      <p class="trap">⚠ 判亮暗永远先算 δ,再看它是「λ 的整数倍」还是「λ/2 的奇数倍」。千万别背「离中央越远越暗」——错。是<b>等间距亮暗交替</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 4 — 路程差 δ 判亮暗:拖屏上的 P 点,看 r₁、r₂、δ=r₂−r₁,自动判断亮/暗</div>
+      <svg id="pdSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>波长 λ(格) <input id="pdL" type="range" min="18" max="42" value="28" step="1"></label>
+        <button id="pdSnapB">↷ 对到最近亮纹</button><button id="pdSnapD">↷ 对到最近暗纹</button>
+      </div>
+      <div class="live">
+        <div><b>r₁(到 S₁)</b><span id="pdR1">0</span></div>
+        <div><b>r₂(到 S₂)</b><span id="pdR2">0</span></div>
+        <div><b>δ=r₂−r₁</b><span id="pdD">0</span></div>
+        <div><b>判定</b><span id="pdV">0</span></div>
+      </div>
+      <p class="small">拖动屏幕上的红点 P。左边画出 P 到两缝的两条光线 r₁、r₂,右上给出 δ=r₂−r₁ 换算成「几倍 λ」。δ 是 λ 整数倍→<b style="color:#E0382A">亮</b>,是 λ/2 奇数倍→<b style="color:#1450C8">暗</b>。中央 δ=0 恒亮。</p>
+    </div>
+
+    <h2 class="g">③ 条纹间距公式 Δy=Lλ/d:测波长的核心</h2>
+    <div class="card">
+      <div class="eq">Δy = (L / d) · λ　⟺　λ = d · Δy / L</div>
+      <p style="margin:8px 0">相邻两条<b>亮纹</b>(或相邻两条<b>暗纹</b>)之间的距离叫<b>条纹间距 Δy</b>。它由三个量决定:</p>
+      <table>
+        <tr><th>符号</th><th>含义</th><th>常见易混</th></tr>
+        <tr><td><b>Δy</b></td><td>相邻亮(暗)纹间距</td><td>不是缝到屏,是条纹之间</td></tr>
+        <tr><td><b>L</b></td><td><b>双缝到屏</b>的距离</td><td>不是缝间距!离屏越远条纹越疏</td></tr>
+        <tr><td><b>d</b></td><td><b>两缝之间</b>的距离</td><td>不是缝到屏!缝越挤条纹越疏</td></tr>
+        <tr><td><b>λ</b></td><td>光的波长</td><td>要测的量,或已知量</td></tr>
+      </table>
+      <div class="keybox" style="margin:12px 0"><b>★ 千万别把 L 和 d 搞反:</b> <b>L 是缝→屏(大,几十厘米到 1 米)</b>,<b>d 是两缝间距(小,零点几毫米)</b>。它们一个在分子一个在分母,搞反答案就差好几个数量级。</div>
+      <p style="margin:8px 0"><b>条纹特点:等间距、等亮度。</b> 每两条相邻亮纹距离都一样,每条亮纹都一样亮——这是<b>干涉</b>区别于衍射的招牌。由 Δy=Lλ/d 反解就得测波长公式 <b>λ=d·Δy/L</b>。</p>
+      <p class="trap">⚠ Δy 是「相邻」条纹间距。若题目量的是第 1 条到第 n 条,那跨了 (n−1) 个间距,要先除以 (n−1),别直接当成 Δy。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌈 互动 1 — 双缝干涉图样:拖 L、d、λ,实时重画等间距条纹并显示 Δy=Lλ/d;可切红/紫光</div>
+      <canvas id="dsCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <label>缝到屏 L <input id="dsL" type="range" min="40" max="120" value="80" step="1"></label>
+        <label>缝间距 d <input id="dsD" type="range" min="10" max="60" value="30" step="1"></label>
+        <label>波长 λ <input id="dsW" type="range" min="20" max="46" value="32" step="1"></label>
+        <button id="dsRed" class="on">红光</button><button id="dsVio">紫光</button>
+      </div>
+      <div class="live">
+        <div><b>L(缝→屏)</b><span id="dsoL">0</span></div>
+        <div><b>d(缝间距)</b><span id="dsoD">0</span></div>
+        <div><b>λ(波长)</b><span id="dsoW">0</span></div>
+        <div><b>Δy=Lλ/d</b><span id="dsoY">0</span></div>
+      </div>
+      <p class="small">上方是屏上真实的<b>亮暗条纹</b>。规律要记牢:<b>λ↑→Δy↑</b>(红光条纹比紫光疏)、<b>L↑→Δy↑</b>、<b>d↑→Δy↓</b>。切到紫光波长自动变小,同参数下条纹立刻变密。</p>
+    </div>
+
+    <h2 class="o">④ 条纹随参数怎么变 & 白光双缝</h2>
+    <div class="card">
+      <p style="margin:6px 0">由 Δy=Lλ/d,三个量的影响一眼看清(记住谁在分子、谁在分母):</p>
+      <table>
+        <tr><th>改变</th><th>Δy 怎么变</th><th>直觉</th></tr>
+        <tr><td>波长 λ 变大(红→紫反之)</td><td><b>Δy 变大</b></td><td>红光 Δy > 紫光(红波长长)</td></tr>
+        <tr><td>缝到屏 L 变大</td><td><b>Δy 变大</b></td><td>屏拉远,条纹摊开</td></tr>
+        <tr><td>缝间距 d 变大</td><td><b>Δy 变小</b></td><td>缝挨近,条纹反而疏</td></tr>
+      </table>
+      <h3>白光(复色光)双缝干涉</h3>
+      <p style="margin:8px 0">白光含各种颜色,各自 δ=0 处(中央)全部重叠→<b>中央亮纹是白色</b>。往两侧,不同颜色的第 1、2… 级亮纹位置不同(Δy∝λ,紫的间距小、红的间距大),于是分开成<b>彩色条纹,每条内侧偏紫、外侧偏红</b>(「内紫外红」)。</p>
+      <p class="trap">⚠ 白光双缝:中央<b>白色</b>、两侧<b>彩色(内紫外红)</b>。别和白光单缝衍射(也是中央白、两侧彩)记混——它俩中央都白,区别在条纹是否等间距。</p>
+    </div>
+
+    <h2 class="v">⑤ 实验:用双缝干涉测光的波长</h2>
+    <div class="card">
+      <h3>装置(光具座上,从光源到屏依次排开)</h3>
+      <div class="mono">光源 → 滤光片 → 单缝 → 双缝 → 遮光筒 → 分划板/测量头 → 毫米刻度尺(屏)</div>
+      <table>
+        <tr><th>部件</th><th>作用(为什么要它)</th></tr>
+        <tr><td><b>光源</b></td><td>提供较强的光(如白炽灯)</td></tr>
+        <tr><td><b>滤光片</b></td><td><b>得到单色光</b>(选出单一波长),使 λ 确定、条纹清晰</td></tr>
+        <tr><td><b>单缝</b></td><td>获得<b>线光源使光相干</b>(相位统一),双缝才能出稳定条纹</td></tr>
+        <tr><td><b>双缝</b></td><td>产生两束相干光,发生干涉,间距 d 已知</td></tr>
+        <tr><td><b>遮光筒</b></td><td>挡杂散光,让条纹背景暗、更清楚</td></tr>
+        <tr><td><b>测量头/分划板</b></td><td>带刻度和手轮,像螺旋测微器一样精读条纹位置</td></tr>
+        <tr><td><b>毫米刻度尺(屏)</b></td><td>作为观察屏,条纹成像在此</td></tr>
+      </table>
+      <div class="say">🗣️ 记忆钩子:<b>滤光片管「单色(λ 确定)」,单缝管「相干(相位统一)」</b>——两个「单」字别搞混作用。</div>
+      <h3>测量步骤与数据处理</h3>
+      <div class="mono">第1步:转动测量头手轮,使分划板中心刻线对准某条亮纹中心 → 读数 x₁。</div>
+      <div class="mono">第2步:再转手轮,对准往后数的第 n 条亮纹中心 → 读数 x₂。</div>
+      <div class="mono">第3步:这跨越了 (n−1) 个间距,总宽 Δx=|x₂−x₁|,故 Δy = Δx/(n−1)。</div>
+      <div class="mono">第4步:代入 λ = d·Δy/L = d·Δx / [(n−1)·L]。</div>
+      <div class="eq">λ = d · Δx / [(n−1) · L]</div>
+      <p style="margin:8px 0"><b>为什么要测多条(不测相邻两条)?</b> 相邻两条只跨 1 个 Δy,读数误差占比大;<b>测第 1 到第 n 条,跨 (n−1) 个间距取平均</b>,把误差摊薄,结果更准。读数用测量头(主尺 + 可动刻度,类似螺旋测微器)。</p>
+      <p class="trap">⚠ 常见错:① (n−1) 写成 n(数间距不是数条纹);② L、d 代反;③ 只测相邻两条误差大。d 通常题目给出(双缝出厂标定)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 2 — 双缝干涉测波长·实验装置图:点击每个部件,高亮并弹出「作用说明」</div>
+      <svg id="apSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="apNote">👆 点上方光具座上的任一部件,看它的作用。光从左边光源出发,一路被「加工」成稳定的单色相干光,最后在屏上显出条纹。</div>
+      <p class="small">顺序:光源→滤光片(单色)→单缝(相干)→双缝(干涉)→遮光筒(挡杂光)→测量头(精读)→刻度尺(屏)。两个关键加工步:滤光片给「颜色」,单缝给「同步」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 3 — 测量头读数与数据处理:对齐第 1 条与第 n 条亮纹,输入 n、d、L → 自动算 Δy 与 λ</div>
+      <svg id="mmSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>数到第 n 条 <input id="mmN" type="range" min="2" max="8" value="6" step="1"></label>
+        <label>缝间距 d(mm) <input id="mmD" type="range" min="10" max="40" value="20" step="1"></label>
+        <label>缝到屏 L(mm) <input id="mmL" type="range" min="500" max="1200" value="800" step="50"></label>
+      </div>
+      <div class="live">
+        <div><b>读数 x₁ / x₂(mm)</b><span id="mmX">0</span></div>
+        <div><b>总宽 Δx=|x₂−x₁|</b><span id="mmDx">0</span></div>
+        <div><b>Δy=Δx/(n−1)</b><span id="mmDy">0</span></div>
+        <div><b>λ=dΔy/L(nm)</b><span id="mmLam">0</span></div>
+      </div>
+      <p class="small">上方模拟测量头:两条黄色准线对准<b>第 1 条</b>和<b>第 n 条</b>亮纹,读出 x₁、x₂。跨了 (n−1) 个间距,所以 Δy=Δx/(n−1)——<b>n 越大误差摊得越薄</b>。d 的单位是 mm,这里 d 用 0.01mm 单位(即 d/100 mm),换算成 λ 的 nm。</p>
+    </div>
+
+    <h2 class="r">⑥ 单缝衍射:中央最宽最亮,两侧渐窄渐暗</h2>
+    <div class="card">
+      <p style="margin:6px 0">让光通过<b>一条很窄的单缝</b>,屏上也出现明暗相间条纹,但花样和干涉<b>完全不同</b>:</p>
+      <table>
+        <tr><th>特征</th><th>单缝衍射</th></tr>
+        <tr><td>中央条纹</td><td><b>最宽、最亮</b>(其他条纹宽度约为它的一半)</td></tr>
+        <tr><td>两侧条纹</td><td>越往外<b>越窄、越暗</b>,间距<b>不相等</b></td></tr>
+        <tr><td>缝宽影响</td><td><b>缝越窄,衍射越明显</b>(条纹摊得越开)</td></tr>
+        <tr><td>白光单缝</td><td>中央<b>白色</b>,两侧<b>彩色</b></td></tr>
+      </table>
+      <h3>衍射的其它形态</h3>
+      <p style="margin:8px 0"><b>圆孔衍射:</b> 明暗相间的<b>同心圆环</b>,中央是亮斑。<br><b>泊松亮斑:</b> 光照小圆板,<b>圆板阴影的正中心出现一个亮点</b>——这是光发生衍射(绕过圆板边缘会聚)的<b>有力证据</b>,历史上是波动说的关键实验。</p>
+      <p class="trap">⚠ 衍射条纹<b>不等间距、不等亮</b>,中央独大。缝越窄现象越明显(不是越宽!)。窗户、门缝之所以看不到明显衍射,是因为缝太宽。</p>
+    </div>
+
+    <h2 class="b">⑦ 干涉 vs 衍射:一眼分辨(高频考点)</h2>
+    <div class="card">
+      <p style="margin:6px 0">看到「明暗相间条纹」先别急,判断是干涉还是衍射,只看<b>条纹是否均匀</b>:</p>
+      <table>
+        <tr><th></th><th>双缝干涉</th><th>单缝衍射</th></tr>
+        <tr><td>条纹间距</td><td><b>等间距</b>(处处相等)</td><td><b>不等间距</b>(向外变窄)</td></tr>
+        <tr><td>条纹亮度</td><td><b>等亮度</b>(明暗均匀)</td><td><b>中央最宽最亮</b>,向外变暗</td></tr>
+        <tr><td>产生条件</td><td>两束<b>相干光</b>叠加(需双缝)</td><td>光遇障碍/狭缝<b>绕过去</b></td></tr>
+        <tr><td>一句话</td><td>整齐划一像栅栏</td><td>中间胖两边瘦</td></tr>
+      </table>
+      <div class="keybox" style="margin:12px 0"><b>秒判口诀:</b> <b>等间距等亮度 → 干涉;中央特宽特亮、越往外越窄越暗 → 衍射。</b></div>
+      <p class="trap">⚠ 两者都属于「波的叠加」,都能出现在同一实验里。别用「有没有条纹」区分——都有条纹;要看<b>均匀性</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🆚 互动 5 — 干涉 vs 衍射条纹对比:上=双缝干涉(等间距等亮),下=单缝衍射(中央宽亮两侧渐窄渐暗)</div>
+      <canvas id="cmCv" width="700" height="270"></canvas>
+      <div class="ctrl">
+        <label>单缝缝宽 a <input id="cmA" type="range" min="10" max="55" value="26" step="1"></label>
+        <button id="cmWhite">切白光</button><button id="cmMono" class="on">切单色</button>
+      </div>
+      <div class="live">
+        <div><b>上:干涉条纹</b><span id="cmT1">等间距等亮</span></div>
+        <div><b>下:衍射中央宽度</b><span id="cmT2">0</span></div>
+        <div><b>缝宽 a</b><span id="cmT3">0</span></div>
+        <div><b>缝越窄</b><span id="cmT4">衍射越明显</span></div>
+      </div>
+      <p class="small">上下并列看差异:上方干涉,每条一样宽一样亮;下方衍射,<b>中央又宽又亮</b>,两侧越来越窄越来越暗。拖缝宽 a:<b>a 越小,中央越宽,衍射越明显</b>。切白光可见中央白、两侧彩。</p>
+    </div>
+
+    <h2 class="v">⑧ 薄膜干涉:等厚干涉与增透膜</h2>
+    <div class="card">
+      <p style="margin:6px 0">薄膜干涉是<b>同一层薄膜前、后两个表面的反射光相互叠加</b>形成的。膜的厚度决定这两束反射光的路程差,于是<b>相同厚度处亮暗相同</b>——叫<b>等厚干涉</b>,条纹是「等厚线」。</p>
+      <table>
+        <tr><th>应用</th><th>原理</th></tr>
+        <tr><td><b>增透膜</b></td><td>镀一层厚度约 <b>λ/4</b> 的膜,使前后表面两束反射光<b>相消干涉</b>→反射减弱→<b>透射增强</b>(相机镜头呈淡紫色)</td></tr>
+        <tr><td><b>劈尖干涉</b></td><td>两玻璃夹成尖劈,出现平行等厚条纹;<b>检查平面平整度</b>,条纹弯曲说明表面不平</td></tr>
+        <tr><td><b>肥皂膜/油膜</b></td><td>厚度不均→不同处相长相消不同→呈现<b>彩色条纹</b></td></tr>
+        <tr><td><b>牛顿环</b></td><td>平凸透镜压在平板上,空气薄层厚度呈圆对称→<b>同心圆环</b>(也是等厚干涉)</td></tr>
+      </table>
+      <h3>增透膜为什么用 λ/4?</h3>
+      <p style="margin:8px 0">膜厚 d=λ/4 时,光在膜内走个来回多走 2d=λ/2,恰好使前后两束反射光「差半个波长」→<b>相消干涉</b>→反射光被抵消→更多光透射进镜头。<b>(注:这里 λ 是光在膜中的波长。)</b></p>
+      <p class="trap">⚠ 增透膜是让<b>反射光相消</b>(所以反射看着变暗、发淡紫),从而<b>透射增强</b>。别说成「让透射光相消」。劈尖/牛顿环条纹弯了=表面不平,是重要判据。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎞️ 互动 6 — 增透膜原理:前后表面两束反射光,厚度 λ/4 时相消 → 反射减弱、透射增强</div>
+      <svg id="tfSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>膜厚 d(以 λ 计) <input id="tfD" type="range" min="10" max="60" value="25" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>膜厚 d</b><span id="tfoD">0</span></div>
+        <div><b>额外程差 2d</b><span id="tfoP">0</span></div>
+        <div><b>两反射光</b><span id="tfoS">0</span></div>
+        <div><b>反射效果</b><span id="tfoR">0</span></div>
+      </div>
+      <p class="small">上表面反射一束、下表面反射一束(下面这束多走了膜厚的来回 2d)。当 2d=λ/2(即 <b>d=λ/4</b>)时两束「差半波长」→ 波峰对波谷 → <b>相消</b> → 反射被削弱、透射增强,这就是增透膜。滑到 d=λ/4 看两波正好反相。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌈 互动 7 — 白光双缝色散(增强):中央白、两侧「内紫外红」的彩色条纹</div>
+      <canvas id="wcCv" width="700" height="160"></canvas>
+      <div class="ctrl">
+        <button id="wcGo">▶ 显示白光条纹</button><button id="wcMono">▶ 对比单色</button>
+      </div>
+      <p class="small">白光双缝:所有颜色在<b>中央 δ=0 处重叠成白</b>;往两侧,因 Δy∝λ,各色错开,形成<b>彩带,每级内侧紫、外侧红</b>。这也印证了「红光条纹间距比紫光大」。</p>
+    </div>
+
+    <h2 class="g">⑨ 做题思路总纲</h2>
+    <div class="card">
+      <p style="margin:6px 0">看到光的干涉衍射题,先分类,再套对应的「标准动作」:</p>
+      <table>
+        <tr><th>题目问什么</th><th>标准动作</th></tr>
+        <tr><td>判断某点亮 / 暗</td><td>算路程差 δ=r₂−r₁ → 看是 <b>kλ(亮)</b> 还是 <b>(2k+1)λ/2(暗)</b></td></tr>
+        <tr><td>求波长 λ</td><td>用 <b>Δy=Lλ/d ⇒ λ=dΔy/L</b>;条纹跨 (n−1) 段则 Δy=Δx/(n−1)</td></tr>
+        <tr><td>判断条纹如何变(变疏/密)</td><td>看 <b>λ、L、d</b> 哪个变:λ↑、L↑ → 疏;d↑ → 密</td></tr>
+        <tr><td>是干涉还是衍射</td><td>看条纹是否<b>等间距等亮</b>:是→干涉;中央宽亮渐窄渐暗→衍射</td></tr>
+        <tr><td>薄膜干涉(增透/劈尖)</td><td><b>等厚干涉</b> + 相消/相长;增透膜 d=λ/4 使反射相消</td></tr>
+      </table>
+      <div class="keybox" style="margin:12px 0"><b>万能第一步:</b> 先问自己「这题在考三条公式里的哪一条」——δ 判亮暗?Δy=Lλ/d 求波长/条纹?还是判类型/薄膜?对号入座,思路立刻清晰。</div>
+    </div>
+
+    <h2 class="o">⑩ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 路程差判某点亮暗</h3>
+      <p><b class="tag">触发信号:</b>给出某点到两缝的距离 r₁、r₂(或几何关系),问该点是亮纹还是暗纹、是第几级。</p>
+      <p><b class="tag">标准动作:</b>算 δ=r₂−r₁ → 除以 λ:商是整数 k → 亮纹(第 k 级);是「半整数」(即 (2k+1)/2)→ 暗纹。</p>
+      <p><b class="tag">示例(带解):</b>某点 r₁=4.0μm、r₂=5.2μm,λ=0.6μm。δ=1.2μm=2λ → 是<b>亮纹</b>,且为第 2 级亮纹。若 δ=0.9μm=1.5λ=(2·1+1)λ/2 → 暗纹。</p>
+      <p class="trap">陷阱:δ=1.5λ 别看成亮;半波长奇数倍才是暗。δ 要取绝对值判整数/半整数。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 双缝干涉测波长</h3>
+      <p><b class="tag">触发信号:</b>给 d、L,以及测量头对第 1 条和第 n 条亮纹的读数 x₁、x₂,求波长 λ。</p>
+      <p><b class="tag">标准动作:</b>Δx=|x₂−x₁| → Δy=Δx/(n−1) → λ=d·Δy/L=d·Δx/[(n−1)L]。注意单位统一到 m 再换 nm。</p>
+      <p><b class="tag">示例(带解):</b>d=0.2mm,L=1.0m,测第 1 到第 5 条亮纹 Δx=11.6mm。Δy=11.6/(5−1)=2.9mm。λ=dΔy/L=(0.2×10⁻³·2.9×10⁻³)/1.0=5.8×10⁻⁷m=580nm。</p>
+      <p class="trap">陷阱:(n−1) 写成 n;L、d 代反;单位没统一(mm 和 m 混用)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 条纹变化分析</h3>
+      <p><b class="tag">触发信号:</b>「把屏移远」「换红光为紫光」「增大缝间距」,问条纹变疏还是变密(Δy 增减)。</p>
+      <p><b class="tag">标准动作:</b>套 Δy=Lλ/d:L↑→Δy↑(疏);λ↑(红)→Δy↑(疏);d↑→Δy↓(密)。只变一个量看它在分子还是分母。</p>
+      <p><b class="tag">示例(带解):</b>把单色光由紫光换成红光(λ 变大),L、d 不变 → Δy=Lλ/d 变大 → 条纹变<b>疏</b>(间距变大)。把屏移远(L↑)同样变疏。</p>
+      <p class="trap">陷阱:误以为 d 增大条纹变疏(其实变密,d 在分母);把「移远屏」当成 d 变化。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 干涉/衍射判别</h3>
+      <p><b class="tag">触发信号:</b>给一张条纹图或描述,问这是干涉还是衍射;或问「中央为什么最亮」。</p>
+      <p><b class="tag">标准动作:</b>看条纹<b>是否等间距等亮</b>:等间距等亮→双缝干涉;中央最宽最亮、两侧渐窄渐暗、不等间距→单缝衍射。</p>
+      <p><b class="tag">示例(带解):</b>某图样中央条纹明显比两侧宽且亮,越往外条纹越窄越暗 → <b>衍射</b>(单缝)。若所有条纹一样宽一样亮 → <b>干涉</b>(双缝)。</p>
+      <p class="trap">陷阱:用「有无彩色」区分(白光下两者都可有彩);要看均匀性。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 薄膜干涉/增透膜</h3>
+      <p><b class="tag">触发信号:</b>肥皂膜彩纹、劈尖检验平整度、牛顿环、增透膜厚度、镜头淡紫色。</p>
+      <p><b class="tag">标准动作:</b>抓「同一薄膜前后表面反射叠加=等厚干涉」;增透膜厚 d=λ/4 使反射相消(2d=λ/2);劈尖/牛顿环条纹弯曲=表面不平。</p>
+      <p><b class="tag">示例(带解):</b>相机镜头镀增透膜,为使某波长 λ 的反射光最弱,膜厚最小取 d=λ/4(λ 为该光在膜中的波长),此时前后反射光相差半波长而相消,透射最强。</p>
+      <p class="trap">陷阱:说成「透射光相消」(错,是反射相消);忘记 λ 是膜中波长;把等厚条纹当等间距干涉条纹。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 相干光源/实验原理理解题</h3>
+      <p><b class="tag">触发信号:</b>问「为什么要单缝」「滤光片作用」「为什么条纹稳定」「相干条件是什么」。</p>
+      <p><b class="tag">标准动作:</b>相干三条件(同频率、同振动方向、恒定相位差);滤光片→单色(定 λ);单缝→线光源使双缝相干(定相位);遮光筒→挡杂光。</p>
+      <p><b class="tag">示例(带解):</b>问「去掉单缝会怎样」→ 双缝被杂乱相位的光照亮,相位差随机变化,屏上条纹模糊消失(不稳定)。故单缝的作用是提供统一波前、保证相干。</p>
+      <p class="trap">陷阱:把单缝作用说成「单色」(那是滤光片);把滤光片作用说成「相干」。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 判亮暗:亮 δ=kλ,暗 δ=(2k+1)λ/2。<b>δ=1.5λ 是暗</b>(半波长奇数倍),不是亮!</p>
+      <p class="trap">② Δy=Lλ/d 里 <b>L 是缝→屏、d 是缝间距</b>,一个分子一个分母,<b>千万别代反</b>。</p>
+      <p class="trap">③ 测波长:第 1 到第 n 条亮纹跨的是 <b>(n−1) 个间距</b>,不是 n 个。Δy=Δx/(n−1)。</p>
+      <p class="trap">④ <b>单缝管相干、滤光片管单色</b>——两个作用别互换。去掉单缝→条纹模糊。</p>
+      <p class="trap">⑤ 干涉条纹<b>等间距等亮</b>;衍射条纹<b>中央最宽最亮、两侧渐窄渐暗、不等间距</b>。这是判别铁律。</p>
+      <p class="trap">⑥ 缝越<b>窄</b>衍射越明显(不是越宽);圆板阴影中心的<b>泊松亮斑</b>是衍射证据。</p>
+      <p class="trap">⑦ 白光双缝/单缝:中央都是<b>白色</b>,两侧<b>彩色</b>;双缝每级「内紫外红」。</p>
+      <p class="trap">⑧ 增透膜让<b>反射光相消</b>(反射变弱、呈淡紫)从而<b>透射增强</b>;厚度 d=λ/4(λ 为膜中波长)。</p>
+      <p class="trap">⑨ 薄膜干涉是<b>同一膜前后两表面</b>反射光叠加,属<b>等厚干涉</b>;条纹弯曲=表面不平。</p>
+      <p class="trap">⑩ 波长越大 Δy 越大:<b>红光条纹间距 > 紫光</b>(因红波长长)。别记反。</p>
+      <p class="trap">⑪ 中央亮纹 δ=0 <b>一定是亮</b>(单色时),因为到两缝等距、两波同步。</p>
+      <p class="trap">⑫ 单位!测波长时 mm、m、nm 要统一;λ 常见量级几百 nm(可见光 400~760nm)。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切都是「路程差 vs 波长」的比较:</b> 干涉判亮暗看 δ 与 λ 的关系,薄膜看 2d 与 λ 的关系,衍射本质也是缝内各点到屏的路程差叠加。抓住「δ=kλ 加强、δ=(2k+1)λ/2 减弱」这一条主线,整章公式都是它的化身,不用死记零散结论。</p>
+      <p style="margin:8px 0"><b>② Δy=Lλ/d 要会「量纲直觉」:</b> λ 在分子(波长越长条纹越开),L 在分子(屏越远越开),d 在分母(缝越挤越开)。考试改参数问变化,不必重算,直接用「分子↑则疏、分母↑则密」秒答。这也解释了为什么测微小波长要用「大 L、小 d」放大条纹。</p>
+      <p style="margin:8px 0"><b>③ 干涉与衍射不是对立,而是同一件事的两种边界:</b> 双缝其实是「两个单缝的干涉」叠加上「每个单缝自身的衍射」。理解了这点,就明白为什么实际双缝图样的亮纹亮度会被一个衍射「包络」调制——高考虽不深究,但知道它俩同源,判别题就不会犹豫。</p>
+      <p style="margin:8px 0"><b>④ 实验设计处处是「控制变量+减小误差」:</b> 滤光片(控制 λ 单一)、单缝(控制相位相干)、遮光筒(控制背景)、测多条取平均(减小读数误差)。把每个部件都问一句「它在控制什么变量」,实验原理题就不再是背诵,而是推理。</p>
+      <p style="margin:8px 0"><b>⑤ 增透膜的 λ/4 是「用波干涉做减法」:</b> 让反射的两束光差半波长相消,能量便更多地透射——这是波动光学在工程上的经典应用(镜头、太阳能板)。同一思路反过来做「增反膜」(让反射相长)。看懂它,你就懂了「相位工程」的雏形,远超解题本身。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:光学总览、几何光学、光的本性</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动4:路程差 δ 判亮暗 ===== */
+(function(){
+  const svg=document.getElementById('pdSvg');
+  const Ls=document.getElementById('pdL');
+  const oR1=document.getElementById('pdR1'),oR2=document.getElementById('pdR2'),oD=document.getElementById('pdD'),oV=document.getElementById('pdV');
+  const S1x=120,S1y=110,S2x=120,S2y=230,screenX=520;
+  let lam=28,Py=170,dragging=false;
+  function draw(){
+    clr(svg);
+    lam=+Ls.value;
+    // 光具座背景线
+    el(svg,'line',{x1:60,y1:40,x2:60,y2:300,stroke:'#bbb','stroke-width':2});
+    el(svg,'text',{x:60,y:32,'font-size':11,'font-weight':800,fill:'#888','text-anchor':'middle'}).textContent='双缝';
+    // 缝
+    el(svg,'circle',{cx:S1x,cy:S1y,r:7,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:S1x-16,y:S1y+4,'font-size':13,'font-weight':900,fill:BLUE}).textContent='S₁';
+    el(svg,'circle',{cx:S2x,cy:S2y,r:7,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:S2x-16,y:S2y+4,'font-size':13,'font-weight':900,fill:GREEN}).textContent='S₂';
+    // 屏
+    el(svg,'line',{x1:screenX,y1:40,x2:screenX,y2:300,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:screenX+8,y:52,'font-size':12,'font-weight':800,fill:INK}).textContent='屏';
+    // P 点
+    Py=Math.max(50,Math.min(290,Py));
+    // 光线
+    el(svg,'line',{x1:S1x,y1:S1y,x2:screenX,y2:Py,stroke:BLUE,'stroke-width':2.5});
+    el(svg,'line',{x1:S2x,y1:S2y,x2:screenX,y2:Py,stroke:GREEN,'stroke-width':2.5});
+    const r1=Math.hypot(screenX-S1x,Py-S1y);
+    const r2=Math.hypot(screenX-S2x,Py-S2y);
+    const d=r2-r1;
+    // r 标注
+    el(svg,'text',{x:(S1x+screenX)/2,y:(S1y+Py)/2-6,'font-size':12,'font-weight':800,fill:BLUE}).textContent='r₁';
+    el(svg,'text',{x:(S2x+screenX)/2,y:(S2y+Py)/2+14,'font-size':12,'font-weight':800,fill:GREEN}).textContent='r₂';
+    // P
+    el(svg,'circle',{cx:screenX,cy:Py,r:9,fill:RED,stroke:INK,'stroke-width':3,style:'cursor:grab'});
+    el(svg,'text',{x:screenX+16,y:Py+5,'font-size':14,'font-weight':900,fill:RED}).textContent='P';
+    // 判定
+    const ratio=d/lam; // 以波长为单位
+    const nearInt=Math.round(ratio);
+    const nearHalf=Math.round(ratio-0.5)+0.5;
+    let verdict,col;
+    if(Math.abs(ratio-nearInt)<0.12){verdict='亮纹(δ≈'+nearInt+'λ)';col=RED;}
+    else if(Math.abs(ratio-nearHalf)<0.12){verdict='暗纹(δ≈'+nearHalf.toFixed(1)+'λ)';col=BLUE;}
+    else{verdict='中间(δ='+ratio.toFixed(2)+'λ)';col=INK;}
+    oR1.textContent=(r1/10).toFixed(1);
+    oR2.textContent=(r2/10).toFixed(1);
+    oD.textContent=ratio.toFixed(2)+'λ';
+    oV.textContent=verdict;
+    oV.style.color=col;
+    // 波长比例尺
+    el(svg,'rect',{x:screenX-140,y:20,width:lam,height:8,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:screenX-140+lam/2,y:16,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='λ';
+  }
+  function evtY(e){
+    const r=svg.getBoundingClientRect();
+    const t=e.touches?e.touches[0]:e;
+    const scale=svg.viewBox.baseVal.height/r.height;
+    return (t.clientY-r.top)*scale;
+  }
+  svg.addEventListener('mousedown',()=>{dragging=true;});
+  svg.addEventListener('mousemove',e=>{if(dragging){Py=evtY(e);draw();}});
+  window.addEventListener('mouseup',()=>{dragging=false;});
+  svg.addEventListener('touchstart',e=>{dragging=true;Py=evtY(e);draw();e.preventDefault();},{passive:false});
+  svg.addEventListener('touchmove',e=>{if(dragging){Py=evtY(e);draw();e.preventDefault();}},{passive:false});
+  window.addEventListener('touchend',()=>{dragging=false;});
+  Ls.oninput=draw;
+  document.getElementById('pdSnapB').onclick=()=>{
+    // 找到使 δ 为整数 λ 的 Py:数值扫描
+    snapTo(true);
+  };
+  document.getElementById('pdSnapD').onclick=()=>{snapTo(false);};
+  function snapTo(bright){
+    let best=Py,bestErr=1e9;
+    for(let y=50;y<=290;y+=1){
+      const r1=Math.hypot(screenX-S1x,y-S1y);
+      const r2=Math.hypot(screenX-S2x,y-S2y);
+      const rt=(r2-r1)/lam;
+      const target=bright?Math.round(rt):(Math.round(rt-0.5)+0.5);
+      if(bright && Math.abs(target)<0.5) continue; // 跳过 δ=0 让它跳到相邻级
+      const err=Math.abs(rt-target);
+      if(err<bestErr && Math.abs(y-Py)>4){bestErr=err;best=y;}
+    }
+    Py=best;draw();
+  }
+  draw();
+})();
+
+/* ===== 互动1:双缝干涉图样 ===== */
+(function(){
+  const cv=document.getElementById('dsCv');const ctx=cv.getContext('2d');
+  const Ls=document.getElementById('dsL'),Ds=document.getElementById('dsD'),Ws=document.getElementById('dsW');
+  const oL=document.getElementById('dsoL'),oD=document.getElementById('dsoD'),oW=document.getElementById('dsoW'),oY=document.getElementById('dsoY');
+  const bRed=document.getElementById('dsRed'),bVio=document.getElementById('dsVio');
+  let L=80,d=30,w=32,mode='red';
+  bRed.onclick=()=>{mode='red';w=32;Ws.value=32;bRed.classList.add('on');bVio.classList.remove('on');draw();};
+  bVio.onclick=()=>{mode='vio';w=22;Ws.value=22;bVio.classList.add('on');bRed.classList.remove('on');draw();};
+  Ls.oninput=Ds.oninput=()=>{sync();};
+  Ws.oninput=()=>{sync();};
+  function sync(){L=+Ls.value;d=+Ds.value;w=+Ws.value;draw();}
+  function colFor(m){return m==='red'?[224,56,42]:[122,63,242];}
+  function draw(){
+    L=+Ls.value;d=+Ds.value;w=+Ws.value;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // Δy 正比于 L*λ/d ,用一个缩放系数画到屏上
+    const dy=(L*w/d)*0.9; // 像素间距
+    const cx=cv.width/2, cyTop=30, H=150;
+    const base=colFor(mode);
+    // 画条纹:亮度 = cos^2(pi * x / dy)
+    for(let x=0;x<cv.width;x++){
+      const rel=(x-cx);
+      const I=Math.pow(Math.cos(Math.PI*rel/dy),2);
+      ctx.fillStyle='rgb('+Math.round(base[0]*I)+','+Math.round(base[1]*I)+','+Math.round(base[2]*I)+')';
+      ctx.fillRect(x,cyTop,1,H);
+    }
+    // 边框与中央线
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(0,cyTop,cv.width,H);
+    ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(cx,cyTop);ctx.lineTo(cx,cyTop+H);ctx.stroke();ctx.setLineDash([]);
+    // 标 Δy:找中央右侧第一条亮纹
+    ctx.strokeStyle=YEL;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx,cyTop+H+6);ctx.lineTo(cx+dy,cyTop+H+6);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cyTop+H+2);ctx.lineTo(cx,cyTop+H+10);ctx.moveTo(cx+dy,cyTop+H+2);ctx.lineTo(cx+dy,cyTop+H+10);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('Δy',cx+dy/2-8,cyTop+H+26);
+    ctx.fillText('中央亮纹',cx-30,cyTop+H+42);
+    ctx.fillStyle='#6b5d3a';ctx.font='bold 11px sans-serif';
+    ctx.fillText(mode==='red'?'红光(波长长→条纹疏)':'紫光(波长短→条纹密)',18,20);
+    oL.textContent=L;oD.textContent=d;oW.textContent=w+(mode==='red'?'(红)':'(紫)');
+    oY.textContent=(dy/10).toFixed(2);
+  }
+  draw();
+})();
+
+/* ===== 互动2:实验装置图 ===== */
+(function(){
+  const svg=document.getElementById('apSvg');const note=document.getElementById('apNote');
+  const parts=[
+    {id:'src',x:20,w:70,label:'光源',col:'#f2c94c',desc:'💡 光源:提供较强的光(白炽灯等)。光的旅程从这里开始。'},
+    {id:'flt',x:110,w:46,label:'滤光片',col:VIO,desc:'🟪 滤光片:得到单色光(选出单一波长 λ)。★作用=单色,让条纹清晰、λ 确定。别和单缝混!'},
+    {id:'ss',x:176,w:26,label:'单缝',col:BLUE,desc:'▏单缝:获得线光源,使照到双缝的光相干(相位统一)。★作用=相干。没有它,双缝出的两束光相位杂乱,条纹模糊。'},
+    {id:'ds',x:222,w:26,label:'双缝',col:GREEN,desc:'▏▏双缝:产生两束相干光,发生干涉。间距 d 已知,是测波长公式里的 d。'},
+    {id:'tube',x:268,w:150,label:'遮光筒',col:'#8a7a5a',desc:'🛢 遮光筒:挡住杂散光,让背景变暗,条纹看得更清楚。'},
+    {id:'head',x:438,w:40,label:'测量头',col:ORANGE,desc:'🔧 测量头/分划板:带手轮和刻度,像螺旋测微器一样精读条纹位置(主尺+可动刻度)。'},
+    {id:'scr',x:498,w:26,label:'刻度尺',col:INK,desc:'📏 毫米刻度尺(屏):作为观察屏,亮暗条纹成像在这里,配合测量头读数。'}
+  ];
+  let cur=null;
+  function draw(){
+    clr(svg);
+    // 光具座导轨
+    el(svg,'rect',{x:10,y:170,width:600,height:16,fill:'#d8cfb8',stroke:INK,'stroke-width':2});
+    // 光路虚线
+    el(svg,'line',{x1:90,y1:120,x2:560,y2:120,stroke:YEL,'stroke-width':3,'stroke-dasharray':'8 5'});
+    parts.forEach(p=>{
+      const active=cur===p.id;
+      el(svg,'rect',{x:p.x,y:70,width:p.w,height:100,fill:p.col,stroke:INK,'stroke-width':active?5:3,opacity:active?1:0.85,rx:4,style:'cursor:pointer',class:'apPart','data-id':p.id});
+      const t=el(svg,'text',{x:p.x+p.w/2,y:190,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle',style:'cursor:pointer','data-id':p.id});
+      t.textContent=p.label;
+      if(active){el(svg,'rect',{x:p.x-3,y:56,width:p.w+6,height:8,fill:RED});}
+    });
+    // 光源箭头 & 屏
+    el(svg,'text',{x:55,y:60,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='光 →';
+    el(svg,'text',{x:511,y:60,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='条纹';
+    // 绑定点击
+    svg.querySelectorAll('[data-id]').forEach(n=>{
+      n.addEventListener('click',()=>{
+        cur=n.getAttribute('data-id');
+        const p=parts.find(x=>x.id===cur);
+        note.innerHTML='<b>'+p.label+'</b>　'+p.desc;
+        note.style.borderColor=RED;
+        draw();
+      });
+    });
+  }
+  draw();
+})();
+
+/* ===== 互动3:测量头读数与数据处理 ===== */
+(function(){
+  const svg=document.getElementById('mmSvg');
+  const Ns=document.getElementById('mmN'),Ds=document.getElementById('mmD'),Ls=document.getElementById('mmL');
+  const oX=document.getElementById('mmX'),oDx=document.getElementById('mmDx'),oDy=document.getElementById('mmDy'),oLam=document.getElementById('mmLam');
+  let n=6,d=20,L=800;
+  // 固定一个"真实" Δy(mm),使读数逼真
+  function draw(){
+    n=+Ns.value;d=+Ds.value;L=+Ls.value;
+    clr(svg);
+    // 设一个用于绘图的条纹间距(像素),并派生数据
+    const dyPix=46; // 屏上画的相邻亮纹像素间距
+    const x0=70; // 第1条位置
+    // 画标尺
+    el(svg,'line',{x1:20,y1:120,x2:680,y2:120,stroke:INK,'stroke-width':3});
+    for(let i=0;i<=12;i++){const xx=20+i*55;el(svg,'line',{x1:xx,y1:114,x2:xx,y2:126,stroke:INK,'stroke-width':2});el(svg,'text',{x:xx,y:142,'font-size':10,'font-weight':700,fill:'#888','text-anchor':'middle'}).textContent=i;}
+    el(svg,'text',{x:670,y:158,'font-size':11,'font-weight':800,fill:'#888','text-anchor':'end'}).textContent='毫米刻度尺(mm)';
+    // 画亮纹
+    for(let i=0;i<10;i++){
+      const xx=x0+i*dyPix;
+      if(xx>660)break;
+      const isMarked=(i===0||i===n-1);
+      el(svg,'rect',{x:xx-4,y:40,width:8,height:60,fill:isMarked?RED:'#c9302c',opacity:isMarked?1:0.35,stroke:isMarked?INK:'none','stroke-width':isMarked?2:0});
+      if(i===0)el(svg,'text',{x:xx,y:32,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='第1条';
+      if(i===n-1)el(svg,'text',{x:xx,y:32,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='第'+n+'条';
+    }
+    // 准线
+    el(svg,'line',{x1:x0,y1:36,x2:x0,y2:104,stroke:YEL,'stroke-width':2,'stroke-dasharray':'3 3'});
+    const xn=x0+(n-1)*dyPix;
+    el(svg,'line',{x1:xn,y1:36,x2:xn,y2:104,stroke:YEL,'stroke-width':2,'stroke-dasharray':'3 3'});
+    // Δx 括号
+    el(svg,'line',{x1:x0,y1:170,x2:xn,y2:170,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:x0,y1:164,x2:x0,y2:176,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:xn,y1:164,x2:xn,y2:176,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:(x0+xn)/2,y:190,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Δx = 跨 '+(n-1)+' 个间距';
+    // 数据:令屏上1像素=0.05mm(可视映射),Δy_real 用一个物理量
+    // 让 Δy(mm) 直接由 dyPix 换算:dyPix=46 -> Δy=2.9mm 量级
+    const dyReal=2.5; // 相邻亮纹间距 mm(固定物理值,便于演示)
+    const x1=20.0, x2=x1+(n-1)*dyReal;
+    const dx=x2-x1;
+    const dy=dx/(n-1);
+    // λ = d*Δy/L, d 用 0.01mm 单位: d 滑块 20 -> 0.20mm
+    const dmm=d/100; // mm
+    const lam=dmm*dy/L; // mm
+    const lamnm=lam*1e6; // nm
+    oX.textContent=x1.toFixed(1)+' / '+x2.toFixed(1);
+    oDx.textContent=dx.toFixed(1)+'mm';
+    oDy.textContent=dy.toFixed(2)+'mm';
+    oLam.textContent=lamnm.toFixed(0);
+  }
+  Ns.oninput=Ds.oninput=Ls.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:干涉 vs 衍射 对比 ===== */
+(function(){
+  const cv=document.getElementById('cmCv');const ctx=cv.getContext('2d');
+  const As=document.getElementById('cmA');
+  const bW=document.getElementById('cmWhite'),bM=document.getElementById('cmMono');
+  const t2=document.getElementById('cmT2'),t3=document.getElementById('cmT3');
+  let a=26,white=false;
+  bW.onclick=()=>{white=true;bW.classList.add('on');bM.classList.remove('on');draw();};
+  bM.onclick=()=>{white=false;bM.classList.add('on');bW.classList.remove('on');draw();};
+  As.oninput=()=>{a=+As.value;draw();};
+  function sinc2(u){if(Math.abs(u)<1e-4)return 1;const s=Math.sin(u)/u;return s*s;}
+  function draw(){
+    a=+As.value;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const cx=cv.width/2;
+    // 上:双缝干涉(等间距等亮)
+    const topY=20,H=95;
+    const dyI=40; // 干涉条纹间距(等间距)
+    for(let x=0;x<cv.width;x++){
+      const rel=x-cx;
+      const I=Math.pow(Math.cos(Math.PI*rel/dyI),2);
+      let r,g,b;
+      if(white){
+        // 白光干涉:中央白,两侧简单彩色近似
+        const hue=(Math.abs(rel)/dyI);
+        r=255*I; g=(180+40*Math.sin(hue))*I; b=(120+120*Math.cos(hue))*I;
+      }else{r=224*I;g=56*I;b=42*I;}
+      ctx.fillStyle='rgb('+Math.round(r)+','+Math.round(g)+','+Math.round(b)+')';
+      ctx.fillRect(x,topY,1,H);
+    }
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(0,topY,cv.width,H);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('▲ 双缝干涉:等间距 · 等亮度',10,topY+H-8);
+    // 下:单缝衍射(中央宽亮,两侧渐窄渐暗,不等间距)
+    const botY=145;
+    const scale=a*0.9; // 缝越窄 scale 越小 -> 中央越宽
+    for(let x=0;x<cv.width;x++){
+      const rel=x-cx;
+      const u=rel/scale; // 相位变量
+      const I=sinc2(u);
+      let r,g,b;
+      if(white){
+        const t=Math.min(1,Math.abs(rel)/(scale*3));
+        r=(255)*I; g=(255-150*t)*I; b=(255-200*t)*I;
+      }else{r=224*I;g=56*I;b=42*I;}
+      ctx.fillStyle='rgb('+Math.round(r)+','+Math.round(g)+','+Math.round(b)+')';
+      ctx.fillRect(x,botY,1,H);
+    }
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(0,botY,cv.width,H);
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.fillText('▼ 单缝衍射:中央最宽最亮 · 两侧渐窄渐暗',10,botY+H-8);
+    // 中央宽度标记(衍射)
+    const cw=Math.round(scale*Math.PI); // 中央半宽 ~ pi*scale
+    ctx.strokeStyle=YEL;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx-cw,botY+6);ctx.lineTo(cx+cw,botY+6);ctx.stroke();
+    t2.textContent=(2*cw)+'px';t3.textContent=a;
+  }
+  draw();
+})();
+
+/* ===== 互动6:增透膜原理 ===== */
+(function(){
+  const svg=document.getElementById('tfSvg');
+  const Ds=document.getElementById('tfD');
+  const oD=document.getElementById('tfoD'),oP=document.getElementById('tfoP'),oS=document.getElementById('tfoS'),oR=document.getElementById('tfoR');
+  let d=25;
+  const lamPix=100; // 一个波长对应的像素(用于画波)
+  function wave(p,x0,y0,x1,phase,col,amp){
+    // 画一段正弦波沿直线(这里简化为水平方向的小波形)
+    let pts='';
+    const len=x1-x0;
+    for(let i=0;i<=len;i+=2){
+      const y=y0-amp*Math.sin(2*Math.PI*(i)/lamPix + phase);
+      pts+=(x0+i)+','+y.toFixed(1)+' ';
+    }
+    el(p,'polyline',{points:pts,fill:'none',stroke:col,'stroke-width':2.5});
+  }
+  function draw(){
+    d=+Ds.value;
+    clr(svg);
+    const topY=70,botY=150,filmL=200,filmR=440;
+    // 膜
+    el(svg,'rect',{x:filmL,y:topY,width:filmR-filmL,height:botY-topY,fill:'rgba(122,63,242,0.18)',stroke:VIO,'stroke-width':3});
+    el(svg,'text',{x:(filmL+filmR)/2,y:(topY+botY)/2+5,'font-size':13,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='增透膜 (厚 d)';
+    el(svg,'text',{x:(filmL+filmR)/2,y:botY+18,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='玻璃镜片';
+    el(svg,'rect',{x:filmL,y:botY,width:filmR-filmL,height:40,fill:'rgba(120,120,120,0.25)',stroke:'#888','stroke-width':2});
+    // 入射光(从左上打到上表面)
+    el(svg,'line',{x1:60,y1:30,x2:filmL+60,y2:topY,stroke:YEL,'stroke-width':3});
+    el(svg,'polygon',{points:(filmL+60)+','+topY+' '+(filmL+48)+','+(topY-10)+' '+(filmL+66)+','+(topY-14),fill:YEL});
+    el(svg,'text',{x:90,y:26,'font-size':11,'font-weight':800,fill:'#b8860b'}).textContent='入射光';
+    // 反射光1:上表面反射
+    el(svg,'line',{x1:filmL+60,y1:topY,x2:filmR+40,y2:20,stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:filmR+44,y:18,'font-size':11,'font-weight':800,fill:BLUE}).textContent='反射光①(上表面)';
+    // 折射进膜 + 下表面反射(反射光2)
+    el(svg,'line',{x1:filmL+60,y1:topY,x2:filmL+60,y2:botY,stroke:'#bbb','stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'line',{x1:filmL+60,y1:botY,x2:filmR+40,y2:60,stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:filmR+44,y:64,'font-size':11,'font-weight':800,fill:GREEN}).textContent='反射光②(下表面,多走 2d)';
+    // 膜厚标注
+    el(svg,'line',{x1:filmL-14,y1:topY,x2:filmL-14,y2:botY,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:filmL-30,y:(topY+botY)/2+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='d';
+    // 两反射波相位:反射光②比①多走 2d,相位差 = 2π*(2d)/λ
+    const lamUnit=40; // d 滑块以 lamUnit 为一个 λ
+    const dLam=d/lamUnit; // 膜厚以 λ 计
+    const extra=2*dLam; // 2d 以 λ 计
+    const phaseDiff=2*Math.PI*extra;
+    // 下方画两列波比较相位
+    wave(svg,140,225,340,0,BLUE,12);
+    wave(svg,140,225,340,phaseDiff,GREEN,12);
+    el(svg,'text',{x:130,y:229,'font-size':11,'font-weight':800,fill:BLUE,'text-anchor':'end'}).textContent='①';
+    el(svg,'text',{x:130,y:245,'font-size':11,'font-weight':800,fill:GREEN,'text-anchor':'end'}).textContent='②';
+    // 判定
+    const half=extra/0.5; // 是半波长的几倍
+    const isCancel=Math.abs((extra%1)-0.5)<0.06; // 2d≈半波长奇数倍 -> 相消
+    let sres,rres,rcol;
+    if(isCancel){sres='反相(差半λ)';rres='相消→反射弱、透射强';rcol=GREEN;}
+    else if(Math.abs(extra%1)<0.06){sres='同相(差整λ)';rres='相长→反射强(增反)';rcol=RED;}
+    else{sres='部分错开';rres='中间态';rcol=INK;}
+    oD.textContent=dLam.toFixed(2)+'λ';
+    oP.textContent=extra.toFixed(2)+'λ';
+    oS.textContent=sres;
+    oR.textContent=rres;
+    oR.style.color=rcol;
+    // 提示 d=λ/4
+    el(svg,'text',{x:400,y:235,'font-size':12,'font-weight':900,fill:isCancel?GREEN:INK,'text-anchor':'start'}).textContent=isCancel?'✓ d=λ/4:反射相消!':'滑到 d=λ/4(2d=λ/2)看相消';
+  }
+  Ds.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动7:白光双缝色散 ===== */
+(function(){
+  const cv=document.getElementById('wcCv');const ctx=cv.getContext('2d');
+  const bGo=document.getElementById('wcGo'),bM=document.getElementById('wcMono');
+  let mono=false;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const cx=cv.width/2, y=20, H=110;
+    // 每种颜色有自己的波长(px),Δy∝λ
+    const colors=[
+      {lam:26,rgb:[122,63,242]}, // 紫
+      {lam:30,rgb:[40,90,230]},  // 蓝
+      {lam:36,rgb:[30,158,134]}, // 绿
+      {lam:42,rgb:[243,192,14]}, // 黄
+      {lam:50,rgb:[224,56,42]}   // 红
+    ];
+    for(let x=0;x<cv.width;x++){
+      let r=0,g=0,b=0;
+      if(mono){
+        const I=Math.pow(Math.cos(Math.PI*(x-cx)/38),2);
+        r=224*I;g=56*I;b=42*I;
+      }else{
+        colors.forEach(c=>{
+          const I=Math.pow(Math.cos(Math.PI*(x-cx)/(c.lam*1.4)),2);
+          r+=c.rgb[0]*I/2.2; g+=c.rgb[1]*I/2.2; b+=c.rgb[2]*I/2.2;
+        });
+      }
+      ctx.fillStyle='rgb('+Math.min(255,Math.round(r))+','+Math.min(255,Math.round(g))+','+Math.min(255,Math.round(b))+')';
+      ctx.fillRect(x,y,1,H);
+    }
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(0,y,cv.width,H);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText(mono?'单色光:亮暗均匀等间距':'白光:中央白,两侧彩(内紫外红)',10,y+H+22);
+    // 中央标记
+    ctx.strokeStyle='rgba(0,0,0,0.4)';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(cx,y);ctx.lineTo(cx,y+H);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=INK;ctx.fillText('中央',cx-14,y+14);
+  }
+  bGo.onclick=()=>{mono=false;draw();};
+  bM.onclick=()=>{mono=true;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 形成稳定干涉条纹的相干条件是什么(三条)?",a:"① 频率相同(同一波长);② 振动方向相同;③ 相位差恒定。三者缺一,屏上条纹就不稳定或消失。"},
+ {q:"2. 双缝干涉实验里,为什么要在双缝前先放一个单缝?",a:"普通光源各点相位杂乱。先过单缝得到一条线光源,用它照亮双缝,使两缝被同一波前照亮→两缝射出的光相位差恒定(相干),屏上才有稳定条纹。单缝管『相干』,不管颜色。"},
+ {q:"3. 屏上某点是亮纹还是暗纹,由什么决定?写出判据。",a:"由该点到两缝的路程差 δ=r₂−r₁ 决定。亮纹:δ=kλ(k=0,±1,±2…);暗纹:δ=(2k+1)λ/2。中央 δ=0 是亮纹。"},
+ {q:"4. 相邻亮纹间距公式?各字母含义?千万别搞反哪两个?",a:"Δy=Lλ/d。L=双缝到屏的距离,d=两缝间距,λ=波长。★别把 L(缝→屏,大)和 d(缝间距,小)搞反——一个分子一个分母。"},
+ {q:"5. λ、L、d 各变大时,条纹间距 Δy 怎么变?",a:"由 Δy=Lλ/d:λ↑→Δy↑(红光比紫光疏);L↑→Δy↑;d↑→Δy↓。分子变大变疏,分母变大变密。"},
+ {q:"6. 用双缝干涉测波长的装置顺序?滤光片和单缝各起什么作用?",a:"光源→滤光片→单缝→双缝→遮光筒→测量头/分划板→毫米刻度尺(屏)。滤光片:得到单色光(定 λ);单缝:获得线光源使光相干(定相位)。"},
+ {q:"7. 测量头对第1条亮纹读数 x₁,对第 n 条读数 x₂,波长怎么算?为什么测多条?",a:"跨了 (n−1) 个间距:Δx=|x₂−x₁|,Δy=Δx/(n−1),λ=d·Δy/L=d·Δx/[(n−1)L]。测多条取平均是为了摊薄读数误差,比只测相邻两条更准。"},
+ {q:"8. d=0.2mm,L=1.0m,测第1到第5条亮纹 Δx=11.6mm,求 λ。",a:"Δy=11.6/(5−1)=2.9mm。λ=dΔy/L=(0.2×10⁻³×2.9×10⁻³)/1.0=5.8×10⁻⁷m=580nm。"},
+ {q:"9. 单缝衍射条纹有什么特点?和干涉条纹最大的区别?",a:"衍射:中央条纹最宽最亮,两侧越来越窄越来越暗、间距不等;缝越窄越明显。干涉:等间距、等亮度。判别铁律=看条纹是否均匀。"},
+ {q:"10. 怎样一眼分辨干涉和衍射?",a:"看条纹均匀性:等间距等亮度→双缝干涉;中央特宽特亮、向外渐窄渐暗、不等间距→单缝衍射。"},
+ {q:"11. 白光双缝干涉图样是什么样?『内紫外红』指什么?",a:"中央亮纹是白色(各色 δ=0 重叠);两侧是彩色条纹。因 Δy∝λ,每级条纹内侧偏紫、外侧偏红,即『内紫外红』。"},
+ {q:"12. 薄膜干涉的原理?增透膜为什么用 λ/4 的厚度?",a:"同一薄膜前、后表面的反射光叠加(等厚干涉)。增透膜厚 d=λ/4 时,下表面反射光多走 2d=λ/2,与上表面反射光相差半波长→相消干涉→反射减弱→透射增强(λ 为膜中波长)。"},
+ {q:"13. 泊松亮斑是什么?它证明了什么?",a:"光照小圆板,在圆板阴影正中心出现一个亮点。它是光发生衍射(绕过边缘会聚)的有力证据,支持光的波动说。"},
+ {q:"14. 劈尖干涉/牛顿环条纹弯曲说明什么?",a:"它们是等厚干涉,条纹对应等厚线。若被检平面不平,等厚线随之弯曲,故『条纹弯曲=表面不平』,可用于检查平整度。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const dv=document.createElement('div');dv.style.cssText='margin:12px 0;font-weight:700';dv.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';dv.querySelector('button').onclick=()=>dv.querySelector('.qa').classList.toggle('show');quiz.appendChild(dv);});
+</script>
+</body>
+</html>
