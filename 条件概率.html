@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>条件概率与全概率 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>条件概率与全概率</h1>
+    <p class="lead">古典概型讲的是「从整个样本空间里数」;这一页讲的是<b>「已经知道 A 发生了」</b>之后，B 还有多少概率——把样本空间<b>缩小到 A 里面</b>再重新数。乘法公式、全概率、贝叶斯、独立性，全部从这一个「缩小分母」的动作长出来。是选择题压轴、也是新高考解答题的常客。</p>
+
+    <div class="say">🗣️ <b>条件概率(人话版):</b> P(B|A) 读作「在 A 已经发生的条件下，B 发生的概率」。做法就一句:<b>已经知道 A 发生了，把整个样本空间缩小到 A 里面，再看 B 占多少</b>。公式 <b>P(B|A)=P(AB)/P(A)</b> —— 分母从「整个 Ω」换成了「只剩 A」，核心就是<b>缩小分母</b>。P(AB) 是 A 和 B 同时发生（在缩小前的整片天地里），P(A) 是新的「地盘」。</div>
+
+    <div class="keybox"><b>四条主线，一条根:</b> 根是 <b>P(B|A)=P(AB)/P(A)</b>。① 变形 → <b>乘法公式 P(AB)=P(A)·P(B|A)</b>;② 把 A 按互斥完备的原因切开求和 → <b>全概率公式</b>;③ 由结果反推原因 → <b>贝叶斯公式</b>;④ 若 P(B|A)=P(B)（知道 A 不改变 B）→ <b>独立 P(AB)=P(A)P(B)</b>。四个公式是一家人。</div>
+
+    <h2>① 条件概率:把样本空间缩小到 A</h2>
+    <div class="card">
+      <div class="eq">P(B|A) = P(AB) / P(A)　(要求 P(A) &gt; 0)</div>
+      <p style="margin:8px 0"><b>文字表述:</b> 「A 已经发生」相当于世界变小了——原来的全集 Ω 不算数了，现在只剩 A 这块地盘。B 在新世界里的占比，就是 A 与 B 的交集 AB 占 A 的比例。用古典概型的<b>数数版</b>更直观:</p>
+      <div class="eq">P(B|A) = n(AB) / n(A)　(A 里满足 B 的个数 ÷ A 的总个数)</div>
+      <table>
+        <tr><th>符号</th><th>含义</th></tr>
+        <tr><td><b>P(A)</b></td><td>缩小后的「新分母」——A 这块地盘的大小</td></tr>
+        <tr><td><b>P(AB)</b></td><td>A 与 B 同时发生（交集），在<b>原样本空间</b>里量</td></tr>
+        <tr><td><b>P(B|A)</b></td><td>缩小到 A 之后 B 的占比 = P(AB)÷P(A)</td></tr>
+      </table>
+      <p class="trap">⚠ P(B|A) 和 P(AB) 完全不同!P(AB) 分母是整个 Ω;P(B|A) 分母是 A（更小）。所以一般 P(B|A) &gt; P(AB)。看到「已知/在…条件下/如果第一次是…」就是条件概率，分母要换。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 缩小样本空间:文氏面积图演示 P(B|A)=P(AB)/P(A)（拖动看分母怎么换）</div>
+      <svg id="cpSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cpShrink">▶ 缩小到 A</button><button id="cpReset">↺ 看回全集</button>
+        <label>P(A) <input id="cpA" type="range" min="0.2" max="0.8" value="0.5" step="0.05"></label>
+        <label>P(AB) <input id="cpAB" type="range" min="0.05" max="0.4" value="0.2" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>P(A) 新分母</b><span id="cpoA">0</span></div>
+        <div><b>P(AB) 交集</b><span id="cpoAB">0</span></div>
+        <div><b>P(B|A)=AB/A</b><span id="cpoBA">0</span></div>
+        <div><b>对比 P(AB)</b><span id="cpoRaw">0</span></div>
+      </div>
+      <p class="small">🗣️ 点「缩小到 A」，整个世界只剩下 A 那块高亮区域;此时 B 的占比就从「AB 占整个 Ω」变成「AB 占 A」——<b>分母缩小了，条件概率就变大了</b>。</p>
+    </div>
+
+    <h2 class="b">② 乘法公式:P(AB)=P(A)·P(B|A)</h2>
+    <div class="card">
+      <div class="eq">P(AB) = P(A)·P(B|A) = P(B)·P(A|B)</div>
+      <p style="margin:8px 0">把条件概率的式子两边乘 P(A) 就得到它。含义:<b>要 A 和 B 都发生，先让 A 发生（概率 P(A)），再在「A 已发生」的前提下让 B 发生（概率 P(B|A)），两步概率相乘</b>。这是「不放回连续抽取」的看家公式。</p>
+      <h3>推广到多步(链式)</h3>
+      <div class="eq">P(A₁A₂A₃) = P(A₁)·P(A₂|A₁)·P(A₃|A₁A₂)</div>
+      <p style="margin:8px 0">三次连抽:第一步的概率 × 第二步在第一步已发生下的概率 × 第三步在前两步已发生下的概率。每一步的分母都因为「前面已经抽走了」而改变。</p>
+      <p class="trap">⚠ 乘法公式里第二个因子是<b>条件</b>概率 P(B|A)，不是 P(B)。只有独立时才能换成 P(B)。不放回抽取<b>绝不独立</b>——第一次抽走会改变第二次的分母和分子。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌳 互动 2 — 树状图:分支概率相乘 P(AB)=P(A)·P(B|A)（不放回抽两个球）</div>
+      <svg id="treeSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>红球数 <input id="trR" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>白球数 <input id="trW" type="range" min="1" max="6" value="2" step="1"></label>
+        <button id="trPath">▶ 高亮「红→红」路径</button>
+      </div>
+      <div class="live">
+        <div><b>P(第1个红)</b><span id="tro1">0</span></div>
+        <div><b>P(第2红|第1红)</b><span id="tro2">0</span></div>
+        <div><b>P(红且红)=相乘</b><span id="tro3">0</span></div>
+        <div><b>P(两球一红一白)</b><span id="tro4">0</span></div>
+      </div>
+      <p class="small">🗣️ 沿着树往下走，<b>每条路径的概率 = 沿途分支概率相乘</b>。第二层分支的分母已经从「总数」减到「总数−1」——这就是乘法公式里 P(B|A) 的由来。</p>
+    </div>
+
+    <h2 class="g">③ 全概率公式:按原因分类，加权求和</h2>
+    <div class="card">
+      <p style="margin:6px 0">当 B 的发生「有好几条不同的路径/来源」时，就把这些原因 A₁,A₂,…,Aₙ 列全（要<b>互斥且完备</b>，即两两不同时发生、且合起来铺满整个 Ω），分别算 B 在每个原因下的概率，再<b>加权求和</b>:</p>
+      <div class="eq">P(B) = P(A₁)P(B|A₁) + P(A₂)P(B|A₂) + … + P(Aₙ)P(B|Aₙ)</div>
+      <p style="margin:8px 0"><b>人话:</b> B 可能从「第一台机器」来、从「第二台机器」来……把每条来路的「先走到这条路的概率 × 走上这条路后 B 发生的概率」全加起来，就是 B 的总概率。相当于把总面积按原因<b>切成几块</b>，每块单独算好再<b>拼回去</b>。</p>
+      <div class="mono">分类要求:A₁…Aₙ 两两互斥（Aᵢ∩Aⱼ=∅）且完备（A₁∪…∪Aₙ=Ω）。</div>
+      <p class="trap">⚠ 分类必须<b>既互斥又完备</b>:漏了一类，概率加不到 1;类之间有重叠，就会重复计数。典型:「两批产品」「两台机器」「三条路线」——先确认它们不重不漏。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧱 互动 3 — 全概率:把总概率按原因切块，再拼回 P(B)=ΣP(Aᵢ)P(B|Aᵢ)</div>
+      <svg id="tpSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>机1占比 P(A₁) <input id="tpW1" type="range" min="0.2" max="0.8" value="0.6" step="0.05"></label>
+        <label>机1次品率 <input id="tpD1" type="range" min="0.02" max="0.2" value="0.05" step="0.01"></label>
+        <label>机2次品率 <input id="tpD2" type="range" min="0.02" max="0.2" value="0.1" step="0.01"></label>
+        <button id="tpMerge">▶ 拼回 P(B)</button>
+      </div>
+      <div class="live">
+        <div><b>机1贡献 P(A₁)P(B|A₁)</b><span id="tpo1">0</span></div>
+        <div><b>机2贡献 P(A₂)P(B|A₂)</b><span id="tpo2">0</span></div>
+        <div><b>次品总概率 P(B)</b><span id="tpo3">0</span></div>
+        <div><b>机2占比 P(A₂)</b><span id="tpo4">0</span></div>
+      </div>
+      <p class="small">🗣️ 大方块=全部产品。竖着按「哪台机器」切成两条（互斥完备），每条里再横着标出次品那一小块。<b>两块次品面积加起来</b>就是次品总概率 P(B)。</p>
+    </div>
+
+    <h2 class="o">④ 贝叶斯公式:由结果反推原因</h2>
+    <div class="card">
+      <p style="margin:6px 0">全概率是「已知原因 → 求结果概率」;贝叶斯反过来:<b>「已经看到结果 B 了，反问它最可能来自哪个原因 Aᵢ」</b>。</p>
+      <div class="eq">P(Aᵢ|B) = P(Aᵢ)P(B|Aᵢ) / P(B) = P(Aᵢ)P(B|Aᵢ) / ΣₖP(Aₖ)P(B|Aₖ)</div>
+      <p style="margin:8px 0"><b>人话:</b> 分子 = 「这个原因贡献的那一块」，分母 = 全概率（所有块的总和）。所以贝叶斯就是<b>「你那块占总块的比例」</b>。分母正是上一节的全概率公式，先算全概率、再回头算比例，两步走。</p>
+      <div class="mono">口诀:先验 P(Aᵢ) —(看到证据 B)→ 后验 P(Aᵢ|B)。分子=你的贡献块，分母=全概率总和。</div>
+      <p class="trap">⚠ 别把 P(Aᵢ|B) 和 P(B|Aᵢ) 弄反!前者「已知次品，问哪台机器造的」，后者「已知是这台机器，问次品率」——条件和结论刚好对调，值通常也不同。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动 4 — 贝叶斯先验→后验:柱状对比（已知抽到次品，反推来自哪台机器）</div>
+      <svg id="bySvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>机1占比(先验) <input id="byPrior" type="range" min="0.2" max="0.8" value="0.6" step="0.05"></label>
+        <label>机1次品率 <input id="byD1" type="range" min="0.02" max="0.2" value="0.04" step="0.01"></label>
+        <label>机2次品率 <input id="byD2" type="range" min="0.02" max="0.2" value="0.12" step="0.01"></label>
+      </div>
+      <div class="live">
+        <div><b>先验 P(A₁)</b><span id="byo1">0</span></div>
+        <div><b>后验 P(A₁|次品)</b><span id="byo2">0</span></div>
+        <div><b>后验 P(A₂|次品)</b><span id="byo3">0</span></div>
+        <div><b>次品总概率 P(B)</b><span id="byo4">0</span></div>
+      </div>
+      <p class="small">🗣️ 左对柱=<b>先验</b>（还没看到证据时对两台机器的信念）;右对柱=<b>后验</b>（看到「是次品」后更新的信念）。次品率高的那台，看到次品后「嫌疑」会明显上升——这就是贝叶斯的更新。</p>
+    </div>
+
+    <h2 class="v">⑤ 事件独立性:知道 A 不改变 B</h2>
+    <div class="card">
+      <div class="eq">A、B 独立 ⟺ P(AB)=P(A)P(B) ⟺ P(B|A)=P(B)</div>
+      <p style="margin:8px 0"><b>人话:</b> 「独立」= <b>知道 A 发生了，对 B 的概率毫无影响</b>（P(B|A)=P(B)，缩小分母也没变）。此时乘法公式里的 P(B|A) 就退化成 P(B)，于是 P(AB)=P(A)P(B)——两个概率直接相乘。放回抽取、两次独立掷骰子都属此类。</p>
+      <h3>独立 ≠ 互斥（最经典陷阱）</h3>
+      <table>
+        <tr><th></th><th>互斥(对立类)</th><th>独立</th></tr>
+        <tr><td>定义</td><td>P(AB)=0（不能同时发生）</td><td>P(AB)=P(A)P(B)</td></tr>
+        <tr><td>直觉</td><td>你死我活，一个发生另一个就不能</td><td>互不干扰，一个发生不影响另一个</td></tr>
+        <tr><td>关系</td><td colspan="2">若 P(A)&gt;0、P(B)&gt;0，则<b>互斥 ⇒ 一定不独立</b>（互斥时 P(B|A)=0≠P(B)）</td></tr>
+      </table>
+      <p class="trap">⚠ 独立和互斥是<b>两回事，还常常打架</b>!互斥是「不能同时」，独立是「互不影响」。两个正概率事件<b>不可能</b>既独立又互斥（因为互斥时 A 发生 B 就绝不发生，这恰恰是最强的「影响」）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 独立 vs 互斥 文氏图对照（看两者到底差在哪）</div>
+      <svg id="imSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="imcase on" data-c="0">独立(有交集)</button>
+        <button class="imcase" data-c="1">互斥(无交集)</button>
+      </div>
+      <div class="verdict" id="imNote"></div>
+      <p class="small">🗣️ 独立:两圆<b>有重叠</b>，且重叠面积恰好=P(A)×P(B)（互不影响）。互斥:两圆<b>完全分开</b>，P(AB)=0，此时知道 A 发生，B 就绝不会发生——影响拉满，绝不独立。</p>
+    </div>
+
+    <h2 class="r">⑥ 不放回 vs 放回:分母变不变</h2>
+    <div class="card">
+      <p style="margin:6px 0">同一个抽球，<b>放回</b>与<b>不放回</b>是条件概率里最能考察「独立 / 乘法公式」的对照。</p>
+      <table>
+        <tr><th></th><th>放回抽取</th><th>不放回抽取</th></tr>
+        <tr><td>第二次分母</td><td>不变(球放回去了)</td><td>减 1(球被抽走了)</td></tr>
+        <tr><td>两次关系</td><td><b>独立</b>:P(B|A)=P(B)</td><td><b>不独立</b>:P(B|A)≠P(B)</td></tr>
+        <tr><td>用哪个公式</td><td>P(AB)=P(A)P(B) 直接相乘</td><td>P(AB)=P(A)P(B|A) 乘法公式</td></tr>
+      </table>
+      <p class="trap">⚠ 判断题里「有放回」三个字是关键开关:有放回→独立→直接相乘;没有放回→条件概率变化→老实用乘法公式，第二步分母要减 1。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎱 互动 6 — 不放回抽球:第二次概率动态变化（分母随抽走而减小）</div>
+      <canvas id="ballCv" width="700" height="200"></canvas>
+      <div class="ctrl">
+        <button id="ballGo">▶ 抽一个球</button><button id="ballReset">↺ 重置盒子</button>
+        <label>红球 <input id="ballR" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>白球 <input id="ballW" type="range" min="1" max="6" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>盒中总数</b><span id="ballTot">0</span></div>
+        <div><b>P(下一个是红)</b><span id="ballPR">0</span></div>
+        <div><b>P(下一个是白)</b><span id="ballPW">0</span></div>
+        <div><b>已抽走</b><span id="ballDrawn">0</span></div>
+      </div>
+      <p class="small">🗣️ 每抽走一个球，<b>盒里总数就减 1</b>，下一次抽到红/白的概率立刻变——这就是「不放回不独立」的动态证据。放回的话，每次概率都会回到起点、保持不变。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 直接缩样本空间(古典概型数数)</h3>
+      <p><b class="tag">触发信号:</b>「已知第一次…，求第二次…」「在…的条件下」，且事件可以列举/数个数。</p>
+      <p><b class="tag">标准动作:</b>把「条件 A」当成新的样本空间，直接数 n(A) 和 n(AB)，P(B|A)=n(AB)/n(A)。或用 P(B|A)=P(AB)/P(A)。</p>
+      <p><b class="tag">示例(带解):</b>掷一颗骰子，已知点数为偶数(A={2,4,6})，求它大于 3(B={4,5,6})的概率。缩到 A 里:A 有 3 个，其中大于 3 的是 {4,6} 共 2 个。P(B|A)=2/3。</p>
+      <p class="trap">陷阱:仍用整个 Ω 当分母（算成 2/6）;把 P(B|A) 当成 P(AB)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 乘法公式(不放回连续抽取)</h3>
+      <p><b class="tag">触发信号:</b>「不放回」「依次取出」「连续抽两张牌」，问「都是…」「第一…且第二…」。</p>
+      <p><b class="tag">标准动作:</b>P(AB)=P(A)·P(B|A)，第二步分母减 1、分子按第一步结果调整。多步用链式乘。</p>
+      <p><b class="tag">示例(带解):</b>盒中 3 红 2 白，不放回取 2 个，求都是红。P(第1红)=3/5，P(第2红|第1红)=2/4。P(红红)=3/5×2/4=6/20=3/10。</p>
+      <p class="trap">陷阱:第二步仍用 3/5（忘了减）;误当独立直接 (3/5)²。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 全概率(分两批/两台机器/两条路)</h3>
+      <p><b class="tag">触发信号:</b>B 的发生「来自几种互斥情形」;「甲乙两厂供货」「第一/二批」「先分类再问总的」。</p>
+      <p><b class="tag">标准动作:</b>先找一组互斥完备的原因 A₁…Aₙ，P(B)=ΣP(Aᵢ)P(B|Aᵢ)。常配树状图。</p>
+      <p><b class="tag">示例(带解):</b>甲厂供 60% 次品率 5%，乙厂供 40% 次品率 10%。任取一件是次品的概率 P(B)=0.6×0.05+0.4×0.10=0.03+0.04=0.07。</p>
+      <p class="trap">陷阱:分类不互斥或不完备（概率加不到 1）;把各次品率直接相加（漏了权重占比）。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 贝叶斯(已知次品反推哪台机器)</h3>
+      <p><b class="tag">触发信号:</b>「已经抽到次品/阳性/结果 B，反问它来自哪个原因/哪台机器的概率」。</p>
+      <p><b class="tag">标准动作:</b>先算全概率 P(B)（分母），再 P(Aᵢ|B)=P(Aᵢ)P(B|Aᵢ)/P(B)（你那块÷总块）。</p>
+      <p><b class="tag">示例(带解):</b>接上例，已知取到次品，求它来自甲厂:P(甲|次)=0.6×0.05/0.07=0.03/0.07≈0.4286;来自乙厂 0.04/0.07≈0.5714。</p>
+      <p class="trap">陷阱:把 P(甲|次) 和 P(次|甲) 搞反;忘了先算全概率当分母。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 独立性判断</h3>
+      <p><b class="tag">触发信号:</b>「A、B 是否独立」「有放回」「两次掷骰子」;或给你 P(A)、P(B)、P(AB) 让你判断。</p>
+      <p><b class="tag">标准动作:</b>验 P(AB)=P(A)P(B) 是否成立;成立即独立，可直接相乘;不成立则不独立，要用乘法公式。</p>
+      <p><b class="tag">示例(带解):</b>P(A)=0.5，P(B)=0.4，P(AB)=0.2。P(A)P(B)=0.5×0.4=0.2=P(AB)，成立 → A、B 独立。若 P(AB)=0.15≠0.2 则不独立。</p>
+      <p class="trap">陷阱:把「互斥」当「独立」;仅凭「看起来无关」就断定独立，必须回到 P(AB)=P(A)P(B) 验算。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 树状图综合</h3>
+      <p><b class="tag">触发信号:</b>多步随机试验、分支多、既要乘法又要全概率;题干信息杂需要梳理结构。</p>
+      <p><b class="tag">标准动作:</b>画树:每层一步，分支上标条件概率;沿路径相乘得该路径概率;把落到同一结果的路径概率相加（即全概率）。</p>
+      <p><b class="tag">示例(带解):</b>先抛硬币定用哪个盒子（各 1/2），甲盒 2 红 1 白、乙盒 1 红 2 白，摸一个求红。P(红)=½×(2/3)+½×(1/3)=1/3+1/6=1/2。</p>
+      <p class="trap">陷阱:分支概率漏乘上一步的概率;把不同路径的红球概率算重或算漏。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>P(B|A) ≠ P(AB)</b>!前者分母是 A（缩小后），后者分母是整个 Ω。P(B|A)=P(AB)/P(A)，一般前者更大。</p>
+      <p class="trap">② 全概率的分类必须<b>既互斥又完备</b>:两两不同时发生、且合起来铺满全集。漏一类概率加不满，重叠则重复计数。</p>
+      <p class="trap">③ <b>独立 ≠ 互斥</b>（最经典陷阱）:独立是「互不影响」P(AB)=P(A)P(B);互斥是「不能同时」P(AB)=0。两个正概率事件不能既独立又互斥。</p>
+      <p class="trap">④ 乘法公式第二个因子是<b>条件</b>概率 P(B|A)，只有独立时才等于 P(B)。不放回抽取绝不独立。</p>
+      <p class="trap">⑤ 贝叶斯里 <b>P(Aᵢ|B) 和 P(B|Aᵢ) 别弄反</b>:一个由果推因，一个由因推果，条件与结论对调。</p>
+      <p class="trap">⑥ 不放回第二步<b>分母要减 1</b>，分子也随第一步结果变;别整体照抄第一步。</p>
+      <p class="trap">⑦ 全概率的每一项都是「占比 × 条件概率」两个因子相乘，别只加条件概率、漏了权重 P(Aᵢ)。</p>
+      <p class="trap">⑧ 贝叶斯的分母就是全概率:<b>先算 P(B)，再回头求比例</b>，顺序别乱。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 贝叶斯 = 「先验→后验」的信念更新:</b> 没看证据前，你对各原因的信念是<b>先验</b> P(Aᵢ)（比如两台机器的产量占比）;看到证据 B（抽到次品）后，用 P(Aᵢ|B)=P(Aᵢ)P(B|Aᵢ)/P(B) <b>更新</b>成<b>后验</b>。证据越「偏向某个原因」（该原因下 B 的概率越高），那个原因的后验就涨得越多。这就是「用数据修正猜测」的数学骨架，理解它，一整类反推题都一句话拆穿:<b>后验 ∝ 先验 × 似然</b>。</p>
+      <p style="margin:8px 0"><b>② 独立与互斥不能共存（除非有零概率事件）:</b> 设 P(A)&gt;0、P(B)&gt;0。若互斥则 P(AB)=0，而独立要求 P(AB)=P(A)P(B)&gt;0，矛盾——所以<b>两个正概率事件不可能既独立又互斥</b>。只有当至少一个事件概率为 0（几乎不可能发生）时，两者才能「勉强」同时成立（此时 0=0）。把「互斥⇒不独立」当成正概率下的定理记牢，选择题里「A、B 互斥所以独立」一律判错。</p>
+      <p style="margin:8px 0"><b>③ 四个公式其实是一棵树:</b> 根 P(B|A)=P(AB)/P(A) → 移项得乘法 → 沿一组互斥完备原因把乘法项加起来得全概率 → 把某一项除以全概率总和得贝叶斯 → 当条件不改变概率时退化为独立。别把它们当四个孤立公式背，抓住「缩小分母」这一个动作，四个都是它的变身。</p>
+      <p style="margin:8px 0"><b>④ 树状图是万能脚手架:</b> 任何多步随机试验都能画成树:每层一步，边上写条件概率，路径相乘、汇合相加。乘法公式=沿一条路径乘;全概率=把通向同一结果的多条路径加;贝叶斯=某条路径÷所有到达该结果的路径和。会画树，就不怕题干信息乱。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 一根主线「缩小分母」，长出乘法/全概率/贝叶斯/独立性</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:缩小样本空间 文氏面积图 ===== */
+(function(){
+  const svg=document.getElementById('cpSvg');
+  const As=document.getElementById('cpA'),ABs=document.getElementById('cpAB');
+  const oA=document.getElementById('cpoA'),oAB=document.getElementById('cpoAB'),oBA=document.getElementById('cpoBA'),oRaw=document.getElementById('cpoRaw');
+  let pA=0.5,pAB=0.2,shrink=0,running=false;
+  function sync(){
+    pA=+As.value;pAB=+ABs.value;
+    if(pAB>pA){pAB=pA;ABs.value=pA;}
+    draw();
+  }
+  As.oninput=ABs.oninput=()=>{sync();};
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=40,W=560,H=220;
+    // full sample space Omega rectangle
+    el(svg,'rect',{x:X0,y:Y0,width:W,height:H,fill:'#f4efe2',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W-8,y:Y0+20,'font-size':13,'font-weight':900,fill:'#6b5d3a','text-anchor':'end'}).textContent='样本空间 Ω  (面积=1)';
+    // A block width proportional to pA (left part)
+    const aw=pA*W;
+    // when shrink=1, dim everything outside A
+    const outsideOpacity=1-shrink*0.85;
+    // outside-A region (right) - dimmed on shrink
+    el(svg,'rect',{x:X0+aw,y:Y0,width:W-aw,height:H,fill:'#c9c1ac',opacity:outsideOpacity,stroke:'none'});
+    // A region highlighted
+    el(svg,'rect',{x:X0,y:Y0,width:aw,height:H,fill:'rgba(20,80,200,0.16)',stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:X0+aw/2,y:Y0-10,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='A (P(A)='+pA.toFixed(2)+')';
+    // AB region: the part inside A that is also B (a sub-block at top of A)
+    const abH=(pAB/pA)*H; // fraction of A that is AB -> this is P(B|A) visually
+    el(svg,'rect',{x:X0,y:Y0,width:aw,height:abH,fill:'rgba(224,56,42,0.35)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X0+aw/2,y:Y0+abH/2+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='AB';
+    // dashed line indicating B extends across (before shrink)
+    if(shrink<0.5){
+      el(svg,'line',{x1:X0,y1:Y0+abH,x2:X0+W,y2:Y0+abH,stroke:RED,'stroke-width':2,'stroke-dasharray':'6 5'});
+      el(svg,'text',{x:X0+W-8,y:Y0+abH-6,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'end'}).textContent='B 的上界';
+    }
+    // labels
+    const pBA=pAB/pA;
+    el(svg,'text',{x:X0+W/2,y:Y0+H+30,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=shrink>0.5?('世界只剩 A → P(B|A)=AB/A='+pBA.toFixed(2)):('看整个 Ω:P(AB)='+pAB.toFixed(2)+'　P(A)='+pA.toFixed(2));
+    // stats
+    oA.textContent=pA.toFixed(2);oAB.textContent=pAB.toFixed(2);oBA.textContent=pBA.toFixed(3);oRaw.textContent=pAB.toFixed(2);
+  }
+  function loop(){
+    if(!running)return;
+    shrink+=0.04;if(shrink>=1){shrink=1;running=false;}
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('cpShrink').onclick=()=>{shrink=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('cpReset').onclick=()=>{shrink=0;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动2:树状图 乘法公式 ===== */
+(function(){
+  const svg=document.getElementById('treeSvg');
+  const Rs=document.getElementById('trR'),Ws=document.getElementById('trW');
+  const o1=document.getElementById('tro1'),o2=document.getElementById('tro2'),o3=document.getElementById('tro3'),o4=document.getElementById('tro4');
+  let R=3,W=2,hi=false;
+  function sync(){R=+Rs.value;W=+Ws.value;draw();}
+  Rs.oninput=Ws.oninput=sync;
+  document.getElementById('trPath').onclick=()=>{hi=!hi;draw();};
+  function frac(a,b){return a+'/'+b;}
+  function draw(){
+    clr(svg);
+    const N=R+W;
+    // root
+    const rootX=90,rootY=160;
+    el(svg,'circle',{cx:rootX,cy:rootY,r:16,fill:INK});
+    el(svg,'text',{x:rootX,y:rootY+5,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='盒';
+    // level 1 nodes: red / white
+    const l1x=320;
+    const rY=80,wY=250;
+    // edges root->level1
+    edge(rootX+16,rootY,l1x-22,rY,hi?RED:INK,hi?4:2,'P(红)='+frac(R,N),hi);
+    edge(rootX+16,rootY,l1x-22,wY,INK,2,'P(白)='+frac(W,N),false);
+    node(l1x,rY,'红',R>0?'rgba(224,56,42,0.85)':'#ccc');
+    node(l1x,wY,'白','rgba(150,150,150,0.6)');
+    // level 2 from red node (no replacement): red / white
+    const l2x=560;
+    const r2Y=40,w2Y=120;
+    const redSecond=Math.max(R-1,0);
+    edge(l1x+22,rY,l2x-20,r2Y,hi?RED:INK,hi?4:2,'P(红|红)='+frac(redSecond,N-1),hi);
+    edge(l1x+22,rY,l2x-20,w2Y,INK,2,'P(白|红)='+frac(W,N-1),false);
+    node(l2x,r2Y,'红',hi?RED:'rgba(224,56,42,0.7)');
+    node(l2x,w2Y,'白','rgba(150,150,150,0.6)');
+    // path label red-red
+    const p1=R/N, p2=redSecond/(N-1);
+    if(hi){
+      el(svg,'rect',{x:l2x+26,y:r2Y-14,width:110,height:30,fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:l2x+81,y:r2Y+6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='相乘='+(p1*p2).toFixed(3);
+    }
+    // title
+    el(svg,'text',{x:350,y:22,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='不放回抽两球:路径概率=分支相乘 (第2层分母已减1)';
+    // stats
+    o1.textContent=frac(R,N)+'='+p1.toFixed(3);
+    o2.textContent=frac(redSecond,N-1)+'='+(N-1>0?p2.toFixed(3):'-');
+    o3.textContent=(p1*p2).toFixed(3);
+    // one red one white (either order)
+    const pMix=(R/N)*(W/(N-1))+(W/N)*(R/(N-1));
+    o4.textContent=pMix.toFixed(3);
+  }
+  function node(x,y,txt,col){
+    el(svg,'circle',{cx:x,cy:y,r:15,fill:col,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:x,y:y+5,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=txt;
+  }
+  function edge(x1,y1,x2,y2,col,w,lab,strong){
+    el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':w});
+    const mx=(x1+x2)/2,my=(y1+y2)/2-6;
+    el(svg,'text',{x:mx,y:my,'font-size':11,'font-weight':strong?900:700,fill:col,'text-anchor':'middle'}).textContent=lab;
+  }
+  sync();
+})();
+
+/* ===== 互动3:全概率 面积切块 ===== */
+(function(){
+  const svg=document.getElementById('tpSvg');
+  const W1s=document.getElementById('tpW1'),D1s=document.getElementById('tpD1'),D2s=document.getElementById('tpD2');
+  const o1=document.getElementById('tpo1'),o2=document.getElementById('tpo2'),o3=document.getElementById('tpo3'),o4=document.getElementById('tpo4');
+  let w1=0.6,d1=0.05,d2=0.1,merge=0,running=false;
+  function sync(){w1=+W1s.value;d1=+D1s.value;d2=+D2s.value;draw();}
+  W1s.oninput=D1s.oninput=D2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=40,W=460,H=200;
+    const w2=1-w1;
+    // main square = all products
+    // gap opens on merge? keep two columns split by machine
+    const gap=0*(1-merge);
+    const aw1=w1*(W-gap);
+    // machine 1 column
+    el(svg,'rect',{x:X0,y:Y0,width:aw1,height:H,fill:'rgba(30,158,134,0.10)',stroke:GREEN,'stroke-width':3});
+    // machine 2 column
+    el(svg,'rect',{x:X0+aw1+gap,y:Y0,width:W-aw1-gap,height:H,fill:'rgba(122,63,242,0.10)',stroke:VIO,'stroke-width':3});
+    // defective blocks (bottom strips) height proportional to defect rate scaled
+    const scaleD=H/0.25; // map defect rate up to 0.25 across full height for visibility
+    const dh1=d1*scaleD, dh2=d2*scaleD;
+    el(svg,'rect',{x:X0,y:Y0+H-dh1,width:aw1,height:dh1,fill:'rgba(30,158,134,0.85)',stroke:INK,'stroke-width':2});
+    el(svg,'rect',{x:X0+aw1+gap,y:Y0+H-dh2,width:W-aw1-gap,height:dh2,fill:'rgba(122,63,242,0.85)',stroke:INK,'stroke-width':2});
+    // labels
+    el(svg,'text',{x:X0+aw1/2,y:Y0-10,'font-size':12.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='机1 '+w1.toFixed(2);
+    el(svg,'text',{x:X0+aw1+gap+(W-aw1-gap)/2,y:Y0-10,'font-size':12.5,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='机2 '+w2.toFixed(2);
+    el(svg,'text',{x:X0+aw1/2,y:Y0+H-dh1/2+4,'font-size':10.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='次品';
+    el(svg,'text',{x:X0+aw1+gap+(W-aw1-gap)/2,y:Y0+H-dh2/2+4,'font-size':10.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='次品';
+    // contributions
+    const c1=w1*d1, c2=w2*d2, pB=c1+c2;
+    // merged bar on right
+    const bx=560,by=Y0+H,bw=44,barScale=200/0.12;
+    const h1=c1*barScale,h2=c2*barScale;
+    el(svg,'rect',{x:bx,y:by-h1,width:bw,height:h1,fill:'rgba(30,158,134,0.85)',stroke:INK,'stroke-width':2});
+    el(svg,'rect',{x:bx,y:by-h1-h2,width:bw,height:h2,fill:'rgba(122,63,242,0.85)',stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:bx-8,y1:by,x2:bx+bw+8,y2:by,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:bx+bw/2,y:by-h1-h2-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P(B)';
+    el(svg,'text',{x:bx+bw/2,y:by-h1-h2-24,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=pB.toFixed(3);
+    el(svg,'text',{x:bx+bw/2,y:by+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='拼回';
+    // formula
+    el(svg,'text',{x:X0,y:Y0+H+38,'font-size':12.5,'font-weight':800,fill:INK}).textContent='P(B)='+w1.toFixed(2)+'×'+d1.toFixed(2)+' + '+w2.toFixed(2)+'×'+d2.toFixed(2)+' = '+c1.toFixed(3)+' + '+c2.toFixed(3)+' = '+pB.toFixed(3);
+    // stats
+    o1.textContent=c1.toFixed(3);o2.textContent=c2.toFixed(3);o3.textContent=pB.toFixed(3);o4.textContent=w2.toFixed(2);
+  }
+  document.getElementById('tpMerge').onclick=()=>{merge=merge>0.5?0:1;draw();};
+  sync();
+})();
+
+/* ===== 互动4:贝叶斯 先验→后验 柱状 ===== */
+(function(){
+  const svg=document.getElementById('bySvg');
+  const Ps=document.getElementById('byPrior'),D1s=document.getElementById('byD1'),D2s=document.getElementById('byD2');
+  const o1=document.getElementById('byo1'),o2=document.getElementById('byo2'),o3=document.getElementById('byo3'),o4=document.getElementById('byo4');
+  let prior=0.6,d1=0.04,d2=0.12;
+  function sync(){prior=+Ps.value;d1=+D1s.value;d2=+D2s.value;draw();}
+  Ps.oninput=D1s.oninput=D2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const pA1=prior,pA2=1-prior;
+    const pB=pA1*d1+pA2*d2;
+    const post1=pA1*d1/pB, post2=pA2*d2/pB;
+    // layout: left pair = prior, right pair = posterior
+    const baseY=230,maxH=170;
+    el(svg,'line',{x1:40,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:170,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='先验(看证据前)';
+    el(svg,'text',{x:500,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='后验(已知是次品)';
+    el(svg,'line',{x1:340,y1:40,x2:340,y2:baseY,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    // prior bars
+    bar(110,pA1,GREEN,'机1',pA1);
+    bar(200,pA2,VIO,'机2',pA2);
+    // arrow
+    el(svg,'text',{x:340,y:130,'font-size':22,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='→';
+    el(svg,'text',{x:340,y:152,'font-size':10.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='看到';
+    el(svg,'text',{x:340,y:166,'font-size':10.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='次品';
+    // posterior bars
+    bar(440,post1,GREEN,'机1',post1);
+    bar(530,post2,VIO,'机2',post2);
+    function bar(x,val,col,lab,shown){
+      const h=val*maxH;
+      el(svg,'rect',{x:x,y:baseY-h,width:60,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+30,y:baseY-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=shown.toFixed(2);
+      el(svg,'text',{x:x+30,y:baseY+18,'font-size':12,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+    }
+    el(svg,'text',{x:350,y:baseY+40,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='后验 ∝ 先验 × 次品率(似然);次品率高的机器嫌疑上升';
+    o1.textContent=pA1.toFixed(2);o2.textContent=post1.toFixed(3);o3.textContent=post2.toFixed(3);o4.textContent=pB.toFixed(3);
+  }
+  sync();
+})();
+
+/* ===== 互动5:独立 vs 互斥 文氏图 ===== */
+(function(){
+  const svg=document.getElementById('imSvg');const note=document.getElementById('imNote');
+  let c=0;
+  document.querySelectorAll('.imcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.imcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cy=130,r=70;
+    if(c===0){
+      // independent: overlapping circles
+      const ax=250,bx=400;
+      el(svg,'circle',{cx:ax,cy:cy,r:r,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':4});
+      el(svg,'circle',{cx:bx,cy:cy,r:r,fill:'rgba(224,56,42,0.25)',stroke:RED,'stroke-width':4});
+      el(svg,'text',{x:ax-30,y:cy+5,'font-size':16,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='A';
+      el(svg,'text',{x:bx+30,y:cy+5,'font-size':16,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='B';
+      el(svg,'text',{x:(ax+bx)/2,y:cy+5,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='AB';
+      el(svg,'text',{x:(ax+bx)/2,y:cy+24,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='≠0';
+      note.innerHTML='<b>独立:</b> 两圆<b>有重叠</b>(P(AB)&gt;0)，且 P(AB)=P(A)·P(B)。知道 A 发生，B 的概率不变 → P(B|A)=P(B)。互不影响。';
+      note.style.borderColor=BLUE;
+    }else{
+      // mutually exclusive: separated circles
+      const ax=200,bx=470;
+      el(svg,'circle',{cx:ax,cy:cy,r:r,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':4});
+      el(svg,'circle',{cx:bx,cy:cy,r:r,fill:'rgba(224,56,42,0.25)',stroke:RED,'stroke-width':4});
+      el(svg,'text',{x:ax,y:cy+5,'font-size':18,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='A';
+      el(svg,'text',{x:bx,y:cy+5,'font-size':18,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='B';
+      el(svg,'text',{x:(ax+bx)/2,y:cy-r-10,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='无交集 P(AB)=0';
+      note.innerHTML='<b>互斥:</b> 两圆<b>完全分开</b>(P(AB)=0)。知道 A 发生，B 就绝不会发生 → P(B|A)=0≠P(B)。影响拉满 → <b>一定不独立</b>。';
+      note.style.borderColor=RED;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动6:不放回抽球 动态概率 ===== */
+(function(){
+  const cv=document.getElementById('ballCv');const ctx=cv.getContext('2d');
+  const Rs=document.getElementById('ballR'),Ws=document.getElementById('ballW');
+  const oTot=document.getElementById('ballTot'),oPR=document.getElementById('ballPR'),oPW=document.getElementById('ballPW'),oDrawn=document.getElementById('ballDrawn');
+  let R0=3,W0=3;
+  let reds=[],whites=[],drawn=0;
+  function sync(){R0=+Rs.value;W0=+Ws.value;reset();}
+  Rs.oninput=Ws.oninput=sync;
+  function reset(){
+    reds=[];whites=[];drawn=0;
+    for(let i=0;i<R0;i++)reds.push(true);
+    for(let i=0;i<W0;i++)whites.push(true);
+    stats();draw();
+  }
+  function remaining(){
+    const r=reds.filter(Boolean).length, w=whites.filter(Boolean).length;
+    return {r:r,w:w,n:r+w};
+  }
+  function stats(){
+    const s=remaining();
+    oTot.textContent=s.n;
+    oPR.textContent=s.n>0?(s.r+'/'+s.n+'='+(s.r/s.n).toFixed(3)):'盒空';
+    oPW.textContent=s.n>0?(s.w+'/'+s.n+'='+(s.w/s.n).toFixed(3)):'盒空';
+    oDrawn.textContent=drawn;
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // box
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(30,30,420,150);
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('盒子(不放回)',40,24);
+    // draw remaining balls
+    const rad=16;let bx=60,by=70;let col=0;
+    const list=[];
+    reds.forEach((v)=>{if(v)list.push('r');});
+    whites.forEach((v)=>{if(v)list.push('w');});
+    list.forEach((t)=>{
+      ctx.beginPath();ctx.arc(bx,by,rad,0,2*Math.PI);
+      ctx.fillStyle=(t==='r')?RED:'#f4efe2';ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+      bx+=42;col++;if(col>=8){col=0;bx=60;by+=44;}
+    });
+    // drawn tray
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(480,30,190,150);
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('已抽走',490,24);
+    // probability text
+    const s=remaining();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    if(s.n>0){
+      ctx.fillText('下一个红:'+s.r+'/'+s.n,490,80);
+      ctx.fillText('下一个白:'+s.w+'/'+s.n,490,104);
+    }else{
+      ctx.fillText('盒子空了',490,90);
+    }
+  }
+  document.getElementById('ballGo').onclick=()=>{
+    const s=remaining();
+    if(s.n===0)return;
+    // random draw weighted by remaining
+    const pick=Math.random()*s.n;
+    if(pick<s.r){
+      for(let i=0;i<reds.length;i++){if(reds[i]){reds[i]=false;break;}}
+    }else{
+      for(let i=0;i<whites.length;i++){if(whites[i]){whites[i]=false;break;}}
+    }
+    drawn++;stats();draw();
+  };
+  document.getElementById('ballReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 条件概率 P(B|A) 的定义式?核心动作是什么?",a:"P(B|A)=P(AB)/P(A)（要求 P(A)>0）。核心是「缩小分母」——把样本空间缩小到 A 里面，再看 B 占多少。"},
+ {q:"2. P(B|A) 和 P(AB) 有什么区别?哪个大?",a:"P(AB) 是 A、B 同时发生，分母是整个 Ω;P(B|A) 分母是 A（更小）。一般 P(B|A)>P(AB)，二者完全不同。"},
+ {q:"3. 乘法公式怎么写?第二个因子是什么?",a:"P(AB)=P(A)·P(B|A)=P(B)·P(A|B)。第二个因子是条件概率 P(B|A)，只有独立时才等于 P(B)。"},
+ {q:"4. 全概率公式的形式?对分类有什么要求?",a:"P(B)=ΣP(Aᵢ)P(B|Aᵢ)。要求一组原因 A₁…Aₙ 既互斥（两两不同时发生）又完备（合起来铺满 Ω）。"},
+ {q:"5. 甲厂供 60% 次品率 5%，乙厂供 40% 次品率 10%。任取一件是次品的概率?",a:"全概率:P(B)=0.6×0.05+0.4×0.10=0.03+0.04=0.07。"},
+ {q:"6. 贝叶斯公式?它和全概率什么关系?",a:"P(Aᵢ|B)=P(Aᵢ)P(B|Aᵢ)/P(B)。分母 P(B) 正是全概率;贝叶斯就是「你那块贡献÷全概率总和」，由结果反推原因。"},
+ {q:"7. 接第5题，已知取到的是次品，求它来自甲厂的概率。",a:"P(甲|次)=0.6×0.05/0.07=0.03/0.07≈0.4286。（来自乙厂 0.04/0.07≈0.5714。）"},
+ {q:"8. 事件 A、B 独立的等价条件?",a:"P(AB)=P(A)P(B) ⟺ P(B|A)=P(B)（知道 A 不改变 B 的概率）。"},
+ {q:"9. 独立和互斥的区别?两个正概率事件能否既独立又互斥?",a:"独立是「互不影响」P(AB)=P(A)P(B);互斥是「不能同时」P(AB)=0。两个正概率事件不能既独立又互斥（互斥时 P(B|A)=0≠P(B)）。"},
+ {q:"10. 盒中 3 红 2 白，不放回取 2 个，都是红的概率?",a:"P(红红)=P(第1红)·P(第2红|第1红)=3/5×2/4=6/20=3/10。第二步分母减 1。"},
+ {q:"11. P(A)=0.5，P(B)=0.4，P(AB)=0.2，A 与 B 独立吗?",a:"P(A)P(B)=0.5×0.4=0.2=P(AB)，成立 → 独立。若 P(AB)≠0.2 则不独立。"},
+ {q:"12. 放回抽取和不放回抽取，用哪个公式?为什么?",a:"放回→两次独立→P(AB)=P(A)P(B) 直接相乘;不放回→不独立、第二次分母减1→用乘法公式 P(AB)=P(A)P(B|A)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

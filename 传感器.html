@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>传感器 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>传感器</h1>
+    <p class="lead">电路只认识<b>电学量</b>(电阻、电压、电流),可现实世界给的是<b>光、热、力、位移、磁场</b>这些非电学量。传感器就是站在中间的<b>翻译官</b>:光敏电阻把「光」翻成「R」,热敏电阻把「温度」翻成「R」,电容式传感器把「位移」翻成「C」,霍尔元件把「磁场」翻成「电压」。翻译完,再丢进分压/限流电路读出电压变化,就能自动控制。这一页把这些翻译官和它们的电路一次讲透。</p>
+
+    <div class="say">🗣️ <b>传感器(人话版):</b> 传感器 = 把<b>非电学量(光、热、力、位移、磁)</b>翻译成<b>电学量(电阻、电压、电流)</b>的<b>翻译官</b>。核心就一句:某个外界物理量一变,传感器的<b>电阻(或电容、或输出电压)</b>就跟着变。你要做的,是记住每种传感器「谁变→谁怎么变」的<b>方向</b>,再把它接进分压电路,看输出电压往哪边跑,就能触发灯、报警器、继电器。<b>方向记对,题就对了一半。</b></div>
+
+    <div class="keybox"><b>一句话总纲:</b> 外界量变 → 传感器<b>电阻 R(或电容 C、霍尔电压 U_H)</b>变 → 接进<b>分压电路</b> → 输出<b>电压 U</b>变 → 达到阈值 → 触发<b>控制元件(灯/继电器/报警器)</b>。解题第一步永远是:<b>判断这个传感器的 R 是变大还是变小</b>。</div>
+
+    <h2>① 光敏电阻:光越强,R 越小</h2>
+    <div class="card">
+      <div class="eq">光照强度 ↑　⇒　R光敏 ↓</div>
+      <p style="margin:8px 0"><b>原理:</b> 光敏电阻由半导体做成,光照射时激发出更多自由载流子,导电能力增强,所以<b>光越强、电阻越小;光越弱(变暗)、电阻越大</b>。完全黑暗时电阻可以非常大。</p>
+      <table>
+        <tr><th>外界变化</th><th>光敏电阻 R</th><th>典型用途</th></tr>
+        <tr><td>光照变强(白天)</td><td><b>R 减小</b></td><td>路灯自动熄灭</td></tr>
+        <tr><td>光照变弱(夜晚)</td><td><b>R 增大</b></td><td>路灯自动点亮</td></tr>
+      </table>
+      <p class="trap">⚠ 记忆口诀:「见光就变小」——光敏电阻见了光就「缩」(R 减小)。别记反成「光越强 R 越大」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">💡 互动 1 — 光敏电阻:拖「光照强度」滑块，看 R 减小、回路电流增大(串联定值电阻)</div>
+      <svg id="ldrSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>光照强度 L <input id="ldrL" type="range" min="0" max="100" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>光照 L (%)</b><span id="ldrLo">0</span></div>
+        <div><b>光敏电阻 R (Ω)</b><span id="ldrRo">0</span></div>
+        <div><b>回路电流 I (mA)</b><span id="ldrIo">0</span></div>
+        <div><b>定值电阻 R0 分压</b><span id="ldrUo">0</span></div>
+      </div>
+      <p class="small">🗣️ 光越强，光敏电阻越「瘦」(R 小)，电路更好走电，<b>电流变大</b>；光越弱它越「胖」(R 大)，电流被卡小。灯泡亮度就是这么被光「翻译」出来的。</p>
+    </div>
+
+    <h2 class="b">② 热敏电阻 vs 金属热电阻:温度系数正负相反</h2>
+    <div class="card">
+      <div class="eq">热敏电阻(半导体·负温度系数):温度 ↑ ⇒ R ↓</div>
+      <div class="eq">金属热电阻(如铂电阻·正温度系数):温度 ↑ ⇒ R ↑</div>
+      <p style="margin:8px 0"><b>两种「测温电阻」方向恰好相反,这是头号考点:</b></p>
+      <table>
+        <tr><th>器件</th><th>材料</th><th>温度升高时 R</th><th>叫法</th></tr>
+        <tr><td><b>热敏电阻</b></td><td>半导体</td><td><b>R 减小</b></td><td>负温度系数(NTC)</td></tr>
+        <tr><td><b>金属热电阻</b></td><td>金属(铂、铜)</td><td><b>R 增大</b></td><td>正温度系数(PTC)</td></tr>
+      </table>
+      <p style="margin:8px 0">半导体升温 → 载流子增多 → 更好导电 → R 减小。金属升温 → 晶格振动加剧、阻碍载流子 → R 增大。教材里的「热敏电阻」默认是<b>半导体、负温度系数(温度高 R 小)</b>。</p>
+      <p class="trap">⚠ 最容易记反!考试八成考半导体热敏电阻(温高 R 小)。看清题目说的是「热敏电阻(半导体)」还是「金属热电阻」,方向别搞混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌡️ 互动 2 — 温度滑块看两条 R-T 曲线:热敏电阻(下降) vs 金属热电阻(上升)</div>
+      <svg id="thSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>温度 T (°C) <input id="thT" type="range" min="0" max="100" value="25" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>温度 T (°C)</b><span id="thTo">0</span></div>
+        <div><b>热敏电阻 R (Ω)</b><span id="thRt">0</span></div>
+        <div><b>金属热电阻 R (Ω)</b><span id="thRm">0</span></div>
+        <div><b>谁大</b><span id="thWho">0</span></div>
+      </div>
+      <p class="small">🗣️ 蓝线(热敏·半导体)随温度往下走——越热越好导电；橙线(金属)随温度往上走——越热越难导电。同一根温度线，两个点分道扬镳，方向千万别记反。</p>
+    </div>
+
+    <h2 class="g">③ 力敏 / 压敏电阻:受力形变，R 变</h2>
+    <div class="card">
+      <div class="eq">受力 / 受压 ↑　⇒　形变 ↑　⇒　R 变化(用于测力、称重)</div>
+      <p style="margin:8px 0"><b>原理:</b> 力敏电阻(应变片、压敏电阻)受力时发生<b>形变</b>,导致电阻改变。典型如金属应变片:被拉伸时变<b>细变长</b>,电阻<b>增大</b>;被压缩时变<b>粗变短</b>,电阻<b>减小</b>。把它贴在弹性体上,力→形变→R 变化→电压变化,就能<b>称重</b>。</p>
+      <p style="margin:8px 0">电子秤、压力测量、汽车碰撞传感,都靠这类「力/压敏电阻」把力翻译成电阻。</p>
+      <p class="trap">⚠ 具体某种压敏电阻的 R 是随力增大还是减小,要看题目给的关系(应变片受拉 R 增大)。别凭空假设方向,以题目/图线为准。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 压敏/应变片:滑块加力，看弹性体形变、R 变化、称重读数联动</div>
+      <svg id="frSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>压力 F (N) <input id="frF" type="range" min="0" max="100" value="0" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>压力 F (N)</b><span id="frFo">0</span></div>
+        <div><b>形变量 (相对)</b><span id="frDo">0</span></div>
+        <div><b>应变片 R (Ω)</b><span id="frRo">0</span></div>
+        <div><b>称重读数 (g)</b><span id="frWo">0</span></div>
+      </div>
+      <p class="small">🗣️ 你越用力压，弹性体被压得越扁，贴在上面的应变片被拉伸变细，电阻越大。电路把这个电阻变化读成一个「重量」，电子秤就是这么工作的。</p>
+    </div>
+
+    <h2 class="o">④ 电容式位移传感器:C = εS/d</h2>
+    <div class="card">
+      <div class="eq">平行板电容:C = εS / d</div>
+      <p style="margin:8px 0"><b>三个可变量,任一变都能测:</b></p>
+      <table>
+        <tr><th>改变量</th><th>C 怎么变</th><th>测什么</th></tr>
+        <tr><td>极板间距 <b>d 减小</b></td><td><b>C 增大</b>(反比)</td><td>微小位移、压力(压近极板)</td></tr>
+        <tr><td>正对面积 <b>S 减小</b></td><td><b>C 减小</b>(正比)</td><td>位移、角度(错开极板)</td></tr>
+        <tr><td>介质 <b>ε 变</b></td><td>C 随 ε 变</td><td>液面高度、湿度</td></tr>
+      </table>
+      <p style="margin:8px 0">动键盘按键、电容式话筒、液位计,都是「让 d 或 S 或 ε 变一点点,C 就变,再测 C」。<b>d 在分母,所以 d 减小 → C 增大(反比,方向易错!)</b>。</p>
+      <p class="trap">⚠ 最坑的一步:C 与 d 成<b>反比</b>。极板<b>靠近(d 减小)→ C 增大</b>;拉远(d 增大)→ C 减小。别顺手写成正比。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔲 互动 3 — 电容式传感器:拖动上极板改极板间距 d，看 C = εS/d 反比变化</div>
+      <svg id="capSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="capReset">↺ 重置</button>
+        <label>极板间距 d <input id="capD" type="range" min="1" max="10" value="5" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>间距 d (相对)</b><span id="capDo">0</span></div>
+        <div><b>电容 C = εS/d</b><span id="capCo">0</span></div>
+        <div><b>d 变化方向</b><span id="capDir">0</span></div>
+        <div><b>C 变化方向</b><span id="capCir">0</span></div>
+      </div>
+      <p class="small">🗣️ 上下两块板离得越近(d 小)，它们「攒电」的本事越强(C 大)——因为 d 在分母。拖近一点 C 蹭往上跳，拖远一点 C 掉下来，这就是反比。</p>
+    </div>
+
+    <h2 class="v">⑤ 霍尔元件:磁场里的横向电压 U_H</h2>
+    <div class="card">
+      <div class="eq">霍尔电压:U_H ∝ (I·B) / (n·d)　(与电流 I、磁感应强度 B 成正比)</div>
+      <p style="margin:8px 0"><b>原理:</b> 一块通电的半导体薄片放进<b>磁场</b>里,里面运动的载流子受<b>洛伦兹力</b>而偏向一侧,在片子<b>横向</b>两端积累电荷,形成一个横向电压——<b>霍尔电压 U_H</b>。当电荷积累到洛伦兹力与横向电场力<b>平衡</b>时,U_H 稳定下来。</p>
+      <p style="margin:8px 0"><b>U_H 与磁场 B 成正比</b>(电流 I 一定时),所以测出 U_H 就知道 B —— 这就是<b>测磁场</b>;霍尔元件还能<b>测转速</b>(每转过一个磁极产生一个脉冲)。</p>
+      <p class="trap">⚠ 霍尔电压是<b>横向</b>的(垂直于电流和磁场),不是沿电流方向。它来自洛伦兹力使载流子偏转、横向堆积电荷。B=0 时无偏转、U_H=0。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧲 互动 4 — 霍尔元件:调磁场 B，看载流子偏转、横向堆积电荷、产生霍尔电压 U_H</div>
+      <canvas id="hallCv" width="700" height="280"></canvas>
+      <div class="ctrl">
+        <button id="hallGo">▶ 通电</button><button id="hallStop">⏸ 暂停</button>
+        <label>磁场 B <input id="hallB" type="range" min="0" max="10" value="5" step="1"></label>
+        <label>电流 I <input id="hallI" type="range" min="1" max="10" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>磁场 B</b><span id="hallBo">0</span></div>
+        <div><b>电流 I</b><span id="hallIo">0</span></div>
+        <div><b>洛伦兹力方向</b><span id="hallFo">0</span></div>
+        <div><b>霍尔电压 U_H</b><span id="hallUo">0</span></div>
+      </div>
+      <p class="small">🗣️ 载流子本来直着走，一进磁场就被洛伦兹力「掰」向一边，挤在片子的一侧，另一侧缺电荷，两侧就有了电压差 U_H。B 越强偏得越狠，U_H 越大——测 U_H 就等于测 B。</p>
+    </div>
+
+    <h2 class="b">⑥ 传感器接入分压电路:输出电压往哪跑</h2>
+    <div class="card">
+      <p style="margin:6px 0">传感器很少单独用,通常和一个<b>定值电阻 R0 串联</b>,接在电源上组成<b>分压电路</b>。从传感器(或 R0)两端取出<b>输出电压 U</b>,喂给后面的灯/比较器/继电器。</p>
+      <div class="eq">串联分压:U_传 = E · R传 /(R传 + R0)</div>
+      <p style="margin:8px 0"><b>方向分析(核心技能):</b> 外界量变 → R传 变 → 分压比变 → U 变。</p>
+      <table>
+        <tr><th>取谁的电压</th><th>R传 增大时</th><th>R传 减小时</th></tr>
+        <tr><td>取<b>传感器</b>两端 U_传</td><td>U_传 <b>增大</b>(分得更多)</td><td>U_传 减小</td></tr>
+        <tr><td>取<b>定值电阻</b> U_R0</td><td>U_R0 <b>减小</b></td><td>U_R0 增大</td></tr>
+      </table>
+      <p class="trap">⚠ 「谁电阻大谁分压多」。取传感器电压还是取 R0 电压,决定输出往哪个方向跑。判断报警/开灯时,先看取的是哪一段电压。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔌 互动 6 — 光控灯电路:光照变化 → 分压电压翻过阈值 → 灯在临界点开关翻转</div>
+      <svg id="ctrlSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>光照 L <input id="ctrlL" type="range" min="0" max="100" value="20" step="1"></label>
+        <label>阈值 U0 <input id="ctrlTh" type="range" min="2" max="10" value="6" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>光照 L (%)</b><span id="ctrlLo">0</span></div>
+        <div><b>输出电压 U (V)</b><span id="ctrlUo">0</span></div>
+        <div><b>阈值 U0 (V)</b><span id="ctrlTho">0</span></div>
+        <div><b>灯状态</b><span id="ctrlSt">0</span></div>
+      </div>
+      <p class="small">🗣️ 天一黑，光敏电阻变大，它分到的电压升高，超过阈值那一刻——灯「啪」地亮了。天一亮又降回去，灯灭。开关就在阈值那条线上翻转，这就是自动路灯。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 光控开关电路型</h3>
+      <p><b class="tag">触发信号:</b>出现「光敏电阻」「路灯自动」「光控开关」「天黑/天亮」，问灯何时亮、电流/电压怎么变。</p>
+      <p><b class="tag">标准动作:</b>①判断光强变化→光敏 R 变化(光强→R小，光弱→R大)；②代入分压 U=E·R取/(R总)算输出电压；③与阈值比较判断灯的通断。</p>
+      <p><b class="tag">示例(带解):</b>光敏电阻与 R0=2kΩ 串联接 12V。天亮时光敏 R=1kΩ，取光敏两端 U=12×1/(1+2)=4V；天黑时光敏 R=10kΩ，U=12×10/(10+2)=10V。若阈值 6V 时开灯，则天黑(U=10V>6V)开灯，天亮(U=4V<6V)关灯——自动路灯成立。</p>
+      <p class="trap">陷阱:光敏 R 方向记反(光强 R 变大)；取错电压段；忘了跟阈值比较。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 温度报警电路型</h3>
+      <p><b class="tag">触发信号:</b>「热敏电阻」「温度报警」「火警」「恒温控制」，问温度到多少时报警器响。</p>
+      <p><b class="tag">标准动作:</b>①先确认是半导体热敏(温高 R 小)还是金属热电阻(温高 R 大)；②温度变→R 变→分压 U 变；③U 达阈值触发报警/继电器。</p>
+      <p><b class="tag">示例(带解):</b>半导体热敏电阻(温高 R 小)与 R0 串联，取 R0 两端电压驱动报警器。温度升高→热敏 R 减小→R0 分得电压 U_R0 增大→超过阈值→报警。所以「温度越高越报警」的电路应取 R0 两端(定值电阻)电压。</p>
+      <p class="trap">陷阱:正负温度系数记反；取错电压段导致报警方向反了(升温反而不报)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 称重 / 压力测量型</h3>
+      <p><b class="tag">触发信号:</b>「电子秤」「应变片」「压敏电阻」「压力传感器」，给力-电阻或力-形变关系求读数。</p>
+      <p><b class="tag">标准动作:</b>①力→弹性体形变→应变片 R 变(受拉 R 增大)；②R 变→分压 U 变；③按题给标定关系把 U 换算成重量/力。</p>
+      <p><b class="tag">示例(带解):</b>应变片受压时因弹性体形变被拉伸，R 从 120Ω 增大到 120.6Ω(变化 0.5%)。R 与 R0 串联分压，R 增大→取应变片电压增大，电路读出更大电压→对应更大重量。灵敏度即「单位力引起的电压变化」ΔU/ΔF。</p>
+      <p class="trap">陷阱:凭空假设应变片受力后 R 增大还是减小(以题给关系为准)；混淆形变与力的正负。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 电容式位移测量型</h3>
+      <p><b class="tag">触发信号:</b>「电容式传感器」「平行板电容」「测微小位移/液面」，给 d 或 S 或 ε 变化求 C 变化。</p>
+      <p><b class="tag">标准动作:</b>套 C=εS/d：d 在分母(反比)，S、ε 在分子(正比)。判断哪个量变、往哪变，再定 C 增减。</p>
+      <p><b class="tag">示例(带解):</b>平行板电容器测位移，极板正对面积 S 不变，测微小压力使间距 d 由 2mm 减小到 1mm。由 C=εS/d，d 减半→C 加倍(反比)。若接恒定电压 U，Q=CU 也加倍；若电荷 Q 不变，则 U=Q/C 减半。</p>
+      <p class="trap">陷阱:把 C 与 d 当正比(实为反比)；恒压 vs 恒电荷时 Q、U 的变化搞混。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 霍尔测磁场 / 测速型</h3>
+      <p><b class="tag">触发信号:</b>「霍尔元件」「霍尔电压」「测磁感应强度」「测转速」，给 I、B 求 U_H 或反求 B。</p>
+      <p><b class="tag">标准动作:</b>①明确 U_H 由洛伦兹力使载流子横向偏转堆积产生；②U_H 与 I、B 成正比；③平衡时 qE横 = qvB，可推 U_H。测速:数单位时间脉冲数。</p>
+      <p><b class="tag">示例(带解):</b>霍尔片厚 d，载流子数密度 n，通电流 I、磁场 B。平衡时横向电场力=洛伦兹力：qU_H/L 相关推得 U_H = IB/(nqd)。B 增大一倍，U_H 也增大一倍——测出 U_H 即得 B。</p>
+      <p class="trap">陷阱:以为 U_H 沿电流方向(其实横向)；B=0 却认为有 U_H；漏掉洛伦兹力与电场力平衡这一步。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 传感器串在分压/限流电路读电压变化型</h3>
+      <p><b class="tag">触发信号:</b>给一张含传感器 + 定值电阻的电路图，问某外界量变化时电流表/电压表读数怎么变。</p>
+      <p><b class="tag">标准动作:</b>①先定传感器 R 的增减方向；②串联时总 R 变→回路电流 I=E/R总 反向变化；③再看电压表接哪段，按「谁大谁分压多」判断该段电压增减。</p>
+      <p><b class="tag">示例(带解):</b>光敏电阻与 R0 串联接电源，接电流表。光照增强→光敏 R 减小→总电阻减小→电流 I=E/R总 增大→电流表读数变大。若电压表并在光敏两端，则 U_光=IR光，R 减小占比下降，读数变小。</p>
+      <p class="trap">陷阱:只看局部不看总电阻；电流方向和某段电压方向的变化搞混；表并联位置看错。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 热敏电阻(半导体)是<b>负温度系数</b>:温度越高 R 越<b>小</b>。金属热电阻相反(温高 R 大)。方向别记反——这是最高频失分点。</p>
+      <p class="trap">② 光敏电阻:光越强 R 越<b>小</b>(见光就缩)。天黑变暗 → R 增大。</p>
+      <p class="trap">③ 电容式传感器:C=εS/d，d 在<b>分母</b>! 极板<b>靠近(d 减小)→ C 增大</b>(反比)。别写成正比。</p>
+      <p class="trap">④ 分压电路里:「谁电阻大谁分压多」。取传感器电压还是 R0 电压,决定输出电压往哪个方向跑,结论会相反。</p>
+      <p class="trap">⑤ 霍尔电压 U_H 是<b>横向</b>的(垂直于电流和磁场),由洛伦兹力使载流子偏转堆积产生。B=0 时 U_H=0。</p>
+      <p class="trap">⑥ 串联电路某处 R 变化,会改变<b>总电阻</b>→改变<b>全回路电流</b>,别只盯着局部。</p>
+      <p class="trap">⑦ 电容器「恒压」时 Q=CU 随 C 变;「电荷不变」时 U=Q/C 随 C 反变。C 变后到底谁变要先看是恒压还是恒电荷。</p>
+      <p class="trap">⑧ 应变片/压敏电阻具体 R 随力增大还是减小,<b>以题给关系为准</b>,别凭直觉假设方向。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切传感器电路都是「翻译 + 分压 + 比较」三段:</b> 非电量→R/C/U_H(翻译),接进分压电路→输出电压(转换),再和阈值比较→触发控制(判决)。抓住这个骨架,任何新传感器题都能拆成这三步,不必死背电路。</p>
+      <p style="margin:8px 0"><b>② 接入比较器/运放触发继电器(定性分析):</b> 输出电压 U 送到<b>比较器</b>的一个输入端,另一端接<b>参考阈值 U0</b>。当 U 越过 U0,比较器输出翻转(高↔低)→驱动<b>继电器</b>吸合/释放→接通/断开后级大电流电路(电机、加热器、报警器)。传感器只提供「弱信号判据」,真正的功率开关由继电器完成。分析时只需判断:外界量变→U 往哪跑→是否越过 U0→继电器动作→负载通断。</p>
+      <p style="margin:8px 0"><b>③ 灵敏度 = 输出变化 / 输入变化:</b> 灵敏度 S=ΔU/Δx(单位输入量引起多大输出)。灵敏度越高,越小的外界变化也能被读出。设计上想提高灵敏度,常让传感器 R 与 R0 <b>匹配</b>(在分压曲线最陡处工作),此时同样的 ΔR 带来最大的 ΔU。这解释了为什么标定点很讲究。</p>
+      <p style="margin:8px 0"><b>④ 霍尔效应的平衡本质是「洛伦兹力 = 横向电场力」:</b> 载流子偏转堆积电荷,直到建立的横向电场力 qE 恰好抵消洛伦兹力 qvB,达到动态平衡,U_H 稳定。由 qE=qvB 且 E=U_H/w、I=nqvS 可推出 U_H=IB/(nqd)。理解这条平衡链,测磁场、测载流子浓度、判断半导体类型(P/N)全都统一了。</p>
+      <p style="margin:8px 0"><b>⑤ 判断输出方向的万能三问:</b> (1)外界量变→传感器 R 是增是减? (2)串联总电阻怎么变→回路电流怎么变? (3)电压表/取样点接哪段→按「谁大分压多」定该段电压增减。三问答完,任何「读数怎么变」的题都秒杀。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想，再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 传感器:把光/热/力/位移/磁翻译成电学量的翻译官</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:光敏电阻 ===== */
+(function(){
+  const svg=document.getElementById('ldrSvg');
+  const Ls=document.getElementById('ldrL');
+  const oL=document.getElementById('ldrLo'),oR=document.getElementById('ldrRo'),oI=document.getElementById('ldrIo'),oU=document.getElementById('ldrUo');
+  const E=12,R0=2; // volts, kOhm
+  function Rldr(L){ // light 0..100 -> R big when dark, small when bright
+    return 10 - 9*(L/100); // 10k at dark .. 1k at full light
+  }
+  function draw(){
+    const L=+Ls.value;
+    const R=Rldr(L); // kOhm
+    const I=E/(R+R0); // mA
+    const U0=I*R0; // volts across R0
+    oL.textContent=L;oR.textContent=(R*1000).toFixed(0);oI.textContent=I.toFixed(2);oU.textContent=U0.toFixed(2)+' V';
+    clr(svg);
+    // sun / lamp source
+    const bright=L/100;
+    // sun
+    const sunX=120,sunY=90,sunR=34;
+    el(svg,'circle',{cx:sunX,cy:sunY,r:sunR,fill:'rgba('+Math.round(243)+','+Math.round(192+30*bright)+','+Math.round(14)+','+(0.25+0.75*bright)+')',stroke:INK,'stroke-width':3});
+    for(let i=0;i<8;i++){const a=i*Math.PI/4;const r1=sunR+6,r2=sunR+10+16*bright;
+      el(svg,'line',{x1:sunX+r1*Math.cos(a),y1:sunY+r1*Math.sin(a),x2:sunX+r2*Math.cos(a),y2:sunY+r2*Math.sin(a),stroke:YEL,'stroke-width':4,opacity:0.3+0.7*bright});}
+    el(svg,'text',{x:sunX,y:sunY+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='光 '+L+'%';
+    // circuit box
+    const bx=270,by=40,bw=380,bh=200;
+    el(svg,'rect',{x:bx,y:by,width:bw,height:bh,fill:'none',stroke:INK,'stroke-width':3});
+    // battery left
+    el(svg,'text',{x:bx+8,y:by+bh/2-14,'font-size':12,'font-weight':900,fill:INK}).textContent='电源 '+E+'V';
+    el(svg,'line',{x1:bx,y1:by+bh/2-6,x2:bx,y2:by+bh/2+6,stroke:INK,'stroke-width':6});
+    el(svg,'line',{x1:bx,y1:by+bh/2-14,x2:bx,y2:by+bh/2+14,stroke:INK,'stroke-width':2});
+    // LDR (top), thickness inversely ~ R (bigger R = fatter blocked)
+    const ldrW=14+ (R/10)*34; // fatter when dark(bigR)
+    el(svg,'rect',{x:bx+90,y:by+18,width:120,height:ldrW,fill:'#c9a23a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+150,y:by+18-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='光敏电阻 R='+(R*1000).toFixed(0)+'Ω';
+    // R0
+    el(svg,'rect',{x:bx+90,y:by+bh-58,width:120,height:22,fill:'#9a9a9a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+150,y:by+bh-40,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='R0=2kΩ';
+    // lamp right, brightness ~ I
+    const Imax=E/(1+R0);
+    const glow=Math.min(1,I/Imax);
+    el(svg,'circle',{cx:bx+bw-50,cy:by+bh/2,r:26,fill:'rgba(243,192,14,'+(0.15+0.85*glow)+')',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+bw-50,y:by+bh/2+4,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='灯';
+    // current arrows
+    el(svg,'text',{x:bx+bw-50,y:by+bh/2+50,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='I='+I.toFixed(2)+'mA';
+    el(svg,'text',{x:(bx+120),y:by+bh+2-176,'font-size':11,'font-weight':800,fill:'#6b5d3a'}).textContent='(块越胖=R越大)';
+  }
+  Ls.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:R-T 曲线 ===== */
+(function(){
+  const svg=document.getElementById('thSvg');
+  const Ts=document.getElementById('thT');
+  const oT=document.getElementById('thTo'),oRt=document.getElementById('thRt'),oRm=document.getElementById('thRm'),oW=document.getElementById('thWho');
+  function Rth(T){return 100*Math.exp(-0.02*T)+20;} // thermistor NTC: decreasing
+  function Rmet(T){return 60+0.6*T;} // metal PTC: linear increasing
+  function draw(){
+    const T=+Ts.value;
+    const rt=Rth(T),rm=Rmet(T);
+    oT.textContent=T;oRt.textContent=rt.toFixed(1);oRm.textContent=rm.toFixed(1);
+    oW.textContent=rt>rm?'热敏大':(rt<rm?'金属大':'相等');
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=230;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='R';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='T';
+    const Rmax=140;
+    function px(t){return X0+(t/100)*W;}
+    function py(r){return Y0+H-(r/Rmax)*H;}
+    // thermistor curve (blue, down)
+    let d1='';for(let t=0;t<=100;t+=2){d1+=(t===0?'M':'L')+px(t)+','+py(Rth(t))+' ';}
+    el(svg,'path',{d:d1,fill:'none',stroke:BLUE,'stroke-width':4});
+    // metal curve (orange, up)
+    let d2='';for(let t=0;t<=100;t+=2){d2+=(t===0?'M':'L')+px(t)+','+py(Rmet(t))+' ';}
+    el(svg,'path',{d:d2,fill:'none',stroke:ORANGE,'stroke-width':4});
+    // current T vertical line
+    el(svg,'line',{x1:px(T),y1:Y0,x2:px(T),y2:Y0+H,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    // dots
+    el(svg,'circle',{cx:px(T),cy:py(rt),r:7,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:px(T),cy:py(rm),r:7,fill:ORANGE,stroke:INK,'stroke-width':2});
+    // legend
+    el(svg,'text',{x:X0+20,y:Y0+16,'font-size':13,'font-weight':900,fill:BLUE}).textContent='● 热敏电阻(半导体·温高R小)';
+    el(svg,'text',{x:X0+20,y:Y0+H-10,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='● 金属热电阻(温高R大)';
+    el(svg,'text',{x:px(T),y:Y0-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='T='+T+'°C';
+  }
+  Ts.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:压敏/应变片 ===== */
+(function(){
+  const svg=document.getElementById('frSvg');
+  const Fs=document.getElementById('frF');
+  const oF=document.getElementById('frFo'),oD=document.getElementById('frDo'),oR=document.getElementById('frRo'),oW=document.getElementById('frWo');
+  const R00=120; // base resistance
+  function draw(){
+    const F=+Fs.value;
+    const def=F/100; // relative deformation 0..1
+    const R=R00*(1+0.006*F); // strain gauge R increases with force
+    const wgt=F*10; // grams reading, arbitrary calibration
+    oF.textContent=F;oD.textContent=def.toFixed(3);oR.textContent=R.toFixed(2);oW.textContent=wgt.toFixed(0);
+    clr(svg);
+    const cx=350,topY=60;
+    // weight block on top
+    const squash=def*22;
+    const platY=140+squash;
+    // load block
+    el(svg,'rect',{x:cx-60,y:topY-30-  (30- squash),width:120,height:60,fill:'#b98a3a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:topY+4-(30-squash),'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='重物 '+wgt.toFixed(0)+'g';
+    // arrow force down
+    if(F>0){el(svg,'line',{x1:cx,y1:topY-58,x2:cx,y2:topY-38,stroke:RED,'stroke-width':4});
+      el(svg,'polygon',{points:cx+',' + (topY-34)+' '+(cx-6)+','+(topY-46)+' '+(cx+6)+','+(topY-46),fill:RED});}
+    // elastic body (spring-ish rectangle compressed)
+    const bodyTop=platY, bodyH=90-squash;
+    el(svg,'rect',{x:cx-70,y:bodyTop,width:140,height:bodyH,fill:'rgba(30,158,134,0.25)',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:cx,y:bodyTop+bodyH/2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='弹性体(受压形变)';
+    // strain gauge on the body - gets thinner(stretched) as force
+    const gW=40-def*20;
+    el(svg,'rect',{x:cx-gW/2,y:bodyTop+bodyH+8,width:gW,height:14,fill:'#c9a23a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:bodyTop+bodyH+50,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='应变片 R='+R.toFixed(1)+'Ω(受拉变细)';
+    // base
+    el(svg,'rect',{x:cx-90,y:250,width:180,height:16,fill:'#7a7a7a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:262,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='底座';
+  }
+  Fs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:电容式传感器 ===== */
+(function(){
+  const svg=document.getElementById('capSvg');
+  const Ds=document.getElementById('capD');
+  const oD=document.getElementById('capDo'),oC=document.getElementById('capCo'),oDir=document.getElementById('capDir'),oCir=document.getElementById('capCir');
+  const eps=100; // arbitrary eps*S product
+  let prevD=5;
+  function draw(){
+    const d=+Ds.value; // 1..10
+    const C=eps/d; // C = epsS/d
+    oD.textContent=d.toFixed(1);oC.textContent=C.toFixed(1);
+    oDir.textContent= d>prevD?'增大 ↑':(d<prevD?'减小 ↓':'不变');
+    oCir.textContent= d>prevD?'减小 ↓':(d<prevD?'增大 ↑':'不变');
+    prevD=d;
+    clr(svg);
+    const cx=350,botPlateY=220,plateW=260;
+    const gapPx=d*16; // pixel gap
+    const topPlateY=botPlateY-gapPx-14;
+    // top plate (draggable feel)
+    el(svg,'rect',{x:cx-plateW/2,y:topPlateY,width:plateW,height:14,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:topPlateY-8,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='上极板(拖间距滑块调 d)';
+    // bottom plate
+    el(svg,'rect',{x:cx-plateW/2,y:botPlateY,width:plateW,height:14,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:botPlateY+30,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='下极板(固定)';
+    // gap dimension
+    el(svg,'line',{x1:cx-plateW/2-24,y1:topPlateY+14,x2:cx-plateW/2-24,y2:botPlateY,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx-plateW/2-30,y:(topPlateY+botPlateY)/2,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='d='+d.toFixed(1);
+    // field lines between plates
+    const n=6;for(let i=1;i<=n;i++){const x=cx-plateW/2+ i*plateW/(n+1);
+      el(svg,'line',{x1:x,y1:topPlateY+14,x2:x,y2:botPlateY,stroke:'rgba(122,63,242,0.5)','stroke-width':2,'stroke-dasharray':'4 4'});}
+    // C bar on right
+    const barX=cx+plateW/2+40, barBase=240, Cmax=eps/1, Ch=(C/Cmax)*180;
+    el(svg,'rect',{x:barX,y:barBase-Ch,width:40,height:Ch,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:barX+20,y:barBase+16,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='C';
+    el(svg,'text',{x:barX+20,y:barBase-Ch-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=C.toFixed(0);
+    el(svg,'text',{x:cx,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='C = εS / d　(d 在分母 → 反比)';
+  }
+  document.getElementById('capReset').onclick=()=>{Ds.value=5;prevD=5;draw();};
+  Ds.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:霍尔元件 ===== */
+(function(){
+  const cv=document.getElementById('hallCv');const ctx=cv.getContext('2d');
+  const Bs=document.getElementById('hallB'),Is=document.getElementById('hallI');
+  const oB=document.getElementById('hallBo'),oI=document.getElementById('hallIo'),oF=document.getElementById('hallFo'),oU=document.getElementById('hallUo');
+  let B=5,I=6,running=true;
+  const plate={x:150,y:70,w:400,h:140};
+  let carriers=[];
+  function init(){carriers=[];for(let i=0;i<26;i++){carriers.push({x:plate.x+Math.random()*plate.w,y:plate.y+10+Math.random()*(plate.h-20),vy:0});}}
+  init();
+  function stats(){
+    const uh=(B*I/60*10).toFixed(2);
+    oB.textContent=B;oI.textContent=I;
+    oF.textContent= B===0?'无(B=0)':'向下偏';
+    oU.textContent= uh+' (相对)';
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // magnetic field crosses (into page)
+    ctx.fillStyle='#c9c2ae';ctx.font='bold 12px sans-serif';
+    for(let gx=plate.x+20;gx<plate.x+plate.w;gx+=48){for(let gy=plate.y+22;gy<plate.y+plate.h;gy+=46){
+      ctx.fillStyle='rgba(20,80,200,'+(0.15+0.07*B)+')';ctx.fillText('×',gx,gy);}}
+    // plate
+    ctx.fillStyle='rgba(201,162,58,0.35)';ctx.fillRect(plate.x,plate.y,plate.w,plate.h);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(plate.x,plate.y,plate.w,plate.h);
+    // charge accumulation shading (bottom + , top -) when B>0
+    if(B>0){
+      ctx.fillStyle='rgba(224,56,42,'+(0.08+0.03*B)+')';ctx.fillRect(plate.x,plate.y+plate.h-24,plate.w,24);
+      ctx.fillStyle='rgba(20,80,200,'+(0.08+0.03*B)+')';ctx.fillRect(plate.x,plate.y,plate.w,24);
+      ctx.fillStyle=RED;ctx.font='bold 14px sans-serif';
+      for(let k=0;k<6;k++)ctx.fillText('+',plate.x+40+k*60,plate.y+plate.h-8);
+      ctx.fillStyle=BLUE;
+      for(let k=0;k<6;k++)ctx.fillText('−',plate.x+40+k*60,plate.y+14);
+    }
+    // labels
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('电流 I →',plate.x-100,plate.y+plate.h/2);
+    ctx.fillText('B(×进纸面)',plate.x+plate.w/2-40,plate.y-14);
+    // current inlet arrow
+    ctx.strokeStyle=RED;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(plate.x-40,plate.y+plate.h/2);ctx.lineTo(plate.x,plate.y+plate.h/2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(plate.x,plate.y+plate.h/2);ctx.lineTo(plate.x-10,plate.y+plate.h/2-6);ctx.lineTo(plate.x-10,plate.y+plate.h/2+6);ctx.closePath();ctx.fillStyle=RED;ctx.fill();
+    // U_H voltmeter on the side (top-bottom)
+    ctx.strokeStyle=INK;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(plate.x+plate.w+60,plate.y+plate.h/2,26,0,2*Math.PI);ctx.stroke();
+    ctx.fillStyle=GREEN;ctx.font='bold 13px sans-serif';ctx.fillText('U_H',plate.x+plate.w+45,plate.y+plate.h/2+5);
+    ctx.strokeStyle=INK;ctx.beginPath();ctx.moveTo(plate.x+plate.w,plate.y+8);ctx.lineTo(plate.x+plate.w+60,plate.y+plate.h/2-24);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(plate.x+plate.w,plate.y+plate.h-8);ctx.lineTo(plate.x+plate.w+60,plate.y+plate.h/2+24);ctx.stroke();
+    // carriers
+    ctx.fillStyle=INK;
+    for(const c of carriers){
+      ctx.beginPath();ctx.arc(c.x,c.y,4,0,2*Math.PI);ctx.fill();
+    }
+  }
+  function step(){
+    const vx=1+I*0.25;
+    const drift=B*0.10; // downward deflection ~ B
+    for(const c of carriers){
+      c.x+=vx;
+      c.y+=drift;
+      if(c.x>plate.x+plate.w){c.x=plate.x+2;c.y=plate.y+10+Math.random()*(plate.h-20);}
+      if(c.y>plate.y+plate.h-6)c.y=plate.y+plate.h-6;
+      if(c.y<plate.y+6)c.y=plate.y+6;
+    }
+  }
+  function loop(){if(running){step();}draw();requestAnimationFrame(loop);}
+  Bs.oninput=()=>{B=+Bs.value;stats();};
+  Is.oninput=()=>{I=+Is.value;stats();};
+  document.getElementById('hallGo').onclick=()=>{running=true;};
+  document.getElementById('hallStop').onclick=()=>{running=false;};
+  stats();requestAnimationFrame(loop);
+})();
+
+/* ===== 互动6:光控灯电路(分压+阈值) ===== */
+(function(){
+  const svg=document.getElementById('ctrlSvg');
+  const Ls=document.getElementById('ctrlL'),Ts=document.getElementById('ctrlTh');
+  const oL=document.getElementById('ctrlLo'),oU=document.getElementById('ctrlUo'),oTh=document.getElementById('ctrlTho'),oSt=document.getElementById('ctrlSt');
+  const E=12,R0=2;
+  function Rldr(L){return 10-9*(L/100);} // dark big
+  function draw(){
+    const L=+Ls.value,U0=+Ts.value;
+    const R=Rldr(L);
+    const U=E*R/(R+R0); // voltage across LDR
+    const on = U>=U0; // lamp on when dark(high U)
+    oL.textContent=L;oU.textContent=U.toFixed(2);oTh.textContent=U0.toFixed(1);
+    oSt.textContent= on?'亮 ●':'灭 ○';
+    clr(svg);
+    const X0=70,Y0=40,W=500,H=200;
+    // U vs L curve
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='光照 L';
+    function px(l){return X0+(l/100)*W;}
+    function py(u){return Y0+H-(u/E)*H;}
+    // curve
+    let d='';for(let l=0;l<=100;l+=2){const r=Rldr(l);const u=E*r/(r+R0);d+=(l===0?'M':'L')+px(l)+','+py(u)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':4});
+    // threshold line
+    el(svg,'line',{x1:X0,y1:py(U0),x2:X0+W,y2:py(U0),stroke:RED,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+W-4,y:py(U0)-6,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='阈值 U0='+U0.toFixed(1)+'V';
+    // current point
+    el(svg,'line',{x1:px(L),y1:Y0,x2:px(L),y2:Y0+H,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 5'});
+    el(svg,'circle',{cx:px(L),cy:py(U),r:8,fill:on?YEL:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:px(L),y:Y0-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='U='+U.toFixed(1)+'V';
+    // lamp indicator
+    const lx=X0+W+70,ly=Y0+60;
+    el(svg,'circle',{cx:lx,cy:ly,r:30,fill:on?'rgba(243,192,14,0.95)':'#f0ece0',stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:lx,y:ly+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=on?'灯亮':'灯灭';
+    el(svg,'text',{x:lx,y:ly+58,'font-size':12,'font-weight':900,fill:on?GREEN:RED,'text-anchor':'middle'}).textContent= on?'U≥U0→通':'U<U0→断';
+    el(svg,'text',{x:lx,y:Y0+H+18,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='天黑→R大→U高→亮';
+  }
+  Ls.oninput=draw;Ts.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 光敏电阻的电阻随光照怎么变？记忆口诀是什么？",a:"光越强，电阻越小；光越弱(变暗)，电阻越大。口诀:见光就缩(R减小)。半导体受光激发出更多载流子，导电增强。"},
+ {q:"2. 半导体热敏电阻是正温度系数还是负温度系数？温度升高 R 怎么变？",a:"负温度系数(NTC)。温度升高→R减小。半导体升温载流子增多、更好导电。教材默认热敏电阻是半导体、温高R小。"},
+ {q:"3. 金属热电阻(如铂电阻)温度升高时 R 怎么变？和热敏电阻有何不同？",a:"金属热电阻是正温度系数，温度升高→R增大(晶格振动加剧、阻碍载流子)。方向与半导体热敏电阻恰好相反。"},
+ {q:"4. 平行板电容式传感器 C=εS/d，极板靠近(d减小)时 C 怎么变？为什么？",a:"C增大。因为 d 在分母，C 与 d 成反比。d减小→C增大；d增大→C减小。别写成正比。"},
+ {q:"5. 电容式传感器测位移，除了改 d 还能改什么？各测什么？",a:"改正对面积 S(C与S正比，测位移/角度)；改介质 ε(C随ε变，测液面/湿度)。三个量任一变都能测。"},
+ {q:"6. 应变片(力敏电阻)受力后 R 怎么变？用于测什么？",a:"金属应变片受拉时变细变长→R增大(受压变粗变短→R减小)。力→形变→R变化→电压变化，用于电子秤、压力测量。具体方向以题给关系为准。"},
+ {q:"7. 霍尔电压 U_H 是怎么产生的？方向是沿电流还是横向？",a:"通电半导体片放入磁场，载流子受洛伦兹力横向偏转、在片两侧堆积电荷，产生横向电压 U_H(垂直于电流和磁场)。U_H与I、B成正比。B=0时U_H=0。"},
+ {q:"8. 霍尔元件测磁场的原理？平衡条件是什么？",a:"U_H∝IB，电流I一定时U_H正比于B，测U_H即知B。平衡条件:横向电场力=洛伦兹力(qE=qvB)，此时U_H稳定。可推 U_H=IB/(nqd)。"},
+ {q:"9. 光敏电阻与定值电阻R0串联接电源，光照增强时回路电流怎么变？",a:"光强→光敏R减小→总电阻减小→电流I=E/R总增大。若电压表并在光敏两端，U光=IR光，R占比下降，读数减小。"},
+ {q:"10. 分压电路中「取传感器电压」和「取R0电压」有何区别？",a:"谁电阻大谁分压多。R传增大时，取传感器电压U传增大、取R0电压U_R0减小(方向相反)。取哪段决定输出往哪跑，判断报警/开灯前必须看清取的是哪一段。"},
+ {q:"11. 温度报警电路:要「温度越高越报警」，半导体热敏电阻应取哪段电压？",a:"取定值电阻R0两端。半导体热敏温高→R小→R0分得电压增大→超阈值报警。若取热敏两端则温高U反而减小，方向就反了。"},
+ {q:"12. 传感器接比较器触发继电器，定性分析分几步？灵敏度是什么？",a:"三步:外界量变→输出电压U往哪跑→是否越过参考阈值U0→比较器翻转→继电器吸合/释放→负载通断。灵敏度S=ΔU/Δx(单位输入引起的输出变化)，让R传与R0匹配、工作在分压曲线最陡处可提高灵敏度。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

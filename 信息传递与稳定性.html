@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生态系统的信息传递与稳定性 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>生态系统的信息传递与稳定性</h1>
+    <p class="lead">物质循环讲「物质怎么转」，能量流动讲「能量怎么流」，这一页讲第三条主线——<b>信息怎么传</b>。信息传递把生态系统的各个部分「串」起来，是维持种群繁衍、调节种间关系的隐形网络；而稳定性讲的是生态系统<b>为什么能自己扛住波动</b>，两者本质都指向同一个核心——<b>负反馈调节</b>。</p>
+
+    <div class="say">🗣️ <b>人话版：</b> 信息传递不是能量、不是物质，它是「消息」——光信息告诉植物该开花了，性外激素告诉异性「我在这」，孔雀开屏告诉对方「我很强」。跟能量流动（单向、逐级递减）、物质循环（循环往复）不同，信息传递<b>往往是双向的</b>：捕食者能感知猎物的气味，猎物也能感知捕食者的气味。而生态系统的「自愈能力」——抵抗力稳定性和恢复力稳定性——底层机制就是不断收到「偏离了」的信息、再自动纠偏，也就是负反馈调节。</div>
+
+    <div class="keybox"><b>一条主线：</b> <b>三种信息类型(物理/化学/行为) → 三大作用(维持生命活动/种群繁衍/调节种间关系稳定生态系统) → 双向传递 → 应用(增产/控害) → 自我调节能力(基础=负反馈) → 抵抗力 vs 恢复力稳定性(通常此消彼长) → 提高稳定性的措施</b>。记住这条链，题目怎么问都能顺着推。</div>
+
+    <h2>① 信息的种类：物理信息 / 化学信息 / 行为信息</h2>
+    <div class="card">
+      <p style="margin:8px 0">生态系统中生物与生物、生物与环境之间传递的信息，人教版分<b>三类</b>：</p>
+      <table>
+        <tr><th>类型</th><th>定义</th><th>常见例子</th></tr>
+        <tr><td><b>物理信息</b></td><td>通过<b>物理过程</b>传递的信息，如光、声、温度、湿度、磁力等</td><td>光照长短(短日照/长日照)、鸟鸣、温度变化、磁场(候鸟迁徙)</td></tr>
+        <tr><td><b>化学信息</b></td><td>生物在代谢过程中产生的可传递信息的<b>化学物质</b></td><td>植物分泌的生物碱、有机酸；动物的性外激素(信息素)</td></tr>
+        <tr><td><b>行为信息</b></td><td>动物的<b>特殊行为</b>(不是普通动作)，对同种或异种生物传递的信息</td><td>孔雀开屏、蜜蜂跳舞、狼嚎、鸟类的求偶炫耀</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键点：</b> 物理信息的<b>来源可以是无机环境，也可以是生物</b>(声、光既可以来自阳光/雷声这种无机环境，也可以来自动物的鸣叫、发光)；化学信息的载体是<b>化学物质本身</b>；行为信息强调的是<b>动物的特殊行为动作</b>，不是随便一个动作都算。</p>
+      <p class="trap">⚠ 最容易错判的三处：① 磁力、温度也是物理信息，别只想到光和声；② 信息素/外激素属于<b>化学信息</b>，不是行为信息；③ 「孔雀开屏」这类特殊行为才是行为信息，判断题常把它错归为物理信息。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 1 — 三类信息判别器：给出例子，判断物理 / 化学 / 行为信息</div>
+      <svg id="clsSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl" id="clsBtns"></div>
+      <div class="verdict" id="clsNote">点击上方例子，看它属于哪类信息。</div>
+      <p class="small">共 9 个例子循环出题：光照、蝙蝠回声、温度、磁场、性外激素、植物生物碱、孔雀开屏、蜜蜂跳舞、狼嚎。答对会给出判别依据。</p>
+    </div>
+
+    <h2 class="b">② 信息传递的方向：往往是双向的</h2>
+    <div class="card">
+      <p style="margin:8px 0">生态系统的三大功能——物质循环、能量流动、信息传递——传递<b>方向不同</b>，这是高频对比考点：</p>
+      <table>
+        <tr><th>功能</th><th>传递方向</th><th>特点</th></tr>
+        <tr><td>能量流动</td><td><b>单向流动</b></td><td>沿食物链从生产者→消费者，逐级递减，不可逆、不循环</td></tr>
+        <tr><td>物质循环</td><td><b>循环流动</b></td><td>在无机环境与生物群落间反复循环(如碳循环)，可重复利用</td></tr>
+        <tr><td>信息传递</td><td><b>往往是双向的</b></td><td>发生在生物与生物之间、生物与环境之间，通常双向(有来有回)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例子理解双向：</b> 捕食者能通过气味等信息发现猎物；猎物同样能通过感知捕食者散发的信息而逃避，这就是双向——双方都在发信息、都在收信息，互相影响、共同进化。</p>
+      <p class="trap">⚠ 「信息传递单向」是最高频的判断题陷阱！只有能量流动是单向的，信息传递<b>往往双向</b>——题目里出现「信息传递也像能量流动一样单向」就是错的。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 2 — 三大功能方向对比：能量单向 / 物质循环 / 信息双向</div>
+      <svg id="dirSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="dirmode on" data-d="0">能量流动</button>
+        <button class="dirmode" data-d="1">物质循环</button>
+        <button class="dirmode" data-d="2">信息传递</button>
+      </div>
+      <div class="verdict" id="dirNote"></div>
+      <p class="small">切换三种功能，箭头动画会展示方向：能量只往前走一条线；物质绕圈循环；信息在生产者与消费者之间来回双向流动。</p>
+    </div>
+
+    <h2 class="g">③ 信息传递的三大作用</h2>
+    <div class="card">
+      <table>
+        <tr><th>作用</th><th>说明</th><th>例子</th></tr>
+        <tr><td>① 维持生命活动正常进行</td><td>个体接收信息才能做出正确的生理/行为反应</td><td>植物开花需要<b>光信息</b>(日照长短)诱导；动物的生长发育受<b>温度信息</b>调控</td></tr>
+        <tr><td>② 有利于种群的繁衍</td><td>雌雄个体靠信息互相识别、吸引，才能完成繁殖</td><td>孔雀开屏吸引异性(行为信息)；蛾类靠性外激素找配偶(化学信息)</td></tr>
+        <tr><td>③ 调节种间关系，维持生态系统的稳定</td><td>捕食者、竞争者、寄生物之间靠信息互相制约，形成动态平衡</td><td>捕食者根据猎物散发的气味等信息发现猎物并捕食，客观上调节了种群数量</td></tr>
+      </table>
+      <p class="trap">⚠ 三个作用别混：「开花需要光信息」是①(个体生命活动)，不是②(繁衍)；「捕食者靠气味找猎物」是③(种间关系)，不是①。做题看主语是「个体本身的生理过程」「找配偶繁殖」还是「不同物种之间的关系」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 信息传递三大作用配例：把例子拖到对应作用</div>
+      <svg id="roleSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl" id="roleBtns"></div>
+      <div class="verdict" id="roleNote">点击下方例子卡片，选择它属于哪个作用。</div>
+      <p class="small">6 个例子：植物开花需光照、蛾类性外激素找配偶、狼靠嗅觉发现兔子、孔雀开屏求偶、低温诱导种子萌发、猫头鹰靠鼠类气味定位猎物。</p>
+    </div>
+
+    <h2 class="o">④ 信息传递的应用</h2>
+    <div class="card">
+      <h3>应用一：提高农产品或畜产品的产量</h3>
+      <p style="margin:6px 0">利用（模拟）信息传递可以<b>提高生物产量</b>。例：模拟雌蛾释放的性外激素诱使田间雄蛾聚集，干扰其交配从而防治害虫间接保产量；用一定波长的光照调控家禽产蛋、催花等。</p>
+      <h3>应用二：对有害动物进行控制</h3>
+      <p style="margin:6px 0">利用<b>性引诱剂</b>诱杀害虫是最经典的应用——释放人工合成的性外激素诱杀雄性害虫，破坏其正常的性别比例，使害虫种群数量明显降低，替代化学农药、减少环境污染。</p>
+      <div class="chips">
+        <span class="chip">性引诱剂诱杀害虫</span><span class="chip">音响设备驱赶鸟类</span><span class="chip">模拟报警信息素驱虫</span><span class="chip">调节光照促家禽产蛋</span>
+      </div>
+      <p class="trap">⚠ 信息传递的应用不是「杀虫剂」那种化学毒杀，而是利用信息(化学/物理/行为)去<b>吸引、驱赶或干扰</b>，本质是对生物行为的调控，属于生物防治思路，环保、不污染环境。</p>
+    </div>
+
+    <h2 class="v">⑤ 生态系统的自我调节能力：负反馈调节</h2>
+    <div class="card">
+      <p style="margin:8px 0">生态系统之所以能维持相对稳定，<b>基础</b>是具备一定的<b>自我调节能力</b>，而自我调节能力的<b>基础是负反馈调节</b>。</p>
+      <div class="eq">负反馈：偏离目标值 → 产生反向的调节信号 → 抑制偏离 → 恢复到原来状态</div>
+      <p style="margin:8px 0"><b>例子：</b> 森林中害虫数量增多 → 食虫鸟因食物增多而增多 → 害虫被大量捕食 → 害虫数量下降回落，这就是一个典型的负反馈调节回路。生态系统的成分越多、营养结构越复杂，负反馈调节的途径就越多，自我调节能力就越强。</p>
+      <p style="margin:8px 0">但自我调节能力是<b>有限度</b>的，超过这个限度（外界干扰因素过强、超过生态系统的自我调节能力），生态系统的稳定性就会被破坏，甚至不能恢复。</p>
+      <p class="trap">⚠ 负反馈调节不是生态系统独有的「特殊技能」，而是所有能保持相对稳定的系统的共同机制（比如体温调节也是负反馈）；但生态系统自我调节能力的<b>基础</b>这一表述是人教版原话，考试常直接考「自我调节能力的基础是____」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 4 — 负反馈调节演示：害虫—食虫鸟数量波动如何被拉回稳态</div>
+      <svg id="fbSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fbGo">▶ 施加一次干扰(害虫暴增)</button><button id="fbReset">↺ 重置</button>
+        <label>干扰强度 <input id="fbK" type="range" min="1" max="10" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>害虫数量</b><span id="fbPest">100</span></div>
+        <div><b>食虫鸟数量</b><span id="fbBird">20</span></div>
+        <div><b>偏离程度</b><span id="fbDev">0</span></div>
+        <div><b>状态</b><span id="fbState">稳态</span></div>
+      </div>
+      <p class="small">红线=害虫，绿线=食虫鸟。干扰让害虫数量突增，食虫鸟随之增多并把害虫压回原水平——这就是负反馈：偏离→反向调节→回归稳定。干扰强度越大，波动越大、回归所需时间越长。</p>
+    </div>
+
+    <h2 class="r">⑥ 抵抗力稳定性 vs 恢复力稳定性</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>抵抗力稳定性</th><th>恢复力稳定性</th></tr>
+        <tr><td>定义</td><td>生态系统<b>抵抗外界干扰并使自身的结构和功能保持原状</b>的能力</td><td>生态系统在受到外界干扰因素破坏后<b>恢复到原状</b>的能力</td></tr>
+        <tr><td>与营养结构复杂度</td><td>营养结构(生物种类、食物链食物网)<b>越复杂，抵抗力稳定性越高</b></td><td>营养结构越复杂，恢复力稳定性通常<b>越低</b></td></tr>
+        <tr><td>典型例子</td><td>热带雨林：物种多、结构复杂，抵抗力强，不容易被破坏</td><td>草原：结构简单，一旦破坏难维持原状，但恢复快</td></tr>
+        <tr><td>两者关系</td><td colspan="2" style="text-align:center">一般呈<b>相反</b>关系(此消彼长)，但并非绝对，需具体分析(如冻原环境两者都低)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么营养结构复杂抵抗力就强？</b> 食物网越复杂，某一物种数量变化能被更多其他物种、更多负反馈途径分担和缓冲，不容易引发连锁的剧烈波动。</p>
+      <p style="margin:8px 0"><b>为什么复杂系统恢复力反而弱？</b> 结构复杂、生物种类多，一旦被严重破坏，需要重建的关系和链条也多，恢复所需时间更长、更困难；简单系统（如草原、荒漠边缘）结构简单，破坏后重新恢复反而更快。</p>
+      <p class="trap">⚠ 「营养结构越复杂，两种稳定性都越强」是错误说法！<b>抵抗力越强，恢复力通常越弱</b>，二者往往此消彼长，不能都往高了想。特殊情况(如极地冻原)两者可能都很低，不能死记硬套。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 抵抗力 vs 恢复力：拖动营养结构复杂度，看两者此消彼长</div>
+      <svg id="stabSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>营养结构复杂度 <input id="stabX" type="range" min="0" max="10" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>抵抗力稳定性</b><span id="stabR">--</span></div>
+        <div><b>恢复力稳定性</b><span id="stabV">--</span></div>
+        <div><b>当前生态系统举例</b><span id="stabEg">--</span></div>
+        <div><b>关系</b><span id="stabRel">此消彼长</span></div>
+      </div>
+      <p class="small">红条=抵抗力稳定性，绿条=恢复力稳定性。拖动滑块从「结构简单(如荒漠)」到「结构复杂(如热带雨林)」，观察两条柱子反向变化。</p>
+    </div>
+
+    <h2 class="b">⑦ 提高生态系统稳定性的措施</h2>
+    <div class="card">
+      <p style="margin:8px 0">要保护生态系统的稳定性，核心思路是：<b>控制干扰的强度，使其不超过生态系统的自我调节能力</b>；同时要<b>适度</b>利用生态系统的自我调节能力，也不能完全不管不顾（人类活动应保持合理的范围和强度）。</p>
+      <table>
+        <tr><th>措施</th><th>目的</th></tr>
+        <tr><td>控制对生态系统的干扰强度(合理利用资源，禁止过度放牧/采伐)</td><td>不超过生态系统自我调节能力的限度</td></tr>
+        <tr><td>实施相应的物质、能量投入(施肥、灌溉、治虫)</td><td>保证生态系统内部结构与功能的协调</td></tr>
+        <tr><td>增加生物多样性、恢复食物网结构(封山育林、退耕还湿)</td><td>提高营养结构复杂度，从而提高抵抗力稳定性</td></tr>
+      </table>
+      <p class="trap">⚠ 「提高稳定性」不等于「完全不干预」——适度、合理的人类活动本身也是维持生态系统稳定的一部分；但超出自我调节能力限度的干扰(过度砍伐、污染)会导致稳定性被破坏且难以恢复。</p>
+    </div>
+
+    <h2 class="v">⑧ 信息素诱杀害虫：应用实例精讲</h2>
+    <div class="card">
+      <p style="margin:8px 0">性引诱剂诱杀害虫是历年高考的高频应用题，逻辑链要理清：</p>
+      <div class="mono">人工合成雌蛾性外激素(化学信息) → 释放到田间 → 诱集大量雄蛾前来 → 集中诱杀(或干扰正常交配) → 破坏害虫种群正常性别比例 → 出生率大幅下降 → 种群数量明显降低</div>
+      <p style="margin:8px 0"><b>本质：</b> 利用信息传递去<b>调节种间/种内关系</b>，而不是像化学农药那样直接毒杀，属于<b>生物防治</b>范畴，优点是<b>专一性强、不污染环境、不易使害虫产生抗药性</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🐛 互动 6 — 性引诱剂诱杀害虫模拟：释放信息素，观察种群数量变化</div>
+      <svg id="trapSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="trapGo">▶ 释放性引诱剂</button><button id="trapReset">↺ 重置田间</button>
+      </div>
+      <div class="live">
+        <div><b>雄蛾数量</b><span id="trapM">30</span></div>
+        <div><b>雌蛾数量</b><span id="trapF">30</span></div>
+        <div><b>下一代出生率</b><span id="trapBirth">正常</span></div>
+        <div><b>害虫种群趋势</b><span id="trapTrend">稳定</span></div>
+      </div>
+      <p class="small">黄点=雌蛾(不受影响)，蓝点=雄蛾。释放后大量雄蛾被诱集捕获(变灰)，雌雄比例失衡，交配成功率骤降，出生率下降，种群数量随世代推移逐渐降低。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断信息类型</h3>
+      <p><b class="tag">触发信号：</b>给出具体例子(光、声、气味、动作等)，问属于物理/化学/行为哪种信息。</p>
+      <p><b class="tag">标准动作：</b>看载体——是光/声/温度/磁力等物理过程→物理信息；是生物分泌的化学物质(信息素、生物碱)→化学信息；是动物的特殊动作(开屏、跳舞、嚎叫)→行为信息。</p>
+      <p><b class="tag">示例(带解)：</b>「雌蛾释放性外激素吸引雄蛾」——性外激素是一种化学物质，属于<b>化学信息</b>；「孔雀开屏吸引异性」——开屏是特殊行为动作，属于<b>行为信息</b>；「候鸟依靠地磁场导航迁徙」——磁力是物理过程，属于<b>物理信息</b>，来源是无机环境。</p>
+      <p class="trap">陷阱：把性外激素误判成行为信息；把磁场、温度这类不常见的物理信息漏判；忽视物理信息来源可以是无机环境。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断信息传递的作用</h3>
+      <p><b class="tag">触发信号：</b>给出例子问体现了信息传递的哪种作用(维持生命活动/种群繁衍/调节种间关系)。</p>
+      <p><b class="tag">标准动作：</b>看主体——个体自身的生理反应(开花、萌发、休眠)→①；异性间识别、求偶、交配→②；不同物种之间的捕食、竞争关系→③。</p>
+      <p><b class="tag">示例(带解)：</b>「短日照促使菊花在秋季开花」→ 个体生理过程，属于①维持生命活动正常进行；「猫头鹰靠鼠类尿液气味确定捕食位置」→ 不同物种间的捕食关系，属于③调节种间关系维持生态系统稳定。</p>
+      <p class="trap">陷阱：把「个体生理反应」和「种间关系调节」混淆；把求偶行为错判成③而非②。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 信息传递方向 vs 物质/能量对比</h3>
+      <p><b class="tag">触发信号：</b>题目同时问信息传递、物质循环、能量流动三者的方向或特点，或判断「信息传递也是单向的」对不对。</p>
+      <p><b class="tag">标准动作：</b>记住三句话——能量流动单向流动、逐级递减；物质循环反复利用、循环流动；信息传递往往双向。凡说「信息传递单向」一律判错(除非题目明确限定某一具体场景的单向传递现象)。</p>
+      <p><b class="tag">示例(带解)：</b>「生态系统中信息传递和能量流动一样都是单向的」——错误。能量流动才是单向的，信息传递往往是双向的，例如猎物和捕食者之间能相互感知对方释放的信息。</p>
+      <p class="trap">陷阱：受「能量流动单向」思维定势影响，误判信息传递也单向；忽视「往往」二字，不能说信息传递绝对不能单向(个别单一场景可以单向)，但整体规律是双向。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 信息传递的应用(增产/控害)</h3>
+      <p><b class="tag">触发信号：</b>题目描述用某种信息物质诱捕、驱赶、调控生物，问这属于信息传递的哪种应用、有何优点。</p>
+      <p><b class="tag">标准动作：</b>判断是「提高产量」还是「控制有害动物」；若是人工合成性外激素诱杀→控制有害动物；若是模拟信息促进生长/产蛋/繁殖→提高农产品/畜产品产量。答优点时突出「不污染环境、专一性强」。</p>
+      <p><b class="tag">示例(带解)：</b>「用人工合成的性引诱剂诱杀农田中的雄性害虫」——属于对有害动物进行控制的应用；原理是破坏害虫种群正常的性别比例，使其出生率降低，达到虫害防治目的，且相比化学农药更环保。</p>
+      <p class="trap">陷阱：把诱杀原理答成「直接毒死害虫」(其实是干扰交配/集中诱捕，破坏性别比例)；漏答「不污染环境」这一核心优点。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 自我调节能力与负反馈</h3>
+      <p><b class="tag">触发信号：</b>题目问生态系统为什么能保持稳定、自我调节能力的基础是什么、举例说明负反馈调节过程。</p>
+      <p><b class="tag">标准动作：</b>先答「基础是负反馈调节」，再用具体食物链举例描述「数量增多→天敌/资源限制增多→被压制→回落」的完整闭环，最后点出自我调节能力是<b>有限度</b>的。</p>
+      <p><b class="tag">示例(带解)：</b>「用负反馈调节解释草原上食草动物数量为什么能维持相对稳定」——食草动物数量增多→食物(牧草)减少、天敌数量增多→食草动物因食物不足、被捕食增多而数量下降→回落到原有水平，属于负反馈调节；但若干旱等干扰过强超过自我调节能力，草原可能退化难以恢复。</p>
+      <p class="trap">陷阱：只答「负反馈」三个字不展开具体过程；忘记补充「自我调节能力是有限的」这一得分点。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 抵抗力 vs 恢复力稳定性比较</h3>
+      <p><b class="tag">触发信号：</b>比较两个生态系统(如森林 vs 草原、热带雨林 vs 苔原)的抵抗力/恢复力稳定性高低，或问「为什么营养结构复杂的生态系统更不容易恢复」。</p>
+      <p><b class="tag">标准动作：</b>先判断营养结构复杂度(物种数、食物网复杂程度)，越复杂→抵抗力越强、恢复力通常越弱；再结合具体例子说明。特别提醒特殊情形(冻原、荒漠等)可能两者都弱，不能生搬硬套。</p>
+      <p><b class="tag">示例(带解)：</b>「比较热带雨林和北方针叶林的抵抗力、恢复力稳定性」——热带雨林物种丰富、食物网复杂，抵抗力稳定性高、恢复力稳定性低；北方针叶林结构相对简单，抵抗力稳定性低、恢复力稳定性相对较高。</p>
+      <p class="trap">陷阱：认为「结构复杂 = 两种稳定性都强」；混淆「抵抗力强」和「恢复力强」谁对应「结构复杂」。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 信息传递的方向<b>往往是双向的</b>，不像能量流动那样单向——这是最高频判断题陷阱。</p>
+      <p class="trap">② 物理信息的<b>来源不一定是生物</b>，无机环境(阳光、温度、磁力)本身也能发出物理信息。</p>
+      <p class="trap">③ 化学信息的物质基础是生物代谢产生的<b>化学物质</b>(如性外激素)，不要归为行为信息。</p>
+      <p class="trap">④ 行为信息特指动物的<b>特殊行为</b>(孔雀开屏、蜜蜂跳舞)，不是任何动作都算行为信息。</p>
+      <p class="trap">⑤ 抵抗力稳定性与恢复力稳定性<b>一般相反</b>(此消彼长)，但并非绝对规律，特殊环境(冻原)两者可能都低。</p>
+      <p class="trap">⑥ 生态系统自我调节能力的基础是<b>负反馈调节</b>，不是正反馈(正反馈会加速偏离，不利于稳定)。</p>
+      <p class="trap">⑦ <b>营养结构越复杂</b>(生物种类多、食物网复杂)，抵抗力稳定性越高，但恢复所需时间通常更长。</p>
+      <p class="trap">⑧ 能量流动<b>单向</b>流动、逐级递减；物质循环反复利用；信息传递往往<b>双向</b>——三者方向不能混。</p>
+      <p class="trap">⑨ 自我调节能力<b>有限度</b>，超过限度生态系统的稳定性会被破坏，甚至无法恢复到原状。</p>
+      <p class="trap">⑩ 信息传递的应用本质是<b>调控生物行为/生理过程</b>，不是化学农药式的直接毒杀，是环保的生物防治手段。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 三大功能其实是同一张网的三种「视角」：</b> 物质循环看的是「原子去哪了」，能量流动看的是「能量去哪了」，信息传递看的是「消息怎么传」。三者依附在同一套食物链食物网上同时发生，但传递方向、是否可循环完全不同——考试常把三者放一起对比，抓住「单向递减 / 循环往复 / 往往双向」三句口诀就不会乱。</p>
+      <p style="margin:8px 0"><b>② 负反馈是稳定性的「发动机」，正反馈是失稳的「加速器」：</b> 负反馈让偏离被压制、系统回到原态；正反馈则相反——偏离越大，触发的效应让偏离<b>更大</b>(如水体富营养化后藻类越死越多、越死越缺氧，形成恶性循环)。生态系统正常运转靠负反馈为主导，一旦某个环节被正反馈主导，稳定性就可能崩溃。</p>
+      <p style="margin:8px 0"><b>③ 抵抗力与恢复力此消彼长的本质是「投入-产出」的权衡：</b> 结构复杂意味着更多物种、更多能量和物质关系需要维持，扰动来了有更多缓冲路径(抵抗力强)，但一旦被打破，重建这些复杂关系需要更长时间(恢复力弱)。这不是死规则，而是「结构复杂度」与「重建成本」之间的正相关关系，理解了这层逻辑，遇到冻原这种「两者都弱」的特例也不会懵——冻原物种本来就少、结构简单，抵抗力天然就弱，环境又严酷导致恢复也慢。</p>
+      <p style="margin:8px 0"><b>④ 信息传递应用的核心是「精准调控」而非「暴力干预」：</b> 性引诱剂只对准特定物种的特定信息通道(某种性外激素结构专一)，不像广谱农药会误伤天敌和有益昆虫。理解这一点，遇到「为什么信息传递应用更环保、更可持续」这类简答题，可以从<b>物种专一性</b>和<b>不破坏其他物种/环境</b>两个角度展开。</p>
+      <p style="margin:8px 0"><b>⑤ 稳定性题目的终极答题框架：</b> 遇到任何「为什么某生态系统稳定/不稳定」的题，按「组分与营养结构复杂度→自我调节能力强弱→抵抗力/恢复力表现→受到的干扰是否超过调节限度→最终结果」这条链条组织答案，既覆盖知识点又符合评分逻辑，比零散罗列得分更稳。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:生态系统的物质循环、生态系统的能量流动</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:三类信息判别器 ===== */
+(function(){
+  const svg=document.getElementById('clsSvg');
+  const btnWrap=document.getElementById('clsBtns');
+  const note=document.getElementById('clsNote');
+  const items=[
+    {t:"阳光照射(光照长短)",ans:"物理",why:"光是一种物理过程，来源可以是无机环境(阳光)"},
+    {t:"蝙蝠回声定位",ans:"物理",why:"声音是物理过程，来源是生物自身发出"},
+    {t:"环境温度变化",ans:"物理",why:"温度是物理因素，来源是无机环境"},
+    {t:"候鸟依靠地磁场导航",ans:"物理",why:"磁力是物理过程，来源是无机环境"},
+    {t:"雌蛾释放性外激素",ans:"化学",why:"性外激素是生物代谢产生的化学物质"},
+    {t:"植物分泌的生物碱",ans:"化学",why:"生物碱是代谢产生的化学物质，属于化学信息"},
+    {t:"孔雀开屏",ans:"行为",why:"开屏是动物的特殊行为动作"},
+    {t:"蜜蜂跳圆圈舞/摆尾舞",ans:"行为",why:"跳舞是蜜蜂传递食物方位的特殊行为"},
+    {t:"狼对着月亮嚎叫",ans:"行为",why:"嚎叫是一种特殊的行为动作(声音本身是物理，但作为整体行为归为行为信息举例)"}
+  ];
+  let idx=0;
+  const cats=[["物理",BLUE],["化学",GREEN],["行为",ORANGE]];
+  cats.forEach(c=>{
+    const b=document.createElement('button');
+    b.textContent=c[0]+'信息';b.style.background=c[1];b.style.borderColor=INK;
+    b.onclick=()=>check(c[0]);
+    btnWrap.appendChild(b);
+  });
+  const nextBtn=document.createElement('button');
+  nextBtn.textContent='下一题 →';nextBtn.onclick=()=>{idx=(idx+1)%items.length;draw();};
+  btnWrap.appendChild(nextBtn);
+  function check(pick){
+    const it=items[idx];
+    if(pick===it.ans){note.innerHTML='✅ 正确！<b>'+it.t+'</b> 属于'+it.ans+'信息 —— '+it.why;note.style.borderColor=GREEN;}
+    else{note.innerHTML='❌ 不对。<b>'+it.t+'</b> 属于<b>'+it.ans+'信息</b> —— '+it.why;note.style.borderColor=RED;}
+  }
+  function draw(){
+    clr(svg);
+    const it=items[idx];
+    el(svg,'rect',{x:20,y:20,width:660,height:120,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:60,'font-size':15,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='例('+(idx+1)+'/'+items.length+')：';
+    el(svg,'text',{x:350,y:95,'font-size':20,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.t;
+    el(svg,'text',{x:350,y:160,'font-size':12.5,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='判断：属于物理信息 / 化学信息 / 行为信息 中的哪一种？';
+    note.innerHTML='点击下方按钮作答。';
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 互动2:三大功能方向对比 ===== */
+(function(){
+  const svg=document.getElementById('dirSvg');const note=document.getElementById('dirNote');
+  let d=0;
+  document.querySelectorAll('.dirmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.dirmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');d=+b.dataset.d;draw();
+  });
+  function draw(){
+    clr(svg);
+    el(svg,'rect',{x:80,y:60,width:120,height:60,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:140,y:95,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='生产者';
+    el(svg,'rect',{x:490,y:60,width:120,height:60,fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:550,y:95,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='消费者';
+    el(svg,'rect',{x:285,y:170,width:130,height:60,fill:'#8a8a8a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:205,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='无机环境';
+    let msg;
+    if(d===0){
+      arrow(200,90,490,90,RED,'能量');
+      el(svg,'text',{x:350,y:40,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='能量流动：单向流动，逐级递减';
+      msg='能量只能从生产者流向消费者，沿食物链单方向传递，不会倒流，也不会循环，逐级递减（大部分以热能散失）。';
+    } else if(d===1){
+      arrow(200,70,490,70,BLUE,'');
+      arrow(490,110,200,110,BLUE,'');
+      arrow(350,170,140,120,GREEN,'');
+      arrow(210,120,320,170,GREEN,'');
+      arrow(550,120,410,170,GREEN,'');
+      arrow(400,170,540,120,GREEN,'');
+      el(svg,'text',{x:350,y:40,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='物质循环：在生物群落与无机环境间反复循环';
+      msg='物质(如碳)在无机环境与生物群落之间不断循环流动，可以被反复利用，不会像能量那样"消失"。';
+    } else {
+      arrowCurve(200,75,490,75,VIO,true);
+      arrowCurve(490,105,200,105,VIO,true);
+      el(svg,'text',{x:350,y:40,'font-size':14,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='信息传递：往往是双向的';
+      msg='生产者与消费者(或消费者之间)常常互相发送并接收信息，比如猎物散发气味、捕食者感知气味，双方都在传递和接收，是双向的，这一点与能量流动的单向性截然不同。';
+    }
+    el(svg,'text',{x:20,y:250,'font-size':12.5,'font-weight':700,fill:'#4a4128'}).textContent=msg;
+    note.innerHTML=msg;
+    note.style.borderColor=d===0?RED:d===1?BLUE:VIO;
+  }
+  function arrow(x1,y1,x2,y2,col,lab){
+    el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':5});
+    const dir=x2>x1?1:-1;
+    el(svg,'polygon',{points:x2+','+(y2-7)+' '+(x2+dir*12)+','+y2+' '+x2+','+(y2+7),fill:col});
+    if(lab)el(svg,'text',{x:(x1+x2)/2,y:y1-8,'font-size':12.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+  }
+  function arrowCurve(x1,y1,x2,y2,col,curve){
+    const midY=(y1+y2)/2+(curve?-6:6);
+    el(svg,'path',{d:'M'+x1+','+y1+' Q'+((x1+x2)/2)+','+midY+' '+x2+','+y2,fill:'none',stroke:col,'stroke-width':4});
+    const dir=x2>x1?1:-1;
+    el(svg,'polygon',{points:x2+','+(y2-7)+' '+(x2+dir*12)+','+y2+' '+x2+','+(y2+7),fill:col});
+  }
+  draw();
+})();
+
+/* ===== 互动3:三大作用配例 ===== */
+(function(){
+  const svg=document.getElementById('roleSvg');
+  const btnWrap=document.getElementById('roleBtns');
+  const note=document.getElementById('roleNote');
+  const items=[
+    {t:"植物开花需要光信息诱导",ans:0},
+    {t:"低温诱导种子萌发",ans:0},
+    {t:"蛾类靠性外激素找配偶",ans:1},
+    {t:"孔雀开屏吸引异性",ans:1},
+    {t:"狼靠嗅觉发现兔子并捕食",ans:2},
+    {t:"猫头鹰靠鼠类气味定位猎物",ans:2}
+  ];
+  const roles=["①维持生命活动","②有利于种群繁衍","③调节种间关系"];
+  const cols=[GREEN,ORANGE,VIO];
+  let idx=0;
+  roles.forEach((r,i)=>{
+    const b=document.createElement('button');
+    b.textContent=r;b.style.background=cols[i];b.style.borderColor=INK;
+    b.onclick=()=>check(i);
+    btnWrap.appendChild(b);
+  });
+  const nextBtn=document.createElement('button');
+  nextBtn.textContent='下一题 →';nextBtn.onclick=()=>{idx=(idx+1)%items.length;draw();};
+  btnWrap.appendChild(nextBtn);
+  function check(pick){
+    const it=items[idx];
+    if(pick===it.ans){note.innerHTML='✅ 正确！「'+it.t+'」体现的是 '+roles[it.ans];note.style.borderColor=GREEN;}
+    else{note.innerHTML='❌ 不对。「'+it.t+'」应属于 <b>'+roles[it.ans]+'</b>';note.style.borderColor=RED;}
+  }
+  function draw(){
+    clr(svg);
+    const it=items[idx];
+    el(svg,'rect',{x:20,y:20,width:660,height:110,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:58,'font-size':14,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='例('+(idx+1)+'/'+items.length+')：';
+    el(svg,'text',{x:350,y:90,'font-size':18,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.t;
+    el(svg,'text',{x:350,y:155,'font-size':12.5,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='这体现了信息传递的哪种作用？点击下方按钮作答。';
+    note.innerHTML='点击下方按钮作答。';
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 互动4:负反馈调节演示 ===== */
+(function(){
+  const svg=document.getElementById('fbSvg');
+  const Ks=document.getElementById('fbK');
+  const oPest=document.getElementById('fbPest'),oBird=document.getElementById('fbBird'),oDev=document.getElementById('fbDev'),oState=document.getElementById('fbState');
+  let K=5,pest=100,bird=20,history=[],running=false,t=0;
+  const basePest=100,baseBird=20;
+  function sync(){K=+Ks.value;}
+  Ks.oninput=sync;
+  function reset(){
+    pest=100;bird=20;history=[[pest,bird]];t=0;running=false;
+    oPest.textContent=pest.toFixed(0);oBird.textContent=bird.toFixed(0);oDev.textContent='0';oState.textContent='稳态';
+    draw();
+  }
+  function step(){
+    // pest surges by disturbance at t=1, then negative feedback pulls back
+    if(t===1){pest=basePest+K*30;}
+    else if(t>1){
+      const foodEffect=(pest-basePest)*0.35; // bird responds to excess pest
+      bird=Math.max(5,bird+foodEffect*0.25-(bird-baseBird)*0.15);
+      const predation=(bird-baseBird)*3.2;
+      pest=Math.max(20,pest-predation-(pest-basePest)*0.05);
+    }
+    history.push([pest,bird]);
+    if(history.length>40)history.shift();
+    const dev=Math.abs(pest-basePest);
+    oPest.textContent=pest.toFixed(0);oBird.textContent=bird.toFixed(0);oDev.textContent=dev.toFixed(0);
+    oState.textContent=dev<3?'回归稳态':'调节中';
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    const X0=50,Y0=20,W=620,H=190;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='数量';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='时间';
+    // baseline
+    const scaleY=H/300;
+    const baseY=Y0+H-basePest*scaleY;
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:'#999','stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+W,y:baseY-6,'font-size':11,'font-weight':800,fill:'#999','text-anchor':'end'}).textContent='原稳态水平';
+    if(history.length>1){
+      let dPest='M',dBird='M';
+      history.forEach((h,i)=>{
+        const x=X0+(i/39)*W;
+        const yP=Y0+H-h[0]*scaleY;
+        const yB=Y0+H-h[1]*scaleY*3;
+        dPest+=(i===0?'':'L')+x+','+yP+' ';
+        dBird+=(i===0?'':'L')+x+','+yB+' ';
+      });
+      el(svg,'path',{d:dPest,fill:'none',stroke:RED,'stroke-width':4});
+      el(svg,'path',{d:dBird,fill:'none',stroke:GREEN,'stroke-width':4});
+    }
+    el(svg,'text',{x:X0+10,y:Y0+16,'font-size':12.5,'font-weight':900,fill:RED}).textContent='● 害虫数量';
+    el(svg,'text',{x:X0+130,y:Y0+16,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='● 食虫鸟数量(放大3倍显示)';
+  }
+  function loop(){
+    if(!running)return;
+    t++;
+    if(t>36){running=false;return;}
+    step();
+    setTimeout(()=>requestAnimationFrame(loop),90);
+  }
+  document.getElementById('fbGo').onclick=()=>{sync();reset();running=true;t=0;loop();};
+  document.getElementById('fbReset').onclick=reset;
+  sync();reset();
+})();
+
+/* ===== 互动5:抵抗力 vs 恢复力 ===== */
+(function(){
+  const svg=document.getElementById('stabSvg');
+  const Xs=document.getElementById('stabX');
+  const oR=document.getElementById('stabR'),oV=document.getElementById('stabV'),oEg=document.getElementById('stabEg'),oRel=document.getElementById('stabRel');
+  const egs=["荒漠(极简单)","苔原/冻原","草原","灌丛","温带落叶林","亚热带常绿林","热带季雨林","热带雨林(边缘)","热带雨林","热带雨林(核心)","热带雨林(顶极群落)"];
+  function sync(){draw();}
+  Xs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const x=+Xs.value; // 0-10 complexity
+    const resist=10+x*8; // 10..90
+    const resil=90-x*7; // 90..20
+    oR.textContent=resist.toFixed(0)+'%';oV.textContent=resil.toFixed(0)+'%';
+    oEg.textContent=egs[x];oRel.textContent='此消彼长';
+    const X0=120,Y0=30,H=180,bw=90;
+    el(svg,'line',{x1:X0-30,y1:Y0+H,x2:X0+400,y2:Y0+H,stroke:INK,'stroke-width':3});
+    // resist bar
+    const rh=resist/100*H;
+    el(svg,'rect',{x:X0,y:Y0+H-rh,width:bw,height:rh,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+bw/2,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='抵抗力';
+    el(svg,'text',{x:X0+bw/2,y:Y0+H-rh-8,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=resist.toFixed(0)+'%';
+    // resil bar
+    const vh=resil/100*H;
+    el(svg,'rect',{x:X0+200,y:Y0+H-vh,width:bw,height:vh,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+200+bw/2,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='恢复力';
+    el(svg,'text',{x:X0+200+bw/2,y:Y0+H-vh-8,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=resil.toFixed(0)+'%';
+    el(svg,'text',{x:350,y:16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='营养结构复杂度 → '+egs[x];
+  }
+  draw();
+})();
+
+/* ===== 互动6:性引诱剂诱杀害虫 ===== */
+(function(){
+  const svg=document.getElementById('trapSvg');
+  const oM=document.getElementById('trapM'),oF=document.getElementById('trapF'),oBirth=document.getElementById('trapBirth'),oTrend=document.getElementById('trapTrend');
+  let males=[],females=[],caught=0,running=false,gen=0;
+  function reset(){
+    males=[];females=[];caught=0;gen=0;running=false;
+    for(let i=0;i<15;i++){
+      males.push({x:80+Math.random()*540,y:40+Math.random()*160,c:false});
+      females.push({x:80+Math.random()*540,y:40+Math.random()*160});
+    }
+    oM.textContent=males.length;oF.textContent=females.length;
+    oBirth.textContent='正常';oTrend.textContent='稳定';
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'rect',{x:20,y:20,width:660,height:190,fill:'#eef7ee',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:15,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='田间模拟：黄=雌蛾  蓝=雄蛾  灰=被诱捕';
+    // trap in center
+    el(svg,'circle',{cx:350,cy:115,r:26,fill:'none',stroke:VIO,'stroke-width':4,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:350,y:120,'font-size':11,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='诱捕器';
+    females.forEach(f=>{
+      el(svg,'circle',{cx:f.x,cy:f.y,r:7,fill:YEL,stroke:INK,'stroke-width':2});
+    });
+    males.forEach(m=>{
+      el(svg,'circle',{cx:m.x,cy:m.y,r:7,fill:m.c?'#999':BLUE,stroke:INK,'stroke-width':2});
+    });
+    const active=males.filter(m=>!m.c).length;
+    oM.textContent=active;oF.textContent=females.length;
+    if(caught>0){
+      const ratio=active/females.length;
+      oBirth.textContent=ratio<0.5?'显著下降':'下降';
+      oTrend.textContent=ratio<0.3?'快速降低':'逐渐降低';
+    }
+  }
+  function loop(){
+    if(!running)return;
+    let moved=false;
+    males.forEach(m=>{
+      if(m.c)return;
+      const dx=350-m.x,dy=115-m.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist>28){m.x+=dx/dist*8;m.y+=dy/dist*8;moved=true;}
+      else{m.c=true;caught++;}
+    });
+    draw();
+    if(males.every(m=>m.c)){running=false;return;}
+    if(moved)setTimeout(()=>requestAnimationFrame(loop),60);
+    else running=false;
+  }
+  document.getElementById('trapGo').onclick=()=>{if(!running){running=true;requestAnimationFrame(loop);}};
+  document.getElementById('trapReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 生态系统中信息的三种类型是什么？各举一例。",a:"物理信息(光、声、温度、磁力，如阳光、鸟鸣、地磁场)；化学信息(生物代谢产生的化学物质，如性外激素)；行为信息(动物的特殊行为，如孔雀开屏、蜜蜂跳舞)。"},
+ {q:"2. 物理信息的来源一定是生物吗？",a:"不一定。物理信息的来源可以是无机环境(如阳光、温度、磁力)，也可以是生物本身(如动物的鸣叫、发光)。"},
+ {q:"3. 信息传递的方向和能量流动、物质循环一样吗？",a:"不一样。能量流动单向流动、逐级递减；物质循环在无机环境与生物群落间反复循环；信息传递往往是双向的。"},
+ {q:"4. 信息传递有哪三大作用？",a:"①有利于生命活动的正常进行(如植物开花需要光信息诱导)；②有利于种群的繁衍(雌雄个体依靠信息识别、交配)；③调节种间关系，维持生态系统的稳定(如捕食者依赖信息发现猎物)。"},
+ {q:"5. 信息传递在生产实践中有哪两大应用？",a:"①提高农产品或畜产品的产量(如模拟信息调控生长、繁殖)；②对有害动物进行控制(如利用性引诱剂诱杀害虫)。"},
+ {q:"6. 生态系统自我调节能力的基础是什么？举例说明。",a:"负反馈调节。例：害虫增多→食虫鸟因食物增多而增多→害虫被大量捕食→数量下降回落到原水平，形成偏离-抑制-恢复的闭环。"},
+ {q:"7. 自我调节能力是无限的吗？",a:"不是，是有限度的。当外界干扰超过生态系统自我调节能力的限度时，稳定性会被破坏，甚至难以恢复。"},
+ {q:"8. 什么是抵抗力稳定性？什么是恢复力稳定性？",a:"抵抗力稳定性：生态系统抵抗外界干扰、保持自身结构和功能相对稳定不变的能力。恢复力稳定性：生态系统受到破坏后恢复到原状的能力。"},
+ {q:"9. 营养结构复杂度与两种稳定性的关系？",a:"营养结构(物种、食物网)越复杂，抵抗力稳定性越高；但恢复力稳定性通常越低，二者一般呈相反关系(此消彼长)，特殊环境(如冻原)可能两者都低。"},
+ {q:"10. 为什么营养结构复杂的生态系统抵抗力更强，但恢复更慢？",a:"结构复杂时，物种多、负反馈调节途径多，扰动能被分担缓冲，所以抵抗力强；但一旦被严重破坏，需要重建的物种关系和链条也多，所以恢复所需时间更长、恢复力较弱。"},
+ {q:"11. 用性引诱剂诱杀害虫的原理和优点是什么？",a:"原理：人工合成雌性性外激素诱集大量雄性害虫并捕杀(或干扰交配)，破坏种群正常性别比例，使出生率下降，种群数量降低。优点：专一性强、不污染环境，属于生物防治。"},
+ {q:"12. 提高生态系统稳定性有哪些措施？",a:"控制人类活动对生态系统的干扰强度，使其不超过生态系统的自我调节能力；对生态系统给予适当的物质、能量投入；增加生物多样性、恢复营养结构(如封山育林)以提高抵抗力稳定性。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>卫星变轨与双星模型 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>卫星变轨与双星模型</h1>
+    <p class="lead">万有引力提供向心力这一句话,能推出「稳定圆轨道」的一整套关系;而<b>变轨</b>问题的坑,几乎全出在「点火加速那一下」到底发生了什么、之后轨道形状怎么变。<b>双星模型</b>则是把「一个天体绕中心天体转」换成「两个天体互相绕公共质心转」,结构不同但方法同源。这页把「稳定→变轨→双星」串成一条线。</p>
+
+    <div class="say">🗣️ <b>变轨(人话版):</b> 卫星在低轨上好好地转着,忽然点火<b>加速</b>——速度变大了,但轨道半径没来得及变,这一下「向心力不够用」(需要的向心力变大了,万有引力没变),于是卫星<b>做离心运动</b>,轨道被甩成椭圆,越飞越远。飞到远地点再点一次火<b>加速</b>,把这个新高度「圆化」,就稳定在更高的圆轨道上。全程就两个动作:<b>加速→离心→上升;到点再加速→圆化</b>。反过来减速就是降轨。</div>
+
+    <div class="keybox"><b>一句话公式:</b> 万有引力提供向心力 <b>GMm/r² = mv²/r = mω²r = m(4π²/T²)r</b>,由此解出 <b>v=√(GM/r)</b>、<b>T=2π√(r³/GM)</b>——<b>轨道半径越大,速度越小、周期越大</b>(高轨低速长周期)。这是本页几乎所有推理的起点。</div>
+
+    <h2>① 稳定圆轨道:万有引力 = 向心力</h2>
+    <div class="card">
+      <div class="eq">GMm/r² = mv²/r = mω²r = m(4π²/T²)r</div>
+      <p style="margin:8px 0">卫星绕中心天体(质量 M)做<b>匀速圆周运动</b>,万有引力全部提供向心力,不需要额外的力。由这一个方程可以解出三种速度/周期表达式:</p>
+      <table>
+        <tr><th>物理量</th><th>表达式</th><th>随 r 的变化趋势</th></tr>
+        <tr><td>线速度 v</td><td>v = √(GM/r)</td><td>r 越大,v 越<b>小</b></td></tr>
+        <tr><td>角速度 ω</td><td>ω = √(GM/r³)</td><td>r 越大,ω 越<b>小</b></td></tr>
+        <tr><td>周期 T</td><td>T = 2π√(r³/GM)</td><td>r 越大,T 越<b>大</b></td></tr>
+        <tr><td>向心加速度 a</td><td>a = GM/r²</td><td>r 越大,a 越<b>小</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>记忆锚点:</b> 「高轨低速长周期」——轨道越高,飞得越慢,绕一圈用的时间越长。这四个量<b>只由 r(和中心天体质量 M)决定</b>,与卫星自身质量 m 无关。</p>
+      <p class="trap">⚠ 不要以为轨道越高卫星"应该"更快——直觉常常反了。越往高处引力越弱,需要的向心力也小,配合的速度反而更小。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🛰️ 互动 1 — 圆轨道 v / T 随 r 变化:拖动半径 r,看「高轨低速长周期」</div>
+      <svg id="vrSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>轨道半径 r <input id="vrR" type="range" min="30" max="100" value="50" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>半径 r (相对值)</b><span id="vrRv">0</span></div>
+        <div><b>速度 v=√(GM/r)</b><span id="vrV">0</span></div>
+        <div><b>周期 T=2π√(r³/GM)</b><span id="vrT">0</span></div>
+        <div><b>加速度 a=GM/r²</b><span id="vrA">0</span></div>
+      </div>
+      <p class="small">拖动滑块改变轨道半径,右侧两个小球分别代表低轨与高轨卫星同步转动。半径越大,球转得越慢(v、ω 都变小),但绕完一圈花的时间(T)更长。</p>
+    </div>
+
+    <h2 class="b">② 卫星变轨:加速升轨,减速降轨</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>升轨三步:</b></p>
+      <div class="mono">第1步:在低轨圆周上某点<b>点火加速</b>(化学能→机械能,速度瞬间变大,位置不变)。</div>
+      <div class="mono">第2步:该点万有引力不足以提供新速度所需的向心力 → 卫星<b>做离心运动</b>,轨道从圆变成椭圆,原点成为椭圆的<b>近地点</b>。</div>
+      <div class="mono">第3步:沿椭圆飞到<b>远地点</b>,在此再次<b>点火加速</b>,把速度提到该处新圆轨道所需大小,轨道从椭圆"圆化"成更高的圆轨道。</div>
+      <p style="margin:8px 0"><b>降轨反过来:</b> 高轨上<b>减速</b> → 向心力"过剩" → 做<b>近心运动</b>,轨道变成内切的椭圆,近地点更低 → 到近地点再<b>减速</b>圆化为低轨圆。口诀:<b>加速升轨,减速降轨</b>。</p>
+      <p class="trap">⚠ 点火加速的瞬间,轨道半径<b>来不及改变</b>,变的只是速度。很多同学会把"加速"和"轨道立刻变大"混为一谈——实际上先做离心运动(椭圆),后续才慢慢远离。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚀 互动 2 — 变轨全过程动画:低轨加速→离心→椭圆→远地点加速→高轨圆</div>
+      <svg id="trSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="trGo">▶ 播放变轨</button><button id="trReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="trNote">阶段:低轨稳定圆周运动</div>
+      <p class="small">红点=卫星。观察四个阶段:①低轨圆(蓝) ②近地点点火加速,瞬间速度变大 ③沿椭圆(离心运动)飞向远地点,期间速度逐渐变小 ④远地点再次点火加速,轨道圆化为高轨圆(绿)。</p>
+    </div>
+
+    <h2 class="g">③ 椭圆轨道:近地点快,远地点慢</h2>
+    <div class="card">
+      <p style="margin:6px 0">卫星在椭圆轨道上运动时,万有引力不再总是垂直于速度(只有在近、远地点才垂直),所以<b>线速度大小不断变化</b>。由<b>开普勒第二定律</b>(对中心天体的连线在相等时间内扫过相等面积,即"面积速度"不变):</p>
+      <div class="eq">近地点 v近 · r近 = 远地点 v远 · r远　(面积速度不变的推论)</div>
+      <p style="margin:8px 0">由于 r近 &lt; r远,所以<b>v近 &gt; v远</b>——<b>近地点速度最大,远地点速度最小</b>。这是椭圆轨道上唯二能严格用<b>圆轨道公式</b> v=√(GM/r) 计算速度的两个点吗?<b>不是!</b> v=√(GM/r) 只对<b>圆轨道</b>成立,椭圆轨道上任意一点(包括近、远地点)都不能直接套这个公式,只能用能量关系或面积速度定性比较大小。</p>
+      <p class="trap">⚠ 最容易错的地方:看到椭圆轨道的近地点,就想套 v=√(GM/r近) ——错!这个公式的前提是<b>做圆周运动</b>,椭圆上任意一点都不满足"万有引力恰好等于该点向心力所需力"这个条件(近、远地点除外方向都不垂直),数值必须用椭圆自身的能量/角动量关系,不能直接套圆轨道公式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌗 互动 3 — 椭圆轨道近远地点速度对比:面积速度不变(开普勒第二定律)</div>
+      <svg id="elSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="elGo">▶ 运行一圈</button><button id="elReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前位置</b><span id="elPos">近地点</span></div>
+        <div><b>相对速度大小</b><span id="elV">大</span></div>
+        <div><b>r近</b><span id="elRn">短</span></div>
+        <div><b>r远</b><span id="elRf">长</span></div>
+      </div>
+      <p class="small">红点沿椭圆运动,速度矢量(箭头长度)在近地点最长、远地点最短;两侧扇形阴影面积始终相等(相等时间扫过相等面积),这正是它"近快远慢"的根源。</p>
+    </div>
+
+    <h2 class="o">④ 同一点、不同轨道:加速度相同,速度不一定相同</h2>
+    <div class="card">
+      <p style="margin:6px 0">变轨瞬间(比如刚点火那一刻),卫星的<b>位置 r 没有变</b>,只有速度变了。这时候要比较"变轨前"和"变轨后"在<b>同一点</b>的加速度与速度:</p>
+      <table>
+        <tr><th>物理量</th><th>是否相同</th><th>原因</th></tr>
+        <tr><td>向心加速度 a</td><td><b>相同</b></td><td>a=GM/r²,只由该点到中心的距离 r 决定,与轨道形状、速度无关</td></tr>
+        <tr><td>万有引力 F</td><td><b>相同</b></td><td>F=GMm/r²,只由 r 决定</td></tr>
+        <tr><td>速度 v</td><td><b>看是否点火</b></td><td>点火加速则变大;若只是"路过"该点(比如已经在椭圆上运行),由椭圆自身的能量关系决定,不再是圆轨道的 v=√(GM/r)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>结论:</b> 只要是在<b>同一位置</b>(同一 r),不管走的是圆轨道还是椭圆轨道,<b>万有引力和加速度都只由 r 决定,完全相同</b>;但速度可以不同——这正是变轨能够发生的物理基础(否则怎么会有些点速度变了,轨道形状却没有立刻变?)。</p>
+      <p class="trap">⚠ 常见错误:认为"轨道变了,加速度也变了"。其实只要位置(r)一样,加速度就一样;变的是速度,不是加速度。加速度只认 r,不认"你在哪条轨道上"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📍 互动 4 — 同一位置、不同轨道:a 相同(由 r 决定),v 不同(点火与否)</div>
+      <svg id="saSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="samode on" data-m="0">未点火(仍在低轨圆)</button>
+        <button class="samode" data-m="1">已点火(进入椭圆)</button>
+      </div>
+      <div class="verdict" id="saNote"></div>
+      <p class="small">同一位置(同一 r)对比两种情形:左侧数值卡显示万有引力 F 与加速度 a——无论点没点火,这两个值<b>完全一样</b>;唯独速度 v 因点火而变大。</p>
+    </div>
+
+    <h2 class="v">⑤ 双星模型:绕公共质心转,不是绕对方转</h2>
+    <div class="card">
+      <p style="margin:6px 0">两颗星(质量 m₁、m₂)靠彼此的万有引力提供向心力,分别绕<b>公共质心</b>做<b>匀速圆周运动</b>——不是甲绕乙转,也不是乙绕甲转,而是<b>两个都绕中间那个不动的质心转</b>,且转动方向相同、角速度相同(否则连线长度、结构就会散架)。</p>
+      <div class="eq">Gm₁m₂/L² = m₁ω²r₁ = m₂ω²r₂　(L=r₁+r₂,两星间距不变)</div>
+      <table>
+        <tr><th>关系</th><th>结论</th></tr>
+        <tr><td>角速度 / 周期</td><td>ω₁=ω₂,T₁=T₂ —— <b>两星角速度、周期永远相同</b></td></tr>
+        <tr><td>轨道半径之比</td><td>由 m₁r₁=m₂r₂(质心定义)得 r₁/r₂=m₂/m₁ —— <b>质量大的,轨道半径小</b></td></tr>
+        <tr><td>总间距</td><td>r₁+r₂=L,固定不变</td></tr>
+        <tr><td>周期与总质量</td><td>由 Gm₁m₂/L²=m₁ω²r₁ 及 r₁=Lm₂/(m₁+m₂) 化简得 T²=4π²L³/[G(m₁+m₂)] —— <b>周期由总质量 m₁+m₂ 决定,与各自质量分配无关</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>推导要点:</b> 两星受的是<b>同一对</b>牛顿第三定律力(大小相等、方向相反的万有引力),各自提供各自的向心力。质量小的那颗,分到的向心力需求所对应半径反而大(因为 m₁ω²r₁=m₂ω²r₂,ω 相同时 m 与 r 成反比)。</p>
+      <p class="trap">⚠ 双星模型三大坑:①以为一颗星绕另一颗转(其实都绕<b>质心</b>转);②以为质量大的轨道半径也大(其实<b>质量大的半径小</b>,r₁/r₂=m₂/m₁);③以为两星的向心力是两个不同的力(其实是<b>同一对</b>作用力与反作用力,大小相等)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⭐ 互动 5 — 双星模型:绕公共质心转,质量大半径小,角速度相同</div>
+      <svg id="biSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>质量比 m₁:m₂ <input id="biR" type="range" min="1" max="5" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>m₁:m₂</b><span id="biM">0</span></div>
+        <div><b>r₁:r₂</b><span id="biRatio">0</span></div>
+        <div><b>ω₁ 与 ω₂</b><span id="biW">相同</span></div>
+        <div><b>T₁ 与 T₂</b><span id="biT">相同</span></div>
+      </div>
+      <p class="small">拖动滑块改变两星质量比,蓝色(m₁,较大)与橙色(m₂,较小)始终绕中间的质心(黑十字)同步转动,质量越大的星,轨道半径越小,但两者角速度、周期永远相等。</p>
+    </div>
+
+    <h2 class="b">⑥ v-r、T-r 关系图:一眼看出高轨低速长周期</h2>
+    <div class="card">
+      <p style="margin:6px 0">把 v=√(GM/r) 和 T=2π√(r³/GM) 画成图像:v-r 是一条<b>递减</b>曲线(∝r^-1/2),T-r 是一条<b>递增</b>曲线(∝r^3/2)。图像趋势和"高轨低速长周期"完全对应,做选择题时一眼判断增减性即可,不必每次都算数值。</p>
+      <p class="trap">⚠ 不要把 v-r 和 T-r 图像的走势记反。可以用极限记忆:r 趋近于 0(贴地飞),v 趋于无穷大、T 趋于 0(转得飞快);r 趋近无穷大(飞到很远),v 趋于 0、T 趋于无穷大(几乎不转了)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 6 — v-r 与 T-r 关系图像:递减 vs 递增,滑块联动看当前点</div>
+      <svg id="vtSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>轨道半径 r <input id="vtR" type="range" min="20" max="100" value="50" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>r</b><span id="vtRv">0</span></div>
+        <div><b>v ∝ 1/√r</b><span id="vtVv">0</span></div>
+        <div><b>T ∝ r^1.5</b><span id="vtTv">0</span></div>
+        <div><b>结论</b><span id="vtNote">高轨低速长周期</span></div>
+      </div>
+      <p class="small">左图 v-r 曲线上的蓝点、右图 T-r 曲线上的绿点随滑块联动移动,直观看到"r 增大 → v 减小、T 增大"的反向/同向关系。</p>
+    </div>
+
+    <h2 class="g">⑦ 变轨时的能量:化学能 → 机械能</h2>
+    <div class="card">
+      <p style="margin:6px 0">点火加速的本质是发动机<b>燃烧推进剂做功</b>,把<b>化学能</b>转化为卫星的<b>机械能</b>(动能+引力势能)。升轨过程能量变化链条:</p>
+      <div class="mono">点火:化学能 → 卫星动能(瞬间 v 增大) → 随后飞向远地点过程中,动能部分转化为引力势能(离中心天体越来越远)</div>
+      <p style="margin:8px 0"><b>轨道越高,机械能越大:</b> 从低轨圆到高轨圆,两次点火都对卫星做正功,<b>机械能持续增大</b>。可以证明,圆轨道上 r 越大,总机械能 E=-GMm/2r 越大(负得越少,即越接近0)。所以"轨道升高"必然伴随"机械能增大",这部分能量来自推进剂的化学能。</p>
+      <p class="trap">⚠ 不要以为"轨道升高、速度却变小"意味着能量减少——机械能包含引力势能,势能增加得比动能减少得更多,总机械能反而是升高的。变轨升轨,机械能只增不减。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 圆轨道基本量计算(v、T、a、r)</h3>
+      <p><b class="tag">触发信号:</b> 给出轨道半径(或高度)、中心天体质量(或 g、R),求卫星的速度、周期、加速度中的任意几个。</p>
+      <p><b class="tag">标准动作:</b> 由 GMm/r²=mv²/r=mω²r=m(4π²/T²)r 选择对应的一个等式,解出所需量;若给的是"地面附近 g",用 GM=gR² 替换 GM。</p>
+      <p><b class="tag">示例(带解):</b> 已知地球半径 R、地面重力加速度 g,卫星距地面高度 h,求周期。由 GM=gR²,代入 GM/(R+h)²=(4π²/T²)(R+h),解得 T=2π√[(R+h)³/(gR²)]。</p>
+      <p class="trap">陷阱:把 r 误当成"距地面高度 h"(应为 r=R+h);GM 与 g、R 换算符号搞混。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 比较不同轨道的 v、T、a</h3>
+      <p><b class="tag">触发信号:</b>「甲、乙两颗卫星轨道半径分别为...」「比较线速度/周期/加速度大小」。</p>
+      <p><b class="tag">标准动作:</b> 记住 v∝r^-1/2,T∝r^3/2,a∝r^-2,r 越大 v、a 越小,T 越大;直接比较半径大小即可判断,无需算具体数值。</p>
+      <p><b class="tag">示例(带解):</b> 卫星甲轨道半径是乙的4倍。v甲/v乙=√(1/4)=1/2;T甲/T乙=4^1.5=8;a甲/a乙=1/16。</p>
+      <p class="trap">陷阱:把三个量的指数搞混(v 是 -1/2 次方,T 是 3/2 次方,a 是 -2 次方);把"周期大"误判成"速度大"。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 变轨过程分析(加速/减速,离心/近心)</h3>
+      <p><b class="tag">触发信号:</b>「卫星在轨道上点火加速/减速」「由圆轨道进入椭圆轨道」「变轨后周期如何变化」。</p>
+      <p><b class="tag">标准动作:</b> 加速→万有引力不足→做离心运动→轨道半径增大(升轨);减速→万有引力过剩→做近心运动→轨道半径减小(降轨)。判断变轨后周期,先判断新轨道整体半径是变大还是变小,再用"高轨长周期"定性给出结论。</p>
+      <p><b class="tag">示例(带解):</b> 卫星在圆轨道A上点火加速,进入椭圆轨道,远地点恰为圆轨道B的半径处,再次点火加速进入圆轨道B(rB>rA)。全程两次点火都是加速;轨道B比轨道A高,周期更长、速度更小。</p>
+      <p class="trap">陷阱:把"加速"和"轨道立刻变大"当成同一瞬间的事;以为减速也能升轨(减速只会降轨)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 椭圆轨道近远地点速度比较</h3>
+      <p><b class="tag">触发信号:</b>「卫星在椭圆轨道近地点/远地点」「比较近地点、远地点的速度」「面积速度」。</p>
+      <p><b class="tag">标准动作:</b> 用开普勒第二定律定性判断:r 小的点(近地点)速度大,r 大的点(远地点)速度小;若要定量,用 v近·r近=v远·r远(面积速度关系),不能直接套 v=√(GM/r)。</p>
+      <p><b class="tag">示例(带解):</b> 椭圆轨道近地点 r近=R,远地点 r远=4R,则 v近:v远=r远:r近=4:1。</p>
+      <p class="trap">陷阱:在椭圆轨道任意一点直接用 v=√(GM/r) 计算(该公式仅对圆轨道成立)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 同一位置不同轨道的 a、v、F 比较</h3>
+      <p><b class="tag">触发信号:</b>「变轨瞬间该点的加速度」「比较圆轨道与椭圆轨道经过同一点时的量」。</p>
+      <p><b class="tag">标准动作:</b> 万有引力 F=GMm/r² 与加速度 a=GM/r² 只由该点 r 决定,与轨道形状、是否点火<b>无关</b>,始终相同;速度是否相同,要看这一点是否发生了点火(加速)。</p>
+      <p><b class="tag">示例(带解):</b> 卫星在半径 r 处点火加速前后,该点万有引力大小不变(仍为 GMm/r²),加速度不变(仍为 GM/r²),但速度由 v=√(GM/r) 变为更大的值 v′。</p>
+      <p class="trap">陷阱:认为"轨道变了、加速度也变";混淆"该点的瞬时加速度"与"整条轨道的性质"。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 双星(多星)模型计算</h3>
+      <p><b class="tag">触发信号:</b>「两颗星相距 L,质量分别为...」「双星系统」「绕公共质心转动」。</p>
+      <p><b class="tag">标准动作:</b> 列 Gm₁m₂/L²=m₁ω²r₁=m₂ω²r₂,结合 r₁+r₂=L 及质心关系 m₁r₁=m₂r₂,联立求 r₁、r₂、ω(或T);周期公式 T²=4π²L³/[G(m₁+m₂)] 直接用总质量代入。</p>
+      <p><b class="tag">示例(带解):</b> 双星质量 m₁=3m、m₂=m,间距 L。由 m₁r₁=m₂r₂ 得 r₁=L/4,r₂=3L/4(质量大的半径小)。由 Gm₁m₂/L²=m₂ω²r₂=m·ω²·(3L/4),解得 ω=√[4Gm₁/(3L³)]=√[4G·3m/(3L³)]=√(4Gm/L³)。</p>
+      <p class="trap">陷阱:把两星的向心力当成两个独立的力分别求解(其实是同一对牛顿第三定律力,大小已知相等);质心位置比例记反(质量大的离质心<b>近</b>)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 轨道半径越大,速度越<b>小</b>,周期越<b>大</b>——"高轨低速长周期",别凭直觉以为高轨更快。</p>
+      <p class="trap">② <b>加速升轨,减速降轨</b>,不是反过来。加速→离心运动→轨道变大;减速→近心运动→轨道变小。</p>
+      <p class="trap">③ 变轨点火的瞬间,轨道半径<b>来不及变</b>,只是速度突变;半径是随后沿新轨道运动才逐渐改变的。</p>
+      <p class="trap">④ v=√(GM/r) 只对<b>圆轨道</b>成立!椭圆轨道上任意一点(含近、远地点)都不能直接套用,只能用面积速度关系 v近r近=v远r远 定性/定量比较。</p>
+      <p class="trap">⑤ 椭圆轨道<b>近地点速度最大,远地点速度最小</b>(开普勒第二定律,面积速度不变的直接推论)。</p>
+      <p class="trap">⑥ 同一位置(同一 r),不管是否点火、不管轨道形状,万有引力和加速度<b>都相同</b>(只由 r 决定);速度是否相同要看有没有点火。</p>
+      <p class="trap">⑦ 双星是两颗星分别绕<b>公共质心</b>转,不是一颗绕另一颗转,更不是各自独立转动。</p>
+      <p class="trap">⑧ 双星系统中<b>质量大的那颗,轨道半径反而小</b>(r₁/r₂=m₂/m₁),别记反。</p>
+      <p class="trap">⑨ 双星的角速度、周期永远<b>相等</b>(ω₁=ω₂,T₁=T₂),这是双星结构不散架的必要条件。</p>
+      <p class="trap">⑩ 双星系统两颗星受到的向心力,来自<b>同一对</b>牛顿第三定律万有引力(大小相等、方向相反),不是两个独立的力。</p>
+      <p class="trap">⑪ 变轨升轨过程<b>机械能增大</b>(化学能注入),别以为速度变小就是能量减少——势能增加更多。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一个方程,三种脸:</b> GMm/r²=mv²/r=mω²r=m(4π²/T²)r 本质上是同一个"万有引力=向心力"方程,只是向心力的三种等价写法(用 v、用 ω、用 T)。碰到题目给哪个量,就用哪个等式去凑,不必先解出别的量再换算,节省步骤。</p>
+      <p style="margin:8px 0"><b>② 变轨的本质是"能量台阶":</b> 圆轨道机械能 E=-GMm/2r,r 越大 E 越大(越接近0)。每次点火加速做正功,本质是往系统里"充能量",把卫星从一个能量台阶送到更高的台阶。理解这一点,"加速为什么能升轨"就不再是死记的口诀,而是能量守恒的自然结果。</p>
+      <p style="margin:8px 0"><b>③ 变轨瞬间的"力不变、需求变"是离心/近心的根源:</b> 点火加速那一刻,r 不变→万有引力 F=GMm/r² 不变;但新速度所需的向心力 mv²/r 变大了。"供给不变,需求变大"→合力不足以拿走多余的向心加速度→物体沿切线方向"甩出去"一点,轨道变成离心的椭圆。把这套"供给 vs 需求"的语言用在近心运动上同样成立(减速→需求变小→供给过剩→被"拉进去")。</p>
+      <p style="margin:8px 0"><b>④ 双星模型是"用比例关系代替解方程":</b> 很多双星题不需要联立解出 r₁、r₂ 的具体数值,只需要用 m₁r₁=m₂r₂(质心)和 r₁+r₂=L 两个比例关系,配合 ω 相同这一条件,就能把答案写成比值形式。考场上先想"要不要具体数值",能约分就不要代具体的 G、m。</p>
+      <p style="margin:8px 0"><b>⑤ 双星、三星、卫星变轨都是"万有引力=向心力"的同一母题:</b> 单星绕心、双星互绕、变轨升降,表面情境不同,底层永远是同一个方程在不同边界条件下的应用——找到"谁绕谁转""半径是多少""角速度/周期是否相同"这三个问题的答案,题目就解开了一半。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:万有引力与天体运动基础篇</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:圆轨道 v/T 随 r 变化 ===== */
+(function(){
+  const svg=document.getElementById('vrSvg');
+  const Rs=document.getElementById('vrR');
+  const oR=document.getElementById('vrRv'),oV=document.getElementById('vrV'),oT=document.getElementById('vrT'),oA=document.getElementById('vrA');
+  const K=4000; // GM surrogate
+  let r=50,ang1=0,ang2=Math.PI;
+  function sync(){r=+Rs.value;draw();}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const v=Math.sqrt(K/r);
+    const T=2*Math.PI*Math.sqrt(Math.pow(r,3)/K);
+    const a=K/(r*r);
+    oR.textContent=r;oV.textContent=v.toFixed(2);oT.textContent=T.toFixed(1);oA.textContent=a.toFixed(3);
+    const cx=350,cy=150;
+    // central body
+    el(svg,'circle',{cx:cx,cy:cy,r:14,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+4,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M';
+    // reference low orbit (fixed r=30) and current orbit r
+    el(svg,'circle',{cx:cx,cy:cy,r:30,fill:'none',stroke:'#c9c2a8',"stroke-width":2,'stroke-dasharray':'4 4'});
+    el(svg,'circle',{cx:cx,cy:cy,r:r*1.2,fill:'none',stroke:BLUE,'stroke-width':3});
+    // satellite position, angular speed proportional to omega
+    const omega=v/r;
+    const sx=cx+r*1.2*Math.cos(ang1), sy=cy+r*1.2*Math.sin(ang1);
+    el(svg,'circle',{cx:sx,cy:sy,r:9,fill:RED,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:sx,y:sy-14,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='卫星';
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='r='+r+'　v='+v.toFixed(1)+'　T='+T.toFixed(0)+'　(r 越大：v 越小，T 越大)';
+    el(svg,'text',{x:20,y:280,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='虚线圆＝参考低轨；实线蓝圆＝当前拖动半径的轨道';
+    ang1+=omega*0.4;
+    requestAnimationFrame(()=>{});
+  }
+  let raf=null;
+  function loop(){draw();raf=requestAnimationFrame(loop);}
+  sync();loop();
+})();
+
+/* ===== 互动2:变轨全过程动画 ===== */
+(function(){
+  const svg=document.getElementById('trSvg');
+  const note=document.getElementById('trNote');
+  const cx=350,cy=190;
+  const rLow=90, rHigh=170;
+  let phase=0,t=0,running=false;
+  function reset(){phase=0;t=0;running=false;note.textContent='阶段:低轨稳定圆周运动';draw(0);}
+  function pointOnEllipse(theta,a,b,cxE,cyE){
+    return [cxE+a*Math.cos(theta), cyE+b*Math.sin(theta)];
+  }
+  function draw(ang){
+    clr(svg);
+    el(svg,'circle',{cx:cx,cy:cy,r:14,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+4,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='地球';
+    // low circle
+    el(svg,'circle',{cx:cx,cy:cy,r:rLow,fill:'none',stroke:BLUE,'stroke-width':3});
+    // high circle
+    el(svg,'circle',{cx:cx,cy:cy,r:rHigh,fill:'none',stroke:GREEN,'stroke-width':3,'stroke-dasharray':phase>=3?'0':'6 5'});
+    el(svg,'text',{x:cx-rLow-6,y:cy-rLow+10,'font-size':11.5,'font-weight':800,fill:BLUE,'text-anchor':'end'}).textContent='低轨圆';
+    el(svg,'text',{x:cx+rHigh+6,y:cy-rHigh+10,'font-size':11.5,'font-weight':800,fill:GREEN}).textContent='高轨圆';
+    let px,py;
+    // ellipse params: perigee at rLow (left point), apogee at rHigh (right point)
+    const aEll=(rLow+rHigh)/2, cEll=(rHigh-rLow)/2, bEll=Math.sqrt(Math.max(aEll*aEll-cEll*cEll,1));
+    const cxE=cx-cEll; // center shifted so left vertex touches perigee at cx-rLow, right vertex at cx+rHigh
+    if(phase===0){ // low circular orbit, angle sweeps
+      px=cx+rLow*Math.cos(ang); py=cy+rLow*Math.sin(ang);
+    } else if(phase===1){ // firing burst at perigee point (angle=0 -> right side... use left side as perigee, angle=Math.PI)
+      px=cx-rLow; py=cy;
+      el(svg,'text',{x:px,y:py-24,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='🔥 点火加速!';
+    } else if(phase===2){ // ellipse transfer from perigee(theta=PI) to apogee(theta=0)
+      const theta=Math.PI - ang*Math.PI; // ang 0..1 maps PI..0
+      const pt=pointOnEllipse(theta,aEll,bEll,cxE,cy);
+      px=pt[0];py=pt[1];
+      el(svg,'ellipse',{cx:cxE,cy:cy,rx:aEll,ry:bEll,fill:'none',stroke:ORANGE,'stroke-width':3,'stroke-dasharray':'7 6'});
+    } else if(phase===3){ // firing at apogee
+      px=cx+rHigh; py=cy;
+      el(svg,'ellipse',{cx:cxE,cy:cy,rx:aEll,ry:bEll,fill:'none',stroke:ORANGE,'stroke-width':3,'stroke-dasharray':'7 6'});
+      el(svg,'text',{x:px,y:py-24,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='🔥 再次点火加速!';
+    } else { // phase 4: high circular orbit
+      px=cx+rHigh*Math.cos(ang); py=cy+rHigh*Math.sin(ang);
+    }
+    el(svg,'circle',{cx:px,cy:py,r:9,fill:RED,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:20,y:340,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='顺序:①低轨圆　②近地点点火加速　③沿椭圆飞向远地点(离心运动)　④远地点点火加速　⑤高轨圆';
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.012;
+    if(phase===0){ if(t>=1){t=0;phase=1;note.textContent='阶段:近地点点火加速(化学能→机械能)';} draw(t*2*Math.PI); }
+    else if(phase===1){ if(t>=0.6){t=0;phase=2;note.textContent='阶段:沿椭圆做离心运动,飞向远地点(速度渐减)';} draw(0); }
+    else if(phase===2){ if(t>=1){t=0;phase=3;note.textContent='阶段:到达远地点,再次点火加速';} draw(t); }
+    else if(phase===3){ if(t>=0.6){t=0;phase=4;note.textContent='阶段:轨道圆化,进入高轨稳定圆周运动';} draw(0); }
+    else { draw(t*2*Math.PI); if(t>=1)t=0; }
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('trGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('trReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动3:椭圆近远地点速度对比 ===== */
+(function(){
+  const svg=document.getElementById('elSvg');
+  const oPos=document.getElementById('elPos'),oV=document.getElementById('elV'),oRn=document.getElementById('elRn'),oRf=document.getElementById('elRf');
+  const cx=350,cy=170,a=220,b=110,c=Math.sqrt(a*a-b*b);
+  const cxE=cx-c; // perigee at cx-a? place perigee left, apogee right
+  let ang=0,running=false;
+  function reset(){ang=0;running=false;draw();}
+  function speedAt(theta){
+    // distance from focus (right focus at cxE + c, roughly cx)
+    const x=cxE+a*Math.cos(theta), y=cy+b*Math.sin(theta);
+    const rf=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
+    // v ~ proportional to 1/r (angular momentum conservation approx for visualization)
+    return 3000/Math.max(rf,10);
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'ellipse',{cx:cxE,cy:cy,rx:a,ry:b,fill:'none',stroke:VIO,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:cy,r:12,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+4,'font-size':10.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='地球';
+    const perigeeX=cxE-a, apogeeX=cxE+a;
+    el(svg,'circle',{cx:perigeeX,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:perigeeX,y:cy+22,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='近地点';
+    el(svg,'circle',{cx:apogeeX,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:apogeeX,y:cy+22,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='远地点';
+    const x=cxE+a*Math.cos(ang), y=cy+b*Math.sin(ang);
+    // sweep sector shading (equal area demo): fixed small angle wedge from focus
+    const dth=0.35;
+    const x1=cxE+a*Math.cos(ang), y1=cy+b*Math.sin(ang);
+    const x2=cxE+a*Math.cos(ang+dth), y2=cy+b*Math.sin(ang+dth);
+    el(svg,'polygon',{points:cx+','+cy+' '+x1+','+y1+' '+x2+','+y2,fill:'rgba(224,56,42,0.25)',stroke:RED,'stroke-width':1.5});
+    // velocity arrow: tangent direction, length ~ speed
+    const v=speedAt(ang);
+    const dx=-a*Math.sin(ang), dy=b*Math.cos(ang);
+    const dlen=Math.sqrt(dx*dx+dy*dy);
+    const ux=dx/dlen, uy=dy/dlen;
+    const vlen=Math.min(70,v*3);
+    el(svg,'line',{x1:x,y1:y,x2:x+ux*vlen,y2:y+uy*vlen,stroke:GREEN,'stroke-width':4});
+    el(svg,'polygon',{points:(x+ux*vlen)+','+(y+uy*vlen-5)+' '+(x+ux*vlen+ux*10)+','+(y+uy*vlen+uy*10)+' '+(x+ux*vlen+5)+','+(y+uy*vlen+5),fill:GREEN});
+    el(svg,'circle',{cx:x,cy:y,r:8,fill:RED,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='绿箭头长度＝速度大小；红色扇形＝相等时间内扫过的面积(处处相等)';
+    const distToPerigee=Math.min(Math.abs(ang),Math.abs(ang-2*Math.PI));
+    const near=distToPerigee<0.6;
+    const far=Math.abs(ang-Math.PI)<0.6;
+    oPos.textContent=near?'接近近地点':far?'接近远地点':'椭圆中段';
+    oV.textContent=near?'大':far?'小':'中等';
+    oRn.textContent='短(近地点)';oRf.textContent='长(远地点)';
+  }
+  function loop(){
+    if(!running)return;
+    // angular speed varies: faster near perigee(ang near 0/2PI), slower near apogee(ang near PI) -- approximate via speed factor
+    const v=speedAt(ang);
+    ang+=0.003*v/10;
+    if(ang>2*Math.PI){ang-=2*Math.PI;running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('elGo').onclick=()=>{running=true;requestAnimationFrame(loop);};
+  document.getElementById('elReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:同一点不同轨道 a 相同 v 不同 ===== */
+(function(){
+  const svg=document.getElementById('saSvg');
+  const note=document.getElementById('saNote');
+  let mode=0;
+  document.querySelectorAll('.samode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.samode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cx=200,cy=130,r=90;
+    el(svg,'circle',{cx:cx,cy:cy,r:12,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+4,'font-size':10.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M';
+    el(svg,'circle',{cx:cx,cy:cy,r:r,fill:'none',stroke:BLUE,'stroke-width':3});
+    const px=cx+r,py=cy;
+    el(svg,'circle',{cx:px,cy:py,r:9,fill:RED,stroke:INK,'stroke-width':2.5});
+    // F and a arrow (pointing toward center) - same in both modes
+    el(svg,'line',{x1:px,y1:py,x2:px-46,y2:py,stroke:ORANGE,'stroke-width':5});
+    el(svg,'polygon',{points:(px-46)+','+(py-6)+' '+(px-58)+','+py+' '+(px-46)+','+(py+6),fill:ORANGE});
+    el(svg,'text',{x:px-30,y:py-14,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='F,a(不变)';
+    // velocity arrow: tangent (upward), length depends on mode
+    const vlen=mode===0?55:80;
+    el(svg,'line',{x1:px,y1:py,x2:px,y2:py-vlen,stroke:mode===0?BLUE:RED,'stroke-width':5});
+    el(svg,'polygon',{points:(px-6)+','+(py-vlen)+' '+px+','+(py-vlen-11)+' '+(px+6)+','+(py-vlen),fill:mode===0?BLUE:RED});
+    el(svg,'text',{x:px+14,y:py-vlen,'font-size':12,'font-weight':900,fill:mode===0?BLUE:RED}).textContent=mode===0?'v(原速度)':'v′(点火后,更大)';
+    if(mode===1){
+      // draw dashed ellipse hint continuing outward
+      el(svg,'path',{d:'M '+px+' '+py+' Q '+(px+90)+' '+(py-40)+' '+(px+60)+' '+(py-120),fill:'none',stroke:VIO,'stroke-width':3,'stroke-dasharray':'6 5'});
+      el(svg,'text',{x:px+70,y:py-90,'font-size':11,'font-weight':800,fill:VIO}).textContent='即将做离心运动';
+    }
+    // value cards
+    const F=100,a=100/2; // arbitrary fixed demo numbers
+    el(svg,'text',{x:420,y:60,'font-size':13,'font-weight':900,fill:INK}).textContent='万有引力 F = GMm/r² = '+F.toFixed(0)+'(固定)';
+    el(svg,'text',{x:420,y:86,'font-size':13,'font-weight':900,fill:INK}).textContent='加速度 a = GM/r² = '+a.toFixed(0)+'(固定)';
+    el(svg,'text',{x:420,y:112,'font-size':13,'font-weight':900,fill:mode===0?BLUE:RED}).textContent='速度 v = '+(mode===0?'√(GM/r)(圆轨道值)':'更大(点火后瞬间值)');
+    el(svg,'text',{x:420,y:150,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='F、a 只认位置 r，与是否点火无关；';
+    el(svg,'text',{x:420,y:170,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='v 是否变化，只看有没有点火。';
+    note.textContent=mode===0?'未点火:仍按圆轨道速度 v=√(GM/r) 运动,合外力=向心力,轨道保持圆形。':'已点火:速度突增为 v′,但该点 F、a 与未点火时完全相同——只是此刻万有引力不足以提供 v′ 所需向心力,卫星即将做离心运动。';
+  }
+  draw();
+})();
+
+/* ===== 互动5:双星模型 ===== */
+(function(){
+  const svg=document.getElementById('biSvg');
+  const Rs=document.getElementById('biR');
+  const oM=document.getElementById('biM'),oRatio=document.getElementById('biRatio'),oW=document.getElementById('biW'),oT=document.getElementById('biT');
+  let ratio=2,ang=0;
+  function sync(){ratio=+Rs.value;}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const cx=350,cy=160;
+    const L=200; // fixed separation (scaled)
+    // m1:m2 = ratio:1 -> r1/r2 = m2/m1 = 1/ratio
+    const m1=ratio, m2=1;
+    const r2=L*m1/(m1+m2); // r2 proportional to m1 (larger mass -> smaller own radius... check)
+    const r1=L*m2/(m1+m2);
+    // r1 is orbit radius of star1(mass m1) ; by m1*r1=m2*r2 => r1=L*m2/(m1+m2), r2=L*m1/(m1+m2)
+    el(svg,'line',{x1:cx-L/2-30,y1:cy,x2:cx+L/2+30,y2:cy,stroke:'#ddd6c0','stroke-width':1});
+    // center of mass marker
+    el(svg,'line',{x1:cx-10,y1:cy,x2:cx+10,y2:cy,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:cx,y1:cy-10,x2:cx,y2:cy+10,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+26,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='质心(不动)';
+    // orbits
+    el(svg,'circle',{cx:cx,cy:cy,r:r1,fill:'none',stroke:BLUE,'stroke-width':2.5,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:cx,cy:cy,r:r2,fill:'none',stroke:ORANGE,'stroke-width':2.5,'stroke-dasharray':'5 4'});
+    // stars positions, opposite sides, same angular speed
+    const x1=cx+r1*Math.cos(ang), y1=cy+r1*Math.sin(ang);
+    const x2=cx+r2*Math.cos(ang+Math.PI), y2=cy+r2*Math.sin(ang+Math.PI);
+    const rad1=8+Math.min(10,ratio*2.2), rad2=8;
+    el(svg,'circle',{cx:x1,cy:y1,r:rad1,fill:BLUE,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:x1,y:y1-rad1-6,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='m₁(大)';
+    el(svg,'circle',{cx:x2,cy:y2,r:rad2,fill:ORANGE,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:x2,y:y2-rad2-6,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='m₂(小)';
+    // connecting line
+    el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#c9c2a8','stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:20,y:290,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='两星始终在质心两侧一条直线上，同步转动 (r1:r2 = m2:m1)';
+    oM.textContent=m1.toFixed(1)+':'+m2.toFixed(1);
+    oRatio.textContent=r1.toFixed(0)+':'+r2.toFixed(0)+'  (≈ '+(r1/r2).toFixed(2)+')';
+    ang+=0.02;
+  }
+  function loop(){draw();requestAnimationFrame(loop);}
+  sync();loop();
+})();
+
+/* ===== 互动6:v-r / T-r 关系图 ===== */
+(function(){
+  const svg=document.getElementById('vtSvg');
+  const Rs=document.getElementById('vtR');
+  const oR=document.getElementById('vtRv'),oV=document.getElementById('vtVv'),oT=document.getElementById('vtTv');
+  const K=4000;
+  function sync(){draw();}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=+Rs.value;
+    const v=Math.sqrt(K/r);
+    const T=2*Math.PI*Math.sqrt(Math.pow(r,3)/K);
+    oR.textContent=r;oV.textContent=v.toFixed(2);oT.textContent=T.toFixed(1);
+    // LEFT: v-r graph
+    const X0=50,Y0=30,W=270,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='v';
+    el(svg,'text',{x:X0+W,y:Y0+H+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='r';
+    let path='';
+    for(let i=0;i<=60;i++){
+      const rr=20+i*(100-20)/60;
+      const vv=Math.sqrt(K/rr);
+      const px=X0+(rr-20)/(100-20)*W;
+      const py=Y0+H-(vv/Math.sqrt(K/20))*H;
+      path+=(i===0?'M':'L')+px+' '+py+' ';
+    }
+    el(svg,'path',{d:path,fill:'none',stroke:BLUE,'stroke-width':3});
+    const cvx=X0+(r-20)/(100-20)*W, cvy=Y0+H-(v/Math.sqrt(K/20))*H;
+    el(svg,'circle',{cx:cvx,cy:cvy,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+W/2,y:Y0-10,'font-size':12.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='v-r：递减';
+    // RIGHT: T-r graph
+    const X1=420,Y1=30,W2=230,H2=200;
+    el(svg,'line',{x1:X1,y1:Y1,x2:X1,y2:Y1+H2,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X1,y1:Y1+H2,x2:X1+W2,y2:Y1+H2,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X1-8,y:Y1+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='T';
+    el(svg,'text',{x:X1+W2,y:Y1+H2+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='r';
+    let path2='';
+    const Tmax=2*Math.PI*Math.sqrt(Math.pow(100,3)/K);
+    for(let i=0;i<=60;i++){
+      const rr=20+i*(100-20)/60;
+      const TT=2*Math.PI*Math.sqrt(Math.pow(rr,3)/K);
+      const px=X1+(rr-20)/(100-20)*W2;
+      const py=Y1+H2-(TT/Tmax)*H2;
+      path2+=(i===0?'M':'L')+px+' '+py+' ';
+    }
+    el(svg,'path',{d:path2,fill:'none',stroke:GREEN,'stroke-width':3});
+    const ctx=X1+(r-20)/(100-20)*W2, cty=Y1+H2-(T/Tmax)*H2;
+    el(svg,'circle',{cx:ctx,cy:cty,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X1+W2/2,y:Y1-10,'font-size':12.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='T-r：递增';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 卫星做圆周运动的基本方程是什么?由此能解出哪些表达式?",a:"GMm/r²=mv²/r=mω²r=m(4π²/T²)r。可解出 v=√(GM/r)、ω=√(GM/r³)、T=2π√(r³/GM)、a=GM/r²。"},
+ {q:"2. 轨道半径越大,速度、周期、加速度分别怎么变?",a:"速度越小,周期越大,加速度越小——'高轨低速长周期'。"},
+ {q:"3. 卫星要从低轨升到高轨,操作顺序是什么?",a:"低轨点火加速→做离心运动进入椭圆(原位置成近地点)→飞到远地点再次点火加速→轨道圆化为高轨圆。"},
+ {q:"4. 减速会让卫星升轨还是降轨?为什么?",a:"降轨。减速后万有引力过剩(超过新速度所需向心力),卫星做近心运动,轨道半径减小。"},
+ {q:"5. 椭圆轨道上近地点和远地点哪个速度大?依据什么定律?",a:"近地点速度大,远地点速度小。依据开普勒第二定律(面积速度不变):v近·r近=v远·r远。"},
+ {q:"6. v=√(GM/r) 能不能直接用来算椭圆轨道近地点的速度?",a:"不能。该公式只对圆轨道成立。椭圆轨道上任意一点(含近、远地点)都需要用面积速度关系或能量关系,不能直接套用。"},
+ {q:"7. 卫星在同一位置 r,不管是否点火加速,万有引力和加速度会变吗?",a:"不会。F=GMm/r²、a=GM/r² 只由该点的 r 决定,与是否点火、轨道形状无关。变的只是速度。"},
+ {q:"8. 双星系统中,两颗星是绕什么转动的?",a:"绕公共质心做匀速圆周运动,不是一颗绕另一颗转。"},
+ {q:"9. 双星系统中,质量大的那颗星,轨道半径是大还是小?",a:"小。由质心关系 m₁r₁=m₂r₂ 得 r₁/r₂=m₂/m₁,质量越大,分到的轨道半径越小。"},
+ {q:"10. 双星系统两颗星的角速度、周期是什么关系?",a:"角速度相等(ω₁=ω₂),周期相等(T₁=T₂)——否则两星连线长度无法保持不变。"},
+ {q:"11. 双星系统的周期公式怎么由 Gm₁m₂/L²=m₁ω²r₁ 推出?",a:"结合 r₁=Lm₂/(m₁+m₂) 代入化简得 T²=4π²L³/[G(m₁+m₂)],周期只由总质量 m₁+m₂ 和间距 L 决定。"},
+ {q:"12. 卫星从低轨变轨到高轨,机械能是增大还是减小?能量从哪里来?",a:"增大。两次点火加速都对卫星做正功,把发动机的化学能转化为卫星的机械能(动能+引力势能),轨道越高机械能越大。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

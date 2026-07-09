@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>受迫振动与共振 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>受迫振动与共振</h1>
+    <p class="lead">一个振动系统有两套「频率」在打架:一套是它<b>天生的</b>(固有频率 f固,只由自己决定),一套是外界<b>逼它跳</b>的(驱动频率 f驱)。受迫振动时物体永远跟着驱动力的节奏走;而当两套频率<b>撞在一起</b>(f驱=f固),振幅会暴涨——这就是共振。桥梁、洗衣机、收音机、微波炉,全在这条曲线上。</p>
+
+    <div class="say">🗣️ <b>共振(人话版):</b> 想把秋千荡高,你得<b>踩准节奏</b>——每次它荡到最高点回摆时,你顺势推一把。推的节奏刚好等于秋千自己来回的节奏(固有频率)时,每一下都在「帮忙」,振幅越荡越大,这就是<b>共振</b>。你要是乱推(节奏不对),有时帮忙有时捣乱,秋千根本荡不起来。所以关键一句话:<b>驱动频率 = 固有频率时,振幅最大</b>。</div>
+
+    <div class="keybox"><b>三条命根:</b> ① <b>固有频率 f固</b> 只由系统本身决定(单摆看摆长和 g,弹簧看 k 和 m),跟你怎么推<b>无关</b>。② <b>受迫振动的频率 = 驱动力频率 f驱</b>(不是固有频率!这是最大的坑)。③ <b>共振条件:f驱 = f固</b>,此时振幅最大。</div>
+
+    <h2>① 三种振动:自由 / 阻尼 / 受迫</h2>
+    <div class="card">
+      <table>
+        <tr><th>类型</th><th>有没有外力持续驱动</th><th>频率由谁定</th><th>振幅变化</th></tr>
+        <tr><td><b>自由振动</b>(理想)</td><td>无阻力、无驱动</td><td>固有频率 f固</td><td>振幅不变(等幅)</td></tr>
+        <tr><td><b>阻尼振动</b></td><td>有阻力、无驱动</td><td>≈固有频率 f固</td><td>振幅越来越小(衰减)</td></tr>
+        <tr><td><b>受迫振动</b></td><td>有周期性驱动力</td><td><b>驱动频率 f驱</b></td><td>稳定后等幅(靠外力补能量)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>自由振动</b>:没人管、也没阻力,它按自己的固有频率永远等幅地荡(理想模型)。<b>阻尼振动</b>:有摩擦/空气阻力,能量被耗掉,振幅一圈比一圈小,最后停下——但每摆一次的周期几乎还是固有周期。<b>受迫振动</b>:有一个周期性外力一直逼着它动,稳定之后它的<b>频率完全等于驱动力频率</b>,靠外力不断补能量维持等幅。</p>
+      <p class="trap">⚠ 受迫振动稳定后的频率 = <b>驱动力频率</b>,与物体自己的固有频率<b>无关</b>!哪怕驱动频率离固有频率很远,物体也乖乖按驱动频率振动(只是振幅小而已)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 1 — 自由 / 阻尼 / 受迫:三种位移-时间图对比(看频率和振幅怎么变)</div>
+      <svg id="threeSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="thmode on" data-t="0">自由振动</button>
+        <button class="thmode" data-t="1">阻尼振动</button>
+        <button class="thmode" data-t="2">受迫振动</button>
+        <button id="thGo">▶ 播放</button>
+      </div>
+      <div class="verdict" id="thNote"></div>
+      <p class="small">看波形怎么走:自由振动<b>等幅不衰减</b>(理想);阻尼振动<b>幅度越来越小</b>(能量被耗);受迫振动<b>先过渡、后稳定成等幅</b>,频率是驱动力的频率。</p>
+    </div>
+
+    <h2 class="b">② 固有频率:系统的「天生节奏」</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>固有频率 f固</b>(也叫自然频率)是一个振动系统在<b>不受外界驱动</b>时,自己振动的频率。它<b>只由系统本身的性质决定</b>,跟你怎么推它、推多大力都无关。</p>
+      <div class="eq">单摆:f固 = (1/2π)·√(g/L)　(只看摆长 L 和 g)</div>
+      <div class="eq">弹簧振子:f固 = (1/2π)·√(k/m)　(只看劲度 k 和质量 m)</div>
+      <p style="margin:8px 0">单摆:摆越长,固有频率越低(荡得越慢);弹簧:弹簧越硬(k 大)、物体越轻(m 小),固有频率越高。记住:<b>换个驱动力不会改变固有频率</b>,只有改摆长/换弹簧/换质量才会改。</p>
+      <p class="trap">⚠ 固有频率是「系统的身份证」。别把它和驱动频率、受迫振动频率混为一谈。共振时之所以特殊,正是因为「外来的驱动频率」恰好撞上了「系统天生的固有频率」。</p>
+    </div>
+
+    <h2 class="g">③ 共振:两套频率撞在一起</h2>
+    <div class="card">
+      <div class="eq">共振条件:f驱 = f固　⇒　振幅 A 最大</div>
+      <p style="margin:8px 0"><b>共振</b>是受迫振动的一种特殊情形:当<b>驱动力频率 f驱 等于系统固有频率 f固</b>时,系统的振幅达到最大值。物理本质就是「秋千踩准了节奏」——每个周期外力都在「顺势帮忙」,能量高效注入,振幅越攒越大。</p>
+      <h3>共振曲线(振幅 A - 驱动频率 f驱)</h3>
+      <p style="margin:6px 0">横轴是<b>驱动频率 f驱</b>,纵轴是稳定后的<b>振幅 A</b>。曲线有一个高高的<b>峰,峰的位置就在 f驱 = f固 处</b>。离固有频率越远(不管高低),振幅越小。</p>
+      <div class="mono">阻尼越小 → 峰越高越尖(共振越剧烈、越挑频率)</div>
+      <div class="mono">阻尼越大 → 峰越矮越钝(振幅上不去、频率宽容)</div>
+      <p class="trap">⚠ 共振曲线的峰在<b>固有频率</b>处,不是在「频率=0」或「频率最大」处。而且横轴是<b>驱动频率</b>,不是时间!读图时先认清横纵轴。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 拖动驱动频率:看振幅响应 + 共振曲线上的点移动(峰在固有频率处)</div>
+      <svg id="curveSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>驱动频率 f驱 <input id="cvF" type="range" min="0.3" max="3" value="1.6" step="0.02"></label>
+        <label>阻尼 <input id="cvD" type="range" min="0.05" max="0.5" value="0.15" step="0.01"></label>
+      </div>
+      <div class="live">
+        <div><b>驱动频率 f驱</b><span id="cvOf">0</span></div>
+        <div><b>固有频率 f固</b><span id="cvOf0">1.00</span></div>
+        <div><b>振幅 A(相对)</b><span id="cvOa">0</span></div>
+        <div><b>是否共振</b><span id="cvOr">否</span></div>
+      </div>
+      <p class="small">拖<b>驱动频率</b>滑块:红点在共振曲线上左右滑,越靠近固有频率(竖虚线)振幅越高。拖<b>阻尼</b>滑块:整条曲线的峰变尖或变钝。f驱=f固 时红点冲上峰顶=共振。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎢 互动 3 — 荡秋千按节奏推:相位对了才越荡越高(共振的本质)</div>
+      <canvas id="swingCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="swGo">▶ 开始推</button><button id="swReset">↺ 重置</button>
+        <label>推的节奏 f驱 <input id="swF" type="range" min="0.5" max="1.5" value="1" step="0.02"></label>
+      </div>
+      <div class="live">
+        <div><b>推的节奏 f驱</b><span id="swOf">1.00</span></div>
+        <div><b>秋千固有 f固</b><span id="swOf0">1.00</span></div>
+        <div><b>是否踩准</b><span id="swOn">是</span></div>
+        <div><b>当前摆幅</b><span id="swOa">0</span></div>
+      </div>
+      <p class="small">把「推的节奏」调到 <b>等于秋千固有频率</b>(1.00):每次都在回摆时顺势推,摆幅越来越大=共振。调偏一点:推力时帮时捣乱,摆幅上不去。</p>
+    </div>
+
+    <h2 class="o">④ 共振曲线的阻尼:峰的高矮尖钝</h2>
+    <div class="card">
+      <p style="margin:6px 0">同一个系统(固有频率固定),<b>阻尼不同,共振曲线的峰形完全不同</b>:</p>
+      <table>
+        <tr><th>阻尼</th><th>峰高</th><th>峰的尖钝</th><th>含义</th></tr>
+        <tr><td><b>小阻尼</b></td><td>很高</td><td>又高又尖</td><td>共振剧烈,只在很窄的频率范围才响(挑频率)</td></tr>
+        <tr><td><b>大阻尼</b></td><td>较矮</td><td>又矮又钝</td><td>振幅上不去,但对频率宽容(一大片频率都有点响应)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键:</b> 无论阻尼大小,峰的位置都在 f驱≈f固 处(大阻尼时峰会稍微左移一点点,高中一般忽略,认为峰仍在固有频率)。阻尼只改变峰的<b>高度和宽度</b>。</p>
+      <p class="trap">⚠ 别以为「阻尼大峰就往右移」或「阻尼改变了固有频率」。固有频率是系统性质,不变;阻尼变的是峰能冲多高、多尖。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌗 互动 4 — 不同阻尼下的共振曲线族:峰都在固有频率,阻尼小则峰尖</div>
+      <svg id="familySvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="famAdd">＋ 高亮下一条</button><button id="famReset">↺ 重置</button>
+      </div>
+      <p class="small">三条曲线固有频率相同(峰都在同一竖虚线上),但阻尼不同:<b>紫=小阻尼(高尖)、橙=中、绿=大阻尼(矮钝)</b>。点按钮轮流高亮,体会「峰位置不变、峰形随阻尼变」。</p>
+    </div>
+
+    <h2 class="v">⑤ 一排单摆的共振:只有匹配的那个大幅摆动</h2>
+    <div class="card">
+      <p style="margin:6px 0">经典演示(共振摆):一根横杆上挂几个<b>摆长不同</b>的单摆,再挂一个「驱动摆」。晃动横杆(或驱动摆)提供一个固定频率的驱动。结果:<b>只有固有频率与驱动频率相同(即摆长相同)的那个摆,才会被越带越大</b>,其余的都只是小幅晃动。</p>
+      <p style="margin:8px 0">这是共振「挑频率」的最直观证据:<b>频率对上号,能量才传得进去</b>。摆长决定固有频率(f固∝√(g/L)),所以「摆长相同」= 「固有频率相同」= 会被激起大幅共振。</p>
+      <p class="trap">⚠ 不是「离驱动摆最近的」摆动最大,而是「固有频率(摆长)与驱动频率匹配的」摆动最大。位置远近无关,频率匹配才是关键。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔔 互动 5 — 共振摆:一排不同摆长,只有频率匹配的那个大幅摆动</div>
+      <canvas id="pendCv" width="700" height="280"></canvas>
+      <div class="ctrl">
+        <button id="pdGo">▶ 晃动横杆(驱动)</button><button id="pdReset">↺ 重置</button>
+        <label>驱动频率 f驱 <input id="pdF" type="range" min="0.6" max="1.6" value="1" step="0.02"></label>
+      </div>
+      <div class="live">
+        <div><b>驱动频率 f驱</b><span id="pdOf">1.00</span></div>
+        <div><b>匹配的摆(固有=f驱)</b><span id="pdOm">中</span></div>
+        <div><b>最大摆幅的摆</b><span id="pdOb">中</span></div>
+        <div><b>是否共振</b><span id="pdOr">是</span></div>
+      </div>
+      <p class="small">四个摆<b>摆长不同→固有频率不同</b>。调驱动频率,匹配的那个摆(固有频率=驱动频率)会被越带越大,其余只是小晃。改频率,"当选"的摆就换人。</p>
+    </div>
+
+    <h2 class="r">⑥ 共振曲线读图:看懂横纵轴</h2>
+    <div class="card">
+      <p style="margin:6px 0">共振曲线题的第一步永远是<b>认坐标轴</b>:</p>
+      <table>
+        <tr><th>问的是</th><th>怎么读</th></tr>
+        <tr><td>系统的<b>固有频率</b></td><td>找曲线<b>峰值对应的横坐标</b>(f驱=f固 时振幅最大)</td></tr>
+        <tr><td>某驱动频率下的<b>振幅</b></td><td>在横轴找该 f驱,竖直上去读纵坐标</td></tr>
+        <tr><td>哪条曲线<b>阻尼更小</b></td><td>峰<b>更高更尖</b>的那条阻尼更小</td></tr>
+        <tr><td>要<b>避免共振</b></td><td>让 f驱<b>远离</b>峰(即远离固有频率)</td></tr>
+      </table>
+      <div class="eq">峰的横坐标 = 固有频率 f固　(共振曲线的核心读数)</div>
+      <p class="trap">⚠ 横轴是<b>驱动频率</b>(不是时间、不是振幅)。峰在固有频率处。若给出多条曲线,峰高的那条阻尼小。这三点是读图不失分的全部。</p>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断受迫振动的频率</h3>
+      <p><b class="tag">触发信号:</b>题目说「用频率 f₀ 的驱动力驱动一个固有频率 f固 的系统,稳定后系统的振动频率是多少?」。</p>
+      <p><b class="tag">标准动作:</b>受迫振动稳定后的频率 = <b>驱动力频率 f驱</b>,与固有频率无关。直接答 f驱,不管 f固 等于多少。</p>
+      <p><b class="tag">示例(带解):</b>固有频率 2Hz 的弹簧振子,用 5Hz 的驱动力驱动,稳定后振子振动频率 = ? 答:<b>5Hz</b>(=驱动频率),不是 2Hz。虽然此时不共振、振幅较小,但频率仍严格等于驱动频率 5Hz。</p>
+      <p class="trap">陷阱:把稳定后的频率当成固有频率 2Hz(最高频错误!)。受迫振动频率永远跟着驱动力走。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 共振条件判断</h3>
+      <p><b class="tag">触发信号:</b>「驱动频率为多少时振幅最大?」「什么条件下发生共振?」「要使振幅最大,该怎么调?」。</p>
+      <p><b class="tag">标准动作:</b>共振条件 <b>f驱 = f固</b>。先求系统固有频率(单摆看 L、弹簧看 k/m),令驱动频率等于它。</p>
+      <p><b class="tag">示例(带解):</b>摆长 L=1m 的单摆(g=10),固有频率 f固=(1/2π)√(g/L)=(1/2π)√10≈0.50Hz。要发生共振,驱动力频率应调到 f驱=f固≈<b>0.50Hz</b>,此时摆的振幅最大。</p>
+      <p class="trap">陷阱:算错固有频率;或以为「驱动频率越大振幅越大」——其实是「越接近固有频率越大」,过了峰再增大频率振幅反而下降。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 共振曲线读图</h3>
+      <p><b class="tag">触发信号:</b>给一张「振幅-驱动频率」曲线(可能多条),问固有频率、问某频率下振幅、问哪条阻尼小。</p>
+      <p><b class="tag">标准动作:</b>峰的横坐标=固有频率;竖直投影读某频率的振幅;峰更高更尖的曲线阻尼更小。</p>
+      <p><b class="tag">示例(带解):</b>曲线峰值出现在横坐标 f=3Hz 处 → 系统固有频率 <b>3Hz</b>。若有两条曲线峰都在 3Hz,峰更高更尖的那条<b>阻尼更小</b>。要避免共振,应让驱动频率<b>远离 3Hz</b>。</p>
+      <p class="trap">陷阱:把横轴当时间轴;误认峰在频率最大处;分不清「峰高=阻尼小」。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 实际情境(火车过桥 / 洗衣机甩干 / 摆钟)</h3>
+      <p><b class="tag">触发信号:</b>「火车过桥要慢行/变速」「洗衣机甩干时某转速抖得厉害」「摆钟走时」「士兵过桥便步走」。</p>
+      <p><b class="tag">标准动作:</b>把「周期性冲击的频率」当驱动频率,把「结构/系统的固有频率」当 f固。抖得最厉害的转速/车速 = 驱动频率撞上固有频率(共振);要避免就让二者<b>错开</b>。</p>
+      <p><b class="tag">示例(带解):</b>洗衣机甩干,从低速升到高速的过程中,某一中间转速桶身剧烈抖动,继续升速反而平稳。原因:该转速下<b>驱动频率(转速)恰好等于桶-弹簧系统的固有频率</b>,发生共振;转速再升高,驱动频率超过固有频率,离开峰,振幅回落。</p>
+      <p class="trap">陷阱:以为「转速越高抖得越厉害」;其实是「转速=固有频率时最抖」,过了就变好。火车过桥/士兵便步走也是为了让冲击频率避开桥的固有频率。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 共振摆(多个单摆)</h3>
+      <p><b class="tag">触发信号:</b>横杆上挂几个摆长不同的摆 + 一个驱动摆,问「哪个摆摆得最厉害/振幅最大」。</p>
+      <p><b class="tag">标准动作:</b>驱动摆决定驱动频率;<b>固有频率(摆长)与驱动摆相同的那个摆</b>会共振、振幅最大。摆长相同 ⇔ 固有频率相同。</p>
+      <p><b class="tag">示例(带解):</b>驱动摆摆长 L₀,横杆上挂 A(短)、B(=L₀)、C(长)三摆。晃动驱动摆后,<b>B 摆</b>因摆长与驱动摆相同(固有频率相同)而振幅最大,A、C 只小幅晃动。若把驱动摆换成和 C 一样长,则改为 C 大幅摆动。</p>
+      <p class="trap">陷阱:选「离驱动摆最近的」或「最长/最短的」;正确判据是「摆长(固有频率)与驱动摆匹配」。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>【最高频错误】</b>受迫振动稳定后的频率 = <b>驱动力频率</b>,不是固有频率!哪怕不共振,物体也严格按驱动频率振动。</p>
+      <p class="trap">② 共振曲线的<b>峰在固有频率处</b>,不是在频率=0 或频率最大处。峰的横坐标就是固有频率。</p>
+      <p class="trap">③ 共振曲线横轴是<b>驱动频率</b>,不是时间!读图先认清横纵轴。</p>
+      <p class="trap">④ <b>阻尼只改变峰的高矮尖钝</b>,不改变固有频率(峰的位置)。阻尼小→峰高而尖;阻尼大→峰矮而钝。</p>
+      <p class="trap">⑤ 固有频率<b>只由系统本身决定</b>(单摆看 L、弹簧看 k/m),换个驱动力不改变它。</p>
+      <p class="trap">⑥ 「驱动频率越大振幅越大」是错的:是「越接近固有频率越大」,越过峰后再增大频率,振幅<b>下降</b>。</p>
+      <p class="trap">⑦ 共振摆里振幅最大的判据是<b>摆长(固有频率)匹配</b>,不是离驱动摆最近。</p>
+      <p class="trap">⑧ 洗衣机/汽车某转速抖得最厉害是因为共振,<b>转速再升高反而平稳</b>(离开峰),不是转速越高越抖。</p>
+      <p class="trap">⑨ 自由振动等幅、阻尼振动衰减、受迫振动稳定后等幅(靠外力补能量)——三者别混。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 共振曲线的定量特征:</b> 稳态振幅 A(ω) ∝ 1/√[(ω固²−ω²)² + (2βω)²]。当驱动角频率 ω 趋近固有角频率 ω固 时,分母第一项趋于 0,振幅冲高。阻尼系数 β 越小,峰越高越尖(理想无阻尼时峰趋于无穷)。高中不要求这式子,但理解「分母在 ω=ω固 附近变小 → 振幅变大」,就懂了峰为什么在固有频率处。</p>
+      <p style="margin:8px 0"><b>② 品质因数 Q(定性):</b> Q 衡量共振峰有多「尖」——Q 越大,峰越高越窄,系统越「挑频率」(只在极窄频段响应)、能量损耗越慢。小阻尼 ⇔ 高 Q ⇔ 尖峰;大阻尼 ⇔ 低 Q ⇔ 钝峰。收音机调谐回路要<b>高 Q</b>(才能精确选出一个电台),防震结构要<b>低 Q</b>(才不会在某个频率被激到爆)。</p>
+      <p style="margin:8px 0"><b>③ 共振之利:</b> 微波炉——微波频率接近水分子的振动/转动响应,水分子共振吸能而发热;收音机/电视调谐——调 LC 回路的固有频率等于目标电台频率,该台信号共振被放大选出,其余被抑制;乐器共鸣箱、核磁共振(NMR)、发电机同步,都在「用共振」。</p>
+      <p style="margin:8px 0"><b>④ 共振之害:</b> 桥梁——周期性风载/人群齐步/车流冲击若撞上桥的固有频率,振幅暴涨可致断裂(故士兵过桥用便步走、大桥设阻尼器);机械——电机/涡轮某转速下共振会松脱、断轴,设计上要让工作转速避开固有频率(或快速穿过共振区)。防治核心两招:<b>错开频率</b>(改结构固有频率或改驱动频率)+<b>增大阻尼</b>(削平峰值)。</p>
+      <p style="margin:8px 0"><b>⑤ 统一视角——「频率匹配 = 能量高效传递」:</b> 共振的本质是外力每个周期都与系统运动<b>同相位地做正功</b>,能量净输入最大。秋千、共振摆、微波炉、收音机、桥梁,全是同一件事:<b>驱动的节奏踩准了系统天生的节奏</b>。用它就叫「调谐」,防它就叫「减震」。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 受迫振动与共振(自由/阻尼/受迫 · 共振曲线 · 应用与防治)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:自由/阻尼/受迫 位移-时间图 ===== */
+(function(){
+  const svg=document.getElementById('threeSvg');const note=document.getElementById('thNote');
+  let mode=0,running=false,phase=0;
+  const X0=50,Y0=30,W=610,H=230,MID=Y0+H/2;
+  document.querySelectorAll('.thmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.thmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.t;phase=0;draw(1);
+  });
+  function yOf(t){
+    // t in 0..1 fraction of shown window (0..12 cycles worth)
+    const tt=t*24; // phase units
+    if(mode===0){ // free: constant amplitude
+      return 70*Math.sin(tt);
+    }else if(mode===1){ // damped: decaying envelope
+      return 90*Math.exp(-t*2.2)*Math.sin(tt);
+    }else{ // forced: transient then steady
+      const steady=55;
+      const env=steady*(1-Math.exp(-t*3.0)); // grows to steady
+      return env*Math.sin(tt*1.15); // driven freq slightly different
+    }
+  }
+  function draw(frac){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:X0,y1:MID,x2:X0+W,y2:MID,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:X0+W,y:MID+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // envelope hint for damped
+    const col=mode===0?BLUE:mode===1?ORANGE:GREEN;
+    let d="";const N=260;
+    for(let i=0;i<=N;i++){
+      const t=(i/N)*frac;const x=X0+(i/N)*W*frac;const y=MID-yOf(t);
+      d+=(i===0?"M":"L")+x.toFixed(1)+","+y.toFixed(1)+" ";
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':3.5});
+    // labels
+    let title,msg;
+    if(mode===0){title='自由振动';msg='无阻力无驱动 → 等幅不衰减,按固有频率永远荡下去(理想模型)。';}
+    else if(mode===1){title='阻尼振动';msg='有阻力 → 能量被耗,振幅一圈比一圈小,最终停下;周期≈固有周期。';}
+    else{title='受迫振动';msg='有周期性驱动力 → 先过渡,后稳定成等幅;稳定后频率 = 驱动力频率(与固有频率无关)。';}
+    el(svg,'text',{x:X0+8,y:Y0+16,'font-size':14,'font-weight':900,fill:col}).textContent=title;
+    note.innerHTML='👉 '+title+'：'+msg;
+    note.style.borderColor=col;
+  }
+  function loop(){
+    if(!running)return;phase+=0.012;if(phase>=1){phase=1;running=false;}draw(phase);requestAnimationFrame(loop);
+  }
+  document.getElementById('thGo').onclick=()=>{phase=0;running=true;requestAnimationFrame(loop);};
+  draw(1);
+})();
+
+/* ===== 互动2:共振曲线 + 拖动驱动频率 ===== */
+(function(){
+  const svg=document.getElementById('curveSvg');
+  const Fs=document.getElementById('cvF'),Ds=document.getElementById('cvD');
+  const oF=document.getElementById('cvOf'),oA=document.getElementById('cvOa'),oR=document.getElementById('cvOr');
+  const f0=1.0; // natural freq
+  let F=1.6,D=0.15;
+  const X0=60,Y0=30,W=580,H=230;
+  function amp(f,damp){
+    // relative amplitude, peak near f0
+    const a=1/Math.sqrt(Math.pow(f0*f0-f*f,2)+Math.pow(2*damp*f,2));
+    return a;
+  }
+  function sync(){F=+Fs.value;D=+Ds.value;draw();}
+  Fs.oninput=Ds.oninput=sync;
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='A';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='f驱';
+    const fMin=0.3,fMax=3;
+    // normalize amplitude by current-damping peak
+    const peak=amp(f0,D);
+    const sy=H/(peak*1.05);
+    const xOf=f=>X0+((f-fMin)/(fMax-fMin))*W;
+    const yOf=a=>Y0+H-a*sy;
+    // natural freq vertical line
+    el(svg,'line',{x1:xOf(f0),y1:Y0,x2:xOf(f0),y2:Y0+H,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:xOf(f0),y:Y0-6,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='f固';
+    // curve
+    let d="";const N=200;
+    for(let i=0;i<=N;i++){
+      const f=fMin+(i/N)*(fMax-fMin);const a=amp(f,D);
+      const x=xOf(f),y=yOf(a);
+      d+=(i===0?"M":"L")+x.toFixed(1)+","+y.toFixed(1)+" ";
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // current point
+    const aNow=amp(F,D);
+    const px=xOf(F),py=yOf(aNow);
+    el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:py,stroke:INK,'stroke-width':2,'stroke-dasharray':'3 4'});
+    el(svg,'circle',{cx:px,cy:py,r:8,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:px,y:Y0+H+22,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='f驱='+F.toFixed(2);
+    // labels/readouts
+    const isRes=Math.abs(F-f0)<0.06;
+    const relA=(aNow/peak);
+    oF.textContent=F.toFixed(2);oA.textContent=relA.toFixed(2);oR.textContent=isRes?'共振!':'否';
+    el(svg,'text',{x:X0+W*0.5,y:Y0+14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='共振曲线：峰在 f驱=f固 处';
+  }
+  document.getElementById('cvOf0').textContent=f0.toFixed(2);
+  sync();
+})();
+
+/* ===== 互动3:荡秋千按节奏推 ===== */
+(function(){
+  const cv=document.getElementById('swingCv');const ctx=cv.getContext('2d');
+  const Fs=document.getElementById('swF');
+  const oF=document.getElementById('swOf'),oN=document.getElementById('swOn'),oA=document.getElementById('swOa');
+  const f0=1.0; // swing natural freq (normalized)
+  let F=1.0,ang=0.15,angVel=0,t=0,running=false;
+  const pivotX=350,pivotY=30,L=170;
+  function sync(){F=+Fs.value;oF.textContent=F.toFixed(2);}
+  Fs.oninput=sync;
+  function reset(){ang=0.12;angVel=0;t=0;running=false;draw();}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // pivot bar
+    ctx.strokeStyle=INK;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(pivotX-90,pivotY);ctx.lineTo(pivotX+90,pivotY);ctx.stroke();
+    // rope
+    const bx=pivotX+L*Math.sin(ang),by=pivotY+L*Math.cos(ang);
+    ctx.strokeStyle=BROWN;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(pivotX,pivotY);ctx.lineTo(bx,by);ctx.stroke();
+    // seat/kid
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(bx,by,18,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    // push arrow indicator: color when driving in-phase
+    const drive=Math.sin(2*Math.PI*F*t);
+    const inphase=(drive*angVel>0);
+    ctx.fillStyle=inphase?GREEN:'#bbb';ctx.font='bold 14px sans-serif';
+    ctx.fillText(inphase?'👉 顺势推（帮忙）':'✋ 节奏不对（捣乱）',pivotX-70,225);
+    // amplitude bar
+    const amp=Math.abs(ang);
+    oA.textContent=(amp*180/Math.PI).toFixed(0)+'°';
+    // status
+    const matched=Math.abs(F-f0)<0.05;
+    oN.textContent=matched?'是':'否';
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('推的节奏 f驱='+F.toFixed(2)+'（秋千固有 f固=1.00）',60,24);
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.03;t+=dt;
+    // pendulum eq with small drive and small damping
+    const w0=2*Math.PI*f0;
+    const drive=0.9*Math.sin(2*Math.PI*F*t);
+    const acc=-w0*w0*ang - 0.25*angVel + drive*0.9;
+    angVel+=acc*dt;ang+=angVel*dt;
+    // clamp
+    if(ang>1.4)ang=1.4;if(ang<-1.4)ang=-1.4;
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('swGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('swReset').onclick=reset;
+  document.getElementById('swOf0').textContent=f0.toFixed(2);
+  sync();reset();
+})();
+
+/* ===== 互动4:共振曲线族(不同阻尼) ===== */
+(function(){
+  const svg=document.getElementById('familySvg');
+  const damps=[0.08,0.18,0.38];const cols=[VIO,ORANGE,GREEN];const names=['小阻尼','中阻尼','大阻尼'];
+  let hi=-1;
+  const f0=1.0,X0=60,Y0=30,W=580,H=230;
+  function amp(f,damp){return 1/Math.sqrt(Math.pow(f0*f0-f*f,2)+Math.pow(2*damp*f,2));}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='A';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='f驱';
+    const fMin=0.3,fMax=3;
+    const globalPeak=amp(f0,Math.min(...damps));
+    const sy=H/(globalPeak*1.05);
+    const xOf=f=>X0+((f-fMin)/(fMax-fMin))*W;
+    const yOf=a=>Y0+H-a*sy;
+    // natural freq line
+    el(svg,'line',{x1:xOf(f0),y1:Y0,x2:xOf(f0),y2:Y0+H,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:xOf(f0),y:Y0-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='f固（峰都在这）';
+    damps.forEach((dp,idx)=>{
+      let d="";const N=200;
+      for(let i=0;i<=N;i++){
+        const f=fMin+(i/N)*(fMax-fMin);const a=amp(f,dp);
+        d+=(i===0?"M":"L")+xOf(f).toFixed(1)+","+yOf(a).toFixed(1)+" ";
+      }
+      const active=(hi===-1||hi===idx);
+      el(svg,'path',{d:d,fill:'none',stroke:cols[idx],'stroke-width':active?4:2,opacity:active?1:0.28});
+      // peak label
+      if(active){
+        el(svg,'text',{x:xOf(f0)+8,y:yOf(amp(f0,dp))+4,'font-size':12,'font-weight':900,fill:cols[idx]}).textContent=names[idx];
+      }
+    });
+    el(svg,'text',{x:X0+W*0.5,y:Y0+14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='阻尼越小 → 峰越高越尖（峰位置不变）';
+  }
+  document.getElementById('famAdd').onclick=()=>{hi=(hi+1)%(damps.length+1);if(hi===damps.length)hi=-1;draw();};
+  document.getElementById('famReset').onclick=()=>{hi=-1;draw();};
+  draw();
+})();
+
+/* ===== 互动5:共振摆(一排不同摆长) ===== */
+(function(){
+  const cv=document.getElementById('pendCv');const ctx=cv.getContext('2d');
+  const Fs=document.getElementById('pdF');
+  const oF=document.getElementById('pdOf'),oM=document.getElementById('pdOm'),oB=document.getElementById('pdOb'),oR=document.getElementById('pdOr');
+  // four pendulums, natural freqs (normalized), labels
+  const pend=[
+    {x:130,f0:0.75,name:'长',ang:0.05,angVel:0},
+    {x:290,f0:1.00,name:'中',ang:0.05,angVel:0},
+    {x:450,f0:1.25,name:'较短',ang:0.05,angVel:0},
+    {x:610,f0:1.55,name:'短',ang:0.05,angVel:0}
+  ];
+  let F=1.0,t=0,running=false;
+  const barY=30;
+  function Lof(f0){return 40+ (1.6/(f0*f0))*40;} // longer rope for lower freq
+  function sync(){F=+Fs.value;oF.textContent=F.toFixed(2);updateStatus();}
+  Fs.oninput=sync;
+  function nearest(){
+    let best=0,bd=9;pend.forEach((p,i)=>{const d=Math.abs(p.f0-F);if(d<bd){bd=d;best=i;}});return best;
+  }
+  function updateStatus(){
+    const m=nearest();oM.textContent=pend[m].name;
+    const matched=Math.abs(pend[m].f0-F)<0.06;oR.textContent=matched?'是':'接近';
+  }
+  function reset(){pend.forEach(p=>{p.ang=0.05;p.angVel=0;});t=0;running=false;draw();updateStatus();}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // driving bar (moves horizontally)
+    const drive=8*Math.sin(2*Math.PI*F*t);
+    ctx.strokeStyle=INK;ctx.lineWidth=6;
+    ctx.beginPath();ctx.moveTo(70+drive,barY);ctx.lineTo(660+drive,barY);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('← 横杆按 f驱='+F.toFixed(2)+' 左右晃 →',250,18);
+    // find biggest
+    let bigI=0,bigA=-1;
+    pend.forEach((p,i)=>{if(Math.abs(p.ang)>bigA){bigA=Math.abs(p.ang);bigI=i;}});
+    pend.forEach((p,i)=>{
+      const L=Lof(p.f0)*1.6+60;
+      const px=p.x+drive;
+      const bx=px+L*Math.sin(p.ang),by=barY+L*Math.cos(p.ang);
+      ctx.strokeStyle=BROWN;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(px,barY);ctx.lineTo(bx,by);ctx.stroke();
+      const isBig=(i===bigI&&bigA>0.15);
+      ctx.fillStyle=isBig?RED:BLUE;ctx.beginPath();ctx.arc(bx,by,isBig?16:12,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+      ctx.fillText(p.name+'(f固='+p.f0.toFixed(2)+')',p.x,barY+L+34);
+      ctx.textAlign='left';
+    });
+    oB.textContent=pend[bigI].name;
+  }
+  function loop(){
+    if(!running)return;
+    const dt=0.03;t+=dt;
+    const barAcc=8*Math.sin(2*Math.PI*F*t); // proportional drive coupling
+    pend.forEach(p=>{
+      const w0=2*Math.PI*p.f0;
+      const acc=-w0*w0*p.ang -0.12*p.angVel + 0.10*barAcc*w0*w0/40;
+      p.angVel+=acc*dt;p.ang+=p.angVel*dt;
+      if(p.ang>1.2)p.ang=1.2;if(p.ang<-1.2)p.ang=-1.2;
+    });
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('pdGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('pdReset').onclick=reset;
+  sync();reset();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 自由振动、阻尼振动、受迫振动的振幅各是怎么变化的？",a:"自由振动：等幅不衰减（理想，无阻力无驱动）。阻尼振动：振幅越来越小（有阻力耗能，最终停下）。受迫振动：稳定后等幅（有周期性外力持续补能量）。"},
+ {q:"2. 受迫振动稳定后的振动频率由谁决定？",a:"由驱动力频率 f驱 决定，等于驱动频率，与系统固有频率无关。这是最容易错的一点——不管共不共振，频率都等于驱动频率。"},
+ {q:"3. 固有频率由什么决定？换个更大的驱动力会改变它吗？",a:"固有频率只由系统本身决定：单摆看摆长 L 和 g（f固=(1/2π)√(g/L)），弹簧振子看 k 和 m。换驱动力（大小/频率）都不会改变固有频率。"},
+ {q:"4. 发生共振的条件是什么？此时振幅怎样？",a:"共振条件：驱动频率 = 固有频率（f驱=f固）。此时振幅达到最大值。"},
+ {q:"5. 共振曲线的横轴、纵轴分别是什么？峰在哪里？",a:"横轴是驱动频率 f驱，纵轴是稳定后的振幅 A。峰（振幅最大处）出现在 f驱=f固，即峰的横坐标就是系统的固有频率。"},
+ {q:"6. 阻尼大小对共振曲线的峰有什么影响？",a:"阻尼越小，峰越高越尖（共振越剧烈、越挑频率）；阻尼越大，峰越矮越钝（振幅上不去，但对频率宽容）。阻尼只改变峰的高矮尖钝，不改变峰的位置（固有频率）。"},
+ {q:"7. 固有频率 2Hz 的振子，用 5Hz 的驱动力驱动，稳定后频率是多少？共振吗？",a:"稳定后频率 = 驱动频率 = 5Hz（不是 2Hz）。此时 f驱≠f固，不共振，振幅较小，但频率严格等于 5Hz。"},
+ {q:"8. 摆长 1m 的单摆（g=10）要发生共振，驱动频率应调到多少？",a:"先求固有频率 f固=(1/2π)√(g/L)=(1/2π)√10≈0.50Hz。共振要 f驱=f固≈0.50Hz，此时振幅最大。"},
+ {q:"9. 洗衣机甩干时某中间转速抖得最厉害，继续升速反而平稳，为什么？",a:"该转速下驱动频率（转速）恰好等于桶-弹簧系统的固有频率，发生共振，振幅暴涨。转速再升高，驱动频率超过固有频率，离开共振峰，振幅回落，所以变平稳。不是转速越高越抖。"},
+ {q:"10. 共振摆里，横杆上哪个摆振幅最大？判据是什么？",a:"固有频率（即摆长）与驱动摆相同的那个摆振幅最大（共振）。判据是频率匹配，不是离驱动摆最近，也不是最长/最短。"},
+ {q:"11. 给两条峰都在 3Hz 的共振曲线，怎么判断哪条阻尼更小？系统固有频率是多少？",a:"峰更高更尖的那条阻尼更小。峰的横坐标 3Hz 就是系统的固有频率。"},
+ {q:"12. 共振有哪些「利」和「害」？防治共振害的两招是什么？",a:"利：微波炉加热（水分子共振吸能）、收音机/电视调谐（LC 回路共振选台）、乐器共鸣、核磁共振。害：桥梁被风/齐步/车流激起共振断裂、机械某转速共振断轴。防治两招：错开频率（改固有频率或改驱动频率）+ 增大阻尼（削平峰值）。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

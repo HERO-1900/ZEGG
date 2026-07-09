@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电路动态分析 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电路动态分析</h1>
+    <p class="lead">滑片一滑、开关一合，整个电路的电流电压就跟着「多米诺」式地连锁变化——电表示数往哪跳、灯泡变亮变暗，全靠一条铁链推理:<b>局部→整体→再局部</b>。这一页把闭合电路欧姆定律 I=E/(R+r)、路端电压 U=E−Ir，和那句救命口诀<b>「串反并同」</b>彻底讲透。含电容、含电动机、含内阻的动态题，也一并收进来。</p>
+
+    <div class="say">🗣️ <b>电路动态(人话版):</b> 把电源想成一个<b>水泵</b>,电流是水流,电阻是<b>水管的粗细</b>。某段水管突然变细(电阻变大),整条主管道的水都被憋住了→<b>干路电流变小</b>。干路电流一小,电源自己内部的「损耗」(Ir)就小,<b>路端电压 U=E−Ir 反而升高</b>。这就是全部剧情的起点。接着一句口诀定生死——<b>串反并同</b>:跟「变化那一段」<b>串联</b>的部分,分到的电压/电流<b>反着变</b>;跟它<b>并联</b>的部分,<b>同着变</b>。记住这八个字,一半的动态题当场秒杀。</div>
+
+    <div class="keybox"><b>核心链条:</b> ① 看哪个电阻变(局部)→ ② 求总电阻 R总 怎么变 → ③ 由 <b>I干=E/(R总+r)</b> 定干路电流、由 <b>U路=E−I干·r</b> 定路端电压(整体)→ ④ 再用「串反并同」+ 部分电路欧姆定律 U=IR 推每个电表(再局部)。<b>顺序不能乱</b>:先算总，再算分。</div>
+
+    <h2>① 闭合电路欧姆定律:动态分析的总闸</h2>
+    <div class="card">
+      <div class="eq">I干 = E / (R外 + r)　　U路 = E − I干·r</div>
+      <p style="margin:8px 0">E 是电源电动势(恒定)，r 是内阻(恒定)。<b>唯一会变的是外电路总电阻 R外</b>。所以整个动态分析，第一件事永远是判断:<b>R外 变大还是变小?</b></p>
+      <table>
+        <tr><th>R外 的变化</th><th>I干 = E/(R外+r)</th><th>U路 = E − I干·r</th><th>内压 Ir</th></tr>
+        <tr><td><b>R外 增大</b></td><td>减小 ↓</td><td>增大 ↑</td><td>减小 ↓</td></tr>
+        <tr><td><b>R外 减小</b></td><td>增大 ↑</td><td>减小 ↓</td><td>增大 ↑</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>记忆:</b> R外 与 I干 <b>永远反着</b>(分母大电流小);U路 与 I干 也<b>反着</b>(电流大内耗大，剩给外面的就少)。所以 <b>R外 和 U路 同向</b>:外电阻大，路端电压高。</p>
+      <p class="trap">⚠ 别把电源当理想电源(r=0)。一旦 r≠0，路端电压 U 就<b>不是</b>恒定的 E，它随电流浮动 U=E−Ir。忽略 r 是动态题头号错因。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 1 — U=E−Ir 直线:拖动电流 I，看路端电压怎么随内压 Ir 掉下来</div>
+      <svg id="ueSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电动势 E <input id="ueE" type="range" min="4" max="12" value="8" step="1"></label>
+        <label>内阻 r <input id="ueR" type="range" min="0" max="4" value="1" step="0.5"></label>
+        <label>干路电流 I <input id="ueI" type="range" min="0" max="6" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>电动势 E (V)</b><span id="ueoE">0</span></div>
+        <div><b>内压 Ir (V)</b><span id="ueoIr">0</span></div>
+        <div><b>路端电压 U=E−Ir</b><span id="ueoU">0</span></div>
+        <div><b>外电阻 R=U/I</b><span id="ueoRe">0</span></div>
+      </div>
+      <p class="small">红线就是电源特性 U=E−Ir，斜率 = −r。电流 I 越大，往右走，U 掉得越多(内耗 Ir 越大)。<b>r=0 时红线水平</b>——那才是理想电源。</p>
+    </div>
+
+    <h2 class="b">② 「串反并同」:动态判断的核心口诀</h2>
+    <div class="card">
+      <p style="margin:6px 0">当电路里某个电阻 Rx 发生变化(比如滑动变阻器阻值增大)，除了看干路，还要判断其它元件跟着怎么变。规则只有八个字:</p>
+      <div class="keybox" style="margin:12px 0"><b>串反并同</b>:与「变化电阻 Rx」<b>串联</b>的元件，分得的电压/电流跟 Rx <b>反着</b>变;与 Rx <b>并联</b>的支路，分得的电压/电流跟 Rx <b>同着</b>变。</div>
+      <h3>为什么「串联反变」?</h3>
+      <p style="margin:6px 0">Rx 增大 → 干路电流 I干 减小 → 与它串联的定值电阻 R串 上的电压 U串=I干·R串 <b>减小</b>(电流小了)。所以 Rx↑ 时串联部分电压↓，方向相反。</p>
+      <h3>为什么「并联同变」?</h3>
+      <p style="margin:6px 0">这要绕一圈:Rx 增大 → 干路电流减小 → 内压 Ir 减小 → 路端电压 U路 升高 → 与 Rx 并联那一坨(它俩共用同一段电压)分到的电压 <b>升高</b>。所以 Rx↑ 时并联支路电压↑，方向相同。</p>
+      <p class="trap">⚠ 「串反并同」判的是<b>电压</b>方向最稳。判并联支路的<b>电流</b>时要更小心:并联支路电压升高→该支路电流(U/R支)也升高，方向仍与 Rx 同向。但这条支路电流升，干路电流却在降——差额从 Rx 那条腿「抽」走了。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 2 — 串反并同:滑动 Rx，看串联电阻(蓝)反着变、并联支路(绿)同着变</div>
+      <svg id="spSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>变化电阻 Rx <input id="spRx" type="range" min="1" max="20" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>干路电流 I干 (A)</b><span id="spI">0</span></div>
+        <div><b>串联R上电压 U串</b><span id="spUs">0</span></div>
+        <div><b>并联支路电压 U并</b><span id="spUp">0</span></div>
+        <div><b>并联支路电流 I并</b><span id="spIp">0</span></div>
+      </div>
+      <p class="small">箭头粗细=电流大小。把 Rx 拉大:干路(黑)变细、串联电阻(蓝)电压变小=反着变、并联支路(绿)电压变大=同着变。这就是「串反并同」的动画版。</p>
+    </div>
+
+    <h2 class="g">③ 滑动变阻器与电路结构变化</h2>
+    <div class="card">
+      <h3>滑动变阻器:先判「有效阻值」变大还是变小</h3>
+      <p style="margin:6px 0">滑片移动时，务必先看清接的是<b>哪两个接线柄</b>(上进上出? 一上一下?)，判断滑片朝某方向移动时<b>接入电路的那一段</b>阻值增大还是减小。这一步判错，后面全盘皆错。</p>
+      <div class="mono">口诀:分清「接入段」——滑片远离接线端 → 接入变长 → 阻值增大。</div>
+      <h3>开关通断改变电路结构</h3>
+      <p style="margin:6px 0">开关一合一断，会让某个电阻<b>被短路(阻值视为0)</b>、<b>被断开(该支路无电流)</b>，或让串并联结构改变。处理办法:<b>先重画等效电路</b>，把短路的线擦掉、断开的支路去掉，再按新结构算 R总。</p>
+      <table>
+        <tr><th>操作</th><th>效果</th><th>对 R外</th></tr>
+        <tr><td>并联再接入一条支路</td><td>并联支路增多</td><td>R外 <b>减小</b></td></tr>
+        <tr><td>断开一条并联支路</td><td>并联支路减少</td><td>R外 <b>增大</b></td></tr>
+        <tr><td>短路掉一个电阻</td><td>该电阻退出</td><td>R外 <b>减小</b></td></tr>
+      </table>
+      <p class="trap">⚠ 「并联接入一条新支路一定使总电阻减小」——哪怕接入的是个大电阻。并联只会越并越小。别凭直觉以为「多了个大电阻总电阻就变大」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 3 — 滑片联动电表:拖滑片，电流表/电压表指针实时联动</div>
+      <svg id="slSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="slLeft">◀ 滑片左移(阻值减)</button><button id="slRight">滑片右移(阻值增) ▶</button>
+        <label>滑片位置 <input id="slPos" type="range" min="0" max="100" value="50" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>接入阻值 R滑 (Ω)</b><span id="slR">0</span></div>
+        <div><b>电流表 A 读数</b><span id="slA">0</span></div>
+        <div><b>电压表 V 读数(路端)</b><span id="slV">0</span></div>
+        <div><b>R滑上电压</b><span id="slVr">0</span></div>
+      </div>
+      <p class="small">左边两个仪表盘是真的电流表(红针)和电压表(蓝针)。拉滑片:R滑增大→电流表读数↓、电压表(路端)读数↑。指针会跟着摆——这就是「电阻变大干路电流变小」的直观样子。</p>
+    </div>
+
+    <h2 class="o">④ 含电容器的稳态电路</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>两条铁律</b>(稳态，即电路稳定后):</p>
+      <div class="mono">① 电容支路稳态时无电流通过——那条支路可看作「断路」。</div>
+      <div class="mono">② 电容两端电压 = 它并联的那段电路的电压(把电容当电压表读)。</div>
+      <p style="margin:8px 0"><b>处理步骤:</b> 先把电容支路「拆掉」(无电流)，用剩下的纯电阻电路算出各段电压电流;再回头看电容<b>并在哪两点之间</b>，那两点的电压就是 U电容，电荷 Q=C·U电容。</p>
+      <h3>动态变化时:充放电瞬间 vs 稳态</h3>
+      <p style="margin:6px 0">电路参数一变(如滑片移动)，电容两端电压随之改变，电容要<b>充电或放电</b>，那一瞬间电容支路<b>有电流</b>(过渡过程);但一旦稳定，电容支路又回到<b>无电流</b>的稳态。高考题几乎只考<b>稳态前后</b>的对比:U电容变了多少、Q=CU 变了多少、电荷怎么流。</p>
+      <p class="trap">⚠ 稳态时电容支路无电流，千万别把电容那条腿的电阻算进 R总(它不分流)。也别忘了电容电压等于「它跨接的两点」间电压——常常不是某个电阻的电压，要看清跨接位置。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔋 互动 4 — 电容充电曲线:U电容(t) 指数逼近稳态值，稳态后支路无电流</div>
+      <svg id="capSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="capGo">▶ 开始充电</button><button id="capReset">↺ 重置</button>
+        <label>稳态电压 U∞ <input id="capU" type="range" min="2" max="10" value="6" step="1"></label>
+        <label>电容 C <input id="capC" type="range" min="1" max="5" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>稳态电压 U∞ (V)</b><span id="capoU">0</span></div>
+        <div><b>当前 U电容 (V)</b><span id="capoUc">0</span></div>
+        <div><b>当前充电电流 (mA)</b><span id="capoIc">0</span></div>
+        <div><b>稳态电荷 Q=CU (μC)</b><span id="capoQ">0</span></div>
+      </div>
+      <p class="small">蓝线=电容电压 U电容，从 0 指数式爬到稳态 U∞;红线=充电电流，一开始最大、随后<b>衰减到 0</b>。电流归零那一刻就是「稳态」——此后电容支路彻底断流。</p>
+    </div>
+
+    <h2 class="v">⑤ 电源内阻不可忽略 & 电表示数变化</h2>
+    <div class="card">
+      <h3>内阻型:U路 会「反着」浮动</h3>
+      <p style="margin:6px 0">凡是题目给了内阻 r，或问「路端电压如何变化」，就必须用 U=E−Ir。<b>核心反直觉点:</b> 外电路某处电阻增大 → 干路电流减小 → 内压 Ir 减小 → <b>路端电压反而升高</b>。灯为什么「拧小别的负载它反而变亮」，就是这个道理。</p>
+      <h3>电表示数变化:先定位电表测的是「谁」</h3>
+      <p style="margin:6px 0">电流表测<b>它所在那条支路</b>的电流;电压表测<b>它并联的那两点</b>的电压。判断示数变化，先搞清它测的对象是干路还是某支路，再套「串反并同」或直接 U=E−Ir。</p>
+      <table>
+        <tr><th>电表位置</th><th>它测什么</th><th>Rx 增大时示数</th></tr>
+        <tr><td>电流表在干路</td><td>I干</td><td>减小 ↓</td></tr>
+        <tr><td>电压表并在电源两端</td><td>U路</td><td>增大 ↑</td></tr>
+        <tr><td>电压表并在与Rx串联的定值电阻上</td><td>U串=I干·R串</td><td>减小 ↓(反变)</td></tr>
+        <tr><td>电压表并在与Rx并联的支路上</td><td>U并</td><td>增大 ↑(同变)</td></tr>
+      </table>
+      <p class="trap">⚠ 电压表并的两点若跨过了 Rx 本身，它读的就是 Rx 的电压 U_Rx=U路−U串，往往是「大减小」的结果，需具体算，不能只靠口诀。</p>
+    </div>
+
+    <h2 class="r">⑥ 含电动机的动态分析</h2>
+    <div class="card">
+      <p style="margin:6px 0">电动机是<b>非纯电阻</b>元件，它把电能转成机械能，不能简单套 U=IR(那只对纯电阻成立)。电动机上:</p>
+      <div class="eq">U电机 = I·r电机 + 反电动势项　　P输入 = UI，P发热 = I²r电机，P机械 = UI − I²r电机</div>
+      <p style="margin:8px 0"><b>关键:</b> 电动机两端电压 U 和电流 I <b>不满足 U=IR</b>(除非电机堵转/不转，此时才退化为纯电阻)。求电机消耗的功率用 P=UI;求它发的热用 I²r电机;两者之差是输出的机械功率。</p>
+      <p style="margin:8px 0"><b>动态时:</b> 若电路其它部分变化导致电机电流 I 变，电机的发热 I²r、机械输出都随之变，但仍要用能量分配式，不能用 U=IR 硬算。</p>
+      <p class="trap">⚠ 头号错:对电动机用 R=U/I 当纯电阻算发热。电动机发热只由 I²r电机 决定(r电机是它线圈的电阻)，跟 U/I 那个「视在电阻」无关。只有<b>堵转</b>(不转)时电机才是纯电阻。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 5 — 电动机功率分配:输入 UI 拆成「发热 I²r」+「机械输出」</div>
+      <svg id="mtSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电机电压 U <input id="mtU" type="range" min="4" max="12" value="8" step="1"></label>
+        <label>电机电流 I <input id="mtI" type="range" min="1" max="5" value="2" step="0.5"></label>
+        <label>线圈内阻 r电机 <input id="mtR" type="range" min="0.2" max="2" value="0.5" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>输入功率 P=UI (W)</b><span id="mtoP">0</span></div>
+        <div><b>发热 I²r (W)</b><span id="mtoH">0</span></div>
+        <div><b>机械输出 (W)</b><span id="mtoM">0</span></div>
+        <div><b>效率 η=机械/输入</b><span id="mtoEta">0</span></div>
+      </div>
+      <p class="small">整条彩条=输入功率 UI。红段=白白发热 I²r(只由电流决定)，绿段=真正输出的机械功。电流越大，红段占比越大——效率就掉。这就是电动机<b>不是纯电阻</b>的可视化。</p>
+    </div>
+
+    <h2 class="b">⑦ 并联等效电阻:随支路怎么变</h2>
+    <div class="card">
+      <p style="margin:6px 0">动态题里最容易算反方向的，就是<b>并联部分的总电阻</b>。两条并联 R₁、R₂，等效 R并 = R₁R₂/(R₁+R₂)。规律:</p>
+      <div class="mono">并联总电阻永远比「最小的那个支路」还小;某支路电阻增大 → 并联总电阻增大(但增得慢)。</div>
+      <p style="margin:8px 0"><b>方向判断:</b> 并联块里<b>任一支路电阻增大，并联总电阻也增大</b>(同向)，但增量比支路本身小得多——它被另一条支路「拽住」。反之支路减小，并联块总电阻减小。</p>
+      <p class="trap">⚠ 别把「支路电阻增大」直觉成「并联总电阻减小」。它俩是<b>同向</b>的。真正让并联块变小的，是<b>新增一条并联支路</b>(条数增多)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 6 — 并联等效电阻:拖动一条支路 R₁，看 R并=R₁R₂/(R₁+R₂) 怎么走</div>
+      <svg id="parSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>支路 R₁ <input id="parR1" type="range" min="1" max="20" value="6" step="1"></label>
+        <label>支路 R₂ <input id="parR2" type="range" min="1" max="20" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>R₁ (Ω)</b><span id="paro1">0</span></div>
+        <div><b>R₂ (Ω)</b><span id="paro2">0</span></div>
+        <div><b>并联 R并 (Ω)</b><span id="paroP">0</span></div>
+        <div><b>比 min(R₁,R₂)</b><span id="paroCmp">0</span></div>
+      </div>
+      <p class="small">紫条=并联总电阻 R并。拉大 R₁，R并 <b>同向变大</b>但永远低于虚线(=较小支路)。这条虚线就是「并联总电阻的天花板」——再大也压不过最小支路。</p>
+    </div>
+
+    <h2 class="o">⑧ U-I 图像法:电源线与外电阻线的交点</h2>
+    <div class="card">
+      <p style="margin:6px 0">尖子生的杀器。在同一张 U-I 图上画两条线:</p>
+      <div class="mono">电源线:U = E − Ir(斜率 −r 的下降直线，截距 E)。</div>
+      <div class="mono">外电阻线:U = I·R外(过原点、斜率 R外 的上升直线)。</div>
+      <p style="margin:8px 0"><b>两条线的交点</b>，就是电路真实的工作点(I工, U工)——电源提供的 U 恰好等于外电阻上的 U。R外 变化 → 外电阻线斜率变 → 交点沿电源线滑动，一眼看出 I、U 怎么变。</p>
+      <p style="margin:8px 0"><b>R外 增大</b> → 外电阻线更陡 → 交点沿电源线<b>左上移</b> → I 减小、U 增大。跟公式结论完全一致，但图像看得更快。</p>
+      <p class="trap">⚠ 电源线是「越往右越低」(下降)，外电阻线是「过原点上升」。别画反。非线性元件(灯丝)的伏安线是弯的，交点依旧是工作点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 7 — U-I 图像交点:拖外电阻 R外，看工作点沿电源线滑动</div>
+      <svg id="uiSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电动势 E <input id="uiE" type="range" min="4" max="12" value="8" step="1"></label>
+        <label>内阻 r <input id="uiR" type="range" min="0.5" max="3" value="1" step="0.5"></label>
+        <label>外电阻 R外 <input id="uiRe" type="range" min="1" max="12" value="3" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>工作电流 I工 (A)</b><span id="uioI">0</span></div>
+        <div><b>工作电压 U工 (V)</b><span id="uioU">0</span></div>
+        <div><b>内压 Ir (V)</b><span id="uioIr">0</span></div>
+        <div><b>外电阻线斜率</b><span id="uioSlope">0</span></div>
+      </div>
+      <p class="small">红=电源线 U=E−Ir(下降)，蓝=外电阻线 U=IR外(过原点上升)。绿点=交点=真实工作点。拉大 R外→蓝线变陡→绿点沿红线<b>左上滑</b>→电流减小、电压升高。</p>
+    </div>
+
+    <h2 class="v">⑨ 极值问题:功率最大点</h2>
+    <div class="card">
+      <p style="margin:6px 0">经典拔高:外电阻 R外 取什么值时，它获得的<b>功率最大</b>?</p>
+      <div class="eq">P外 = I²R外 = E²R外/(R外+r)²　　当 R外 = r 时 P外 取最大值 P_max = E²/(4r)</div>
+      <p style="margin:8px 0"><b>结论:</b> 外电阻等于内阻(R外=r)时，外电路获得最大功率 E²/(4r)。这叫「阻抗匹配」。此时电源效率恰为 50%(一半功率白白耗在内阻上)。</p>
+      <p style="margin:8px 0"><b>提醒:</b> 追求「最大输出功率」和追求「最高效率」是两码事。效率 η=R外/(R外+r)，R外 越大效率越高(趋近100%)，但那时输出功率并不最大。</p>
+      <p class="trap">⚠ 别把「最大功率」和「最高效率」混为一谈。最大输出功率在 R外=r，此时效率只有 50%;要高效率得让 R外≫r，但那时功率没到顶。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 8 — 输出功率极值:P外 随 R外 变化，R外=r 时封顶</div>
+      <svg id="pkSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电动势 E <input id="pkE" type="range" min="4" max="12" value="8" step="1"></label>
+        <label>内阻 r <input id="pkR" type="range" min="0.5" max="4" value="2" step="0.5"></label>
+        <label>外电阻 R外 <input id="pkRe" type="range" min="0.2" max="12" value="2" step="0.2"></label>
+      </div>
+      <div class="live">
+        <div><b>输出功率 P外 (W)</b><span id="pkoP">0</span></div>
+        <div><b>最大功率 E²/4r (W)</b><span id="pkoPmax">0</span></div>
+        <div><b>效率 η=R/(R+r)</b><span id="pkoEta">0</span></div>
+        <div><b>是否匹配 R外=r?</b><span id="pkoMatch">0</span></div>
+      </div>
+      <p class="small">紫曲线=输出功率 P外 随 R外 的变化，是个<b>驼峰</b>。峰顶正好落在 R外=r(竖虚线)处。绿点=当前 R外 对应的功率。拉到峰顶就是「阻抗匹配」，此时效率恰好 50%。</p>
+    </div>
+
+    <h2 class="r">⑩ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 滑动变阻器滑片移动型</h3>
+      <p><b class="tag">触发信号:</b>「滑片 P 向 a/b 端移动」「变阻器阻值增大/减小」，问电流表、电压表、灯泡亮暗如何变。</p>
+      <p><b class="tag">标准动作:</b>① 判滑片移动使接入阻值 R滑 变大还是变小 → ② R外 同向变 → ③ I干=E/(R外+r) 反向变、U路=E−I干r 同向变 → ④ 用串反并同定各电表。</p>
+      <p><b class="tag">示例(带解):</b>E=6V，r=1Ω，定值 R₀=2Ω 与滑动变阻器 R滑 串联，电流表在干路。滑片使 R滑 从 3Ω 增到 5Ω。则 R外:5→7Ω，I干=6/(5+1)=1A → 6/(7+1)=0.75A，电流表<b>减小</b>;U路=6−1×1=5V → 6−0.75×1=5.25V，电压表(测路端)<b>增大</b>;R₀上电压 U₀=I干×2:2V→1.5V，<b>减小</b>(与 R滑 串联，反变)。</p>
+      <p class="trap">陷阱:没看清滑片朝哪滑对应阻值增还是减;把测路端的电压表当成测 R滑 的。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 开关通断改变电路结构型</h3>
+      <p><b class="tag">触发信号:</b>「闭合/断开开关 S」，电路结构(串并联)改变，问各量变化。</p>
+      <p><b class="tag">标准动作:</b>先<b>重画等效电路</b>:短路的擦线、断开的删支路 → 求新 R外 → 再套闭合电路欧姆定律。并联多一条支路 R外 必减小。</p>
+      <p><b class="tag">示例(带解):</b>E=12V，r=1Ω，R₁=3Ω 干路，R₂=6Ω 支路。闭合 S 接入第二条并联支路 R₃=6Ω。原 R外=3+6=9Ω(R₁串R₂)?若 R₂、R₃ 并联:R并=6×6/12=3Ω，R外=R₁+R并=3+3=6Ω，比原来的 9Ω 小 → I干=12/(6+1)=1.71A，比原来 12/10=1.2A <b>增大</b>。并联支路增多，总电阻减小，干路电流增大。</p>
+      <p class="trap">陷阱:不重画就硬算;以为「并联新支路总电阻会变大」;漏看开关短路掉某电阻。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 含电容器的稳态型</h3>
+      <p><b class="tag">触发信号:</b>电路里有电容器 C，问稳定后电容电压、电荷量，或参数变化后电荷怎么变。</p>
+      <p><b class="tag">标准动作:</b>① 电容支路稳态无电流，当断路 → ② 用剩余纯电阻电路算各点电压 → ③ 找电容跨接的两点，U电容=那两点电压 → ④ Q=C·U电容。变化题算前后 Q 之差。</p>
+      <p><b class="tag">示例(带解):</b>E=10V，r=0(理想)，R₁=4Ω、R₂=6Ω 串联，电容 C=2μF 并在 R₂ 两端。稳态电容支路无电流，I=10/(4+6)=1A，U_R₂=1×6=6V=U电容。Q=CU=2μF×6V=12μC。若 R₂ 增到 9Ω:I=10/13≈0.77A，U_R₂=0.77×9≈6.9V，Q≈13.8μC，电荷增加。</p>
+      <p class="trap">陷阱:把电容支路的电阻算进 R总(它不分流);算错电容跨接的是哪两点;混淆充放电瞬间与稳态。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 电源内阻不可忽略型</h3>
+      <p><b class="tag">触发信号:</b>题目明确给内阻 r，或问「路端电压如何变化」「电源效率」。</p>
+      <p><b class="tag">标准动作:</b>坚持用 U路=E−I干r。外阻增大→I干减小→Ir减小→U路升高。绝不把 U 当恒定的 E。</p>
+      <p><b class="tag">示例(带解):</b>E=6V，r=0.5Ω。负载电阻从 2.5Ω 增到 5.5Ω。I:6/3=2A → 6/6=1A，I减小;U路=E−Ir=6−2×0.5=5V → 6−1×0.5=5.5V，<b>升高</b>。内耗 Ir 从 1V 降到 0.5V，省下的电压全「还」给了路端。</p>
+      <p class="trap">陷阱:把电源当理想电源，误认为 U 恒=E;方向判反(以为外阻增大 U 也减小)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 电表示数变化判断型</h3>
+      <p><b class="tag">触发信号:</b>「A₁、A₂、V 示数如何变化」，多个电表分布在不同支路。</p>
+      <p><b class="tag">标准动作:</b>逐个电表定位它测「谁」(干路?某支路?哪两点电压?) → 干路电流用 I干=E/(R外+r);支路量用串反并同;跨 Rx 的电压表要具体算 U路−U串。</p>
+      <p><b class="tag">示例(带解):</b>R₁串(R₂并R₃)，Rx=R₃ 增大。干路电流表 A(测I干):R₃↑→R并↑→R外↑→I干↓，A <b>减小</b>。V 并在 R₂(与R₃并联):并同→电压升高，V <b>增大</b>。测 R₁ 的电压表:R₁串在干路，I干↓→U₁↓，<b>减小</b>。</p>
+      <p class="trap">陷阱:不先定位电表测什么就套口诀;把测支路的当测干路;电压表跨 Rx 时只靠口诀。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 含电动机型</h3>
+      <p><b class="tag">触发信号:</b>电路里有「电动机 / 马达」，问机械功率、发热功率、效率。</p>
+      <p><b class="tag">标准动作:</b>电动机是非纯电阻，用能量式:P输入=UI，P热=I²r电机，P机械=UI−I²r电机。发热只由 I²r电机 定，绝不用 U/I 当电阻。</p>
+      <p><b class="tag">示例(带解):</b>电动机端电压 U=10V，通过电流 I=2A，线圈电阻 r电机=1Ω。P输入=10×2=20W;P热=I²r=2²×1=4W;P机械=20−4=16W;效率 η=16/20=80%。注意 U/I=5Ω 只是「视在电阻」，不能拿来算发热。</p>
+      <p class="trap">陷阱:用 R=U/I 算电动机发热(大错);只有堵转不转时才退化为纯电阻;漏算机械输出。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 把电源当<b>理想电源</b>忽略内阻:一旦 r≠0，U路=E−Ir 随电流浮动，不是恒定的 E。这是动态题第一大错因。</p>
+      <p class="trap">② <b>方向判反</b>:外电阻增大 → 干路电流减小 → 路端电压<b>升高</b>(不是降低)。R外 与 U路 同向、与 I干 反向。</p>
+      <p class="trap">③ <b>并联部分总电阻的方向</b>:某支路电阻增大，并联块总电阻<b>同向增大</b>(不是减小)。让并联块变小的是「新增支路」，不是单支路变大。</p>
+      <p class="trap">④ 电容器「<b>充放电瞬间有电流</b>」vs「<b>稳态无电流</b>」:稳态时电容支路当断路，不分流、不算进 R总;瞬间过渡才有电流。</p>
+      <p class="trap">⑤ 电容电压 = 它<b>跨接两点</b>的电压，不一定等于某个电阻的电压。看清它并在哪。</p>
+      <p class="trap">⑥ 「并联新支路总电阻一定减小」——哪怕接入的是大电阻。并联越并越小。</p>
+      <p class="trap">⑦ 电动机<b>不是纯电阻</b>:发热用 I²r电机，不能用 U/I。只有堵转不转才退化为纯电阻。</p>
+      <p class="trap">⑧ 电表定位:电流表测所在支路电流，电压表测并接两点电压。判示数前先搞清它测「谁」。</p>
+      <p class="trap">⑨ 「串反并同」判<b>电压</b>最稳;判并联支路<b>电流</b>时，它与 Rx 同向，但干路电流反向，别混。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一条主链贯穿所有动态题:</b> 局部(哪个R变)→整体(R总→I干→U路)→再局部(串反并同定各表)。任何动态题，无论多花哨，都在这条链上跑一遍。先总后分，顺序不能倒。</p>
+      <p style="margin:8px 0"><b>② U-I 图像法是「几何版」的闭合欧姆定律:</b> 电源线 U=E−Ir 是固定的(E、r 不变);外电阻线 U=IR外 是过原点可转的射线。R外 一变，转动外电阻线，交点(工作点)沿电源线滑——I、U 的变化一眼看穿，比逐步代数快得多。</p>
+      <p style="margin:8px 0"><b>③ 「串反并同」的物理根源是能量/电压分配:</b> 串联反变，是因为共享同一个干路电流，I 降则串联段 U=IR 降;并联同变，是因为共享同一段路端电压，Ir 降则 U路 升，并联段跟着升。记住根源，比死背口诀更不会出错。</p>
+      <p style="margin:8px 0"><b>④ 最大功率与最高效率是两个极值，别混:</b> P外=E²R/(R+r)² 在 R=r 时封顶(阻抗匹配，η=50%);而效率 η=R/(R+r) 在 R→∞ 时趋近 100%(但功率趋0)。题目问哪个，思路完全不同。</p>
+      <p style="margin:8px 0"><b>⑤ 含电容=「稳态断路 + 电压跟随」:</b> 把电容想成一个「只读电压表」——稳态它不导电(断路)，但忠实记录跨接两点的电压，Q=CU。参数一变，它默默充放电重新记录。这套模型让所有含容题变成「先算纯电阻电路，再读电容那两点」。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:闭合电路欧姆定律、含容电路稳态、电源内阻与电动机动态</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:U=E-Ir 直线 ===== */
+(function(){
+  const svg=document.getElementById('ueSvg');
+  const Es=document.getElementById('ueE'),Rs=document.getElementById('ueR'),Is=document.getElementById('ueI');
+  const oE=document.getElementById('ueoE'),oIr=document.getElementById('ueoIr'),oU=document.getElementById('ueoU'),oRe=document.getElementById('ueoRe');
+  let E=8,r=1,I=2;
+  function sync(){E=+Es.value;r=+Rs.value;I=+Is.value;draw();}
+  Es.oninput=Rs.oninput=Is.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=230;
+    const Imax=6,Umax=12;
+    const sx=W/Imax, sy=H/Umax;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U/V';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='I/A';
+    // U = E - I r : line from (0,E) to (E/r, 0)
+    const y0=Y0+H-E*sy; // at I=0, U=E
+    const Iend=(r>0)?(E/r):Imax; // where U=0
+    const Ix=Math.min(Iend,Imax);
+    const yEnd=Y0+H-(E-Ix*r)*sy;
+    el(svg,'line',{x1:X0,y1:y0,x2:X0+Ix*sx,y2:yEnd,stroke:RED,'stroke-width':4});
+    el(svg,'text',{x:X0+8,y:y0-8,'font-size':13,'font-weight':900,fill:RED}).textContent='U = E − I·r';
+    // E intercept dot
+    el(svg,'circle',{cx:X0,cy:y0,r:5,fill:RED});
+    el(svg,'text',{x:X0-12,y:y0+5,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'end'}).textContent='E='+E;
+    // current working point
+    const U=E-I*r;
+    const px=X0+I*sx, py=Y0+H-Math.max(0,U)*sy;
+    // dashed guides
+    el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:py,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'line',{x1:X0,y1:py,x2:px,y2:py,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:px,cy:py,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px+8,y:py-8,'font-size':12,'font-weight':900,fill:GREEN}).textContent='('+I+', '+U.toFixed(1)+')';
+    // Ir bracket (internal drop) shown as vertical red segment at working I from U to E
+    el(svg,'line',{x1:px+3,y1:py,x2:px+3,y2:y0-(y0-py),stroke:ORANGE,'stroke-width':0});
+    el(svg,'line',{x1:X0+I*sx+14,y1:Y0+H-E*sy,x2:X0+I*sx+14,y2:py,stroke:ORANGE,'stroke-width':4});
+    el(svg,'text',{x:X0+I*sx+22,y:(Y0+H-E*sy+py)/2,'font-size':11.5,'font-weight':800,fill:ORANGE}).textContent='内压 Ir='+(I*r).toFixed(1);
+    // stats
+    oE.textContent=E.toFixed(0);oIr.textContent=(I*r).toFixed(1);oU.textContent=U.toFixed(2);
+    oRe.textContent=(I>0)?(U/I).toFixed(2):'∞';
+  }
+  sync();
+})();
+
+/* ===== 互动2:串反并同 ===== */
+(function(){
+  const svg=document.getElementById('spSvg');
+  const Rxs=document.getElementById('spRx');
+  const oI=document.getElementById('spI'),oUs=document.getElementById('spUs'),oUp=document.getElementById('spUp'),oIp=document.getElementById('spIp');
+  const E=12,r=1,Rs=3,Rp=6; // series resistor, parallel branch fixed resistor
+  let Rx=6;
+  function sync(){Rx=+Rxs.value;draw();}
+  Rxs.oninput=sync;
+  function draw(){
+    clr(svg);
+    // circuit: E,r  -> series Rs -> then [ Rx parallel Rp ]
+    const Rpar=(Rx*Rp)/(Rx+Rp);
+    const Rext=Rs+Rpar;
+    const Itot=E/(Rext+r);
+    const Useries=Itot*Rs;
+    const Upar=Itot*Rpar;
+    const Ip=Upar/Rp; // current in the fixed parallel branch
+    // === draw schematic ===
+    // battery left
+    el(svg,'text',{x:40,y:30,'font-size':13,'font-weight':900,fill:INK}).textContent='电源 E,r → 串联R → (Rx ∥ R支)';
+    el(svg,'rect',{x:30,y:110,width:16,height:70,fill:INK});
+    el(svg,'line',{x1:38,y1:110,x2:38,y2:60,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:38,y:200,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='E='+E+'V';
+    // top wire
+    el(svg,'line',{x1:38,y1:60,x2:180,y2:60,stroke:INK,'stroke-width':3});
+    // series resistor (thickness = current)
+    const w=Math.max(3,Itot*4);
+    el(svg,'line',{x1:180,y1:60,x2:280,y2:60,stroke:BLUE,'stroke-width':w});
+    el(svg,'rect',{x:200,y:46,width:60,height:28,fill:'none',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:230,y:36,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='串R='+Rs+'Ω';
+    // node
+    el(svg,'line',{x1:280,y1:60,x2:420,y2:60,stroke:INK,'stroke-width':w});
+    // parallel block: two branches
+    const nx=420;
+    el(svg,'line',{x1:nx,y1:60,x2:nx,y2:200,stroke:INK,'stroke-width':3});
+    // branch Rx (top)
+    el(svg,'line',{x1:nx,y1:90,x2:560,y2:90,stroke:RED,'stroke-width':Math.max(3,(Upar/Rx)*4)});
+    el(svg,'rect',{x:460,y:76,width:60,height:28,fill:'none',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:490,y:70,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='Rx='+Rx+'Ω';
+    // branch Rp (bottom)
+    el(svg,'line',{x1:nx,y1:170,x2:560,y2:170,stroke:GREEN,'stroke-width':Math.max(3,Ip*4)});
+    el(svg,'rect',{x:460,y:156,width:60,height:28,fill:'none',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:490,y:150,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='R支='+Rp+'Ω';
+    // right rail
+    el(svg,'line',{x1:560,y1:90,x2:610,y2:90,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:560,y1:170,x2:610,y2:170,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:610,y1:90,x2:610,y2:170,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:610,y1:130,x2:640,y2:130,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:640,y1:130,x2:640,y2:230,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:640,y1:230,x2:38,y2:230,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:38,y1:230,x2:38,y2:180,stroke:INK,'stroke-width':3});
+    // arrows for current thickness legend
+    el(svg,'text',{x:110,y:265,'font-size':12.5,'font-weight':800,fill:INK}).textContent='线越粗 = 电流越大';
+    // dynamic verdict text
+    el(svg,'text',{x:350,y:288,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='Rx↑ → 串R电压↓(反) , 并支路电压↑(同)';
+    el(svg,'text',{x:350,y:312,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='干路 I='+Itot.toFixed(2)+'A , U串='+Useries.toFixed(2)+'V , U并='+Upar.toFixed(2)+'V';
+    // stats
+    oI.textContent=Itot.toFixed(2);
+    oUs.textContent=Useries.toFixed(2);
+    oUp.textContent=Upar.toFixed(2);
+    oIp.textContent=Ip.toFixed(2);
+  }
+  sync();
+})();
+
+/* ===== 互动3:滑片联动电表 ===== */
+(function(){
+  const svg=document.getElementById('slSvg');
+  const Ps=document.getElementById('slPos');
+  const oR=document.getElementById('slR'),oA=document.getElementById('slA'),oV=document.getElementById('slV'),oVr=document.getElementById('slVr');
+  const E=6,r=0.5,R0=2,Rmax=10;
+  let pos=50;
+  function sync(){pos=+Ps.value;draw();}
+  Ps.oninput=sync;
+  document.getElementById('slLeft').onclick=()=>{pos=Math.max(0,pos-10);Ps.value=pos;draw();};
+  document.getElementById('slRight').onclick=()=>{pos=Math.min(100,pos+10);Ps.value=pos;draw();};
+  function gauge(cx,cy,frac,col,label,val){
+    // dial background
+    el(svg,'circle',{cx:cx,cy:cy,r:44,fill:'#fff',stroke:INK,'stroke-width':3});
+    // arc
+    for(let k=0;k<=10;k++){
+      const a=Math.PI*(1 - k/10);
+      const x1=cx+38*Math.cos(a),y1=cy-38*Math.sin(a);
+      const x2=cx+44*Math.cos(a),y2=cy-44*Math.sin(a);
+      el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:INK,'stroke-width':2});
+    }
+    // needle
+    const ang=Math.PI*(1 - Math.max(0,Math.min(1,frac)));
+    const nx=cx+34*Math.cos(ang), ny=cy-34*Math.sin(ang);
+    el(svg,'line',{x1:cx,y1:cy,x2:nx,y2:ny,stroke:col,'stroke-width':4});
+    el(svg,'circle',{cx:cx,cy:cy,r:5,fill:col});
+    el(svg,'text',{x:cx,y:cy+62,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=label;
+    el(svg,'text',{x:cx,y:cy-20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=val;
+  }
+  function draw(){
+    clr(svg);
+    const Rslide=(pos/100)*Rmax; // 0..10
+    const Rext=R0+Rslide;
+    const I=E/(Rext+r);
+    const Uroad=E-I*r;
+    const Uslide=I*Rslide;
+    // gauges (left)
+    gauge(90,90,I/ (E/(R0+r)) ,RED,'电流表 A',I.toFixed(2)+'A');
+    gauge(90,210,Uroad/E,BLUE,'电压表 V',Uroad.toFixed(2)+'V');
+    // rheostat schematic (right)
+    const bx=260,by=70,bw=380,bh=24;
+    el(svg,'rect',{x:bx,y:by,width:bw,height:bh,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+bw/2,y:by-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='滑动变阻器(接入段染色)';
+    // engaged portion
+    const eng=(pos/100)*bw;
+    el(svg,'rect',{x:bx,y:by,width:eng,height:bh,fill:'rgba(232,106,23,0.35)',stroke:'none'});
+    // slider knob
+    const kx=bx+eng;
+    el(svg,'line',{x1:kx,y1:by-14,x2:kx,y2:by+bh+14,stroke:INK,'stroke-width':4});
+    el(svg,'rect',{x:kx-10,y:by-30,width:20,height:16,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:kx,y:by-18,'font-size':10,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P';
+    // labels
+    el(svg,'text',{x:bx,y:by+bh+30,'font-size':11.5,'font-weight':800,fill:INK}).textContent='接入 R滑 = '+Rslide.toFixed(1)+'Ω';
+    // arrows showing direction
+    el(svg,'text',{x:bx+bw-4,y:by+bh+30,'font-size':11.5,'font-weight':800,fill:ORANGE,'text-anchor':'end'}).textContent='右移→阻值增';
+    // conclusion box
+    el(svg,'text',{x:260,y:170,'font-size':13,'font-weight':900,fill:INK}).textContent='R滑↑ → I干↓(A表落) → U路↑(V表升)';
+    el(svg,'rect',{x:260,y:190,width:380,height:80,fill:'none',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:270,y:214,'font-size':12.5,'font-weight':800,fill:RED}).textContent='干路电流 I = E/(R0+R滑+r) = '+I.toFixed(3)+' A';
+    el(svg,'text',{x:270,y:236,'font-size':12.5,'font-weight':800,fill:BLUE}).textContent='路端电压 U = E − Ir = '+Uroad.toFixed(3)+' V';
+    el(svg,'text',{x:270,y:258,'font-size':12.5,'font-weight':800,fill:ORANGE}).textContent='R滑上电压 U滑 = I·R滑 = '+Uslide.toFixed(3)+' V';
+    // stats
+    oR.textContent=Rslide.toFixed(1);
+    oA.textContent=I.toFixed(3)+'A';
+    oV.textContent=Uroad.toFixed(3)+'V';
+    oVr.textContent=Uslide.toFixed(3)+'V';
+  }
+  sync();
+})();
+
+/* ===== 互动4:电容充电曲线 ===== */
+(function(){
+  const svg=document.getElementById('capSvg');
+  const Us=document.getElementById('capU'),Cs=document.getElementById('capC');
+  const oU=document.getElementById('capoU'),oUc=document.getElementById('capoUc'),oIc=document.getElementById('capoIc'),oQ=document.getElementById('capoQ');
+  let Uinf=6,C=2,t=0,running=false;
+  const tau=1.2; // time constant (arbitrary units)
+  function sync(){Uinf=+Us.value;C=+Cs.value;reset();}
+  Us.oninput=Cs.oninput=sync;
+  function reset(){t=0;running=false;draw();}
+  function Uc(tt){return Uinf*(1-Math.exp(-tt/tau));}
+  function Ic(tt){return (Uinf/ (tau*2))*Math.exp(-tt/tau)*100;} // mA, scaled
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=230;
+    const Tmax=6,Umax=10;
+    const sx=W/Tmax, sy=H/Umax;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U/V';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // asymptote
+    const yInf=Y0+H-Uinf*sy;
+    el(svg,'line',{x1:X0,y1:yInf,x2:X0+W,y2:yInf,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:X0+W-6,y:yInf-6,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='U∞='+Uinf;
+    // charge curve up to current t
+    let d='M '+X0+' '+(Y0+H);
+    const tt=Math.min(t,Tmax);
+    for(let x=0;x<=tt;x+=0.05){
+      const px=X0+x*sx, py=Y0+H-Uc(x)*sy;
+      d+=' L '+px.toFixed(1)+' '+py.toFixed(1);
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':4});
+    // current curve (red)
+    let dc='';let started=false;
+    for(let x=0;x<=tt;x+=0.05){
+      const px=X0+x*sx, py=Y0+H-(Ic(x)/100*Umax)*sy;
+      dc+=(started?' L ':'M ')+px.toFixed(1)+' '+py.toFixed(1);started=true;
+    }
+    if(dc)el(svg,'path',{d:dc,fill:'none',stroke:RED,'stroke-width':3,'stroke-dasharray':'4 3'});
+    // moving dot on Uc
+    const cx=X0+tt*sx, cy=Y0+H-Uc(tt)*sy;
+    el(svg,'circle',{cx:cx,cy:cy,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    // labels
+    el(svg,'text',{x:X0+90,y:Y0+20,'font-size':12.5,'font-weight':900,fill:BLUE}).textContent='蓝: U电容(t) 爬向 U∞';
+    el(svg,'text',{x:X0+90,y:Y0+40,'font-size':12.5,'font-weight':900,fill:RED}).textContent='红: 充电电流 → 衰减到 0(稳态断流)';
+    // stats
+    const ucur=Uc(tt), icur=(tt<Tmax)?Ic(tt):Ic(Tmax);
+    oU.textContent=Uinf.toFixed(0);
+    oUc.textContent=ucur.toFixed(2);
+    oIc.textContent=icur.toFixed(1);
+    oQ.textContent=(C*Uinf).toFixed(1);
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.05;
+    if(t>=6){t=6;running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('capGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('capReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动5:电动机功率分配 ===== */
+(function(){
+  const svg=document.getElementById('mtSvg');
+  const Us=document.getElementById('mtU'),Is=document.getElementById('mtI'),Rs=document.getElementById('mtR');
+  const oP=document.getElementById('mtoP'),oH=document.getElementById('mtoH'),oM=document.getElementById('mtoM'),oEta=document.getElementById('mtoEta');
+  let U=8,I=2,r=0.5;
+  function sync(){U=+Us.value;I=+Is.value;r=+Rs.value;draw();}
+  Us.oninput=Is.oninput=Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const P=U*I, H=I*I*r, M=Math.max(0,P-H);
+    // full bar
+    const X0=60,Y=90,W=580,Hbar=60;
+    const total=P;
+    const hw=(total>0)?(H/total)*W:0;
+    const mw=W-hw;
+    el(svg,'text',{x:X0,y:Y-16,'font-size':13,'font-weight':900,fill:INK}).textContent='电动机输入功率 P=UI = '+P.toFixed(1)+' W（整条彩条）';
+    // heat segment (red)
+    el(svg,'rect',{x:X0,y:Y,width:hw,height:Hbar,fill:RED,stroke:INK,'stroke-width':3});
+    // mechanical segment (green)
+    el(svg,'rect',{x:X0+hw,y:Y,width:mw,height:Hbar,fill:GREEN,stroke:INK,'stroke-width':3});
+    // labels inside
+    if(hw>40)el(svg,'text',{x:X0+hw/2,y:Y+Hbar/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='发热 I²r='+H.toFixed(1)+'W';
+    else el(svg,'text',{x:X0+hw+4,y:Y-4,'font-size':11.5,'font-weight':900,fill:RED}).textContent='发热 '+H.toFixed(1)+'W';
+    el(svg,'text',{x:X0+hw+mw/2,y:Y+Hbar/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='机械输出 '+M.toFixed(1)+'W';
+    // formulas
+    el(svg,'text',{x:X0,y:Y+Hbar+40,'font-size':13,'font-weight':800,fill:INK}).textContent='P输入 = U·I = '+U+'×'+I+' = '+P.toFixed(1)+' W';
+    el(svg,'text',{x:X0,y:Y+Hbar+64,'font-size':13,'font-weight':800,fill:RED}).textContent='P发热 = I²·r电机 = '+I+'²×'+r+' = '+H.toFixed(2)+' W（不能用 U/I 算!）';
+    el(svg,'text',{x:X0,y:Y+Hbar+88,'font-size':13,'font-weight':800,fill:GREEN}).textContent='P机械 = UI − I²r = '+M.toFixed(2)+' W';
+    // stats
+    oP.textContent=P.toFixed(1);
+    oH.textContent=H.toFixed(2);
+    oM.textContent=M.toFixed(2);
+    oEta.textContent=(P>0)?((M/P*100).toFixed(0)+'%'):'0%';
+  }
+  sync();
+})();
+
+/* ===== 互动6:并联等效电阻 ===== */
+(function(){
+  const svg=document.getElementById('parSvg');
+  const R1s=document.getElementById('parR1'),R2s=document.getElementById('parR2');
+  const o1=document.getElementById('paro1'),o2=document.getElementById('paro2'),oP=document.getElementById('paroP'),oCmp=document.getElementById('paroCmp');
+  let R1=6,R2=6;
+  function sync(){R1=+R1s.value;R2=+R2s.value;draw();}
+  R1s.oninput=R2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const Rpar=(R1*R2)/(R1+R2);
+    const mn=Math.min(R1,R2);
+    const X0=70,Y0=250,maxH=200,Rmax=20;
+    const sy=maxH/Rmax;
+    // baseline
+    el(svg,'line',{x1:X0-10,y1:Y0,x2:640,y2:Y0,stroke:INK,'stroke-width':3});
+    // ceiling dashed line = min(R1,R2)
+    const yCeil=Y0-mn*sy;
+    el(svg,'line',{x1:X0-10,y1:yCeil,x2:640,y2:yCeil,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:640,y:yCeil-6,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='天花板 = min(R₁,R₂) = '+mn;
+    function bar(x,val,col,lab){
+      const h=val*sy;
+      el(svg,'rect',{x:x,y:Y0-h,width:90,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+45,y:Y0+22,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+      el(svg,'text',{x:x+45,y:Y0-h-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=val.toFixed(2)+'Ω';
+    }
+    bar(120,R1,BLUE,'支路 R₁');
+    bar(280,R2,GREEN,'支路 R₂');
+    bar(460,Rpar,VIO,'并联 R并');
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='R并 = R₁R₂/(R₁+R₂) = '+Rpar.toFixed(2)+' Ω';
+    el(svg,'text',{x:350,y:52,'font-size':12,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='并联总电阻永远 < 最小支路（压在天花板下）';
+    // stats
+    o1.textContent=R1.toFixed(0);
+    o2.textContent=R2.toFixed(0);
+    oP.textContent=Rpar.toFixed(2);
+    oCmp.textContent=Rpar.toFixed(2)+' < '+mn;
+  }
+  sync();
+})();
+
+/* ===== 互动7:U-I 图像交点 ===== */
+(function(){
+  const svg=document.getElementById('uiSvg');
+  const Es=document.getElementById('uiE'),Rs=document.getElementById('uiR'),Res=document.getElementById('uiRe');
+  const oI=document.getElementById('uioI'),oU=document.getElementById('uioU'),oIr=document.getElementById('uioIr'),oSlope=document.getElementById('uioSlope');
+  let E=8,r=1,Re=3;
+  function sync(){E=+Es.value;r=+Rs.value;Re=+Res.value;draw();}
+  Es.oninput=Rs.oninput=Res.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=230;
+    const Imax=6,Umax=12;
+    const sx=W/Imax, sy=H/Umax;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U/V';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='I/A';
+    // source line U = E - I r
+    const y0=Y0+H-E*sy;
+    const Iend=Math.min(E/r,Imax);
+    const yE=Y0+H-(E-Iend*r)*sy;
+    el(svg,'line',{x1:X0,y1:y0,x2:X0+Iend*sx,y2:yE,stroke:RED,'stroke-width':4});
+    el(svg,'text',{x:X0+10,y:y0-8,'font-size':12.5,'font-weight':900,fill:RED}).textContent='电源线 U=E−Ir';
+    // external resistor line U = I Re (through origin)
+    const Iend2=Umax/Re;
+    const Ie=Math.min(Iend2,Imax);
+    const ye=Y0+H-(Ie*Re)*sy;
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+Ie*sx,y2:ye,stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:X0+Ie*sx-6,y:ye+16,'font-size':12.5,'font-weight':900,fill:BLUE,'text-anchor':'end'}).textContent='外电阻线 U=IR外';
+    // intersection: E - I r = I Re -> I = E/(Re+r)
+    const Iw=E/(Re+r), Uw=Iw*Re;
+    const px=X0+Iw*sx, py=Y0+H-Uw*sy;
+    el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:py,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'line',{x1:X0,y1:py,x2:px,y2:py,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:px,cy:py,r:7,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px+10,y:py-8,'font-size':12,'font-weight':900,fill:GREEN}).textContent='工作点('+Iw.toFixed(2)+', '+Uw.toFixed(2)+')';
+    // stats
+    oI.textContent=Iw.toFixed(2);
+    oU.textContent=Uw.toFixed(2);
+    oIr.textContent=(Iw*r).toFixed(2);
+    oSlope.textContent=Re.toFixed(1);
+  }
+  sync();
+})();
+
+/* ===== 互动8:输出功率极值 ===== */
+(function(){
+  const svg=document.getElementById('pkSvg');
+  const Es=document.getElementById('pkE'),Rs=document.getElementById('pkR'),Res=document.getElementById('pkRe');
+  const oP=document.getElementById('pkoP'),oPmax=document.getElementById('pkoPmax'),oEta=document.getElementById('pkoEta'),oMatch=document.getElementById('pkoMatch');
+  let E=8,r=2,Re=2;
+  function sync(){E=+Es.value;r=+Rs.value;Re=+Res.value;draw();}
+  Es.oninput=Rs.oninput=Res.oninput=sync;
+  function Pout(R){return (E*E*R)/((R+r)*(R+r));}
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=230;
+    const Rmax=12;
+    const Pmax=(E*E)/(4*r);
+    const sx=W/Rmax, sy=H/(Pmax*1.15);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='P外/W';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='R外/Ω';
+    // curve
+    let d='';let started=false;
+    for(let R=0.05;R<=Rmax;R+=0.05){
+      const px=X0+R*sx, py=Y0+H-Pout(R)*sy;
+      d+=(started?' L ':'M ')+px.toFixed(1)+' '+py.toFixed(1);started=true;
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':4});
+    // peak vertical line at R=r
+    const prx=X0+r*sx;
+    el(svg,'line',{x1:prx,y1:Y0,x2:prx,y2:Y0+H,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:prx+4,y:Y0+16,'font-size':11.5,'font-weight':800,fill:INK}).textContent='R外=r → 峰顶';
+    // peak dot
+    const pkx=X0+r*sx, pky=Y0+H-Pmax*sy;
+    el(svg,'circle',{cx:pkx,cy:pky,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:pkx+8,y:pky-6,'font-size':11.5,'font-weight':900,fill:RED}).textContent='Pmax=E²/4r='+Pmax.toFixed(1)+'W';
+    // current working dot
+    const P=Pout(Re);
+    const wx=X0+Re*sx, wy=Y0+H-P*sy;
+    el(svg,'line',{x1:wx,y1:Y0+H,x2:wx,y2:wy,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:wx,cy:wy,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:wx+8,y:wy+16,'font-size':11.5,'font-weight':900,fill:GREEN}).textContent='当前 P='+P.toFixed(2)+'W';
+    // stats
+    const eta=Re/(Re+r);
+    oP.textContent=P.toFixed(2);
+    oPmax.textContent=Pmax.toFixed(2);
+    oEta.textContent=(eta*100).toFixed(0)+'%';
+    oMatch.textContent=(Math.abs(Re-r)<0.15)?'匹配!η=50%':(Re>r?'R外>r':'R外<r');
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 闭合电路欧姆定律的两个式子?动态分析里唯一会变的是什么?",a:"I干=E/(R外+r)，U路=E−I干·r。E、r 恒定，唯一会变的是外电路总电阻 R外。所有动态分析都从「R外 变大还是变小」开始。"},
+ {q:"2. 外电阻 R外 增大，干路电流、路端电压各怎么变?",a:"R外↑ → I干=E/(R外+r) 减小 → 内压 Ir 减小 → 路端电压 U路=E−Ir 反而升高。R外 与 I干 反向、与 U路 同向。"},
+ {q:"3. 「串反并同」是什么?为什么?",a:"与变化电阻 Rx 串联的元件，电压/电流跟 Rx 反着变(共享干路电流，I降则 U=IR 降);与 Rx 并联的支路跟 Rx 同着变(共享路端电压，U路升则并联段升)。"},
+ {q:"4. 滑动变阻器动态题，第一步该做什么?",a:"先看清接哪两个接线柄，判断滑片朝某方向移动时「接入电路的那段」阻值是增大还是减小。这一步判错全盘皆错。"},
+ {q:"5. 开关闭合接入一条并联新支路，总电阻怎么变?即使新支路电阻很大?",a:"总电阻一定减小。并联越并越小，哪怕接入的是个大电阻。处理开关题要先重画等效电路。"},
+ {q:"6. 含电容器的稳态电路，两条铁律是什么?",a:"① 稳态时电容支路无电流，当断路处理，不算进 R总;② 电容两端电压 = 它跨接两点的电压，Q=C·U电容。"},
+ {q:"7. E=10V(理想)，R₁=4Ω、R₂=6Ω 串联，电容 C=2μF 并在 R₂ 两端，求电荷 Q。",a:"稳态电容支路断流，I=10/(4+6)=1A，U_R₂=1×6=6V=U电容。Q=CU=2μF×6V=12μC。"},
+ {q:"8. 为什么电容器有时「有电流」有时「无电流」?",a:"参数变化的充放电瞬间(过渡过程)电容支路有电流;一旦稳定进入稳态，电容支路无电流当断路。高考多考稳态前后对比。"},
+ {q:"9. 电动机的发热功率怎么算?能用 R=U/I 吗?",a:"发热 P热=I²·r电机(r电机是线圈电阻)，绝对不能用 U/I。电动机是非纯电阻，U/I 只是视在电阻。只有堵转不转时才退化为纯电阻。"},
+ {q:"10. 电动机端电压 U=10V、电流 I=2A、线圈电阻 1Ω，求机械输出功率与效率。",a:"P输入=UI=20W，P热=I²r=4×1=4W，P机械=20−4=16W，效率 η=16/20=80%。"},
+ {q:"11. 外电阻 R外 取何值时输出功率最大?最大值多少?此时效率?",a:"R外=r(阻抗匹配)时输出功率最大，P_max=E²/(4r)，此时效率恰为 50%。追求最大功率≠追求最高效率。"},
+ {q:"12. U-I 图上，电源线和外电阻线各长什么样?交点是什么?",a:"电源线 U=E−Ir 是下降直线(截距E、斜率−r);外电阻线 U=IR外 是过原点上升射线。两线交点=真实工作点(I工,U工)。R外增大→外电阻线变陡→交点沿电源线左上移(I减小U增大)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

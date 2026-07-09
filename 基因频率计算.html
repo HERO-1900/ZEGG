@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基因频率与基因型频率计算 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .ctrl input[type=number]{width:70px;border:3px solid var(--ink);padding:4px 6px;font-weight:800;font-size:13px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>基因频率与基因型频率计算</h1>
+    <p class="lead">这一页专治「现代生物进化理论」里最容易算错的那道计算题。核心就两件事分清楚:<b>基因频率</b>是「等位基因」在基因库里占的比例,<b>基因型频率</b>是「个体」按基因型分类占的比例。两者能互相换算,而<b>哈迪-温伯格定律</b>给了一套「理想种群不进化」的基准公式——一旦条件被打破(选择、突变、迁移),基因频率就会变,这就是<b>进化的实质</b>。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 想象一个「基因池」,里面装着全种群所有个体的等位基因。<b>基因频率</b>问的是「这个基因池里,A 占多少、a 占多少」;<b>基因型频率</b>问的是「population 里,AA、Aa、aa 各占多少」。基因频率决定基因型频率怎么分布(哈迪-温伯格给出精确公式),但基因型频率变化不一定等于基因频率变化——这是自交题的杀手锏。</div>
+
+    <div class="keybox"><b>两把尺子:</b> <b>基因频率 = 某等位基因数 ÷ 该基因座等位基因总数</b>;<b>基因型频率 = 某基因型个体数 ÷ 总个体数</b>。由基因型频率算基因频率:<b>A% = AA% + ½·Aa%</b>(杂合子只贡献一半 A)。哈迪-温伯格:若 p+q=1,则理想种群中 <b>AA=p²、Aa=2pq、aa=q²</b>,且世代不变。</div>
+
+    <h2>① 基因频率 vs 基因型频率:先分清算的是「基因」还是「个体」</h2>
+    <div class="card">
+      <div class="eq">基因频率 = 某等位基因数 / 该基因座等位基因总数</div>
+      <div class="eq">基因型频率 = 某基因型个体数 / 总个体数</div>
+      <p style="margin:8px 0">一个二倍体个体在某基因座上有<b>两个</b>等位基因(常染色体上)。所以「等位基因总数」= 个体数 × 2(常染色体),不是个体数本身。<b>基因频率算的是「基因」这个层面</b>(整个种群基因库里 A 占多少),<b>基因型频率算的是「个体」这个层面</b>(种群里哪种组合的个体多)。</p>
+      <table>
+        <tr><th>种群 100 人,基因型</th><th>个体数</th><th>基因型频率</th><th>贡献的 A 基因数</th><th>贡献的 a 基因数</th></tr>
+        <tr><td>AA</td><td>30</td><td>30%</td><td>30×2=60</td><td>0</td></tr>
+        <tr><td>Aa</td><td>40</td><td>40%</td><td>40×1=40</td><td>40×1=40</td></tr>
+        <tr><td>aa</td><td>30</td><td>30%</td><td>0</td><td>30×2=60</td></tr>
+        <tr><td><b>合计</b></td><td>100</td><td>100%</td><td><b>100</b></td><td><b>100</b></td></tr>
+      </table>
+      <p style="margin:8px 0">等位基因总数 = 100×2 = 200。<b>A% = 100/200 = 50%</b>,<b>a% = 100/200 = 50%</b>。同样可以用速算式验证:A% = AA% + ½Aa% = 30% + ½×40% = 30%+20% = 50%。两条路结果必须一致。</p>
+      <p class="trap">⚠ 基因频率和基因型频率是<b>两种不同的百分比</b>,分母不一样(等位基因总数 vs 个体总数),不能混着比大小、更不能把「AA占30%」直接当成「A的基因频率是30%」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 1 — 基因型频率 → 基因频率计算器:输入 AA%/Aa%/aa%,自动算 A%、a%(两种方法互验)</div>
+      <svg id="calcSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>AA% <input id="calcAA" type="range" min="0" max="100" value="30" step="1"></label>
+        <label>Aa% <input id="calcAa" type="range" min="0" max="100" value="40" step="1"></label>
+        <label>aa% <input id="calcaa" type="range" min="0" max="100" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>AA+Aa+aa</b><span id="calcSum">100</span></div>
+        <div><b>A% = AA%+½Aa%</b><span id="calcA">0</span></div>
+        <div><b>a% = aa%+½Aa%</b><span id="calcaR">0</span></div>
+        <div><b>A%+a%</b><span id="calcCheck">0</span></div>
+      </div>
+      <p class="small">拖三个滑块(会自动归一化到 100%)。柱状图:左三根是基因型频率(个体层面),右两根是换算出的基因频率(基因层面)。记住口诀:<b>纯合全给,杂合半给</b>。</p>
+    </div>
+
+    <h2 class="b">② 哈迪-温伯格定律:理想种群不进化的基准</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>五个理想条件(缺一不可):</b> ① 种群<b>足够大</b>(避免偶然波动);② <b>随机交配</b>(自由交配,非选择性);③ <b>没有突变</b>发生;④ 没有<b>迁入迁出</b>;⑤ 没有<b>自然选择</b>(所有基因型适合度相同)。满足这五条,种群叫「理想种群」,处于「哈迪-温伯格平衡」。</p>
+      <div class="eq">设 A 频率为 p,a 频率为 q,p + q = 1</div>
+      <div class="eq">则子代基因型频率:AA = p²　Aa = 2pq　aa = q²</div>
+      <p style="margin:8px 0">这来自随机交配的「配子随机结合」:雌配子里 A 占 p、a 占 q,雄配子同样 A 占 p、a 占 q。二者随机结合,AA 的概率 = p×p = p²,Aa 的概率 = p×q + q×p = 2pq,aa 的概率 = q×q = q²。展开验证:p²+2pq+q² = (p+q)² = 1²= 1,自洽。</p>
+      <h3>理想种群的核心结论:世代不变</h3>
+      <p style="margin:6px 0">只要满足五条件,<b>基因频率和基因型频率都会一代代保持不变</b>——种群没有进化。这正是「进化」的反面参照系:现实种群一旦偏离这五条,频率就会变,变化本身就是进化在发生。</p>
+      <p class="trap">⚠ 五个条件常考「找茬」:题目给「种群小」「非随机交配(如近亲多)」「有新突变」「个体迁入迁出」「某基因型更易存活/繁殖」中任意一条,哈迪-温伯格公式就<b>不能直接用</b>,基因频率会变。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 2 — 哈迪-温伯格可视化:拖 p 看 AA=p²、Aa=2pq、aa=q² 如何分布</div>
+      <svg id="hwSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>A 的频率 p <input id="hwP" type="range" min="0" max="100" value="50" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>p (A频率)</b><span id="hwPv">0.50</span></div>
+        <div><b>q (a频率)</b><span id="hwQv">0.50</span></div>
+        <div><b>AA=p² / Aa=2pq / aa=q²</b><span id="hwGeno">-</span></div>
+        <div><b>验证 p²+2pq+q²</b><span id="hwSum">1.00</span></div>
+      </div>
+      <p class="small">拖动 p:注意 Aa=2pq 在 p=q=0.5 时<b>最大</b>(杂合子比例峰值在中间,不是两端)。p 或 q 越接近 0 或 1,纯合子占绝对多数。</p>
+    </div>
+
+    <h2 class="g">③ 反推:由 aa 的频率倒推 q 和 p</h2>
+    <div class="card">
+      <div class="eq">已知 aa 表现型频率 = q²　⟹　q = √(aa频率)　⟹　p = 1 − q</div>
+      <p style="margin:8px 0">这是最常考的「反推」计算:隐性性状(aa)<b>可以直接数出来</b>(表现型能观察),但 A 和 Aa 表面上分不开(都是显性表现型)。所以标准流程是:先数出隐性表现型 aa 占比 → 开平方得 q → 用 p=1−q 得 p → 再算 AA=p²、Aa=2pq(此时才知道显性个体里到底多少是纯合、多少是杂合)。</p>
+      <div class="mono">例:白化病(aa)发病率 1/10000 = 0.0001。q=√0.0001=0.01,p=1−0.01=0.99。携带者(Aa)频率=2pq=2×0.99×0.01≈0.0198,约 1/50。</div>
+      <p class="trap">⚠ 最容易犯的错:直接把 <b>aa 的频率当成 q</b>(漏开平方)。q 是「等位基因 a 的频率」,aa 是「基因型 aa 的频率」,q²=aa,q=√(aa),千万别写反。此推导<b>前提也是哈迪-温伯格成立</b>(理想种群),否则 aa≠q²。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 3 — 由 aa 反推基因频率:输入隐性表现型频率,自动算 q、p、携带者比例</div>
+      <svg id="revSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>aa 频率(%) <input id="revAA" type="range" min="0.1" max="50" value="4" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>q=√(aa频率)</b><span id="revQ">0</span></div>
+        <div><b>p=1−q</b><span id="revP">0</span></div>
+        <div><b>携带者 Aa=2pq</b><span id="revCarrier">0</span></div>
+        <div><b>AA=p²</b><span id="revAAg">0</span></div>
+      </div>
+      <p class="small">拖动隐性表现型(aa)的观测频率,右侧自动反推出等位基因频率 q、p,再算出「表面正常、实为携带者」Aa 的比例——这正是遗传咨询里估算携带者概率的原理。</p>
+    </div>
+
+    <h2 class="o">④ 自然选择改变基因频率:进化的实质</h2>
+    <div class="card">
+      <div class="eq">进化的实质 = 种群基因频率的(定向)改变</div>
+      <p style="margin:6px 0">达尔文自然选择学说 + 现代进化理论:<b>变异是随机的,选择是定向的</b>。若 aa 个体因不利性状(如更易被捕食、更难存活或繁殖)而适合度降低,每一代 aa 被淘汰的比例增加,携带 a 的个体留下后代减少,则 <b>q(a的频率)逐代下降</b>,p(A的频率)逐代上升。这个过程不需要「新基因产生」,只需要现有基因频率的定向改变。</p>
+      <table>
+        <tr><th>改变基因频率的因素</th><th>作用方式</th></tr>
+        <tr><td>自然选择</td><td>不同基因型适合度不同,定向改变频率(不利基因频率下降)</td></tr>
+        <tr><td>基因突变</td><td>产生新等位基因,是进化的<b>原材料</b>,频率改变量通常很小但持续</td></tr>
+        <tr><td>迁入/迁出(基因流)</td><td>带入或带走等位基因,直接改变种群基因库组成</td></tr>
+        <tr><td>遗传漂变</td><td>小种群中偶然波动(非定向),可使某基因频率随机剧变甚至消失</td></tr>
+      </table>
+      <p class="trap">⚠ 「选择」直接作用于<b>表现型</b>(个体的性状表现),但改变的是<b>基因频率</b>(下一代基因库的组成)。淘汰的是个体,变化的是种群——别把「个体被选择」和「基因频率改变」的因果关系说反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 4 — 自然选择改变基因频率:逐代淘汰部分 aa,观察 q 逐代下降</div>
+      <svg id="selSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="selStep">▶ 下一代</button><button id="selReset">↺ 重置</button>
+        <label>起始 q₀ <input id="selQ0" type="range" min="10" max="90" value="50" step="5"></label>
+        <label>aa 淘汰强度 s <input id="selS" type="range" min="0" max="100" value="50" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>世代数</b><span id="selGen">0</span></div>
+        <div><b>当前 q</b><span id="selQ">0</span></div>
+        <div><b>当前 p</b><span id="selP">0</span></div>
+        <div><b>当前 aa 频率</b><span id="selAAf">0</span></div>
+      </div>
+      <p class="small">每代按哈迪-温伯格产生 AA/Aa/aa,再对 aa 个体按选择强度 s 淘汰一部分,剩下的个体重新组成基因库进入下一代。s 越大,q 下降越快——这就是「选择使不利基因频率下降」的定量演示。</p>
+    </div>
+
+    <h2 class="v">⑤ 自交 vs 自由交配:基因频率不变,基因型频率呢?</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是选择题高频陷阱。以 Aa 自交(连续自交,不涉及选择)为例:</p>
+      <table>
+        <tr><th></th><th>自交(自花传粉/近亲)</th><th>自由交配(随机交配)</th></tr>
+        <tr><td>基因频率(A%,a%)</td><td><b>不变</b>(只要无选择,配子里 A、a 比例不变)</td><td><b>不变</b>(同左)</td></tr>
+        <tr><td>基因型频率</td><td><b>会变</b>:Aa 比例逐代减半,AA、aa 比例逐代上升(纯合子增多)</td><td><b>不变</b>(一旦达到哈迪-温伯格平衡,世代维持 p²:2pq:q²)</td></tr>
+        <tr><td>本质原因</td><td>自交只在<b>同一基因型内部</b>交配,不是种群内随机配子结合</td><td>配子在<b>整个种群基因库</b>中随机结合,重现 p²:2pq:q²</td></tr>
+      </table>
+      <p style="margin:8px 0">Aa 自交一代:¼AA : ½Aa : ¼aa。Aa 部分再自交,Aa 比例又减半……n 代后 Aa 比例 = (½)ⁿ,AA 和 aa 各占 [1−(½)ⁿ]/2,且始终 <b>A%=a%=50% 不变</b>。这说明:<b>自交改变基因型频率,但不改变基因频率</b>,所以自交本身<b>不能算作生物在进化</b>(进化的标志是基因频率变)。</p>
+      <p class="trap">⚠ 别把「基因型频率变化」等同于「正在进化」。进化的判定标准始终是<b>基因频率</b>是否改变,不是基因型频率。自交、自由交配都可能让基因型频率不同,但只要没有选择/突变/迁移,基因频率都不变——都不算进化。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌱 互动 5 — 自交 vs 自由交配:同一 Aa 起始种群,基因型频率随世代如何变化</div>
+      <svg id="selfSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="selfStep">▶ 下一代</button><button id="selfReset">↺ 重置</button>
+        <label>模式 <input id="selfMode" type="range" min="0" max="1" value="0" step="1"></label>
+        <span class="vlabel" id="selfModeLabel">当前:自交</span>
+      </div>
+      <div class="live">
+        <div><b>世代数</b><span id="selfGen">0</span></div>
+        <div><b>AA / Aa / aa</b><span id="selfGeno">25% / 50% / 25%</span></div>
+        <div><b>A 频率(应恒定)</b><span id="selfA">50%</span></div>
+        <div><b>a 频率(应恒定)</b><span id="selfa">50%</span></div>
+      </div>
+      <p class="small">起点都是 Aa 自交一代的 1:2:1。拖「模式」切换自交 / 自由交配,点「下一代」看基因型频率曲线怎么走:自交模式下 Aa(黄)持续减半、AA+aa(蓝+红)上升;自由交配模式下三者从第二代起<b>锁死不变</b>。右侧 A/a 频率两种模式都恒定 50%。</p>
+    </div>
+
+    <h2 class="r">⑥ 伴 X 基因频率:男性只有一条 X,分母要单独算</h2>
+    <div class="card">
+      <p style="margin:6px 0">X 染色体上的基因,女性(XX)有<b>两个</b>等位基因座位,男性(XY)只有<b>一个</b>(Y 上没有对应等位基因)。所以算伴 X 基因的基因频率时,<b>等位基因总数 ≠ 总人数×2</b>,要分性别分别计算再合并。</p>
+      <div class="eq">该等位基因总数 = 女性数×2 + 男性数×1</div>
+      <div class="eq">某等位基因频率 = (女性中该基因拷贝数 + 男性中该基因拷贝数) / 等位基因总数</div>
+      <p style="margin:8px 0"><b>例:</b> 色盲基因(隐性,X<sup>b</sup>)。种群女性 100 人:X<sup>B</sup>X<sup>B</sup> 81、X<sup>B</sup>X<sup>b</sup> 18、X<sup>b</sup>X<sup>b</sup> 1;男性 100 人:X<sup>B</sup>Y 90、X<sup>b</sup>Y 10。</p>
+      <p style="margin:6px 0">女性贡献 X<sup>b</sup>:18×1+1×2=20;男性贡献 X<sup>b</sup>:10×1=10。X<sup>b</sup> 总数=20+10=30。等位基因总数=100×2+100×1=300。<b>X<sup>b</sup> 频率=30/300=10%</b>。</p>
+      <p class="trap">⚠ 常见错误:直接套常染色体公式,把男性也按「2个基因」算,或者干脆漏掉男性只有一条 X 这件事。伴 X 隐性性状,男性<b>只要有一个 X<sup>b</sup> 就发病</b>(不需要纯合),所以男性发病率<b>直接等于该人群中 X<sup>b</sup> 的基因频率</b>,这点常被拿来出「巧算」题。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 6 — 伴 X 基因频率计算器:男女基因型人数 → X<sup>b</sup> 基因频率(男性只算一条 X)</div>
+      <svg id="xSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>女性 X<sup>B</sup>X<sup>b</sup> 人数 <input id="xFHet" type="range" min="0" max="100" value="18" step="1"></label>
+        <label>女性 X<sup>b</sup>X<sup>b</sup> 人数 <input id="xFRec" type="range" min="0" max="100" value="1" step="1"></label>
+        <label>男性 X<sup>b</sup>Y 人数 <input id="xMRec" type="range" min="0" max="100" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>女性总数(固定100)</b><span id="xFTot">100</span></div>
+        <div><b>男性总数(固定100)</b><span id="xMTot">100</span></div>
+        <div><b>等位基因总数</b><span id="xTotal">300</span></div>
+        <div><b>X<sup>b</sup> 基因频率</b><span id="xFreq">0</span></div>
+      </div>
+      <p class="small">女性人数固定 100(其余为 X<sup>B</sup>X<sup>B</sup>),男性人数固定 100(其余为 X<sup>B</sup>Y)。等位基因总数 = 100×2(女)+100×1(男) = 300,分母始终不是「总人数×2」。男性 X<sup>b</sup>Y 人数同时也等于男性发病人数——伴 X 隐性男性发病率=X<sup>b</sup> 频率,可对照验证。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 由基因型个体数/频率算基因频率</h3>
+      <p><b class="tag">触发信号:</b>给出 AA、Aa、aa 的个体数或百分比,问 A(或a)的基因频率。</p>
+      <p><b class="tag">标准动作:</b>法一(数基因):等位基因总数=个体数×2,数出 A 的总数除以它;法二(速算):A%=AA%+½Aa%。两法互验。</p>
+      <p><b class="tag">示例(带解):</b>某种群 AA=20%、Aa=60%、aa=20%。A%=20%+½×60%=20%+30%=50%,a%=20%+30%=50%。验证:50%+50%=100%,符合。</p>
+      <p class="trap">陷阱:漏掉杂合子只算「半个」;把基因型频率直接当基因频率;分母用错(个体数当成等位基因数)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 哈迪-温伯格正算:由 p、q 求基因型频率</h3>
+      <p><b class="tag">触发信号:</b>给出「理想种群」「随机交配」「基因频率p、q」,求 AA/Aa/aa 的比例或人数。</p>
+      <p><b class="tag">标准动作:</b>先确认五个理想条件成立 → AA=p²,Aa=2pq,aa=q² → 若求人数,再乘以种群总数。</p>
+      <p><b class="tag">示例(带解):</b>某岛屿蝴蝶种群理想状态,A 频率 p=0.6,a 频率 q=0.4。AA=0.6²=36%,Aa=2×0.6×0.4=48%,aa=0.4²=16%。验证 36%+48%+16%=100%。</p>
+      <p class="trap">陷阱:忘记验证五个前提是否成立就直接套公式;把 2pq 漏写成 pq(杂合子有两种来源:父A母a、父a母A)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 哈迪-温伯格反算:由 aa 表现型频率反推 q、p</h3>
+      <p><b class="tag">触发信号:</b>给出隐性遗传病/性状的发病率或表现型比例,问基因频率、携带者比例。</p>
+      <p><b class="tag">标准动作:</b>q=√(aa频率),p=1−q,携带者 Aa=2pq,AA=p²。前提仍是种群处于哈迪-温伯格平衡。</p>
+      <p><b class="tag">示例(带解):</b>囊性纤维化(隐性)发病率 1/2500=0.0004。q=√0.0004=0.02,p=0.98。携带者频率=2×0.98×0.02≈0.0392,约 1/25.5,远高于患病率(因为携带者不发病却携带a)。</p>
+      <p class="trap">陷阱:忘记开平方,直接把 aa 的频率当 q;算携带者时漏了「2」这个系数(Aa 有两种父母来源组合)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 自然选择/环境改变导致基因频率变化</h3>
+      <p><b class="tag">触发信号:</b>题目描述「环境改变后某基因型个体存活率/繁殖率下降(或上升)」,问下一代或多代后基因频率如何变化。</p>
+      <p><b class="tag">标准动作:</b>列出选择前各基因型的比例和数量,按存活率/淘汰比例调整,重新计算新一代的基因总数和基因频率;多代要逐代迭代。</p>
+      <p><b class="tag">示例(带解):</b>某种群 AA:Aa:aa=100:200:100(共400只,等位基因800个,p=q=0.5)。环境剧变后 aa 全部死亡,存活 300 只中 A 总数=100×2+200×1=400,a 总数=200×1=200,总等位基因=600。新 p=400/600≈0.67,新 q=200/600≈0.33。a 频率明显下降。</p>
+      <p class="trap">陷阱:选择只改变了存活个体的构成,基因频率要用「存活下来的个体」重新计算等位基因总数,不能沿用选择前的分母;多代问题要逐代累计而非一步到位。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 自交 vs 自由交配对基因型频率的影响</h3>
+      <p><b class="tag">触发信号:</b>「连续自交n代」或「自由交配」,问基因频率是否变、基因型频率是否变。</p>
+      <p><b class="tag">标准动作:</b>基因频率:只要无选择/突变/迁移,自交和自由交配<b>都不变</b>。基因型频率:自交下 Aa 比例每代减半、纯合子比例上升;自由交配一旦达到平衡则维持 p²:2pq:q² 不变。</p>
+      <p><b class="tag">示例(带解):</b>Aa 连续自交 3 代,Aa 比例=(½)³=1/8=12.5%,AA=aa=(1−1/8)/2=43.75%。而基因频率全程 A=a=50%,与自交代数无关。</p>
+      <p class="trap">陷阱:把「基因型频率改变」误判为「正在进化」;进化的判据始终是基因频率是否改变,自交不算进化。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 伴X遗传的基因频率计算</h3>
+      <p><b class="tag">触发信号:</b>题目涉及色盲、血友病等伴X隐性遗传,给男女不同基因型人数,求该等位基因频率。</p>
+      <p><b class="tag">标准动作:</b>等位基因总数=女性数×2+男性数×1;某等位基因总数=女性中该基因拷贝数之和+男性中该基因拷贝数之和;两者相除。男性发病率直接等于致病基因频率(伴X隐性)。</p>
+      <p><b class="tag">示例(带解):</b>女性200人(X<sup>B</sup>X<sup>B</sup> 152、X<sup>B</sup>X<sup>b</sup> 40、X<sup>b</sup>X<sup>b</sup> 8),男性200人(X<sup>B</sup>Y 180、X<sup>b</sup>Y 20)。X<sup>b</sup>总数=40+8×2+20=76,等位基因总数=200×2+200=600。X<sup>b</sup>频率=76/600≈12.7%。</p>
+      <p class="trap">陷阱:男性也按2个基因算分母;漏加女性纯合隐性的×2;混淆「男性发病率」与「男性中X<sup>b</sup>频率」——对男性而言两者数值相同但概念不同。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 基因频率(等位基因层面,分母×2)≠ 基因型频率(个体层面,分母不乘2),两者分母不同,不能混用。</p>
+      <p class="trap">② 由基因型频率算基因频率的口诀:<b>A% = AA% + ½Aa%</b>——纯合子全给、杂合子只给一半,常漏乘 ½ 或漏加 AA。</p>
+      <p class="trap">③ 哈迪-温伯格定律成立需<b>五个理想条件同时满足</b>(种群大、随机交配、无突变、无迁移、无选择),缺一条结论就不成立。</p>
+      <p class="trap">④ 由 aa 反推:<b>q=√(aa频率)</b>,不是 q=aa频率本身;算携带者 Aa=2pq 时别漏系数 2。</p>
+      <p class="trap">⑤ 伴X遗传基因频率:等位基因总数 = 女性数×2 + 男性数×1,<b>男性只有一条X</b>,分母别按常染色体套。</p>
+      <p class="trap">⑥ 进化的实质是<b>基因频率的改变</b>,不是基因型频率的改变、也不是个体性状的改变,判断「是否在进化」永远看基因频率这把尺子。</p>
+      <p class="trap">⑦ 自然选择<b>直接作用于表现型</b>,但通过淘汰/存活差异,<b>间接改变的是基因频率</b>——因果链是"选表现型→变基因频率"。</p>
+      <p class="trap">⑧ 自交与自由交配:只要无选择/突变/迁移,<b>两者基因频率都不变</b>;但<b>自交会使基因型频率改变</b>(杂合子比例逐代减半),自由交配达到平衡后基因型频率不变。</p>
+      <p class="trap">⑨ 突变、迁移、遗传漂变都能改变基因频率,不是只有自然选择——题目提到「小种群」要警惕遗传漂变(非定向的偶然波动)。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 哈迪-温伯格是「配子随机抽样」的必然结果:</b> 把基因库想象成一个装满 A、a 配子的袋子,比例是 p:q。随机交配就是「随机抓两个配子配对」——这在数学上就是二项展开 (p+q)²=p²+2pq+q²。不用死记,理解「独立随机事件概率相乘、两种路径概率相加」就能现推出 Aa=2pq(而不是 pq)。</p>
+      <p style="margin:8px 0"><b>② 「基因频率不变」和「基因型频率不变」是两个独立命题:</b> 随机交配只需<b>一代</b>就能让基因型频率锁定在 p²:2pq:q²(哈迪-温伯格平衡),此后世代不变;但自交<b>永远达不到</b>这个平衡态,Aa 比例按 (½)ⁿ 指数衰减趋于 0——这解释了为什么长期自交(如自花传粉植物、近亲繁殖)会导致纯合子比例升高、隐性性状暴露增多。</p>
+      <p style="margin:8px 0"><b>③ 「反推 q=√(aa)」的前提本身值得推敲:</b> 这一步严格依赖种群处于哈迪-温伯格平衡。如果题目描述的是「刚发生选择」或「刚有大量迁入」的种群,aa 频率不等于 q²,这时候盲目开平方是错的——先判断种群是否处于平衡态,是解题的隐藏前提。</p>
+      <p style="margin:8px 0"><b>④ 选择系数 s 与频率变化速度非线性:</b> 对隐性纯合致死(s=1)的情形,q 每代下降但下降速度越来越慢(q 越小,q² 更小,能被选择淘汰的"有效目标"更少)——这解释了为什么想通过选择彻底清除一个隐性有害基因非常困难,因为它大量"隐藏"在杂合子 Aa 中不被选择触及。</p>
+      <p style="margin:8px 0"><b>⑤ 进化 = 基因频率改变,但基因频率改变不等于产生新物种:</b> 新物种的形成需要<b>生殖隔离</b>的出现,基因频率的定向改变(自然选择的结果)只是物种形成的必要条件之一。做题时区分「种群在进化」(基因频率变了)和「新物种形成了」(出现生殖隔离),是常见的概念层级陷阱。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 现代生物进化理论:基因频率与基因型频率计算</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:基因型频率 -> 基因频率计算器 ===== */
+(function(){
+  const svg=document.getElementById('calcSvg');
+  const AAs=document.getElementById('calcAA'),Aas=document.getElementById('calcAa'),aas=document.getElementById('calcaa');
+  const oSum=document.getElementById('calcSum'),oA=document.getElementById('calcA'),oaR=document.getElementById('calcaR'),oCheck=document.getElementById('calcCheck');
+  function sync(){
+    let AA=+AAs.value,Aa=+Aas.value,aa=+aas.value;
+    let sum=AA+Aa+aa;
+    if(sum<=0){AA=1;Aa=1;aa=1;sum=3;}
+    const AAn=AA/sum*100, Aan=Aa/sum*100, aan=aa/sum*100;
+    const Afreq=AAn+0.5*Aan;
+    const afreq=aan+0.5*Aan;
+    oSum.textContent=(AAn+Aan+aan).toFixed(1)+'%';
+    oA.textContent=Afreq.toFixed(1)+'%';
+    oaR.textContent=afreq.toFixed(1)+'%';
+    oCheck.textContent=(Afreq+afreq).toFixed(1)+'%';
+    draw(AAn,Aan,aan,Afreq,afreq);
+  }
+  AAs.oninput=Aas.oninput=aas.oninput=sync;
+  function draw(AAn,Aan,aan,Af,af){
+    clr(svg);
+    const baseY=180,maxH=140,bw=60;
+    const bars=[
+      {x:60,h:AAn,col:BLUE,lab:'AA',val:AAn},
+      {x:150,h:Aan,col:YEL,lab:'Aa',val:Aan},
+      {x:240,h:aan,col:RED,lab:'aa',val:aan},
+      {x:420,h:Af,col:GREEN,lab:'A%',val:Af},
+      {x:510,h:af,col:VIO,lab:'a%',val:af}
+    ];
+    el(svg,'line',{x1:20,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:150,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='基因型频率(个体层面)';
+    el(svg,'text',{x:465,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='基因频率(基因层面)';
+    el(svg,'line',{x1:340,y1:10,x2:340,y2:200,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    bars.forEach(b=>{
+      const h=Math.max(2,b.h/100*maxH);
+      el(svg,'rect',{x:b.x,y:baseY-h,width:bw,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+bw/2,y:baseY-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.val.toFixed(1)+'%';
+    });
+    el(svg,'text',{x:465,y:200,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='A%=AA%+½Aa%　a%=aa%+½Aa%';
+  }
+  sync();
+})();
+
+/* ===== 互动2:哈迪-温伯格可视化 ===== */
+(function(){
+  const svg=document.getElementById('hwSvg');
+  const Ps=document.getElementById('hwP');
+  const oPv=document.getElementById('hwPv'),oQv=document.getElementById('hwQv'),oGeno=document.getElementById('hwGeno'),oSum=document.getElementById('hwSum');
+  function sync(){
+    const p=+Ps.value/100, q=1-p;
+    const AA=p*p, Aa=2*p*q, aa=q*q;
+    oPv.textContent=p.toFixed(2);oQv.textContent=q.toFixed(2);
+    oGeno.textContent=(AA*100).toFixed(1)+'% / '+(Aa*100).toFixed(1)+'% / '+(aa*100).toFixed(1)+'%';
+    oSum.textContent=(AA+Aa+aa).toFixed(2);
+    draw(p,q,AA,Aa,aa);
+  }
+  Ps.oninput=sync;
+  function draw(p,q,AA,Aa,aa){
+    clr(svg);
+    const baseY=210,maxH=170,bw=110;
+    const bars=[{x:70,h:AA,col:BLUE,lab:'AA=p²'},{x:280,h:Aa,col:YEL,lab:'Aa=2pq'},{x:490,h:aa,col:RED,lab:'aa=q²'}];
+    el(svg,'line',{x1:30,y1:baseY,x2:670,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='p='+p.toFixed(2)+'　q='+q.toFixed(2)+'　(p+q=1)';
+    bars.forEach(b=>{
+      const h=Math.max(2,b.h*maxH);
+      el(svg,'rect',{x:b.x,y:baseY-h,width:bw,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+bw/2,y:baseY+22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+bw/2,y:baseY-h-10,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(b.h*100).toFixed(1)+'%';
+    });
+    el(svg,'text',{x:350,y:245,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='注意:Aa=2pq 在 p=q=0.5 时达到最大值 0.5';
+  }
+  sync();
+})();
+
+/* ===== 互动3:由aa反推基因频率 ===== */
+(function(){
+  const svg=document.getElementById('revSvg');
+  const AAs=document.getElementById('revAA');
+  const oQ=document.getElementById('revQ'),oP=document.getElementById('revP'),oCarrier=document.getElementById('revCarrier'),oAAg=document.getElementById('revAAg');
+  function sync(){
+    const aa=+AAs.value/100;
+    const q=Math.sqrt(aa);
+    const p=1-q;
+    const carrier=2*p*q;
+    const AAg=p*p;
+    oQ.textContent=q.toFixed(4);
+    oP.textContent=p.toFixed(4);
+    oCarrier.textContent=(carrier*100).toFixed(2)+'%';
+    oAAg.textContent=(AAg*100).toFixed(2)+'%';
+    draw(aa,q,p,carrier,AAg);
+  }
+  AAs.oninput=sync;
+  function draw(aa,q,p,carrier,AAg){
+    clr(svg);
+    const baseY=170,maxH=110;
+    const bars=[{x:60,h:aa,col:RED,lab:'aa(观测)'},{x:220,h:q,col:VIO,lab:'q=√aa'},{x:380,h:carrier,col:YEL,lab:'Aa(携带者)'},{x:540,h:AAg,col:BLUE,lab:'AA'}];
+    el(svg,'line',{x1:20,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    bars.forEach(b=>{
+      const h=Math.max(2,b.h*maxH);
+      el(svg,'rect',{x:b.x,y:baseY-h,width:80,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+40,y:baseY+18,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+40,y:baseY-h-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(b.h*100).toFixed(2)+'%';
+    });
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='q=√(aa频率) → p=1−q → 携带者 Aa=2pq';
+  }
+  sync();
+})();
+
+/* ===== 互动4:自然选择改变基因频率 ===== */
+(function(){
+  const svg=document.getElementById('selSvg');
+  const Q0s=document.getElementById('selQ0'),Ss=document.getElementById('selS');
+  const oGen=document.getElementById('selGen'),oQ=document.getElementById('selQ'),oP=document.getElementById('selP'),oAAf=document.getElementById('selAAf');
+  let q=0.5,gen=0,history=[];
+  function reset(){
+    q=+Q0s.value/100;gen=0;history=[q];
+    update();
+  }
+  Q0s.oninput=reset;
+  Ss.oninput=()=>{draw();};
+  function step(){
+    const s=+Ss.value/100;
+    const p=1-q;
+    // Hardy-Weinberg genotype freqs before selection
+    const AA=p*p, Aa=2*p*q, aa=q*q;
+    // selection against aa: fraction s of aa removed
+    const aaSurv=aa*(1-s);
+    const total=AA+Aa+aaSurv;
+    const AAn=AA/total, Aan=Aa/total, aan=aaSurv/total;
+    // new allele freq from surviving population
+    const newQ=aan+0.5*Aan;
+    q=newQ;
+    gen++;
+    history.push(q);
+    if(history.length>30)history.shift();
+    update();
+  }
+  function update(){
+    const p=1-q;
+    oGen.textContent=gen;
+    oQ.textContent=q.toFixed(4);
+    oP.textContent=p.toFixed(4);
+    oAAf.textContent=(q*q*100).toFixed(2)+'%';
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    const X0=50,Y0=20,W=610,H=180;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='q';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='世代';
+    el(svg,'text',{x:X0-8,y:Y0+8,'font-size':10.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'end'}).textContent='1.0';
+    el(svg,'text',{x:X0-8,y:Y0+H+4,'font-size':10.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'end'}).textContent='0';
+    const n=Math.max(history.length-1,1);
+    const stepX=W/Math.max(n,10);
+    let pts=[];
+    history.forEach((v,i)=>{
+      const x=X0+i*stepX, y=Y0+H-(v*H);
+      pts.push(x+','+y);
+    });
+    if(pts.length>1){
+      el(svg,'polyline',{points:pts.join(' '),fill:'none',stroke:RED,'stroke-width':4});
+    }
+    history.forEach((v,i)=>{
+      const x=X0+i*stepX, y=Y0+H-(v*H);
+      el(svg,'circle',{cx:x,cy:y,r:4,fill:RED,stroke:INK,'stroke-width':2});
+    });
+    el(svg,'text',{x:X0+W/2,y:Y0+H+40,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='红线 = q(a的频率)随世代变化，选择强度越大下降越快';
+  }
+  document.getElementById('selStep').onclick=step;
+  document.getElementById('selReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:自交 vs 自由交配 ===== */
+(function(){
+  const svg=document.getElementById('selfSvg');
+  const modeSlider=document.getElementById('selfMode'),modeLabel=document.getElementById('selfModeLabel');
+  const stepBtn=document.getElementById('selfStep'),resetBtn=document.getElementById('selfReset');
+  const oGen=document.getElementById('selfGen'),oGeno=document.getElementById('selfGeno'),oA=document.getElementById('selfA'),oa=document.getElementById('selfa');
+  let AA=0.25,Aa=0.5,aa=0.25,gen=1;
+  function reset(){AA=0.25;Aa=0.5;aa=0.25;gen=1;update();}
+  modeSlider.oninput=()=>{
+    modeLabel.textContent='当前:'+(modeSlider.value==='0'?'自交':'自由交配');
+    draw();
+  };
+  function step(){
+    const mode=modeSlider.value;
+    const p=AA+0.5*Aa, q=aa+0.5*Aa; // allele freq before
+    if(mode==='0'){
+      // selfing: AA->AA, aa->aa, Aa-> 1/4 AA + 1/2 Aa + 1/4 aa
+      const newAA=AA+0.25*Aa;
+      const newAa=0.5*Aa;
+      const newaa=aa+0.25*Aa;
+      AA=newAA;Aa=newAa;aa=newaa;
+    } else {
+      // random mating: reaches HW equilibrium in one generation based on current allele freq
+      AA=p*p;Aa=2*p*q;aa=q*q;
+    }
+    gen++;
+    update();
+  }
+  function update(){
+    oGen.textContent=gen;
+    oGeno.textContent=(AA*100).toFixed(1)+'% / '+(Aa*100).toFixed(1)+'% / '+(aa*100).toFixed(1)+'%';
+    const p=AA+0.5*Aa, q=aa+0.5*Aa;
+    oA.textContent=(p*100).toFixed(1)+'%';
+    oa.textContent=(q*100).toFixed(1)+'%';
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    const baseY=210,maxH=170,bw=110;
+    const bars=[{x:90,h:AA,col:BLUE,lab:'AA'},{x:300,h:Aa,col:YEL,lab:'Aa'},{x:510,h:aa,col:RED,lab:'aa'}];
+    el(svg,'line',{x1:30,y1:baseY,x2:670,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='第 '+gen+' 代　模式:'+(modeSlider.value==='0'?'自交':'自由交配');
+    bars.forEach(b=>{
+      const h=Math.max(2,b.h*maxH);
+      el(svg,'rect',{x:b.x,y:baseY-h,width:bw,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+bw/2,y:baseY+22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+bw/2,y:baseY-h-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(b.h*100).toFixed(1)+'%';
+    });
+  }
+  stepBtn.onclick=step;
+  resetBtn.onclick=reset;
+  reset();
+})();
+
+/* ===== 互动6:伴X基因频率计算器 ===== */
+(function(){
+  const svg=document.getElementById('xSvg');
+  const FHets=document.getElementById('xFHet'),FRecs=document.getElementById('xFRec'),MRecs=document.getElementById('xMRec');
+  const oFTot=document.getElementById('xFTot'),oMTot=document.getElementById('xMTot'),oTotal=document.getElementById('xTotal'),oFreq=document.getElementById('xFreq');
+  const Ftotal=100, Mtotal=100;
+  function sync(){
+    let FHet=+FHets.value, FRec=+FRecs.value;
+    if(FHet+FRec>Ftotal){
+      if(FHet>Ftotal)FHet=Ftotal;
+      FRec=Math.min(FRec,Ftotal-FHet);
+      FRecs.value=FRec;
+    }
+    const MRec=+MRecs.value;
+    const FHom=Ftotal-FHet-FRec; // XBXB
+    const MDom=Mtotal-MRec; // XBY
+    const XbCount=FHet*1+FRec*2+MRec*1;
+    const alleleTotal=Ftotal*2+Mtotal*1;
+    const freq=XbCount/alleleTotal;
+    oFTot.textContent=Ftotal;
+    oMTot.textContent=Mtotal;
+    oTotal.textContent=alleleTotal;
+    oFreq.textContent=(freq*100).toFixed(2)+'%';
+    draw(FHom,FHet,FRec,MDom,MRec,XbCount,alleleTotal,freq);
+  }
+  FHets.oninput=FRecs.oninput=MRecs.oninput=sync;
+  function draw(FHom,FHet,FRec,MDom,MRec,XbCount,alleleTotal,freq){
+    clr(svg);
+    const baseY=170,maxH=110;
+    const bars=[
+      {x:40,h:FHom,col:BLUE,lab:'X'+String.fromCharCode(66)+'X'+String.fromCharCode(66)},
+      {x:140,h:FHet,col:YEL,lab:'X'+String.fromCharCode(66)+'X'+String.fromCharCode(98)},
+      {x:240,h:FRec,col:RED,lab:'X'+String.fromCharCode(98)+'X'+String.fromCharCode(98)},
+      {x:400,h:MDom,col:GREEN,lab:'X'+String.fromCharCode(66)+'Y'},
+      {x:500,h:MRec,col:VIO,lab:'X'+String.fromCharCode(98)+'Y'}
+    ];
+    el(svg,'line',{x1:20,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:140,y:20,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='女性(共100，每人2条X)';
+    el(svg,'text',{x:450,y:20,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='男性(共100，每人1条X)';
+    el(svg,'line',{x1:330,y1:10,x2:330,y2:190,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    bars.forEach(b=>{
+      const h=Math.max(2,(b.h/100)*maxH);
+      el(svg,'rect',{x:b.x,y:baseY-h,width:80,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+40,y:baseY+16,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+40,y:baseY-h-6,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.h;
+    });
+    el(svg,'text',{x:340,y:215,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='X'+String.fromCharCode(98)+' 总数='+XbCount+' / 等位基因总数='+alleleTotal+' = '+(freq*100).toFixed(2)+'%';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 基因频率和基因型频率的定义分别是什么?分母有何不同?",a:"基因频率=某等位基因数/该基因座等位基因总数(常染色体上分母=个体数×2);基因型频率=某基因型个体数/总个体数(分母=个体数)。两者的分母层面不同,不能混用。"},
+ {q:"2. 已知 AA%=20%、Aa%=60%、aa%=20%,求 A 的基因频率。",a:"A%=AA%+½Aa%=20%+½×60%=20%+30%=50%。（也可用数基因法验证：等位基因总数按比例算，A的比例仍是50%。）"},
+ {q:"3. 哈迪-温伯格定律成立需要哪五个理想条件?",a:"种群足够大、随机交配、没有突变、没有迁入迁出、没有自然选择（所有基因型适合度相同）。五者缺一，公式就不能直接套用。"},
+ {q:"4. 哈迪-温伯格定律下，若A频率为p、a频率为q，写出AA、Aa、aa的基因型频率公式。",a:"AA=p²，Aa=2pq，aa=q²，且p+q=1，三者之和恒为1（(p+q)²=1）。"},
+ {q:"5. 某隐性遗传病发病率(aa)为1/10000，求致病基因a的频率q和携带者Aa的频率。",a:"q=√(1/10000)=1/100=0.01。p=1−0.01=0.99。携带者Aa=2pq=2×0.99×0.01≈0.0198，约1/50。"},
+ {q:"6. 为什么不能直接把aa的表现型频率当成a的基因频率q？",a:"aa是基因型频率（q²），q是等位基因频率，二者不是同一层面的量。q²=aa成立的前提是种群处于哈迪-温伯格平衡，必须开平方才能从aa反推出q。"},
+ {q:"7. 进化的实质是什么？自然选择如何改变基因频率？",a:"进化的实质是种群基因频率的（定向）改变。自然选择直接作用于个体的表现型，通过影响不同基因型个体的存活率/繁殖率（适合度不同），使不利基因型被定向淘汰，其等位基因在下一代基因库中的比例下降，从而改变基因频率。"},
+ {q:"8. Aa连续自交多代，基因频率和基因型频率各自如何变化？",a:"基因频率（A%、a%）始终不变，保持50%:50%（只要无选择/突变/迁移）。基因型频率会变：Aa比例每代减半（(½)ⁿ），AA和aa比例逐代上升（纯合子增多）。"},
+ {q:"9. 自由交配（随机交配）达到哈迪-温伯格平衡后，基因型频率会不会随世代继续变化？",a:"不会。只要种群满足理想条件，一旦达到p²:2pq:q²的平衡比例，之后每一代基因型频率都维持不变，这与自交的持续变化形成鲜明对比。"},
+ {q:"10. 为什么伴X基因的基因频率计算，等位基因总数不能直接用总人数×2？",a:"因为男性（XY）在该基因座上只有一条X染色体、一个等位基因，女性（XX）才有两个。等位基因总数=女性数×2+男性数×1，男女要分开计算再相加。"},
+ {q:"11. 某人群女性中XBXb为40人（女性共200人），男性中XbY为20人（男性共200人），求Xb的基因频率。",a:"Xb总数=女性杂合子贡献40×1+男性隐性贡献20×1=60（题中未给女性纯合隐性人数，若为0则如此）。等位基因总数=200×2+200×1=600。Xb频率=60/600=10%。（若女性还有XbXb纯合个体，需按×2计入分子。）"},
+ {q:"12. 判断：某种群基因型频率发生了变化，能否直接断定该种群正在进化？",a:"不能。进化的判定标准是基因频率是否改变，不是基因型频率。例如连续自交会改变基因型频率，但基因频率不变，这种情况不算进化。必须看基因频率这把尺子。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

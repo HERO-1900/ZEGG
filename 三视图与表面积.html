@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三视图与表面积体积 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>三视图与表面积体积</h1>
+    <p class="lead">三视图就是从<b>正前、正左、正上</b>三个方向，给一个立体几何体各拍一张"照片"。这一页教你把三张平面照片<b>在脑子里拼回立体</b>，再由三视图的尺寸算出<b>表面积和体积</b>。会还原、能算量、认得组合体、不被斜二测的尺寸骗——这四件事做齐，这类题就是白送分。</p>
+
+    <div class="say">🗣️ <b>三视图(人话版):</b> 想象把一个立体放在墙角，用平行光从<b>前面、左面、上面</b>各照一次，墙上留下的影子就是三张视图：正视图(从前往后看)、侧视图(从左往右看)、俯视图(从上往下看)。做题的核心就一句话：<b>看三张照片，在脑子里把立体拼回来</b>。拼的时候靠口诀对齐——<b>长对正、高平齐、宽相等</b>：正视图和俯视图<b>左右一样长</b>，正视图和侧视图<b>上下一样高</b>，侧视图和俯视图<b>前后一样宽(深)</b>。</div>
+
+    <div class="keybox"><b>一句话口诀:</b> <b>长对正、高平齐、宽相等</b>。正视图↔俯视图共享"长"(左右)，正视图↔侧视图共享"高"(上下)，侧视图↔俯视图共享"宽"(前后深度)。<b>实线</b>=看得见的轮廓，<b>虚线</b>=被挡住看不见的轮廓。还原口诀：<b>先看俯视图定底面，再由正、侧视图定高和形状</b>。</div>
+
+    <h2>① 三视图的投影规则:三张照片怎么来的</h2>
+    <div class="card">
+      <div class="eq">正视图(前→后)　侧视图(左→右)　俯视图(上→下)</div>
+      <p style="margin:8px 0"><b>三视图</b>是几何体在三个互相垂直方向上的<b>正投影</b>(平行光垂直照射)。三张图不是随便摆的，它们之间有严格的尺寸对应关系：</p>
+      <table>
+        <tr><th>视图</th><th>观察方向</th><th>反映的两个尺寸</th></tr>
+        <tr><td><b>正视图</b>(主视图)</td><td>从前往后看</td><td>物体的<b>长</b>(左右) 与 <b>高</b>(上下)</td></tr>
+        <tr><td><b>侧视图</b>(左视图)</td><td>从左往右看</td><td>物体的<b>宽</b>(前后深) 与 <b>高</b>(上下)</td></tr>
+        <tr><td><b>俯视图</b></td><td>从上往下看</td><td>物体的<b>长</b>(左右) 与 <b>宽</b>(前后深)</td></tr>
+      </table>
+      <div class="mono">长对正：正视图 与 俯视图 → 左右方向的"长"相等、要对齐。</div>
+      <div class="mono">高平齐：正视图 与 侧视图 → 上下方向的"高"相等、要对齐。</div>
+      <div class="mono">宽相等：侧视图 与 俯视图 → 前后方向的"宽(深)"相等。</div>
+      <p style="margin:8px 0"><b>虚线的含义：</b>视图里<b>看得见</b>的棱、边用<b>实线</b>；被前面部分<b>挡住、看不见</b>的棱用<b>虚线</b>。虚线是判断"里面藏着什么结构"的关键线索(如中空、内凹、后方的棱)。</p>
+      <p class="trap">⚠ 摆放位置固定：正视图在左上，侧视图在正视图右边，俯视图在正视图正下方。三张图之间的对齐关系(长对正、高平齐、宽相等)不能乱。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧊 互动 1 — 可旋转立体 + 它的三张视图(转动看影子怎么变)</div>
+      <canvas id="rotCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <button id="rotSpin">▶ 自动旋转</button><button id="rotStop">⏸ 暂停</button>
+        <label>左右转 <input id="rotY" type="range" min="0" max="360" value="35" step="1"></label>
+        <label>上下转 <input id="rotX" type="range" min="-40" max="40" value="20" step="1"></label>
+      </div>
+      <p class="small">左边是可旋转的立体(一个 L 形台阶块)，右边三个小框是它的<b>正视图 / 侧视图 / 俯视图</b>。三视图是固定的"影子"，不随你转动而变——但转动立体能帮你看清每张影子是从哪个方向拍的。</p>
+    </div>
+
+    <h2 class="b">② "长对正、高平齐、宽相等"是怎么对齐的</h2>
+    <div class="card">
+      <p style="margin:6px 0">这三句口诀是<b>还原立体</b>和<b>标注尺寸</b>的命根子。它们说的是三张视图之间"哪个尺寸和哪个尺寸必须相等且对齐"：</p>
+      <table>
+        <tr><th>口诀</th><th>连接哪两张图</th><th>共享的尺寸</th></tr>
+        <tr><td><b>长对正</b></td><td>正视图 ↔ 俯视图</td><td>长(左右方向)，上下要对齐成一条竖线</td></tr>
+        <tr><td><b>高平齐</b></td><td>正视图 ↔ 侧视图</td><td>高(上下方向)，左右要对齐成一条横线</td></tr>
+        <tr><td><b>宽相等</b></td><td>侧视图 ↔ 俯视图</td><td>宽/深(前后方向)，长度相等</td></tr>
+      </table>
+      <p style="margin:8px 0">于是整个立体的三个尺寸(<b>长、宽、高</b>)分别由两张视图共同确认，缺一张就可能有多种立体。这也是"给你三视图，尺寸就唯一确定"的原因。</p>
+      <p class="trap">⚠ 别把"宽"当成第二个"长"。宽是<b>前后深度</b>，它只出现在侧视图和俯视图里，正视图里看不到宽。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 2 — "长对正 高平齐 宽相等"对齐动画(连线告诉你哪个尺寸配哪个)</div>
+      <svg id="alignSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="alignmode on" data-a="0">长对正</button>
+        <button class="alignmode" data-a="1">高平齐</button>
+        <button class="alignmode" data-a="2">宽相等</button>
+      </div>
+      <div class="verdict" id="alignNote"></div>
+      <p class="small">三张视图按标准位置摆好，点按钮看红色连线：哪两张图被连起来，说明它们<b>共享那个尺寸</b>、必须相等对齐。这就是三视图"对得上号"的底层规则。</p>
+    </div>
+
+    <h2 class="g">③ 由三视图还原直观图:先定底面，再定高</h2>
+    <div class="card">
+      <h3>还原四步法</h3>
+      <div class="mono">第1步：看俯视图 → 确定<b>底面形状</b>(它是从上往下看的轮廓)。</div>
+      <div class="mono">第2步：看正视图、侧视图的<b>高度</b> → 确定立体有多高、是柱是锥。</div>
+      <div class="mono">第3步：看正/侧视图<b>是矩形还是三角形</b> → 矩形→柱(上下一样粗)，三角形→锥(向上收成一点)。</div>
+      <div class="mono">第4步：结合<b>虚线</b>补出看不见的棱，拼出完整直观图，再核对三张视图是否都对得上。</div>
+      <h3>常见判断口诀</h3>
+      <table>
+        <tr><th>正视图 / 侧视图 是</th><th>俯视图 是</th><th>大概率是</th></tr>
+        <tr><td>矩形、矩形</td><td>多边形</td><td>棱柱(直棱柱)</td></tr>
+        <tr><td>三角形、三角形</td><td>多边形(可能带对角线)</td><td>棱锥</td></tr>
+        <tr><td>矩形、矩形</td><td>圆</td><td>圆柱</td></tr>
+        <tr><td>三角形、三角形</td><td>带圆心的圆</td><td>圆锥</td></tr>
+        <tr><td>圆、圆</td><td>圆</td><td>球</td></tr>
+      </table>
+      <p class="trap">⚠ 俯视图里的<b>对角线/斜线</b>常常暗示锥顶或棱的投影方向，别忽略；正视图是三角形≠一定是三棱锥，还要看俯视图的底面。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 3 — 给三视图，点击"还原"看立体拼回来</div>
+      <svg id="buildSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="buildcase on" data-b="0">柱：三矩形</button>
+        <button class="buildcase" data-b="1">锥：两三角+多边形</button>
+        <button class="buildcase" data-b="2">圆柱</button>
+        <button id="buildGo">▶ 还原立体</button>
+      </div>
+      <div class="verdict" id="buildNote"></div>
+      <p class="small">左边三张视图，点"还原立体"，右边慢慢<b>长出</b>对应的直观图。先看俯视图定底面(方或圆)，再看正/侧视图是矩形(柱)还是三角形(锥)，立体就出来了。</p>
+    </div>
+
+    <h2 class="o">④ 常见几何体的表面积与体积公式</h2>
+    <div class="card">
+      <p style="margin:6px 0">还原出立体后，套公式算量。<b>表面积 S</b> = 所有面的面积之和；<b>体积 V</b> = 装得下多少。记这张表就够用：</p>
+      <table>
+        <tr><th>几何体</th><th>表面积 S</th><th>体积 V</th></tr>
+        <tr><td><b>正方体</b>(棱 a)</td><td>6a²</td><td>a³</td></tr>
+        <tr><td><b>长方体</b>(长宽高 a,b,c)</td><td>2(ab+bc+ca)</td><td>abc</td></tr>
+        <tr><td><b>棱柱</b>(底面积 S底, 高 h)</td><td>2·S底 + S侧(=底周长×h)</td><td>S底 · h</td></tr>
+        <tr><td><b>棱锥</b>(底面积 S底, 高 h)</td><td>S底 + S侧(各侧面三角形之和)</td><td>⅓ · S底 · h</td></tr>
+        <tr><td><b>圆柱</b>(底半径 r, 高 h)</td><td>2πr² + 2πrh</td><td>πr²h</td></tr>
+        <tr><td><b>圆锥</b>(底半径 r, 高 h, 母线 l)</td><td>πr² + πrl　(l=√(r²+h²))</td><td>⅓ πr²h</td></tr>
+        <tr><td><b>球</b>(半径 R)</td><td>4πR²</td><td>4/3 · πR³</td></tr>
+        <tr><td><b>圆台</b>(上下半径 r,R, 高 h, 母线 l)</td><td>π(r²+R²+rl+Rl)</td><td>⅓ πh(r²+rR+R²)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>母线是关键小陷阱：</b>圆锥侧面积用<b>母线 l</b> 而不是高 h。已知底半径 r 和高 h 时，先算 <b>l=√(r²+h²)</b>，再代 S侧=πrl。</p>
+      <p class="trap">⚠ 棱锥/圆锥体积都有 <b>⅓</b>，别漏；圆锥侧面积用母线 l 不用高 h；球的体积是 4/3·πR³、表面积是 4πR²，别记混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔺 互动 4 — 圆锥的三视图(正/侧=三角形，俯=带圆心的圆) + 母线现场算</div>
+      <svg id="coneSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>底半径 r <input id="coR" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>高 h <input id="coH" type="range" min="1" max="8" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>母线 l=√(r²+h²)</b><span id="coL">0</span></div>
+        <div><b>侧面积 πrl</b><span id="coSlat">0</span></div>
+        <div><b>全面积 πr²+πrl</b><span id="coS">0</span></div>
+        <div><b>体积 ⅓πr²h</b><span id="coV">0</span></div>
+      </div>
+      <p class="small">圆锥的三视图：正视图、侧视图都是<b>等腰三角形</b>(底=2r，高=h)，俯视图是一个<b>带圆心的圆</b>(圆心=锥顶的投影)。改 r、h，母线 l 和各面积体积同步算给你看。</p>
+    </div>
+
+    <h2 class="v">⑤ 组合体:切割与叠加</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>组合体</b>是几个简单几何体拼/切出来的。三视图里常表现为"缺了一角""挖了个洞""叠了一层"。处理原则：</p>
+      <h3>叠加型(A + B)</h3>
+      <p style="margin:6px 0"><b>体积</b>直接相加：V=V_A+V_B。<b>表面积</b>要小心——两块<b>贴合的接触面</b>被藏进内部，<b>不能算</b>！S=S_A+S_B − 2×接触面积。</p>
+      <h3>切割型(大 − 小)</h3>
+      <p style="margin:6px 0"><b>体积</b>相减：V=V_大 − V_挖去。<b>表面积</b>=剩下的外表面。挖洞会<b>去掉一块旧面、露出一块新面</b>，两笔都要记。</p>
+      <div class="mono">组合体表面积 = 各部分表面积之和 − 被遮住的接触面(×2) + 切割露出的新面</div>
+      <p class="trap">⚠ 表面积最大的坑：叠放时<b>接触面重叠</b>，上面块的底 + 下面块的顶都被埋进内部，共两个面，一个都不能算进总表面积。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 5 — 组合体切割动画(大立方挖去一角，看体积和新增表面)</div>
+      <canvas id="cutCv" width="700" height="320"></canvas>
+      <div class="ctrl">
+        <button id="cutGo">▶ 切一刀</button><button id="cutReset">↺ 复原</button>
+        <label>小块占比 <input id="cutK" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>原体积 a³</b><span id="cuV0">0</span></div>
+        <div><b>切去体积</b><span id="cuVc">0</span></div>
+        <div><b>剩余体积</b><span id="cuV1">0</span></div>
+        <div><b>表面积变化</b><span id="cuDs">0</span></div>
+      </div>
+      <p class="small">从大立方体的一角<b>切掉一个小立方块</b>。体积一定<b>减小</b>；但表面积——切掉 3 个旧面，又露出 3 个新面，正好<b>抵消，表面积不变</b>！这是经典反直觉结论。</p>
+    </div>
+
+    <h2 class="r">⑥ 斜二测画法与还原:尺寸会"缩水"</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>斜二测画法</b>是把平面图形画成"立体感直观图"的一种规则。它有两条铁律，也正是失分点：</p>
+      <div class="mono">规则1：x 轴方向的线段 → 长度<b>不变</b>。</div>
+      <div class="mono">规则2：y 轴方向的线段 → 画成 45°斜线，长度<b>减半</b>(只画原来的 ½)。</div>
+      <p style="margin:8px 0"><b>面积关系(常考结论)：</b>原图形面积 S 与它的斜二测直观图面积 S′ 满足</p>
+      <div class="eq">S′ / S = √2 / 4　⟺　S = 2√2 · S′</div>
+      <p style="margin:8px 0"><b>还原：</b>拿到斜二测直观图求原图，就是把上面两条规则<b>反过来</b>用——45°斜线方向的线段<b>乘 2</b> 复原，并摆回竖直(y 轴)方向；x 方向不动。原图面积用 S=2√2·S′ 快速求。</p>
+      <p class="trap">⚠ 斜二测直观图里量到的<b>斜线尺寸不是真实尺寸</b>(它被缩了一半)！求原图或算真实面积，一定要先按"斜线×2、摆正"复原，或直接用 S=2√2·S′。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 6 — 斜二测：原图 ↔ 直观图互变(y 方向减半、45°，面积比 √2/4)</div>
+      <svg id="obliqueSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="obGo">▶ 变成斜二测</button><button id="obReset">↺ 复原</button>
+        <label>边长 a <input id="obA" type="range" min="2" max="6" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>原图面积 S</b><span id="obS0">0</span></div>
+        <div><b>直观图面积 S′</b><span id="obS1">0</span></div>
+        <div><b>比值 S′/S</b><span id="obR">0</span></div>
+        <div><b>验证 2√2·S′</b><span id="obChk">0</span></div>
+      </div>
+      <p class="small">左边一个真正方形(面积 S=a²)。点按钮：y 方向的边<b>转 45°并缩到一半</b>，变成右边的斜二测直观图。面积比恒为 <b>S′/S=√2/4≈0.354</b>，用 2√2·S′ 能把 S 还原回来。</p>
+    </div>
+
+    <h2 class="b">⑦ 俯视图带对角线:那条线代表什么</h2>
+    <div class="card">
+      <p style="margin:6px 0">俯视图里出现<b>对角线/内部线段</b>，几乎都在暗示"上方有一条棱或一个顶点的投影"。判读法：</p>
+      <table>
+        <tr><th>俯视图内部的线</th><th>通常代表</th></tr>
+        <tr><td>连到某个<b>顶点</b>的斜线</td><td>棱锥的<b>侧棱</b>投影(锥顶投在那个点上)</td></tr>
+        <tr><td>圆内一个<b>圆心点</b></td><td>圆锥/圆锥顶点的投影</td></tr>
+        <tr><td>矩形内的<b>一条对角线</b></td><td>一条位于上方、斜着的棱(如四棱锥的一条侧棱)</td></tr>
+        <tr><td><b>实线</b>对角线</td><td>看得见的上棱；<b>虚线</b>对角线=被挡的下方棱</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>用法：</b>先由俯视图外轮廓定底面，再看内部线连到哪个顶点 → 那里就是锥顶/斜棱的落点 → 结合正、侧视图的高，就能定出斜棱锥的完整形状。</p>
+      <p class="trap">⚠ 别把俯视图的对角线当成"底面被分成两个三角形"。它多半是<b>上方棱的投影</b>，是三维信息，不是底面被切开。</p>
+    </div>
+
+    <h2 class="o">⑧ 棱锥的表面积展开图</h2>
+    <div class="card">
+      <p style="margin:6px 0">求棱锥、圆锥表面积最稳的办法是<b>把它剪开摊平</b>成展开图，一片一片面积加起来。</p>
+      <div class="mono">棱锥表面积 = 底面多边形面积 + 各侧面三角形面积之和</div>
+      <p style="margin:6px 0"><b>关键量是斜高</b>(侧面三角形的高，从锥顶到底边中点)，不是棱锥的竖直高 h！正四棱锥若底边 a、斜高 h′，则一个侧面积=½·a·h′，四个侧面=2a·h′，加底面 a²。</p>
+      <p class="trap">⚠ 侧面三角形的高是"<b>斜高</b>"(沿侧面斜着量)，不是几何体的竖直高 h。斜高 h′=√(h²+(a/2)²)(正四棱锥)。混用两者是这类题最常见的错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🗺️ 互动 7 — 正四棱锥表面积展开(合拢=立体，摊开=底+4个三角形)</div>
+      <svg id="netSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="netGo">▶ 展开</button><button id="netFold">▲ 合拢</button>
+        <label>底边 a <input id="netA" type="range" min="2" max="6" value="4" step="1"></label>
+        <label>斜高 h′ <input id="netHp" type="range" min="2" max="8" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>底面积 a²</b><span id="netSb">0</span></div>
+        <div><b>1 个侧面 ½a·h′</b><span id="netSt">0</span></div>
+        <div><b>侧面积 2a·h′</b><span id="netSs">0</span></div>
+        <div><b>全表面积 a²+2a·h′</b><span id="netS">0</span></div>
+      </div>
+      <p class="small">点"展开"，四个侧面三角形向外翻平，露出正中间的正方形底面。表面积就是<b>底 a² + 四个 ½·a·h′</b>。注意三角形的高是<b>斜高 h′</b>，不是锥的竖直高。</p>
+    </div>
+
+    <h2 class="v">⑨ 内含球与旋转体三视图</h2>
+    <div class="card">
+      <h3>内切球 / 外接球</h3>
+      <p style="margin:6px 0"><b>内切球</b>：塞进立体内部、与各面相切的最大球。正方体(棱 a)内切球半径 <b>R=a/2</b>。<b>外接球</b>：把立体各顶点都套住的球，正方体外接球半径 <b>R=(√3/2)·a</b>(体对角线的一半)。</p>
+      <h3>旋转体三视图</h3>
+      <p style="margin:6px 0">一个平面图形绕轴旋转一周得到旋转体(圆柱、圆锥、球、圆台都是)。它们的三视图特征：<b>俯视图必为圆</b>(有圆的对称)，正视图=侧视图=旋转前的"母线剖面"。</p>
+      <table>
+        <tr><th>旋转体</th><th>正视图=侧视图</th><th>俯视图</th></tr>
+        <tr><td>圆柱</td><td>矩形</td><td>圆</td></tr>
+        <tr><td>圆锥</td><td>三角形</td><td>带圆心的圆</td></tr>
+        <tr><td>球</td><td>圆</td><td>圆</td></tr>
+        <tr><td>圆台</td><td>梯形</td><td>两个同心圆</td></tr>
+      </table>
+      <p class="trap">⚠ 旋转体正视图与侧视图<b>必然相同</b>(轴对称)。若一道题的正、侧视图不一样，它就<b>不是</b>简单旋转体。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌀 互动 8 — 旋转体三视图对照(切换圆柱/圆锥/球/圆台，看三视图特征)</div>
+      <svg id="rotBodySvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rbcase on" data-r="0">圆柱</button>
+        <button class="rbcase" data-r="1">圆锥</button>
+        <button class="rbcase" data-r="2">球</button>
+        <button class="rbcase" data-r="3">圆台</button>
+      </div>
+      <div class="verdict" id="rbNote"></div>
+      <p class="small">四种旋转体，切换看它们的三视图：<b>俯视图永远是圆</b>(或同心圆)，正视图=侧视图(矩形/三角/圆/梯形)。这是识别旋转体的看家本领。</p>
+    </div>
+
+    <h2 class="g">⑩ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 由三视图求体积</h3>
+      <p><b class="tag">触发信号:</b>给出正、侧、俯三张视图及尺寸，问"该几何体的体积"。</p>
+      <p><b class="tag">标准动作:</b>先由俯视图定底面、由正/侧视图定高与柱锥 → 还原立体 → 套体积公式(柱 S底·h、锥 ⅓S底·h、球 4/3πR³)。</p>
+      <p><b class="tag">示例(带解):</b>正视图、侧视图均为边长 4 的正方形，俯视图为半径 2 的圆。→ 底面是圆(r=2)、正视图矩形→圆柱，高 h=4。V=πr²h=π·2²·4=<b>16π</b>。</p>
+      <p class="trap">陷阱:把俯视图的圆当底、却忘了正视图是三角形(那就是圆锥要乘⅓);单位与尺寸看错。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由三视图求表面积</h3>
+      <p><b class="tag">触发信号:</b>给三视图问"表面积/全面积/侧面积"。</p>
+      <p><b class="tag">标准动作:</b>还原立体 → 分别算底面积、侧面积(柱:底周长×h;锥:各侧面三角形,注意用<b>斜高/母线</b>) → 相加。</p>
+      <p><b class="tag">示例(带解):</b>三视图还原为底半径 r=3、高 h=4 的圆锥。母线 l=√(3²+4²)=5。S=πr²+πrl=π·9+π·3·5=9π+15π=<b>24π</b>。</p>
+      <p class="trap">陷阱:圆锥侧面积误用高 h 而非母线 l;棱锥用竖直高而非斜高;漏底面。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 组合体(切割 / 叠加)</h3>
+      <p><b class="tag">触发信号:</b>三视图里出现缺角、挖洞、上下两层不同粗细,或"半球+圆柱"这类拼接。</p>
+      <p><b class="tag">标准动作:</b>拆成几个简单体。体积相加/相减;表面积=各部分之和 − 接触面(×2) + 切割新露面。</p>
+      <p><b class="tag">示例(带解):</b>底面半径 1 的圆柱(高 2)顶上放一个半径 1 的半球。V=πr²h+½·(4/3πr³)=π·2+⅔π=<b>8π/3</b>。表面积:圆柱侧 2πrh=4π + 圆柱底 π + 半球面 2πr²=2π,接触的圆面(圆柱顶=半球底)被埋掉不算 → S=4π+π+2π=<b>7π</b>。</p>
+      <p class="trap">陷阱:表面积把接触面算进去(重复计两次);切割体忘记补上新露出的截面。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 含斜线(斜棱锥)型</h3>
+      <p><b class="tag">触发信号:</b>正/侧视图是三角形但不对称,或俯视图带对角线/顶点偏置,提示锥顶不在底面中心正上方。</p>
+      <p><b class="tag">标准动作:</b>由俯视图对角线定锥顶投影落点 → 由正/侧视图定高 → 建坐标或用勾股求各侧棱长、斜高 → 算体积(仍 ⅓S底·h,h 为竖直高)和表面积(逐个侧面三角形)。</p>
+      <p><b class="tag">示例(带解):</b>底面为边长 2 的正方形,俯视图对角线指向一角,说明锥顶在该顶点正上方,高 h=3。体积仍 V=⅓·S底·h=⅓·4·3=<b>4</b>(斜与否不影响体积,只要底面积和竖直高不变)。</p>
+      <p class="trap">陷阱:斜棱锥体积仍用竖直高,不是侧棱长;各侧面不再全等,要逐个算。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 俯视图带对角线判断型</h3>
+      <p><b class="tag">触发信号:</b>俯视图内部画着一条实线或虚线对角线,问该几何体是什么/求量。</p>
+      <p><b class="tag">标准动作:</b>把对角线读成"上方棱的投影"。实线=可见上棱,虚线=被挡下棱 → 结合正/侧视图高度还原斜棱锥或屋脊状立体。</p>
+      <p><b class="tag">示例(带解):</b>俯视图是正方形加一条实线对角线,正、侧视图都是三角形。→ 一条棱在上方沿对角线方向,是四棱锥/或"屋脊"体,对角线为可见上棱的投影,据此补形。</p>
+      <p class="trap">陷阱:误把对角线当成把底面切成两块;分不清实线(可见)与虚线(遮挡)对角线含义。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 旋转体三视图型</h3>
+      <p><b class="tag">触发信号:</b>俯视图是圆或同心圆,正视图=侧视图(矩形/三角/圆/梯形),或题干说"绕轴旋转一周"。</p>
+      <p><b class="tag">标准动作:</b>正=侧确认是旋转体 → 由俯视图圆半径定 r、由正视图定高与形状(矩→柱、三角→锥、圆→球、梯形→台) → 套相应公式。</p>
+      <p><b class="tag">示例(带解):</b>正视图=侧视图为等腰梯形(上底 2、下底 6、高 4),俯视图两同心圆(r=1,R=3)。→ 圆台。V=⅓πh(r²+rR+R²)=⅓π·4·(1+3+9)=<b>52π/3</b>。</p>
+      <p class="trap">陷阱:圆台上下半径搞反;把正视图梯形高当成母线;忘了俯视图两个圆对应上下底。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>斜二测直观图里量到的斜线尺寸不是真实尺寸</b>!y 方向被缩成一半,求原图要"斜线×2、摆正",或用 S=2√2·S′。</p>
+      <p class="trap">② <b>俯视图里的对角线</b>多半代表"上方一条棱/锥顶的投影"(三维信息),不是把底面切成两个三角形。实线=可见上棱,虚线=被挡下棱。</p>
+      <p class="trap">③ <b>组合体表面积:接触面(重叠面)不能算两次</b>!叠放时上块的底和下块的顶都被埋进内部,一个都不计。S=各部分和 − 接触面×2。</p>
+      <p class="trap">④ 圆锥侧面积用<b>母线 l</b> 不是高 h;先 l=√(r²+h²) 再 πrl。棱锥侧面用<b>斜高</b> h′ 不是竖直高。</p>
+      <p class="trap">⑤ 棱锥、圆锥体积都有 <b>⅓</b>,别当成柱直接 S底·h。</p>
+      <p class="trap">⑥ 虚线 = <b>看不见的轮廓</b>,是判断中空/内凹/后方棱的关键,不能当装饰忽略。</p>
+      <p class="trap">⑦ "长对正、高平齐、宽相等":宽是<b>前后深度</b>,只在侧视图和俯视图出现,正视图里没有宽。</p>
+      <p class="trap">⑧ 球:体积 <b>4/3·πR³</b>、表面积 <b>4πR²</b>,别记混(4πR² 是面积不是体积)。</p>
+      <p class="trap">⑨ 旋转体正视图=侧视图必相同;若两者不同,它就不是简单旋转体。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 三视图 ↔ 立体是"三张约束定唯一"：</b> 长、宽、高三个尺寸各由两张视图共同锁定(长对正、高平齐、宽相等)，所以三张视图给全，立体唯一确定。反过来只给两张视图时，立体可能<b>不唯一</b>——这正是"补第三视图/判断多少种可能"这类难题的题眼。</p>
+      <p style="margin:8px 0"><b>② 由三视图数据反推"最长棱"：</b> 把立体放进坐标系，各顶点坐标由三视图的长宽高读出，任意两顶点距离用 √(Δx²+Δy²+Δz²) 算。<b>最长棱/最长对角线</b>往往是"跨越长宽高全程"的那条，本质是三维勾股。例如长方体的体对角线=√(a²+b²+c²)，就是这类题的原型。</p>
+      <p style="margin:8px 0"><b>③ 内含球把"相切"翻译成半径方程：</b> 内切球半径=球心到各面的距离(相等)，外接球半径=球心到各顶点的距离(相等)。正方体内切 R=a/2、外接 R=(√3/2)a。复杂组合体求外接球，常用"球心在对称轴上，到两个不同顶点距离相等"列方程解 R——这是把几何关系代数化的典型。</p>
+      <p style="margin:8px 0"><b>④ 组合体表面积的"守恒式"记账：</b> 拼接=埋掉两个接触面,切割=去一块旧面、补一块新面。养成"哪些面进内部(减)、哪些面新露出(加)"的记账习惯,再复杂的组合体也不会算漏算重。从一角切走小立方"表面积不变"就是这个记账的漂亮特例。</p>
+      <p style="margin:8px 0"><b>⑤ 斜二测面积比 √2/4 的来历：</b> y 方向缩到 ½ 且转 45°，纵向"有效高度"变成原来的 ½·sin45°=√2/4。所以任意平面图形斜二测后面积都乘 √2/4，与形状无关。记住这个"万能倍率"，一切"直观图面积↔原图面积"互求都是一步乘除。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 三视图与表面积体积 · 配套:空间几何体·线面关系</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const PI=Math.PI;
+
+/* ===== 互动1:可旋转立体 + 三视图 ===== */
+(function(){
+  const cv=document.getElementById('rotCv');const ctx=cv.getContext('2d');
+  const rY=document.getElementById('rotY'),rX=document.getElementById('rotX');
+  let ay=35*PI/180, ax=20*PI/180, spin=false;
+  // L-shape step block vertices (unit box space), we build from two boxes
+  // Base box: 2 x 2 x 1 (x,y,z); step box on top-back: 2 x 1 x 1
+  function boxVerts(x0,y0,z0,dx,dy,dz){
+    const v=[];
+    for(let i=0;i<2;i++)for(let j=0;j<2;j++)for(let k=0;k<2;k++){
+      v.push([x0+i*dx, y0+j*dy, z0+k*dz]);
+    }
+    return v;
+  }
+  // edges by index into 8-vert box
+  const boxEdges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+  function project(p){
+    // center object around origin
+    let [x,y,z]=p;
+    x-=1;y-=0.75;z-=1;
+    // rotate around Y then X
+    let cy=Math.cos(ay),sy=Math.sin(ay);
+    let x1=x*cy+z*sy, z1=-x*sy+z*cy;
+    let cx=Math.cos(ax),sx=Math.sin(ax);
+    let y1=y*cx - z1*sx, z2=y*sx + z1*cx;
+    const sc=48;
+    return [175 + x1*sc, 170 - y1*sc];
+  }
+  function drawBox(x0,y0,z0,dx,dy,dz,col){
+    const v=boxVerts(x0,y0,z0,dx,dy,dz).map(project);
+    ctx.strokeStyle=col;ctx.lineWidth=3;
+    boxEdges.forEach(e=>{
+      ctx.beginPath();ctx.moveTo(v[e[0]][0],v[e[0]][1]);ctx.lineTo(v[e[1]][0],v[e[1]][1]);ctx.stroke();
+    });
+  }
+  function drawViews(){
+    // three little view boxes on the right; L-shape footprint
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    // normal view drawing helper
+    function frame(x,y,w,h,label){
+      ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);
+      ctx.fillStyle=INK;ctx.fillText(label,x+4,y-4);
+    }
+    const bx=420;
+    // 正视图: from front -> see an L (step) shape. outline of L
+    frame(bx,30,110,90,'正视图');
+    ctx.strokeStyle=RED;ctx.lineWidth=3;
+    ctx.beginPath();
+    // L: full width base + shorter top on left half
+    ctx.moveTo(bx+15,110);ctx.lineTo(bx+15,55);ctx.lineTo(bx+63,55);ctx.lineTo(bx+63,80);ctx.lineTo(bx+95,80);ctx.lineTo(bx+95,110);ctx.closePath();ctx.stroke();
+    // 侧视图: from left -> rectangle with step
+    frame(bx,140,110,90,'侧视图');
+    ctx.strokeStyle=BLUE;ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(bx+15,220);ctx.lineTo(bx+15,165);ctx.lineTo(bx+55,165);ctx.lineTo(bx+55,190);ctx.lineTo(bx+95,190);ctx.lineTo(bx+95,220);ctx.closePath();ctx.stroke();
+    // 俯视图: from top -> rectangle (footprint 2x2)
+    frame(bx,250,110,90,'俯视图');
+    ctx.strokeStyle=GREEN;ctx.lineWidth=3;ctx.strokeRect(bx+15,265,80,60);
+    // dashed line inside footprint = step edge
+    ctx.setLineDash([6,4]);ctx.strokeStyle=GREEN;ctx.beginPath();ctx.moveTo(bx+55,265);ctx.lineTo(bx+55,325);ctx.stroke();ctx.setLineDash([]);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // ground text
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText('可旋转立体 (L 形台阶块)',40,24);
+    // base box 2x2x1 + step 2x1x1 on top-back
+    drawBox(0,0,0, 2,2,1, INK);
+    drawBox(0,1,1, 2,1,1, ORANGE);
+    drawViews();
+  }
+  function loop(){ if(!spin)return; ay+=0.012; rY.value=((ay*180/PI)%360).toFixed(0); draw(); requestAnimationFrame(loop);}
+  rY.oninput=()=>{ay=(+rY.value)*PI/180;draw();};
+  rX.oninput=()=>{ax=(+rX.value)*PI/180;draw();};
+  document.getElementById('rotSpin').onclick=()=>{if(!spin){spin=true;requestAnimationFrame(loop);}};
+  document.getElementById('rotStop').onclick=()=>{spin=false;};
+  draw();
+})();
+
+/* ===== 互动2:长对正 高平齐 宽相等 对齐动画 ===== */
+(function(){
+  const svg=document.getElementById('alignSvg');const note=document.getElementById('alignNote');
+  let a=0;
+  document.querySelectorAll('.alignmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.alignmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');a=+b.dataset.a;draw();
+  });
+  // view positions (standard layout)
+  const front={x:120,y:60,w:150,h:110}; // 正视图 top-left
+  const side={x:340,y:60,w:110,h:110};  // 侧视图 right of front
+  const top={x:120,y:210,w:150,h:100};  // 俯视图 below front
+  function box(v,label,col){
+    el(svg,'rect',{x:v.x,y:v.y,width:v.w,height:v.h,fill:'none',stroke:col,'stroke-width':3});
+    el(svg,'text',{x:v.x+4,y:v.y-6,'font-size':13,'font-weight':900,fill:col}).textContent=label;
+  }
+  function dline(x1,y1,x2,y2){el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:RED,'stroke-width':3,'stroke-dasharray':'7 5'});}
+  function draw(){
+    clr(svg);
+    box(front,'正视图',INK);box(side,'侧视图',BLUE);box(top,'俯视图',GREEN);
+    let msg;
+    if(a===0){
+      // 长对正: front <-> top, vertical lines connecting left & right edges
+      dline(front.x,front.y+front.h,front.x,top.y);
+      dline(front.x+front.w,front.y+front.h,front.x+front.w,top.y);
+      el(svg,'text',{x:front.x+front.w/2,y:top.y-14,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='长(左右)对齐 → 相等';
+      msg='长对正：正视图 与 俯视图 的「长」(左右方向)相等,且上下对齐成竖线。';
+    } else if(a===1){
+      // 高平齐: front <-> side, horizontal lines
+      dline(front.x+front.w,front.y,side.x,front.y);
+      dline(front.x+front.w,front.y+front.h,side.x,front.y+front.h);
+      el(svg,'text',{x:(front.x+front.w+side.x)/2,y:front.y-14,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='高(上下)对齐 → 相等';
+      msg='高平齐：正视图 与 侧视图 的「高」(上下方向)相等,且左右对齐成横线。';
+    } else {
+      // 宽相等: side width == top height (depth). show both spans
+      el(svg,'line',{x1:side.x,y1:side.y+side.h+16,x2:side.x+side.w,y2:side.y+side.h+16,stroke:RED,'stroke-width':3});
+      el(svg,'text',{x:side.x+side.w/2,y:side.y+side.h+34,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='宽(侧图水平)';
+      el(svg,'line',{x1:top.x+top.w+16,y1:top.y,x2:top.x+top.w+16,y2:top.y+top.h,stroke:RED,'stroke-width':3});
+      el(svg,'text',{x:top.x+top.w+40,y:top.y+top.h/2,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='宽(俯图竖直)';
+      dline(side.x+side.w/2,side.y+side.h+20,top.x+top.w+20,top.y+top.h/2);
+      msg='宽相等：侧视图的「宽」(水平方向) 与 俯视图的「宽/深」(竖直方向)长度相等。';
+    }
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=RED;
+  }
+  draw();
+})();
+
+/* ===== 互动3:给三视图还原立体 ===== */
+(function(){
+  const svg=document.getElementById('buildSvg');const note=document.getElementById('buildNote');
+  let c=0, t=1;
+  document.querySelectorAll('.buildcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.buildcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;t=1;draw();
+  });
+  function frame(x,y,w,h,label,col){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:'none',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:x+3,y:y-5,'font-size':11.5,'font-weight':900,fill:col}).textContent=label;
+  }
+  function draw(){
+    clr(svg);
+    // left: three small views
+    el(svg,'text',{x:20,y:20,'font-size':13,'font-weight':900,fill:INK}).textContent='三视图';
+    const vx=30;
+    frame(vx,35,90,60,'正视图',RED);
+    frame(vx,110,90,60,'侧视图',BLUE);
+    frame(vx,185,90,60,'俯视图',GREEN);
+    if(c===0){ // prism: three rectangles-ish; 正/侧 rectangle, 俯 polygon
+      el(svg,'rect',{x:vx+20,y:45,width:50,height:40,fill:'none',stroke:RED,'stroke-width':3});
+      el(svg,'rect',{x:vx+25,y:120,width:40,height:40,fill:'none',stroke:BLUE,'stroke-width':3});
+      el(svg,'rect',{x:vx+20,y:195,width:50,height:40,fill:'none',stroke:GREEN,'stroke-width':3});
+    } else if(c===1){ // pyramid: two triangles + polygon
+      el(svg,'polygon',{points:(vx+45)+',48 '+(vx+22)+',88 '+(vx+68)+',88',fill:'none',stroke:RED,'stroke-width':3});
+      el(svg,'polygon',{points:(vx+45)+',118 '+(vx+27)+',160 '+(vx+63)+',160',fill:'none',stroke:BLUE,'stroke-width':3});
+      el(svg,'rect',{x:vx+22,y:198,width:46,height:40,fill:'none',stroke:GREEN,'stroke-width':3});
+      el(svg,'line',{x1:vx+22,y1:198,x2:vx+68,y2:238,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'4 3'});
+    } else { // cylinder: rectangles + circle
+      el(svg,'rect',{x:vx+20,y:45,width:50,height:40,fill:'none',stroke:RED,'stroke-width':3});
+      el(svg,'rect',{x:vx+25,y:120,width:40,height:40,fill:'none',stroke:BLUE,'stroke-width':3});
+      el(svg,'ellipse',{cx:vx+45,cy:215,rx:25,ry:20,fill:'none',stroke:GREEN,'stroke-width':3});
+    }
+    // arrow
+    el(svg,'text',{x:180,y:150,'font-size':30,'font-weight':900,fill:INK}).textContent='→';
+    // right: reconstructed solid grows with t
+    const cx=430,cy=175,S=t;
+    if(c===0){ // rectangular prism
+      const w=90*S,h=70*S,d=40*S;
+      // front face
+      el(svg,'rect',{x:cx-w/2,y:cy-h/2,width:w,height:h,fill:'rgba(224,56,42,0.12)',stroke:INK,'stroke-width':3});
+      // depth (top-right)
+      poly([[cx-w/2,cy-h/2],[cx-w/2+d,cy-h/2-d],[cx+w/2+d,cy-h/2-d],[cx+w/2,cy-h/2]]);
+      poly([[cx+w/2,cy-h/2],[cx+w/2+d,cy-h/2-d],[cx+w/2+d,cy+h/2-d],[cx+w/2,cy+h/2]]);
+      note.innerHTML='👉 俯视图是多边形 + 正/侧视图都是矩形 → <b>棱柱</b>(上下一样粗)。';
+    } else if(c===1){ // pyramid
+      const w=90*S,h=80*S,d=36*S;
+      const bx=cx-w/2, by=cy+h/2;
+      // base parallelogram
+      poly([[bx,by],[bx+d,by-d],[bx+w+d,by-d],[bx+w,by]]);
+      const apex=[cx+d/2, cy-h/2];
+      // side edges
+      [[bx,by],[bx+w,by],[bx+w+d,by-d],[bx+d,by-d]].forEach(p=>{
+        el(svg,'line',{x1:p[0],y1:p[1],x2:apex[0],y2:apex[1],stroke:INK,'stroke-width':3});
+      });
+      el(svg,'circle',{cx:apex[0],cy:apex[1],r:3,fill:RED});
+      note.innerHTML='👉 俯视图多边形(带对角线) + 正/侧视图都是三角形 → <b>棱锥</b>(向上收成一点)。';
+    } else { // cylinder
+      const w=80*S,h=80*S;
+      el(svg,'line',{x1:cx-w/2,y1:cy-h/2,x2:cx-w/2,y2:cy+h/2,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:cx+w/2,y1:cy-h/2,x2:cx+w/2,y2:cy+h/2,stroke:INK,'stroke-width':3});
+      el(svg,'ellipse',{cx:cx,cy:cy-h/2,rx:w/2,ry:16*S,fill:'rgba(30,158,134,0.15)',stroke:INK,'stroke-width':3});
+      el(svg,'ellipse',{cx:cx,cy:cy+h/2,rx:w/2,ry:16*S,fill:'none',stroke:INK,'stroke-width':3});
+      note.innerHTML='👉 俯视图是圆 + 正/侧视图都是矩形 → <b>圆柱</b>。';
+    }
+    note.style.borderColor=c===0?RED:c===1?BLUE:GREEN;
+  }
+  function poly(pts){
+    el(svg,'polygon',{points:pts.map(p=>p[0]+','+p[1]).join(' '),fill:'rgba(20,80,200,0.08)',stroke:INK,'stroke-width':3});
+  }
+  document.getElementById('buildGo').onclick=()=>{
+    t=0.05;
+    (function grow(){ t+=0.06; if(t>1)t=1; draw(); if(t<1)requestAnimationFrame(grow); })();
+  };
+  draw();
+})();
+
+/* ===== 互动4:圆锥三视图 + 母线计算 ===== */
+(function(){
+  const svg=document.getElementById('coneSvg');
+  const Rs=document.getElementById('coR'),Hs=document.getElementById('coH');
+  const oL=document.getElementById('coL'),oSlat=document.getElementById('coSlat'),oS=document.getElementById('coS'),oV=document.getElementById('coV');
+  let r=3,h=4;
+  function sync(){r=+Rs.value;h=+Hs.value;draw();}
+  Rs.oninput=Hs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const l=Math.sqrt(r*r+h*h);
+    const slat=PI*r*l, S=PI*r*r+slat, V=PI*r*r*h/3;
+    oL.textContent=l.toFixed(2);
+    oSlat.textContent=slat.toFixed(2);
+    oS.textContent=S.toFixed(2);
+    oV.textContent=V.toFixed(2);
+    const sc=14;
+    // 正视图 triangle
+    frame(40,40,150,160,'正视图 (三角形)',RED);
+    const bx=115, by=180, bw=r*sc, hh=h*sc;
+    el(svg,'polygon',{points:bx+','+(by-hh)+' '+(bx-bw)+','+by+' '+(bx+bw)+','+by,fill:'rgba(224,56,42,0.12)',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:bx,y:by+16,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='底=2r';
+    // 侧视图 triangle (same)
+    frame(210,40,150,160,'侧视图 (三角形)',BLUE);
+    const sx=285;
+    el(svg,'polygon',{points:sx+','+(by-hh)+' '+(sx-bw)+','+by+' '+(sx+bw)+','+by,fill:'rgba(20,80,200,0.10)',stroke:BLUE,'stroke-width':3});
+    // 俯视图 circle with center
+    frame(400,40,160,160,'俯视图 (带圆心的圆)',GREEN);
+    const tx=480,ty=120, rr=Math.min(60,r*sc);
+    el(svg,'circle',{cx:tx,cy:ty,r:rr,fill:'rgba(30,158,134,0.10)',stroke:GREEN,'stroke-width':3});
+    el(svg,'circle',{cx:tx,cy:ty,r:3.5,fill:GREEN});
+    el(svg,'text',{x:tx,y:ty+rr+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='圆心=锥顶投影';
+    el(svg,'text',{x:590,y:60,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='';
+    // formula strip
+    el(svg,'text',{x:350,y:230,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='l=√(r²+h²)  ·  S侧=πrl  ·  V=⅓πr²h';
+    el(svg,'text',{x:350,y:252,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='r='+r+', h='+h+' → l='+l.toFixed(2);
+  }
+  function frame(x,y,w,h,label,col){
+    el(svg,'text',{x:x,y:y-6,'font-size':11.5,'font-weight':900,fill:col}).textContent=label;
+  }
+  sync();
+})();
+
+/* ===== 互动5:组合体切割动画(挖角) ===== */
+(function(){
+  const cv=document.getElementById('cutCv');const ctx=cv.getContext('2d');
+  const Ks=document.getElementById('cutK');
+  const oV0=document.getElementById('cuV0'),oVc=document.getElementById('cuVc'),oV1=document.getElementById('cuV1'),oDs=document.getElementById('cuDs');
+  const a=4; // big cube edge
+  let kdiv=2, t=0, running=false; // t: 0..1 cut progress
+  function sync(){kdiv=+Ks.value;t=0;stats();draw();}
+  Ks.oninput=sync;
+  function stats(){
+    const s=a/kdiv; // small cube edge
+    const V0=a*a*a, Vc=s*s*s, V1=V0-Vc;
+    oV0.textContent=V0.toFixed(0);
+    oVc.textContent=Vc.toFixed(2);
+    oV1.textContent=V1.toFixed(2);
+    oDs.textContent='0 (不变)';
+  }
+  // isometric projection helper
+  function P(x,y,z){
+    const ox=250,oy=210,sc=26;
+    return [ox + (x-z)*0.87*sc, oy - y*sc + (x+z)*0.5*sc];
+  }
+  function face(pts,col){
+    ctx.beginPath();pts.forEach((p,i)=>{const q=P(p[0],p[1],p[2]);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});ctx.closePath();
+    ctx.fillStyle=col;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('大立方体 (棱 a=4) —— 从一角切走小立方块',30,24);
+    const s=a/kdiv;
+    // draw big cube 3 visible faces
+    // top face
+    face([[0,a,0],[a,a,0],[a,a,a],[0,a,a]],'rgba(243,192,14,0.35)');
+    // front face
+    face([[0,0,a],[a,0,a],[a,a,a],[0,a,a]],'rgba(224,56,42,0.22)');
+    // right face
+    face([[a,0,a],[a,0,0],[a,a,0],[a,a,a]],'rgba(20,80,200,0.20)');
+    // the cut: remove small cube at the near-top-right corner (x:a-s..a, y:a-s..a, z:a-s..a)
+    if(t>0){
+      const cs=s*t; // grows
+      const x0=a-cs,y0=a-cs,z0=a-cs;
+      // draw the notch: new exposed faces (3 inner faces) in green
+      // inner faces of notch
+      face([[x0,y0,a],[a,y0,a],[a,a,a],[x0,a,a]],'rgba(30,158,134,0.55)'); // inner front (at z=a? actually the notch removes near corner)
+      face([[a,y0,z0],[a,y0,a],[a,a,a],[a,a,z0]],'rgba(30,158,134,0.40)');
+      face([[x0,a,z0],[a,a,z0],[a,a,a],[x0,a,a]],'rgba(30,158,134,0.45)');
+      // outline the removed small cube (dashed)
+      ctx.setLineDash([5,4]);ctx.strokeStyle=INK;ctx.lineWidth=1.5;
+      const e=[[x0,y0,z0],[a,y0,z0],[a,a,z0],[x0,a,z0],[x0,y0,a],[a,y0,a],[a,a,a],[x0,a,a]];
+      const ed=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      ed.forEach(pr=>{const p=P(...e[pr[0]]),q=P(...e[pr[1]]);ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();});
+      ctx.setLineDash([]);
+    }
+    // note
+    ctx.fillStyle=GREEN;ctx.font='bold 12px sans-serif';
+    ctx.fillText('绿=切角后新露出的 3 个内面',30,300);
+    ctx.fillStyle=RED;
+    ctx.fillText('切掉 3 个旧外角面，露出 3 个等大新面 → 表面积不变!',30,318);
+  }
+  function loop(){ if(!running)return; t+=0.03; if(t>=1){t=1;running=false;} draw(); requestAnimationFrame(loop);}
+  document.getElementById('cutGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('cutReset').onclick=()=>{t=0;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动6:斜二测 原图<->直观图 ===== */
+(function(){
+  const svg=document.getElementById('obliqueSvg');
+  const As=document.getElementById('obA');
+  const oS0=document.getElementById('obS0'),oS1=document.getElementById('obS1'),oR=document.getElementById('obR'),oChk=document.getElementById('obChk');
+  let a=4, t=0, running=false; // t: 0 original -> 1 oblique
+  function sync(){a=+As.value;t=0;stats();draw();}
+  As.oninput=sync;
+  function stats(){
+    const S0=a*a;
+    const S1=S0*Math.SQRT2/4;
+    oS0.textContent=S0.toFixed(2);
+    oS1.textContent=S1.toFixed(2);
+    oR.textContent=(Math.SQRT2/4).toFixed(3);
+    oChk.textContent=(2*Math.SQRT2*S1).toFixed(2);
+  }
+  function draw(){
+    clr(svg);
+    const sc=28, ox=120, oy=200;
+    // original square: x right, y up. In oblique: y -> 45deg, half length
+    // interpolate: y-axis rotates from vertical(90°) to 45°, and scale from 1 -> 0.5
+    const ang=(90 - 45*t)*PI/180;
+    const yscale=1 - 0.5*t;
+    const ux=[a*sc,0]; // x-direction vector (unchanged)
+    const uy=[Math.cos(ang)*a*sc*yscale, -Math.sin(ang)*a*sc*yscale]; // y-direction
+    // four corners: O, O+ux, O+ux+uy, O+uy
+    const O=[ox,oy];
+    const p=[O,[O[0]+ux[0],O[1]+ux[1]],[O[0]+ux[0]+uy[0],O[1]+ux[1]+uy[1]],[O[0]+uy[0],O[1]+uy[1]]];
+    // axes
+    el(svg,'line',{x1:ox-20,y1:oy,x2:ox+a*sc+40,y2:oy,stroke:'#999','stroke-width':1.5});
+    el(svg,'line',{x1:ox,y1:oy+20,x2:ox,y2:oy-a*sc-40,stroke:'#999','stroke-width':1.5});
+    el(svg,'text',{x:ox+a*sc+42,y:oy+14,'font-size':12,'font-weight':800,fill:'#999'}).textContent='x';
+    el(svg,'text',{x:ox-14,y:oy-a*sc-42,'font-size':12,'font-weight':800,fill:'#999'}).textContent='y';
+    // shape
+    const col=t<0.5?BLUE:VIO;
+    el(svg,'polygon',{points:p.map(q=>q[0]+','+q[1]).join(' '),fill:t<0.5?'rgba(20,80,200,0.15)':'rgba(122,63,242,0.18)',stroke:col,'stroke-width':3});
+    // labels
+    el(svg,'text',{x:400,y:70,'font-size':14,'font-weight':900,fill:INK}).textContent=t<0.5?'原图形：正方形 (面积 S=a²)':'斜二测直观图 (面积 S′)';
+    el(svg,'text',{x:400,y:100,'font-size':13,'font-weight':800,fill:VIO}).textContent='规则：x 不变，y 方向 45° 且减半';
+    el(svg,'text',{x:400,y:128,'font-size':15,'font-weight':900,fill:RED}).textContent='S′ / S = √2 / 4 ≈ 0.354';
+    el(svg,'text',{x:400,y:156,'font-size':13,'font-weight':800,fill:INK}).textContent='还原：S = 2√2 · S′';
+    el(svg,'text',{x:400,y:186,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent='a='+a+' → S='+(a*a)+', S′='+(a*a*Math.SQRT2/4).toFixed(2);
+  }
+  function loop(){ if(!running)return; t+=0.03; if(t>=1){t=1;running=false;} draw(); requestAnimationFrame(loop);}
+  document.getElementById('obGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('obReset').onclick=()=>{t=0;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动7:正四棱锥表面积展开 ===== */
+(function(){
+  const svg=document.getElementById('netSvg');
+  const As=document.getElementById('netA'),Hps=document.getElementById('netHp');
+  const oSb=document.getElementById('netSb'),oSt=document.getElementById('netSt'),oSs=document.getElementById('netSs'),oS=document.getElementById('netS');
+  let a=4,hp=5, t=0, running=false; // t:0 folded ->1 unfolded
+  function sync(){a=+As.value;hp=+Hps.value;stats();draw();}
+  As.oninput=Hps.oninput=sync;
+  function stats(){
+    const Sb=a*a, St=0.5*a*hp, Ss=2*a*hp, S=Sb+Ss;
+    oSb.textContent=Sb.toFixed(0);
+    oSt.textContent=St.toFixed(2);
+    oSs.textContent=Ss.toFixed(2);
+    oS.textContent=S.toFixed(2);
+  }
+  function draw(){
+    clr(svg);
+    const cx=350,cy=160,sc=18;
+    const half=a*sc/2;
+    // base square (in plane)
+    const b=[[cx-half,cy-half],[cx+half,cy-half],[cx+half,cy+half],[cx-half,cy+half]];
+    el(svg,'polygon',{points:b.map(p=>p[0]+','+p[1]).join(' '),fill:'rgba(243,192,14,0.30)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='底 a²';
+    // four triangles: when folded(t=0) apex projects to center; when unfolded(t=1) folds out flat
+    const H=hp*sc; // slant height on screen
+    // for each side, apex position interpolates from center(folded) to outward(unfolded)
+    // top side (between b0,b1): midpoint
+    function tri(m0,m1,outDir){
+      const mx=(m0[0]+m1[0])/2, my=(m0[1]+m1[1])/2;
+      // folded apex = center cx,cy (lifted, appears near center); unfolded apex = outward by H
+      const apexF=[cx,cy];
+      const apexU=[mx+outDir[0]*H, my+outDir[1]*H];
+      const ax=apexF[0]+(apexU[0]-apexF[0])*t;
+      const ay=apexF[1]+(apexU[1]-apexF[1])*t;
+      el(svg,'polygon',{points:m0[0]+','+m0[1]+' '+m1[0]+','+m1[1]+' '+ax+','+ay,fill:'rgba(232,106,23,0.22)',stroke:ORANGE,'stroke-width':2.5});
+    }
+    tri(b[0],b[1],[0,-1]);  // top
+    tri(b[1],b[2],[1,0]);   // right
+    tri(b[2],b[3],[0,1]);   // bottom
+    tri(b[3],b[0],[-1,0]);  // left
+    // labels
+    el(svg,'text',{x:40,y:30,'font-size':13,'font-weight':900,fill:INK}).textContent=t<0.5?'合拢=正四棱锥':'展开=底 + 4 个三角形';
+    el(svg,'text',{x:40,y:290,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='侧面三角形的高 = 斜高 h′（不是锥的竖直高！）';
+    el(svg,'text',{x:40,y:55,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent='S=a²+4·½a·h′ = a²+2a·h′';
+  }
+  function anim(dir){
+    running=true;
+    (function step(){ if(!running)return; t+=0.035*dir; if(t>=1){t=1;running=false;} if(t<=0){t=0;running=false;} draw(); if(running)requestAnimationFrame(step); })();
+  }
+  document.getElementById('netGo').onclick=()=>{anim(1);};
+  document.getElementById('netFold').onclick=()=>{anim(-1);};
+  sync();
+})();
+
+/* ===== 互动8:旋转体三视图对照 ===== */
+(function(){
+  const svg=document.getElementById('rotBodySvg');const note=document.getElementById('rbNote');
+  let r=0;
+  document.querySelectorAll('.rbcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.rbcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');r=+b.dataset.r;draw();
+  });
+  function frame(x,y,label,col){
+    el(svg,'rect',{x:x,y:y,width:130,height:130,fill:'none',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:x+3,y:y-6,'font-size':12,'font-weight':900,fill:col}).textContent=label;
+  }
+  function draw(){
+    clr(svg);
+    const fx=40,sx=210,tx=380;
+    frame(fx,40,'正视图',RED);frame(sx,40,'侧视图',BLUE);frame(tx,40,'俯视图',GREEN);
+    const cxF=fx+65,cxS=sx+65,cxT=tx+65,cyv=105;
+    let msg;
+    if(r===0){ // cylinder: rect, rect, circle
+      el(svg,'rect',{x:cxF-40,y:55,width:80,height:100,fill:'rgba(224,56,42,0.12)',stroke:RED,'stroke-width':3});
+      el(svg,'rect',{x:cxS-40,y:55,width:80,height:100,fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:cxT,cy:cyv,r:50,fill:'rgba(30,158,134,0.12)',stroke:GREEN,'stroke-width':3});
+      msg='圆柱：正视图=侧视图=矩形，俯视图=圆。';
+    } else if(r===1){ // cone: triangle, triangle, circle+center
+      el(svg,'polygon',{points:cxF+',55 '+(cxF-45)+',155 '+(cxF+45)+',155',fill:'rgba(224,56,42,0.12)',stroke:RED,'stroke-width':3});
+      el(svg,'polygon',{points:cxS+',55 '+(cxS-45)+',155 '+(cxS+45)+',155',fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:cxT,cy:cyv,r:50,fill:'rgba(30,158,134,0.12)',stroke:GREEN,'stroke-width':3});
+      el(svg,'circle',{cx:cxT,cy:cyv,r:3.5,fill:GREEN});
+      msg='圆锥：正视图=侧视图=三角形，俯视图=带圆心的圆。';
+    } else if(r===2){ // sphere: circle,circle,circle
+      el(svg,'circle',{cx:cxF,cy:cyv,r:50,fill:'rgba(224,56,42,0.12)',stroke:RED,'stroke-width':3});
+      el(svg,'circle',{cx:cxS,cy:cyv,r:50,fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:cxT,cy:cyv,r:50,fill:'rgba(30,158,134,0.12)',stroke:GREEN,'stroke-width':3});
+      msg='球：三视图都是圆(半径相等)。';
+    } else { // 圆台: trapezoid,trapezoid, two concentric circles
+      el(svg,'polygon',{points:(cxF-25)+',55 '+(cxF+25)+',55 '+(cxF+48)+',155 '+(cxF-48)+',155',fill:'rgba(224,56,42,0.12)',stroke:RED,'stroke-width':3});
+      el(svg,'polygon',{points:(cxS-25)+',55 '+(cxS+25)+',55 '+(cxS+48)+',155 '+(cxS-48)+',155',fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:cxT,cy:cyv,r:50,fill:'rgba(30,158,134,0.10)',stroke:GREEN,'stroke-width':3});
+      el(svg,'circle',{cx:cxT,cy:cyv,r:24,fill:'none',stroke:GREEN,'stroke-width':3});
+      msg='圆台：正视图=侧视图=梯形，俯视图=两同心圆(上下底)。';
+    }
+    note.innerHTML='👉 '+msg+' 关键：<b>俯视图必为圆(或同心圆)，正视图=侧视图</b>。';
+    note.style.borderColor=r===0?RED:r===1?BLUE:r===2?GREEN:VIO;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 三视图分别从哪三个方向看？各反映哪两个尺寸？",a:"正视图(从前往后)：长与高；侧视图(从左往右)：宽与高；俯视图(从上往下)：长与宽。"},
+ {q:"2. 「长对正、高平齐、宽相等」分别连接哪两张视图？",a:"长对正：正视图↔俯视图(左右长相等)；高平齐：正视图↔侧视图(上下高相等)；宽相等：侧视图↔俯视图(前后深相等)。"},
+ {q:"3. 视图里的虚线代表什么？",a:"被前面部分挡住、看不见的轮廓/棱。实线是看得见的轮廓。虚线是判断中空、内凹、后方棱的关键。"},
+ {q:"4. 由三视图还原立体的步骤？",a:"先看俯视图定底面形状；再由正/侧视图的高度定高、由它是矩形还是三角形判柱/锥；结合虚线补出看不见的棱，最后核对三视图。"},
+ {q:"5. 圆锥的三视图是什么？侧面积用什么长度？",a:"正视图=侧视图=等腰三角形，俯视图=带圆心的圆。侧面积 S侧=πrl 用母线 l=√(r²+h²)，不是高 h。"},
+ {q:"6. 常见几何体的体积公式(柱、锥、球)？",a:"柱：V=S底·h；锥：V=⅓S底·h(圆锥 ⅓πr²h)；球：V=4/3·πR³。锥都有 ⅓。"},
+ {q:"7. 组合体(叠加)的表面积怎么算？最大的坑是什么？",a:"S=各部分表面积之和 − 接触面×2。坑：两块贴合的接触面被埋进内部，一个都不能算(上块底+下块顶共两个面)。"},
+ {q:"8. 从大立方体一角切走一个小立方块，体积和表面积怎么变？",a:"体积减小(减去小立方块)；表面积不变——切掉 3 个旧外面，同时露出 3 个等大新面，恰好抵消。"},
+ {q:"9. 斜二测画法的两条规则？直观图面积与原图面积的比？",a:"x 方向长度不变；y 方向画成 45°且长度减半。面积比 S′/S=√2/4，还原用 S=2√2·S′。斜线尺寸不是真实尺寸！"},
+ {q:"10. 俯视图里的对角线通常代表什么？",a:"上方一条棱或锥顶的投影(三维信息)，不是把底面切成两个三角形。实线=可见上棱，虚线=被挡下棱。"},
+ {q:"11. 正四棱锥表面积怎么算？三角形的高用哪个？",a:"S=底 a² + 4 个侧面三角形 = a²+4·½a·h′ = a²+2a·h′。三角形的高是斜高 h′(沿侧面斜量)，不是锥的竖直高 h。"},
+ {q:"12. 旋转体三视图有什么共同特征？",a:"俯视图必为圆(或同心圆)，正视图=侧视图(圆柱矩形、圆锥三角、球圆、圆台梯形)。若正视图≠侧视图，就不是简单旋转体。"},
+ {q:"13. 三视图还原为底半径 3、高 4 的圆锥，求全面积。",a:"母线 l=√(3²+4²)=5。S=πr²+πrl=9π+π·3·5=9π+15π=24π。"},
+ {q:"14. 正方体棱长 a，内切球和外接球半径各是多少？",a:"内切球 R=a/2(球心到各面距离)；外接球 R=(√3/2)a(体对角线 √3·a 的一半)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

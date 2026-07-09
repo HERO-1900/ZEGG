@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电化学综合计算 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .ctrl input[type=number]{width:84px;border:3px solid var(--ink);padding:4px 6px;font-weight:800;font-size:13px;font-family:inherit}
+  .ctrl select{border:3px solid var(--ink);padding:5px 6px;font-weight:800;font-size:13px;font-family:inherit;background:#fff}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>电化学综合计算</h1>
+    <p class="lead">原电池、电解池、电镀、电解精炼……题型五花八门，但算量的<b>底层逻辑只有一条</b>:<b>得失电子守恒</b>。只要把「转移了多少 mol 电子」算出来，产物质量、气体体积、pH 变化、镀层厚度，全都是这一个数字的换算题。这一页专攻「算」，把串并联电路、法拉第电量公式、分阶段电解、镀层厚度这几类硬骨头一次啃透。</p>
+
+    <div class="say">🗣️ <b>电化学计算(人话版):</b> 别管装置长什么样、是原电池还是电解池、是铜电极还是惰性电极——<b>先抓电子数</b>。整个电路里，电子从哪个电极出发、流过外电路、进入哪个电极，这条「电子流水线」上<b>每一处转移的电子数都相等</b>。串联的几个装置，电子数也都相等，可以直接列等式联立。抓住 n(e⁻) 这一个中间量，前后随便怎么换算。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>Q = It = n(e⁻)·F</b>，其中 <b>F = 96500 C/mol</b>。解题第一步永远是:<b>写出电极反应式，标出得失电子数</b>，再拿 n(e⁻) 当"通用货币"去换算质量、体积、pH、厚度。</div>
+
+    <h2>① 得失电子守恒:电化学计算的总纲</h2>
+    <div class="card">
+      <div class="eq">n(e⁻)氧化 = n(e⁻)还原　(全程守恒，贯穿始终)</div>
+      <p style="margin:8px 0">不管原电池还是电解池，<b>氧化反应失去的电子总数 = 还原反应得到的电子总数</b>。原电池里负极失电子、正极得电子;电解池里阳极失电子(或被氧化)、阴极得电子。写出两极的电极反应式，配平得失电子数，就能把电子数、物质的量、质量、体积、电荷量全部串起来。</p>
+      <table>
+        <tr><th>已知</th><th>求 n(e⁻) 的路径</th></tr>
+        <tr><td>某电极产物的质量/体积</td><td>由该电极反应式的化学计量数比，换算出 n(e⁻)</td></tr>
+        <tr><td>电流 I 和时间 t</td><td>Q=It，再 n(e⁻)=Q/F</td></tr>
+        <tr><td>另一电极/另一装置的 n(e⁻)</td><td>串联电路电子数相等，直接代入</td></tr>
+      </table>
+      <p class="trap">⚠ 电子守恒配的是「电子数」，不是「原子数」或「质量」。写电极反应式时一定先配平电荷(得失电子数)，再核对原子数，两者都要对。</p>
+    </div>
+
+    <h2 class="b">② 串联电路:电子数相等，不是电荷量相等</h2>
+    <div class="card">
+      <p style="margin:6px 0">多个电解池(或原电池+电解池)用导线依次相连，即为<b>串联</b>。串联电路只有一条通路，电流处处相等，<b>通过每个电极的电荷量相等，转移的电子的物质的量也相等</b>。这是"跨装置联立方程"的依据:装置甲某电极转移 n(e⁻)，装置乙对应电极转移的 n(e⁻) 完全相同。</p>
+      <div class="mono">串联:n(e⁻)甲 = n(e⁻)乙 = n(e⁻)丙 = …（同一条电路上处处相等）</div>
+      <p style="margin:8px 0"><b>精确表述很重要:</b> 严谨说法是"转移的电子的物质的量相等"，说成"电荷量相等"也对(因为 Q=n(e⁻)·F，n 相等则 Q 也相等)，但绝不能笼统说成"电流相等就是电荷相等"含糊带过——电流相等只是电荷量相等的原因，考试要写清楚是<b>电子转移数(或电荷量)</b>相等，不能只写"电荷相等"就跳过电子这一层。</p>
+      <p class="trap">⚠ 串联时相等的是"通过各电极的电荷量"和"转移的电子的物质的量"，不是"各装置产物的物质的量"或"各装置产物的质量"——产物的量还要看该电极反应式里得失电子数与产物的化学计量比，不同金属、不同气体换算系数不同。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 1 — 串联电路电子守恒器:两个电解装置串联，输入一个装置转移的电子数(或电流·时间)，联动算出两装置对应电极产物量</div>
+      <svg id="serSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>输入方式
+          <select id="serMode"><option value="ne">直接输 n(e⁻)</option><option value="it">输电流 I 和时间 t</option></select>
+        </label>
+        <label id="serNeWrap">n(e⁻) mol <input id="serNe" type="number" min="0" step="0.01" value="0.2"></label>
+        <label id="serIWrap" style="display:none">电流 I (A) <input id="serI" type="number" min="0" step="0.1" value="2"></label>
+        <label id="serTWrap" style="display:none">时间 t (s) <input id="serT" type="number" min="0" step="10" value="9650"></label>
+      </div>
+      <div class="ctrl">
+        <label>装置甲阴极
+          <select id="serDevA"><option value="Cu">Cu²⁺+2e⁻→Cu</option><option value="Ag">Ag⁺+e⁻→Ag</option><option value="H2">2H₂O+2e⁻→H₂+2OH⁻</option></select>
+        </label>
+        <label>装置乙阳极(惰性电极)
+          <select id="serDevB"><option value="O2">2H₂O−4e⁻→O₂+4H⁺</option><option value="Cl2">2Cl⁻−2e⁻→Cl₂</option></select>
+        </label>
+      </div>
+      <div class="live">
+        <div><b>n(e⁻) mol</b><span id="serOutNe">0</span></div>
+        <div><b>甲阴极产物 n (mol)</b><span id="serOutA">0</span></div>
+        <div><b>甲阴极产物量</b><span id="serOutAv">0</span></div>
+        <div><b>乙阳极产物 n (mol)</b><span id="serOutB">0</span></div>
+      </div>
+      <p class="small">串联电路里，两装置转移的 n(e⁻) 完全一样;但换算成"产物的物质的量"要分别除以各自电极反应式的电子计量数——这正是最容易算错的一步。</p>
+    </div>
+
+    <h2 class="g">③ 并联电路:电流按支路分配</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>并联</b>电路有多条支路，总电流在节点处分流，<b>各支路电流之和 = 总电流</b>(I总=I₁+I₂+…)，但各支路电流<b>不一定相等</b>(取决于各支路电阻/电解池特性)。因此并联时，不能像串联那样直接说"各装置电子数相等"——要先按电阻或题给条件求出每条支路各自的电流(或电荷量)，再对每条支路单独用电子守恒。</p>
+      <div class="mono">并联:I总 = I₁ + I₂ + …　（先分流，再对每条支路单独算 n(e⁻)=Q/F）</div>
+      <p class="trap">⚠ 看到"串联"就默认电子数相等，看到"并联"就要先想"电流怎么分"，千万别把并联当串联处理直接判定两支路产物相等。</p>
+    </div>
+
+    <h2 class="o">④ 由 n(e⁻) 算产物:质量、体积、pH、金属析出/溶解量</h2>
+    <div class="card">
+      <p style="margin:6px 0">拿到 n(e⁻) 后，按电极反应式的<b>电子计量数比</b>换算成产物的物质的量，再乘摩尔质量得质量、乘 22.4 L/mol(标准状况)得气体体积。</p>
+      <table>
+        <tr><th>电极反应</th><th>1 mol e⁻ 对应产物</th></tr>
+        <tr><td>Cu²⁺ + 2e⁻ → Cu</td><td>0.5 mol Cu (32.5 g)</td></tr>
+        <tr><td>Ag⁺ + e⁻ → Ag</td><td>1 mol Ag (108 g)</td></tr>
+        <tr><td>2H₂O + 2e⁻ → H₂↑ + 2OH⁻</td><td>0.5 mol H₂ (11.2 L标况)，同时生成 1 mol OH⁻</td></tr>
+        <tr><td>2H₂O − 4e⁻ → O₂↑ + 4H⁺(阳极，惰性电极)</td><td>0.25 mol O₂ (5.6 L标况)，同时生成 1 mol H⁺</td></tr>
+        <tr><td>2Cl⁻ − 2e⁻ → Cl₂↑(阳极)</td><td>0.5 mol Cl₂ (11.2 L标况)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>气体体积必须换算到标准状况(STP)才能用 22.4 L/mol!</b> 题目若给的是常温常压或其他条件，要先用理想气体或题给条件换算，绝不能直接套 22.4。</p>
+      <p style="margin:8px 0"><b>pH 变化</b>要看电极反应<b>具体生成的是 H⁺ 还是 OH⁻</b>，再结合溶液体积算浓度变化——不能凭"电解通常显酸性"这类直觉，必须对号入座看反应式。</p>
+      <p class="trap">⚠ 气体体积换算成标况这一步最容易漏。审题先问:题目给的是不是标准状况?不是的话不能直接用 22.4 L/mol。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚗️ 互动 2 — 电极产物计算器:选电极反应，输入 n(e⁻)，算产物质量或气体体积(标况)</div>
+      <svg id="prodSvg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电极反应
+          <select id="prodRxn">
+            <option value="Cu">阴极 Cu²⁺+2e⁻→Cu</option>
+            <option value="Ag">阴极 Ag⁺+e⁻→Ag</option>
+            <option value="H2">阴极(惰性) 2H₂O+2e⁻→H₂↑+2OH⁻</option>
+            <option value="O2">阳极(惰性) 2H₂O−4e⁻→O₂↑+4H⁺</option>
+            <option value="Cl2">阳极 2Cl⁻−2e⁻→Cl₂↑</option>
+          </select>
+        </label>
+        <label>n(e⁻) mol <input id="prodNe" type="number" min="0" step="0.05" value="0.4"></label>
+      </div>
+      <div class="live">
+        <div><b>产物 n (mol)</b><span id="prodN">0</span></div>
+        <div><b>固体质量 (g)</b><span id="prodMass">—</span></div>
+        <div><b>气体体积(标况 L)</b><span id="prodVol">—</span></div>
+        <div><b>同时生成 H⁺/OH⁻ (mol)</b><span id="prodIon">—</span></div>
+      </div>
+      <p class="small">切换电极反应，观察每 1 mol e⁻ 对应的产物系数如何不同——这正是各类产物换算系数不统一、必须逐个记牢的原因。</p>
+    </div>
+
+    <h2 class="v">⑤ 法拉第电量公式:Q = It = n(e⁻)·F</h2>
+    <div class="card">
+      <div class="eq">Q = I·t = n(e⁻)·F　　F = 96500 C/mol</div>
+      <p style="margin:8px 0">Q(电荷量，单位库仑 C)、I(电流，安培 A)、t(时间，秒 s)、n(e⁻)(转移电子的物质的量，mol)、F(法拉第常数，人教版取 <b>96500 C/mol</b>，即 1 mol 电子所带电荷量的绝对值)。三个物理量任知其二，就能求出第三个，再用 n(e⁻) 去换算产物。</p>
+      <div class="mono">n(e⁻) = Q/F = It/F　　　　Q = n(e⁻)·F</div>
+      <p class="trap">⚠ 时间单位必须是<b>秒</b>，题目给"分钟"或"小时"要先换算成秒再代入 Q=It。F 统一取 96500 C/mol，不用 96485 的近似值(除非题目另有说明)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔋 互动 3 — 电量换算器:Q = It = n(e⁻)·F 三者互算(F=96500 C/mol 固定)</div>
+      <svg id="qSvg" viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>已知量
+          <select id="qMode">
+            <option value="It">已知 I、t → 求 Q 和 n(e⁻)</option>
+            <option value="ne">已知 n(e⁻) → 求 Q，及给定 t 求 I</option>
+          </select>
+        </label>
+        <label id="qIWrap">电流 I (A) <input id="qI" type="number" min="0" step="0.1" value="2"></label>
+        <label id="qTWrap">时间 t (s) <input id="qT" type="number" min="0" step="10" value="965"></label>
+        <label id="qNeWrap" style="display:none">n(e⁻) mol <input id="qNe" type="number" min="0" step="0.01" value="0.02"></label>
+      </div>
+      <div class="live">
+        <div><b>电荷量 Q (C)</b><span id="qOutQ">0</span></div>
+        <div><b>n(e⁻) (mol)</b><span id="qOutNe">0</span></div>
+        <div><b>F (C/mol)</b><span>96500</span></div>
+        <div><b>验证 It vs n·F</b><span id="qOutCheck">0</span></div>
+      </div>
+      <p class="small">改任意一项，其余同步重算，两条路径(I·t 与 n(e⁻)·F)算出的 Q 应始终一致，用来自检答案。</p>
+    </div>
+
+    <h2 class="r">⑥ 电镀镀层厚度计算</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>电镀</b>本质是电解:待镀件作<b>阴极</b>，镀层金属(如 Cu、Ag、Cr)作<b>阳极</b>，电镀液含该金属离子。阴极上金属离子被还原、沉积成镀层。求厚度的链条:</p>
+      <div class="mono">Q=It → n(e⁻)=Q/F → n(金属)=n(e⁻)/电子计量数 → m=n·M → V=m/ρ → 厚度=V/面积</div>
+      <p style="margin:8px 0">最后一步把镀层近似看成"面积 × 厚度"的薄层体积，用 V=面积×厚度 反解厚度。密度 ρ、摩尔质量 M 需要题目给出或是常见金属的已知值(如 Cu: M=64 g/mol, ρ≈8.9 g/cm³)。</p>
+      <p class="trap">⚠ 面积和厚度的单位要统一(通常换算到 cm 或 m 级配套 g、cm³)，厚度常是很小的数(mm 甚至 μm 级)，代入前检查单位换算，别把 cm² 和 m² 搞混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪙 互动 4 — 电镀镀层厚度计算器:面积·密度·摩尔质量·电流·时间 → 转移电子 → 沉积质量 → 体积 → 厚度</div>
+      <svg id="platSvg" viewBox="0 0 700 130" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>镀层金属
+          <select id="platMetal"><option value="Cu">Cu (M=64, ρ=8.9, 得2e⁻)</option><option value="Ag">Ag (M=108, ρ=10.5, 得1e⁻)</option><option value="Ni">Ni (M=59, ρ=8.9, 得2e⁻)</option></select>
+        </label>
+        <label>面积 S (cm²) <input id="platS" type="number" min="0.1" step="1" value="50"></label>
+      </div>
+      <div class="ctrl">
+        <label>电流 I (A) <input id="platI" type="number" min="0" step="0.1" value="1"></label>
+        <label>时间 t (s) <input id="platT" type="number" min="0" step="10" value="9650"></label>
+      </div>
+      <div class="live">
+        <div><b>n(e⁻) mol</b><span id="platNe">0</span></div>
+        <div><b>沉积质量 (g)</b><span id="platMass">0</span></div>
+        <div><b>体积 (cm³)</b><span id="platVol">0</span></div>
+        <div><b>厚度 (mm)</b><span id="platThick">0</span></div>
+      </div>
+      <p class="small">厚度 = 体积 / 面积。换金属看厚度怎么变——同样的电流·时间，M 越大、得电子数越少、密度越小，镀层越厚。</p>
+    </div>
+
+    <h2 class="b">⑦ 电解 CuSO₄ 溶液:分阶段模拟(转折点在哪)</h2>
+    <div class="card">
+      <p style="margin:6px 0">用惰性电极电解 CuSO₄ 溶液，分两个阶段:</p>
+      <h3>阶段一:Cu²⁺ 未耗尽</h3>
+      <div class="mono">阴极:Cu²⁺+2e⁻→Cu(析铜，不产气)　　阳极:2H₂O−4e⁻→O₂↑+4H⁺(析氧，产生H⁺)</div>
+      <p style="margin:6px 0">此阶段阴极只析铜、不产气;阳极持续产 O₂ 并生成 H⁺，溶液<b>酸性增强，pH 下降</b>(相当于电解出了 Cu 和 O₂，母液中 H₂SO₄ 浓度上升)。</p>
+      <h3>阶段二:Cu²⁺ 耗尽后</h3>
+      <div class="mono">阴极转为:2H₂O+2e⁻→H₂↑+2OH⁻(此OH⁻与H⁺中和，实质是电解水)　　阳极仍为:2H₂O−4e⁻→O₂↑+4H⁺</div>
+      <p style="margin:6px 0">Cu²⁺ 耗尽后，阴极开始产 H₂，此时两极产物之比变为 H₂:O₂=2:1，整体上相当于<b>电解水</b>。由于阶段一已积累了 H⁺(H₂SO₄)，阶段二 pH 变化趋势是酸性溶液的水被electrolysis消耗——溶液中 H₂SO₄ 浓度会因水被电解而进一步<b>浓缩，pH 继续略降(更酸)但降速趋缓</b>，直至加水补足或题目按比例讨论。</p>
+      <p class="trap">⚠ Cu²⁺ 耗尽是<b>转折点</b>——之前阴极不产气，之后才产 H₂。判断"析铜结束、开始析氢"必须先算 Cu²⁺ 全部消耗需要多少 n(e⁻)，再比较总 n(e⁻) 是否超过这个量。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 5 — 电解CuSO₄分阶段模拟器:总转移电子 mol 与初始 Cu²⁺ 的量，展示阶段一→阶段二转折点及产物变化</div>
+      <svg id="stageSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>初始 n(Cu²⁺) mol <input id="stageCu" type="range" min="0.05" max="1" value="0.3" step="0.05"></label>
+        <label>总转移 n(e⁻) mol <input id="stageNe" type="range" min="0.05" max="2" value="0.9" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>耗尽Cu²⁺所需n(e⁻)</b><span id="stageNeed">0</span></div>
+        <div><b>当前阶段</b><span id="stagePhase">—</span></div>
+        <div><b>析出Cu (mol)</b><span id="stageCuOut">0</span></div>
+        <div><b>产H₂ (mol)</b><span id="stageH2">0</span></div>
+      </div>
+      <div class="live">
+        <div><b>产O₂ (mol)</b><span id="stageO2">0</span></div>
+        <div><b>生成H⁺总量(阳极) (mol)</b><span id="stageHplus">0</span></div>
+        <div><b>阴极耗OH⁻/生OH⁻ (mol)</b><span id="stageOH">0</span></div>
+        <div><b>pH趋势</b><span id="stageTrend">—</span></div>
+      </div>
+      <p class="small">拖动"总转移 n(e⁻)"滑过"耗尽Cu²⁺所需n(e⁻)"这条线，看阴极产物从"只析铜"跳到"析铜+产氢→纯产氢"的转折。</p>
+    </div>
+
+    <h2 class="g">⑧ pH 追踪器:按产物 H⁺/OH⁻ 定量算 pH 变化</h2>
+    <div class="card">
+      <p style="margin:6px 0">pH 变化的核心是:<b>算出电极反应净生成的 H⁺ 或 OH⁻ 的物质的量，再除以溶液体积得浓度变化</b>，最后取负对数。切勿凭电解类型"想当然"判断酸碱方向——electrolysis 食盐水生成 NaOH 显碱性、电解 CuSO₄ 生成 H₂SO₄ 显酸性、电解水本身两极氢氧根与氢离子恰好抵消(纯水电解只是浓缩，pH≈7 不变)，三种情况方向都不同，必须对着电极反应式逐一判断。</p>
+      <div class="mono">Δc(H⁺或OH⁻) = n(H⁺或OH⁻生成量) / V(溶液，L)　　pH = −log₁₀c(H⁺)</div>
+      <p class="trap">⚠ 若阴阳两极分别生成 H⁺ 和 OH⁻ 但不在同一区域(如用隔膜)，两者不能直接抵消，要看题目装置是否连通;若同一容器内混合，则 H⁺、OH⁻ 会中和，需按守恒抵消后再算剩余量的 pH。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 6 — pH追踪器:输入生成的H⁺/OH⁻物质的量与溶液体积，算pH变化方向与数值</div>
+      <svg id="phSvg" viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>净生成
+          <select id="phType"><option value="H">H⁺ (酸性增强)</option><option value="OH">OH⁻ (碱性增强)</option></select>
+        </label>
+        <label>物质的量 (mol) <input id="phN" type="number" min="0" step="0.001" value="0.02"></label>
+        <label>溶液体积 (L) <input id="phV" type="number" min="0.01" step="0.1" value="1"></label>
+      </div>
+      <div class="live">
+        <div><b>Δc (mol/L)</b><span id="phDc">0</span></div>
+        <div><b>c(H⁺) (mol/L)</b><span id="phCH">0</span></div>
+        <div><b>pH</b><span id="phVal">0</span></div>
+        <div><b>变化方向</b><span id="phDir">—</span></div>
+      </div>
+      <p class="small">默认原溶液视为中性(c(H⁺)=10⁻⁷)，只看新生成的 H⁺/OH⁻ 对浓度的贡献(简化处理，不考虑原有酸碱背景，适用于讲清方向和量级)。</p>
+    </div>
+
+    <h2 class="o">⑨ 电解饱和食盐水 与 粗铜精炼(电解精炼铜)</h2>
+    <div class="card">
+      <h3>电解饱和食盐水(氯碱工业)</h3>
+      <div class="mono">阳极:2Cl⁻−2e⁻→Cl₂↑　　阴极:2H₂O+2e⁻→H₂↑+2OH⁻</div>
+      <p style="margin:6px 0">阴极区 OH⁻ 积累，溶液变为 NaOH，<b>pH 上升(碱性增强)</b>。每转移 2 mol e⁻，生成 1 mol Cl₂、1 mol H₂、2 mol NaOH，n(e⁻):n(Cl₂):n(H₂):n(NaOH)=2:1:1:2。</p>
+      <h3>粗铜精炼(电解精炼铜)</h3>
+      <p style="margin:6px 0">粗铜(含 Zn、Fe、Ni、Ag、Au 等杂质)作<b>阳极</b>，纯铜作<b>阴极</b>，电解质为 CuSO₄ 溶液。</p>
+      <div class="mono">阳极(粗铜，活性电极):Cu−2e⁻→Cu²⁺(及比Cu活泼的Zn、Fe、Ni也失电子溶解)　　阴极(纯铜):Cu²⁺+2e⁻→Cu</div>
+      <p style="margin:6px 0">关键点:阳极是<b>活性电极</b>，电极本身参与反应而溶解，不是电解质中的阴离子(如 SO₄²⁻)被氧化放电——阳极本身"越用越少"。比铜活泼的金属(Zn、Fe、Ni)随铜一起溶解进入溶液，比铜不活泼的金属(Ag、Au)不失电子，以单质形式沉积在阳极底部，形成<b>阳极泥</b>，这是提炼贵金属的重要来源。阴极上只有 Cu²⁺被还原析出纯铜，其他更活泼的金属离子(Zn²⁺、Fe²⁺、Ni²⁺)因得电子能力弱于 Cu²⁺，留在溶液中不被还原。</p>
+      <p class="trap">⚠ 粗铜精炼中阳极反应绝不能写成"SO₄²⁻放电"或"2H₂O−4e⁻→O₂+4H⁺"——只要阳极是活性电极(比电解质中阴离子更容易失电子的金属)，就是电极材料自身溶解，惰性电极那一套（阳极产气）在这里不适用。</p>
+    </div>
+
+    <h2 class="r">⑩ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 串联电路联立求产物量</h3>
+      <p><b class="tag">触发信号:</b>「两个电解池串联」「甲装置阴极析出…克，求乙装置…」，出现"串联"字样或电路图上明显首尾相连成一条通路。</p>
+      <p><b class="tag">标准动作:</b>先由已知产物量求出该电极反应对应的 n(e⁻)；再依据串联电子数相等，把 n(e⁻) 代入另一装置对应电极反应式，换算出所求产物量。</p>
+      <p><b class="tag">示例(带解):</b>甲装置阴极析出 Cu 3.2g(M=64)，与乙装置(惰性电极电解AgNO₃溶液)串联。n(Cu)=3.2/64=0.05mol，由Cu²⁺+2e⁻→Cu，n(e⁻)=0.1mol。串联电子数相等，乙装置阴极 n(e⁻)=0.1mol，由Ag⁺+e⁻→Ag，n(Ag)=0.1mol，m(Ag)=0.1×108=10.8g。</p>
+      <p class="trap">陷阱:直接说"甲乙产物物质的量相等"（错，要分别除以各自电子计量数）；漏了先求n(e⁻)这一步就直接套比例。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由 Q=It=n(e⁻)F 求电流或时间</h3>
+      <p><b class="tag">触发信号:</b>给出电解时间、要求电流强度，或给电流强度、求所需时间；常伴随「恒定电流」「通电…分钟/小时」等表述。</p>
+      <p><b class="tag">标准动作:</b>先把已知产物量换算成 n(e⁻)，再用 Q=n(e⁻)F 求电荷量，最后 I=Q/t 或 t=Q/I。时间单位统一换算成秒。</p>
+      <p><b class="tag">示例(带解):</b>电解CuSO₄溶液，阴极析出Cu 6.4g，通电时间16min5s(=965s)，求电流。n(Cu)=6.4/64=0.1mol，n(e⁻)=0.2mol，Q=0.2×96500=19300C，I=Q/t=19300/965=20A。</p>
+      <p class="trap">陷阱:时间不换算成秒直接代入；F误用96485导致结果对不上96500标准值；漏了电子计量数(Cu是2个电子)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 电解CuSO₄分阶段(转折点)问题</h3>
+      <p><b class="tag">触发信号:</b>「继续电解」「电解一段时间后阴极开始产生气泡」「Cu²⁺全部析出后」等描述阶段转变的字眼。</p>
+      <p><b class="tag">标准动作:</b>先算耗尽Cu²⁺所需n(e⁻)=2n(Cu²⁺)初始；比较总n(e⁻)与这个值的大小，判断处于阶段一(未耗尽,只析铜产O₂)还是阶段二(耗尽后,析铜+产H₂或纯产H₂+产O₂)；分段计算各阶段产物。</p>
+      <p><b class="tag">示例(带解):</b>0.2mol Cu²⁺的CuSO₄溶液，惰性电极电解，共转移0.5mol e⁻。耗尽Cu²⁺需n(e⁻)=0.4mol。0.5>0.4，说明Cu²⁺已耗尽，多余0.1mol e⁻用于阴极产H₂：n(H₂)=0.1/2=0.05mol。阳极全程产O₂：n(O₂)=0.5/4=0.125mol。析出Cu：n(Cu)=0.4/2=0.2mol(全部析出)。</p>
+      <p class="trap">陷阱:不比较n(e⁻)大小直接按单一阶段计算；忘记阳极产物是连续的(不分阶段)，只有阴极产物分阶段变化。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — pH变化定量计算</h3>
+      <p><b class="tag">触发信号:</b>「电解后溶液pH如何变化」「求电解后溶液的pH」「(忽略体积变化)」等表述。</p>
+      <p><b class="tag">标准动作:</b>先判断该电极反应生成的是H⁺还是OH⁻(写出电极反应式确认)，算出其物质的量，除以溶液体积得Δc，再计算pH，别凭电解池类型直觉猜方向。</p>
+      <p><b class="tag">示例(带解):</b>用惰性电极电解500mL某盐溶液，阳极产生标况下1.12L O₂(此前溶液中性，体积不变)。n(O₂)=1.12/22.4=0.05mol，由2H₂O−4e⁻→O₂+4H⁺，n(H⁺)=0.2mol，c(H⁺)=0.2/0.5=0.4mol/L，pH=−log0.4≈0.4。</p>
+      <p class="trap">陷阱:漏掉气体体积要换算标况这一步；把O₂的物质的量直接当H⁺的物质的量（少乘4倍）；不判断阴阳极产物就瞎猜pH升还是降。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 电镀/镀层厚度计算</h3>
+      <p><b class="tag">触发信号:</b>「镀件表面镀上一层…金属」「求镀层厚度」，给出镀件面积、金属密度、电流、时间。</p>
+      <p><b class="tag">标准动作:</b>Q=It → n(e⁻)=Q/F → n(金属)=n(e⁻)/得电子数 → m=nM → V=m/ρ → 厚度=V/S，全程注意单位统一(cm、g、cm³配套)。</p>
+      <p><b class="tag">示例(带解):</b>某铁件表面镀镍，面积100cm²，电流2A，电镀2小时(7200s)，Ni取M=59,ρ=8.9g/cm³,得2e⁻。Q=2×7200=14400C，n(e⁻)=14400/96500≈0.1492mol，n(Ni)=0.0746mol，m=0.0746×59≈4.40g，V=4.40/8.9≈0.495cm³，厚度=0.495/100≈0.00495cm≈0.0495mm。</p>
+      <p class="trap">陷阱:面积单位与体积单位不匹配(cm²配cm³，不能混m²)；忘记除以得电子数就把n(e⁻)直接当n(金属)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 粗铜精炼/阳极泥问题</h3>
+      <p><b class="tag">触发信号:</b>「粗铜精炼」「阳极泥」「活性电极」「精铜」等字眼，涉及粗铜中多种金属杂质。</p>
+      <p><b class="tag">标准动作:</b>确认阳极为粗铜(活性电极，本身溶解)，写阳极反应Cu−2e⁻→Cu²⁺(及更活泼杂质金属一起失电子)；阴极只有Cu²⁺被还原；比铜不活泼的金属沉入阳极泥；用n(e⁻)对阳极溶解的Cu、阴极析出的纯Cu分别求量(两者可能不完全相等，因为阳极部分电子来自杂质金属)。</p>
+      <p><b class="tag">示例(带解):</b>若粗铜阳极溶解共转移1mol e⁻，其中0.1mol e⁻来自杂质Zn(Zn−2e⁻→Zn²⁺)，其余0.9mol e⁻来自Cu。则阳极溶解Cu：n=0.9/2=0.45mol；阴极上全部0.9mol e⁻(杂质离子不在阴极放电，因得电子能力弱于Cu²⁺)用于析Cu：n=0.45mol，阴阳两极Cu的量因杂质分流而不一定相等，需分别计算。</p>
+      <p class="trap">陷阱:把阳极反应写成惰性电极那套(2H₂O−4e⁻→O₂+4H⁺)；以为阳极溶解Cu的量一定等于阴极析出Cu的量（当阳极有活泼杂质分流电子时两者不等）。</p>
+    </div>
+
+    <h2 class="r">⑪ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 串联电路相等的是<b>转移电子的物质的量(或电荷量)</b>，不能笼统说成"电荷相等"就不深究——本质是"电子数相等"，产物的量还要按各自电极反应式的电子计量数换算，不会自动相等。</p>
+      <p class="trap">② 计算气体体积必须先确认是否为<b>标准状况</b>，只有标况才能用 22.4 L/mol；非标况需用其他条件(如题给摩尔体积、理想气体方程)换算，绝不能想当然套用。</p>
+      <p class="trap">③ 电解 CuSO₄ 溶液，Cu²⁺ <b>耗尽后</b>阴极反应会转折为电解水(产H₂)，之前只析铜不产气——先算耗尽Cu²⁺所需n(e⁻)，再判断总转移电子是否超过这个临界值。</p>
+      <p class="trap">④ pH 变化方向要根据电极反应<b>具体生成的是 H⁺ 还是 OH⁻</b>逐一判断，不能凭"电解一般显酸性/碱性"的经验想当然，氯碱工业显碱性、CuSO₄电解显酸性、纯水电解pH几乎不变，方向各不相同。</p>
+      <p class="trap">⑤ 阳极若为<b>活性电极</b>(如粗铜精炼的粗铜)，电极材料本身失电子溶解，不是电解质中的阴离子(如SO₄²⁻)放电；只有<b>惰性电极</b>(Pt、石墨)才轮到阴离子在阳极放电。</p>
+      <p class="trap">⑥ 法拉第常数固定取 <b>F=96500 C/mol</b>(人教版标准值)，除非题目特别说明用96485，否则一律用96500，别自己临时改近似值。</p>
+      <p class="trap">⑦ Q=It 中时间单位必须是<b>秒</b>，题目给分钟、小时要先换算，直接代入会差60倍或3600倍。</p>
+      <p class="trap">⑧ 电镀镀层厚度计算，面积与体积单位要统一(如都用cm、cm²、cm³)，混用m²和cm³会出现千万倍的数量级错误。</p>
+      <p class="trap">⑨ 粗铜精炼中，阳极溶解的Cu量与阴极析出的纯Cu量<b>不一定相等</b>——若粗铜含比Cu活泼的杂质(Zn、Fe、Ni)，这些杂质也会在阳极失电子，分流了一部分电子，阴极却只有Cu²⁺被还原。</p>
+      <p class="trap">⑩ 并联电路的电流是<b>分流</b>，不是均分，不能想当然认为并联的两条支路电子数相等——除非题目明确各支路电阻相同或电流相等，否则要先求各支路电流(电荷量)再各自算n(e⁻)。</p>
+    </div>
+
+    <h2 class="v">⑫ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① n(e⁻) 是电化学计算的"通用货币":</b> 把任何已知条件(产物质量、气体体积、电流时间、镀层厚度)都先兑换成 n(e⁻)，再从 n(e⁻) 兑换成任意所求量。这样无论题目给的是质量、体积还是时间，你走的都是同一条中转站，不会被"表面形式不同"迷惑。</p>
+      <p style="margin:8px 0"><b>② 串联的本质是"同一条导线上的电流处处相等"，这是电路理论，不是化学规律:</b> 之所以电子数相等，是因为串联电路只有一条通路，电流(单位时间通过某截面的电荷量)在任意截面都相同。理解这一点，你就不会在遇到"部分串联、部分并联"的混合电路时慌——先用电路知识理清电流分配，再逐支路套电子守恒。</p>
+      <p style="margin:8px 0"><b>③ 电解CuSO₄的分阶段问题，本质是"两种还原反应在阴极竞争"，谁先反应看得电子能力:</b> Cu²⁺得电子能力强于H₂O(即Cu²⁺氧化性强于H⁺/H₂O)，所以Cu²⁺优先放电；耗尽后没有更强的氧化剂了，才轮到H₂O被还原产H₂。这套"氧化性强弱决定放电顺序"的逻辑，在任何混合溶液电解题里都通用，不止CuSO₄这一个例子。</p>
+      <p style="margin:8px 0"><b>④ 粗铜精炼的阳极泥问题，考的是氧化性/还原性强弱的排序，不是单纯电化学计算:</b> 比Cu活泼(还原性更强)的金属才会在阳极先失电子溶解；比Cu不活泼(还原性更弱)的金属留在阳极不反应，沉积成阳极泥。把金属活动性顺序表和电化学放电顺序连起来看，才能透彻理解为什么阳极泥里恰好是Ag、Au等贵金属。</p>
+      <p style="margin:8px 0"><b>⑤ pH计算的本质是"离子守恒"配合"电子守恒"两条线同时用:</b> 电子守恒决定生成了多少mol的H⁺或OH⁻，之后就完全是溶液化学的浓度、pH计算，与电化学无关了。想清楚"这道题从哪一步开始不再是电化学问题、而是普通酸碱计算"，就不会在两套逻辑之间混淆用错公式。</p>
+    </div>
+
+    <h2 class="b">⑬ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 电化学综合计算专题</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const FARADAY=96500;
+
+/* electrode reaction table: electrons per 1 mol product, type solid/gas, and companion ion produced per mol product */
+const RXN={
+  Cu:{label:"Cu²⁺+2e⁻→Cu", e:2, kind:"solid", M:64, companion:null, companionPerProd:0},
+  Ag:{label:"Ag⁺+e⁻→Ag", e:1, kind:"solid", M:108, companion:null, companionPerProd:0},
+  H2:{label:"2H₂O+2e⁻→H₂+2OH⁻", e:2, kind:"gas", companion:"OH-", companionPerProd:2},
+  O2:{label:"2H₂O−4e⁻→O₂+4H⁺", e:4, kind:"gas", companion:"H+", companionPerProd:4},
+  Cl2:{label:"2Cl⁻−2e⁻→Cl₂", e:2, kind:"gas", companion:null, companionPerProd:0}
+};
+
+/* ===== 互动1: 串联电路电子守恒器 ===== */
+(function(){
+  const svg=document.getElementById('serSvg');
+  const modeSel=document.getElementById('serMode');
+  const neWrap=document.getElementById('serNeWrap'), iWrap=document.getElementById('serIWrap'), tWrap=document.getElementById('serTWrap');
+  const neInp=document.getElementById('serNe'), iInp=document.getElementById('serI'), tInp=document.getElementById('serT');
+  const devA=document.getElementById('serDevA'), devB=document.getElementById('serDevB');
+  const oNe=document.getElementById('serOutNe'), oA=document.getElementById('serOutA'), oAv=document.getElementById('serOutAv'), oB=document.getElementById('serOutB');
+
+  function sync(){
+    const useIt = modeSel.value==='it';
+    neWrap.style.display = useIt?'none':'flex';
+    iWrap.style.display = useIt?'flex':'none';
+    tWrap.style.display = useIt?'flex':'none';
+    draw();
+  }
+  modeSel.onchange=sync;
+  [neInp,iInp,tInp,devA,devB].forEach(x=>x.oninput=draw);
+
+  function draw(){
+    const useIt = modeSel.value==='it';
+    let ne;
+    if(useIt){
+      const I=+iInp.value||0, t=+tInp.value||0;
+      ne = (I*t)/FARADAY;
+    } else {
+      ne = +neInp.value||0;
+    }
+    const rxnA = RXN[devA.value];
+    const rxnB = RXN[devB.value];
+    const nA = ne/rxnA.e;
+    const nB = ne/rxnB.e;
+    oNe.textContent = ne.toFixed(4);
+    oA.textContent = nA.toFixed(4);
+    oAv.textContent = rxnA.kind==='solid' ? (nA*rxnA.M).toFixed(3)+' g' : (nA*22.4).toFixed(3)+' L(标况)';
+    oB.textContent = nB.toFixed(4);
+
+    clr(svg);
+    const X0=40,Y0=30,boxW=260,boxH=140,gap=80;
+    // device A box
+    el(svg,'rect',{x:X0,y:Y0,width:boxW,height:boxH,fill:'rgba(20,80,200,0.12)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:X0+boxW/2,y:Y0-8,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='装置甲(阴极)';
+    el(svg,'text',{x:X0+boxW/2,y:Y0+40,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=rxnA.label;
+    el(svg,'text',{x:X0+boxW/2,y:Y0+75,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='n(e⁻)='+ne.toFixed(3)+' mol';
+    el(svg,'text',{x:X0+boxW/2,y:Y0+105,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='产物 '+nA.toFixed(3)+' mol';
+    // device B box
+    const X1=X0+boxW+gap;
+    el(svg,'rect',{x:X1,y:Y0,width:boxW,height:boxH,fill:'rgba(232,106,23,0.12)',stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:X1+boxW/2,y:Y0-8,'font-size':13,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='装置乙(阳极)';
+    el(svg,'text',{x:X1+boxW/2,y:Y0+40,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=rxnB.label;
+    el(svg,'text',{x:X1+boxW/2,y:Y0+75,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='n(e⁻)='+ne.toFixed(3)+' mol';
+    el(svg,'text',{x:X1+boxW/2,y:Y0+105,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='产物 '+nB.toFixed(3)+' mol';
+    // connecting wire
+    el(svg,'line',{x1:X0+boxW,y1:Y0+boxH/2,x2:X1,y2:Y0+boxH/2,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:(X0+boxW+X1)/2,y:Y0+boxH/2-10,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='串联：n(e⁻)相等';
+    el(svg,'text',{x:X0,y:Y0+boxH+30,'font-size':12,'font-weight':700,fill:'#6b5d3a'}).textContent='同一条导线上，电流处处相等 → 两装置转移的电子物质的量相等，但产物量要各自除以电子计量数。';
+  }
+  sync();
+})();
+
+/* ===== 互动2: 电极产物计算器 ===== */
+(function(){
+  const svg=document.getElementById('prodSvg');
+  const rxnSel=document.getElementById('prodRxn'), neInp=document.getElementById('prodNe');
+  const oN=document.getElementById('prodN'), oMass=document.getElementById('prodMass'), oVol=document.getElementById('prodVol'), oIon=document.getElementById('prodIon');
+  function draw(){
+    const r=RXN[rxnSel.value];
+    const ne=+neInp.value||0;
+    const n=ne/r.e;
+    oN.textContent=n.toFixed(4);
+    if(r.kind==='solid'){
+      oMass.textContent=(n*r.M).toFixed(3)+' g';
+      oVol.textContent='—';
+    } else {
+      oMass.textContent='—';
+      oVol.textContent=(n*22.4).toFixed(3)+' L';
+    }
+    // companion ion amount: companion mol = n * companionPerProd
+    if(r.companion){
+      const ionMol = n*r.companionPerProd;
+      oIon.textContent = ionMol.toFixed(4)+' mol '+(r.companion==='H+'?'H⁺':'OH⁻');
+    } else {
+      oIon.textContent='—';
+    }
+    clr(svg);
+    const X0=40,Y0=25,W=620;
+    el(svg,'text',{x:X0,y:Y0,'font-size':14,'font-weight':900,fill:INK}).textContent='电极反应：'+r.label;
+    el(svg,'text',{x:X0,y:Y0+30,'font-size':14,'font-weight':800,fill:BLUE}).textContent='n(e⁻)='+ne.toFixed(3)+' mol　→　产物 n='+n.toFixed(4)+' mol';
+    // bar showing product amount
+    const barMax=200, val=Math.min(1,n/2)*barMax;
+    el(svg,'rect',{x:X0,y:Y0+55,width:barMax,height:22,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:X0,y:Y0+55,width:val,height:22,fill:GREEN});
+    el(svg,'text',{x:X0,y:Y0+100,'font-size':13,'font-weight':800,fill:INK}).textContent = r.kind==='solid' ? ('质量 = n×M = '+n.toFixed(4)+'×'+r.M+' = '+(n*r.M).toFixed(3)+' g') : ('体积(标况) = n×22.4 = '+(n*22.4).toFixed(3)+' L');
+    if(r.companion){
+      el(svg,'text',{x:X0,y:Y0+125,'font-size':13,'font-weight':800,fill:RED}).textContent='同时生成 '+(r.companion==='H+'?'H⁺':'OH⁻')+' = '+(n*r.companionPerProd).toFixed(4)+' mol';
+    }
+  }
+  rxnSel.onchange=draw; neInp.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3: 电量换算器 ===== */
+(function(){
+  const svg=document.getElementById('qSvg');
+  const modeSel=document.getElementById('qMode');
+  const iWrap=document.getElementById('qIWrap'), tWrap=document.getElementById('qTWrap'), neWrap=document.getElementById('qNeWrap');
+  const iInp=document.getElementById('qI'), tInp=document.getElementById('qT'), neInp=document.getElementById('qNe');
+  const oQ=document.getElementById('qOutQ'), oNe=document.getElementById('qOutNe'), oCheck=document.getElementById('qOutCheck');
+
+  function sync(){
+    const useNe = modeSel.value==='ne';
+    neWrap.style.display = useNe?'flex':'none';
+    iWrap.style.display = 'flex';
+    tWrap.style.display = 'flex';
+    draw();
+  }
+  modeSel.onchange=sync;
+  [iInp,tInp,neInp].forEach(x=>x.oninput=draw);
+
+  function draw(){
+    const useNe = modeSel.value==='ne';
+    let Q, ne, I=+iInp.value||0, t=+tInp.value||0;
+    if(useNe){
+      ne = +neInp.value||0;
+      Q = ne*FARADAY;
+    } else {
+      Q = I*t;
+      ne = Q/FARADAY;
+    }
+    oQ.textContent = Q.toFixed(2);
+    oNe.textContent = ne.toFixed(5);
+    const QfromNe = ne*FARADAY;
+    oCheck.textContent = 'It='+Q.toFixed(1)+' vs n·F='+QfromNe.toFixed(1);
+
+    clr(svg);
+    const X0=40,Y0=30;
+    el(svg,'text',{x:X0,y:Y0,'font-size':15,'font-weight':900,fill:INK}).textContent='Q = I·t = n(e⁻)·F';
+    el(svg,'text',{x:X0,y:Y0+35,'font-size':14,'font-weight':800,fill:BLUE}).textContent='I·t = '+I.toFixed(2)+' × '+t.toFixed(1)+' = '+(I*t).toFixed(2)+' C';
+    el(svg,'text',{x:X0,y:Y0+65,'font-size':14,'font-weight':800,fill:GREEN}).textContent='n(e⁻)·F = '+ne.toFixed(5)+' × 96500 = '+(ne*FARADAY).toFixed(2)+' C';
+    el(svg,'text',{x:X0,y:Y0+95,'font-size':14,'font-weight':900,fill:RED}).textContent='Q = '+Q.toFixed(2)+' C　　n(e⁻) = '+ne.toFixed(5)+' mol';
+  }
+  sync();
+})();
+
+/* ===== 互动4: 电镀镀层厚度计算器 ===== */
+(function(){
+  const svg=document.getElementById('platSvg');
+  const metalSel=document.getElementById('platMetal');
+  const sInp=document.getElementById('platS'), iInp=document.getElementById('platI'), tInp=document.getElementById('platT');
+  const oNe=document.getElementById('platNe'), oMass=document.getElementById('platMass'), oVol=document.getElementById('platVol'), oThick=document.getElementById('platThick');
+  const METAL={
+    Cu:{M:64, rho:8.9, e:2},
+    Ag:{M:108, rho:10.5, e:1},
+    Ni:{M:59, rho:8.9, e:2}
+  };
+  function draw(){
+    const m=METAL[metalSel.value];
+    const S=+sInp.value||0, I=+iInp.value||0, t=+tInp.value||0;
+    const Q=I*t;
+    const ne=Q/FARADAY;
+    const nMetal=ne/m.e;
+    const mass=nMetal*m.M;
+    const vol=mass/m.rho; // cm^3
+    const thickCm = S>0 ? vol/S : 0; // cm
+    const thickMm = thickCm*10;
+    oNe.textContent=ne.toFixed(5);
+    oMass.textContent=mass.toFixed(4);
+    oVol.textContent=vol.toFixed(5);
+    oThick.textContent=thickMm.toFixed(5);
+
+    clr(svg);
+    const X0=40,Y0=25;
+    el(svg,'text',{x:X0,y:Y0,'font-size':13.5,'font-weight':900,fill:INK}).textContent='Q=It='+Q.toFixed(1)+'C → n(e⁻)='+ne.toFixed(5)+'mol → n(金属)='+nMetal.toFixed(5)+'mol';
+    el(svg,'text',{x:X0,y:Y0+28,'font-size':13.5,'font-weight':900,fill:BLUE}).textContent='质量 m=n×M='+mass.toFixed(4)+'g → 体积 V=m/ρ='+vol.toFixed(5)+'cm³';
+    el(svg,'text',{x:X0,y:Y0+56,'font-size':13.5,'font-weight':900,fill:RED}).textContent='厚度 = V/S = '+vol.toFixed(5)+'/'+S.toFixed(1)+' = '+thickCm.toFixed(6)+' cm = '+thickMm.toFixed(5)+' mm';
+    el(svg,'text',{x:X0,y:Y0+84,'font-size':12,'font-weight':700,fill:'#6b5d3a'}).textContent='金属参数：M='+m.M+' g/mol，ρ='+m.rho+' g/cm³，得电子数='+m.e;
+  }
+  [metalSel,sInp,iInp,tInp].forEach(x=>x.oninput=draw);
+  draw();
+})();
+
+/* ===== 互动5: 电解CuSO4分阶段模拟器 ===== */
+(function(){
+  const svg=document.getElementById('stageSvg');
+  const cuInp=document.getElementById('stageCu'), neInp=document.getElementById('stageNe');
+  const oNeed=document.getElementById('stageNeed'), oPhase=document.getElementById('stagePhase');
+  const oCuOut=document.getElementById('stageCuOut'), oH2=document.getElementById('stageH2');
+  const oO2=document.getElementById('stageO2'), oHplus=document.getElementById('stageHplus');
+  const oOH=document.getElementById('stageOH'), oTrend=document.getElementById('stageTrend');
+
+  function draw(){
+    const cu0=+cuInp.value||0;
+    const neTotal=+neInp.value||0;
+    const neNeed=2*cu0; // Cu2+ + 2e- -> Cu
+    oNeed.textContent=neNeed.toFixed(3);
+
+    let cuOut, h2, phase;
+    if(neTotal<=neNeed){
+      // phase 1 only: all electrons deposit Cu
+      cuOut=neTotal/2;
+      h2=0;
+      phase='阶段一(未耗尽Cu²⁺，只析铜不产气)';
+    } else {
+      cuOut=cu0; // all Cu2+ consumed
+      const neExtra=neTotal-neNeed;
+      h2=neExtra/2;
+      phase='阶段二(Cu²⁺已耗尽，阴极析铜完毕+开始产H₂)';
+    }
+    const o2=neTotal/4; // anode always produces O2 (inert electrode), continuous across both phases
+    const hplus=o2*4; // = neTotal, generated at anode throughout
+    const ohFromH2=h2*2; // OH- generated at cathode once H2 starts
+
+    oPhase.textContent=phase;
+    oCuOut.textContent=cuOut.toFixed(4);
+    oH2.textContent=h2.toFixed(4);
+    oO2.textContent=o2.toFixed(4);
+    oHplus.textContent=hplus.toFixed(4);
+    oOH.textContent=ohFromH2.toFixed(4);
+    const netAcid = hplus - ohFromH2;
+    oTrend.textContent = netAcid>0 ? 'pH下降(酸性增强)' : (netAcid===0?'基本不变':'pH略升');
+
+    clr(svg);
+    const X0=50,Y0=30,W=600,H=150;
+    // axis: electron progress bar
+    el(svg,'rect',{x:X0,y:Y0,width:W,height:36,fill:'#fff',stroke:INK,'stroke-width':3});
+    const maxNe=2; // slider max
+    const needX = X0 + (neNeed/maxNe)*W;
+    const curX = X0 + Math.min(neTotal,maxNe)/maxNe*W;
+    // phase1 region
+    el(svg,'rect',{x:X0,y:Y0,width:Math.min(needX-X0,W),height:36,fill:'rgba(20,80,200,0.18)'});
+    // phase2 region
+    if(needX<X0+W){
+      el(svg,'rect',{x:needX,y:Y0,width:X0+W-needX,height:36,fill:'rgba(224,56,42,0.18)'});
+    }
+    // marker for need
+    el(svg,'line',{x1:needX,y1:Y0-6,x2:needX,y2:Y0+42,stroke:INK,'stroke-width':3,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:needX,y:Y0-10,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='耗尽点 n(e⁻)='+neNeed.toFixed(2);
+    // marker for current
+    el(svg,'line',{x1:curX,y1:Y0-6,x2:curX,y2:Y0+42,stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:curX,cy:Y0+18,r:7,fill:RED});
+    el(svg,'text',{x:X0,y:Y0+58,'font-size':12,'font-weight':800,fill:BLUE}).textContent='蓝区=阶段一(只析铜产O₂)';
+    el(svg,'text',{x:X0+200,y:Y0+58,'font-size':12,'font-weight':800,fill:RED}).textContent='红区=阶段二(析铜完毕后产H₂+O₂)';
+    el(svg,'text',{x:X0,y:Y0+85,'font-size':13,'font-weight':900,fill:INK}).textContent='当前:n(e⁻)总='+neTotal.toFixed(3)+' mol，'+phase;
+    el(svg,'text',{x:X0,y:Y0+112,'font-size':12.5,'font-weight':800,fill:GREEN}).textContent='析Cu='+cuOut.toFixed(3)+'mol　产H₂='+h2.toFixed(3)+'mol　产O₂(全程)='+o2.toFixed(3)+'mol';
+    el(svg,'text',{x:X0,y:Y0+136,'font-size':12.5,'font-weight':800,fill:ORANGE}).textContent='阳极生成H⁺='+hplus.toFixed(3)+'mol，阴极(阶段二)生成OH⁻='+ohFromH2.toFixed(3)+'mol → 净酸性H⁺='+netAcid.toFixed(3)+'mol';
+  }
+  cuInp.oninput=draw; neInp.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6: pH追踪器 ===== */
+(function(){
+  const svg=document.getElementById('phSvg');
+  const typeSel=document.getElementById('phType');
+  const nInp=document.getElementById('phN'), vInp=document.getElementById('phV');
+  const oDc=document.getElementById('phDc'), oCH=document.getElementById('phCH'), oVal=document.getElementById('phVal'), oDir=document.getElementById('phDir');
+
+  function draw(){
+    const type=typeSel.value;
+    const n=+nInp.value||0;
+    const V=+vInp.value||0.001;
+    const dc = n/V;
+    oDc.textContent=dc.toExponential(3)+' mol/L';
+    let cH, ph, dir;
+    if(type==='H'){
+      cH = 1e-7 + dc; // simplified: neutral baseline plus added H+
+      dir='酸性增强(pH下降)';
+    } else {
+      const cOH = 1e-7 + dc;
+      cH = 1e-14/cOH;
+      dir='碱性增强(pH上升)';
+    }
+    ph = -Math.log10(cH);
+    oCH.textContent=cH.toExponential(3);
+    oVal.textContent=ph.toFixed(2);
+    oDir.textContent=dir;
+
+    clr(svg);
+    const X0=40,Y0=25;
+    el(svg,'text',{x:X0,y:Y0,'font-size':13.5,'font-weight':900,fill:INK}).textContent='Δc('+(type==='H'?'H⁺':'OH⁻')+') = n/V = '+n.toFixed(4)+'/'+V.toFixed(3)+' = '+dc.toExponential(3)+' mol/L';
+    el(svg,'text',{x:X0,y:Y0+30,'font-size':13.5,'font-weight':900,fill:BLUE}).textContent='c(H⁺) ≈ '+cH.toExponential(3)+' mol/L';
+    el(svg,'text',{x:X0,y:Y0+60,'font-size':15,'font-weight':900,fill:RED}).textContent='pH = −log c(H⁺) ≈ '+ph.toFixed(2);
+    el(svg,'text',{x:X0,y:Y0+90,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent=dir+'（简化处理：原溶液视为中性 c(H⁺)=10⁻⁷ mol/L 为基准）';
+  }
+  typeSel.onchange=draw; nInp.oninput=draw; vInp.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 电化学计算的总纲是什么？为什么原电池和电解池都能用同一套逻辑算？",a:"得失电子守恒：氧化反应失去的电子总数=还原反应得到的电子总数，全程贯穿。原电池负极失电子、正极得电子；电解池阳极失电子、阴极得电子，本质都是同一条'电子流水线'，n(e⁻)可以互相换算。"},
+ {q:"2. 串联电路里，两个电解池对应电极产物的物质的量一定相等吗？",a:"不一定。串联相等的是转移电子的物质的量(n(e⁻))，即电荷量相等。产物的物质的量还要分别除以各自电极反应式里的电子计量数，系数不同则产物量不同。"},
+ {q:"3. 法拉第电量公式是什么？F取多少？",a:"Q=It=n(e⁻)·F，F=96500 C/mol(人教版标准值，不用96485的近似值)。"},
+ {q:"4. 计算电解产生气体的体积时，最容易漏掉的一步是什么？",a:"必须先确认是否为标准状况(STP)，只有标况才能直接用22.4 L/mol；非标况需用其他条件换算，不能直接套用。"},
+ {q:"5. 电解CuSO₄溶液，Cu²⁺耗尽前后阴极反应有什么变化？怎么判断转折点？",a:"耗尽前：Cu²⁺+2e⁻→Cu，只析铜不产气。耗尽后：2H₂O+2e⁻→H₂+2OH⁻，开始产H₂。转折点=算出耗尽Cu²⁺所需n(e⁻)=2n(Cu²⁺)初始，比较总转移n(e⁻)是否超过这个值。"},
+ {q:"6. 判断电解后溶液pH变化方向，应该看什么，不能怎么判断？",a:"要看电极反应具体生成的是H⁺还是OH⁻(写出电极反应式确认)，不能凭'电解通常显酸性/碱性'的经验想当然，不同电解质电解方向不同(氯碱工业显碱性、电解CuSO₄显酸性)。"},
+ {q:"7. 电镀镀层厚度的计算链条是什么？",a:"Q=It → n(e⁻)=Q/F → n(金属)=n(e⁻)/得电子数 → m=n·M → V=m/ρ → 厚度=V/面积。注意面积、体积单位要统一。"},
+ {q:"8. 粗铜精炼中，阳极反应是什么？和惰性电极电解有什么本质不同？",a:"阳极(粗铜)是活性电极，本身失电子溶解：Cu−2e⁻→Cu²⁺(及更活泼杂质金属)。这与惰性电极不同——惰性电极阳极是电解质中的阴离子放电(如2H₂O−4e⁻→O₂+4H⁺)，而活性电极是电极材料本身反应，不是阴离子放电。"},
+ {q:"9. 阳极泥是什么？为什么会出现比Cu不活泼的金属留在阳极泥里？",a:"阳极泥是粗铜精炼时沉积在阳极附近的不溶物，主要含Ag、Au等比Cu不活泼(还原性弱于Cu)的金属——它们的失电子能力不如Cu，所以不参与阳极溶解，以单质形式沉积下来，是提炼贵金属的重要来源。"},
+ {q:"10. 串联和并联电路，在处理电子转移数时的核心区别是什么？",a:"串联电路只有一条通路，电流处处相等，各装置转移的n(e⁻)相等。并联电路有多条支路，总电流等于各支路电流之和，但各支路电流不一定相等，需要先按电阻或题给条件分流，再对每条支路单独用电子守恒。"},
+ {q:"11. 电解饱和食盐水(氯碱工业)的两极反应是什么？n(e⁻)与Cl₂、H₂、NaOH的比例关系？",a:"阳极：2Cl⁻−2e⁻→Cl₂↑；阴极：2H₂O+2e⁻→H₂↑+2OH⁻。每转移2mol e⁻，生成1mol Cl₂、1mol H₂、2mol NaOH，即n(e⁻):n(Cl₂):n(H₂):n(NaOH)=2:1:1:2，阴极区pH上升。"},
+ {q:"12. 时间单位在Q=It公式里要注意什么？F为什么不能随便用96485代替96500？",a:"时间必须换算成秒(题目常给分钟、小时，要先乘60或3600)。F统一取人教版标准值96500 C/mol，除非题目明确说明用96485，否则用96485会导致答案与标准答案对不上。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

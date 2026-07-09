@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外接球与内切球 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>外接球与内切球</h1>
+    <p class="lead">这一页只干一件事:<b>找球心</b>。几何体的外接球是「把它装进一个球,所有顶点贴着球面」;内切球是「把一个球塞进它,球贴着每个面」。看着吓人,其实全靠一句口诀——<b>外接球心到各顶点等距、内切球心到各面等距</b>——加上补形、方程、等体积三把刀。正方体、长方体、正棱锥、正棱柱、圆锥圆柱、墙角、对棱相等,一网打尽。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> <b>外接球</b>=把几何体「装进」一个球,所有顶点都落在球面上,球心 O 到<b>每一个顶点</b>的距离都相等,这个距离就是外接球半径 R。<b>内切球</b>=把一个球「塞进」几何体里,球和<b>每一个面</b>都相切,球心 I 到<b>每一个面</b>的距离都相等,这个距离就是内切球半径 r。所以整套方法的核心思想只有三个字:<b>找球心</b>。外接球找那个「到所有顶点等距」的点;内切球找那个「到所有面等距」的点。找到球心,半径顺手就有了。</div>
+
+    <div class="keybox"><b>两把总钥匙:</b> ① <b>外接球:R² = 底面外接圆半径² + (球心到底面的距离)²</b>,即 R² = r<sub>底</sub>² + d²。② <b>内切球(等体积法):V = ⅓ · S<sub>表</sub> · r</b> ⇒ <b>r = 3V / S<sub>表</sub></b>。前者靠「勾股 + 找球心高度」,后者靠「体积拆成 N 个以球心为顶点的小锥」。</div>
+
+    <h2>① 外接球:球心的两条几何铁律</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>球心到各顶点等距</b>是唯一定义。由它推出两条定位铁律,交点就是球心 O:</p>
+      <div class="mono">铁律1:球心 O 必在「过底面外接圆圆心、且垂直于底面」的直线(底面中垂轴)上。</div>
+      <div class="mono">铁律2:球心 O 必在「任意一条棱的中垂面」上(到棱两端等距)。</div>
+      <p style="margin:8px 0">两条轨迹一交,球心 O 定死。落到计算上,最常用的是「铁律1」加勾股定理:</p>
+      <div class="eq">R² = r<sub>底</sub>² + d²　(r<sub>底</sub>=底面外接圆半径,d=球心到底面距离)</div>
+      <p class="trap">⚠ 球心<b>不一定</b>在几何体内部!当几何体「又扁又矮」时,球心会跑到底面下方甚至体外,此时 d 要带<b>负号</b>处理(见 ⑩ 拔高)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔮 互动 1 — 正方体外接球:体对角线就是直径(2R=√3·a),可拖动旋转</div>
+      <canvas id="cubeCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <button id="cubeSpin">▶ 自动旋转</button><button id="cubeStop">⏸ 暂停</button>
+        <label>棱长 a <input id="cubeA" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>显示球 <input id="cubeSphere" type="checkbox" checked></label>
+      </div>
+      <div class="live">
+        <div><b>棱长 a</b><span id="cubeOa">0</span></div>
+        <div><b>体对角线 √3·a</b><span id="cubeOd">0</span></div>
+        <div><b>外接球 R=√3·a/2</b><span id="cubeOR">0</span></div>
+        <div><b>球心=正方体中心</b><span id="cubeOc">中心</span></div>
+      </div>
+      <p class="small">用鼠标(或手指)在图上<b>拖动</b>可旋转正方体。8 个顶点全部贴在球面上,球心就是正方体中心,<b>体对角线正好是外接球的直径</b>:2R=√3·a → R=(√3/2)·a。长方体同理:2R=√(a²+b²+c²)。</p>
+    </div>
+
+    <h2 class="b">② 补形法:把几何体「装回」长方体</h2>
+    <div class="card">
+      <p style="margin:8px 0">很多几何体本身不好找球心,但只要它能「补」成一个<b>长方体</b>,问题就秒解——因为长方体的外接球心就是它的<b>中心</b>,直径就是<b>体对角线</b>。</p>
+      <div class="eq">长方体外接球:2R = √(a² + b² + c²)　⇒　R = ½√(a²+b²+c²)</div>
+      <h3>两大补形对象</h3>
+      <table>
+        <tr><th>模型</th><th>怎么补</th></tr>
+        <tr><td><b>墙角模型</b>(三条棱两两垂直)</td><td>三棱直接当长方体的长宽高,补成长方体</td></tr>
+        <tr><td><b>对棱相等模型</b>(三组对棱分别相等)</td><td>把四面体嵌进长方体,每条棱当长方体的面对角线,解方程求长宽高</td></tr>
+      </table>
+      <p class="trap">⚠ 补形的前提是「补出来必须是长方体」(所有二面角/棱互相垂直匹配)。别看到三棱锥就硬补,先确认有没有「三线两两垂直」或「对棱分别相等」的条件。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧱 互动 2 — 墙角模型:三条两两垂直的棱补成长方体,体对角线=2R,可旋转</div>
+      <canvas id="cornerCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <button id="cornerBuild">▶ 补成长方体</button><button id="cornerReset">↺ 只看墙角</button>
+        <label>a <input id="cornerA" type="range" min="1" max="5" value="3" step="0.5"></label>
+        <label>b <input id="cornerB" type="range" min="1" max="5" value="4" step="0.5"></label>
+        <label>c <input id="cornerC" type="range" min="1" max="5" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>三棱 a,b,c</b><span id="coABC">0</span></div>
+        <div><b>体对角线</b><span id="coDiag">0</span></div>
+        <div><b>外接球 R</b><span id="coR">0</span></div>
+        <div><b>2R = 对角线?</b><span id="coChk">✓</span></div>
+      </div>
+      <p class="small">墙角模型:从一个顶点伸出三条<b>两两垂直</b>的棱 a、b、c。点「补成长方体」,四面体正好补成长方体,它的<b>体对角线</b>连接墙角顶点与对角顶点,就是外接球直径:R=½√(a²+b²+c²)。拖动可旋转。</p>
+    </div>
+
+    <h2 class="g">③ 方程法:正棱锥找球心高度</h2>
+    <div class="card">
+      <p style="margin:8px 0">正棱锥(含正四面体、正三棱锥)的球心 O 在<b>顶点 P 与底面中心的连线(即高线所在的轴)</b>上。设球心到底面距离为 d,则球心到<b>底面顶点</b>与到<b>顶点 P</b> 的距离都必须等于 R,列方程:</p>
+      <div class="mono">对底面顶点:R² = r<sub>底</sub>² + d²　　(r<sub>底</sub>=底面外接圆半径)</div>
+      <div class="mono">对锥顶 P:  R = |PO| = |h − d|　　(h=棱锥的高,球心在轴上)</div>
+      <p style="margin:8px 0">两式联立消去 R:r<sub>底</sub>² + d² = (h − d)²,展开解出 d,再代回求 R。一步到位的合并公式:</p>
+      <div class="eq">R = (r<sub>底</sub>² + h²) / (2h)　(球心在锥内、底面上方时)</div>
+      <p class="trap">⚠ |PO|=|h−d| 里的绝对值不能丢。若球心跑到底面下方,d 取负号,|h−d|=h+|d|,方程照样成立。硬把 d 当正数会算错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 正三棱锥找球心:轴线 + 中垂面的交点,拖滑块看 R 随高变化</div>
+      <svg id="pyrSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>底面外接圆 r底 <input id="pyrR" type="range" min="1" max="4" value="2" step="0.25"></label>
+        <label>棱锥高 h <input id="pyrH" type="range" min="1" max="7" value="4" step="0.25"></label>
+      </div>
+      <div class="live">
+        <div><b>r底</b><span id="pyOr">0</span></div>
+        <div><b>高 h</b><span id="pyOh">0</span></div>
+        <div><b>球心到底面 d</b><span id="pyOd">0</span></div>
+        <div><b>外接球 R</b><span id="pyOR">0</span></div>
+      </div>
+      <p class="small">侧视图:红点=球心 O,在<b>轴线</b>(过底面中心的竖直线)上。O 到底面顶点 A 的距离 = O 到锥顶 P 的距离 = R。d 由方程 r底²+d²=(h−d)² 解出。h 很小时球心可能落到底面<b>下方</b>(d&lt;0),此时球心在锥外。</p>
+    </div>
+
+    <h2 class="o">④ 内切球:等体积法</h2>
+    <div class="card">
+      <p style="margin:8px 0">内切球心 I 到<b>每个面</b>的距离都等于 r。把球心和每个面连起来,整个几何体就被<b>拆成 N 个小棱锥</b>,每个小锥以「某个面」为底、以「球心 I」为顶点、高都是 r。总体积 = 各小锥体积之和:</p>
+      <div class="eq">V = ⅓·S₁·r + ⅓·S₂·r + … = ⅓·(S₁+S₂+…)·r = ⅓·S<sub>表</sub>·r</div>
+      <div class="eq">⇒　r = 3V / S<sub>表</sub></div>
+      <p style="margin:8px 0"><b>只要能算出体积 V 和全表面积 S<sub>表</sub>,内切球半径 r 立刻出来。</b>这就是等体积法(也叫「体积割补」)。对正棱锥、正棱柱、任意有内切球的多面体都适用。</p>
+      <p class="trap">⚠ S<sub>表</sub> 是<b>全表面积</b>——所有面都要算,底面、侧面一个都不能漏!最常见的失分点就是「只加了侧面,忘了底面」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🟠 互动 4 — 内切球与各面相切:拆成 N 个小锥,V=⅓·S表·r,可旋转</div>
+      <canvas id="inCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <button id="inSpin">▶ 旋转</button><button id="inStop">⏸ 暂停</button>
+        <button id="inSplit">▶ 拆成小锥</button>
+        <label>棱长 a <input id="inA" type="range" min="1" max="6" value="4" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>正方体棱长 a</b><span id="inOa">0</span></div>
+        <div><b>体积 V=a³</b><span id="inOV">0</span></div>
+        <div><b>全表面积 S=6a²</b><span id="inOS">0</span></div>
+        <div><b>内切球 r=3V/S=a/2</b><span id="inOr">0</span></div>
+      </div>
+      <p class="small">正方体内切球最直观:球贴住 6 个面,r 正好等于棱长的一半(a/2)。用等体积法验证:r=3V/S表=3a³/6a²=a/2,完全一致。点「拆成小锥」看球心如何把正方体切成 6 个小四棱锥(每个高都是 r)。</p>
+    </div>
+
+    <h2 class="v">⑤ 圆柱与圆锥的球</h2>
+    <div class="card">
+      <h3>圆柱:外接球</h3>
+      <p style="margin:6px 0">球心在圆柱<b>轴线的中点</b>。R² = 底面半径² + (高的一半)²:</p>
+      <div class="eq">R² = r<sub>底</sub>² + (h/2)²　(圆柱)</div>
+      <h3>圆柱:内切球(须 h = 2r<sub>底</sub>)</h3>
+      <p style="margin:6px 0">只有当<b>高 = 底面直径</b>(h=2r<sub>底</sub>)时圆柱才有内切球,此时 r<sub>内</sub> = r<sub>底</sub> = h/2。</p>
+      <h3>圆锥:内切球(轴截面看)</h3>
+      <p style="margin:6px 0">把圆锥沿轴切开得<b>等腰三角形</b>,圆锥的内切球 = 该三角形的<b>内切圆</b>。内切圆半径 r=面积/半周长,或用相似三角形。外接球同理是轴截面外接圆。</p>
+      <p class="trap">⚠ 圆锥/圆柱的球问题,<b>一律转成轴截面的平面几何</b>(内切圆/外接圆)来算,别在三维里硬想。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔺 互动 5 — 圆锥内切球 = 轴截面内切圆:拖动看半径联动</div>
+      <svg id="coneSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>底面半径 R底 <input id="coneR" type="range" min="1" max="4" value="3" step="0.25"></label>
+        <label>圆锥高 H <input id="coneH" type="range" min="2" max="8" value="5" step="0.25"></label>
+      </div>
+      <div class="live">
+        <div><b>底面半径 R底</b><span id="cnR">0</span></div>
+        <div><b>高 H</b><span id="cnH">0</span></div>
+        <div><b>母线 l</b><span id="cnL">0</span></div>
+        <div><b>内切球 r=R底·H/(l+R底)</b><span id="cnr">0</span></div>
+      </div>
+      <p class="small">轴截面是等腰三角形(底 2R底、高 H),圆锥内切球就是这个三角形的<b>内切圆</b>。r = 面积/半周长 = (R底·H)/(l+R底),其中母线 l=√(R底²+H²)。橙色圆和三角形三边相切。</p>
+    </div>
+
+    <h2 class="r">⑥ 对棱相等模型:补长方体解方程</h2>
+    <div class="card">
+      <p style="margin:6px 0">四面体三组对棱分别相等(AB=CD=p,AC=BD=q,AD=BC=m)。把它嵌进长方体,每条棱恰是长方体某个面的<b>面对角线</b>。设长方体长宽高为 x、y、z:</p>
+      <div class="mono">x²+y² = p²,　y²+z² = q²,　x²+z² = m²</div>
+      <p style="margin:8px 0">三式相加:2(x²+y²+z²)=p²+q²+m²。而外接球直径 2R = 体对角线 = √(x²+y²+z²),所以:</p>
+      <div class="eq">R = ½·√( (p²+q²+m²)/2 )</div>
+      <p style="margin:8px 0"><b>不用解出 x、y、z</b>,直接用「三对棱平方和的一半」就得 4R²=x²+y²+z²=(p²+q²+m²)/2。</p>
+      <p class="trap">⚠ 这个模型的四面体外接球心 = 长方体中心,但四面体<b>四个面都不含球心</b>,球心悬在四面体内部空腔。别去套正棱锥的「轴线」法,那里没有对称轴可用。</p>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 长方体/正方体补形(2R=体对角线)</h3>
+      <p><b class="tag">触发信号:</b>几何体是长方体、正方体,或明确「三条棱两两垂直」,直接求外接球。</p>
+      <p><b class="tag">标准动作:</b>外接球心=长方体中心,2R=体对角线=√(a²+b²+c²),R=½√(a²+b²+c²)。正方体 a=b=c → R=(√3/2)a。</p>
+      <p><b class="tag">示例(带解):</b>棱长为 2 的正方体,求外接球表面积。R=(√3/2)×2=√3。S球=4πR²=4π×3=<b>12π</b>。</p>
+      <p class="trap">陷阱:把面对角线当体对角线;正方体 R 写成 a/√2(那是外接圆半径不是外接球)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 墙角模型(三棱两两垂直)</h3>
+      <p><b class="tag">触发信号:</b>「PA⊥PB⊥PC 两两垂直」「侧棱两两垂直」的三棱锥。</p>
+      <p><b class="tag">标准动作:</b>三条互垂棱当长方体长宽高,补成长方体 → 2R=√(a²+b²+c²)。</p>
+      <p><b class="tag">示例(带解):</b>三棱锥 P-ABC,PA、PB、PC 两两垂直,PA=1,PB=2,PC=3。补成长方体,2R=√(1+4+9)=√14,R=√14/2。外接球体积 V=(4/3)πR³=(4/3)π(14√14/8)=<b>(7√14/3)π</b>。</p>
+      <p class="trap">陷阱:题目只给「侧面互相垂直」而非「侧棱两两垂直」时不能直接补;要确认是三条棱两两垂直。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 对棱相等模型(嵌长方体解方程)</h3>
+      <p><b class="tag">触发信号:</b>四面体「三组对棱分别相等」,如 AB=CD、AC=BD、AD=BC。</p>
+      <p><b class="tag">标准动作:</b>嵌入长方体,x²+y²=AB²、y²+z²=AC²、x²+z²=AD²,相加得 4R²=x²+y²+z²=½(对棱平方和)。</p>
+      <p><b class="tag">示例(带解):</b>四面体对棱为 √10、√13、√5。8R²·... 直接用:4R²=½(10+13+5)=14,R²=3.5,R=√14/2。S球=4πR²=<b>14π</b>。</p>
+      <p class="trap">陷阱:忘了「平方和再除以 2」;误当墙角模型直接开根号。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 正三棱锥/正四面体外接球(方程法)</h3>
+      <p><b class="tag">触发信号:</b>正三棱锥、正四面体,给底边和高(或侧棱),求外接球。</p>
+      <p><b class="tag">标准动作:</b>球心在轴上,r底²+d²=(h−d)²,或直接 R=(r底²+h²)/(2h)。正四面体棱长 a:R=(√6/4)a。</p>
+      <p><b class="tag">示例(带解):</b>正四面体棱长 a=2。底面外接圆 r底=(√3/3)a=2√3/3,高 h=(√6/3)a=2√6/3。R=(r底²+h²)/(2h)=(4/3+8/3)/(2·2√6/3)=4/(4√6/3)=<b>√6/2</b>。(即 (√6/4)·2 ✓)</p>
+      <p class="trap">陷阱:|PO|=|h−d| 丢绝对值;把底面外接圆半径记成边心距(内切圆半径)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 圆柱/圆锥的球(转轴截面)</h3>
+      <p><b class="tag">触发信号:</b>圆柱、圆锥求外接球或内切球。</p>
+      <p><b class="tag">标准动作:</b>圆柱外接球 R²=r底²+(h/2)²。圆锥转轴截面:外接球=三角形外接圆,内切球=三角形内切圆(r=面积/半周长)。</p>
+      <p><b class="tag">示例(带解):</b>圆锥底面半径 3、高 4,母线 l=5。内切球 r=(R底·H)/(l+R底)=(3×4)/(5+3)=12/8=<b>1.5</b>。</p>
+      <p class="trap">陷阱:圆柱内切球要求 h=2r底,不满足就没有内切球;圆锥别用圆柱公式。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 内切球等体积法(r=3V/S表)</h3>
+      <p><b class="tag">触发信号:</b>正棱锥、正棱柱或多面体求内切球半径。</p>
+      <p><b class="tag">标准动作:</b>算体积 V 和<b>全表面积</b> S表,r=3V/S表。</p>
+      <p><b class="tag">示例(带解):</b>棱长 a 的正方体,V=a³,S表=6a²,r=3a³/(6a²)=<b>a/2</b>。正四面体棱长 a:V=(√2/12)a³,S表=√3·a²,r=3V/S表=(√2/4)a³·... = (√6/12)a。</p>
+      <p class="trap">陷阱:S表 漏掉底面;把侧面积当全表面积;体积公式记错。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 球心<b>不一定在几何体内部</b>!又扁又矮的锥,外接球心会跑到底面下方甚至体外,d 必须带负号。</p>
+      <p class="trap">② 正棱锥球心位置的方程 r底²+d²=(h−d)²,右边的 |h−d| <b>绝对值/符号</b>是头号错点。先假设 d>0,若解出 d>h 说明球心在锥外,回头补符号。</p>
+      <p class="trap">③ 内切球等体积法 r=3V/S表,S表 是<b>全表面积</b>——底面、侧面全算,漏底面是最常见失分。</p>
+      <p class="trap">④ 正方体外接球 R=(√3/2)a,内切球 r=a/2,「棱切球」(切各棱)r=(√2/2)a,<b>三种球别混</b>。</p>
+      <p class="trap">⑤ 底面外接圆半径 r底 ≠ 底面内切圆半径。外接球用外接圆,内切球侧算才用内切圆/边心距。</p>
+      <p class="trap">⑥ 圆柱外接球 R²=r底²+(h/2)²,那个是<b>高的一半</b>,别写成 h²。</p>
+      <p class="trap">⑦ 对棱相等模型:4R²=½(三对棱平方和),别忘「除以 2」,也别开根号当墙角。</p>
+      <p class="trap">⑧ 求「表面积/体积」时先求 R,再套 S球=4πR²、V球=(4/3)πR³,别在中途约错。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 正四面体外接球与内切球半径之比恒为 3:1。</b> 棱长 a 时 R=(√6/4)a,r=(√6/12)a,R/r=3。这不是巧合:正四面体的球心(外接=内切,同一个点)把「中心到顶点」和「中心到面」按 3:1 分,是重心分中线 3:1 的三维版。记住 R:r=3:1,很多选择题一眼出答案。</p>
+      <p style="margin:8px 0"><b>② 球心到底面距离 d 的正负号处理。</b> 统一取「底面上方为正」。列 R²=r底²+d² 时 d² 天然非负;真正需要符号的是「球心到锥顶」这一段 |h−d|。若最终 d<0,说明球心在底面下方,几何体外——这在扁锥、钝角二面角时会发生,别当算错。用带符号的坐标法(把底面放 z=0,球心设 (0,0,d))最稳,d 自动带符号。</p>
+      <p style="margin:8px 0"><b>③ 三球统一记忆(正方体棱长 a)。</b> 外接球 R=(√3/2)a(切顶点)、棱切球 R=(√2/2)a(切各棱中点)、内切球 r=a/2(切各面)。三者比 √3:√2:1,分别对应「体对角线一半、面对角线一半、棱一半」,一句话锁死。</p>
+      <p style="margin:8px 0"><b>④ 坐标法是万能兜底。</b> 找不到对称轴、补不成长方体时,建系设球心 (x,y,z)=(x,y,z),列「到各顶点距离相等」的方程组(平方后一次项都消得掉),必解出球心。虽笨但绝不会错,适合非常规几何体。</p>
+      <p style="margin:8px 0"><b>⑤ 内切球的存在性。</b> 不是所有几何体都有内切球(要能同时与所有面相切)。正多面体、正棱锥、正棱柱一定有;一般棱柱/棱锥未必。等体积法算出的是「与所有面等距的球」,用前先确认它真的内切(半径 r 不超过任何面到对面的距离)。</p>
+    </div>
+
+    <h2 class="g">⑩ 半径联动与同心球</h2>
+    <div class="card">
+      <p style="margin:6px 0">正四面体的外接球与内切球<b>同心</b>(球心是同一个点:体的中心),半径比 R:r=3:1。下面两个可视化把「半径随边长联动」和「同心双球」直接画出来。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔵 互动 6 — 正四面体外接球+内切球同心:拖边长看两球半径联动(R:r=3:1)</div>
+      <svg id="tetSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>棱长 a <input id="tetA" type="range" min="1" max="6" value="3" step="0.25"></label>
+      </div>
+      <div class="live">
+        <div><b>棱长 a</b><span id="tetOa">0</span></div>
+        <div><b>外接球 R=(√6/4)a</b><span id="tetOR">0</span></div>
+        <div><b>内切球 r=(√6/12)a</b><span id="tetOr">0</span></div>
+        <div><b>比值 R:r</b><span id="tetOk">3:1</span></div>
+      </div>
+      <p class="small">两个<b>同心</b>圆(球的截面):大圆=外接球(过顶点),小圆=内切球(切各面)。拖棱长 a,两个半径<b>成比例</b>一起变,比值永远是 3:1。这就是「同心 + 定比」的双重美感。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 7 — 半径随棱长联动曲线:R、r、棱切球 三条线一起长</div>
+      <svg id="linkSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>取样棱长 a <input id="linkA" type="range" min="1" max="6" value="3" step="0.25"></label>
+        <label>几何体
+          <select id="linkType" style="font-weight:800;padding:3px">
+            <option value="cube">正方体</option>
+            <option value="tet">正四面体</option>
+          </select>
+        </label>
+      </div>
+      <div class="live">
+        <div><b>棱长 a</b><span id="lkA">0</span></div>
+        <div><b>外接球 R</b><span id="lkR">0</span></div>
+        <div><b>内切球 r</b><span id="lkr">0</span></div>
+        <div><b>R/r</b><span id="lkk">0</span></div>
+      </div>
+      <p class="small">横轴=棱长 a,三条线分别是外接球 R(红)、棱切球(紫)、内切球 r(绿)。都是过原点的<b>直线</b>(半径正比于棱长),斜率之比就是三种球的半径之比。竖直虚线标出当前取样的 a。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 核心思想:找球心 · 三把刀:补形 / 方程 / 等体积</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 3D 工具:旋转投影 ===== */
+function rot(pt,ax,ay){
+  let x=pt[0],y=pt[1],z=pt[2];
+  // rotate about Y
+  let x1=x*Math.cos(ay)+z*Math.sin(ay);
+  let z1=-x*Math.sin(ay)+z*Math.cos(ay);
+  // rotate about X
+  let y1=y*Math.cos(ax)-z1*Math.sin(ax);
+  let z2=y*Math.sin(ax)+z1*Math.cos(ax);
+  return [x1,y1,z2];
+}
+function proj(pt,cx,cy,scale){
+  const d=8; // perspective distance
+  const f=d/(d - pt[2]/scale*0.0 + 1e-9); // keep simple orthographic-ish
+  return [cx+pt[0], cy-pt[1]];
+}
+
+/* ===== 互动1:正方体外接球 ===== */
+(function(){
+  const cv=document.getElementById('cubeCv');const ctx=cv.getContext('2d');
+  const As=document.getElementById('cubeA'),Sp=document.getElementById('cubeSphere');
+  const oa=document.getElementById('cubeOa'),od=document.getElementById('cubeOd'),oR=document.getElementById('cubeOR');
+  let a=3,ax=-0.5,ay=0.6,spinning=false,dragging=false,lx=0,ly=0,raf=0;
+  const cx=350,cy=185,scale=32;
+  function verts(s){
+    const h=s/2;const v=[];
+    for(const X of[-h,h])for(const Y of[-h,h])for(const Z of[-h,h])v.push([X,Y,Z]);
+    return v;
+  }
+  const edges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+  function stats(){
+    oa.textContent=a.toFixed(1);
+    od.textContent=(Math.sqrt(3)*a).toFixed(2);
+    oR.textContent=(Math.sqrt(3)*a/2).toFixed(2);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const V=verts(a).map(p=>rot(p,ax,ay));
+    const P=V.map(p=>[cx+p[0]*scale,cy-p[1]*scale]);
+    // sphere (circle) radius = R*scale
+    if(Sp.checked){
+      const R=Math.sqrt(3)*a/2;
+      ctx.beginPath();ctx.arc(cx,cy,R*scale,0,2*Math.PI);
+      ctx.fillStyle='rgba(20,80,200,0.10)';ctx.fill();
+      ctx.strokeStyle=BLUE;ctx.lineWidth=3;ctx.stroke();
+    }
+    // edges
+    ctx.strokeStyle=INK;ctx.lineWidth=2.5;
+    edges.forEach(e=>{ctx.beginPath();ctx.moveTo(P[e[0]][0],P[e[0]][1]);ctx.lineTo(P[e[1]][0],P[e[1]][1]);ctx.stroke();});
+    // body diagonal (vertex 0 to 7) as diameter
+    ctx.strokeStyle=RED;ctx.lineWidth=3.5;
+    ctx.beginPath();ctx.moveTo(P[0][0],P[0][1]);ctx.lineTo(P[7][0],P[7][1]);ctx.stroke();
+    ctx.fillStyle=RED;ctx.font='bold 12px sans-serif';
+    ctx.fillText('体对角线 = 2R',(P[0][0]+P[7][0])/2-30,(P[0][1]+P[7][1])/2-6);
+    // vertices
+    P.forEach(p=>{ctx.beginPath();ctx.arc(p[0],p[1],4,0,2*Math.PI);ctx.fillStyle=YEL;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();});
+    // center
+    ctx.beginPath();ctx.arc(cx,cy,5,0,2*Math.PI);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('球心 O',cx+8,cy-8);
+  }
+  function loop(){if(!spinning)return;ay+=0.012;draw();raf=requestAnimationFrame(loop);}
+  As.oninput=()=>{a=+As.value;stats();draw();};
+  Sp.onchange=draw;
+  document.getElementById('cubeSpin').onclick=()=>{if(!spinning){spinning=true;loop();}};
+  document.getElementById('cubeStop').onclick=()=>{spinning=false;};
+  cv.addEventListener('pointerdown',e=>{dragging=true;lx=e.offsetX;ly=e.offsetY;});
+  cv.addEventListener('pointermove',e=>{if(!dragging)return;ay+=(e.offsetX-lx)*0.01;ax+=(e.offsetY-ly)*0.01;lx=e.offsetX;ly=e.offsetY;draw();});
+  window.addEventListener('pointerup',()=>{dragging=false;});
+  stats();draw();
+})();
+
+/* ===== 互动2:墙角模型补长方体 ===== */
+(function(){
+  const cv=document.getElementById('cornerCv');const ctx=cv.getContext('2d');
+  const As=document.getElementById('cornerA'),Bs=document.getElementById('cornerB'),Cs=document.getElementById('cornerC');
+  const oABC=document.getElementById('coABC'),oDiag=document.getElementById('coDiag'),oR=document.getElementById('coR'),oChk=document.getElementById('coChk');
+  let a=3,b=4,c=2,ax=-0.5,ay=0.7,built=1,dragging=false,lx=0,ly=0;
+  const cx=350,cy=200,scale=34;
+  function stats(){
+    oABC.textContent=a+','+b+','+c;
+    const diag=Math.sqrt(a*a+b*b+c*c);
+    oDiag.textContent=diag.toFixed(2);
+    oR.textContent=(diag/2).toFixed(2);
+    oChk.textContent='✓';
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // box corner at origin, edges along +x(a),+y(b),+z(c)
+    const O=[-a/2,-b/2,-c/2];
+    function P(x,y,z){const p=rot([O[0]+x,O[1]+y,O[2]+z],ax,ay);return [cx+p[0]*scale,cy-p[1]*scale];}
+    const A=P(a,0,0),B=P(0,b,0),C=P(0,0,c),Or=P(0,0,0);
+    // tetra edges (the corner): O-A,O-B,O-C, A-B,B-C,A-C
+    ctx.lineWidth=3;ctx.strokeStyle=RED;
+    [[Or,A],[Or,B],[Or,C]].forEach(s=>{ctx.beginPath();ctx.moveTo(s[0][0],s[0][1]);ctx.lineTo(s[1][0],s[1][1]);ctx.stroke();});
+    ctx.strokeStyle=ORANGE;
+    [[A,B],[B,C],[A,C]].forEach(s=>{ctx.beginPath();ctx.moveTo(s[0][0],s[0][1]);ctx.lineTo(s[1][0],s[1][1]);ctx.stroke();});
+    if(built){
+      // full box: 8 corners
+      const box=[P(0,0,0),P(a,0,0),P(a,b,0),P(0,b,0),P(0,0,c),P(a,0,c),P(a,b,c),P(0,b,c)];
+      const be=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      ctx.strokeStyle='rgba(22,18,10,0.45)';ctx.lineWidth=1.8;ctx.setLineDash([5,4]);
+      be.forEach(e=>{ctx.beginPath();ctx.moveTo(box[e[0]][0],box[e[0]][1]);ctx.lineTo(box[e[1]][0],box[e[1]][1]);ctx.stroke();});
+      ctx.setLineDash([]);
+      // body diagonal O to far corner
+      const far=P(a,b,c);
+      ctx.strokeStyle=BLUE;ctx.lineWidth=3.5;
+      ctx.beginPath();ctx.moveTo(Or[0],Or[1]);ctx.lineTo(far[0],far[1]);ctx.stroke();
+      ctx.fillStyle=BLUE;ctx.font='bold 12px sans-serif';
+      ctx.fillText('体对角线=2R',(Or[0]+far[0])/2-20,(Or[1]+far[1])/2-6);
+      // center = midpoint
+      const mid=[(Or[0]+far[0])/2,(Or[1]+far[1])/2];
+      ctx.beginPath();ctx.arc(mid[0],mid[1],5,0,2*Math.PI);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=INK;ctx.fillText('球心 O',mid[0]+8,mid[1]-6);
+    }
+    // vertices dots
+    [Or,A,B,C].forEach(p=>{ctx.beginPath();ctx.arc(p[0],p[1],4,0,2*Math.PI);ctx.fillStyle=YEL;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();});
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('墙角顶点 P',Or[0]-40,Or[1]+18);
+    ctx.fillText('a',(Or[0]+A[0])/2,(Or[1]+A[1])/2-4);
+    ctx.fillText('b',(Or[0]+B[0])/2+4,(Or[1]+B[1])/2);
+    ctx.fillText('c',(Or[0]+C[0])/2-10,(Or[1]+C[1])/2);
+  }
+  As.oninput=()=>{a=+As.value;stats();draw();};
+  Bs.oninput=()=>{b=+Bs.value;stats();draw();};
+  Cs.oninput=()=>{c=+Cs.value;stats();draw();};
+  document.getElementById('cornerBuild').onclick=()=>{built=1;draw();};
+  document.getElementById('cornerReset').onclick=()=>{built=0;draw();};
+  cv.addEventListener('pointerdown',e=>{dragging=true;lx=e.offsetX;ly=e.offsetY;});
+  cv.addEventListener('pointermove',e=>{if(!dragging)return;ay+=(e.offsetX-lx)*0.01;ax+=(e.offsetY-ly)*0.01;lx=e.offsetX;ly=e.offsetY;draw();});
+  window.addEventListener('pointerup',()=>{dragging=false;});
+  stats();draw();
+})();
+
+/* ===== 互动3:正三棱锥找球心(侧视方程) ===== */
+(function(){
+  const svg=document.getElementById('pyrSvg');
+  const Rs=document.getElementById('pyrR'),Hs=document.getElementById('pyrH');
+  const oR=document.getElementById('pyOr'),oH=document.getElementById('pyOh'),oD=document.getElementById('pyOd'),oRR=document.getElementById('pyOR');
+  let rb=2,h=4;
+  function solve(){
+    // r^2 = rb^2 + d^2 ; also R=|h-d| ; combine: rb^2 + d^2 = (h-d)^2
+    // rb^2 + d^2 = h^2 -2hd + d^2 -> rb^2 = h^2 -2hd -> d=(h^2 - rb^2)/(2h)
+    const d=(h*h-rb*rb)/(2*h);
+    const R=Math.abs(h-d);
+    return {d,R};
+  }
+  function draw(){
+    clr(svg);
+    const cx=350,baseY=270,sc=30;
+    // ground line (base cross-section width = 2*rb)
+    el(svg,'line',{x1:cx-rb*sc-30,y1:baseY,x2:cx+rb*sc+30,y2:baseY,stroke:INK,'stroke-width':3});
+    // base vertices A (left) at (-rb), and center M
+    const Ax=cx-rb*sc, Bx=cx+rb*sc;
+    const apexY=baseY-h*sc;
+    // axis
+    el(svg,'line',{x1:cx,y1:baseY,x2:cx,y2:apexY,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // pyramid outline (side view triangle)
+    el(svg,'polygon',{points:Ax+','+baseY+' '+Bx+','+baseY+' '+cx+','+apexY,fill:'rgba(30,158,134,0.14)',stroke:GREEN,'stroke-width':3});
+    // apex label
+    el(svg,'circle',{cx:cx,cy:apexY,r:4,fill:INK});
+    el(svg,'text',{x:cx+8,y:apexY-4,'font-size':13,'font-weight':900,fill:INK}).textContent='P (锥顶)';
+    el(svg,'text',{x:Ax-6,y:baseY+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='A';
+    el(svg,'text',{x:cx,y:baseY+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='底面中心 M';
+    // solve球心
+    const s=solve();const Oy=baseY-s.d*sc;
+    // sphere circle
+    el(svg,'circle',{cx:cx,cy:Oy,r:s.R*sc,fill:'rgba(224,56,42,0.08)',stroke:RED,'stroke-width':2.5});
+    // center
+    el(svg,'circle',{cx:cx,cy:Oy,r:5,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx-10,y:Oy-8,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='球心 O';
+    // R lines: O to A, O to P
+    el(svg,'line',{x1:cx,y1:Oy,x2:Ax,y2:baseY,stroke:VIO,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:Oy,x2:cx,y2:apexY,stroke:VIO,'stroke-width':2});
+    el(svg,'text',{x:(cx+Ax)/2,y:(Oy+baseY)/2+14,'font-size':11,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='R';
+    // d annotation
+    el(svg,'text',{x:cx+8,y:(Oy+baseY)/2,'font-size':11,'font-weight':800,fill:INK}).textContent='d='+s.d.toFixed(2);
+    if(s.d<0){el(svg,'text',{x:cx,y:baseY+40,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='d<0：球心在底面下方（锥外）!';}
+    oR.textContent=rb.toFixed(2);oH.textContent=h.toFixed(2);oD.textContent=s.d.toFixed(2);oRR.textContent=s.R.toFixed(2);
+  }
+  Rs.oninput=()=>{rb=+Rs.value;draw();};
+  Hs.oninput=()=>{h=+Hs.value;draw();};
+  draw();
+})();
+
+/* ===== 互动4:内切球(正方体)+ 拆小锥 ===== */
+(function(){
+  const cv=document.getElementById('inCv');const ctx=cv.getContext('2d');
+  const As=document.getElementById('inA');
+  const oa=document.getElementById('inOa'),oV=document.getElementById('inOV'),oS=document.getElementById('inOS'),or=document.getElementById('inOr');
+  let a=4,ax=-0.5,ay=0.6,spinning=false,split=0,dragging=false,lx=0,ly=0,raf=0;
+  const cx=350,cy=185,scale=30;
+  function verts(s){const h=s/2;const v=[];for(const X of[-h,h])for(const Y of[-h,h])for(const Z of[-h,h])v.push([X,Y,Z]);return v;}
+  const edges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+  // 6 face centers
+  function faceCenters(s){const h=s/2;return [[h,0,0],[-h,0,0],[0,h,0],[0,-h,0],[0,0,h],[0,0,-h]];}
+  function stats(){
+    oa.textContent=a.toFixed(1);oV.textContent=(a*a*a).toFixed(1);
+    oS.textContent=(6*a*a).toFixed(1);or.textContent=(a/2).toFixed(2);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const V=verts(a).map(p=>rot(p,ax,ay));
+    const P=V.map(p=>[cx+p[0]*scale,cy-p[1]*scale]);
+    // inscribed sphere: r=a/2
+    const r=a/2;
+    ctx.beginPath();ctx.arc(cx,cy,r*scale,0,2*Math.PI);
+    ctx.fillStyle='rgba(232,106,23,0.16)';ctx.fill();ctx.strokeStyle=ORANGE;ctx.lineWidth=3;ctx.stroke();
+    // edges
+    ctx.strokeStyle=INK;ctx.lineWidth=2.5;
+    edges.forEach(e=>{ctx.beginPath();ctx.moveTo(P[e[0]][0],P[e[0]][1]);ctx.lineTo(P[e[1]][0],P[e[1]][1]);ctx.stroke();});
+    // center
+    ctx.beginPath();ctx.arc(cx,cy,5,0,2*Math.PI);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    if(split){
+      // lines from center to each face center (height=r of small pyramids)
+      const FC=faceCenters(a).map(p=>rot(p,ax,ay)).map(p=>[cx+p[0]*scale,cy-p[1]*scale]);
+      ctx.strokeStyle=VIO;ctx.lineWidth=2;ctx.setLineDash([4,3]);
+      FC.forEach(f=>{ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(f[0],f[1]);ctx.stroke();});
+      ctx.setLineDash([]);
+      FC.forEach(f=>{ctx.beginPath();ctx.arc(f[0],f[1],3.5,0,2*Math.PI);ctx.fillStyle=VIO;ctx.fill();});
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('每个小锥高 = r',cx+12,cy+18);
+    }
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('球心 I',cx+8,cy-8);
+  }
+  function loop(){if(!spinning)return;ay+=0.012;draw();raf=requestAnimationFrame(loop);}
+  As.oninput=()=>{a=+As.value;stats();draw();};
+  document.getElementById('inSpin').onclick=()=>{if(!spinning){spinning=true;loop();}};
+  document.getElementById('inStop').onclick=()=>{spinning=false;};
+  document.getElementById('inSplit').onclick=()=>{split=split?0:1;draw();};
+  cv.addEventListener('pointerdown',e=>{dragging=true;lx=e.offsetX;ly=e.offsetY;});
+  cv.addEventListener('pointermove',e=>{if(!dragging)return;ay+=(e.offsetX-lx)*0.01;ax+=(e.offsetY-ly)*0.01;lx=e.offsetX;ly=e.offsetY;draw();});
+  window.addEventListener('pointerup',()=>{dragging=false;});
+  stats();draw();
+})();
+
+/* ===== 互动5:圆锥内切球 = 轴截面内切圆 ===== */
+(function(){
+  const svg=document.getElementById('coneSvg');
+  const Rs=document.getElementById('coneR'),Hs=document.getElementById('coneH');
+  const oR=document.getElementById('cnR'),oH=document.getElementById('cnH'),oL=document.getElementById('cnL'),or=document.getElementById('cnr');
+  let R=3,H=5;
+  function draw(){
+    clr(svg);
+    const cx=350,baseY=290,sc=30;
+    const l=Math.sqrt(R*R+H*H);
+    // incircle radius r = area/s = (R*H)/(l+R)  [half of triangle: base R? use full]
+    // full isosceles: base=2R, height=H, area=R*H, semiperimeter=(2R+2l)/2=R+l -> r=R*H/(R+l)
+    const r=(R*H)/(R+l);
+    const Ax=cx-R*sc, Bx=cx+R*sc, apexY=baseY-H*sc;
+    // triangle
+    el(svg,'polygon',{points:Ax+','+baseY+' '+Bx+','+baseY+' '+cx+','+apexY,fill:'rgba(122,63,242,0.10)',stroke:VIO,'stroke-width':3});
+    // base
+    el(svg,'line',{x1:Ax-20,y1:baseY,x2:Bx+20,y2:baseY,stroke:INK,'stroke-width':3});
+    // incircle center on axis at height r
+    const Iy=baseY-r*sc;
+    el(svg,'circle',{cx:cx,cy:Iy,r:r*sc,fill:'rgba(232,106,23,0.18)',stroke:ORANGE,'stroke-width':3});
+    el(svg,'circle',{cx:cx,cy:Iy,r:4,fill:ORANGE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx+8,y:Iy-6,'font-size':12,'font-weight':900,fill:ORANGE}).textContent='球心 I';
+    // radius line down to base (touch point)
+    el(svg,'line',{x1:cx,y1:Iy,x2:cx,y2:baseY,stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:cx+6,y:(Iy+baseY)/2,'font-size':11,'font-weight':800,fill:ORANGE}).textContent='r';
+    // labels
+    el(svg,'circle',{cx:cx,cy:apexY,r:4,fill:INK});
+    el(svg,'text',{x:cx+8,y:apexY-4,'font-size':12,'font-weight':900,fill:INK}).textContent='锥顶';
+    el(svg,'text',{x:(cx+Bx)/2+6,y:(apexY+baseY)/2,'font-size':11,'font-weight':800,fill:VIO}).textContent='母线 l';
+    el(svg,'text',{x:cx,y:baseY+20,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='底面直径 2R底';
+    oR.textContent=R.toFixed(2);oH.textContent=H.toFixed(2);oL.textContent=l.toFixed(2);or.textContent=r.toFixed(2);
+  }
+  Rs.oninput=()=>{R=+Rs.value;draw();};
+  Hs.oninput=()=>{H=+Hs.value;draw();};
+  draw();
+})();
+
+/* ===== 互动6:正四面体同心双球 ===== */
+(function(){
+  const svg=document.getElementById('tetSvg');
+  const As=document.getElementById('tetA');
+  const oa=document.getElementById('tetOa'),oR=document.getElementById('tetOR'),or=document.getElementById('tetOr');
+  let a=3;
+  function draw(){
+    clr(svg);
+    const cx=350,cy=175;
+    const R=Math.sqrt(6)/4*a;   // circumradius
+    const r=Math.sqrt(6)/12*a;  // inradius
+    // scale so big circle fits
+    const sc=110/Math.max(R,0.001);
+    // outer circle (circumsphere)
+    el(svg,'circle',{cx:cx,cy:cy,r:R*sc,fill:'rgba(20,80,200,0.08)',stroke:BLUE,'stroke-width':3});
+    // inner circle (insphere)
+    el(svg,'circle',{cx:cx,cy:cy,r:r*sc,fill:'rgba(30,158,134,0.16)',stroke:GREEN,'stroke-width':3});
+    // draw a projected tetrahedron (2D schematic): triangle with center
+    const Rt=R*sc;
+    const top=[cx,cy-Rt];
+    const bl=[cx-Rt*Math.sin(Math.PI/3),cy+Rt*0.5];
+    const br=[cx+Rt*Math.sin(Math.PI/3),cy+Rt*0.5];
+    el(svg,'polygon',{points:top[0]+','+top[1]+' '+bl[0]+','+bl[1]+' '+br[0]+','+br[1],fill:'none',stroke:INK,'stroke-width':2.5});
+    // inner apex (schematic 4th vertex to center)
+    el(svg,'line',{x1:top[0],y1:top[1],x2:cx,y2:cy,stroke:'rgba(22,18,10,0.4)','stroke-width':1.5,'stroke-dasharray':'4 3'});
+    el(svg,'line',{x1:bl[0],y1:bl[1],x2:cx,y2:cy,stroke:'rgba(22,18,10,0.4)','stroke-width':1.5,'stroke-dasharray':'4 3'});
+    el(svg,'line',{x1:br[0],y1:br[1],x2:cx,y2:cy,stroke:'rgba(22,18,10,0.4)','stroke-width':1.5,'stroke-dasharray':'4 3'});
+    // vertices on big circle
+    [top,bl,br].forEach(p=>{el(svg,'circle',{cx:p[0],cy:p[1],r:4,fill:YEL,stroke:INK,'stroke-width':2});});
+    // common center
+    el(svg,'circle',{cx:cx,cy:cy,r:5,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx+10,y:cy+4,'font-size':12,'font-weight':900,fill:RED}).textContent='同心 O=I';
+    el(svg,'text',{x:cx+R*sc+6,y:cy,'font-size':12,'font-weight':900,fill:BLUE}).textContent='外接球 R';
+    el(svg,'text',{x:cx,y:cy-r*sc-6,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='内切球 r';
+    el(svg,'text',{x:cx,y:cy+Rt+40,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='R : r = 3 : 1（棱长 a='+a.toFixed(2)+'）';
+    oa.textContent=a.toFixed(2);oR.textContent=R.toFixed(2);or.textContent=r.toFixed(2);
+  }
+  As.oninput=()=>{a=+As.value;draw();};
+  draw();
+})();
+
+/* ===== 互动7:半径随棱长联动曲线 ===== */
+(function(){
+  const svg=document.getElementById('linkSvg');
+  const As=document.getElementById('linkA'),Ts=document.getElementById('linkType');
+  const oA=document.getElementById('lkA'),oR=document.getElementById('lkR'),or=document.getElementById('lkr'),ok=document.getElementById('lkk');
+  let a=3,type='cube';
+  function coeff(){
+    if(type==='cube')return {R:Math.sqrt(3)/2, edge:Math.sqrt(2)/2, r:0.5, name:'正方体'};
+    return {R:Math.sqrt(6)/4, edge:Math.sqrt(2)/4, r:Math.sqrt(6)/12, name:'正四面体'};
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=240;const amax=6;
+    const c=coeff();
+    const Rmax=c.R*amax;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='半径';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='棱长 a';
+    const sx=W/amax, sy=(H-10)/Rmax;
+    function line(k,col,lab){
+      const x2=X0+amax*sx, y2=Y0+H-(k*amax)*sy;
+      el(svg,'line',{x1:X0,y1:Y0+H,x2:x2,y2:y2,stroke:col,'stroke-width':3.5});
+      el(svg,'text',{x:x2+4,y:y2+4,'font-size':11.5,'font-weight':900,fill:col}).textContent=lab;
+    }
+    line(c.R,RED,'外接R');
+    line(c.edge,VIO,'棱切');
+    line(c.r,GREEN,'内切r');
+    // current a marker
+    const mx=X0+a*sx;
+    el(svg,'line',{x1:mx,y1:Y0,x2:mx,y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    // dots
+    [[c.R,RED],[c.edge,VIO],[c.r,GREEN]].forEach(pr=>{
+      const y=Y0+H-(pr[0]*a)*sy;
+      el(svg,'circle',{cx:mx,cy:y,r:4,fill:pr[1],stroke:INK,'stroke-width':1.5});
+    });
+    el(svg,'text',{x:mx,y:Y0+H+20,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='a='+a.toFixed(2);
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=c.name+'：三种半径都 ∝ 棱长 a（过原点直线）';
+    oA.textContent=a.toFixed(2);oR.textContent=(c.R*a).toFixed(2);or.textContent=(c.r*a).toFixed(2);ok.textContent=(c.R/c.r).toFixed(2);
+  }
+  As.oninput=()=>{a=+As.value;draw();};
+  Ts.onchange=()=>{type=Ts.value;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 外接球和内切球分别是怎么定义的？各自的核心几何条件是什么？",a:"外接球：所有顶点都在球面上，球心到每个顶点等距（=R）。内切球：球与每个面相切，球心到每个面等距（=r）。核心思想都是「找球心」。"},
+ {q:"2. 正方体棱长为 a，它的外接球、棱切球、内切球半径各是多少？",a:"外接球 R=(√3/2)a（体对角线一半）；棱切球 r=(√2/2)a（面对角线一半）；内切球 r=a/2（棱的一半）。三者比 √3:√2:1。"},
+ {q:"3. 长方体（长宽高 a,b,c）的外接球半径公式？球心在哪？",a:"2R=体对角线=√(a²+b²+c²)，R=½√(a²+b²+c²)。球心=长方体中心（体对角线中点）。"},
+ {q:"4. 墙角模型（三棱两两垂直，长 1、2、3）的外接球半径？",a:"补成长方体，2R=√(1²+2²+3²)=√14，R=√14/2。"},
+ {q:"5. 外接球用什么万能勾股关系？式中每个量代表什么？",a:"R²=r底²+d²。r底=底面外接圆半径，d=球心到底面的距离（可正可负）。加上「球心在过底面外心的垂线上」定位球心。"},
+ {q:"6. 正棱锥外接球用方程法，两个方程怎么列？",a:"到底面顶点：R²=r底²+d²；到锥顶 P：R=|h−d|。联立消 R 得 d=(h²−r底²)/(2h)，再求 R。注意 |h−d| 的绝对值。"},
+ {q:"7. 内切球等体积法的公式？S表 指什么？最易漏什么？",a:"V=⅓·S表·r ⇒ r=3V/S表。S表 是全表面积（所有面），最易漏底面。"},
+ {q:"8. 圆柱外接球半径公式？圆柱什么时候才有内切球？",a:"外接球 R²=r底²+(h/2)²（球心在轴中点）。当 h=2r底（高=底面直径）时才有内切球，此时 r=r底=h/2。"},
+ {q:"9. 圆锥的内切球怎么求？底面半径 3、高 4 的圆锥内切球半径是多少？",a:"转轴截面（等腰三角形），内切球=内切圆。母线 l=5，r=(R底·H)/(l+R底)=(3×4)/(5+3)=1.5。"},
+ {q:"10. 对棱相等四面体（三对棱 p,q,m）的外接球半径公式？",a:"嵌入长方体：x²+y²=p²、y²+z²=q²、x²+z²=m²，相加得 4R²=x²+y²+z²=(p²+q²+m²)/2。R=½√((p²+q²+m²)/2)。"},
+ {q:"11. 正四面体棱长 a，外接球与内切球半径各多少？比值是多少？",a:"R=(√6/4)a，r=(√6/12)a，R:r=3:1。且两球同心（球心是四面体的中心）。"},
+ {q:"12. 为什么说「球心不一定在几何体内部」？d 什么时候要带负号？",a:"当锥又扁又矮时，由 d=(h²−r底²)/(2h)，若 r底>h 则 d<0，球心跑到底面下方（几何体外）。此时 d 取负号，|h−d|=h+|d|，方程仍成立。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
