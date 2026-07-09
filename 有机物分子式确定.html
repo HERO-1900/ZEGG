@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有机物分子式的确定与燃烧计算 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>有机物分子式的确定与燃烧计算</h1>
+    <p class="lead">给你一堆数据——质量分数、相对分子质量、燃烧生成的 CO<sub>2</sub> 和 H<sub>2</sub>O——让你反推出这个有机物到底是 C<sub>x</sub>H<sub>y</sub>O<sub>z</sub> 中的哪一个。这类题看着数据一大堆,其实全是<b>两步走</b>:先求「各元素原子个数比」得到最简式,再用相对分子质量把它「放大」到分子式。掌握这条主线,燃烧型、质量分数型、通式型全部通吃。</p>
+
+    <div class="say">🗣️ <b>确定分子式(人话版):</b> 分子式无非是「一个分子里 C、H、O 各有几个」。你先别急着求「几个」,先求它们的<b>个数比</b>(比如 C:H:O = 1:2:1)——这个最简整数比写出来就是<b>最简式</b>(实验式,如 CH<sub>2</sub>O)。但最简式可能是「缩小版」:真正的分子可能是它的 1 倍、2 倍、3 倍……到底几倍?用<b>相对分子质量 M</b> 一除就知道:M ÷ 最简式式量 = n,再把最简式每个下标 ×n,就是<b>分子式</b>。一句话:<b>先定比例(最简式),再定倍数(用 M 放大)。</b></div>
+
+    <div class="keybox"><b>两条主线公式:</b><br>① <b>原子个数比法:</b> n(C):n(H):n(O) → 化成最简整数比 → 最简式 → 分子式 = (最简式)<sub>n</sub>,其中 <b>n = M ÷ 最简式式量</b>。<br>② <b>通式法:</b> 已知类别(烷 C<sub>n</sub>H<sub>2n+2</sub>、烯/环烷 C<sub>n</sub>H<sub>2n</sub>、炔/二烯 C<sub>n</sub>H<sub>2n-2</sub>)+ M,直接列方程解 n。</div>
+
+    <h2>① 核心原理:从燃烧产物到原子个数</h2>
+    <div class="card">
+      <p style="margin:6px 0">有机物 C<sub>x</sub>H<sub>y</sub>O<sub>z</sub> 完全燃烧:<b>所有 C 都跑进 CO<sub>2</sub>,所有 H 都跑进 H<sub>2</sub>O</b>。所以数产物就能反数原子。</p>
+      <div class="eq">n(C) = n(CO<sub>2</sub>)　　n(H) = 2·n(H<sub>2</sub>O)</div>
+      <p style="margin:8px 0">注意 H 那个 <b>×2</b>:一个 H<sub>2</sub>O 里有 2 个 H。这是头号漏点。求出 n(C)、n(H) 后,算它们的质量:m(C)=12·n(C),m(H)=1·n(H)。</p>
+      <h3>关键一步:判断是否含 O</h3>
+      <div class="mono">m(O) = m(有机物总质量) − m(C) − m(H)</div>
+      <p style="margin:8px 0">用<b>总质量减去 C、H 的质量</b>,剩下的就是 O 的质量:若 &gt;0 → 含 O,n(O)=m(O)/16;若 =0 → 只含 C、H,不含 O。这一步<b>绝不能跳</b>,否则可能把含氧物当成烃。</p>
+      <h3>然后:比 → 最简式 → 分子式</h3>
+      <div class="mono">n(C):n(H):n(O) → 化最简整数比 → 最简式 → ×n(=M/式量) → 分子式</div>
+      <p style="margin:8px 0"><b>商余法(直接定 n):</b> 若已知含 C、H,且 M 已知,可设分子式 C<sub>x</sub>H<sub>y</sub>,由 12x &lt; M 定 x 的范围,再用余量 M−12x 分给 H,快速试出整数解。</p>
+      <p class="trap">⚠ 三大命门:① H 要 ×2;② 一定要用质量差判断是否含 O;③ 最简式 ≠ 分子式,别忘了用 M 放大。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔥 互动 1 — 燃烧产物 → C、H 原子数反推流程(拖动 CO₂ 和 H₂O 的量,看 C、H 原子怎么被数出来)</div>
+      <svg id="burnSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>n(CO<sub>2</sub>) mol <input id="bnCO2" type="range" min="1" max="8" value="4" step="1"></label>
+        <label>n(H<sub>2</sub>O) mol <input id="bnH2O" type="range" min="1" max="10" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>n(C)=n(CO₂)</b><span id="boC">0</span></div>
+        <div><b>n(H)=2·n(H₂O)</b><span id="boH">0</span></div>
+        <div><b>m(C)=12·n(C)</b><span id="boMC">0</span></div>
+        <div><b>m(H)=1·n(H)</b><span id="boMH">0</span></div>
+      </div>
+      <p class="small">左边燃烧产物,右边被数出来的原子。<b>C 一对一</b>从 CO<sub>2</sub> 数出;<b>H 一对二</b>从 H<sub>2</sub>O 数出(每个水分子放出 2 个 H)。这就是所有燃烧型题的第一步。</p>
+    </div>
+
+    <h2 class="b">② 各元素质量 → 物质的量 → 个数比</h2>
+    <div class="card">
+      <p style="margin:6px 0">拿到每种元素的<b>质量</b>(或由质量分数×总质量得到),除以各自的<b>相对原子质量</b>(C=12,H=1,O=16),就得到<b>物质的量</b>,也就是「原子个数」的比例基础。</p>
+      <div class="eq">n = 质量 ÷ 相对原子质量</div>
+      <table>
+        <tr><th>元素</th><th>相对原子质量</th><th>质量 → 物质的量</th></tr>
+        <tr><td>C</td><td>12</td><td>n(C) = m(C)/12</td></tr>
+        <tr><td>H</td><td>1</td><td>n(H) = m(H)/1</td></tr>
+        <tr><td>O</td><td>16</td><td>n(O) = m(O)/16</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>化最简整数比:</b> 把三个 n 同时除以其中<b>最小的一个</b>,得到近似整数;若出现 1.5、2.5 之类,整体再 ×2(或 ×3)化成整数。这个整数比就是最简式的下标。</p>
+      <p class="trap">⚠ 别拿「质量比」当「个数比」!质量比必须先各自除以相对原子质量,变成物质的量之比,才是原子个数比。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚗️ 互动 2 — 质量 → 物质的量 → 个数比 的转化条(输入三元素质量,自动化成最简整数比)</div>
+      <svg id="ratioSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>m(C) g <input id="rC" type="range" min="0" max="72" value="24" step="12"></label>
+        <label>m(H) g <input id="rH" type="range" min="0" max="12" value="4" step="1"></label>
+        <label>m(O) g <input id="rO" type="range" min="0" max="64" value="16" step="16"></label>
+      </div>
+      <div class="live">
+        <div><b>n(C):n(H):n(O)</b><span id="raN">0</span></div>
+        <div><b>最简整数比</b><span id="raS">0</span></div>
+        <div><b>最简式</b><span id="raF">0</span></div>
+        <div><b>最简式式量</b><span id="raM">0</span></div>
+      </div>
+      <p class="small">三根条:质量(灰)→ 除以相对原子质量 → 物质的量(彩色)。彩条高度之比就是原子个数比,化成最简整数就是最简式。O 拉到 0 就是纯烃。</p>
+    </div>
+
+    <h2 class="g">③ 最简式 × n = 分子式:放大的秘密</h2>
+    <div class="card">
+      <p style="margin:6px 0">最简式只告诉你「个数比」,不告诉你「几个」。分子式 = 最简式重复 <b>n</b> 次,而 n 由相对分子质量决定:</p>
+      <div class="eq">n = M(分子式) ÷ M(最简式式量)</div>
+      <p style="margin:8px 0"><b>例:</b> 最简式 CH<sub>2</sub>O,式量 = 12+2+16 = 30。若测得 M = 60,则 n = 60/30 = 2,分子式 = C<sub>2</sub>H<sub>4</sub>O<sub>2</sub>(乙酸/甲酸甲酯);若 M = 180,n = 6,分子式 = C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>(葡萄糖)。同一个最简式,M 越大,分子越大。</p>
+      <table>
+        <tr><th>最简式</th><th>式量</th><th>M=该值时 n</th><th>分子式</th></tr>
+        <tr><td>CH<sub>2</sub>O</td><td>30</td><td>M=180 → n=6</td><td>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></td></tr>
+        <tr><td>CH<sub>2</sub></td><td>14</td><td>M=56 → n=4</td><td>C<sub>4</sub>H<sub>8</sub></td></tr>
+        <tr><td>CH</td><td>13</td><td>M=78 → n=6</td><td>C<sub>6</sub>H<sub>6</sub>(苯)</td></tr>
+      </table>
+      <p class="trap">⚠ n 必须是<b>正整数</b>!算出来若不是整数,说明前面某步错了(常见:算错式量或 M)。回去检查。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔎 互动 3 — 最简式 × n = 分子式 放大动画(选一个最简式,拉动 M,看 n 和分子式怎么变)</div>
+      <svg id="scaleSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="scbase on" data-b="0">最简式 CH<sub>2</sub>O (30)</button>
+        <button class="scbase" data-b="1">最简式 CH<sub>2</sub> (14)</button>
+        <button class="scbase" data-b="2">最简式 CH (13)</button>
+        <label>相对分子质量 M <input id="scM" type="range" min="14" max="180" value="60" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>最简式式量</b><span id="scF">0</span></div>
+        <div><b>n=M/式量</b><span id="scN">0</span></div>
+        <div><b>n 是否整数</b><span id="scOk">-</span></div>
+        <div><b>分子式</b><span id="scOut">0</span></div>
+      </div>
+      <p class="small">一排小方块 = 最简式;放大 n 倍就是分子式。<b>只有 n 恰好是整数时</b>才对应真实存在的分子(绿字);n 带小数(红字)说明 M 与该最简式不匹配。</p>
+    </div>
+
+    <h2 class="o">④ 通式法:C<sub>n</sub>H<sub>2n+2</sub> 随 n 增大 M 变化</h2>
+    <div class="card">
+      <p style="margin:6px 0">如果题目告诉你有机物的<b>类别</b>,就能直接写出通式,再用 M 解 n,一步到位,连最简式都不用求:</p>
+      <table>
+        <tr><th>类别</th><th>通式</th><th>M 关于 n</th></tr>
+        <tr><td>烷烃</td><td>C<sub>n</sub>H<sub>2n+2</sub></td><td>M = 14n + 2</td></tr>
+        <tr><td>烯烃 / 环烷烃</td><td>C<sub>n</sub>H<sub>2n</sub></td><td>M = 14n</td></tr>
+        <tr><td>炔烃 / 二烯烃</td><td>C<sub>n</sub>H<sub>2n-2</sub></td><td>M = 14n − 2</td></tr>
+        <tr><td>饱和一元醇</td><td>C<sub>n</sub>H<sub>2n+2</sub>O</td><td>M = 14n + 18</td></tr>
+        <tr><td>饱和一元羧酸</td><td>C<sub>n</sub>H<sub>2n</sub>O<sub>2</sub></td><td>M = 14n + 32</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> 某烷烃 M = 58,由 14n+2 = 58 → n = 4,分子式 C<sub>4</sub>H<sub>10</sub>。某烯烃 M = 42,由 14n = 42 → n = 3,分子式 C<sub>3</sub>H<sub>6</sub>。</p>
+      <p class="trap">⚠ 用错通式 = 全盘皆错。看清是烷(+2)、烯(+0)还是炔(−2);含官能团的要把 O 那部分式量加进去。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 通式 C<sub>n</sub>H<sub>2n+2</sub> 随 n 增大 M 变化(切换类别,拉 n,看 M 和分子式)</div>
+      <svg id="genSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="gencls on" data-c="0">烷 C<sub>n</sub>H<sub>2n+2</sub></button>
+        <button class="gencls" data-c="1">烯 C<sub>n</sub>H<sub>2n</sub></button>
+        <button class="gencls" data-c="2">炔 C<sub>n</sub>H<sub>2n-2</sub></button>
+        <label>碳数 n <input id="gnN" type="range" min="1" max="8" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>通式</b><span id="gnGen">0</span></div>
+        <div><b>M(当前 n)</b><span id="gnM">0</span></div>
+        <div><b>分子式</b><span id="gnF">0</span></div>
+        <div><b>每加 1 个 C,M 增</b><span id="gnStep">14</span></div>
+      </div>
+      <p class="small">折线:M 随 n 线性增长,<b>斜率都是 14</b>(每多一个 CH<sub>2</sub>)。三条线只是截距不同(+2、0、−2)。反过来:已知 M 找到对应点,就读出 n。</p>
+    </div>
+
+    <h2 class="v">⑤ 是否含氧:质量差判断</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是燃烧型最容易翻车的一步。你只从产物数出了 C 和 H,<b>O 从哪来?</b> 不能从产物数(产物里的 O 一部分来自空气 O<sub>2</sub>),只能靠<b>总质量守恒</b>倒推:</p>
+      <div class="eq">m(O) = m(样品总) − m(C) − m(H)</div>
+      <ul style="font-weight:600;margin:8px 0">
+        <li>若 m(O) = 0 → 只含 C、H,是<b>烃</b>(CxHy)。</li>
+        <li>若 m(O) &gt; 0 → 含 O,n(O)=m(O)/16,是<b>烃的含氧衍生物</b>(醇/醛/酸/酯…)。</li>
+        <li>若 m(O) &lt; 0 → 前面算错了(H 忘了 ×2,或质量抄错),回去查。</li>
+      </ul>
+      <p style="margin:8px 0"><b>例:</b> 4.6g 某有机物完全燃烧生成 8.8g CO<sub>2</sub> 和 5.4g H<sub>2</sub>O。n(C)=8.8/44=0.2,m(C)=2.4g;n(H)=2×5.4/18=0.6,m(H)=0.6g;m(O)=4.6−2.4−0.6=1.6g&gt;0 → 含 O,n(O)=0.1。比 C:H:O=0.2:0.6:0.1=2:6:1 → C<sub>2</sub>H<sub>6</sub>O(乙醇)。</p>
+      <p class="trap">⚠ 千万别用产物 CO<sub>2</sub>、H<sub>2</sub>O 里的 O 去数样品的 O——那些 O 大部分是燃烧时从空气 O<sub>2</sub> 来的,不是样品里的。只能用质量差。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 是否含氧的质量差判断(拉动样品总质量,看 m(O) 是正是零,判定烃还是含氧物)</div>
+      <svg id="oxySvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>样品总质量 m(g) <input id="oxM" type="range" min="2" max="10" value="4.6" step="0.1"></label>
+        <label>m(C) 固定 <input id="oxC" type="range" min="1" max="4" value="2.4" step="0.1"></label>
+        <label>m(H) 固定 <input id="oxH" type="range" min="0.2" max="2" value="0.6" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>m(C)+m(H)</b><span id="oxCH">0</span></div>
+        <div><b>m(O)=总−C−H</b><span id="oxO">0</span></div>
+        <div><b>n(O)=m(O)/16</b><span id="oxNO">0</span></div>
+        <div><b>判定</b><span id="oxV">-</span></div>
+      </div>
+      <p class="small">堆叠条:C(蓝)+H(黄)先垒上去,总质量(整条)减去它俩,<b>顶上剩下的绿段就是 O</b>。绿段消失(m(O)=0)→ 纯烃;绿段存在 → 含氧衍生物;若 C+H 超过总质量(条溢出)→ 算错了。</p>
+    </div>
+
+    <h2 class="r">⑥ 同最简式辨析:一个最简式,多个分子</h2>
+    <div class="card">
+      <p style="margin:6px 0">不同的有机物<b>可以有相同的最简式</b>——因为最简式只管个数比,不管分子大小。这正是「必须用 M 定 n」的原因。</p>
+      <table>
+        <tr><th>最简式</th><th>可能的分子式</th><th>对应物质举例</th></tr>
+        <tr><td>CH<sub>2</sub></td><td>C<sub>2</sub>H<sub>4</sub>, C<sub>3</sub>H<sub>6</sub>, C<sub>4</sub>H<sub>8</sub> …</td><td>乙烯、丙烯、环丁烷</td></tr>
+        <tr><td>CH<sub>2</sub>O</td><td>CH<sub>2</sub>O, C<sub>2</sub>H<sub>4</sub>O<sub>2</sub>, C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></td><td>甲醛、乙酸、葡萄糖</td></tr>
+        <tr><td>CH</td><td>C<sub>2</sub>H<sub>2</sub>, C<sub>6</sub>H<sub>6</sub></td><td>乙炔、苯</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>反过来的经典考法:</b> 「乙炔 C<sub>2</sub>H<sub>2</sub> 和苯 C<sub>6</sub>H<sub>6</sub> 最简式相同,等质量完全燃烧耗 O<sub>2</sub>、生成 CO<sub>2</sub>/H<sub>2</sub>O 是否相同?」答案:<b>相同</b>——因为最简式相同意味着 C、H 质量分数相同,等质量即等的 C、H 物质的量,耗氧和产物自然一样。</p>
+      <p class="trap">⚠ 「最简式相同」是一个强条件:它意味着等质量样品的 C%、H% 完全一样,燃烧耗 O<sub>2</sub> 和产物量都相同。抓住这点,很多「等质量燃烧比较」题秒解。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 6 — 同最简式对比(选一个最简式,看它放大成的一串不同有机物,以及它们的 C%、H% 都相同)</div>
+      <svg id="sameSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="samebase on" data-b="0">最简式 CH<sub>2</sub></button>
+        <button class="samebase" data-b="1">最简式 CH<sub>2</sub>O</button>
+        <button class="samebase" data-b="2">最简式 CH</button>
+      </div>
+      <div class="verdict" id="sameNote"></div>
+      <p class="small">一竖排都是<b>同一个最简式</b>放大 n=1,2,3… 得到的不同分子。它们分子式不同、大小不同,但<b>C 的质量分数、H 的质量分数完全相同</b>(右侧百分比)——这就是等质量燃烧结果相同的根源。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 已知各元素质量分数型</h3>
+      <p><b class="tag">触发信号:</b>给出「C 占 x%、H 占 y%(、O 占 z%)」或直接给各元素质量,再给 M。</p>
+      <p><b class="tag">标准动作:</b>设样品 100g → 各元素质量 = 百分数;n=质量/相对原子质量 → 化最简整数比 → 最简式 → n=M/式量 → 分子式。</p>
+      <p><b class="tag">示例(带解):</b>某物 C 占 40%、H 占 6.7%、O 占 53.3%,M=180。取 100g:n(C)=40/12≈3.33,n(H)=6.7/1=6.7,n(O)=53.3/16≈3.33。比 3.33:6.7:3.33 = 1:2:1 → 最简式 CH<sub>2</sub>O(式量30)。n=180/30=6 → 分子式 C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>。</p>
+      <p class="trap">陷阱:拿质量比当个数比(没除相对原子质量);比没化成最简整数。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 已知燃烧产物型</h3>
+      <p><b class="tag">触发信号:</b>给样品质量 + 生成的 CO<sub>2</sub> 和 H<sub>2</sub>O 质量(有时给 M)。</p>
+      <p><b class="tag">标准动作:</b>n(C)=n(CO<sub>2</sub>),n(H)=2·n(H<sub>2</sub>O) → m(C)、m(H) → m(O)=总−C−H 判是否含氧 → 比 → 最简式 →(有 M 则)分子式。</p>
+      <p><b class="tag">示例(带解):</b>9.0g 某物燃烧生成 13.2g CO<sub>2</sub>、5.4g H<sub>2</sub>O,M=60。n(C)=13.2/44=0.3,m(C)=3.6;n(H)=2×5.4/18=0.6,m(H)=0.6;m(O)=9−3.6−0.6=4.8,n(O)=0.3。比 0.3:0.6:0.3=1:2:1 → CH<sub>2</sub>O(30)。n=60/30=2 → C<sub>2</sub>H<sub>4</sub>O<sub>2</sub>(乙酸)。</p>
+      <p class="trap">陷阱:H 忘 ×2;漏判是否含氧;用产物的 O 去数样品 O。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 已知通式与 M 求 n 型</h3>
+      <p><b class="tag">触发信号:</b>点明类别(烷/烯/炔/醇/酸…)+ 给 M 或密度(可换算 M)。</p>
+      <p><b class="tag">标准动作:</b>写通式 → 列 M 关于 n 的方程(烷 14n+2、烯 14n、炔 14n−2、醇 14n+18…)→ 解 n → 写分子式。</p>
+      <p><b class="tag">示例(带解):</b>某炔烃 M=54。由 14n−2=54 → 14n=56 → n=4 → 分子式 C<sub>4</sub>H<sub>6</sub>。某饱和一元醇 M=46 → 14n+18=46 → n=2 → C<sub>2</sub>H<sub>6</sub>O(乙醇)。</p>
+      <p class="trap">陷阱:通式选错(烷烯炔的氢数差 2);醇/酸忘加 O 的式量。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 气体密度求 M 型</h3>
+      <p><b class="tag">触发信号:</b>给「标况密度 ρ(g/L)」或「相对某气体的密度」,先求 M 再往下做。</p>
+      <p><b class="tag">标准动作:</b>标况:M = ρ × 22.4(g/mol);相对密度:M = D × M(参照气体)。得到 M 后接题型 A/B/C。</p>
+      <p><b class="tag">示例(带解):</b>某烃标况密度 1.25g/L → M=1.25×22.4=28 → 若为烯 14n=28→n=2 → C<sub>2</sub>H<sub>4</sub>。某气体对 H<sub>2</sub> 的相对密度为 21 → M=21×2=42 → 烯 14n=42→n=3 → C<sub>3</sub>H<sub>6</sub>。</p>
+      <p class="trap">陷阱:忘了标况 22.4 只对气体;相对密度要乘参照气体的 M(对 H<sub>2</sub> 乘 2,对空气乘 29)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 最简式相同辨析型</h3>
+      <p><b class="tag">触发信号:</b>「等质量的 A、B 完全燃烧,耗 O<sub>2</sub>/生成 CO<sub>2</sub> 是否相同」「哪些物质最简式相同」。</p>
+      <p><b class="tag">标准动作:</b>各自求最简式;最简式相同 → C%、H% 相同 → 等质量燃烧耗氧、产物完全相同。含氧不同则要另算。</p>
+      <p><b class="tag">示例(带解):</b>乙炔 C<sub>2</sub>H<sub>2</sub> 与苯 C<sub>6</sub>H<sub>6</sub> 最简式都是 CH。等质量(如13g)燃烧,C、H 物质的量相同(C:H=1:1)→ 耗 O<sub>2</sub>、生成 CO<sub>2</sub> 和 H<sub>2</sub>O 完全相同。</p>
+      <p class="trap">陷阱:以为分子式不同就燃烧结果不同;其实等质量看的是最简式(C%、H%)。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>H 要 ×2!</b> n(H)=2·n(H<sub>2</sub>O),一个水分子含 2 个 H。这是燃烧型第一大漏点。</p>
+      <p class="trap">② <b>一定要判断是否含 O:</b> m(O)=m(总)−m(C)−m(H)。跳过这步可能把含氧物当成烃。</p>
+      <p class="trap">③ <b>最简式 ≠ 分子式:</b> 最简式只给个数比,必须用 n=M/式量 放大才是分子式。忘乘 n 是致命错。</p>
+      <p class="trap">④ <b>质量比不是个数比:</b> 必须各自除以相对原子质量变成物质的量,才是原子个数比。</p>
+      <p class="trap">⑤ <b>样品的 O 不能从产物数:</b> CO<sub>2</sub>、H<sub>2</sub>O 里的 O 大多来自空气 O<sub>2</sub>,样品 O 只能用质量差求。</p>
+      <p class="trap">⑥ <b>通式别选错:</b> 烷 C<sub>n</sub>H<sub>2n+2</sub>、烯 C<sub>n</sub>H<sub>2n</sub>、炔 C<sub>n</sub>H<sub>2n-2</sub>,氢数差 2;含官能团别忘加 O。</p>
+      <p class="trap">⑦ <b>n 必须是正整数:</b> 若 M/式量 不是整数,前面一定有错,回查式量或 M。</p>
+      <p class="trap">⑧ <b>标况密度求 M 用 22.4:</b> M=ρ×22.4 仅对标况气体;相对密度要乘参照气体的 M。</p>
+      <p class="trap">⑨ <b>化最简整数比要彻底:</b> 出现 1.5、3.33 之类,整体再 ×2 或 ×3 化成整数下标。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 最简式承载「组成信息」,M 承载「大小信息」:</b> 一道确定分子式的题,本质是给你两类独立信息——「元素比例」(→最简式)和「分子有多大」(→M)。两者缺一不可:只有比例,不知道放大几倍;只有 M,不知道怎么分配到各元素。看题时先分清哪些数据在告诉你「比例」,哪些在告诉你「大小」,思路立刻清晰。</p>
+      <p style="margin:8px 0"><b>② 燃烧型的守恒骨架是「元素守恒 + 质量守恒」:</b> C、H 靠元素守恒从产物数出(C→CO<sub>2</sub>,H→H<sub>2</sub>O);O 靠质量守恒从总质量差倒推。想通这两个守恒各管什么,就不会犯「用产物 O 数样品 O」的错——因为氧不满足从产物直接数的元素守恒(空气也供氧)。</p>
+      <p style="margin:8px 0"><b>③ 通式法 = 把「最简式+M」两步压成一步:</b> 已知类别时,通式其实已经内含了 H 与 C 的固定关系,所以不必单独求最简式,直接用 M 解 n。这是「用已知类别信息换计算步骤」的典型——信息越多,步骤越少。</p>
+      <p style="margin:8px 0"><b>④ 「等质量燃烧比较」认最简式,不认分子式:</b> 等质量样品的耗氧量、产物量,只取决于 C%、H%,即只取决于最简式。所以乙炔和苯、乙烯和环己烷这类「同最简式」物质,等质量燃烧结果一模一样。抓住「等质量→看百分比→看最简式」这条链,一大类比较题秒杀。</p>
+      <p style="margin:8px 0"><b>⑤ 商余法/讨论法处理「M 已知、类别未知」:</b> 当只给 M、不给类别时,可设分子式 C<sub>x</sub>H<sub>y</sub>(O<sub>z</sub>),用 12x&lt;M 限定 x 的范围,逐个 x 讨论余量 M−12x 能否合理分给 H、O。这种「有限枚举 + 合理性检验」是处理开放型定式题的通法,考场上比死套公式更稳。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 主线:先定比例(最简式),再定倍数(用 M 放大)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+function gcd(a,b){a=Math.round(a);b=Math.round(b);while(b){[a,b]=[b,a%b];}return a||1;}
+
+/* ===== 互动1:燃烧产物 -> C、H 原子数反推 ===== */
+(function(){
+  const svg=document.getElementById('burnSvg');
+  const co2=document.getElementById('bnCO2'),h2o=document.getElementById('bnH2O');
+  const oC=document.getElementById('boC'),oH=document.getElementById('boH'),oMC=document.getElementById('boMC'),oMH=document.getElementById('boMH');
+  let C=4,H=4;
+  function sync(){C=+co2.value;H=+h2o.value;draw();}
+  co2.oninput=h2o.oninput=sync;
+  function draw(){
+    clr(svg);
+    const nC=C, nH=2*H;
+    oC.textContent=nC;oH.textContent=nH;oMC.textContent=(12*nC)+' g';oMH.textContent=(1*nH)+' g';
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='燃烧产物';
+    el(svg,'text',{x:400,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='反推出的原子';
+    el(svg,'line',{x1:360,y1:36,x2:360,y2:280,stroke:INK,'stroke-width':3,'stroke-dasharray':'6 5'});
+    // left: CO2 molecules row
+    el(svg,'text',{x:20,y:70,'font-size':13,'font-weight':800,fill:BLUE}).textContent='CO₂ × '+C;
+    for(let i=0;i<C;i++){
+      const x=30+i*38, y=90;
+      el(svg,'circle',{cx:x,cy:y,r:11,fill:INK,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x,y:y+4,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='C';
+    }
+    // left: H2O molecules row
+    el(svg,'text',{x:20,y:150,'font-size':13,'font-weight':800,fill:BLUE}).textContent='H₂O × '+H;
+    for(let i=0;i<H;i++){
+      const x=30+i*30, y=175;
+      el(svg,'circle',{cx:x,cy:y,r:9,fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x,y:y+4,'font-size':9,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='H₂';
+    }
+    // right: C atoms
+    el(svg,'text',{x:400,y:70,'font-size':13,'font-weight':800,fill:INK}).textContent='n(C) = n(CO₂) = '+nC;
+    for(let i=0;i<Math.min(nC,8);i++){
+      el(svg,'circle',{cx:410+i*32,cy:92,r:10,fill:INK,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:410+i*32,y:96,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='C';
+    }
+    // right: H atoms (x2)
+    el(svg,'text',{x:400,y:150,'font-size':13,'font-weight':800,fill:INK}).textContent='n(H) = 2×n(H₂O) = '+nH;
+    for(let i=0;i<Math.min(nH,9);i++){
+      el(svg,'circle',{cx:410+i*30,cy:175,r:9,fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:410+i*30,y:179,'font-size':9,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='H';
+    }
+    el(svg,'text',{x:400,y:230,'font-size':12.5,'font-weight':800,fill:RED}).textContent='★ H 一对二：每个水放出 2 个 H';
+    el(svg,'text',{x:400,y:252,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='m(C)='+12*nC+'g，m(H)='+nH+'g';
+  }
+  sync();
+})();
+
+/* ===== 互动2:质量 -> 物质的量 -> 个数比 ===== */
+(function(){
+  const svg=document.getElementById('ratioSvg');
+  const rC=document.getElementById('rC'),rH=document.getElementById('rH'),rO=document.getElementById('rO');
+  const oN=document.getElementById('raN'),oS=document.getElementById('raS'),oF=document.getElementById('raF'),oM=document.getElementById('raM');
+  function draw(){
+    clr(svg);
+    const mC=+rC.value,mH=+rH.value,mO=+rO.value;
+    const nC=mC/12,nH=mH/1,nO=mO/16;
+    oN.textContent=nC.toFixed(2)+':'+nH.toFixed(2)+':'+nO.toFixed(2);
+    // simplest integer ratio: multiply to clear, then gcd
+    let a=Math.round(nC*100),b=Math.round(nH*100),c=Math.round(nO*100);
+    let g=gcd(gcd(a,b),c)||1;
+    let ia=a/g,ib=b/g,ic=c/g;
+    oS.textContent=ia+':'+ib+':'+ic;
+    // formula string
+    function part(sym,k){if(k<=0)return '';return sym+(k>1?'<sub>'+k+'</sub>':'');}
+    let f='C'+(ia>1?ia:'')+'H'+(ib>1?ib:'')+(ic>0?('O'+(ic>1?ic:'')):'');
+    oF.innerHTML=f.replace(/([A-Z])(\d+)/g,'$1<sub>$2</sub>');
+    const fm=12*ia+1*ib+16*ic;
+    oM.textContent=fm;
+    // bars: mass(gray) vs mol(color)
+    const items=[{lab:'C',m:mC,n:nC,col:BLUE},{lab:'H',m:mH,n:nH,col:YEL},{lab:'O',m:mO,n:nO,col:GREEN}];
+    const baseY=210,maxH=150;const nMax=6;
+    items.forEach((it,i)=>{
+      const x=120+i*180;
+      // mol bar (color)
+      const h=Math.max(2,(it.n/nMax)*maxH);
+      el(svg,'rect',{x:x,y:baseY-h,width:60,height:h,fill:it.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+30,y:baseY+20,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=it.lab;
+      el(svg,'text',{x:x+30,y:baseY-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='n='+it.n.toFixed(2);
+      el(svg,'text',{x:x+30,y:baseY-h-24,'font-size':11,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent='m='+it.m+'g';
+    });
+    el(svg,'line',{x1:100,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:28,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='n = 质量 ÷ 相对原子质量 （彩条高之比 = 原子个数比）';
+  }
+  rC.oninput=rH.oninput=rO.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:最简式 x n = 分子式 ===== */
+(function(){
+  const svg=document.getElementById('scaleSvg');
+  const scM=document.getElementById('scM');
+  const oF=document.getElementById('scF'),oN=document.getElementById('scN'),oOk=document.getElementById('scOk'),oOut=document.getElementById('scOut');
+  const bases=[
+    {name:'CH₂O',fm:30,C:1,H:2,O:1},
+    {name:'CH₂',fm:14,C:1,H:2,O:0},
+    {name:'CH',fm:13,C:1,H:1,O:0}
+  ];
+  let bi=0;
+  document.querySelectorAll('.scbase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.scbase').forEach(x=>x.classList.remove('on'));b.classList.add('on');bi=+b.dataset.b;draw();
+  });
+  function draw(){
+    clr(svg);
+    const base=bases[bi];const M=+scM.value;
+    const nRaw=M/base.fm;const n=Math.round(nRaw);const ok=Math.abs(nRaw-n)<0.02 && n>=1;
+    oF.textContent=base.fm;oN.textContent=nRaw.toFixed(2);
+    oOk.textContent=ok?'是 ✓':'否 ✗';oOk.style.color=ok?GREEN:RED;
+    if(ok){
+      let f='C'+(base.C*n>1?base.C*n:'')+'H'+(base.H*n>1?base.H*n:'')+(base.O>0?('O'+(base.O*n>1?base.O*n:'')):'');
+      oOut.innerHTML=f.replace(/([A-Z])(\d+)/g,'$1<sub>$2</sub>');
+    } else {oOut.textContent='—';}
+    // draw base blocks then scaled blocks
+    el(svg,'text',{x:20,y:30,'font-size':13,'font-weight':900,fill:INK}).textContent='最简式（一份）：'+base.name;
+    drawUnit(svg,30,50,base,1);
+    el(svg,'text',{x:20,y:150,'font-size':13,'font-weight':900,fill:INK}).textContent='分子式 = 最简式 × n（n='+(ok?n:nRaw.toFixed(2))+'）';
+    if(ok){
+      for(let k=0;k<Math.min(n,6);k++){drawUnit(svg,30+k*108,170,base,1);}
+      if(n>6)el(svg,'text',{x:30+6*108,y:200,'font-size':16,'font-weight':900,fill:INK}).textContent='…×'+n;
+    } else {
+      el(svg,'text',{x:30,y:200,'font-size':15,'font-weight':900,fill:RED}).textContent='n 不是整数 → 该 M 与此最简式不匹配（回查式量或 M）';
+    }
+    el(svg,'text',{x:350,y:250,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='n = M('+M+') ÷ 式量('+base.fm+') = '+nRaw.toFixed(2);
+  }
+  function drawUnit(p,x,y,base,scale){
+    let cx=x;
+    for(let i=0;i<base.C;i++){el(p,'circle',{cx:cx+11,cy:y+30,r:11,fill:INK,stroke:INK,'stroke-width':2});el(p,'text',{x:cx+11,y:y+34,'font-size':10,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='C';cx+=26;}
+    for(let i=0;i<base.H;i++){el(p,'circle',{cx:cx+9,cy:y+30,r:9,fill:YEL,stroke:INK,'stroke-width':2});el(p,'text',{x:cx+9,y:y+34,'font-size':9,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='H';cx+=22;}
+    for(let i=0;i<base.O;i++){el(p,'circle',{cx:cx+10,cy:y+30,r:10,fill:GREEN,stroke:INK,'stroke-width':2});el(p,'text',{x:cx+10,y:y+34,'font-size':9,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='O';cx+=24;}
+  }
+  scM.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:通式 M 随 n 变化 ===== */
+(function(){
+  const svg=document.getElementById('genSvg');
+  const gnN=document.getElementById('gnN');
+  const oGen=document.getElementById('gnGen'),oM=document.getElementById('gnM'),oF=document.getElementById('gnF'),oStep=document.getElementById('gnStep');
+  const classes=[
+    {gen:'CnH2n+2',hp:2,name:'烷'},
+    {gen:'CnH2n',hp:0,name:'烯'},
+    {gen:'CnH2n-2',hp:-2,name:'炔'}
+  ];
+  let ci=0;
+  document.querySelectorAll('.gencls').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.gencls').forEach(x=>x.classList.remove('on'));b.classList.add('on');ci=+b.dataset.c;draw();
+  });
+  function Mof(cls,n){return 14*n+cls.hp;}
+  function draw(){
+    clr(svg);
+    const cls=classes[ci];const n=+gnN.value;
+    const M=Mof(cls,n);const h=2*n+cls.hp;
+    oGen.textContent=cls.gen;oM.textContent=M;
+    let f='C'+(n>1?n:'')+'H'+(h>1?h:'');
+    oF.innerHTML=f.replace(/([A-Z])(\d+)/g,'$1<sub>$2</sub>');oStep.textContent='14';
+    // axes
+    const X0=60,Y0=30,W=560,H=210;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='M';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='n';
+    const nMax=8,Mmax=120;
+    const sx=W/nMax, sy=H/Mmax;
+    // draw all three faint, current bold
+    const cols=[BLUE,ORANGE,VIO];
+    classes.forEach((cl,i)=>{
+      let d='';
+      for(let k=1;k<=nMax;k++){const px=X0+k*sx, py=Y0+H-Mof(cl,k)*sy; d+=(k===1?'M':'L')+px+' '+py+' ';}
+      el(svg,'path',{d:d,fill:'none',stroke:cols[i],'stroke-width':i===ci?4:2,opacity:i===ci?1:0.3});
+    });
+    // current point
+    const px=X0+n*sx, py=Y0+H-M*sy;
+    el(svg,'circle',{cx:px,cy:py,r:8,fill:cols[ci],stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:px,y1:py,x2:px,y2:Y0+H,stroke:cols[ci],'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'line',{x1:X0,y1:py,x2:px,y2:py,stroke:cols[ci],'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:px,y:Y0+H+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='n='+n;
+    el(svg,'text',{x:X0-8,y:py+4,'font-size':11.5,'font-weight':900,fill:cols[ci],'text-anchor':'end'}).textContent='M='+M;
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M 随 n 直线上升，斜率都是 14（每多一个 CH₂）';
+    el(svg,'text',{x:px+10,y:py-8,'font-size':12,'font-weight':900,fill:cols[ci]}).textContent=cls.name+' '+f.replace(/<[^>]+>/g,'');
+  }
+  gnN.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:是否含氧 质量差判断 ===== */
+(function(){
+  const svg=document.getElementById('oxySvg');
+  const oxM=document.getElementById('oxM'),oxC=document.getElementById('oxC'),oxH=document.getElementById('oxH');
+  const oCH=document.getElementById('oxCH'),oO=document.getElementById('oxO'),oNO=document.getElementById('oxNO'),oV=document.getElementById('oxV');
+  function draw(){
+    clr(svg);
+    const mT=+oxM.value,mC=+oxC.value,mH=+oxH.value;
+    const mCH=mC+mH;const mO=mT-mCH;
+    oCH.textContent=mCH.toFixed(1)+' g';
+    oO.textContent=mO.toFixed(1)+' g';
+    oNO.textContent=mO>0?(mO/16).toFixed(3):'0';
+    let verdict;
+    if(mO<-0.001){verdict='✗ 算错了';oV.style.color=RED;}
+    else if(Math.abs(mO)<0.05){verdict='不含 O（烃）';oV.style.color=BLUE;}
+    else{verdict='含 O（含氧物）';oV.style.color=GREEN;}
+    oV.textContent=verdict;
+    // stacked bar for total, and C+H underneath
+    const baseX=120,baseY=210,bw=140,scale=16;
+    // total outline
+    const totH=mT*scale;
+    el(svg,'rect',{x:baseX+220,y:baseY-totH,width:bw,height:totH,fill:'none',stroke:INK,'stroke-width':3,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:baseX+220+bw+8,y:baseY-totH+14,'font-size':12,'font-weight':900,fill:INK}).textContent='样品总 '+mT.toFixed(1)+'g';
+    // stacked C,H,O
+    const cH=mC*scale, hH=mH*scale;
+    let y=baseY;
+    el(svg,'rect',{x:baseX,y:y-cH,width:bw,height:cH,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:baseX+bw/2,y:y-cH/2+4,'font-size':12.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='C '+mC+'g';
+    y-=cH;
+    el(svg,'rect',{x:baseX,y:y-hH,width:bw,height:hH,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:baseX+bw/2,y:y-hH/2+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='H '+mH+'g';
+    y-=hH;
+    if(mO>0.001){
+      const oH=mO*scale;
+      el(svg,'rect',{x:baseX,y:y-oH,width:bw,height:oH,fill:GREEN,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:baseX+bw/2,y:y-oH/2+4,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='O '+mO.toFixed(1)+'g';
+    } else if(mO<-0.001){
+      el(svg,'text',{x:baseX+bw/2,y:y-14,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='C+H 超出总质量!';
+    } else {
+      el(svg,'text',{x:baseX+bw/2,y:y-14,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='无 O';
+    }
+    el(svg,'line',{x1:80,y1:baseY,x2:620,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:baseX+70,y:baseY+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='C+H 堆叠';
+    el(svg,'text',{x:baseX+220+bw/2,y:baseY+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='样品总质量';
+    el(svg,'text',{x:350,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='m(O) = m(总) − m(C) − m(H)';
+  }
+  oxM.oninput=oxC.oninput=oxH.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:同最简式对比 ===== */
+(function(){
+  const svg=document.getElementById('sameSvg');const note=document.getElementById('sameNote');
+  const bases=[
+    {name:'CH₂',fm:14,C:1,H:2,O:0,names:['乙烯','丙烯','环丁烷']},
+    {name:'CH₂O',fm:30,C:1,H:2,O:1,names:['甲醛','乙酸','葡萄糖(n=6)']},
+    {name:'CH',fm:13,C:1,H:1,O:0,names:['乙炔','苯(n=6)','—']}
+  ];
+  let bi=0;
+  document.querySelectorAll('.samebase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.samebase').forEach(x=>x.classList.remove('on'));b.classList.add('on');bi=+b.dataset.b;draw();
+  });
+  function draw(){
+    clr(svg);
+    const base=bases[bi];
+    // C% and H% are fixed for a given empirical formula
+    const cPct=12*base.C/base.fm*100, hPct=1*base.H/base.fm*100, oPct=16*base.O/base.fm*100;
+    el(svg,'text',{x:20,y:26,'font-size':13,'font-weight':900,fill:INK}).textContent='最简式 '+base.name+' 放大成不同分子（n=1,2,3）';
+    const ns=[1,2,3];
+    ns.forEach((n,i)=>{
+      const y=60+i*62;
+      // build formula
+      let f='C'+(base.C*n>1?base.C*n:'')+'H'+(base.H*n>1?base.H*n:'')+(base.O>0?('O'+(base.O*n>1?base.O*n:'')):'');
+      const M=base.fm*n;
+      // block row
+      let cx=30;
+      for(let r=0;r<n;r++){
+        for(let a=0;a<base.C;a++){el(svg,'circle',{cx:cx+8,cy:y,r:8,fill:INK});cx+=19;}
+        for(let a=0;a<base.H;a++){el(svg,'circle',{cx:cx+6,cy:y,r:6,fill:YEL,stroke:INK,'stroke-width':1.5});cx+=15;}
+        for(let a=0;a<base.O;a++){el(svg,'circle',{cx:cx+7,cy:y,r:7,fill:GREEN});cx+=17;}
+        cx+=6;
+      }
+      el(svg,'text',{x:330,y:y+4,'font-size':13,'font-weight':900,fill:INK}).innerHTML='';
+      const t=el(svg,'text',{x:330,y:y+4,'font-size':13,'font-weight':900,fill:INK});
+      // build tspans for subscripts
+      buildFormula(t,f);
+      el(svg,'text',{x:470,y:y+4,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='M='+M;
+      el(svg,'text',{x:540,y:y+4,'font-size':11.5,'font-weight':800,fill:VIO}).textContent=base.names[i]||'';
+    });
+    // percentages panel
+    el(svg,'text',{x:20,y:262,'font-size':12.5,'font-weight':900,fill:RED}).textContent='★ 无论放大几倍，C%='+cPct.toFixed(1)+'%、H%='+hPct.toFixed(1)+'%'+(base.O>0?('、O%='+oPct.toFixed(1)+'%'):'')+' 始终不变';
+    note.innerHTML='同一最简式 '+base.name.replace(/(\d+)/g,'<sub>$1<\/sub>')+' → C、H 质量分数固定（C%='+cPct.toFixed(1)+'%，H%='+hPct.toFixed(1)+'%）。所以<b>等质量</b>的这些物质完全燃烧，耗 O₂、生成 CO₂ 和 H₂O 都相同。';
+  }
+  function buildFormula(t,f){
+    // f like C2H4O2 -> letters + subscripts
+    const re=/([A-Z][a-z]?)(\d*)/g;let m;
+    while((m=re.exec(f))!==null){
+      if(!m[1])continue;
+      const t1=el(t,'tspan',{});t1.textContent=m[1];
+      if(m[2]){const t2=el(t,'tspan',{'baseline-shift':'sub','font-size':'9'});t2.textContent=m[2];}
+    }
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 确定有机物分子式的两步主线是什么？",a:"第一步：由各元素物质的量之比求最简式（实验式）。第二步：用相对分子质量 M 除以最简式式量得 n，把最简式每个下标 ×n，得到分子式。一句话：先定比例，再定倍数。"},
+ {q:"2. 有机物完全燃烧，C、H 的物质的量怎么从产物求？",a:"n(C)=n(CO₂)（所有 C 进 CO₂）；n(H)=2·n(H₂O)（每个水分子含 2 个 H，务必 ×2）。"},
+ {q:"3. 怎么判断有机物是否含氧？为什么不能从产物数 O？",a:"用质量差：m(O)=m(总)−m(C)−m(H)。>0 含 O，=0 不含。不能从 CO₂、H₂O 里数 O，因为产物里的 O 大部分来自燃烧用的空气 O₂，不是样品自带的。"},
+ {q:"4. 最简式和分子式是什么关系？",a:"最简式（实验式）只给各元素原子的最简整数个数比；分子式 =（最简式）ₙ，n=M÷最简式式量，是正整数。同一最简式可对应多个分子式。"},
+ {q:"5. 某物 C 40%、H 6.7%、O 53.3%，M=180，求分子式。",a:"取100g：n(C)=40/12≈3.33，n(H)=6.7/1=6.7，n(O)=53.3/16≈3.33。比1:2:1→最简式CH₂O（式量30）。n=180/30=6→分子式C₆H₁₂O₆（葡萄糖）。"},
+ {q:"6. 4.6g 有机物燃烧生成 8.8g CO₂、5.4g H₂O，M=46，求分子式。",a:"n(C)=8.8/44=0.2，m(C)=2.4g；n(H)=2×5.4/18=0.6，m(H)=0.6g；m(O)=4.6−2.4−0.6=1.6g>0，n(O)=0.1。比 0.2:0.6:0.1=2:6:1→C₂H₆O，式量46=M→n=1→C₂H₆O（乙醇）。"},
+ {q:"7. 烷烃、烯烃、炔烃的通式和 M 关于 n 的表达式？",a:"烷 CₙH₂ₙ₊₂：M=14n+2；烯/环烷 CₙH₂ₙ：M=14n；炔/二烯 CₙH₂ₙ₋₂：M=14n−2。斜率都是14。"},
+ {q:"8. 某炔烃 M=54，求分子式。",a:"炔通式 M=14n−2=54 → 14n=56 → n=4 → 分子式 C₄H₆。"},
+ {q:"9. 某烃标况密度 1.25 g/L，且为烯烃，求分子式。",a:"M=ρ×22.4=1.25×22.4=28。烯 14n=28→n=2→C₂H₄（乙烯）。"},
+ {q:"10. 某气体对 H₂ 的相对密度为 21，为烯烃，求分子式。",a:"M=相对密度×M(H₂)=21×2=42。烯 14n=42→n=3→C₃H₆（丙烯）。"},
+ {q:"11. 乙炔 C₂H₂ 与苯 C₆H₆ 等质量完全燃烧，耗 O₂、生成 CO₂ 是否相同？为什么？",a:"相同。两者最简式都是 CH，C%、H% 完全相同，等质量即等的 C、H 物质的量，故耗氧量、CO₂ 与 H₂O 生成量都相同。"},
+ {q:"12. 最简式为 CH₂ 的物质，若 M=56，分子式是什么？还可能是哪些？",a:"式量14，n=56/14=4→C₄H₈。CH₂ 还可对应 C₂H₄(M28)、C₃H₆(M42)、C₅H₁₀(M70) 等，M 越大分子越大。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

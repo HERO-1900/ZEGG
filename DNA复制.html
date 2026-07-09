@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNA的复制 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>DNA的复制</h1>
+    <p class="lead">一条 DNA 变两条，靠的不是「凭空再造」，而是<b>拆开双链、各自照着模板配对</b>。所以每条新 DNA 都是「一条老链 + 一条新链」——这就是<b>半保留复制</b>。这一页把复制的时间场所、半保留的证明（¹⁵N/¹⁴N 离心实验）、以及最爱考的碱基计算与代数统计，一次讲透。</p>
+
+    <div class="say">🗣️ <b>DNA复制(人话版):</b> 把双螺旋想成一条拉链。复制时酶把拉链<b>边解旋边拉开</b>，露出两条老链当「模板」；细胞里游离的 A、T、G、C 就<b>照着模板配对</b>（A 认 T、G 认 C）接上去。结果:<b>每条新 DNA 都是一条老链 + 一条新链</b>——老的那半永远被保留，所以叫「半保留」。记住两句话:<b>①边解旋边配对 ②老链永远留一半</b>，几乎所有题都从这两句推。</div>
+
+    <div class="keybox"><b>一句话骨架:</b> <b>复制 = 解旋 + 碱基互补配对 + 连接</b>。原料是<b>4种脱氧核苷酸</b>;配对法则 <b>A-T、G-C</b>;每复制一次，1 个 DNA 变 2 个，n 次后共 <b>2ⁿ</b> 个，而含亲代(母)链的<b>永远只有 2 个</b>。</div>
+
+    <h2>① 复制的时间、场所与条件</h2>
+    <div class="card">
+      <div class="eq">复制时间：分裂间期（DNA 复制 + 有关蛋白质合成）</div>
+      <p style="margin:8px 0"><b>什么时候复制:</b> 在细胞分裂前的<b>间期</b>——包括<b>有丝分裂间期</b>和<b>减数第一次分裂前的间期</b>。复制发生在分裂之前，让 DNA 加倍，才能保证子细胞得到一份完整的遗传物质。</p>
+      <table>
+        <tr><th>要素</th><th>内容</th></tr>
+        <tr><td><b>时间</b></td><td>有丝分裂间期 / 减数第一次分裂前的间期</td></tr>
+        <tr><td><b>场所</b></td><td>主要在细胞核；线粒体、叶绿体中也有(半自主)</td></tr>
+        <tr><td><b>模板</b></td><td>解旋后的<b>两条母链</b>(各作一条链的模板)</td></tr>
+        <tr><td><b>原料</b></td><td>4 种<b>游离的脱氧核苷酸</b>(dATP/dTTP/dGTP/dCTP)</td></tr>
+        <tr><td><b>酶</b></td><td>解旋酶(拆开氢键) + DNA 聚合酶(连接核苷酸)</td></tr>
+        <tr><td><b>能量</b></td><td>ATP 水解供能</td></tr>
+      </table>
+      <p class="trap">⚠ 复制在<b>间期</b>，不是分裂期!「解旋」用的是<b>解旋酶</b>，「连接」用 DNA 聚合酶，别把两种酶张冠李戴。原料是<b>脱氧核苷酸</b>不是碱基、不是核糖核苷酸(那是转录用的)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 1 — 边解旋边复制动画：老链金色、新链蓝色，看半保留怎么形成</div>
+      <svg id="repSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="repGo">▶ 开始复制</button><button id="repReset">↺ 重置</button>
+        <label>解旋速度 <input id="repSpd" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>已解旋碱基对</b><span id="repN">0</span></div>
+        <div><b>新接上碱基</b><span id="repNew">0</span></div>
+        <div><b>产物DNA数</b><span id="repDna">1</span></div>
+        <div><b>每个新DNA构成</b><span id="repMake">—</span></div>
+      </div>
+      <p class="small">金色 = 保留的<b>老链(模板)</b>，蓝色 = 新合成的链。解旋酶像拉链头往右拉开双链，游离碱基照 A-T/G-C 配对补上。复制完 1 个变 2 个，<b>每个都是「一金一蓝」</b>——半保留。</p>
+    </div>
+
+    <h2 class="b">② 半保留复制 & 碱基互补配对</h2>
+    <div class="card">
+      <div class="eq">半保留：每条子代 DNA = 1 条母链 + 1 条新链</div>
+      <p style="margin:8px 0"><b>半保留复制:</b> 复制时双链解开，<b>每条母链都作模板</b>，各合成一条互补的新链。所以复制出的两个 DNA 里，<b>每一个都保留了一条原来的母链</b>。这是无论复制多少代，含母链的 DNA <b>永远是 2 个</b>的根本原因。</p>
+      <h3>碱基互补配对法则(计算的命根)</h3>
+      <div class="eq">A = T　G = C　（双链中）</div>
+      <table>
+        <tr><th>结论</th><th>说明</th></tr>
+        <tr><td><b>A=T，G=C</b></td><td>整个双链 DNA 中，A 总数=T 总数，G 总数=C 总数</td></tr>
+        <tr><td><b>A+G = T+C</b></td><td>嘌呤总数 = 嘧啶总数(占 50%)</td></tr>
+        <tr><td><b>一条链的比 ↔ 互补链</b></td><td>一条链 (A₁+T₁):(G₁+C₁) 与另一条链<b>相同</b>；A₁=T₂，T₁=A₂</td></tr>
+        <tr><td><b>某碱基占整链%</b></td><td>整个 DNA 中某碱基% =(两条链该碱基% 之和)÷2</td></tr>
+      </table>
+      <p class="trap">⚠ 区分「某<b>一条链</b>」和「整个 DNA」!一条链上 A 不一定等于 T；只有<b>整个双链</b>才有 A=T、G=C。看到「模板链」「其中一条链」四个字，立刻警觉。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 5 — 碱基互补配对计数器：给一条链，自动推互补链与整个 DNA 的碱基数</div>
+      <svg id="baseSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>链1 中 A <input id="bA" type="range" min="0" max="40" value="15" step="1"></label>
+        <label>链1 中 T <input id="bT" type="range" min="0" max="40" value="10" step="1"></label>
+        <label>链1 中 G <input id="bG" type="range" min="0" max="40" value="20" step="1"></label>
+        <label>链1 中 C <input id="bC" type="range" min="0" max="40" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>整个DNA A=T</b><span id="bAT">0</span></div>
+        <div><b>整个DNA G=C</b><span id="bGC">0</span></div>
+        <div><b>总碱基数</b><span id="bTot">0</span></div>
+        <div><b>G+C 占比</b><span id="bGCr">0</span></div>
+      </div>
+      <p class="small">上排 = 你设的<b>链1</b>，下排 = 自动配出的<b>互补链2</b>(A↔T、G↔C 对调)。整个 DNA 中 A=T=链1A+链1T，G=C=链1G+链1C。改滑块看数字联动。</p>
+    </div>
+
+    <h2 class="g">③ 梅塞尔森-斯塔尔实验：证明半保留</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>思路:</b> 用<b>密度不同的氮同位素</b>给 DNA「贴标签」——重的 ¹⁵N、轻的 ¹⁴N。DNA 越重，离心后沉得越低。看不同代数 DNA 落在哪条带，就知道链是怎么组合的。</p>
+      <div class="mono">第1步：大肠杆菌先在含 ¹⁵N 培养基里养很多代 → DNA 两条链全是重的（全 ¹⁵N，重带）。</div>
+      <div class="mono">第2步：转到 ¹⁴N（轻）培养基，复制若干代，每代离心看密度带。</div>
+      <table>
+        <tr><th>代数</th><th>每个 DNA 的两条链</th><th>离心带型</th></tr>
+        <tr><td>亲代(第0代)</td><td>¹⁵N + ¹⁵N</td><td>全在<b>重带</b></td></tr>
+        <tr><td>第1代</td><td>¹⁵N(老) + ¹⁴N(新)</td><td>全在<b>中带</b>(杂合)</td></tr>
+        <tr><td>第2代</td><td>2个中带 + 2个轻带</td><td>中带∶轻带 = 1∶1</td></tr>
+        <tr><td>第n代</td><td>含¹⁵N者=2个(中带),其余轻带</td><td>中∶轻 = 2 ∶ (2ⁿ−2)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么证明半保留:</b> 第1代若是「全保留」应出现重带+轻带两条，可实际<b>只有一条中带</b>→说明每条新 DNA 是「一半重一半轻」→半保留。第2代出现轻带，且中带永远对应<b>2 个含母链</b>的 DNA。</p>
+      <p class="trap">⚠ 「中带」不会消失，它对应的正是那<b>2 个含 ¹⁵N 母链</b>的 DNA(永远 2 个)。但中带 DNA 占<b>比例</b>随代数减小(2/2ⁿ)。别把「个数」和「比例」搞混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 2 — ¹⁵N→¹⁴N 离心分层带型：随代数变化，重/中/轻带此消彼长</div>
+      <svg id="centSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="centPrev">◀ 上一代</button><button id="centNext">下一代 ▶</button><button id="centReset">↺ 回亲代</button>
+      </div>
+      <div class="live">
+        <div><b>当前代数 n</b><span id="ceN">0</span></div>
+        <div><b>DNA总数 2ⁿ</b><span id="ceTot">1</span></div>
+        <div><b>中带(含母链)个数</b><span id="ceMid">1</span></div>
+        <div><b>轻带个数</b><span id="ceLight">0</span></div>
+      </div>
+      <p class="small">试管里三个高度=重带(下)/中带(中)/轻带(上)。亲代全在重带；第1代全变中带；之后中带<b>个数恒为2</b>而轻带越来越多。柱高按个数比例画。</p>
+    </div>
+
+    <h2 class="o">④ 关键计算公式（背下来）</h2>
+    <div class="card">
+      <table>
+        <tr><th>问题</th><th>公式</th></tr>
+        <tr><td>复制 n 次后 DNA 总数</td><td><b>2ⁿ</b> 个</td></tr>
+        <tr><td>含亲代(母)链的 DNA 数</td><td><b>恒为 2</b> 个(半保留!)</td></tr>
+        <tr><td>全部由新原料构成的 DNA 数</td><td><b>2ⁿ − 2</b> 个</td></tr>
+        <tr><td>消耗某游离碱基总数(第 n 次后)</td><td>原 DNA 该碱基数 × <b>(2ⁿ − 1)</b></td></tr>
+        <tr><td>第 n 次复制(单独这一次)消耗</td><td>原 DNA 该碱基数 × <b>2ⁿ⁻¹</b></td></tr>
+        <tr><td>含母链的那条母链总数</td><td>母链共 2 条，分处 2 个 DNA 中</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>消耗公式怎么来:</b> n 次后共 2ⁿ 个 DNA，需要 2ⁿ 份链的量，但原来已有 1 份(母链)且母链被保留，实际<b>新合成 = 总量 − 原量</b>。以碱基计:一个 DNA 含某碱基 x 个，2ⁿ 个共 x·2ⁿ，原本有 x，故消耗 <b>x·(2ⁿ−1)</b>。</p>
+      <p class="trap">⚠ 「一共消耗」用 <b>2ⁿ−1</b>，「第 n 次单独消耗」用 <b>2ⁿ⁻¹</b>，两个极易混。含母链 DNA 永远 2 个(不是 2ⁿ⁻¹ 也不是 1 个)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 消耗游离碱基数演示：总量 2ⁿ − 1 倍 vs 单次 2ⁿ⁻¹ 倍</div>
+      <svg id="conSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>复制次数 n <input id="cnN" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>原DNA中该碱基数 <input id="cnX" type="range" min="1" max="20" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>DNA总数 2ⁿ</b><span id="cnTot">0</span></div>
+        <div><b>累计消耗 x(2ⁿ−1)</b><span id="cnCum">0</span></div>
+        <div><b>第n次消耗 x·2ⁿ⁻¹</b><span id="cnLast">0</span></div>
+        <div><b>累计÷单次</b><span id="cnRatio">0</span></div>
+      </div>
+      <p class="small">柱状图=每一代<b>新消耗</b>的碱基数(1,1,2,4,8…按 x·2^(k−1))。所有柱之和 = 累计 x(2ⁿ−1)。最后一根柱 = 第 n 次单独消耗。看「累计」和「单次」的区别。</p>
+    </div>
+
+    <h2 class="v">⑤ 含母链 DNA 恒为 2 · 含¹⁵N比例演示</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>核心结论:</b> 母链一共只有 2 条(亲代双链拆开)。半保留复制中这 2 条母链<b>各自被保留</b>，永远分处 2 个不同的子代 DNA 中。所以<b>含母链(含 ¹⁵N)的 DNA 个数恒为 2</b>，与复制多少代无关。</p>
+      <div class="eq">含母链 DNA 数 = 2　；　含母链 DNA 比例 = 2 / 2ⁿ = 1/2ⁿ⁻¹</div>
+      <p style="margin:8px 0"><b>个数 vs 比例:</b> 个数不变(2)，但<b>比例</b>随代数指数下降。第1代 2/2=100%，第2代 2/4=50%，第3代 2/8=25%…越复制，含母链的越「稀释」。</p>
+      <p class="trap">⚠ 这是全章最高频陷阱:问「个数」答 2，问「比例/占几分之几」答 2/2ⁿ。看清问的是哪个!</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🟡 互动 3 &amp; 6 — 含母链数恒为2 &amp; 含¹⁵N比例随代数：黄块永远2个，比例却在缩小</div>
+      <svg id="motSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="motPrev">◀ 上一代</button><button id="motNext">下一代 ▶</button><button id="motReset">↺ 回第1代</button>
+      </div>
+      <div class="live">
+        <div><b>代数 n</b><span id="moN">1</span></div>
+        <div><b>DNA总数 2ⁿ</b><span id="moTot">2</span></div>
+        <div><b>含母链个数</b><span id="moMom">2</span></div>
+        <div><b>含母链比例</b><span id="moRatio">100%</span></div>
+      </div>
+      <p class="small">每个小方块 = 一个子代 DNA。<b>金黄块 = 含一条母链</b>(含 ¹⁵N)，灰块 = 全新链。数金黄块:<b>永远只有 2 个</b>;但它们在越来越多的方块里，占比越来越小。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 碱基数量计算（第 n 代含某碱基总数）</h3>
+      <p><b class="tag">触发信号:</b>「复制 n 次后，所有 DNA 中含 A(或 G)多少个」，或「第 n 代 DNA 共含某碱基多少」。</p>
+      <p><b class="tag">标准动作:</b>先求一个 DNA 含该碱基数 x → 复制 n 次得 2ⁿ 个 DNA → 总数 = x·2ⁿ。注意碱基被完整复制，含量随 DNA 数同倍增。</p>
+      <p><b class="tag">示例(带解):</b>一个 DNA 含 A=200 个，复制 3 次。第3代共 2³=8 个 DNA，含 A 总数 = 200×8 = 1600 个。(T 同为 1600，因 A=T。)</p>
+      <p class="trap">陷阱:把「含某碱基总数」和「消耗游离碱基数」搞混——含量用 2ⁿ，消耗用 2ⁿ−1。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 含亲代链的 DNA 分子数（含原料/含母链）</h3>
+      <p><b class="tag">触发信号:</b>「复制 n 次后，含亲代链(母链/原 DNA 的链)的 DNA 有几个」「完全由新原料组成的有几个」。</p>
+      <p><b class="tag">标准动作:</b>含母链 DNA <b>恒为 2</b>(半保留，2 条母链各占1个);完全新料 = 总数 − 2 = 2ⁿ−2。</p>
+      <p><b class="tag">示例(带解):</b>1 个 DNA 复制 4 次 → 2⁴=16 个。含亲代链的 = 2 个;完全由新脱氧核苷酸构成的 = 16−2 = 14 个。</p>
+      <p class="trap">陷阱:误答含母链 = 2ⁿ⁻¹ 或 = 1。半保留下永远是 2(母链就 2 条)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 同位素标记离心分层</h3>
+      <p><b class="tag">触发信号:</b>¹⁵N/¹⁴N、³²P/³¹P、³H 标记，问离心后几条带、各带比例、哪代出现轻带。</p>
+      <p><b class="tag">标准动作:</b>全 ¹⁵N 母代→第1代全中带→之后中带对应 2 个含母链 DNA(个数恒2)，轻带 = 2ⁿ−2 个。中∶轻 = 2∶(2ⁿ−2) = 1∶(2ⁿ⁻¹−1)。</p>
+      <p><b class="tag">示例(带解):</b>全 ¹⁵N 的 DNA 转 ¹⁴N 复制 3 次。共 8 个:中带(含¹⁵N)=2，轻带=8−2=6。中∶轻 = 2∶6 = 1∶3;<b>无重带</b>(母链已分散到中带)。</p>
+      <p class="trap">陷阱:以为还有重带——第1代起重带就消失了(母链各自配了轻链)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 消耗游离碱基数计算</h3>
+      <p><b class="tag">触发信号:</b>「复制 n 次共需(消耗)多少个游离的 A/脱氧核苷酸」或「第 n 次复制消耗多少」。</p>
+      <p><b class="tag">标准动作:</b>累计消耗 = x·(2ⁿ−1);第 n 次单独消耗 = x·2ⁿ⁻¹(x=一个 DNA 含该碱基数)。</p>
+      <p><b class="tag">示例(带解):</b>1 个 DNA 含 T=300，复制 3 次。累计消耗 T = 300×(2³−1)=300×7=2100 个;第3次单独消耗 = 300×2²=1200 个。</p>
+      <p class="trap">陷阱:累计用 2ⁿ−1，单次用 2ⁿ⁻¹，别互换;别用 2ⁿ(那是产物 DNA 数不是消耗数)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 复制次数与产物统计</h3>
+      <p><b class="tag">触发信号:</b>给出产物 DNA 数或某统计量，反推复制次数 n;或问「n 次后有几条链是新的」。</p>
+      <p><b class="tag">标准动作:</b>2ⁿ=产物数 → 解 n(取对数或凑 2 的幂);总链数 = 2·2ⁿ，母链 2 条，新链 = 2·2ⁿ−2 = 2(2ⁿ−1)。</p>
+      <p><b class="tag">示例(带解):</b>某 DNA 复制后产生 32 个 DNA → 2ⁿ=32 → n=5 次。总链 = 64 条，其中母链 2 条、新链 62 条。含母链 DNA 仍 2 个。</p>
+      <p class="trap">陷阱:把「链数」当「DNA 数」;新链条数 = 2(2ⁿ−1) 别漏那个 2。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 半保留导致<b>含母链 DNA 恒为 2 个</b>，无论复制几代。问「比例」才是 2/2ⁿ。</p>
+      <p class="trap">② ¹⁵N 全标记转 ¹⁴N 离心:第1代<b>只有中带</b>(不是重+轻)!之后中带恒 2 个、轻带 2ⁿ−2 个，<b>无重带</b>。</p>
+      <p class="trap">③ 碱基计算分清「某<b>一条链</b>」和「整个 DNA」:只有整个双链才 A=T、G=C。</p>
+      <p class="trap">④ <b>消耗</b>游离碱基用 2ⁿ−1(累计)或 2ⁿ⁻¹(单次);<b>含有</b>某碱基总数用 2ⁿ。三者别混。</p>
+      <p class="trap">⑤ 复制时间在<b>间期</b>(有丝/减一前)，不是分裂中期后期;原料是<b>脱氧核苷酸</b>不是碱基、不是核糖核苷酸。</p>
+      <p class="trap">⑥ 解旋酶拆氢键、DNA 聚合酶连核苷酸;别把 RNA 聚合酶(转录用)扯进来。</p>
+      <p class="trap">⑦ 一条链上 A₁ 与 T₁ 不一定相等;但 A₁=T₂、G₁=C₂(与互补链换位相等)。</p>
+      <p class="trap">⑧ 「个数」与「比例」是两码事,读题看清问哪个(含母链个数=2，比例=2/2ⁿ)。</p>
+      <p class="trap">⑨ 边解旋边复制:不是先全解开再复制，而是解一段配一段(半不连续)。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 「守恒量」思维——母链是不灭的 2 条:</b> 把 2 条母链当成两个被永久保留的「印章」，无论复制多少次，它们只是被稀释进越来越多的 DNA，从不消失也不增多。凡是问「含母链/含旧标记」的<b>个数</b>，答案永远锁死 2;问<b>比例</b>就是 2/2ⁿ。抓住这条守恒线，一整类题秒杀。</p>
+      <p style="margin:8px 0"><b>② 消耗 = 总量 − 库存:</b> 消耗公式 x(2ⁿ−1) 的本质是「产物总链的碱基量 − 原本已有的量」。想成会计:期末总量 x·2ⁿ，期初库存 x，消耗 = 期末−期初。这样你永远不必背，现推即可，还能推广到「共消耗多少条链」= 2(2ⁿ−1)。</p>
+      <p style="margin:8px 0"><b>③ 离心带型 = 母链去向的可视化:</b> 重带→中带→(中+轻)的演变，本质是「那 2 条重母链怎样被逐代分配」。中带永远只装 2 个含母链的 DNA;轻带装的是「双新链」DNA。把带型翻译成「母链在哪」，任何标记实验(¹⁵N、³²P、³H、BrdU)都同一套逻辑。</p>
+      <p style="margin:8px 0"><b>④ 碱基互补的「换位对称」:</b> A₁=T₂、T₁=A₂、G₁=C₂、C₁=G₂——一条链的某碱基 = 互补链对应碱基。由此(A₁+T₁)/(G₁+C₁) 在两条链相等，整个 DNA 相等。掌握这层对称，「给一条链的比例求整个 DNA 或另一条链」的题就变成机械换位。</p>
+      <p style="margin:8px 0"><b>⑤ 复制 vs 转录 vs 翻译的原料/酶/产物对照:</b> 复制(脱氧核苷酸/解旋酶+DNA聚合酶/DNA)、转录(核糖核苷酸/RNA聚合酶/RNA)、翻译(氨基酸/无需模板酶但需 tRNA·核糖体/蛋白质)。三者最爱在选择题里互相设套,列一张对照表反复默写，原料和酶就不会张冠李戴。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:基因的表达(转录/翻译)攻坚包、有丝分裂与减数分裂攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GOLD="#D9A400",GREY="#9a9284";
+
+/* ===== 互动1:边解旋边复制动画 ===== */
+(function(){
+  const svg=document.getElementById('repSvg');
+  const Spd=document.getElementById('repSpd');
+  const oN=document.getElementById('repN'),oNew=document.getElementById('repNew'),oDna=document.getElementById('repDna'),oMake=document.getElementById('repMake');
+  const seqTop="ATGCTAGCATGCTAGC"; // 老链上链
+  const comp={A:"T",T:"A",G:"C",C:"G"};
+  const N=seqTop.length;
+  let prog=0,running=false,speed=3;
+  Spd.oninput=()=>{speed=+Spd.value;};
+  function draw(){
+    clr(svg);
+    const X0=40,step=38,yTop=70,yBot=210,forkAt=prog; // number of pairs opened
+    el(svg,'text',{x:20,y:26,'font-size':13,'font-weight':900,fill:INK}).textContent='边解旋边复制：金=老链(模板)，蓝=新链，A-T/G-C 配对';
+    for(let i=0;i<N;i++){
+      const x=X0+i*step;
+      const opened=i<forkAt;
+      // top old strand always gold
+      el(svg,'rect',{x:x,y:yTop-14,width:30,height:26,fill:GOLD,stroke:INK,'stroke-width':2,rx:4});
+      el(svg,'text',{x:x+15,y:yTop+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=seqTop[i];
+      // bottom old strand always gold
+      el(svg,'rect',{x:x,y:yBot-14,width:30,height:26,fill:GOLD,stroke:INK,'stroke-width':2,rx:4});
+      el(svg,'text',{x:x+15,y:yBot+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=comp[seqTop[i]];
+      if(opened){
+        // new strand paired to top old (below top) - blue
+        el(svg,'rect',{x:x,y:yTop+22,width:30,height:26,fill:BLUE,stroke:INK,'stroke-width':2,rx:4});
+        el(svg,'text',{x:x+15,y:yTop+41,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=comp[seqTop[i]];
+        // new strand paired to bottom old (above bottom) - blue
+        el(svg,'rect',{x:x,y:yBot-48,width:30,height:26,fill:BLUE,stroke:INK,'stroke-width':2,rx:4});
+        el(svg,'text',{x:x+15,y:yBot-29,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=seqTop[i];
+      } else {
+        // still double helix: hydrogen bond dashes
+        el(svg,'line',{x1:x+15,y1:yTop+14,x2:x+15,y2:yBot-14,stroke:'#b9a', 'stroke-width':2,'stroke-dasharray':'3 4'});
+      }
+    }
+    // fork marker
+    const fx=X0+forkAt*step;
+    if(forkAt>0&&forkAt<N){el(svg,'text',{x:fx,y:150,'font-size':22,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='◄解旋';}
+    oN.textContent=Math.min(N,Math.floor(forkAt));
+    oNew.textContent=Math.min(N,Math.floor(forkAt))*2;
+    oDna.textContent=forkAt>=N?2:1;
+    oMake.textContent=forkAt>=N?'1金+1蓝':'复制中';
+  }
+  function loop(){
+    if(!running)return;
+    prog+=0.06*speed;
+    if(prog>=N){prog=N;running=false;}
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('repGo').onclick=()=>{prog=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('repReset').onclick=()=>{prog=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动5:碱基互补配对计数器 ===== */
+(function(){
+  const svg=document.getElementById('baseSvg');
+  const A=document.getElementById('bA'),T=document.getElementById('bT'),G=document.getElementById('bG'),C=document.getElementById('bC');
+  const oAT=document.getElementById('bAT'),oGC=document.getElementById('bGC'),oTot=document.getElementById('bTot'),oGCr=document.getElementById('bGCr');
+  function sync(){draw();}
+  A.oninput=T.oninput=G.oninput=C.oninput=sync;
+  function bar(x,y,w,h,fill,lab,val){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:fill,stroke:INK,'stroke-width':2,rx:3});
+    el(svg,'text',{x:x+w/2,y:y+h/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=lab+':'+val;
+  }
+  function draw(){
+    clr(svg);
+    const a=+A.value,t=+T.value,g=+G.value,c=+C.value;
+    // whole DNA: A_total=a+t, T=a+t; G=g+c, C=g+c
+    const AT=a+t, GC=g+c, tot=2*(a+t+g+c);
+    const gcr=tot? ( (GC*2)/tot*100 ):0;
+    oAT.textContent=AT;oGC.textContent=GC;oTot.textContent=tot;oGCr.textContent=gcr.toFixed(1)+'%';
+    el(svg,'text',{x:20,y:20,'font-size':12.5,'font-weight':900,fill:INK}).textContent='链1(你设定) →  链2 自动互补(A↔T, G↔C)';
+    // strand1 blocks
+    const y1=40,y2=110,bw=42,gap=8;let x=30;
+    const s1=[['A',a,GREEN],['T',t,RED],['G',g,BLUE],['C',c,VIO]];
+    s1.forEach(o=>{bar(x,y1,bw,44,o[2],o[0]+'₁',o[1]);x+=bw+gap;});
+    // strand2 (complement): A2=t? no -> complement of strand1: where strand1 has A, strand2 has T etc.
+    // strand2 counts: A2=t1's? Actually strand2 A pairs strand1 T => A2 = t (number of T in strand1). etc.
+    x=30;
+    const s2=[['A',t,GREEN],['T',a,RED],['G',c,BLUE],['C',g,VIO]];
+    s2.forEach(o=>{bar(x,y2,bw,44,o[2],o[0]+'₂',o[1]);x+=bw+gap;});
+    el(svg,'text',{x:250,y:64,'font-size':12,'font-weight':800,fill:INK}).textContent='整个DNA：A=T='+AT+'，G=C='+GC;
+    el(svg,'text',{x:250,y:134,'font-size':12,'font-weight':800,fill:INK}).textContent='A₂=T₁，T₂=A₁，G₂=C₁，C₂=G₁';
+    el(svg,'text',{x:250,y:200,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='总碱基='+tot+'，(G+C)占比='+gcr.toFixed(1)+'%';
+  }
+  draw();
+})();
+
+/* ===== 互动2:离心分层带型 ===== */
+(function(){
+  const svg=document.getElementById('centSvg');
+  const oN=document.getElementById('ceN'),oTot=document.getElementById('ceTot'),oMid=document.getElementById('ceMid'),oLight=document.getElementById('ceLight');
+  let n=0;
+  function counts(g){
+    // g=generation. total=2^g. heavy: only g==0 -> all heavy(1 dna, 2 heavy strands)
+    // g==0: 1 DNA heavy (both strands 15N) -> heavy band
+    // g>=1: mid = 2 (contain a 15N strand), light = 2^g - 2, heavy = 0
+    const tot=Math.pow(2,g);
+    if(g===0)return{heavy:1,mid:0,light:0,tot:1};
+    return{heavy:0,mid:2,light:tot-2,tot:tot};
+  }
+  function draw(){
+    clr(svg);
+    const c=counts(n);
+    oN.textContent=n;oTot.textContent=c.tot;oMid.textContent=c.mid;oLight.textContent=c.light;
+    // draw a test tube with three band positions
+    const tubeX=80,tubeW=180,top=40,H=220;
+    el(svg,'rect',{x:tubeX,y:top,width:tubeW,height:H,fill:'#fbfbf6',stroke:INK,'stroke-width':3,rx:8});
+    // band y-positions: light(top), mid, heavy(bottom)
+    const yLight=top+40,yMid=top+110,yHeavy=top+180;
+    const denom=c.tot;
+    function band(y,cnt,col,lab){
+      if(cnt<=0){el(svg,'text',{x:tubeX+tubeW+16,y:y+5,'font-size':12,'font-weight':800,fill:'#aaa'}).textContent=lab+'：0';return;}
+      const frac=cnt/denom; const h=Math.max(10,frac*70);
+      el(svg,'rect',{x:tubeX+8,y:y-h/2,width:tubeW-16,height:h,fill:col,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:tubeX+tubeW+16,y:y+5,'font-size':12.5,'font-weight':900,fill:INK}).textContent=lab+'：'+cnt+'个 ('+(frac*100).toFixed(0)+'%)';
+    }
+    band(yLight,c.light,'#bfe3d9','轻带 ¹⁴N/¹⁴N');
+    band(yMid,c.mid,'#8fb7e6','中带 ¹⁵N/¹⁴N');
+    band(yHeavy,c.heavy,'#e6a15c','重带 ¹⁵N/¹⁵N');
+    el(svg,'text',{x:tubeX,y:top-12,'font-size':13,'font-weight':900,fill:INK}).textContent='离心管：越往下密度越大';
+    el(svg,'text',{x:tubeX+tubeW/2,y:top+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='第 '+n+' 代 · 共 '+c.tot+' 个 DNA';
+    const note = n===0?'亲代：全 ¹⁵N，只有重带':(n===1?'第1代：全部中带(证明半保留！无重带无轻带)':'第'+n+'代：中带恒2个，轻带越来越多，无重带');
+    el(svg,'text',{x:tubeX+tubeW/2,y:top+H+42,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent=note;
+  }
+  document.getElementById('centNext').onclick=()=>{if(n<6){n++;draw();}};
+  document.getElementById('centPrev').onclick=()=>{if(n>0){n--;draw();}};
+  document.getElementById('centReset').onclick=()=>{n=0;draw();};
+  draw();
+})();
+
+/* ===== 互动4:消耗游离碱基 ===== */
+(function(){
+  const svg=document.getElementById('conSvg');
+  const N=document.getElementById('cnN'),X=document.getElementById('cnX');
+  const oTot=document.getElementById('cnTot'),oCum=document.getElementById('cnCum'),oLast=document.getElementById('cnLast'),oRatio=document.getElementById('cnRatio');
+  N.oninput=X.oninput=draw;
+  function draw(){
+    clr(svg);
+    const n=+N.value,x=+X.value;
+    const tot=Math.pow(2,n);
+    const cum=x*(tot-1);
+    const last=x*Math.pow(2,n-1);
+    oTot.textContent=tot;oCum.textContent=cum;oLast.textContent=last;oRatio.textContent=(cum/last).toFixed(2);
+    // bars: each generation k(1..n) new consumption = x*2^(k-1)
+    const X0=60,Y0=40,W=580,H=200,base=Y0+H;
+    el(svg,'line',{x1:X0,y1:base,x2:X0+W,y2:base,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:base,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0,y:Y0-14,'font-size':13,'font-weight':900,fill:INK}).textContent='每一代新消耗该碱基数 = x·2^(k−1)，柱之和 = 累计 x(2ⁿ−1)';
+    const maxVal=x*Math.pow(2,n-1);
+    const bw=W/(n+1);
+    for(let k=1;k<=n;k++){
+      const v=x*Math.pow(2,k-1);
+      const h=(v/maxVal)*H;
+      const bx=X0+(k-1)*bw+bw*0.15;
+      const col=k===n?RED:BLUE;
+      el(svg,'rect',{x:bx,y:base-h,width:bw*0.7,height:h,fill:col,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:bx+bw*0.35,y:base-h-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=v;
+      el(svg,'text',{x:bx+bw*0.35,y:base+18,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='第'+k+'次';
+    }
+    el(svg,'text',{x:X0+W-8,y:Y0+10,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='红=第n次单独消耗 '+last;
+    el(svg,'text',{x:X0+W-8,y:Y0+30,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='累计 '+cum+' = '+x+'×(2^'+n+'−1)';
+  }
+  draw();
+})();
+
+/* ===== 互动3&6:含母链数恒为2 & 含15N比例 ===== */
+(function(){
+  const svg=document.getElementById('motSvg');
+  const oN=document.getElementById('moN'),oTot=document.getElementById('moTot'),oMom=document.getElementById('moMom'),oRatio=document.getElementById('moRatio');
+  let n=1;
+  function draw(){
+    clr(svg);
+    const tot=Math.pow(2,n);
+    const mom=2; // always 2 contain a mother strand
+    const ratio=(mom/tot*100);
+    oN.textContent=n;oTot.textContent=tot;oMom.textContent=mom;oRatio.textContent=ratio.toFixed(1)+'%';
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='每方块=1个子代DNA；金黄=含母链(含¹⁵N)，永远只有2个';
+    // grid of tot blocks
+    const cols=Math.min(8,tot), rows=Math.ceil(tot/cols);
+    const gx=40,gy=50,cw=Math.min(72,(620/cols)),ch=42,gap=8;
+    for(let i=0;i<tot;i++){
+      const r=Math.floor(i/cols),c=i%cols;
+      const x=gx+c*(cw+gap),y=gy+r*(ch+gap);
+      const isMom=i<2; // first two carry a mother strand
+      el(svg,'rect',{x:x,y:y,width:cw,height:ch,fill:isMom?GOLD:'#d8d2c2',stroke:INK,'stroke-width':2,rx:5});
+      if(isMom){
+        // draw a gold(old) + grey(new) split to show one mother strand
+        el(svg,'rect',{x:x+4,y:y+6,width:cw-8,height:12,fill:'#b8860b',stroke:INK,'stroke-width':1});
+        el(svg,'rect',{x:x+4,y:y+ch-18,width:cw-8,height:12,fill:'#efe7d0',stroke:INK,'stroke-width':1});
+      }
+    }
+    const by=gy+rows*(ch+gap)+18;
+    el(svg,'text',{x:40,y:by,'font-size':13,'font-weight':900,fill:INK}).textContent='第 '+n+' 代：共 '+tot+' 个 DNA，含母链 = 2 个（个数恒定！）';
+    el(svg,'text',{x:40,y:by+22,'font-size':13,'font-weight':900,fill:RED}).textContent='含母链比例 = 2 / '+tot+' = '+ratio.toFixed(1)+'%（比例随代数缩小）';
+  }
+  document.getElementById('motNext').onclick=()=>{if(n<6){n++;draw();}};
+  document.getElementById('motPrev').onclick=()=>{if(n>1){n--;draw();}};
+  document.getElementById('motReset').onclick=()=>{n=1;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. DNA 复制发生在细胞周期的什么时期？在哪些分裂中？",a:"发生在分裂间期，包括有丝分裂间期和减数第一次分裂前的间期。复制在分裂之前完成，使 DNA 加倍。"},
+ {q:"2. DNA 复制需要哪些条件（模板/原料/酶/能量）？",a:"模板：解旋后的两条母链；原料：4 种游离的脱氧核苷酸；酶：解旋酶(拆氢键)+DNA 聚合酶(连接)；能量：ATP。场所主要在细胞核。"},
+ {q:"3. 什么是半保留复制？为什么含母链的 DNA 永远是 2 个？",a:"每条子代 DNA 由一条母链和一条新链组成。母链一共只有 2 条(亲代双链拆开)，各自保留进一个子代 DNA，故含母链 DNA 恒为 2 个，与代数无关。"},
+ {q:"4. 碱基互补配对法则？整个双链 DNA 中有哪些等量关系？",a:"A 配 T、G 配 C。整个双链 DNA：A=T，G=C，A+G=T+C(嘌呤=嘧啶=50%)。但一条链上 A 不一定等于 T。"},
+ {q:"5. 一个 DNA 含 A=200，复制 3 次后所有 DNA 共含 A 多少个？",a:"复制 3 次得 2³=8 个 DNA，共含 A=200×8=1600 个(T 也是 1600)。含量用 2ⁿ。"},
+ {q:"6. 一个 DNA 复制 4 次，含亲代链的 DNA 有几个？完全由新原料构成的有几个？",a:"2⁴=16 个。含亲代链的=2 个(半保留)；完全新料=16−2=14 个。"},
+ {q:"7. 一个 DNA 含 T=300，复制 3 次共消耗游离 T 多少个？第 3 次单独消耗多少？",a:"累计=300×(2³−1)=300×7=2100 个；第 3 次单独=300×2²=1200 个。累计用 2ⁿ−1，单次用 2ⁿ⁻¹。"},
+ {q:"8. 梅塞尔森-斯塔尔实验中，全 ¹⁵N 的 DNA 转 ¹⁴N 复制 1 代，离心出现几条带？说明什么？",a:"只出现一条中带(¹⁵N/¹⁴N 杂合)。若是全保留应出现重带+轻带两条，实际只有中带，证明是半保留复制。"},
+ {q:"9. 上题继续复制到第 3 代，中带和轻带各几个？有重带吗？",a:"共 8 个 DNA：中带(含¹⁵N)=2 个，轻带=8−2=6 个，中∶轻=1∶3。无重带(母链已各配一条轻链)。"},
+ {q:"10. 含母链 DNA 的『个数』和『比例』分别是多少（复制 n 代）？",a:"个数恒为 2；比例=2/2ⁿ=1/2ⁿ⁻¹。第2代比例50%，第3代25%…个数不变但比例随代数缩小。这是高频陷阱。"},
+ {q:"11. 某 DNA 复制后得到 32 个 DNA，复制了几次？其中母链、新链各几条？",a:"2ⁿ=32→n=5 次。总链=2×32=64 条，母链 2 条，新链=64−2=62 条=2(2⁵−1)。含母链 DNA 仍为 2 个。"},
+ {q:"12. 已知一条链中 A₁∶T₁∶G₁∶C₁=1∶2∶3∶4，整个 DNA 中 A∶T∶G∶C 是多少？",a:"整个 DNA：A=T=A₁+T₁∝(1+2)=3；G=C=G₁+C₁∝(3+4)=7。故 A∶T∶G∶C=3∶3∶7∶7。整链一定 A=T、G=C。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

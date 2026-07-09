@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>兴奋的产生与传导 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>兴奋的产生与传导</h1>
+    <p class="lead">神经调节的核心，就是一场沿着神经跑的<b>电位翻转波</b>。这一页把三件事讲透:兴奋<b>怎么产生</b>(静息电位与动作电位、离子进出)、在神经纤维上<b>怎么跑</b>(局部电流、双向传导)、跨过突触<b>怎么传</b>(化学递质、单向传递)。搞清「电信号↔化学信号」的两次转换,反射弧和电流计题就全通了。</p>
+
+    <div class="say">🗣️ <b>兴奋(人话版):</b> 兴奋就是神经上的一次「<b>电位翻转波</b>」。<b>没受刺激时</b>,细胞膜外面是正、里面是负(叫静息电位,靠 K⁺ 往外漏维持);<b>受刺激那一点</b>,大门 Na⁺ 冲进来,这一小段立刻翻成外负内正。翻转的地方和旁边没翻的地方之间就有了<b>电流</b>(局部电流),这股电流又去「叫醒」旁边,一处接一处往前推——兴奋就这样跑起来了。跑到突触口,电信号变成<b>化学递质</b>喷过去,再在下一个细胞变回电信号。</div>
+
+    <div class="keybox"><b>一句话主线:</b> <b>静息电位(外正内负,K⁺外流) → 刺激处 Na⁺内流翻成外负内正(动作电位) → 与邻处形成局部电流 → 电流刺激邻处也翻转 → 兴奋在纤维上双向传导 → 到突触处变递质,只能前膜→后膜,单向传递。</b>电信号↔化学信号,一路转换。</div>
+
+    <h2>① 静息电位:外正内负,靠 K⁺ 外流</h2>
+    <div class="card">
+      <div class="eq">静息电位:膜外正、膜内负(外正内负)</div>
+      <p style="margin:8px 0">神经细胞没受刺激时,细胞膜对 <b>K⁺ 有通透性</b>,K⁺ 顺浓度差(内高外低)<b>外流</b>,把正电荷带到膜外,于是形成「<b>膜外正、膜内负</b>」的电位差,这就是静息电位。它是一种<b>协助扩散</b>(顺浓度梯度,靠通道蛋白),<b>不消耗 ATP</b>。</p>
+      <table>
+        <tr><th>项目</th><th>静息电位</th></tr>
+        <tr><td>膜电位状态</td><td><b>外正内负</b>(外正内负)</td></tr>
+        <tr><td>关键离子</td><td><b>K⁺ 外流</b>(细胞内 K⁺ 浓度高)</td></tr>
+        <tr><td>方式</td><td>协助扩散(顺浓度,通道蛋白),<b>不耗 ATP</b></td></tr>
+      </table>
+      <p class="trap">⚠ 静息电位是 <b>K⁺ 外流</b>不是 Na⁺;是<b>协助扩散、不耗能</b>。别把它和「钠钾泵主动运输」混——泵是维持内外浓度差的幕后功臣,但静息电位本身的形成是 K⁺ 顺浓度外流。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔋 互动 1 — 离子分布与膜电位:静息(外正内负) → 受刺激翻转(外负内正)</div>
+      <svg id="ionSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ionRest">静息态(K⁺外流)</button><button id="ionAct">受刺激(Na⁺内流)</button>
+      </div>
+      <div class="live">
+        <div><b>膜外电位</b><span id="ionOut">+</span></div>
+        <div><b>膜内电位</b><span id="ionIn">−</span></div>
+        <div><b>主导离子</b><span id="ionK">K⁺外流</span></div>
+        <div><b>是否耗ATP</b><span id="ionATP">否</span></div>
+      </div>
+      <p class="small">上排=膜外,下排=膜内。静息时 K⁺ 往外漏 → 外正内负;点「受刺激」看 Na⁺ 冲进来 → 电位<b>翻转</b>成外负内正。这就是一个点上的动作电位。</p>
+    </div>
+
+    <h2 class="b">② 动作电位:Na⁺ 内流,翻成外负内正</h2>
+    <div class="card">
+      <div class="eq">动作电位:膜外负、膜内正(外负内正)</div>
+      <p style="margin:8px 0">受到<b>足够强的刺激</b>时,细胞膜对 <b>Na⁺ 的通透性突然增大</b>,Na⁺ 顺浓度差(外高内低)<b>大量内流</b>,把正电荷送进膜内,使这一段膜电位<b>由外正内负翻转为外负内正</b>——这就是动作电位(兴奋)。随后 Na⁺ 通道关、K⁺ 通道开,K⁺ 外流,电位<b>恢复</b>到静息状态。</p>
+      <div class="mono">刺激 → Na⁺内流(去极化) → 峰值(外负内正) → K⁺外流(复极化) → 恢复静息(外正内负)</div>
+      <p style="margin:8px 0"><b>Na⁺ 内流也是协助扩散</b>(顺浓度、靠通道、不耗 ATP)。恢复静息后,靠<b>钠钾泵</b>(主动运输,耗 ATP)把跑错位的 Na⁺、K⁺ 搬回去,维持浓度差。</p>
+      <p class="trap">⚠ 动作电位是 <b>Na⁺ 内流</b>造成的,不是 K⁺。峰值时膜内电位比膜外高(外负内正),别写反。Na⁺ 内流本身<b>不耗 ATP</b>(顺浓度);耗 ATP 的是事后钠钾泵复原。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 2 — 动作电位曲线(−70→+30→恢复)与 Na⁺/K⁺ 通道开关联动</div>
+      <svg id="apSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="apGo">▶ 给一次刺激</button><button id="apReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>膜电位 (mV)</b><span id="apV">−70</span></div>
+        <div><b>阶段</b><span id="apPhase">静息</span></div>
+        <div><b>Na⁺ 通道</b><span id="apNa">关</span></div>
+        <div><b>K⁺ 通道</b><span id="apKch">开(漏)</span></div>
+      </div>
+      <p class="small">曲线从静息 <b>−70mV</b> 被刺激后 Na⁺ 内流冲到 <b>+30mV</b>(外负内正),再 K⁺ 外流<b>复极化</b>回 −70mV。下方两条灯带显示 Na⁺/K⁺ 通道此刻是开还是关。</p>
+    </div>
+
+    <h2 class="g">③ 局部电流:兴奋在神经纤维上的传导</h2>
+    <div class="card">
+      <p style="margin:6px 0">某一点变成动作电位(外负内正)后,它和<b>相邻的未兴奋段</b>(仍外正内负)之间就存在电位差,于是产生<b>局部电流</b>。这股电流刺激相邻段也发生 Na⁺ 内流、翻转成兴奋——如此一段接一段,兴奋就沿神经纤维<b>传导</b>下去。</p>
+      <div class="mono">局部电流方向:膜外由「未兴奋区」流向「兴奋区」;膜内由「兴奋区」流向「未兴奋区」。</div>
+      <p style="margin:8px 0"><b>传导方向 = 兴奋区向两侧未兴奋区推进</b>的方向。在膜内,局部电流方向与兴奋传导方向<b>一致</b>;在膜外,与传导方向<b>相反</b>(这是判断题眼)。</p>
+      <p class="trap">⚠ 「局部电流方向」要分膜内膜外说,别只答一个方向。记:<b>膜内电流方向 = 兴奋传导方向</b>;膜外相反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌊 互动 3 — 刺激后兴奋向两侧双向传导 + 局部电流箭头</div>
+      <canvas id="condCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button id="condGo">▶ 在中间刺激</button><button id="condReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>刺激点</b><span id="cdPt">中央</span></div>
+        <div><b>传导方向</b><span id="cdDir">向两侧</span></div>
+        <div><b>膜内电流</b><span id="cdIn">同传导向</span></div>
+        <div><b>膜外电流</b><span id="cdOut">反传导向</span></div>
+      </div>
+      <p class="small">在<b>神经纤维中央</b>刺激,红色兴奋区(外负内正)向<b>两侧同时</b>扩散——离体神经纤维上兴奋是<b>双向传导</b>的。箭头显示膜内/膜外局部电流方向。</p>
+    </div>
+
+    <h2 class="o">④ 突触传递:电→化学→电,只能单向</h2>
+    <div class="card">
+      <h3>突触结构:前膜 / 间隙 / 后膜</h3>
+      <p style="margin:6px 0">一个神经元的轴突末梢膨大成<b>突触小体</b>,与下一个神经元(或效应器)相接处叫<b>突触</b>,由三部分组成:</p>
+      <table>
+        <tr><th>结构</th><th>说明</th></tr>
+        <tr><td><b>突触前膜</b></td><td>突触小体的膜,内有含<b>神经递质</b>的<b>突触小泡</b></td></tr>
+        <tr><td><b>突触间隙</b></td><td>前后膜之间的空隙,充满组织液,递质在此扩散</td></tr>
+        <tr><td><b>突触后膜</b></td><td>下一神经元的膜,上有<b>受体(特异性)</b>,只在此接收递质</td></tr>
+      </table>
+      <h3>传递过程与信号转换</h3>
+      <div class="mono">兴奋(电)到前膜 → 突触小泡释放递质(胞吐,耗ATP)入间隙 → 递质扩散过间隙 → 与后膜受体结合 → 后膜产生电位变化(化学→电)</div>
+      <p style="margin:8px 0"><b>为什么单向?</b> 递质<b>只能由突触前膜释放</b>、只作用于突触后膜上的受体。递质不能倒着从后膜释放。这就决定了兴奋在突触处<b>只能由前膜→后膜、单向传递</b>。加上递质释放、扩散需要时间,还造成<b>突触延搁</b>。</p>
+      <p class="trap">⚠ 突触处信号转换是「<b>电信号→化学信号→电信号</b>」两次转换;在神经纤维上则一直是电信号。单向传递的根本原因是<b>递质只从前膜释放、作用后膜受体</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 4 — 突触传递动画:电信号 → 递质释放扩散 → 后膜电信号(单向)</div>
+      <canvas id="synCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="synGo">▶ 传一次(前→后)</button><button id="synReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前信号</b><span id="syType">电信号</span></div>
+        <div><b>位置</b><span id="syPos">突触前膜</span></div>
+        <div><b>方向</b><span id="syDir">前膜→后膜</span></div>
+        <div><b>能否倒传</b><span id="syBack">不能</span></div>
+      </div>
+      <p class="small">左神经元电信号到<b>前膜</b>→小泡释放递质(黄点)扩散过<b>间隙</b>→与<b>后膜</b>受体结合→右神经元产生电信号。递质只从前膜出、只作用后膜 → <b>单向</b>。</p>
+    </div>
+
+    <h2 class="v">⑤ 兴奋性递质 vs 抑制性递质</h2>
+    <div class="card">
+      <p style="margin:6px 0">递质与后膜受体结合后,对后膜电位的影响分两类:</p>
+      <table>
+        <tr><th>类型</th><th>对后膜作用</th><th>结果</th></tr>
+        <tr><td><b>兴奋性递质</b></td><td>使后膜发生 Na⁺ 内流,趋向去极化</td><td>后神经元<b>兴奋</b>(产生动作电位)</td></tr>
+        <tr><td><b>抑制性递质</b></td><td>使后膜更「外正内负」(超极化)</td><td>后神经元<b>被抑制</b>,不易兴奋</td></tr>
+      </table>
+      <p style="margin:8px 0">所以<b>突触前膜释放兴奋≠后膜一定兴奋</b>:递质是兴奋性的才让后膜兴奋,抑制性递质反而让后膜更难兴奋。这解释了神经系统「有开有关」的调控。</p>
+      <p class="trap">⚠ 别默认「递质=让下一个兴奋」。递质有<b>兴奋性和抑制性</b>两种;抑制性递质让后膜更负、更难产生动作电位。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 兴奋性 vs 抑制性递质对后膜电位的不同影响</div>
+      <svg id="ntSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ntmode on" data-m="0">兴奋性递质</button>
+        <button class="ntmode" data-m="1">抑制性递质</button>
+      </div>
+      <div class="verdict" id="ntNote"></div>
+      <p class="small">同样是前膜释放递质,后膜命运不同:兴奋性递质→Na⁺内流→后膜去极化→可能达到阈值<b>兴奋</b>;抑制性递质→后膜超极化→更负→<b>被抑制</b>。</p>
+    </div>
+
+    <h2 class="r">⑥ 电流计指针偏转:双电极题的套路</h2>
+    <div class="card">
+      <p style="margin:6px 0">电流计题考的就是「兴奋依次到达两个电极,造成指针偏转」。两根电极接在膜外(或膜表面)不同两点 a、b:</p>
+      <table>
+        <tr><th>刺激位置</th><th>偏转情况</th></tr>
+        <tr><td>刺激 a、b <b>正中间</b></td><td>兴奋<b>同时</b>到 a、b → 两点电位始终相同 → 指针<b>不偏转</b></td></tr>
+        <tr><td>刺激 <b>靠近 a</b>(或某一侧)</td><td>兴奋<b>先到 a 后到 b</b> → 指针先偏一个方向,再<b>反向</b>偏一次 → 共偏转 <b>2 次、方向相反</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么两次?</b> 兴奋到 a 时 a 变负、b 还正 → 电流从 b→a,指针偏一次;兴奋越过 a 到 b 时 b 变负、a 已恢复正 → 电流反向,指针再偏一次(方向相反)。若中间刺激,两电极同时变化,电位差始终为 0 → 不偏。</p>
+      <p class="trap">⚠ 突触<b>单向</b>:若两电极间隔着突触且刺激在突触后侧,兴奋传不回突触前电极,可能只偏 <b>1 次</b>。判断偏转次数先看:兴奋能不能依次到达<b>两个</b>电极。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 6 — 电流计双电极指针偏转(兴奋依次到达两电极)</div>
+      <canvas id="galCv" width="700" height="230"></canvas>
+      <svg id="galMeter" viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="galmode on" data-m="0">刺激正中间</button>
+        <button class="galmode" data-m="1">刺激靠 a 一侧</button>
+        <button id="galGo">▶ 刺激</button><button id="galReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>刺激点</b><span id="gaPt">中间</span></div>
+        <div><b>到 a</b><span id="gaA">—</span></div>
+        <div><b>到 b</b><span id="gaB">—</span></div>
+        <div><b>偏转次数</b><span id="gaN">0</span></div>
+      </div>
+      <p class="small">红色兴奋波经过电极 a、b。中间刺激→同时到达→电位差恒为0→指针<b>不偏</b>;偏一侧刺激→先到 a 后到 b→指针偏 <b>2 次且方向相反</b>。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断膜电位状态与离子流向</h3>
+      <p><b class="tag">触发信号:</b>给「膜外正膜内负 / 外负内正」「静息 / 动作电位」,问此刻是什么离子在进出、方向如何。</p>
+      <p><b class="tag">标准动作:</b>外正内负=<b>静息</b>=<b>K⁺外流</b>(协助扩散,不耗ATP);外负内正=<b>动作</b>=<b>Na⁺内流</b>(协助扩散)。恢复期 K⁺外流复极化,事后钠钾泵(耗ATP)复原浓度。</p>
+      <p><b class="tag">示例(带解):</b>某点测得膜电位由 −70mV 升到 +30mV。说明该点受刺激后 <b>Na⁺ 内流</b>,膜由外正内负翻转为外负内正,产生动作电位;此内流是顺浓度的协助扩散,不消耗 ATP。</p>
+      <p class="trap">陷阱:静息说成 Na⁺;动作说成 K⁺;把「顺浓度协助扩散」当成主动运输耗能。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 局部电流方向与传导方向</h3>
+      <p><b class="tag">触发信号:</b>问「局部电流方向」「膜内/膜外电流方向」「兴奋传导方向」。</p>
+      <p><b class="tag">标准动作:</b>膜内电流由兴奋区(内正)流向未兴奋区(内负),<b>与传导方向一致</b>;膜外电流由未兴奋区(外正)流向兴奋区(外负),<b>与传导方向相反</b>。传导方向=兴奋向未兴奋侧推进。</p>
+      <p><b class="tag">示例(带解):</b>纤维左端受刺激,兴奋向右传导。则<b>膜内</b>局部电流向右(与传导同向),<b>膜外</b>向左(与传导反向)。</p>
+      <p class="trap">陷阱:只答一个方向不分膜内膜外;把膜外方向当成传导方向。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 双向传导 vs 单向传递</h3>
+      <p><b class="tag">触发信号:</b>「离体神经纤维中央刺激」「经过突触后」问兴奋能否传到某处、往哪些方向传。</p>
+      <p><b class="tag">标准动作:</b>在<b>神经纤维上双向</b>(中央刺激向两侧都传);在<b>突触处单向</b>(只能前膜→后膜)。经过突触的通路,兴奋只能沿一个方向,遇突触后侧刺激传不回前神经元。</p>
+      <p><b class="tag">示例(带解):</b>中央刺激离体神经纤维,两侧电极都能测到兴奋(双向);但在反射弧中刺激传出神经,兴奋不能经突触逆传回传入神经(单向)。</p>
+      <p class="trap">陷阱:把「纤维上双向」错当「整条反射弧双向」;反射弧因有突触而单向。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 突触结构与信号转换</h3>
+      <p><b class="tag">触发信号:</b>给突触结构图,问各部分名称、递质在哪释放/作用、信号怎样转换、为什么单向。</p>
+      <p><b class="tag">标准动作:</b>前膜(放递质)/间隙(递质扩散)/后膜(有受体,收递质)。转换:电→化学(前膜)→电(后膜)。单向原因:递质只由前膜释放、作用后膜受体。</p>
+      <p><b class="tag">示例(带解):</b>兴奋到突触前膜,突触小泡以<b>胞吐</b>方式释放递质入间隙(耗ATP,体现膜的流动性),递质与后膜<b>特异性受体</b>结合,引起后膜电位变化。</p>
+      <p class="trap">陷阱:说递质由后膜释放;把受体位置放到前膜;漏掉「胞吐耗ATP」。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 电流计指针偏转</h3>
+      <p><b class="tag">触发信号:</b>灵敏电流计两电极接膜外两点,问刺激某处后指针偏转几次、方向如何。</p>
+      <p><b class="tag">标准动作:</b>刺激两极<b>正中间</b>→同时到达→<b>不偏</b>;刺激<b>偏一侧</b>→先后到达两极→偏 <b>2 次、方向相反</b>。若中间隔着突触且刺激在后侧→可能只偏 <b>1 次</b>(单向)。</p>
+      <p><b class="tag">示例(带解):</b>电极接 a、b,刺激靠 a 处:兴奋先到 a(a 变负,电流 b→a,偏一次),再到 b(b 变负、a 已复原,电流 a→b,反向偏一次),共 <b>2 次相反</b>。</p>
+      <p class="trap">陷阱:忘了「中间刺激不偏」;把 2 次说成同方向;忽略突触单向导致只偏 1 次。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 递质作用(兴奋性/抑制性)</h3>
+      <p><b class="tag">触发信号:</b>「释放递质后后膜却没兴奋 / 更难兴奋」「某药物阻断受体」,问递质性质或后果。</p>
+      <p><b class="tag">标准动作:</b>兴奋性递质→后膜 Na⁺内流去极化→兴奋;抑制性递质→后膜超极化(更负)→抑制。阻断受体或分解酶→影响后膜能否兴奋、或递质持续作用。</p>
+      <p><b class="tag">示例(带解):</b>某递质使后膜电位由 −70mV 变为 −80mV(更负,超极化),说明它是<b>抑制性</b>递质,后神经元更不易产生动作电位。</p>
+      <p class="trap">陷阱:默认递质都让下一个兴奋;忽略抑制性递质;把「受体被占」和「递质增多」的效果搞混。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 静息电位 = <b>K⁺ 外流</b>,是<b>协助扩散、不消耗 ATP</b>(顺浓度、靠通道)。别说成 Na⁺、别说成主动运输。</p>
+      <p class="trap">② 动作电位 = <b>Na⁺ 内流</b>,膜翻成<b>外负内正</b>。Na⁺内流本身也不耗ATP;事后钠钾泵复原才耗ATP。</p>
+      <p class="trap">③ 局部电流方向要<b>分膜内膜外</b>:膜内与传导方向同向,膜外相反。</p>
+      <p class="trap">④ 神经纤维上兴奋<b>双向</b>传导;经过<b>突触</b>只能<b>单向</b>传递。整条反射弧因有突触而单向。</p>
+      <p class="trap">⑤ 单向传递根本原因:<b>递质只由突触前膜释放、只作用后膜受体</b>;并造成<b>突触延搁</b>。</p>
+      <p class="trap">⑥ 突触处信号:<b>电→化学→电</b>两次转换;神经纤维上一直是电信号。</p>
+      <p class="trap">⑦ 递质有<b>兴奋性</b>和<b>抑制性</b>两类;抑制性递质让后膜更负、更难兴奋。</p>
+      <p class="trap">⑧ 电流计:中间刺激<b>不偏</b>;偏一侧刺激偏 <b>2 次且方向相反</b>;隔突触在后侧刺激可能只偏 <b>1 次</b>。</p>
+      <p class="trap">⑨ 递质释放是<b>胞吐</b>(耗ATP、体现膜流动性);释放后被<b>分解或回收</b>,否则会持续起作用。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切从「离子浓度差」出发:</b> 细胞内 K⁺ 高、细胞外 Na⁺ 高——这个浓度差是钠钾泵(主动运输、耗ATP)日常维持的「电池」。静息时 K⁺ 顺差外流→外正内负;刺激时 Na⁺ 顺差内流→外负内正。<b>膜电位的每一步都是「顺浓度的协助扩散」,耗能的只是幕后维持浓度差的泵。</b>抓住这条,静息/动作/复极全串起来。</p>
+      <p style="margin:8px 0"><b>② 「传导」与「传递」是两码事:</b> 纤维上叫<b>传导</b>(靠局部电流,电信号,双向,快);突触上叫<b>传递</b>(靠递质,化学信号,单向,有延搁,慢)。题目问「双向还是单向」,先定位:在纤维还是过突触。</p>
+      <p style="margin:8px 0"><b>③ 单向性是「结构决定功能」的范例:</b> 突触小泡只在前膜、受体只在后膜——结构上的不对称直接锁定了信号只能前→后。这也是反射弧单向、神经系统能精确布线的分子基础。</p>
+      <p style="margin:8px 0"><b>④ 电流计题本质是「时间差」:</b> 指针偏不偏、偏几次,取决于兴奋<b>到达两电极有没有时间差</b>。同时到→无电位差→不偏;先后到→两次相反的电位差→偏2次。把它当成「兴奋波先后扫过两点」的时序题,而非死记结论。</p>
+      <p style="margin:8px 0"><b>⑤ 递质的「兴奋/抑制」提示神经调控是双向阀门:</b> 同一套突触机制,靠递质与受体类型决定「放行还是刹车」。理解这点,才懂为什么麻醉药、有机磷农药(抑制分解酶→递质堆积)、阻断剂能各自精准地改变神经信号——它们都作用在「递质—受体—后膜电位」这条链上。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 兴奋的产生与传导(膜电位 / 神经纤维传导 / 突触传递)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#8a8a8a";
+
+/* ===== 互动1:离子分布与膜电位翻转 ===== */
+(function(){
+  const svg=document.getElementById('ionSvg');
+  const oOut=document.getElementById('ionOut'),oIn=document.getElementById('ionIn'),oK=document.getElementById('ionK'),oATP=document.getElementById('ionATP');
+  let state=0; // 0 rest, 1 active
+  function draw(){
+    clr(svg);
+    const W=700,memTop=110,memBot=150;
+    // membrane band
+    el(svg,'rect',{x:40,y:memTop,width:620,height:memBot-memTop,fill:'#f4efe2',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:memBot-14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='细胞膜';
+    el(svg,'text',{x:50,y:40,'font-size':13,'font-weight':900,fill:INK}).textContent='膜外';
+    el(svg,'text',{x:50,y:230,'font-size':13,'font-weight':900,fill:INK}).textContent='膜内';
+    const outSign=state===0?'+':'−';
+    const inSign=state===0?'−':'+';
+    const outCol=state===0?RED:BLUE;
+    const inCol=state===0?BLUE:RED;
+    // outside charges
+    for(let i=0;i<9;i++){
+      el(svg,'text',{x:90+i*62,y:70,'font-size':22,'font-weight':900,fill:outCol,'text-anchor':'middle'}).textContent=outSign;
+    }
+    for(let i=0;i<9;i++){
+      el(svg,'text',{x:90+i*62,y:205,'font-size':22,'font-weight':900,fill:inCol,'text-anchor':'middle'}).textContent=inSign;
+    }
+    // ion arrow
+    if(state===0){
+      // K+ outflow: arrow from inside to outside
+      el(svg,'line',{x1:350,y1:170,x2:350,y2:92,stroke:GREEN,'stroke-width':5});
+      el(svg,'polygon',{points:'350,80 344,96 356,96',fill:GREEN});
+      el(svg,'text',{x:372,y:100,'font-size':15,'font-weight':900,fill:GREEN}).textContent='K⁺ 外流';
+      el(svg,'text',{x:350,y:250,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='静息电位:外正内负(K⁺顺浓度外流,协助扩散,不耗ATP)';
+    }else{
+      // Na+ inflow: arrow from outside to inside
+      el(svg,'line',{x1:350,y1:90,x2:350,y2:168,stroke:VIO,'stroke-width':5});
+      el(svg,'polygon',{points:'350,180 344,164 356,164',fill:VIO});
+      el(svg,'text',{x:372,y:130,'font-size':15,'font-weight':900,fill:VIO}).textContent='Na⁺ 内流';
+      el(svg,'text',{x:350,y:250,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='动作电位:外负内正(Na⁺顺浓度内流,协助扩散,电位翻转)';
+    }
+  }
+  function set(s){state=s;
+    oOut.textContent=s===0?'+ (正)':'− (负)';
+    oIn.textContent=s===0?'− (负)':'+ (正)';
+    oK.textContent=s===0?'K⁺外流':'Na⁺内流';
+    oATP.textContent='否';
+    draw();
+  }
+  document.getElementById('ionRest').onclick=()=>set(0);
+  document.getElementById('ionAct').onclick=()=>set(1);
+  set(0);
+})();
+
+/* ===== 互动2:动作电位曲线 ===== */
+(function(){
+  const svg=document.getElementById('apSvg');
+  const oV=document.getElementById('apV'),oP=document.getElementById('apPhase'),oNa=document.getElementById('apNa'),oK=document.getElementById('apKch');
+  const X0=60,Y0=30,W=580,H=200;
+  // baseline -70, peak +30. map mV: +40 top, -90 bottom
+  const vTop=40,vBot=-90;
+  function vy(v){return Y0+ (vTop-v)/(vTop-vBot)*H;}
+  let t=0,running=false;
+  // phase model over t in [0,1]
+  function valAt(x){ // x 0..1 -> mV
+    if(x<0.1) return -70;
+    if(x<0.35) return -70 + (x-0.1)/0.25*100; // rise to +30
+    if(x<0.6) return 30 - (x-0.35)/0.25*100;   // fall to -70
+    return -70;
+  }
+  function phaseAt(x){
+    if(x<0.1) return ['静息','关','开(漏)'];
+    if(x<0.35) return ['去极化(Na⁺内流)','开','关'];
+    if(x<0.6) return ['复极化(K⁺外流)','关','开'];
+    return ['恢复静息','关','开(漏)'];
+  }
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:vy(-70),x2:X0+W,y2:vy(-70),stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='mV';
+    // ticks
+    [[30,'+30'],[0,'0'],[-70,'−70']].forEach(p=>{
+      el(svg,'line',{x1:X0-6,y1:vy(p[0]),x2:X0,y2:vy(p[0]),stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0-9,y:vy(p[0])+4,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent=p[1];
+    });
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='时间';
+    // curve up to t
+    let d='';
+    const N=120;const lim=Math.max(0.001,t);
+    for(let i=0;i<=N;i++){
+      const x=i/N*lim;
+      const px=X0+ (i/N)*W*lim/lim*lim; // careful
+    }
+    // simpler: draw from 0 to t
+    let path='';
+    const steps=Math.floor(t*200)+1;
+    for(let i=0;i<=steps;i++){
+      const x=(i/200);
+      if(x>t)break;
+      const px=X0+x*W;
+      const py=vy(valAt(x));
+      path+=(i===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';
+    }
+    el(svg,'path',{d:path,fill:'none',stroke:RED,'stroke-width':4});
+    // moving dot
+    const cx=X0+t*W,cy=vy(valAt(t));
+    el(svg,'circle',{cx:cx,cy:cy,r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    // channel lamps
+    const ph=phaseAt(t);
+    el(svg,'text',{x:X0,y:Y0+H+42,'font-size':12.5,'font-weight':900,fill:VIO}).textContent='Na⁺通道: '+ph[1];
+    lamp(320,Y0+H+34,ph[1]==='开');
+    el(svg,'text',{x:400,y:Y0+H+42,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='K⁺通道: '+ph[2];
+    lamp(560,Y0+H+34,ph[2].indexOf('开')>=0);
+    // stats
+    oV.textContent=Math.round(valAt(t))+'';
+    oP.textContent=ph[0];oNa.textContent=ph[1];oK.textContent=ph[2];
+  }
+  function lamp(x,y,on){
+    el(svg,'circle',{cx:x,cy:y,r:8,fill:on?GREEN:'#cfc8b4',stroke:INK,'stroke-width':2});
+  }
+  function loop(){if(!running)return;t+=0.006;if(t>=1){t=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('apGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('apReset').onclick=()=>{t=0;running=false;draw();};
+  t=0;draw();
+})();
+
+/* ===== 互动3:双向传导 + 局部电流 ===== */
+(function(){
+  const cv=document.getElementById('condCv');const ctx=cv.getContext('2d');
+  const oPt=document.getElementById('cdPt'),oDir=document.getElementById('cdDir');
+  const fiberY=110,fx0=60,fx1=640,center=350;
+  let spread=0,running=false; // spread grows outward
+  function reset(){spread=0;running=false;draw();}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // fiber
+    ctx.fillStyle='#f4efe2';ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.fillRect(fx0,fiberY-26,fx1-fx0,52);ctx.strokeRect(fx0,fiberY-26,fx1-fx0,52);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('膜外',fx0-2,fiberY-34);ctx.fillText('膜内',fx0-2,fiberY+46);
+    // excited region
+    const left=Math.max(fx0,center-spread), right=Math.min(fx1,center+spread);
+    if(spread>0){
+      ctx.fillStyle='rgba(224,56,42,0.30)';
+      ctx.fillRect(left,fiberY-26,right-left,52);
+      ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.strokeRect(left,fiberY-26,right-left,52);
+      ctx.fillStyle=RED;ctx.font='bold 12px sans-serif';
+      ctx.fillText('兴奋区(外负内正)',center-58,fiberY+4);
+    }
+    // stimulus marker
+    ctx.strokeStyle=VIO;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(center,fiberY-40);ctx.lineTo(center,fiberY-26);ctx.stroke();
+    ctx.fillStyle=VIO;ctx.font='bold 12px sans-serif';ctx.fillText('刺激',center-14,fiberY-44);
+    // local current arrows (only when spreading)
+    if(spread>10){
+      // membrane outside arrows: from unexcited (outside +) toward excited (outside -)
+      drawArrow(ctx,left-40,fiberY-38,left-8,fiberY-38,BLUE); // outside, pointing to excited (leftward region -> arrow toward center? )
+      drawArrow(ctx,right+40,fiberY-38,right+8,fiberY-38,BLUE);
+      ctx.fillStyle=BLUE;ctx.font='bold 11px sans-serif';ctx.fillText('膜外电流(指向兴奋区,与传导反向)',center-100,fiberY-52);
+      // inside arrows: from excited toward unexcited (with conduction dir)
+      drawArrow(ctx,left+8,fiberY+38,left-40,fiberY+38,GREEN);
+      drawArrow(ctx,right-8,fiberY+38,right+40,fiberY+38,GREEN);
+      ctx.fillStyle=GREEN;ctx.font='bold 11px sans-serif';ctx.fillText('膜内电流(与传导同向,向两侧)',center-95,fiberY+62);
+    }
+    // conduction direction arrows big
+    if(spread>4){
+      ctx.strokeStyle=RED;ctx.lineWidth=4;
+      drawArrow(ctx,center-14,fiberY,left+6,fiberY,RED);
+      drawArrow(ctx,center+14,fiberY,right-6,fiberY,RED);
+    }
+  }
+  function drawArrow(ctx,x1,y1,x2,y2,col){
+    ctx.strokeStyle=col;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    const ang=Math.atan2(y2-y1,x2-x1);
+    ctx.fillStyle=col;ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-9*Math.cos(ang-0.4),y2-9*Math.sin(ang-0.4));
+    ctx.lineTo(x2-9*Math.cos(ang+0.4),y2-9*Math.sin(ang+0.4));
+    ctx.closePath();ctx.fill();
+  }
+  function loop(){if(!running)return;spread+=3;if(spread>300){spread=300;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('condGo').onclick=()=>{spread=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('condReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:突触传递动画 ===== */
+(function(){
+  const cv=document.getElementById('synCv');const ctx=cv.getContext('2d');
+  const oType=document.getElementById('syType'),oPos=document.getElementById('syPos'),oDir=document.getElementById('syDir'),oBack=document.getElementById('syBack');
+  const preX=60,preEnd=300,postStart=400,postX=640,midY=120;
+  const gap0=300,gap1=400;
+  let t=0,running=false; // t 0..1 progress
+  let particles=[];
+  function reset(){t=0;running=false;particles=[];setout();draw();}
+  function setout(){
+    let type='电信号',pos='突触前膜';
+    if(t<0.35){type='电信号(前神经元)';pos='轴突→突触前膜';}
+    else if(t<0.75){type='化学信号(递质)';pos='突触间隙';}
+    else{type='电信号(后神经元)';pos='突触后膜';}
+    oType.textContent=type;oPos.textContent=pos;oDir.textContent='前膜→后膜';oBack.textContent='不能';
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // pre neuron (left)
+    ctx.fillStyle='rgba(20,80,200,0.15)';ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(preX,midY-40);ctx.lineTo(preEnd-30,midY-40);ctx.quadraticCurveTo(preEnd,midY-40,preEnd,midY);ctx.quadraticCurveTo(preEnd,midY+40,preEnd-30,midY+40);ctx.lineTo(preX,midY+40);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('前神经元(突触小体)',preX+8,midY-48);
+    // post neuron (right)
+    ctx.fillStyle='rgba(30,158,134,0.15)';
+    ctx.beginPath();ctx.moveTo(postX,midY-40);ctx.lineTo(postStart+30,midY-40);ctx.quadraticCurveTo(postStart,midY-40,postStart,midY);ctx.quadraticCurveTo(postStart,midY+40,postStart+30,midY+40);ctx.lineTo(postX,midY+40);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle=INK;ctx.fillText('后神经元',postStart+40,midY-48);
+    // membranes labels
+    ctx.fillStyle=RED;ctx.font='bold 11px sans-serif';ctx.fillText('前膜',preEnd-30,midY+58);
+    ctx.fillText('间隙',330,midY+58);
+    ctx.fillStyle=GREEN;ctx.fillText('后膜',postStart-4,midY+58);
+    // vesicles in pre
+    if(t<0.4){
+      for(let i=0;i<3;i++){ctx.strokeStyle=ORANGE;ctx.fillStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(preEnd-70+i*0,midY-15+i*15,9,0,2*Math.PI);ctx.fill();ctx.stroke();ctx.fillStyle=ORANGE;ctx.beginPath();ctx.arc(preEnd-70,midY-15+i*15,3,0,2*Math.PI);ctx.fill();}
+      ctx.fillStyle=INK;ctx.font='bold 10px sans-serif';ctx.fillText('突触小泡',preEnd-110,midY-25);
+    }
+    // electric pulse in pre neuron
+    if(t<0.35){
+      const px=preX+(preEnd-preX)*(t/0.35);
+      ctx.fillStyle=YEL;ctx.strokeStyle=INK;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(px-8,midY-14);ctx.lineTo(px+4,midY-2);ctx.lineTo(px-2,midY-2);ctx.lineTo(px+8,midY+14);ctx.lineTo(px-4,midY+2);ctx.lineTo(px+2,midY+2);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle=BLUE;ctx.font='bold 11px sans-serif';ctx.fillText('电信号',px-14,midY-20);
+    }
+    // neurotransmitter particles crossing gap
+    if(t>=0.35&&t<0.8){
+      const prog=(t-0.35)/0.45;
+      for(let i=0;i<7;i++){
+        const jitter=(i-3)*8;
+        const nx=gap0+ (gap1-gap0)*Math.min(1,prog+i*0.02);
+        ctx.fillStyle=ORANGE;ctx.strokeStyle=INK;ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.arc(nx,midY+jitter,5,0,2*Math.PI);ctx.fill();ctx.stroke();
+      }
+      ctx.fillStyle=ORANGE;ctx.font='bold 11px sans-serif';ctx.fillText('递质扩散→',330,midY-25);
+    }
+    // receptors on post membrane
+    ctx.fillStyle=GREEN;
+    for(let i=0;i<3;i++){ctx.fillRect(postStart-6,midY-20+i*16,6,10);}
+    // electric pulse in post neuron
+    if(t>=0.78){
+      const prog=(t-0.78)/0.22;
+      const px=postStart+(postX-postStart)*prog;
+      ctx.fillStyle=YEL;ctx.strokeStyle=INK;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(px-8,midY-14);ctx.lineTo(px+4,midY-2);ctx.lineTo(px-2,midY-2);ctx.lineTo(px+8,midY+14);ctx.lineTo(px-4,midY+2);ctx.lineTo(px+2,midY+2);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle=BLUE;ctx.font='bold 11px sans-serif';ctx.fillText('电信号',px-14,midY-20);
+    }
+    // one-way arrow
+    ctx.strokeStyle=RED;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(preEnd-10,midY+72);ctx.lineTo(postStart+10,midY+72);ctx.stroke();
+    ctx.fillStyle=RED;ctx.beginPath();ctx.moveTo(postStart+10,midY+72);ctx.lineTo(postStart,midY+68);ctx.lineTo(postStart,midY+76);ctx.closePath();ctx.fill();
+    ctx.fillStyle=RED;ctx.font='bold 11px sans-serif';ctx.fillText('单向',340,midY+68);
+    setout();
+  }
+  function loop(){if(!running)return;t+=0.007;if(t>=1){t=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('synGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('synReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:兴奋性 vs 抑制性递质 ===== */
+(function(){
+  const svg=document.getElementById('ntSvg');const note=document.getElementById('ntNote');
+  let m=0;
+  document.querySelectorAll('.ntmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.ntmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  const X0=60,Y0=30,W=580,H=170;
+  const vTop=40,vBot=-100;
+  function vy(v){return Y0+(vTop-v)/(vTop-vBot)*H;}
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='mV';
+    // baseline -70
+    el(svg,'line',{x1:X0,y1:vy(-70),x2:X0+W,y2:vy(-70),stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // threshold -55
+    el(svg,'line',{x1:X0,y1:vy(-55),x2:X0+W,y2:vy(-55),stroke:VIO,'stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:X0+W,y:vy(-55)-4,'font-size':11,'font-weight':800,fill:VIO,'text-anchor':'end'}).textContent='阈值 −55';
+    [[30,'+30'],[-55,'−55'],[-70,'−70'],[-85,'−85']].forEach(p=>{
+      el(svg,'text',{x:X0-9,y:vy(p[0])+4,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent=p[1];
+    });
+    // mark 'release' time
+    const relX=X0+W*0.28;
+    el(svg,'line',{x1:relX,y1:Y0,x2:relX,y2:Y0+H,stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:relX,y:Y0-4,'font-size':11,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='递质结合';
+    let path='',col,msg;
+    if(m===0){
+      // excitatory: rest -70, depolarize past threshold -> spike to +30
+      path='M'+X0+','+vy(-70)+' L'+relX+','+vy(-70)+' L'+(relX+70)+','+vy(-55)+' L'+(relX+110)+','+vy(30)+' L'+(relX+170)+','+vy(-70)+' L'+(X0+W)+','+vy(-70);
+      col=RED;
+      msg='<b>兴奋性递质</b>:后膜 Na⁺内流→电位上升(去极化)→达到阈值 −55mV→触发动作电位冲到 +30mV→<b>后神经元兴奋</b>。';
+    }else{
+      // inhibitory: hyperpolarize to -85, then back
+      path='M'+X0+','+vy(-70)+' L'+relX+','+vy(-70)+' L'+(relX+70)+','+vy(-85)+' L'+(relX+180)+','+vy(-70)+' L'+(X0+W)+','+vy(-70);
+      col=BLUE;
+      msg='<b>抑制性递质</b>:后膜电位更负(超极化到 −85mV)→离阈值更远→<b>后神经元被抑制</b>,更难产生动作电位。';
+    }
+    el(svg,'path',{d:path,fill:'none',stroke:col,'stroke-width':4});
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=m===0?RED:BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动6:电流计双电极偏转 ===== */
+(function(){
+  const cv=document.getElementById('galCv');const ctx=cv.getContext('2d');
+  const meter=document.getElementById('galMeter');
+  const oPt=document.getElementById('gaPt'),oA=document.getElementById('gaA'),oB=document.getElementById('gaB'),oN=document.getElementById('gaN');
+  let mode=0; // 0 center, 1 near a
+  const fiberY=120,fx0=60,fx1=640;
+  const aX=250,bX=450; // electrodes
+  let wave=[],running=false,needle=0,defl=0,phaseText='';
+  document.querySelectorAll('.galmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.galmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;reset();
+  });
+  function reset(){wave=[];running=false;needle=0;defl=0;
+    oPt.textContent=mode===0?'中间':'靠 a 一侧';
+    oA.textContent='—';oB.textContent='—';oN.textContent='0';
+    draw();drawMeter();
+  }
+  let stimX,dir1,dir2,t=0,atA=false,atB=false,countN=0;
+  function start(){
+    t=0;countN=0;atA=false;atB=false;
+    stimX=mode===0?(aX+bX)/2:150; // center or left of a
+    running=true;needle=0;defl=0;
+    oA.textContent='—';oB.textContent='—';oN.textContent='0';
+    requestAnimationFrame(loop);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // fiber
+    ctx.fillStyle='#f4efe2';ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.fillRect(fx0,fiberY-24,fx1-fx0,48);ctx.strokeRect(fx0,fiberY-24,fx1-fx0,48);
+    // electrodes
+    [ [aX,'a'],[bX,'b'] ].forEach(e=>{
+      ctx.strokeStyle=INK;ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(e[0],fiberY-24);ctx.lineTo(e[0],fiberY-70);ctx.stroke();
+      ctx.fillStyle=INK;ctx.beginPath();ctx.arc(e[0],fiberY-24,5,0,2*Math.PI);ctx.fill();
+      ctx.fillStyle=BLUE;ctx.font='bold 14px sans-serif';ctx.fillText(e[1],e[0]-5,fiberY-76);
+    });
+    // wires up to meter box (drawn in svg below), just labels
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('电极 a、b 接膜外',fx0+4,fiberY-40);
+    // stimulus marker
+    const sx=(running||t>0)?stimX:(mode===0?(aX+bX)/2:150);
+    ctx.strokeStyle=VIO;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(sx,fiberY+24);ctx.lineTo(sx,fiberY+52);ctx.stroke();
+    ctx.fillStyle=VIO;ctx.font='bold 12px sans-serif';ctx.fillText('刺激',sx-14,fiberY+66);
+    // excitation waves (red bands) spreading from stim
+    if(running||t>0){
+      const spread=t*1.6;
+      ctx.fillStyle='rgba(224,56,42,0.35)';
+      const l=Math.max(fx0,sx-spread),r=Math.min(fx1,sx+spread);
+      // draw a moving band of width ~30 at each front instead of full fill (front pulse)
+      drawFront(sx-spread);drawFront(sx+spread);
+    }
+  }
+  function drawFront(cx){
+    if(cx<fx0||cx>fx1)return;
+    ctx.fillStyle='rgba(224,56,42,0.55)';
+    ctx.fillRect(cx-14,fiberY-24,28,48);
+    ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.strokeRect(cx-14,fiberY-24,28,48);
+  }
+  function drawMeter(){
+    clr(meter);
+    // meter box
+    el(meter,'rect',{x:300,y:20,width:100,height:70,fill:'#fff',stroke:INK,'stroke-width':3});
+    // pivot
+    const px=350,py=82;
+    el(meter,'text',{x:350,y:14,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='灵敏电流计';
+    // scale marks
+    el(meter,'line',{x1:px,y1:py,x2:px,y2:py-52,stroke:'#ccc','stroke-width':2});
+    // needle angle from defl (-1..1)
+    const ang=-Math.PI/2 + defl*0.7;
+    const nx=px+Math.cos(ang)*46, ny=py+Math.sin(ang)*46;
+    el(meter,'line',{x1:px,y1:py,x2:nx,y2:ny,stroke:RED,'stroke-width':4});
+    el(meter,'circle',{cx:px,cy:py,r:4,fill:INK});
+    el(meter,'text',{x:315,y:40,'font-size':11,'font-weight':800,fill:'#999'}).textContent='左';
+    el(meter,'text',{x:378,y:40,'font-size':11,'font-weight':800,fill:'#999'}).textContent='右';
+    el(meter,'text',{x:200,y:55,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=phaseText;
+  }
+  function loop(){
+    if(!running)return;
+    t+=4;
+    const spread=t*1.6;
+    // fronts positions
+    const fl=stimX-spread, fr=stimX+spread;
+    // detect arrival at a and b (whichever front reaches)
+    if(!atA && (Math.abs(fl-aX)<8 || Math.abs(fr-aX)<8)){atA=true;oA.textContent='已到达';pulse(-1);phaseText='兴奋到 a：a 变负 → 指针偏(一次)';}
+    if(!atB && (Math.abs(fl-bX)<8 || Math.abs(fr-bX)<8)){atB=true;oB.textContent='已到达';
+      if(mode===0){/* simultaneous: no net deflection handled below */ }
+      else{pulse(1);phaseText='兴奋到 b：b 变负 → 指针反向偏(第二次)';}
+    }
+    // center mode: both reached ~ same time -> no deflection
+    if(mode===0){
+      // if wave passed both simultaneously, needle stays 0
+      if(Math.abs(fl-aX)<8||Math.abs(fr-bX)<8){phaseText='兴奋同时到 a、b → 电位差=0 → 指针不偏';}
+    }
+    // needle relaxes toward 0
+    defl*=0.90;
+    draw();drawMeter();
+    if(t>420){running=false;
+      if(mode===0){countN=0;phaseText='结论：中间刺激 → 指针不偏转（0 次）';}
+      else{countN=2;phaseText='结论：偏一侧刺激 → 指针偏转 2 次且方向相反';}
+      oN.textContent=countN;drawMeter();
+    }
+    requestAnimationFrame(loop);
+  }
+  let pulseTimer;
+  function pulse(dir){
+    if(mode===0)return; // center: no net deflection
+    defl=dir*1; countN++;oN.textContent=countN;
+  }
+  document.getElementById('galGo').onclick=start;
+  document.getElementById('galReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 静息电位是怎么形成的？外正内负还是外负内正？耗不耗 ATP？",a:"静息时膜对 K⁺ 有通透性，K⁺ 顺浓度差（内高外低）外流，使膜外带正电、膜内带负电，形成外正内负的静息电位。这是协助扩散，不消耗 ATP。"},
+ {q:"2. 动作电位是哪种离子造成的？此时膜电位状态如何？",a:"受足够刺激时膜对 Na⁺ 通透性突增，Na⁺ 顺浓度差大量内流，使膜电位由外正内负翻转为外负内正，形成动作电位。Na⁺ 内流也是协助扩散，不耗 ATP。"},
+ {q:"3. 兴奋在神经纤维上为什么能传导？局部电流方向如何？",a:"兴奋区（外负内正）与相邻未兴奋区（外正内负）间形成局部电流，刺激邻处也翻转为兴奋，一段接一段传下去。膜内电流方向与传导方向一致，膜外相反。"},
+ {q:"4. 离体神经纤维中央受刺激，兴奋向哪些方向传？为什么？",a:"向两侧双向传导。因为两侧都有未兴奋区，都能与中央兴奋区形成局部电流被依次激活。神经纤维上兴奋是双向的。"},
+ {q:"5. 突触由哪三部分组成？递质在哪里？受体在哪里？",a:"突触前膜、突触间隙、突触后膜。神经递质装在突触前膜内的突触小泡里；受体在突触后膜上（特异性）。"},
+ {q:"6. 兴奋在突触处为什么只能单向传递？",a:"因为神经递质只能由突触前膜释放（小泡在前膜），并只作用于突触后膜上的受体。递质不能倒着从后膜释放，所以兴奋只能由前膜→后膜单向传递（并有突触延搁）。"},
+ {q:"7. 突触传递过程中信号是怎样转换的？",a:"电信号（到突触前膜）→ 化学信号（前膜释放递质，扩散过间隙）→ 电信号（递质与后膜受体结合，后膜产生电位变化）。即电→化学→电两次转换。"},
+ {q:"8. 递质与后膜结合后，后膜一定兴奋吗？",a:"不一定。兴奋性递质使后膜 Na⁺内流去极化→后膜兴奋；抑制性递质使后膜超极化（更负）→后膜被抑制，更难兴奋。"},
+ {q:"9. 电流计两电极接膜外，刺激两极正中间，指针偏转几次？",a:"不偏转。兴奋同时到达两电极，两点电位始终相同，电位差为 0，指针不偏。"},
+ {q:"10. 若刺激靠近电极 a 一侧，指针如何偏转？",a:"兴奋先到 a（a 变负，指针偏一次），再到 b（b 变负、a 已恢复，电流反向，指针反向偏一次），共偏转 2 次且方向相反。"},
+ {q:"11. 神经递质释放到间隙的方式是什么？释放后如何处理？",a:"以胞吐方式释放（消耗 ATP，体现细胞膜的流动性）。作用于后膜受体后被相应酶分解或被回收，否则会持续起作用。"},
+ {q:"12. 静息电位形成不耗能，那浓度差靠什么维持？",a:"靠钠钾泵（主动运输，消耗 ATP）不断把内流的 Na⁺ 泵出、把外流的 K⁺ 泵入，维持“内高 K⁺、外高 Na⁺”的浓度差。它是幕后的“电池”，但静息/动作电位本身的形成是离子顺浓度的协助扩散。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

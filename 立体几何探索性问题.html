@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>立体几何探索性问题（存在性/翻折） · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>立体几何探索性问题（存在性 / 翻折）</h1>
+    <p class="lead">立体几何大题的最后一问，往往不再直接问「求」，而是问「<b>是否存在</b>某个点，使某条线与某个面平行 / 垂直，或使二面角为某个定值」；另一大类是「<b>翻折</b>」——把平面图形沿某条折线折起，问折后空间中的位置关系与角度。这两类看着吓人，其实有一套<b>坐标法通杀</b>的固定流程：建系 → 动点设参数 → 由条件列方程 → 解出并判断范围。本页把这套流程拆到骨头里。</p>
+
+    <div class="say">🗣️ <b>探索性问题（人话版）：</b> 别怕「是否存在」——先<b>假设它存在</b>，把那个未知点用一个参数 λ 设出来（比如 P 在棱 AB 上，就写 AP=λAB，坐标全带 λ）。然后把题目要的条件（平行 / 垂直 / 二面角=某值）翻译成一个<b>关于 λ 的方程</b>。解得出、且 λ 落在 [0,1] 里 → <b>存在</b>，报出位置;解不出、或 λ 跑出 [0,1] → <b>不存在</b>。存在与否，全交给方程判决。</div>
+
+    <div class="say">🗣️ <b>翻折问题（人话版）：</b> 折纸的时候，<b>盯住哪些量不变</b>。折线<b>同一侧</b>图形里的所有长度、角度，折起来之后一点没变（因为那块纸没被弯）;<b>跨过折线</b>的连线、角度才会改变。把不变量抓牢——它们给你折后图形的边长和直角，正好用来建系。建完系，翻折题就退化成普通的坐标法求角。</div>
+
+    <div class="keybox"><b>坐标法四步走：</b> ①<b>建系</b>（找两两垂直的三条棱当 x/y/z 轴，或用垂直关系造出来） ②<b>写坐标</b>（定点直接读，动点用参数：P 在 AB 上则 P=A+λ(B−A)，λ∈[0,1]） ③<b>翻译条件</b>（线面平行↔方向向量与法向量垂直即点积=0;线面垂直↔方向向量平行法向量;二面角↔两半平面法向量夹角） ④<b>列方程解 λ</b>（有解且 λ∈[0,1] 则存在）。</div>
+
+    <h2>① 建系：把立体图形装进坐标格子</h2>
+    <div class="card">
+      <p style="margin:8px 0">坐标法的命根子是<b>选对原点和三条两两垂直的轴</b>。看到这些结构，直接建系：</p>
+      <table>
+        <tr><th>图形结构</th><th>怎么建系</th></tr>
+        <tr><td>正方体 / 长方体</td><td>一个顶点当原点，三条棱当 x、y、z 轴（天然两两垂直）</td></tr>
+        <tr><td>直棱柱（底面有直角）</td><td>底面直角顶点当原点，两直角边 + 侧棱当三轴</td></tr>
+        <tr><td>有「一条棱⊥底面」的锥 / 柱</td><td>该棱作 z 轴，在底面内找两条互相垂直的线作 x、y 轴</td></tr>
+        <tr><td>底面正方形 / 菱形对角线垂直</td><td>对角线交点当原点，两条对角线 + 竖直方向作三轴</td></tr>
+      </table>
+      <p class="trap">⚠ 建系铁律：三条轴必须<b>两两垂直</b>!没有现成的垂直，就先用题目给的「线面垂直、勾股逆定理、等腰三角形取中点」等条件<b>造出垂直</b>再建。轴选歪了，后面全错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📦 互动 1 — 正方体建系与坐标读取（旋转看 3D，点选顶点显示坐标）</div>
+      <canvas id="axCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <label>水平旋转 <input id="axRot" type="range" min="-60" max="60" value="25" step="1"></label>
+        <label>俯仰 <input id="axPit" type="range" min="5" max="55" value="28" step="1"></label>
+        <button id="axNext">▶ 下一个顶点</button>
+      </div>
+      <div class="live">
+        <div><b>选中顶点</b><span id="axName">A</span></div>
+        <div><b>坐标 (x,y,z)</b><span id="axCoord">(0,0,0)</span></div>
+        <div><b>边长设为</b><span id="axLen">1</span></div>
+        <div><b>原点</b><span id="axO">A=(0,0,0)</span></div>
+      </div>
+      <p class="small">正方体 ABCD-A₁B₁C₁D₁，取 A 为原点，AB→x、AD→y、AA₁→z。每个顶点坐标只由「它在三个方向各走了几格」决定。拖动滑块旋转，点「下一个顶点」逐个读坐标。</p>
+    </div>
+
+    <h2 class="b">② 动点设参数：让未知点带着 λ 上场</h2>
+    <div class="card">
+      <p style="margin:8px 0">探索性问题的核心动作:把「待定的那个点」用<b>一个参数 λ</b> 表示出来。P 在线段/棱上滑动时:</p>
+      <div class="eq">P 在 AB 上，AP = λ·AB　⇒　P = A + λ(B − A)，λ∈[0,1]</div>
+      <p style="margin:8px 0">λ=0 时 P 在 A，λ=1 时 P 在 B，中间是内部各点。把 A、B 坐标代进去，P 的坐标就是每个分量都含 λ 的一次式。之后一切向量（如 CP、方向向量）都自动带 λ。</p>
+      <div class="mono">例：A=(0,0,0)，B=(2,0,0)，P=A+λ(B−A)=(2λ,0,0)，λ∈[0,1]。</div>
+      <p style="margin:8px 0">若 P 在面内动、或用比例 AP:PB=k，也都能化成一个参数。<b>一个未知点 → 一个参数</b>，是探索题不变的起手式。</p>
+      <p class="trap">⚠ 参数<b>范围</b>是命门:P 在线段 AB 上 → λ∈[0,1];在射线上 → λ≥0;在直线上 → λ 任意。解出 λ 后<b>必须回头验范围</b>，超范围就是「不存在」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 2 — 动点 P 沿棱滑动（拖 λ，实时判定 PC 与某面是否平行 / 垂直）</div>
+      <canvas id="slideCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <label>参数 λ <input id="slLam" type="range" min="0" max="1" value="0.5" step="0.01"></label>
+        <label>水平旋转 <input id="slRot" type="range" min="-50" max="50" value="22" step="1"></label>
+        <button class="slmode on" data-m="0">看 D₁P ∥ 面?</button>
+        <button class="slmode" data-m="1">看 D₁P ⊥ 面?</button>
+      </div>
+      <div class="live">
+        <div><b>λ</b><span id="slLamV">0.50</span></div>
+        <div><b>P 坐标</b><span id="slP">(0,0,0)</span></div>
+        <div><b>点积检验</b><span id="slDot">0</span></div>
+        <div><b>判定</b><span id="slVerd">—</span></div>
+      </div>
+      <p class="small">正方体边长 1，P 在底棱 AB 上，AP=λ。滑动 λ 找到让「方向向量·法向量=0（平行判据）」或「方向向量∥法向量（垂直判据）」成立的那个 λ。判定框实时告诉你成不成立。</p>
+    </div>
+
+    <h2 class="g">③ 三大判据：把几何条件翻成向量方程</h2>
+    <div class="card">
+      <h3>线面平行 ⟺ 方向向量 ⊥ 面的法向量</h3>
+      <div class="eq">直线方向向量 s · 平面法向量 n = 0　（且直线不在面内）</div>
+      <p style="margin:6px 0">或用「共面法」:证 s 能被面内两个向量线性表示。坐标法首选点积=0，最省事。</p>
+      <h3>线面垂直 ⟺ 方向向量 ∥ 法向量</h3>
+      <div class="eq">s = k·n　（s 与面内任意两个不共线向量都点积为 0）</div>
+      <h3>二面角 ⟺ 两个半平面的法向量夹角</h3>
+      <div class="eq">cosθ = ± (n₁ · n₂) / (|n₁|·|n₂|)</div>
+      <p style="margin:6px 0">算出法向量夹角后，<b>正负号看二面角是锐是钝</b>:题目/图形告诉你该角是锐角就取正 cos，是钝角就取负 cos。二面角常给定值（如 45°、60°、90°），把它的 cos 代进去 → 得到关于 λ 的方程。</p>
+      <p class="trap">⚠ 线面平行是 s·n=<b>0</b>（垂直），线面垂直是 s∥n（平行）——这两个「反着来」最容易记混!平行判据里那个点积等于 0，指的是「方向向量和法向量互相垂直」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 3 — 空间坐标系与法向量：给平面看它的法向量 n（旋转观察）</div>
+      <canvas id="normCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <label>水平旋转 <input id="nmRot" type="range" min="-60" max="60" value="30" step="1"></label>
+        <label>俯仰 <input id="nmPit" type="range" min="5" max="55" value="26" step="1"></label>
+        <button class="nmface on" data-f="0">面 xOy (底)</button>
+        <button class="nmface" data-f="1">斜面</button>
+      </div>
+      <div class="live">
+        <div><b>面内向量 a</b><span id="nmA">—</span></div>
+        <div><b>面内向量 b</b><span id="nmB">—</span></div>
+        <div><b>法向量 n=a×b</b><span id="nmN">—</span></div>
+        <div><b>验证 n·a</b><span id="nmChk">0</span></div>
+      </div>
+      <p class="small">法向量 n 由面内两个不共线向量的<b>叉乘 a×b</b> 得到（n⊥a 且 n⊥b）。红箭是 n。它一竖起来，就代表整个平面的朝向——线面、二面角判据全靠它。</p>
+    </div>
+
+    <h2 class="o">④ 二面角随 λ 变化：找那个定值</h2>
+    <div class="card">
+      <p style="margin:8px 0">「是否存在点 P，使二面角为 60°」这类题，做法是:P 带 λ → 两个半平面的法向量都成 λ 的式子 → 二面角余弦 cosθ(λ) 是 λ 的函数 → 令它等于给定值的 cos → 解 λ。</p>
+      <div class="mono">令 cosθ(λ) = cos60° = 1/2，得到关于 λ 的方程，解出 λ 并验 λ∈[0,1]。</div>
+      <p style="margin:8px 0">随着 P 在棱上滑，二面角是<b>连续变化</b>的。给定的定值若落在这个变化范围内，就有解（存在）;若定值超出可达范围，方程无实数解（不存在）。</p>
+      <p class="trap">⚠ 别忘了 cos 的正负:法向量方向可正可反，|cos| 一样，但二面角本身是锐是钝要按图判断。列方程时用 |cosθ| 或明确取号，别让符号问题吞掉一个解。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 4 — 二面角随 λ 变化曲线：拖 λ，看二面角是否等于目标定值</div>
+      <svg id="diSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>参数 λ <input id="diLam" type="range" min="0" max="1" value="0.4" step="0.01"></label>
+        <label>目标角 <input id="diTgt" type="range" min="30" max="80" value="60" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 λ</b><span id="diLamV">0.40</span></div>
+        <div><b>二面角 θ(λ)</b><span id="diTheta">0°</span></div>
+        <div><b>目标定值</b><span id="diTgtV">60°</span></div>
+        <div><b>是否命中</b><span id="diHit">—</span></div>
+      </div>
+      <p class="small">曲线是二面角 θ 随 λ 变化的图象;水平虚线是目标定值。曲线与虚线<b>相交处的 λ</b> 就是「存在的那个点」。若虚线整条在曲线上方/下方（无交点）→ 该定值不可达 → 不存在。</p>
+    </div>
+
+    <h2 class="v">⑤ 存在性判决：解 λ 方程有没有解</h2>
+    <div class="card">
+      <p style="margin:8px 0">所有探索题最后都归结成<b>一个关于 λ 的方程</b>。判决只看两件事:</p>
+      <table>
+        <tr><th>方程解的情况</th><th>结论</th></tr>
+        <tr><td>有实数解，且 λ∈[0,1]</td><td><b>存在</b>。报出 P 的位置（如「P 为中点」λ=1/2）</td></tr>
+        <tr><td>有实数解，但 λ∉[0,1]（跑到范围外）</td><td><b>不存在</b>（点跑出了线段）</td></tr>
+        <tr><td>方程无实数解（如判别式<0）</td><td><b>不存在</b></td></tr>
+        <tr><td>方程恒成立（λ 任意都满足）</td><td><b>恒存在</b>（对所有 P 都成立）</td></tr>
+      </table>
+      <p style="margin:8px 0">写答题时套路:「<b>假设</b>存在满足条件的点 P，设 AP=λAB…（列方程）…解得 λ=…，因 λ∈[0,1]，故<b>存在</b>，此时 P 为…」;若无解，则「…方程无解 / λ 不在 [0,1] 内，故<b>不存在</b>」。</p>
+      <p class="trap">⚠ 千万别只解方程忘了<b>验范围</b>!很多同学解出 λ=1.5 就直接写「存在」，其实点已经跑出线段，正确答案是不存在。范围检验是最后一道也是最常丢分的关卡。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔎 互动 5 — 存在性演示：改变几何条件，看 λ 方程有解 / 无解 / 出范围</div>
+      <svg id="exSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="excase on" data-c="0">有解 λ∈[0,1] → 存在</button>
+        <button class="excase" data-c="1">解 λ=1.6 → 出范围·不存在</button>
+        <button class="excase" data-c="2">无实数解 → 不存在</button>
+      </div>
+      <div class="verdict" id="exNote"></div>
+      <p class="small">把「条件方程」画成一条曲线，「=目标」画成横线。交点的横坐标就是 λ。落在灰色区 [0,1] 内 → 存在;落在区外或没交点 → 不存在。三种情形切着看。</p>
+    </div>
+
+    <h2 class="r">⑥ 翻折问题：抓住不变量</h2>
+    <div class="card">
+      <p style="margin:8px 0">翻折 = 把平面图形沿一条<b>折线</b>折成空间图形。全部难点就一句话:<b>分清什么变、什么不变</b>。</p>
+      <table>
+        <tr><th></th><th>翻折后</th><th>为什么</th></tr>
+        <tr><td>折线<b>同一侧</b>的边长、角度</td><td><b>不变</b></td><td>那块纸没被弯，内部几何关系原样保留</td></tr>
+        <tr><td><b>跨过折线</b>的连线长、两侧点之间的角</td><td><b>改变</b></td><td>两块纸的相对位置转动了</td></tr>
+        <tr><td>折线本身的长</td><td><b>不变</b></td><td>折线是公共棱</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>解题主线:</b> ① 在原平面图上标出所有已知长度、直角; ② 翻折后，<b>同侧的量照抄</b>，得到折后图形的边长; ③ 常有「折后某两条线垂直 / 某点到某面距离为定值」当新条件，配合不变量把<b>建系需要的垂直关系</b>凑齐; ④ 建系→坐标法求角 / 判位置。</p>
+      <p class="trap">⚠ 最大陷阱:把「跨折线的量」也当成不变量照抄。比如矩形沿对角线折起，对角线两侧的边长不变，但<b>两个原本共线的点折后不再共线</b>，它们的连线长会变——那正是要用余弦定理或垂直条件重新算的量。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📄 互动 6 — 翻折动画：矩形沿折线折起，绿=不变的量，红=改变的量</div>
+      <canvas id="foldCv" width="700" height="360"></canvas>
+      <div class="ctrl">
+        <label>翻折角 φ <input id="fdAng" type="range" min="0" max="180" value="90" step="1"></label>
+        <button id="fdPlay">▶ 折一次</button><button id="fdReset">↺ 摊平</button>
+      </div>
+      <div class="live">
+        <div><b>翻折角 φ</b><span id="fdAngV">90°</span></div>
+        <div><b>不变:AB, 折线</b><span id="fdInv">保持</span></div>
+        <div><b>可变:跨线 BD</b><span id="fdVar">0</span></div>
+        <div><b>此刻 BD 长</b><span id="fdBD">0</span></div>
+      </div>
+      <p class="small">矩形 ABCD 沿一条中折线折起。<b>绿色</b>的边（折线同侧）长度一直不变;<b>红色</b>的跨折线连线 BD 随折角 φ 改变——φ=180°（摊平）时最长，φ 变小时缩短。这条会变的量正是要重新计算的。</p>
+    </div>
+
+    <h2 class="b">⑦ 翻折前后不变量高亮 · 建系求角</h2>
+    <div class="card">
+      <p style="margin:8px 0">翻折题真正考的，是「利用不变量把折后图形的<b>垂直关系</b>找出来，然后建系」。常见套路:</p>
+      <div class="mono">套路1:折后出现「某线⊥折线，且分居两侧」→ 折角就是二面角 → 若给二面角=90°，得到一对新垂直，可建系。</div>
+      <div class="mono">套路2:折前有直角（同侧不变）→ 折后仍是直角 → 直接当坐标轴。</div>
+      <div class="mono">套路3:折后给「某两点距离」→ 配不变边长，用余弦定理/勾股逆定理算出折角或造出垂直。</div>
+      <p style="margin:8px 0">一旦垂直关系凑齐三对，建系写坐标，翻折题就变成前面讲的普通坐标法:求线面角、二面角、判平行垂直，全套流程照跑。</p>
+      <p class="trap">⚠ 翻折后先问自己:<b>原来的直角还在吗?</b> 在折线同侧的直角还在;被折线拆开的直角可能已经不是直角了。建系用的垂直，必须是折后确实成立的。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✨ 互动 7 — 不变量高亮：切换「折前 / 折后」，同侧量高亮为不变</div>
+      <svg id="hiSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="histate on" data-s="0">折前（平面图）</button>
+        <button class="histate" data-s="1">折后（空间图）</button>
+      </div>
+      <div class="verdict" id="hiNote"></div>
+      <p class="small">同一张纸的折前 / 折后对照。<b>绿色</b>标的长度和直角在两个状态里完全一样（折线同侧，不变）;<b>红色</b>标的跨折线量折后变了。抓住绿色，就抓住了建系的依据。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 存在点使线面平行</h3>
+      <p><b class="tag">触发信号:</b>「是否存在点 P（在某棱 / 某线段上），使 直线 ∥ 平面」，或「使 P 满足…∥…」。</p>
+      <p><b class="tag">标准动作:</b>建系 → P 设 λ → 求出该直线的方向向量 s（含 λ） → 求目标平面法向量 n → 令 <b>s·n=0</b> → 解 λ → 验 λ∈[0,1]。</p>
+      <p><b class="tag">示例（带解）:</b>正方体 ABCD-A₁B₁C₁D₁ 边长 1，建系 A=(0,0,0)，B=(1,0,0)，D=(0,1,0)，A₁=(0,0,1)。P 在棱 CC₁ 上，C=(1,1,0)，P=(1,1,λ)。问是否存在 P 使 BP∥面 A₁DC₁?…求面 A₁DC₁ 法向量 n，令 BP·n=0 解出 λ。设解得 λ=1/2∈[0,1] → <b>存在，P 为 CC₁ 中点</b>。</p>
+      <p class="trap">陷阱:把平行判据写成 s∥n（那是垂直）;漏验 λ 范围;直线恰在面内时不算「平行」。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 存在点使线面 / 线线垂直</h3>
+      <p><b class="tag">触发信号:</b>「是否存在点 P，使 直线 ⊥ 平面」或「使 PA ⊥ PB / 使某两线垂直」。</p>
+      <p><b class="tag">标准动作:</b>线面垂直→令方向向量 <b>s = k·n</b>（或 s 与面内两向量点积均为 0），逐分量列式解 λ;线线垂直→令两方向向量<b>点积=0</b>解 λ。</p>
+      <p><b class="tag">示例（带解）:</b>P 在棱 AB 上 P=(λ,0,0)，问是否存在 P 使 D₁P⊥面 …。D₁=(0,1,1)，D₁P=(λ,−1,−1)。令 D₁P 平行于该面法向量 n=(a,b,c)，得比例方程组，解出 λ。若得 λ=2∉[0,1] → <b>不存在</b>。</p>
+      <p class="trap">陷阱:垂直写成 s·n=0（那是平行）;线线垂直只需点积=0，别硬套线面垂直的比例式。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 存在点使二面角为定值</h3>
+      <p><b class="tag">触发信号:</b>「是否存在点 P，使二面角 X-YZ-P（或某二面角）等于 45°/60°/90°」。</p>
+      <p><b class="tag">标准动作:</b>P 设 λ → 两个半平面法向量 n₁、n₂（含 λ） → cosθ(λ)=±(n₁·n₂)/(|n₁||n₂|) → 令 = cos（定值） → 解 λ → 验范围与锐钝。</p>
+      <p><b class="tag">示例（带解）:</b>P 在 PA 棱上 P=(0,0,λ)，两半平面法向量算得 n₁=(1,0,0)，n₂=(λ,1,λ)。令 |cosθ|=|n₁·n₂|/(|n₁||n₂|)=cos60°=1/2，得 λ/√(2λ²+1)=1/2，平方解 λ²=1/2，λ=√2/2∈[0,1] → <b>存在</b>。</p>
+      <p class="trap">陷阱:忘记 cos 取号/取绝对值导致漏解;二面角是钝角却按锐角取正 cos。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 翻折后建系求角</h3>
+      <p><b class="tag">触发信号:</b>「将△/矩形沿…折起，使…（常给一个折后垂直条件），求线面角 / 二面角」。</p>
+      <p><b class="tag">标准动作:</b>标出折线同侧不变量 → 用折后给的垂直条件凑齐三对垂直 → 建系写坐标 → 求方向向量 / 法向量 → 求角。</p>
+      <p><b class="tag">示例（带解）:</b>矩形 ABCD，AB=2，AD=1，沿对角线 BD 把△ABD 折起，使折后 AC=√3（跨折线量）。同侧 △ABD、△CBD 内边长不变。由 AC=√3 配合不变边长用勾股逆定理判 AB⊥…，凑出垂直后建系，再求二面角 A-BD-C 的余弦。</p>
+      <p class="trap">陷阱:把跨折线的 AC 当不变量照抄;折后仍默认原来的共面直角还在。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 翻折中判断位置关系的变化</h3>
+      <p><b class="tag">触发信号:</b>「随折角变化，某两线是否始终垂直 / 某线与某面是否始终平行 / 折到什么程度出现某关系」。</p>
+      <p><b class="tag">标准动作:</b>把折角设为参数（或折后某垂直设为参数），坐标全带该参数 → 写出待判关系的向量式 → 看它是<b>恒成立</b>（与参数无关）还是<b>仅在特定折角成立</b>。</p>
+      <p><b class="tag">示例（带解）:</b>矩形沿中线折起成直二面角，判断折前互相垂直的两条边折后是否仍垂直。建系写坐标后算两方向向量点积:若点积恒为 0 → 始终垂直（不变）;若点积含折角、仅某值为 0 → 只在该折角垂直。</p>
+      <p class="trap">陷阱:凭直觉说「折了还垂直」;跨折线的关系最易在折动中被打破，必须坐标验证。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 动点参数<b>范围 λ∈[0,1]</b> 是最后判决关卡!解出 λ 必须回代验范围，跑出 [0,1] 就是「不存在」，别只解方程不验。</p>
+      <p class="trap">② <b>线面平行 s·n=0</b>（方向向量⊥法向量）、<b>线面垂直 s∥n</b>（方向向量∥法向量）——两个判据「反着来」，最易记混。</p>
+      <p class="trap">③ 二面角的 cos <b>正负号</b>:法向量方向可任取，|cos| 相同，但二面角是锐是钝要按图定号，别让符号吞掉解或算反角。</p>
+      <p class="trap">④ 建系<b>三轴必须两两垂直</b>。没有现成垂直就先用条件造垂直，轴选歪全盘皆错。</p>
+      <p class="trap">⑤ 翻折:<b>折线同侧的量不变</b>，<b>跨折线的量会变</b>。把跨线量当不变量照抄是翻折头号错误。</p>
+      <p class="trap">⑥ 翻折后<b>原直角不一定还在</b>:同侧的直角保留，被折线拆开的角可能变。建系用的垂直要折后确实成立。</p>
+      <p class="trap">⑦ 求法向量时联立方程 n·a=0、n·b=0，注意<b>取一个非零解</b>即可（法向量可差常数倍），别把零向量当法向量。</p>
+      <p class="trap">⑧ 「存在」要<b>报出位置</b>（λ=? P 在哪），「不存在」要说清理由（无解 / 出范围），只写结论不给依据要扣分。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 「是否存在」= 求解方程的语言游戏:</b> 探索题本质是「解方程有没有满足约束的根」。假设存在→设参数→列方程，是把几何问题<b>翻译成代数方程</b>。你要做的不是「猜」存不存在，而是老实解出 λ，让方程告诉你答案。这套「先假设、再求解、看范围」的思维，正是数学建模的雏形。</p>
+      <p style="margin:8px 0"><b>② 一个未知点，一个自由度:</b> P 在线段上动 → 一个参数;P 在平面区域内动 → 两个参数。<b>自由度 = 参数个数</b>。想清楚动点有几个自由度，就知道该设几个参数——这能帮你避免「参数设多了解不出」或「设少了漏情况」。</p>
+      <p style="margin:8px 0"><b>③ 二面角随参数是连续函数，用「介值」看存不存在:</b> P 从一端滑到另一端，二面角 θ(λ) 连续变化，取遍 [θ_min, θ_max]。给定值落在这区间内 → 由连续性必有解（存在）;落在区间外 → 不存在。不用真解方程，先估个范围就能判定，这是秒杀选择/填空的利器。</p>
+      <p style="margin:8px 0"><b>④ 翻折的「不变量」= 刚体运动下的守恒量:</b> 折纸是把折线一侧的图形绕折线<b>刚性转动</b>。刚体运动保长度、保角度，所以同侧一切度量不变。理解到这层，你不再靠背，而是「转动的那块纸内部啥都没变」一眼看穿哪些量守恒。</p>
+      <p style="margin:8px 0"><b>⑤ 坐标法 vs 几何法，何时该切换:</b> 有现成或易造的垂直 → 坐标法（无脑、稳）;图形高度对称、能一眼看出平行/垂直（如中位线、面对角线）→ 几何法更快。高手是<b>两条腿走路</b>:坐标法保底拿分，几何法在坐标难建时救场。翻折题几乎总走坐标法，因为空间关系已被折乱，直觉不可靠。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测（先想，再点开）</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 立体几何探索性问题（存在性 / 翻折）· 坐标法四步走通杀</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#8a8a8a";
+
+/* ===== 3D 投影小工具（等距斜投影，可旋转） ===== */
+function makeProjector(rotDeg,pitDeg,scale,ox,oy){
+  const r=rotDeg*Math.PI/180, p=pitDeg*Math.PI/180;
+  const cr=Math.cos(r),sr=Math.sin(r),cp=Math.cos(p),sp=Math.sin(p);
+  return function(x,y,z){
+    // rotate about vertical axis then tilt
+    const X=x*cr - y*sr;
+    const Y=x*sr + y*cr;
+    const sx=ox + X*scale;
+    const sy=oy - z*scale*cp - Y*scale*sp;
+    return [sx,sy];
+  };
+}
+
+/* ===== 互动1：正方体建系与坐标 ===== */
+(function(){
+  const cv=document.getElementById('axCv');const ctx=cv.getContext('2d');
+  const Rs=document.getElementById('axRot'),Ps=document.getElementById('axPit');
+  const oName=document.getElementById('axName'),oCoord=document.getElementById('axCoord');
+  let rot=25,pit=28,sel=0;
+  const V=[
+    ['A',0,0,0],['B',1,0,0],['C',1,1,0],['D',0,1,0],
+    ['A1',0,0,1],['B1',1,0,1],['C1',1,1,1],['D1',0,1,1]
+  ];
+  const edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  function sync(){rot=+Rs.value;pit=+Ps.value;draw();}
+  Rs.oninput=Ps.oninput=sync;
+  document.getElementById('axNext').onclick=()=>{sel=(sel+1)%V.length;draw();};
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const P=makeProjector(rot,pit,150,240,270);
+    // axes
+    const O=P(0,0,0);
+    drawArrow(ctx,O,P(1.5,0,0),BLUE,'x');
+    drawArrow(ctx,O,P(0,1.5,0),GREEN,'y');
+    drawArrow(ctx,O,P(0,0,1.5),RED,'z');
+    // edges
+    ctx.strokeStyle=INK;ctx.lineWidth=2.5;
+    edges.forEach(e=>{const a=P(V[e[0]][1],V[e[0]][2],V[e[0]][3]);const b=P(V[e[1]][1],V[e[1]][2],V[e[1]][3]);
+      ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();});
+    // vertices
+    V.forEach((v,i)=>{const q=P(v[1],v[2],v[3]);
+      ctx.fillStyle=i===sel?RED:INK;ctx.beginPath();ctx.arc(q[0],q[1],i===sel?7:4,0,2*Math.PI);ctx.fill();
+      ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+      const lab=v[0].replace('1','₁');ctx.fillText(lab,q[0]+8,q[1]-4);});
+    // panel of selected coord
+    const s=V[sel];
+    ctx.fillStyle=INK;ctx.font='bold 15px sans-serif';
+    ctx.fillText('选中 '+s[0].replace('1','₁')+' = ('+s[1]+', '+s[2]+', '+s[3]+')',430,60);
+    oName.textContent=s[0].replace('1','₁');
+    oCoord.textContent='('+s[1]+','+s[2]+','+s[3]+')';
+  }
+  sync();
+})();
+
+function drawArrow(ctx,a,b,col,lab){
+  ctx.strokeStyle=col;ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();
+  const ang=Math.atan2(b[1]-a[1],b[0]-a[0]);
+  ctx.fillStyle=col;ctx.beginPath();
+  ctx.moveTo(b[0],b[1]);
+  ctx.lineTo(b[0]-10*Math.cos(ang-0.4),b[1]-10*Math.sin(ang-0.4));
+  ctx.lineTo(b[0]-10*Math.cos(ang+0.4),b[1]-10*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+  if(lab){ctx.fillStyle=col;ctx.font='bold 14px sans-serif';ctx.fillText(lab,b[0]+4,b[1]+4);}
+}
+
+/* ===== 互动2：动点 P 沿棱滑动，判定平行/垂直 ===== */
+(function(){
+  const cv=document.getElementById('slideCv');const ctx=cv.getContext('2d');
+  const Ls=document.getElementById('slLam'),Rs=document.getElementById('slRot');
+  const oLam=document.getElementById('slLamV'),oP=document.getElementById('slP'),oDot=document.getElementById('slDot'),oV=document.getElementById('slVerd');
+  let lam=0.5,rot=22,mode=0;
+  const V={A:[0,0,0],B:[1,0,0],C:[1,1,0],D:[0,1,0],A1:[0,0,1],B1:[1,0,1],C1:[1,1,1],D1:[0,1,1]};
+  const edges=[['A','B'],['B','C'],['C','D'],['D','A'],['A1','B1'],['B1','C1'],['C1','D1'],['D1','A1'],['A','A1'],['B','B1'],['C','C1'],['D','D1']];
+  function sync(){lam=+Ls.value;rot=+Rs.value;draw();}
+  Ls.oninput=Rs.oninput=sync;
+  document.querySelectorAll('.slmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.slmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function sub(u,v){return [u[0]-v[0],u[1]-v[1],u[2]-v[2]];}
+  function dot(u,v){return u[0]*v[0]+u[1]*v[1]+u[2]*v[2];}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const P=makeProjector(rot,26,150,250,280);
+    ctx.strokeStyle=INK;ctx.lineWidth=2.3;
+    edges.forEach(e=>{const a=P(...V[e[0]]);const b=P(...V[e[1]]);ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();});
+    // labels for main verts
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    for(const k in V){const q=P(...V[k]);const lab=k.replace('1','₁');ctx.fillText(lab,q[0]+6,q[1]-3);}
+    // point P on AB: AP=lam
+    const Pp=[lam,0,0];
+    const qP=P(...Pp);
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(qP[0],qP[1],7,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle=RED;ctx.font='bold 13px sans-serif';ctx.fillText('P',qP[0]+8,qP[1]+4);
+    // line D1P
+    const qD1=P(...V.D1);
+    ctx.strokeStyle=VIO;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(qD1[0],qD1[1]);ctx.lineTo(qP[0],qP[1]);ctx.stroke();
+    // reference face: use face ADD1A1 (x=0), normal n=(1,0,0)
+    const s=sub(Pp,V.D1); // D1P direction = (lam, -1, -1)
+    const n=[1,0,0];
+    oLam.textContent=lam.toFixed(2);
+    oP.textContent='('+lam.toFixed(2)+',0,0)';
+    let dotv, verd, ok;
+    if(mode===0){ // parallel test: s·n=0
+      dotv=dot(s,n);oDot.textContent='s·n='+dotv.toFixed(2);
+      ok=Math.abs(dotv)<0.03;
+      verd=ok?'∥ 成立 ✓':'不平行';
+    }else{ // perpendicular test: s ∥ n ? here n=(1,0,0), s=(lam,-1,-1) never parallel
+      // parallel iff s x n = 0
+      const cx=s[1]*n[2]-s[2]*n[1], cyv=s[2]*n[0]-s[0]*n[2], cz=s[0]*n[1]-s[1]*n[0];
+      const mag=Math.sqrt(cx*cx+cyv*cyv+cz*cz);
+      oDot.textContent='|s×n|='+mag.toFixed(2);
+      ok=mag<0.03;
+      verd=ok?'⊥ 成立 ✓':'不垂直';
+    }
+    oV.textContent=verd;
+    // banner
+    ctx.fillStyle=ok?GREEN:INK;ctx.font='bold 14px sans-serif';
+    const txt=mode===0?'判据：D₁P 方向 · 面ADD₁A₁法向(1,0,0) = 0 ?':'判据：D₁P 方向 ∥ 法向(1,0,0) ?';
+    ctx.fillText(txt,20,24);
+    ctx.fillStyle=ok?GREEN:RED;ctx.fillText(verd,20,44);
+  }
+  sync();
+})();
+
+/* ===== 互动3：坐标系与法向量 ===== */
+(function(){
+  const cv=document.getElementById('normCv');const ctx=cv.getContext('2d');
+  const Rs=document.getElementById('nmRot'),Ps=document.getElementById('nmPit');
+  const oA=document.getElementById('nmA'),oB=document.getElementById('nmB'),oN=document.getElementById('nmN'),oChk=document.getElementById('nmChk');
+  let rot=30,pit=26,face=0;
+  function sync(){rot=+Rs.value;pit=+Ps.value;draw();}
+  Rs.oninput=Ps.oninput=sync;
+  document.querySelectorAll('.nmface').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.nmface').forEach(x=>x.classList.remove('on'));b.classList.add('on');face=+b.dataset.f;draw();
+  });
+  function cross(u,v){return [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]];}
+  function dot(u,v){return u[0]*v[0]+u[1]*v[1]+u[2]*v[2];}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const P=makeProjector(rot,pit,120,300,250);
+    const O=[0,0,0];
+    // draw axes
+    drawArrow(ctx,P(...O),P(2,0,0),'#9aa','x');
+    drawArrow(ctx,P(...O),P(0,2,0),'#9aa','y');
+    drawArrow(ctx,P(...O),P(0,0,2),'#9aa','z');
+    let a,b,corners;
+    if(face===0){ // xOy plane, a=(1,0,0), b=(0,1,0), n=(0,0,1)
+      a=[1,0,0];b=[0,1,0];
+      corners=[[0,0,0],[1.4,0,0],[1.4,1.4,0],[0,1.4,0]];
+    }else{ // slanted plane through pts, a=(1,0,0), b=(0,1,1)
+      a=[1,0,0];b=[0,1,1];
+      corners=[[0,0,0],[1.4,0,0],[1.4,1.4,1.4],[0,1.4,1.4]];
+    }
+    // plane polygon
+    ctx.beginPath();
+    corners.forEach((c,i)=>{const q=P(...c);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});
+    ctx.closePath();ctx.fillStyle='rgba(20,80,200,0.15)';ctx.fill();ctx.strokeStyle=BLUE;ctx.lineWidth=2.5;ctx.stroke();
+    // a,b vectors
+    drawArrow(ctx,P(...O),P(...a),GREEN,'a');
+    drawArrow(ctx,P(...O),P(...b),ORANGE,'b');
+    // normal n=a×b, scaled to unit-ish
+    let n=cross(a,b);
+    const mag=Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
+    const nn=[n[0]/mag*1.3,n[1]/mag*1.3,n[2]/mag*1.3];
+    drawArrow(ctx,P(...O),P(...nn),RED,'n');
+    oA.textContent='('+a.join(',')+')';
+    oB.textContent='('+b.join(',')+')';
+    oN.textContent='('+n[0]+','+n[1]+','+n[2]+')';
+    oChk.textContent=dot(n,a).toFixed(0)+' (⊥a✓)';
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('n = a × b = ('+n[0]+','+n[1]+','+n[2]+')，且 n·a=0、n·b=0',20,24);
+  }
+  sync();
+})();
+
+/* ===== 互动4：二面角随 λ 变化 ===== */
+(function(){
+  const svg=document.getElementById('diSvg');
+  const Ls=document.getElementById('diLam'),Ts=document.getElementById('diTgt');
+  const oLam=document.getElementById('diLamV'),oTh=document.getElementById('diTheta'),oTg=document.getElementById('diTgtV'),oHit=document.getElementById('diHit');
+  let lam=0.4,tgt=60;
+  // model: theta(lam) = a curve, e.g. theta from 30 to 90 deg as lam 0->1
+  function theta(l){return 30 + 60*Math.sqrt(l);} // continuous, 30° at 0, 90° at 1
+  function sync(){lam=+Ls.value;tgt=+Ts.value;draw();}
+  Ls.oninput=Ts.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=230;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='θ';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='λ';
+    const thMin=20,thMax=100;
+    function px(l){return X0+l*W;}
+    function py(th){return Y0+H-((th-thMin)/(thMax-thMin))*H;}
+    // curve
+    let d='';
+    for(let i=0;i<=100;i++){const l=i/100;const x=px(l),y=py(theta(l));d+=(i===0?'M':'L')+x+' '+y;}
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':3.5});
+    // target line
+    const ty=py(tgt);
+    el(svg,'line',{x1:X0,y1:ty,x2:X0+W,y2:ty,stroke:RED,'stroke-width':2.5,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+W+2,y:ty+4,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'start'}).textContent=tgt+'°';
+    // intersection (solve theta(l)=tgt -> sqrt(l)=(tgt-30)/60)
+    const root=Math.pow((tgt-30)/60,2);
+    const hasSol=root>=0&&root<=1&&tgt>=30&&tgt<=90;
+    if(hasSol){
+      const ix=px(root),iy=py(tgt);
+      el(svg,'circle',{cx:ix,cy:iy,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'line',{x1:ix,y1:iy,x2:ix,y2:Y0+H,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'4 4'});
+      el(svg,'text',{x:ix,y:Y0+H+22,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='λ='+root.toFixed(2);
+    }
+    // current lam marker
+    const cx=px(lam),cy=py(theta(lam));
+    el(svg,'circle',{cx:cx,cy:cy,r:5,fill:RED});
+    el(svg,'line',{x1:cx,y1:Y0+H,x2:cx,y2:Y0+H+6,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W/2,y:Y0-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='二面角 θ 随 λ 连续变化；与虚线交点=存在的 P';
+    const cur=theta(lam);
+    oLam.textContent=lam.toFixed(2);
+    oTh.textContent=cur.toFixed(1)+'°';
+    oTg.textContent=tgt+'°';
+    oHit.textContent=hasSol?('可达 λ='+root.toFixed(2)):'不可达·不存在';
+  }
+  sync();
+})();
+
+/* ===== 互动5：存在性演示 ===== */
+(function(){
+  const svg=document.getElementById('exSvg');const note=document.getElementById('exNote');
+  let c=0;
+  document.querySelectorAll('.excase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.excase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=25,W=560,H=210;
+    // axes: horizontal = lam (-0.2..2), vertical = f(lam)
+    const lmin=-0.2,lmax=2;
+    function px(l){return X0+((l-lmin)/(lmax-lmin))*W;}
+    function py(v){return Y0+H/2 - v*40;}
+    // shaded valid region [0,1]
+    el(svg,'rect',{x:px(0),y:Y0,width:px(1)-px(0),height:H,fill:'rgba(30,158,134,0.12)'});
+    el(svg,'text',{x:(px(0)+px(1))/2,y:Y0+14,'font-size':11.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='有效区间 λ∈[0,1]';
+    // axes lines
+    el(svg,'line',{x1:X0,y1:py(0),x2:X0+W,y2:py(0),stroke:INK,'stroke-width':2.5});
+    el(svg,'line',{x1:px(0),y1:Y0,x2:px(0),y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:px(1),y1:Y0,x2:px(1),y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:px(0),y:Y0+H+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='0';
+    el(svg,'text',{x:px(1),y:Y0+H+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='1';
+    el(svg,'text',{x:X0+W,y:py(0)+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='λ';
+    // curve f(lam) and target=0 (x-axis is the "=目标" line)
+    let f,root,msg,col,title;
+    if(c===0){ // linear root at 0.5
+      f=(l)=>2*l-1;root=0.5;title='条件方程 2λ−1=0';col=GREEN;
+      msg='解得 λ=0.5，落在 [0,1] 内 → <b>存在</b>，此时 P 为该棱中点。';
+    }else if(c===1){ // root at 1.6, out of range
+      f=(l)=>l-1.6;root=1.6;title='条件方程 λ−1.6=0';col=RED;
+      msg='解得 λ=1.6，<b>跑出</b> [0,1] → 点已越过线段端点 → <b>不存在</b>。';
+    }else{ // no real root: parabola f=lam^2+... shifted up, min>0
+      f=(l)=>(l-0.9)*(l-0.9)+0.5;root=null;title='条件方程 (λ−0.9)²+0.5=0';col=RED;
+      msg='方程恒 >0，<b>无实数解</b>（判别式<0）→ <b>不存在</b>满足条件的 P。';
+    }
+    let d='';
+    for(let i=0;i<=120;i++){const l=lmin+(lmax-lmin)*i/120;const x=px(l),y=py(f(l));d+=(i===0?'M':'L')+x+' '+y;}
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':3.5});
+    // root marker
+    if(root!==null){
+      const rx=px(root),ry=py(0);
+      const inRange=root>=0&&root<=1;
+      el(svg,'circle',{cx:rx,cy:ry,r:7,fill:inRange?GREEN:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:rx,y:ry-12,'font-size':12,'font-weight':900,fill:inRange?GREEN:RED,'text-anchor':'middle'}).textContent='λ='+root;
+    }else{
+      el(svg,'text',{x:px(0.9),y:py(0.5)-10,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='无交点';
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0-6,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=title+'（曲线与 λ 轴的交点=解）';
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 互动6：翻折动画 ===== */
+(function(){
+  const cv=document.getElementById('foldCv');const ctx=cv.getContext('2d');
+  const As=document.getElementById('fdAng');
+  const oAng=document.getElementById('fdAngV'),oInv=document.getElementById('fdInv'),oVar=document.getElementById('fdVar'),oBD=document.getElementById('fdBD');
+  let phi=90,running=false,target=90;
+  function sync(){phi=+As.value;running=false;draw();}
+  As.oninput=sync;
+  // Rectangle split by vertical fold line into left half (fixed) and right half (folds up).
+  // 3D coords: fold line along y-axis at x=0. Left half in plane z=0 (x<0). Right half rotates about y-axis by (180-phi)?
+  // We'll define: flat = phi=180. As phi decreases, right half lifts.
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const rot=25,pit=26;
+    const P=makeProjector(rot,pit,90,350,250);
+    // fold line from (0,0,0) to (0,2,0)
+    // left half corners: A=(-1.5,0,0) top? define rectangle 3 wide 2 tall, fold at middle
+    const w=1.5,h=2;
+    // left rectangle (fixed): x in [-w,0]
+    const L=[[-w,0,0],[0,0,0],[0,h,0],[-w,h,0]];
+    // right rectangle folds about y-axis. Flat: x in [0,w]. Fold angle from flat: (180-phi).
+    const ang=(180-phi)*Math.PI/180; // 0 when flat(phi=180), up when phi<180
+    // rotate point (x,0) about y-axis: newx=x*cos, newz=x*sin
+    function rp(x,y){return [x*Math.cos(ang),y,x*Math.sin(ang)];}
+    const Rr=[rp(0,0),rp(w,0),rp(w,h),rp(0,h)];
+    // draw left
+    poly(ctx,P,L,'rgba(30,158,134,0.18)',GREEN);
+    // draw right
+    poly(ctx,P,Rr,'rgba(224,56,42,0.14)',RED);
+    // fold line highlight (unchanged)
+    line3(ctx,P,[0,0,0],[0,h,0],GREEN,4);
+    // point B = far corner of left top = (-w,h,0); point D = far corner of right top folded = Rr[2]
+    const A=[-w,0,0]; // bottom-left
+    const B=[-w,h,0]; // top-left (green, invariant edge AB length = h)
+    const Dfold=Rr[2]; // top-right folded (red, cross-line target)
+    // draw AB (green invariant)
+    line3(ctx,P,A,B,GREEN,4);
+    // draw BD cross line (red, variable)
+    line3(ctx,P,B,Dfold,RED,3.5);
+    // labels
+    label(ctx,P,A,'A');label(ctx,P,B,'B');label(ctx,P,Dfold,'D');label(ctx,P,[0,0,0],'折线');
+    // compute BD length
+    const BD=Math.sqrt((B[0]-Dfold[0])**2+(B[1]-Dfold[1])**2+(B[2]-Dfold[2])**2);
+    oAng.textContent=phi+'°';
+    oInv.textContent='保持 (AB='+h.toFixed(1)+')';
+    oVar.textContent=BD.toFixed(2);
+    oBD.textContent=BD.toFixed(2);
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('绿=折线同侧不变量  红=跨折线可变量 BD',20,24);
+    ctx.fillStyle=RED;ctx.fillText('BD = '+BD.toFixed(2)+'（随折角变）',20,44);
+  }
+  function poly(ctx,P,pts,fill,stroke){
+    ctx.beginPath();pts.forEach((p,i)=>{const q=P(...p);if(i===0)ctx.moveTo(q[0],q[1]);else ctx.lineTo(q[0],q[1]);});
+    ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=2.5;ctx.stroke();
+  }
+  function line3(ctx,P,a,b,col,w){const qa=P(...a),qb=P(...b);ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(qa[0],qa[1]);ctx.lineTo(qb[0],qb[1]);ctx.stroke();}
+  function label(ctx,P,a,t){const q=P(...a);ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.fillText(t,q[0]+7,q[1]-3);}
+  function loop(){
+    if(!running)return;
+    if(phi>target){phi-=2;if(phi<=target)phi=target;}
+    As.value=phi;draw();
+    if(phi>target)requestAnimationFrame(loop);else running=false;
+  }
+  document.getElementById('fdPlay').onclick=()=>{phi=180;target=90;running=true;requestAnimationFrame(loop);};
+  document.getElementById('fdReset').onclick=()=>{phi=180;As.value=180;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动7：不变量高亮 折前/折后 ===== */
+(function(){
+  const svg=document.getElementById('hiSvg');const note=document.getElementById('hiNote');
+  let st=0;
+  document.querySelectorAll('.histate').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.histate').forEach(x=>x.classList.remove('on'));b.classList.add('on');st=+b.dataset.s;draw();
+  });
+  function draw(){
+    clr(svg);
+    if(st===0){
+      // flat: rectangle ABCD with fold line, show green invariant edges + right angles, red cross-line
+      // rectangle corners on screen
+      const A=[120,80],B=[120,240],C=[420,240],D=[420,80];
+      const M=[270,80],N=[270,240]; // fold line MN vertical middle
+      // left half green edges AB, AM(top), MN? mark green
+      // draw whole rectangle
+      poly([A,D,C,B],'rgba(0,0,0,0)',INK,2);
+      // fold line
+      el(svg,'line',{x1:M[0],y1:M[1],x2:N[0],y2:N[1],stroke:GREEN,'stroke-width':4,'stroke-dasharray':'8 5'});
+      lab(M[0]-4,M[1]-8,'折线',GREEN);
+      // green invariant: AB (left edge), AM (left-top)
+      el(svg,'line',{x1:A[0],y1:A[1],x2:B[0],y2:B[1],stroke:GREEN,'stroke-width':4});
+      lab(A[0]-40,(A[1]+B[1])/2,'AB (绿·不变)',GREEN);
+      // right angle marker at A
+      rightAngle(A[0],A[1],1,1);
+      // red cross-line diagonal from B to D (crosses fold line)
+      el(svg,'line',{x1:B[0],y1:B[1],x2:D[0],y2:D[1],stroke:RED,'stroke-width':3.5});
+      lab((B[0]+D[0])/2-10,(B[1]+D[1])/2+20,'BD (红·跨折线,会变)',RED);
+      // vertices
+      ['A','B','C','D'].forEach((t,i)=>{const pt=[A,B,C,D][i];dot(pt,t);});
+      el(svg,'text',{x:270,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='折前：平面矩形 ABCD（沿折线折起）';
+      note.innerHTML='折前：绿色 AB、折线、A 处直角，折起后<b>照样不变</b>；红色 BD 跨过折线，折起后长度会改变，要重算。';
+      note.style.borderColor=INK;
+    }else{
+      // folded: show 3D-ish, left half in plane, right half lifted
+      const rot=20,pit=24;const P=makeProjector(rot,pit,80,340,250);
+      // fold at y-axis; left half x<0 flat; right half lifted 90deg (up)
+      const h=2,w=1.6;
+      const A=[-w,0,0],B=[-w,h,0]; // left green
+      const foldTop=[0,h,0],foldBot=[0,0,0];
+      // right half lifted 90: x->z
+      const Cf=[0,0,w],Df=[0,h,w]; // right corners lifted up (z)
+      // left poly
+      polyP(P,[A,foldBot,foldTop,B],'rgba(30,158,134,0.16)',GREEN);
+      // right poly
+      polyP(P,[foldBot,Cf,Df,foldTop],'rgba(224,56,42,0.12)',RED);
+      // green invariant edges
+      line3P(P,A,B,GREEN,4);
+      line3P(P,foldBot,foldTop,GREEN,4);
+      // red cross-line B to Df
+      line3P(P,B,Df,RED,3.5);
+      // labels
+      labP(P,A,'A');labP(P,B,'B');labP(P,foldTop,'M');labP(P,Df,'D');
+      el(svg,'text',{x:340,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='折后：右半掀起（此处折成直二面角）';
+      // annotate
+      el(svg,'text',{x:60,y:270,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='绿：AB、折线 长度不变';
+      el(svg,'text',{x:60,y:290,'font-size':12.5,'font-weight':900,fill:RED}).textContent='红：BD 变短了（B、D 不再共面直连）';
+      note.innerHTML='折后：绿色量与折前<b>完全一致</b>（可直接用来建系）；红色 BD 已改变——这正是要用余弦定理/垂直条件重新求的量。';
+      note.style.borderColor=INK;
+    }
+  }
+  function poly(pts,fill,stroke,w){const p=el(svg,'polygon',{points:pts.map(a=>a.join(',')).join(' '),fill:fill,stroke:stroke,'stroke-width':w});}
+  function polyP(P,pts3,fill,stroke){const pts=pts3.map(a=>P(...a));el(svg,'polygon',{points:pts.map(a=>a.join(',')).join(' '),fill:fill,stroke:stroke,'stroke-width':2.5});}
+  function line3P(P,a,b,col,w){const qa=P(...a),qb=P(...b);el(svg,'line',{x1:qa[0],y1:qa[1],x2:qb[0],y2:qb[1],stroke:col,'stroke-width':w});}
+  function labP(P,a,t){const q=P(...a);el(svg,'text',{x:q[0]+7,y:q[1]-3,'font-size':13,'font-weight':900,fill:INK}).textContent=t;}
+  function lab(x,y,t,col){el(svg,'text',{x:x,y:y,'font-size':12,'font-weight':900,fill:col}).textContent=t;}
+  function dot(pt,t){el(svg,'circle',{cx:pt[0],cy:pt[1],r:4,fill:INK});el(svg,'text',{x:pt[0]+6,y:pt[1]-5,'font-size':13,'font-weight':900,fill:INK}).textContent=t;}
+  function rightAngle(x,y,dx,dy){el(svg,'path',{d:'M'+(x+12*dx)+' '+y+' L'+(x+12*dx)+' '+(y+12*dy)+' L'+x+' '+(y+12*dy),fill:'none',stroke:GREEN,'stroke-width':2});}
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 探索性问题（是否存在点）的通用解题流程是什么？",a:"先假设存在→把未知点用参数 λ 表示（如 AP=λAB，坐标含 λ）→把条件翻译成关于 λ 的方程→解方程→验 λ 是否在 [0,1] 内。有解且在范围内则存在，否则不存在。"},
+ {q:"2. 建立空间直角坐标系的核心要求是什么？看到哪些结构可以直接建？",a:"核心要求：三条轴两两垂直。正方体/长方体用一顶点+三棱；有一棱垂直底面的锥/柱用该棱作 z 轴、底面内找两条垂直线作 x/y 轴；没有现成垂直就先用条件造出垂直再建。"},
+ {q:"3. P 在线段 AB 上如何用一个参数表示坐标？范围是多少？",a:"P=A+λ(B−A)，即 AP=λAB，λ∈[0,1]。λ=0 在 A，λ=1 在 B。代入 A、B 坐标后，P 每个分量都是含 λ 的一次式。"},
+ {q:"4. 线面平行、线面垂直的向量判据分别是什么？为什么最容易记混？",a:"线面平行：方向向量 s·法向量 n=0（s⊥n，且线不在面内）。线面垂直：s∥n（s=k·n）。两者「反着来」——平行时那个点积等于 0，指方向向量与法向量互相垂直，最易混。"},
+ {q:"5. 用坐标法求二面角，公式是什么？正负号怎么定？",a:"cosθ=±(n₁·n₂)/(|n₁||n₂|)，n₁、n₂ 为两半平面法向量。正负号按二面角是锐角（取正）还是钝角（取负）来定，需结合图形判断，不能只看公式。"},
+ {q:"6. 「是否存在点使二面角为 60°」怎么做？如何判断存不存在？",a:"P 设 λ→两半平面法向量含 λ→cosθ(λ)=1/2 列方程→解 λ 验范围。或用连续性：θ(λ) 连续取遍 [θmin,θmax]，60° 落在区间内则存在，落在区间外则不存在。"},
+ {q:"7. 解出 λ 后必须做什么？举一个「解出但不存在」的例子。",a:"必须验范围 λ∈[0,1]。例如解得 λ=1.6，虽然方程有解，但点已跑出线段 AB → 结论是「不存在」。忘记验范围直接写「存在」是常见丢分点。"},
+ {q:"8. 翻折问题中，哪些量翻折后不变？哪些会变？为什么？",a:"折线同一侧的边长、角度不变（那块纸没被弯，是刚体转动，保长度保角度）；跨过折线的连线长、两侧点间的角会变（两块纸相对转动了）；折线本身长不变（公共棱）。"},
+ {q:"9. 翻折题的解题主线是什么？",a:"①在原平面图标出所有已知长度、直角；②折后同侧量照抄得折后边长；③用折后给的新条件（如某垂直、某距离）配合不变量凑齐三对垂直；④建系写坐标→坐标法求角/判位置。"},
+ {q:"10. 矩形沿对角线 BD 折起，对角线两侧的边长变不变？原来共线的点折后如何？",a:"对角线两侧（各三角形内部）的边长不变；但原本在矩形对角线两端、跨折线的点，折后不再共线，它们的连线长会改变，要用余弦定理或垂直条件重新算。"},
+ {q:"11. 翻折后原来的直角还在吗？建系用的垂直有什么要求？",a:"折线同侧的直角保留；被折线拆开的角可能已不是直角。建系所用的垂直关系必须是折后确实成立的（同侧不变的直角，或由折后条件新证出的垂直）。"},
+ {q:"12. 求平面法向量的方法？要注意什么？",a:"设 n=(a,b,c)，令 n·（面内向量1）=0、n·（面内向量2）=0，联立解出比例，取一个非零解即可（法向量可差常数倍）。注意别取到零向量，通常令某分量为 1 或取整数解。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

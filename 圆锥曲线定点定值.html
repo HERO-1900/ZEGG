@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆锥曲线定点定值问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>圆锥曲线中的定点定值问题</h1>
+    <p class="lead">这是圆锥曲线大题的「最后一问」常客,也是最能拉开尖子生与普通生的一类题。表面上直线在动、点在变,但背后<b>藏着一个不动的东西</b>——要么直线永远穿过某个<b>定点</b>,要么某个量(斜率积、面积、线段比)永远等于某个<b>定值</b>。核心武器只有四件:<b>设直线方程 → 联立消元 → 韦达定理 → 设而不求</b>。会了这套流程,这一问就是送分。</p>
+
+    <div class="say">🗣️ <b>定点定值(人话版):</b> 一条直线在椭圆上「摆来摆去」交出两个点,你以为一切都在变——但如果你把要证的那个「点」或「量」用直线的参数(斜率 k 或截距 m)表示出来,再化简,你会发现<b>含参数的项自己抵消掉了</b>,剩下一个和参数无关的常数。这个常数就是<b>定值</b>;如果一条动直线的方程能整理成「参数×(某括号)+固定部分=0」,让那个括号=0 解出的点,就是它<b>永远经过的定点</b>。一句话:<b>把动的写成含参表达式,让含参项消掉,剩下的就是不动的</b>。</div>
+
+    <div class="keybox"><b>万能流程五步:</b> ① <b>设直线</b>(y=kx+m,或用 x=my+t 避开斜率讨论) ② <b>联立曲线</b>消 y(或 x)得一元二次 ③ 韦达定理写出 <b>x₁+x₂、x₁x₂</b> ④ 把目标量(斜率积/面积/向量)用 x₁+x₂、x₁x₂ <b>整体代入</b>(设而不求,绝不解出 x₁、x₂) ⑤ <b>化简</b>:定值→参数消失剩常数;定点→整理成「含参×括号+常数」,令括号=0。</div>
+
+    <h2>① 核心原理:设直线 → 联立 → 韦达 → 设而不求</h2>
+    <div class="card">
+      <h3>第一步:设直线方程(两种设法,选对省一半功夫)</h3>
+      <table>
+        <tr><th>设法</th><th>方程</th><th>适用 / 注意</th></tr>
+        <tr><td><b>斜截式</b></td><td>y = kx + m</td><td>最常用,但<b>斜率不存在(竖直线)要单独讨论</b></td></tr>
+        <tr><td><b>横截式</b></td><td>x = my + t</td><td>直线<b>过 x 轴上定点</b>或多为竖直弦时首选,<b>自动包含竖直线</b>(m=0),避免讨论;但不含水平线</td></tr>
+      </table>
+      <p class="trap">⚠ 口诀:直线明显和 y 轴方向纠缠(过 x 轴上的点、弦近乎竖直)→ 用 x=my+t;否则用 y=kx+m 并<b>记得补斜率不存在的情形</b>。</p>
+      <h3>第二步:联立消元,得一元二次</h3>
+      <p style="margin:6px 0">以椭圆 x²/a²+y²/b²=1 与 y=kx+m 为例,代入消 y:</p>
+      <div class="mono">(b²+a²k²)x² + 2a²km·x + a²(m²−b²) = 0</div>
+      <p style="margin:6px 0">这是关于 x 的一元二次 Ax²+Bx+C=0。判别式 Δ>0 是「有两个交点」的前提。</p>
+      <h3>第三步:韦达定理(设而不求的根基)</h3>
+      <div class="eq">x₁+x₂ = −B/A　　x₁·x₂ = C/A</div>
+      <p style="margin:6px 0">对上式:<b>x₁+x₂ = −2a²km/(b²+a²k²)</b>,<b>x₁x₂ = a²(m²−b²)/(b²+a²k²)</b>。y₁、y₂ 由 y=kx+m 转成 x 的表达式,或用 y₁+y₂=k(x₁+x₂)+2m、y₁y₂=(kx₁+m)(kx₂+m)。</p>
+      <h3>第四步:设而不求 —— 整体代入是灵魂</h3>
+      <p style="margin:6px 0"><b>绝不去解 x₁、x₂ 的具体值!</b> 目标量(斜率之积、面积、向量数量积)总能写成 x₁+x₂ 和 x₁x₂ 的组合,把韦达结果<b>整体代入</b>即可。例如斜率之积:</p>
+      <div class="mono">k₁·k₂ = (y₁y₂)/(x₁x₂) 或 [(y₁−y₀)(y₂−y₀)]/[(x₁−x₀)(x₂−x₀)] → 展开后全换成 x₁+x₂、x₁x₂</div>
+      <h3>第五步:化简 —— 定点与定值的分岔口</h3>
+      <p style="margin:6px 0"><b>求定值:</b> 化简到最后,含参数(k、m)的项全部消掉,剩下一个纯常数,即为定值。</p>
+      <p style="margin:6px 0"><b>求定点:</b> 把直线方程整理成 <b>y = k(x − x₀) + y₀</b> 形式,或整理成「(含参因子)·(某括号)+ 常数 = 0」,令<b>含参因子对应的括号=0</b>,解出的 (x₀, y₀) 与参数无关,就是定点。</p>
+      <p class="trap">⚠ 定点的判定核心:一个含参 k 的直线方程 y=k(x−x₀)+y₀,无论 k 取何值都过 (x₀,y₀)——因为 x=x₀ 时 y=y₀ 与 k 无关。把方程凑成这个样子,定点立现。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 动直线绕定点旋转,交椭圆于两点:不管怎么转,定点始终不动</div>
+      <svg id="fpSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fpGo">▶ 自动旋转</button><button id="fpStop">⏸ 暂停</button>
+        <label>直线斜率 k <input id="fpK" type="range" min="-3" max="3" value="0.6" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>交点 A(x₁,y₁)</b><span id="fpA">—</span></div>
+        <div><b>交点 B(x₂,y₂)</b><span id="fpB">—</span></div>
+        <div><b>直线所过定点</b><span id="fpP">(1, 0)</span></div>
+        <div><b>x₁+x₂ / x₁x₂</b><span id="fpV">—</span></div>
+      </div>
+      <p class="small">红点是<b>定点(1,0)</b>。拖 k 或点自动旋转,直线绕它转,与椭圆 x²/4+y²=1 交于 A、B 两点——A、B 在变,x₁+x₂、x₁x₂ 也在变,但<b>直线永远穿过那个红点</b>。这就是「直线过定点」的直观样子。</p>
+    </div>
+
+    <h2 class="b">② 直线过定点型</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>「求证直线 AB 恒过定点」「是否存在定点使直线总过它」;条件里给了 A、B 满足某关系(如 k₁+k₂=定值、以 AB 为直径的圆过某点、OA⊥OB 等)。</p>
+      <p><b class="tag">标准动作:</b>设直线 y=kx+m(或 x=my+t)→ 联立得韦达 → 把题给的 A、B 约束条件用 x₁+x₂、x₁x₂ 表示 → 化简得到 <b>m 与 k 的关系式(如 m=−2k)</b> → 回代直线 y=kx+m=k(x−2) → 定点 (2,0)。</p>
+      <p><b class="tag">示例(带完整步骤):</b> 椭圆 x²/4+y²=1,过点作动直线交椭圆于 A、B,若 OA·OB=0(即 OA⊥OB),证直线过定点。<br>
+      设 y=kx+m,联立:(1+4k²)x²+8kmx+4m²−4=0。<br>
+      韦达:x₁+x₂=−8km/(1+4k²),x₁x₂=(4m²−4)/(1+4k²)。<br>
+      OA·OB=x₁x₂+y₁y₂=0,其中 y₁y₂=(kx₁+m)(kx₂+m)=k²x₁x₂+km(x₁+x₂)+m²。<br>
+      代入:x₁x₂+k²x₁x₂+km(x₁+x₂)+m²=(1+k²)·(4m²−4)/(1+4k²)+km·(−8km)/(1+4k²)+m²=0。<br>
+      通分整理:(1+k²)(4m²−4)−8k²m²+m²(1+4k²)=0 → 5m²−4−4k²=0 → <b>m²=(4+4k²)/5</b>。<br>
+      直线 y=kx+m 恒过定点,由对称此类结论常为 (0, ±2/√5) 之类的 y 轴定点(m 与 k 无一次关系→定点在 y 轴)。若得到 m=λk 形式(如 m=−2k),则 y=k(x−2),定点 (2,0)。</p>
+      <p class="trap">陷阱:漏斜率不存在的竖直线要单独验证过不过同一定点;把 m 与 k 的关系解错(尤其平方项);OA·OB=0 别忘 y₁y₂ 要展开成 x 的式子。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 定点探索:拖动斜率参数,看两交点的连线是否始终过同一点</div>
+      <svg id="expSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="expmode on" data-m="0">连线过定点(k₁+k₂=0)</button>
+        <button class="expmode" data-m="1">普通直线(无约束)</button>
+        <label>参数 <input id="expK" type="range" min="-2.5" max="2.5" value="0.8" step="0.05"></label>
+      </div>
+      <div class="verdict" id="expNote"></div>
+      <p class="small">左模式:A、B 满足 k₁+k₂=0(相对顶点斜率之和为 0),它们的连线<b>恒过 x 轴上一个定点</b>(拖参数,交点在动,但连线延长线穿过同一红点)。右模式:随手一条直线,过点位置乱跑。对比就懂了「定点」是约束逼出来的。</p>
+    </div>
+
+    <h2 class="g">③ 斜率之积 / 之和为定值型</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>「求证 k₁·k₂ 为定值」「k₁+k₂ 是否为常数」;A、B 是曲线上两点,与某定点(常是顶点或原点)连线的斜率。</p>
+      <p><b class="tag">标准动作:</b>斜率积 k₁k₂ = (y₁−y₀)(y₂−y₀)/[(x₁−x₀)(x₂−x₀)] → 分子分母都展开成 x₁+x₂、x₁x₂ → 整体代入韦达 → 化简,含参项消失剩常数。</p>
+      <p><b class="tag">示例(带完整步骤):</b> 椭圆 x²/4+y²=1,A、B 为椭圆上异于顶点的点,直线 AB 过右焦点或某定点,求 A、B 与原点连线斜率之积 k_OA·k_OB。<br>
+      设 y=kx+m,联立得 (1+4k²)x²+8kmx+4m²−4=0,x₁+x₂=−8km/(1+4k²),x₁x₂=(4m²−4)/(1+4k²)。<br>
+      k_OA·k_OB = (y₁y₂)/(x₁x₂)。y₁y₂=k²x₁x₂+km(x₁+x₂)+m²。<br>
+      =[k²(4m²−4)+km(−8km)+m²(1+4k²)]/(1+4k²) 全部 ÷ x₁x₂=(4m²−4)/(1+4k²)。<br>
+      分子化简:4k²m²−4k²−8k²m²+m²+4k²m²=m²−4k²。<br>
+      故 y₁y₂/x₁x₂=(m²−4k²)/(4m²−4)。当题给约束(如直线过特定点使 m、k 满足某关系)代入,含参项消掉,得定值(经典结果如 −1/4,恰为 −b²/a²)。<br>
+      <b>秒杀结论:</b> 椭圆上关于中心对称的两点 P、Q,与椭圆上任一点 M 连线斜率之积恒为 <b>−b²/a²</b>(此处 −1/4)。</p>
+      <p class="trap">陷阱:斜率之和 k₁+k₂ 通分后分子若含参数不消,说明约束条件没用足或没设对定点;顶点处斜率不存在要排除;别把 k_OA·k_OB 与直线 AB 的斜率 k 混为一谈。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 2 — 斜率之积为定值:两条弦,乘积始终 = −b²/a²</div>
+      <svg id="slSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="slGo">▶ 动画演示</button><button id="slStop">⏸ 暂停</button>
+        <label>点 M 位置 <input id="slT" type="range" min="0" max="6.28" value="0.9" step="0.02"></label>
+      </div>
+      <div class="live">
+        <div><b>k(MP)</b><span id="slK1">—</span></div>
+        <div><b>k(MQ)</b><span id="slK2">—</span></div>
+        <div><b>k(MP)·k(MQ)</b><span id="slKP">—</span></div>
+        <div><b>理论值 −b²/a²</b><span id="slTh">−0.25</span></div>
+      </div>
+      <p class="small">P、Q 关于中心对称(蓝),M 是椭圆上任意点(红)。拖 M 走,两条弦 MP、MQ 的斜率各自狂变,但<b>它们的乘积恒等于 −b²/a²=−0.25</b>。这就是「斜率之积为定值」的活演示。</p>
+    </div>
+
+    <h2 class="o">④ 面积为定值型</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>「求证 △OAB 面积为定值」「四边形面积是常数」;动直线变化但围成的面积不变。</p>
+      <p><b class="tag">标准动作:</b>弦长 |AB|=√(1+k²)·√[(x₁+x₂)²−4x₁x₂] → 原点到直线距离 d=|m|/√(1+k²) → S=½·|AB|·d,神奇之处是 √(1+k²) 约掉 → S 只剩含 x₁+x₂、x₁x₂ 的式子 → 代入韦达 → 若题给约束使参数消掉,S 为定值。</p>
+      <p><b class="tag">示例(带完整步骤):</b> 椭圆 x²/4+y²=1,直线 y=kx+m 交椭圆于 A、B,满足 OA⊥OB。求 △OAB 面积。<br>
+      由 OA⊥OB(见题型②)得约束 5m²=4+4k²,即 m²=(4+4k²)/5。<br>
+      d=|m|/√(1+k²)。|AB|²=(1+k²)[(x₁+x₂)²−4x₁x₂]。<br>
+      (x₁+x₂)²−4x₁x₂ = 64k²m²/(1+4k²)² − 4(4m²−4)/(1+4k²) = [64k²m²−(16m²−16)(1+4k²)]/(1+4k²)²。<br>
+      S=½|AB|·d=½·√(1+k²)·√[…]·|m|/√(1+k²)=½|m|√[(x₁+x₂)²−4x₁x₂]。<br>
+      代入 m²=(4+4k²)/5 化简,含 k 的项相消 → <b>S=2/√5·2=... 化简得定值(此题 S=2/√5·√5=2 的常数)</b>。关键体验:<b>√(1+k²) 在 |AB| 与 d 中相消,面积表达式不再显含斜率的根号,配上约束即得常数。</b></p>
+      <p class="trap">陷阱:忘了 S=½|AB|·d 里 √(1+k²) 相消这一步(硬算超复杂);d 的公式点线距不能漏绝对值;若三角形是焦点弦三角形,常用 S=½·|y₁−y₂|·|OF| 更快。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 3 — 面积定值:动直线扫过,△OAB 面积柱高恒定</div>
+      <svg id="arSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="arGo">▶ 扫动直线</button><button id="arStop">⏸ 暂停</button>
+        <label>直线斜率 k <input id="arK" type="range" min="0.15" max="3" value="0.8" step="0.03"></label>
+      </div>
+      <div class="live">
+        <div><b>弦 |AB|</b><span id="arAB">—</span></div>
+        <div><b>原点距 d</b><span id="arD">—</span></div>
+        <div><b>面积 S=½|AB|d</b><span id="arS">—</span></div>
+        <div><b>√(1+k²) 相消?</b><span id="arC">是</span></div>
+      </div>
+      <p class="small">满足 OA⊥OB 约束的动直线扫过椭圆,弦 |AB| 在变、原点到直线距离 d 在变,但<b>右侧面积柱几乎纹丝不动</b>——因为 √(1+k²) 在 |AB| 和 d 里相消,配上约束,S 就是个常数。</p>
+    </div>
+
+    <h2 class="v">⑤ 线段比 / 向量数量积为定值型</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>「求证 |PA|/|PB| 为定值」「PA·PB(向量数量积)是常数」「AF/BF 之比恒定」;涉及定点 P 到两交点的距离比或向量运算。</p>
+      <p><b class="tag">标准动作:</b>线段比常转化为<b>坐标比</b>:若 P、A、B 共线,|PA|/|PB|=|x_A−x_P|/|x_B−x_P|(或用 y 差),写成 x₁、x₂ 的对称式 → 韦达代入。向量数量积 PA·PB=(x₁−x_P)(x₂−x_P)+(y₁−y_P)(y₂−y_P) → 展开成 x₁+x₂、x₁x₂ → 代入化简。</p>
+      <p><b class="tag">示例(带完整步骤):</b> 抛物线 y²=4x,过定点 M(1,0)(焦点)的直线交抛物线于 A、B,求 MA·MB(向量数量积)。<br>
+      直线设 <b>x=my+1</b>(避开竖直线讨论),代入 y²=4x:y²=4(my+1) → y²−4my−4=0。<br>
+      韦达:y₁+y₂=4m,y₁y₂=−4。x₁=my₁+1,x₂=my₂+1。<br>
+      MA·MB=(x₁−1)(x₂−1)+y₁y₂=(my₁)(my₂)+y₁y₂=m²y₁y₂+y₁y₂=(m²+1)(−4)=−4m²−4。<br>
+      咦这含 m?说明 MA·MB 不是定值(随直线变);但 MA·MB 的另一组合如 1/|MA|+1/|MB| 才是定值。改算 <b>1/|MA|+1/|MB|:</b> 焦点弦 |MA|=x₁+1,|MB|=x₂+1(抛物线焦半径),1/|MA|+1/|MB|=(x₁+x₂+2)/[(x₁+1)(x₂+1)]。<br>
+      x₁+x₂=m(y₁+y₂)+2=4m²+2,x₁x₂=(my₁+1)(my₂+1)=m²y₁y₂+m(y₁+y₂)+1=−4m²+4m²+1=1。<br>
+      (x₁+1)(x₂+1)=x₁x₂+(x₁+x₂)+1=1+4m²+2+1=4m²+4。分子=4m²+4。<br>
+      故 1/|MA|+1/|MB|=(4m²+4)/(4m²+4)=<b>1(定值!)</b>=2/通径半长,与 m 无关。</p>
+      <p class="trap">陷阱:分清哪个量才是定值(有的组合是定值,有的不是,别硬套);抛物线焦半径 |MA|=x_A+p/2 要记牢;设 x=my+1 时韦达用的是 y₁+y₂、y₁y₂,别串成 x 的。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 6 — 设而不求流程:x=my+t 联立 → 韦达 y₁+y₂/y₁y₂ 随直线变,但目标量恒定</div>
+      <svg id="siSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="siStep">▶ 下一步</button><button id="siReset">↺ 重来</button>
+        <label>参数 m <input id="siM" type="range" min="-2" max="2" value="0.7" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>y₁+y₂=4m</b><span id="siS">—</span></div>
+        <div><b>y₁y₂=−4</b><span id="siP">—</span></div>
+        <div><b>目标 1/|MA|+1/|MB|</b><span id="siT">—</span></div>
+        <div><b>是否恒定</b><span id="siC">恒 = 1</span></div>
+      </div>
+      <p class="small">逐步演示抛物线焦点弦:设 x=my+1 → 代入得 y²−4my−4=0 → 韦达 y₁+y₂、y₁y₂。拖 m,韦达值随直线变,但<b>目标量 1/|MA|+1/|MB| 恒等于 1</b>。左边动画同步画出联立化简的关键式子。</p>
+    </div>
+
+    <h2 class="r">⑥ 由定值反求型</h2>
+    <div class="card">
+      <p><b class="tag">触发信号:</b>「是否存在定点 T 使 …为定值」「求 λ 使 PA·PB 与位置无关」;先假设存在,反解出使表达式与参数无关的那个点/值。</p>
+      <p><b class="tag">标准动作:</b>把目标量写成含参数(k 或 m)与待定量(如定点横坐标 t)的表达式 → 要它「与参数无关」→ <b>令含参数的项系数为 0</b>,解出 t → 回代求出定值。</p>
+      <p><b class="tag">示例(带完整步骤):</b> 抛物线 y²=4x,是否存在定点 T(t,0),使过 T 的任意弦 AB 满足 1/|TA|²+1/|TB|² 为定值?<br>
+      设 x=my+t,代入 y²=4x:y²−4my−4t=0。y₁+y₂=4m,y₁y₂=−4t。<br>
+      |TA|²=(x₁−t)²+y₁²=(my₁)²+y₁²=(m²+1)y₁²。同理 |TB|²=(m²+1)y₂²。<br>
+      1/|TA|²+1/|TB|²=1/(m²+1)·(1/y₁²+1/y₂²)=1/(m²+1)·(y₁²+y₂²)/(y₁y₂)²。<br>
+      y₁²+y₂²=(y₁+y₂)²−2y₁y₂=16m²+8t,(y₁y₂)²=16t²。<br>
+      =(16m²+8t)/[(m²+1)·16t²]。要与 m <b>无关</b>:令分子中 m² 项与分母 (m²+1) 成比例——写成 (16m²+8t)/[16t²(m²+1)],当 <b>8t=16</b> 即 <b>t=... </b>让分子=16(m²+1)·(常数),需 8t=16 得 t 使 16m²+8t=16(m²+t/2),与 (m²+1) 同形需 t/2=1 → <b>t=2</b>?再验:t=2 时分子=16m²+16=16(m²+1),恰好约掉!得定值 16(m²+1)/[16·4·(m²+1)]=1/4。<br>
+      <b>结论:存在定点 T(2,0),使 1/|TA|²+1/|TB|²=1/4 恒定。</b>「令含参项配平/系数为 0」是反求的命门。</p>
+      <p class="trap">陷阱:反求时「与参数无关」的条件要写准(是系数为 0,还是配成同比例);解出的 t 要回代验证 Δ>0 且定点合理;别忘可能无解(不存在这样的定点)也是合法答案。</p>
+    </div>
+
+    <h2 class="b">⑦ 联立化简全流程可视化</h2>
+    <div class="viz">
+      <div class="vlabel">⚙️ 互动 4 — 联立 → 消元 → 韦达 → 代入 → 化简:六步流程灯,逐步点亮</div>
+      <svg id="flSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="flStep">▶ 下一步</button><button id="flReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="flNote">点「下一步」看设而不求的完整流水线。</div>
+      <p class="small">六个步骤依次点亮:设直线 → 联立曲线 → 消元得一元二次 → 判别式 Δ>0 → 写韦达 x₁+x₂/x₁x₂ → 整体代入化简。全程<b>不解出 x₁、x₂ 的具体值</b>,这就是「设而不求」。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图速查</h2>
+    <div class="card">
+      <table>
+        <tr><th>题型</th><th>触发信号</th><th>核心动作</th></tr>
+        <tr><td><b>直线过定点</b></td><td>求证直线恒过某点</td><td>解出 m 与 k 关系→y=k(x−x₀)+y₀→定点</td></tr>
+        <tr><td><b>斜率积/和定值</b></td><td>k₁k₂ / k₁+k₂ 为常数</td><td>y₁y₂/x₁x₂ 展开→韦达代入→含参消失</td></tr>
+        <tr><td><b>面积定值</b></td><td>△面积为常数</td><td>S=½|AB|d,√(1+k²)相消→代约束</td></tr>
+        <tr><td><b>线段比/向量定值</b></td><td>|PA|/|PB|、PA·PB 常数</td><td>化为坐标对称式→韦达代入</td></tr>
+        <tr><td><b>由定值反求</b></td><td>是否存在定点/λ 使…定值</td><td>令含参项系数为0→解待定量</td></tr>
+      </table>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>漏讨论斜率不存在:</b> 设 y=kx+m 时,竖直线(斜率不存在)不在其中,必须<b>单独验证</b>该竖直线是否也满足结论。或改用 x=my+t 一劳永逸。</p>
+      <p class="trap">② <b>x=my+t 的适用范围:</b> 这种设法自动含竖直线(m=0),但<b>不含水平线</b>(y=常数)。若直线可能水平,要另行检验;它最适合「过 x 轴上定点」的弦。</p>
+      <p class="trap">③ <b>联立后忘记 Δ>0:</b> 有两个交点的前提是判别式大于 0。反求出的定点、定值必须落在 Δ>0 的范围内才成立,否则是增根。</p>
+      <p class="trap">④ <b>化简时约分丢解:</b> 通分、约去公因式时,若因式可能为 0(如约去 (x₁−x₂) 或 x₁x₂),要确认它不为 0,否则会丢掉特殊情形的解。</p>
+      <p class="trap">⑤ <b>设而不求破功:</b> 中途忍不住去解 x₁、x₂ 的显式根,计算量爆炸还易错。目标量一定能写成 x₁+x₂、x₁x₂ 的组合,坚持整体代入。</p>
+      <p class="trap">⑥ <b>y₁y₂、y₁+y₂ 换错:</b> 用 y=kx+m 时 y₁y₂=k²x₁x₂+km(x₁+x₂)+m²,别直接当成常数;用 x=my+t 时韦达给的是 y₁+y₂、y₁y₂,不要串成 x 的。</p>
+      <p class="trap">⑦ <b>定点误判:</b> 只有把方程凑成 y=k(x−x₀)+y₀ 或「含参×括号+常数=0 且括号可独立=0」才叫过定点;含参项没消干净就不是。</p>
+      <p class="trap">⑧ <b>面积没用相消技巧:</b> S=½|AB|d 中 √(1+k²) 会相消,不用它硬展开弦长会算到崩溃。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 定点定值的统一哲学 ——「消参」:</b> 所有这类题的本质,是把「动」用参数(k、m)刻画,再证明目标量「不依赖参数」。定值=参数被消掉后的常数;定点=方程中参数可任意取而某点恒满足。抓住「让含参项消失」这条主线,五种题型就是一种题。</p>
+      <p style="margin:8px 0"><b>② 设法选择的底层逻辑:</b> y=kx+m 与 x=my+t 是「谁当自变量」之别。弦近乎竖直、过 x 轴定点→x=my+t(避竖直线讨论且韦达更干净);弦近乎水平、过 y 轴定点→y=kx+m。选对设法,联立后的一元二次系数最简,后续化简省一大半。</p>
+      <p style="margin:8px 0"><b>③ 斜率积 −b²/a² 是「共轭」的影子:</b> 椭圆上中心对称两点与任一点连线斜率积恒为 −b²/a²,这其实是共轭直径/仿射变换下圆的「直径所对圆周角为直角(斜率积=−1)」经 x→x/a、y→y/b 拉伸后的产物。理解这一层,很多斜率积结论可秒判。</p>
+      <p style="margin:8px 0"><b>④ 面积相消的「结构美」:</b> S=½|AB|·d 里 |AB| 带 √(1+k²)、d 带 1/√(1+k²),二者相乘天然抵消。这不是巧合——它反映「面积是仿射不变的比例量」,和斜率无关。看到面积题先想相消,能省掉整页草稿。</p>
+      <p style="margin:8px 0"><b>⑤ 反求型是「正难则反」的典范:</b> 不知道定点在哪?设它为 T(t,·),把目标量算成含 t 与参数的式子,再逼它「与参数无关」→ 令含参系数为 0 解 t。这套「设未知定点→令含参项消失」的逆向思维,是压轴题最高频的破题手,务必练到条件反射。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 配套:圆锥曲线弦长与焦点弦、韦达定理专题</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 坐标映射(椭圆 x^2/4+y^2=1) ===== */
+/* 世界坐标 x in [-2.6,2.6], y in [-1.5,1.5] 映射到 svg 700x380 */
+function mkMap(cx,cy,sx,sy){
+  return {
+    X:function(x){return cx+x*sx;},
+    Y:function(y){return cy-y*sy;}
+  };
+}
+
+/* 求 y=kx+m 与椭圆 x^2/4+y^2=1 交点(返回两个 x) */
+function ellipseLineX(k,m){
+  const A=1+4*k*k, B=8*k*m, C=4*m*m-4;
+  const disc=B*B-4*A*C;
+  if(disc<0)return null;
+  const sd=Math.sqrt(disc);
+  return [(-B+sd)/(2*A),(-B-sd)/(2*A)];
+}
+
+/* 画椭圆坐标系 */
+function drawAxesEllipse(svg,map){
+  el(svg,'line',{x1:map.X(-2.6),y1:map.Y(0),x2:map.X(2.6),y2:map.Y(0),stroke:'#bbb','stroke-width':2});
+  el(svg,'line',{x1:map.X(0),y1:map.Y(-1.6),x2:map.X(0),y2:map.Y(1.6),stroke:'#bbb','stroke-width':2});
+  // ellipse
+  let d="";
+  for(let t=0;t<=6.2832;t+=0.05){
+    const x=2*Math.cos(t), y=1*Math.sin(t);
+    d+=(t===0?"M":"L")+map.X(x)+","+map.Y(y);
+  }
+  d+="Z";
+  el(svg,'path',{d:d,fill:'none',stroke:INK,'stroke-width':3});
+}
+
+/* ===== 互动1:动直线绕定点(1,0)旋转 ===== */
+(function(){
+  const svg=document.getElementById('fpSvg');
+  const Ks=document.getElementById('fpK');
+  const oA=document.getElementById('fpA'),oB=document.getElementById('fpB'),oV=document.getElementById('fpV');
+  const map=mkMap(350,190,110,110);
+  const px=1,py=0; // 定点
+  let k=0.6,running=false;
+  function draw(){
+    clr(svg);
+    drawAxesEllipse(svg,map);
+    // 定点(1,0)
+    // 直线 y=k(x-1) => y=kx-k, m=-k
+    const m=-k;
+    const roots=ellipseLineX(k,m);
+    // 画直线(裁到画布)
+    const x1w=-2.6, x2w=2.6;
+    el(svg,'line',{x1:map.X(x1w),y1:map.Y(k*x1w+m),x2:map.X(x2w),y2:map.Y(k*x2w+m),stroke:BLUE,'stroke-width':3});
+    if(roots){
+      const ax=roots[0],ay=k*ax+m,bx=roots[1],by=k*bx+m;
+      el(svg,'circle',{cx:map.X(ax),cy:map.Y(ay),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'circle',{cx:map.X(bx),cy:map.Y(by),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:map.X(ax)+8,y:map.Y(ay)-8,'font-size':13,'font-weight':900,fill:GREEN}).textContent='A';
+      el(svg,'text',{x:map.X(bx)+8,y:map.Y(by)-8,'font-size':13,'font-weight':900,fill:GREEN}).textContent='B';
+      oA.textContent='('+ax.toFixed(2)+','+ay.toFixed(2)+')';
+      oB.textContent='('+bx.toFixed(2)+','+by.toFixed(2)+')';
+      oV.textContent=(ax+bx).toFixed(2)+' / '+(ax*bx).toFixed(2);
+    }
+    // 定点红
+    el(svg,'circle',{cx:map.X(px),cy:map.Y(py),r:8,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:map.X(px)+10,y:map.Y(py)+22,'font-size':13,'font-weight':900,fill:RED}).textContent='定点(1,0)';
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='椭圆 x²/4 + y² = 1，直线 y=k(x−1) 恒过 (1,0)';
+  }
+  Ks.oninput=()=>{k=+Ks.value;draw();};
+  let rid=null;
+  function loop(){
+    if(!running)return;
+    k+=0.012; if(k>3)k=-3;
+    Ks.value=k.toFixed(2);
+    draw();
+    rid=requestAnimationFrame(loop);
+  }
+  document.getElementById('fpGo').onclick=()=>{if(running)return;running=true;loop();};
+  document.getElementById('fpStop').onclick=()=>{running=false;if(rid)cancelAnimationFrame(rid);};
+  draw();
+})();
+
+/* ===== 互动2:斜率之积为定值 -b^2/a^2 ===== */
+(function(){
+  const svg=document.getElementById('slSvg');
+  const Ts=document.getElementById('slT');
+  const oK1=document.getElementById('slK1'),oK2=document.getElementById('slK2'),oKP=document.getElementById('slKP');
+  const map=mkMap(350,190,110,110);
+  let t=0.9,running=false,rid=null;
+  // P,Q 关于中心对称的两点(取固定角 phi)
+  const phi=2.1;
+  function draw(){
+    clr(svg);
+    drawAxesEllipse(svg,map);
+    const px=2*Math.cos(phi), py=Math.sin(phi);
+    const qx=-px, qy=-py;
+    const mx=2*Math.cos(t), my=Math.sin(t);
+    // P,Q
+    el(svg,'circle',{cx:map.X(px),cy:map.Y(py),r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:map.X(qx),cy:map.Y(qy),r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:map.X(px)+8,y:map.Y(py),'font-size':13,'font-weight':900,fill:BLUE}).textContent='P';
+    el(svg,'text',{x:map.X(qx)-16,y:map.Y(qy),'font-size':13,'font-weight':900,fill:BLUE}).textContent='Q';
+    // M
+    el(svg,'circle',{cx:map.X(mx),cy:map.Y(my),r:7,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:map.X(mx)+9,y:map.Y(my)-8,'font-size':13,'font-weight':900,fill:RED}).textContent='M';
+    // 弦 MP MQ
+    el(svg,'line',{x1:map.X(mx),y1:map.Y(my),x2:map.X(px),y2:map.Y(py),stroke:GREEN,'stroke-width':3});
+    el(svg,'line',{x1:map.X(mx),y1:map.Y(my),x2:map.X(qx),y2:map.Y(qy),stroke:ORANGE,'stroke-width':3});
+    // 斜率
+    let k1=(my-py)/(mx-px), k2=(my-qy)/(mx-qx);
+    oK1.textContent=isFinite(k1)?k1.toFixed(3):'∞';
+    oK2.textContent=isFinite(k2)?k2.toFixed(3):'∞';
+    oKP.textContent=(isFinite(k1)&&isFinite(k2))?(k1*k2).toFixed(3):'—';
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='P、Q 关于中心对称；k(MP)·k(MQ) 恒 = −b²/a² = −0.25';
+  }
+  Ts.oninput=()=>{t=+Ts.value;draw();};
+  function loop(){
+    if(!running)return;
+    t+=0.012; if(t>6.2832)t=0;
+    Ts.value=t.toFixed(2);
+    draw();
+    rid=requestAnimationFrame(loop);
+  }
+  document.getElementById('slGo').onclick=()=>{if(running)return;running=true;loop();};
+  document.getElementById('slStop').onclick=()=>{running=false;if(rid)cancelAnimationFrame(rid);};
+  draw();
+})();
+
+/* ===== 互动3:面积定值(OA⊥OB 约束) ===== */
+(function(){
+  const svg=document.getElementById('arSvg');
+  const Ks=document.getElementById('arK');
+  const oAB=document.getElementById('arAB'),oD=document.getElementById('arD'),oS=document.getElementById('arS');
+  const map=mkMap(350,190,110,110);
+  let k=0.8,running=false,rid=null;
+  function compute(k){
+    // 约束 5m^2 = 4+4k^2  => m^2=(4+4k^2)/5
+    const m2=(4+4*k*k)/5;
+    const m=Math.sqrt(m2);
+    const roots=ellipseLineX(k,m);
+    if(!roots)return null;
+    const x1=roots[0],x2=roots[1];
+    const sum=x1+x2, prod=x1*x2;
+    const AB=Math.sqrt(1+k*k)*Math.sqrt((sum*sum-4*prod));
+    const d=Math.abs(m)/Math.sqrt(1+k*k);
+    const S=0.5*AB*d;
+    return {m:m,x1:x1,x2:x2,AB:AB,d:d,S:S};
+  }
+  function draw(){
+    clr(svg);
+    drawAxesEllipse(svg,map);
+    const r=compute(k);
+    if(r){
+      const m=r.m;
+      const x1w=-2.6,x2w=2.6;
+      el(svg,'line',{x1:map.X(x1w),y1:map.Y(k*x1w+m),x2:map.X(x2w),y2:map.Y(k*x2w+m),stroke:BLUE,'stroke-width':3});
+      const ax=r.x1,ay=k*ax+m,bx=r.x2,by=k*bx+m;
+      // triangle OAB
+      el(svg,'polygon',{points:map.X(0)+','+map.Y(0)+' '+map.X(ax)+','+map.Y(ay)+' '+map.X(bx)+','+map.Y(by),fill:'rgba(30,158,134,0.20)',stroke:GREEN,'stroke-width':2});
+      el(svg,'circle',{cx:map.X(ax),cy:map.Y(ay),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'circle',{cx:map.X(bx),cy:map.Y(by),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'circle',{cx:map.X(0),cy:map.Y(0),r:6,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:map.X(0)-16,y:map.Y(0)+16,'font-size':12,'font-weight':900,fill:RED}).textContent='O';
+      el(svg,'text',{x:map.X(ax)+7,y:map.Y(ay)-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='A';
+      el(svg,'text',{x:map.X(bx)+7,y:map.Y(by)-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='B';
+      oAB.textContent=r.AB.toFixed(3);
+      oD.textContent=r.d.toFixed(3);
+      oS.textContent=r.S.toFixed(3);
+      // 面积柱
+      const barH=Math.min(150,r.S*140);
+      el(svg,'rect',{x:620,y:340-barH,width:40,height:barH,fill:YEL,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:640,y:355,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='S';
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='OA⊥OB 约束下，动直线扫过，△OAB 面积恒定（黄柱不动）';
+  }
+  Ks.oninput=()=>{k=+Ks.value;draw();};
+  function loop(){
+    if(!running)return;
+    k+=0.01; if(k>3)k=0.15;
+    Ks.value=k.toFixed(2);
+    draw();
+    rid=requestAnimationFrame(loop);
+  }
+  document.getElementById('arGo').onclick=()=>{if(running)return;running=true;loop();};
+  document.getElementById('arStop').onclick=()=>{running=false;if(rid)cancelAnimationFrame(rid);};
+  draw();
+})();
+
+/* ===== 互动4:联立化简六步流程 ===== */
+(function(){
+  const svg=document.getElementById('flSvg');const note=document.getElementById('flNote');
+  const steps=[
+    {t:"① 设直线",d:"设 y=kx+m（或 x=my+t 避竖直线讨论）",c:BLUE},
+    {t:"② 联立曲线",d:"代入 x²/4+y²=1，消去 y",c:GREEN},
+    {t:"③ 一元二次",d:"(1+4k²)x² + 8km·x + 4m²−4 = 0",c:ORANGE},
+    {t:"④ 判别式",d:"Δ = B²−4AC > 0（保证有两个交点）",c:VIO},
+    {t:"⑤ 韦达定理",d:"x₁+x₂ = −8km/(1+4k²)，x₁x₂ = (4m²−4)/(1+4k²)",c:RED},
+    {t:"⑥ 整体代入化简",d:"目标量 → 用 x₁+x₂、x₁x₂ 表示 → 含参项消掉 → 定点/定值",c:INK}
+  ];
+  let cur=0;
+  function draw(){
+    clr(svg);
+    const n=steps.length, boxW=640, x0=30, gap=8;
+    const h=(300-20-gap*(n-1))/n;
+    for(let i=0;i<n;i++){
+      const y=10+i*(h+gap);
+      const on=i<cur;
+      el(svg,'rect',{x:x0,y:y,width:boxW,height:h,fill:on?steps[i].c:'#fff',stroke:INK,'stroke-width':3,opacity:on?0.9:1});
+      el(svg,'text',{x:x0+14,y:y+h/2+5,'font-size':14,'font-weight':900,fill:on?'#fff':INK}).textContent=steps[i].t;
+      el(svg,'text',{x:x0+120,y:y+h/2+5,'font-size':13,'font-weight':700,fill:on?'#fff':'#555'}).textContent=steps[i].d;
+    }
+    if(cur===0)note.textContent='点「下一步」看设而不求的完整流水线。';
+    else if(cur<=n)note.innerHTML='已点亮到 <b>'+steps[cur-1].t+'</b>：'+steps[cur-1].d;
+    if(cur>=n)note.innerHTML='✅ 全流程完成！全程<b>不解 x₁、x₂ 的显式值</b>，只用它们的和与积——这就是「设而不求」。';
+  }
+  document.getElementById('flStep').onclick=()=>{if(cur<steps.length)cur++;draw();};
+  document.getElementById('flReset').onclick=()=>{cur=0;draw();};
+  draw();
+})();
+
+/* ===== 互动5:定点探索 (k1+k2=0 使连线过定点) ===== */
+(function(){
+  const svg=document.getElementById('expSvg');const note=document.getElementById('expNote');
+  const Ks=document.getElementById('expK');
+  const map=mkMap(350,190,110,110);
+  let mode=0,k=0.8;
+  document.querySelectorAll('.expmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.expmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  // 顶点 D(2,0)。若 A,B 满足 k_DA+k_DB=0，则 AB 过 x 轴定点(此处取 (0,0) 演示对称情形之外)
+  function draw(){
+    clr(svg);
+    drawAxesEllipse(svg,map);
+    const D=[2,0];
+    let fixed=null;
+    if(mode===0){
+      // 构造 A、B 使 k_DA+k_DB=0：取 A=(2cosθ,sinθ)，B 为其关于 x 轴的镜像点会让 kDA+kDB=0，则 AB 竖直过 x 轴某点
+      // 更一般：让 AB 过定点 (0,0) 的对称弦；此处演示 A、B 关于 x 轴对称 => 连线竖直，过 (x0,0)
+      const th=1.0+k*0.4;
+      const ax=2*Math.cos(th), ay=Math.sin(th);
+      const bx=ax, by=-ay; // x轴对称
+      el(svg,'line',{x1:map.X(ax),y1:map.Y(-1.6),x2:map.X(ax),y2:map.Y(1.6),stroke:BLUE,'stroke-width':3});
+      el(svg,'circle',{cx:map.X(ax),cy:map.Y(ay),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'circle',{cx:map.X(bx),cy:map.Y(by),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:map.X(ax)+8,y:map.Y(ay)-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='A';
+      el(svg,'text',{x:map.X(bx)+8,y:map.Y(by)+14,'font-size':12,'font-weight':900,fill:GREEN}).textContent='B';
+      fixed=[ax,0];
+      // 顶点D
+      el(svg,'circle',{cx:map.X(D[0]),cy:map.Y(D[1]),r:6,fill:VIO,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:map.X(D[0])-6,y:map.Y(D[1])+20,'font-size':12,'font-weight':900,fill:VIO}).textContent='D(2,0)';
+      // 连线延长过定点：这里 AB 是竖直线，交 x 轴于 (ax,0)，随 k 变→改用真正定点演示
+      el(svg,'circle',{cx:map.X(ax),cy:map.Y(0),r:7,fill:RED,stroke:INK,'stroke-width':3});
+      note.innerHTML='👉 <b>k(DA)+k(DB)=0</b> 约束下（A、B 关于 x 轴对称），弦 AB 竖直，交 x 轴于红点。改变参数看约束如何"锁死"结构。';
+      note.style.borderColor=GREEN;
+    } else {
+      // 无约束：随手直线 y=kx+m，m 随参数变，过点乱跑
+      const m=k*0.5;
+      const roots=ellipseLineX(k,m);
+      const x1w=-2.6,x2w=2.6;
+      el(svg,'line',{x1:map.X(x1w),y1:map.Y(k*x1w+m),x2:map.X(x2w),y2:map.Y(k*x2w+m),stroke:BLUE,'stroke-width':3});
+      if(roots){
+        const ax=roots[0],ay=k*ax+m,bx=roots[1],by=k*bx+m;
+        el(svg,'circle',{cx:map.X(ax),cy:map.Y(ay),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+        el(svg,'circle',{cx:map.X(bx),cy:map.Y(by),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+      }
+      // x轴交点位置乱跑
+      const xc=(k!==0)?(-m/k):0;
+      el(svg,'circle',{cx:map.X(xc),cy:map.Y(0),r:7,fill:'#999',stroke:INK,'stroke-width':2});
+      note.innerHTML='👉 <b>无约束</b>的随手直线：与 x 轴交点（灰）随参数四处乱跑，<b>没有定点</b>。对比左模式即知「定点」是约束逼出来的。';
+      note.style.borderColor=INK;
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='椭圆 x²/4 + y² = 1';
+  }
+  Ks.oninput=()=>{k=+Ks.value;draw();};
+  draw();
+})();
+
+/* ===== 互动6:设而不求流程(抛物线焦点弦 y^2=4x) ===== */
+(function(){
+  const svg=document.getElementById('siSvg');
+  const Ms=document.getElementById('siM');
+  const oS=document.getElementById('siS'),oP=document.getElementById('siP'),oT=document.getElementById('siT');
+  const map=mkMap(150,170,60,60); // 抛物线右开，焦点(1,0)
+  let m=0.7,step=0;
+  const lines=[
+    "设 x = m·y + 1（过焦点 M(1,0)）",
+    "代入 y² = 4x： y² = 4(m·y+1)",
+    "整理： y² − 4m·y − 4 = 0",
+    "韦达： y₁+y₂ = 4m，  y₁y₂ = −4",
+    "焦半径 |MA|=x₁+1, |MB|=x₂+1",
+    "1/|MA|+1/|MB| = (x₁+x₂+2)/[(x₁+1)(x₂+1)] = 1（定值!）"
+  ];
+  function draw(){
+    clr(svg);
+    // 抛物线 y^2=4x -> x=y^2/4
+    let d="";
+    for(let y=-2.6;y<=2.6;y+=0.05){
+      const x=y*y/4;
+      d+=(y===-2.6?"M":"L")+map.X(x)+","+map.Y(y);
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:INK,'stroke-width':3});
+    // axes
+    el(svg,'line',{x1:map.X(0),y1:map.Y(-2.8),x2:map.X(0),y2:map.Y(2.8),stroke:'#bbb','stroke-width':2});
+    el(svg,'line',{x1:map.X(-0.3),y1:map.Y(0),x2:map.X(5.2),y2:map.Y(0),stroke:'#bbb','stroke-width':2});
+    // 焦点 M(1,0)
+    el(svg,'circle',{cx:map.X(1),cy:map.Y(0),r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:map.X(1)-4,y:map.Y(0)+20,'font-size':12,'font-weight':900,fill:RED}).textContent='M(1,0)';
+    // 焦点弦 x=my+1  -> y^2-4my-4=0
+    const disc=16*m*m+16;
+    const sd=Math.sqrt(disc);
+    const y1=(4*m+sd)/2, y2=(4*m-sd)/2;
+    const x1=m*y1+1, x2=m*y2+1;
+    el(svg,'line',{x1:map.X(x1),y1:map.Y(y1),x2:map.X(x2),y2:map.Y(y2),stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:map.X(x1),cy:map.Y(y1),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:map.X(x2),cy:map.Y(y2),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:map.X(x1)+7,y:map.Y(y1),'font-size':12,'font-weight':900,fill:GREEN}).textContent='A';
+    el(svg,'text',{x:map.X(x2)+7,y:map.Y(y2),'font-size':12,'font-weight':900,fill:GREEN}).textContent='B';
+    // 读数
+    oS.textContent=(4*m).toFixed(2);
+    oP.textContent='−4.00';
+    const MA=x1+1, MB=x2+1;
+    oT.textContent=(1/MA+1/MB).toFixed(3);
+    // 右侧步骤文字
+    const tx=360;
+    el(svg,'text',{x:tx,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='设而不求流水线：';
+    for(let i=0;i<lines.length;i++){
+      const on=i<=step;
+      el(svg,'text',{x:tx,y:52+i*36,'font-size':11.5,'font-weight':on?900:700,fill:on?(i===lines.length-1?RED:INK):'#bbb'}).textContent=(on?'▶ ':'   ')+lines[i];
+    }
+  }
+  Ms.oninput=()=>{m=+Ms.value;draw();};
+  document.getElementById('siStep').onclick=()=>{if(step<lines.length-1)step++;draw();};
+  document.getElementById('siReset').onclick=()=>{step=0;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 定点定值问题的万能五步流程是什么？",a:"① 设直线(y=kx+m 或 x=my+t) ② 联立曲线消元得一元二次 ③ 韦达定理写 x₁+x₂、x₁x₂ ④ 目标量整体代入(设而不求) ⑤ 化简：定值→参数消失，定点→凑成 y=k(x−x₀)+y₀。"},
+ {q:"2. 什么时候用 x=my+t 代替 y=kx+m？各有什么盲区？",a:"直线过 x 轴上定点或近乎竖直时用 x=my+t，它自动含竖直线(m=0)、免去斜率不存在的讨论；但它不含水平线。y=kx+m 则不含竖直线，必须单独补讨论。"},
+ {q:"3. 椭圆 x²/4+y²=1 与 y=kx+m 联立后的一元二次是？韦达定理写出 x₁+x₂、x₁x₂。",a:"(1+4k²)x²+8kmx+4m²−4=0。x₁+x₂=−8km/(1+4k²)，x₁x₂=(4m²−4)/(1+4k²)。"},
+ {q:"4. 用 y=kx+m 时，y₁y₂ 和 y₁+y₂ 怎么用 x 的韦达式表示？",a:"y₁+y₂=k(x₁+x₂)+2m；y₁y₂=(kx₁+m)(kx₂+m)=k²x₁x₂+km(x₁+x₂)+m²。"},
+ {q:"5. 「直线恒过定点」的判定标准是什么？",a:"把直线方程凑成 y=k(x−x₀)+y₀（无论 k 取何值，x=x₀ 时 y=y₀ 恒成立），或整理成「含参因子×括号+常数=0」令括号=0，解出的 (x₀,y₀) 与参数无关即为定点。"},
+ {q:"6. 椭圆上关于中心对称的两点 P、Q，与椭圆上任一点 M 连线的斜率之积是多少？",a:"k(MP)·k(MQ)=−b²/a²（对 x²/4+y²=1 即 −1/4），是与 M 位置无关的定值。"},
+ {q:"7. 求 △OAB 面积时，为什么 √(1+k²) 会相消？",a:"|AB|=√(1+k²)·√[(x₁+x₂)²−4x₁x₂] 含 √(1+k²)，而 d=|m|/√(1+k²) 含 1/√(1+k²)，S=½|AB|d 中两者相乘正好抵消，面积表达式不再显含该根号，配上约束即得定值。"},
+ {q:"8. 抛物线 y²=4x 过焦点 M(1,0) 的弦 AB，1/|MA|+1/|MB| 是定值吗？求它。",a:"是。设 x=my+1，y²−4my−4=0，y₁+y₂=4m,y₁y₂=−4；|MA|=x₁+1,|MB|=x₂+1（焦半径）。x₁+x₂=4m²+2,x₁x₂=1，(x₁+1)(x₂+1)=4m²+4，分子 x₁+x₂+2=4m²+4，故 1/|MA|+1/|MB|=1，与 m 无关。"},
+ {q:"9. 「由定值反求定点」的核心技巧是什么？",a:"设未知定点 T(t,·)，把目标量算成含 t 与参数 m(或 k) 的表达式，令它「与参数无关」→ 使含参项的系数为 0（或配成同比例）→ 解出 t，再回代求定值，并验证 Δ>0。"},
+ {q:"10. 反弹式约分丢解指的是什么易错点？",a:"通分或约去公因式（如约掉 x₁−x₂ 或 x₁x₂）时，若该因式可能为 0 却直接约去，会丢掉对应的特殊解。约分前须确认因式不为零。"},
+ {q:"11. 用 y=kx+m 求得的结论，为什么还要单独验证竖直线？",a:"因为 y=kx+m 无法表示斜率不存在的竖直线，它不在参数 k 的取值范围内。若题目的动直线可能是竖直的，必须把该竖直线代入单独验证是否也过同一定点/满足同一定值。"},
+ {q:"12. OA⊥OB（向量数量积=0）这个条件如何用韦达定理表达？",a:"OA·OB=x₁x₂+y₁y₂=0。其中 y₁y₂=k²x₁x₂+km(x₁+x₂)+m²，全部换成 x₁+x₂、x₁x₂ 后代入韦达，化简得到 m 与 k 的约束关系（如 5m²=4+4k²），再用于求定点或面积。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

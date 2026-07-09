@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导数与不等式证明（构造函数法） · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>导数与不等式证明（构造函数法）</h1>
+    <p class="lead">导数压轴题里最能拉开档次的一类:<b>用导数证明不等式</b>。核心武器只有一件——<b>构造函数</b>。把要证的不等式「搬到一边」,做差得到一个新函数 h(x),再用导数看它的<b>单调性、找最小值</b>,只要证出 h(x) 的最小值 ≥ 0,原不等式就成立。配上两条万能切线不等式 e<sup>x</sup>≥x+1 与 lnx≤x−1,放缩、含参、双变量题都能被拆穿。</p>
+
+    <div class="say">🗣️ <b>构造函数法(人话版):</b> 要证 f(x) > g(x),别硬碰硬。先<b>把它们搬到一边</b>,构造 h(x)=f(x)−g(x),问题就变成「证明 h(x) > 0」。接着用导数 h′(x) 判断 h(x) 是往上走还是往下走,<b>找到它的最小值</b>。只要证出 <b>h(x) 的最小值 > 0</b>(或 ≥ 0),不等式就板上钉钉。一句话:<b>作差构造 + 求最值</b>。放缩、切线不等式、含参分类,都是为「求最值」这一步服务的助攻。</div>
+
+    <div class="keybox"><b>一句话流程:</b> 证 f(x) > g(x) <span class="arrow">→</span> 构造 h(x) = f(x) − g(x) <span class="arrow">→</span> 求 h′(x) 判单调性 <span class="arrow">→</span> 求 h(x) 的最小值 h<sub>min</sub> <span class="arrow">→</span> 证 h<sub>min</sub> ≥ 0。<b>先写定义域,再取等条件</b>,两步都不能省。</div>
+
+    <h2>① 移项作差,构造函数</h2>
+    <div class="card">
+      <div class="eq">证 f(x) &gt; g(x)　⟺　证 h(x) = f(x) − g(x) &gt; 0</div>
+      <p style="margin:8px 0"><b>为什么要作差?</b> 两条曲线比高低不好比,但把它们的「高度差」当成一条新曲线 h(x),问题就变成「这条新曲线是否始终在 x 轴上方」——这正是导数最擅长的<b>最值问题</b>。</p>
+      <table>
+        <tr><th>要证的形式</th><th>构造的 h(x)</th><th>目标</th></tr>
+        <tr><td>f(x) &gt; g(x)</td><td>h(x)=f(x)−g(x)</td><td>证 h<sub>min</sub> &gt; 0</td></tr>
+        <tr><td>f(x) ≥ g(x)</td><td>h(x)=f(x)−g(x)</td><td>证 h<sub>min</sub> ≥ 0(可取等)</td></tr>
+        <tr><td>比商形式 f(x)/g(x)≥1</td><td>先化成差,或取对数再作差</td><td>证差 ≥ 0</td></tr>
+      </table>
+      <p class="trap">⚠ 构造完 h(x) <b>第一件事写定义域</b>!含 lnx 的定义域是 x&gt;0,含 √x 的是 x≥0。定义域写错,后面单调性全盘皆输。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 作差构造演示:f(x)、g(x) 两曲线 → 高度差 h(x)=f−g,看它是否始终在 0 上方</div>
+      <svg id="diffSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="diffToggle">▶ 显示差函数 h(x)</button>
+        <label>移动竖线 x <input id="diffX" type="range" min="5" max="300" value="150" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>x</b><span id="diffXo">0</span></div>
+        <div><b>f(x)=e^x</b><span id="diffF">0</span></div>
+        <div><b>g(x)=x+1</b><span id="diffG">0</span></div>
+        <div><b>h=f−g</b><span id="diffH">0</span></div>
+      </div>
+      <p class="small">这里 f(x)=e<sup>x</sup>、g(x)=x+1。上图两条原曲线难比高低;点「显示差函数」后,<b>紫色曲线 h(x)=e<sup>x</sup>−(x+1)</b> 冒出来——它<b>始终 ≥ 0</b>,最低点恰好在 x=0 处贴到 0。这就是 e<sup>x</sup>≥x+1 的图像证据。</p>
+    </div>
+
+    <h2 class="b">② 求导判单调,锁定最值</h2>
+    <div class="card">
+      <p style="margin:8px 0">构造出 h(x) 后,证 h(x)&gt;0 的标准套路:</p>
+      <div class="mono">第1步:写定义域,求导 h′(x)。</div>
+      <div class="mono">第2步:解 h′(x)=0 找极值点,判断 h′ 正负 → 增区间(h′&gt;0)、减区间(h′&lt;0)。</div>
+      <div class="mono">第3步:确定 h(x) 的最小值 h<sub>min</sub>(通常在极小值点或端点)。</div>
+      <div class="mono">第4步:证 h<sub>min</sub> ≥ 0,得原不等式;写清取等条件。</div>
+      <p style="margin:8px 0"><b>关键直觉:</b> h′(x) 是 h(x) 的「上坡/下坡指示牌」。h′&gt;0 上坡,h′&lt;0 下坡,h′=0 是山顶或谷底。要证「始终 ≥ 0」,只需盯住<b>最低的那个谷底</b>——只要谷底 ≥ 0,全线就 ≥ 0。</p>
+      <p class="trap">⚠ 极值点不一定是最值点!要结合区间端点、定义域边界一起判断,尤其定义域是开区间时最值可能取不到(需用极限/趋势说明)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 2 — 最小值 &gt; 0 演示:h(x)=e^x−x−1,拖动看导数正负与谷底,谷底恰为 0</div>
+      <svg id="minSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>动点 x <input id="minX" type="range" min="-30" max="30" value="14" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>x</b><span id="minXo">0</span></div>
+        <div><b>h(x)=e^x−x−1</b><span id="minH">0</span></div>
+        <div><b>h′(x)=e^x−1</b><span id="minD">0</span></div>
+        <div><b>单调性</b><span id="minMono">—</span></div>
+      </div>
+      <p class="small">h′(x)=e<sup>x</sup>−1:x&lt;0 时 h′&lt;0(下坡,减),x&gt;0 时 h′&gt;0(上坡,增),x=0 时 h′=0。所以 <b>x=0 是唯一谷底</b>,h(0)=1−0−1=0,即 h<sub>min</sub>=0 ≥ 0。原不等式 e<sup>x</sup>≥x+1 得证,取等当且仅当 x=0。</p>
+    </div>
+
+    <h2 class="g">③ 两条万能切线不等式</h2>
+    <div class="card">
+      <p style="margin:6px 0">这两条是导数证不等式的「放缩弹药库」,来自曲线在某点的<b>切线</b>始终托住或压住曲线:</p>
+      <div class="eq">e<sup>x</sup> ≥ x + 1　(取等当且仅当 x=0)</div>
+      <div class="eq">ln x ≤ x − 1　⟺　x − 1 ≥ ln x　(取等当且仅当 x=1)</div>
+      <p style="margin:8px 0"><b>怎么来的?</b> y=e<sup>x</sup> 在点 (0,1) 处的切线是 y=x+1,且 e<sup>x</sup> 是<b>下凸</b>的,曲线永远在切线上方 → e<sup>x</sup>≥x+1。y=lnx 在点 (1,0) 处的切线是 y=x−1,且 lnx 是<b>上凸</b>的,曲线永远在切线下方 → lnx≤x−1。</p>
+      <h3>常用变形(换元就得一堆)</h3>
+      <table>
+        <tr><th>母式</th><th>换元</th><th>得到</th></tr>
+        <tr><td>e<sup>x</sup>≥x+1</td><td>x→−x</td><td>e<sup>−x</sup>≥1−x,即 e<sup>x</sup>≤1/(1−x) (x&lt;1)</td></tr>
+        <tr><td>e<sup>x</sup>≥x+1</td><td>x→x−1</td><td>e<sup>x−1</sup>≥x,即 x≤e<sup>x−1</sup></td></tr>
+        <tr><td>lnx≤x−1</td><td>x→1/x</td><td>ln(1/x)≤1/x−1 → lnx≥1−1/x</td></tr>
+        <tr><td>lnx≤x−1</td><td>x→x+1</td><td>ln(x+1)≤x (x&gt;−1)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>联合夹逼(超好用):</b> 由上两式得 <b>1 − 1/x ≤ lnx ≤ x − 1</b>,把 lnx 上下都框住。</p>
+      <p class="trap">⚠ 用切线不等式放缩前<b>必须先证明它</b>(或注明「由 e<sup>x</sup>≥x+1 及其证明」),不能当公理直接搬。取等条件(x=0 或 x=1)也要记牢,否则放缩后取等对不上会翻车。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 切线不等式 e^x ≥ x+1:曲线 y=e^x 始终在切线 y=x+1 上方,唯 x=0 相切</div>
+      <svg id="expSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>动点 x <input id="expX" type="range" min="-25" max="14" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>x</b><span id="expXo">0</span></div>
+        <div><b>e^x</b><span id="expE">0</span></div>
+        <div><b>x+1</b><span id="expL">0</span></div>
+        <div><b>差 e^x−(x+1)</b><span id="expGap">0</span></div>
+      </div>
+      <p class="small">红曲线 y=e<sup>x</sup>,蓝直线 y=x+1(在 (0,1) 处相切)。差 e<sup>x</sup>−(x+1) <b>永远 ≥ 0</b>,只有 x=0 时为 0(相切)。这就是「曲线在切线上方」= 切线不等式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 切线不等式 ln x ≤ x−1:曲线 y=ln x 始终在切线 y=x−1 下方,唯 x=1 相切</div>
+      <svg id="lnSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>动点 x <input id="lnX" type="range" min="3" max="70" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>x</b><span id="lnXo">0</span></div>
+        <div><b>ln x</b><span id="lnLn">0</span></div>
+        <div><b>x−1</b><span id="lnL">0</span></div>
+        <div><b>差 (x−1)−ln x</b><span id="lnGap">0</span></div>
+      </div>
+      <p class="small">绿曲线 y=lnx,橙直线 y=x−1(在 (1,0) 处相切)。差 (x−1)−lnx <b>永远 ≥ 0</b>,只有 x=1 时为 0。即 lnx ≤ x−1,处处被切线压住。</p>
+    </div>
+
+    <h2 class="o">④ 放缩配合:把难项换成好项</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>放缩的核心:</b> 当 h(x) 里同时有 e<sup>x</sup> 和 lnx、次数高低混杂,直接求导很难看出正负时,先用切线不等式把某一项<b>换成更简单的一次式</b>,证一个更弱(但足够)的不等式,链式传递到原式。</p>
+      <div class="eq">要证 A ≥ C　&larr;　先证 A ≥ B(放缩) 且 B ≥ C</div>
+      <p style="margin:8px 0"><b>方向要对:</b> 想证「≥ 某值」,就把左边<b>往小了放</b>(缩),证明「缩小后仍 ≥ 目标」;想证「≤ 某值」就往大了放(放)。放缩链的每一环取等点要能对齐,否则会「放过头」——缩得比目标还小,结论反而证不出来。</p>
+      <p class="trap">⚠ 放缩过头 = 最常见死法。例如证 e<sup>x</sup>≥x²/2 却直接用 e<sup>x</sup>≥x+1,当 x 大时 x+1 &lt; x²/2,链断了。放缩要「够用但不过分」,不确定时宁可老实作差求导。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 5 — 放缩链条:e^x ≥ x+1 逐段传递,看放缩「够用」还是「过头」</div>
+      <svg id="chainSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="chaincase on" data-c="0">够用:e^x≥x+1≥目标</button>
+        <button class="chaincase" data-c="1">过头:放到 x+1 &lt; 目标</button>
+      </div>
+      <div class="verdict" id="chainNote"></div>
+      <p class="small">红线 y=e<sup>x</sup>、蓝线中间量 y=x+1、绿线目标。<b>够用</b>时三者从上到下有序,放缩成立;<b>过头</b>时中间量掉到目标下面,链条断裂,必须换更强的放缩或直接求导。</p>
+    </div>
+
+    <h2 class="v">⑤ 含参不等式:分离参数 或 分类讨论</h2>
+    <div class="card">
+      <p style="margin:6px 0">出现参数 a 的恒成立问题「对任意 x∈D,f(x,a) ≥ 0 恒成立,求 a 的范围」,两条主路:</p>
+      <h3>路线一:分离参数(能把 a 单独拎出来时首选)</h3>
+      <p style="margin:6px 0">把不等式变形成 <b>a ≥ φ(x)</b>(或 a ≤ φ(x)),则:</p>
+      <div class="eq">a ≥ φ(x) 恒成立 ⟺ a ≥ φ(x)<sub>max</sub>　;　a ≤ φ(x) 恒成立 ⟺ a ≤ φ(x)<sub>min</sub></div>
+      <p style="margin:6px 0">问题转成求 φ(x) 的最值——又回到求导找最值。<b>优点:</b>把含参问题变成不含参的最值问题,干净利落。</p>
+      <h3>路线二:分类讨论(a 分不出来,或分出来 φ 无最值时)</h3>
+      <p style="margin:6px 0">直接对 h(x)=f(x,a) 求导,h′(x) 里含 a → 按 a 的取值范围<b>分类</b>讨论 h′ 的正负、极值点位置,分别验证 h<sub>min</sub>≥0。分类的临界值常来自「h′=0 的根是否落在定义域内」「二次项系数正负」。</p>
+      <p class="trap">⚠ 分类讨论要<b>不重不漏</b>,临界点(如 a=0、a=1、判别式=0)单独讨论。分离参数时若 φ(x) 在开区间端点取不到最值,要用极限说明「取不到但趋近」,边界 a 的取舍最容易错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 6 — 含参最值滑块:h(x)=e^x−a·x,拖参数 a 看 h 的最小值符号翻转</div>
+      <svg id="paramSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>参数 a <input id="paramA" type="range" min="-10" max="40" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>参数 a</b><span id="paramAo">0</span></div>
+        <div><b>极小点 x=ln a</b><span id="paramXm">—</span></div>
+        <div><b>最小值 h_min</b><span id="paramMin">0</span></div>
+        <div><b>恒成立?</b><span id="paramOk">—</span></div>
+      </div>
+      <p class="small">h(x)=e<sup>x</sup>−a·x。a&gt;0 时极小点 x=lna,h<sub>min</sub>=a−a·lna=a(1−lna)。<b>拖动 a</b>:曲线整体升降,谷底(黑点)上下穿过 x 轴。h<sub>min</sub>≥0 ⟺ a(1−lna)≥0 ⟺ 0&lt;a≤e。这就是「求 a 范围」的可视化。</p>
+    </div>
+
+    <h2 class="r">⑥ 双变量:换元化归为单变量</h2>
+    <div class="card">
+      <p style="margin:6px 0">形如「对 x<sub>1</sub>、x<sub>2</sub> 证某不等式」的双变量题,核心是<b>降维:两个变量转成一个变量</b>。</p>
+      <table>
+        <tr><th>技巧</th><th>做法</th></tr>
+        <tr><td><b>比值换元</b></td><td>令 t=x<sub>1</sub>/x<sub>2</sub>(或 x<sub>2</sub>/x<sub>1</sub>),把双变量式整理成只含 t 的一元函数,再求导</td></tr>
+        <tr><td><b>差换元</b></td><td>令 t=x<sub>1</sub>−x<sub>2</sub>,或对对称式令 s=x<sub>1</sub>+x<sub>2</sub>、p=x<sub>1</sub>x<sub>2</sub></td></tr>
+        <tr><td><b>构造对称/齐次</b></td><td>把式子写成关于 x<sub>1</sub>、x<sub>2</sub> 对称或齐次,除以某变量化成单变量比</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>典型:</b>对数均值不等式 —— 若 x<sub>1</sub>≠x<sub>2</sub>&gt;0,则 √(x<sub>1</sub>x<sub>2</sub>) &lt; (x<sub>1</sub>−x<sub>2</sub>)/(lnx<sub>1</sub>−lnx<sub>2</sub>) &lt; (x<sub>1</sub>+x<sub>2</sub>)/2。证法就是令 t=x<sub>1</sub>/x<sub>2</sub>&gt;1,化为一元关于 t 的不等式再求导。</p>
+      <p class="trap">⚠ 换元后<b>务必写清新变量 t 的范围</b>(如 t&gt;1 或 t&gt;0),它决定单调性判断的区间。丢了 t 的范围,最值就找错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 7 — 双变量换元:令 t=x₁/x₂ 把二维问题压成一维曲线 φ(t)</div>
+      <svg id="twoSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>比值 t=x₁/x₂ <input id="twoT" type="range" min="11" max="80" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>t=x₁/x₂</b><span id="twoTo">0</span></div>
+        <div><b>φ(t)=ln t−2(t−1)/(t+1)</b><span id="twoPhi">0</span></div>
+        <div><b>φ(1)</b><span id="twoP1">0</span></div>
+        <div><b>符号</b><span id="twoSign">—</span></div>
+      </div>
+      <p class="small">对数均值不等式右半段,令 t=x<sub>1</sub>/x<sub>2</sub>&gt;1 后化为一元 φ(t)=lnt−2(t−1)/(t+1)。可证 φ(t)&gt;0(t&gt;1),φ(1)=0。<b>二维不等式被压成这一条曲线的符号问题</b>,拖动 t 看 φ 始终在 0 上方。</p>
+    </div>
+
+    <h2 class="b">⑦ 数列不等式:用函数放缩求和</h2>
+    <div class="card">
+      <p style="margin:6px 0">要证一串求和不等式(如 Σ 1/k、Σ ln 型),把<b>通项</b>用切线不等式放缩成能<b>裂项或已知求和</b>的形式,再累加。</p>
+      <div class="eq">由 ln(1+x) ≤ x　⟹　ln(1+1/n) ≤ 1/n　⟹　累加得 Σ 型结论</div>
+      <p style="margin:8px 0"><b>由 lnx≤x−1 换 x→(k+1)/k:</b> ln((k+1)/k) ≤ (k+1)/k − 1 = 1/k,即 ln(k+1)−lnk ≤ 1/k。对 k=1..n 累加左边裂项(消成 ln(n+1)),得 <b>ln(n+1) ≤ 1 + 1/2 + … + 1/n</b>。反向用 lnx≥1−1/x 可得上界。</p>
+      <p class="trap">⚠ 数列放缩要保证「<b>逐项放缩后能求和</b>」——放成裂项相消或等比/常见级数。放错方向(该放大却缩小)或放完不能求和,等于白放。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 8 — 函数放缩证数列:ln(n+1) ≤ 1+1/2+…+1/n,逐项 ln(k+1)−ln k ≤ 1/k 累加</div>
+      <svg id="seqSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>项数 n <input id="seqN" type="range" min="1" max="12" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>n</b><span id="seqNo">0</span></div>
+        <div><b>下界 ln(n+1)</b><span id="seqLn">0</span></div>
+        <div><b>调和和 Σ1/k</b><span id="seqSum">0</span></div>
+        <div><b>成立?</b><span id="seqOk">—</span></div>
+      </div>
+      <p class="small">蓝柱=调和和 Σ<sub>k=1</sub><sup>n</sup> 1/k,绿线=下界 ln(n+1)。每一项 1/k 都 ≥ ln(k+1)−lnk(切线不等式),逐项累加 → <b>蓝柱始终高过绿线</b>,即 ln(n+1)≤Σ1/k。拖动 n 验证。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 作差构造求最值型</h3>
+      <p><b class="tag">触发信号:</b>「证明 f(x)&gt;g(x)」「证明 f(x)≥某常数」,两边都是显式函数,没有参数。</p>
+      <p><b class="tag">标准动作:</b>构造 h(x)=f(x)−g(x),写定义域 → 求 h′(x) → 判单调、找 h<sub>min</sub> → 证 h<sub>min</sub>≥0,写取等条件。</p>
+      <p><b class="tag">示例(带解):</b>证 e<sup>x</sup> ≥ x+1(x∈R)。构造 h(x)=e<sup>x</sup>−x−1,h′(x)=e<sup>x</sup>−1。h′&lt;0(x&lt;0)、h′&gt;0(x&gt;0),故 x=0 是最小值点,h<sub>min</sub>=h(0)=1−0−1=0。所以 h(x)≥0,即 e<sup>x</sup>≥x+1,取等当且仅当 x=0。∎</p>
+      <p class="trap">陷阱:漏写定义域;把极值点当最值点没验端点;取等条件不写。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 切线不等式放缩型</h3>
+      <p><b class="tag">触发信号:</b>式子里同时有 e<sup>x</sup> 和 lnx、或次数混杂,直接求导算不动;要证的不等式「像」某条切线不等式的变形。</p>
+      <p><b class="tag">标准动作:</b>先(证并)引用 e<sup>x</sup>≥x+1 或 lnx≤x−1,把难项放缩成一次式,证一个更弱的不等式,链式得原式;核对取等点对齐。</p>
+      <p><b class="tag">示例(带解):</b>证 x&gt;0 时 lnx ≤ x−1 ≤ e<sup>x−1</sup>−1&lt;e<sup>x</sup>。左段是切线不等式本身;由 e<sup>t</sup>≥t+1 取 t=x−1 得 e<sup>x−1</sup>≥x,即 e<sup>x−1</sup>−1≥x−1,连起来即得。取等 x=1(左段)。∎</p>
+      <p class="trap">陷阱:放缩过头(缩得比目标还小);未先证明切线不等式就直接用;取等点不对齐导致严格/非严格弄错。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 含参恒成立(分离参数 / 分类讨论)型</h3>
+      <p><b class="tag">触发信号:</b>「对任意 x∈D,含 a 的不等式恒成立,求 a 的范围」。</p>
+      <p><b class="tag">标准动作:</b>能分离参数 → 化 a≥φ(x)(或 ≤),转求 φ(x)<sub>max/min</sub>;分不出 → 直接对 h(x) 求导,按 a 分类讨论 h<sub>min</sub>。</p>
+      <p><b class="tag">示例(带解):</b>求 a 使 e<sup>x</sup>≥a·x 对一切 x&gt;0 恒成立。分离:a ≤ e<sup>x</sup>/x=φ(x)(x&gt;0)。φ′(x)=e<sup>x</sup>(x−1)/x²,x=1 处取极小,φ(1)=e。故 a ≤ e。∎</p>
+      <p class="trap">陷阱:分离参数时不等号方向随 x 符号变(除以负数要变号);φ 在开区间端点最值取不到,边界 a 取舍错;分类不重不漏没做到。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 双变量(换元 / 构造对称)型</h3>
+      <p><b class="tag">触发信号:</b>不等式含两个变量 x<sub>1</sub>、x<sub>2</sub>(常是同一函数的两个零点/交点),要证它们的和、差、积的某性质。</p>
+      <p><b class="tag">标准动作:</b>令 t=x<sub>1</sub>/x<sub>2</sub>(或 t=x<sub>1</sub>−x<sub>2</sub>),把双变量式整理成一元 φ(t),写清 t 的范围,再求导证 φ(t) 符号。</p>
+      <p><b class="tag">示例(带解):</b>证 x<sub>1</sub>≠x<sub>2</sub>&gt;0 时 (x<sub>1</sub>−x<sub>2</sub>)/(lnx<sub>1</sub>−lnx<sub>2</sub>) &lt; (x<sub>1</sub>+x<sub>2</sub>)/2。设 t=x<sub>1</sub>/x<sub>2</sub>&gt;1,化为证 lnt &gt; 2(t−1)/(t+1)。令 φ(t)=lnt−2(t−1)/(t+1),φ′(t)=(t−1)²/[t(t+1)²]&gt;0,φ 增,φ(1)=0,故 t&gt;1 时 φ&gt;0。∎</p>
+      <p class="trap">陷阱:换元后忘写 t 的范围;化简出错;对称式没利用对称性硬算。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 数列不等式用函数放缩型</h3>
+      <p><b class="tag">触发信号:</b>要证含 Σ(求和)或连乘的数列不等式,通项里有 1/k、ln 型、指数型。</p>
+      <p><b class="tag">标准动作:</b>用切线不等式把<b>通项</b>放缩成可裂项/已知级数的形式,逐项放缩后累加(相消或套等比),得整体不等式。</p>
+      <p><b class="tag">示例(带解):</b>证 ln(n+1) ≤ 1+1/2+…+1/n。由 lnx≤x−1 取 x=(k+1)/k:ln(k+1)−lnk ≤ 1/k。对 k=1..n 累加,左边裂项相消得 ln(n+1),右边为 Σ1/k,故 ln(n+1)≤Σ1/k。∎</p>
+      <p class="trap">陷阱:放缩方向反(该放大却缩小);放完不能求和;累加时裂项没消干净。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 构造 h(x) 后<b>必须先写定义域</b>(含 lnx→x&gt;0,含 √x→x≥0)。定义域错,单调性、最值全错。</p>
+      <p class="trap">② <b>最值点是否取到</b>要交代。开区间/定义域边界上的极值可能取不到,需用极限说明趋势,别直接写「min=…」。</p>
+      <p class="trap">③ <b>切线不等式取等条件</b>:e<sup>x</sup>≥x+1 取等 x=0;lnx≤x−1 取等 x=1。放缩后取等对不齐 → 严格「&gt;」写成了「≥」或反之。</p>
+      <p class="trap">④ <b>放缩过头</b>:缩得比目标还小,链条断裂。放缩前先估一下量级,拿不准就老实作差求导。</p>
+      <p class="trap">⑤ 极值点 ≠ 最值点。要结合区间端点、单调性整体判断 h<sub>min</sub>。</p>
+      <p class="trap">⑥ 分离参数时,<b>不等号方向</b>随两边符号变(除以负数变号);φ(x) 端点取不到时边界 a 的取舍要小心。</p>
+      <p class="trap">⑦ 分类讨论要<b>不重不漏</b>,临界值(a=0、判别式=0、根落在定义域边界)单独讨论。</p>
+      <p class="trap">⑧ 双变量换元后<b>写清新变量范围</b>(t&gt;1 等),它决定 φ 的单调区间。</p>
+      <p class="trap">⑨ 引用切线不等式前要<b>先证明</b>(或注明来源),不能当公理直接搬用。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切都是「作差 + 求最值」:</b> 无论题面多花哨,证不等式的骨架就是把不等式移到一边构造 h(x),证 h<sub>min</sub>≥0。放缩、切线、分类、换元,全是为「让 h 的最值好求」服务的助攻手段。抓住这条主线,压轴题就不慌。</p>
+      <p style="margin:8px 0"><b>② e<sup>x</sup> 与 lnx 是「互为镜子」的一对:</b> 它们关于 y=x 对称,切线不等式 e<sup>x</sup>≥x+1 和 lnx≤x−1 也互为反演(令 x→lnx 可从一条推出另一条)。看到指数就想切线托底、看到对数就想切线压顶,方向从不会错。</p>
+      <p style="margin:8px 0"><b>③ 「二次求导」定海神针:</b> h′(x) 的正负看不出来时,再求一次导 h″(x) 判 h′ 的单调性,从而定 h′ 有没有唯一零点、h 有没有唯一极值。含 e<sup>x</sup>·多项式、lnx·多项式的题几乎必用二阶导定单调。</p>
+      <p style="margin:8px 0"><b>④ 隐零点(设而不求):</b> 当 h′(x)=0 解不出显式根 x<sub>0</sub> 时,设它存在(由单调+零点定理保证唯一),用 h′(x<sub>0</sub>)=0 这个关系式把 h(x<sub>0</sub>) 里的超越项换掉,化成关于 x<sub>0</sub> 的可估代数式。这是压轴题最高频的「设而不求」技巧。</p>
+      <p style="margin:8px 0"><b>⑤ 双变量的「极值点偏移」母题:</b> f(x<sub>1</sub>)=f(x<sub>2</sub>) 求证 x<sub>1</sub>+x<sub>2</sub>&gt;2x<sub>0</sub> 之类,统一套路是构造对称差函数 F(x)=f(x)−f(2x<sub>0</sub>−x) 判符号,或比值换元 t=x<sub>1</sub>/x<sub>2</sub> 化一元。识别出它属于「极值点偏移」,套路一步到位。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 核心:作差构造 + 求最值,配两条切线不等式 e^x≥x+1、lnx≤x−1</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:作差构造 f、g -> h=f-g ===== */
+(function(){
+  const svg=document.getElementById('diffSvg');
+  const Xs=document.getElementById('diffX');
+  const oX=document.getElementById('diffXo'),oF=document.getElementById('diffF'),oG=document.getElementById('diffG'),oH=document.getElementById('diffH');
+  let showH=false;
+  const X0=60,Y0=20,W=580,H=280;
+  const xmin=-2.2,xmax=1.6,ymin=-0.5,ymax=4.5;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(0),y1:Y0,x2:px(0),y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(xmax)-6,y:py(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:px(0)+8,y:Y0+12,'font-size':13,'font-weight':900,fill:INK}).textContent='y';
+    // f = e^x  (red)
+    let d1='';for(let x=xmin;x<=xmax;x+=0.03){const y=Math.exp(x);d1+=(d1?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';}
+    el(svg,'path',{d:d1,fill:'none',stroke:RED,'stroke-width':4});
+    // g = x+1 (blue)
+    el(svg,'line',{x1:px(xmin),y1:py(xmin+1),x2:px(xmax),y2:py(xmax+1),stroke:BLUE,'stroke-width':4});
+    // h = f-g (violet) if shown
+    if(showH){
+      let d3='';for(let x=xmin;x<=xmax;x+=0.03){const y=Math.exp(x)-(x+1);d3+=(d3?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';}
+      el(svg,'path',{d:d3,fill:'none',stroke:VIO,'stroke-width':4,'stroke-dasharray':'2 0'});
+      el(svg,'circle',{cx:px(0),cy:py(0),r:5,fill:VIO,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:px(0)+10,y:py(0)+18,'font-size':12,'font-weight':900,fill:VIO}).textContent='h_min=0 @x=0';
+    }
+    // legend
+    el(svg,'text',{x:px(-2.1),y:py(4.2),'font-size':13,'font-weight':900,fill:RED}).textContent='f(x)=e^x';
+    el(svg,'text',{x:px(-2.1),y:py(3.7),'font-size':13,'font-weight':900,fill:BLUE}).textContent='g(x)=x+1';
+    if(showH)el(svg,'text',{x:px(-2.1),y:py(3.2),'font-size':13,'font-weight':900,fill:VIO}).textContent='h=f−g≥0';
+    // moving vertical line
+    const t=+Xs.value;const xv=xmin+(xmax-xmin)*(t-5)/295;
+    const fv=Math.exp(xv),gv=xv+1,hv=fv-gv;
+    el(svg,'line',{x1:px(xv),y1:Y0,x2:px(xv),y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:px(xv),cy:py(fv),r:4,fill:RED});
+    el(svg,'circle',{cx:px(xv),cy:py(gv),r:4,fill:BLUE});
+    oX.textContent=xv.toFixed(2);oF.textContent=fv.toFixed(2);oG.textContent=gv.toFixed(2);oH.textContent=hv.toFixed(2);
+  }
+  Xs.oninput=draw;
+  document.getElementById('diffToggle').onclick=()=>{showH=!showH;document.getElementById('diffToggle').textContent=showH?'▶ 隐藏差函数 h(x)':'▶ 显示差函数 h(x)';draw();};
+  draw();
+})();
+
+/* ===== 互动2:h(x)=e^x-x-1 最小值 ===== */
+(function(){
+  const svg=document.getElementById('minSvg');
+  const Xs=document.getElementById('minX');
+  const oX=document.getElementById('minXo'),oH=document.getElementById('minH'),oD=document.getElementById('minD'),oM=document.getElementById('minMono');
+  const X0=60,Y0=20,W=580,H=250;
+  const xmin=-3,xmax=2,ymin=-0.3,ymax=5;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(0),y1:Y0,x2:px(0),y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(xmax)-6,y:py(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // h curve (violet)
+    let d='';for(let x=xmin;x<=xmax;x+=0.02){const y=Math.exp(x)-x-1;d+=(d?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':4});
+    // min point
+    el(svg,'circle',{cx:px(0),cy:py(0),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(0)+8,y:py(0)+20,'font-size':12,'font-weight':900,fill:GREEN}).textContent='谷底 h_min=0 @x=0';
+    el(svg,'text',{x:px(-2.9),y:py(4.6),'font-size':13,'font-weight':900,fill:VIO}).textContent='h(x)=e^x−x−1 ≥ 0';
+    // moving dot
+    const xv=(+Xs.value)/10;const hv=Math.exp(xv)-xv-1,dv=Math.exp(xv)-1;
+    el(svg,'line',{x1:px(xv),y1:Y0,x2:px(xv),y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:px(xv),cy:py(hv),r:5,fill:RED,stroke:INK,'stroke-width':2});
+    oX.textContent=xv.toFixed(1);oH.textContent=hv.toFixed(3);oD.textContent=dv.toFixed(3);
+    oM.textContent=dv>0.001?'增(h′>0)':dv<-0.001?'减(h′<0)':'谷底(h′=0)';
+    oM.style.color=Math.abs(dv)<0.001?GREEN:INK;
+  }
+  Xs.oninput=draw;draw();
+})();
+
+/* ===== 互动3:e^x >= x+1 切线不等式 ===== */
+(function(){
+  const svg=document.getElementById('expSvg');
+  const Xs=document.getElementById('expX');
+  const oX=document.getElementById('expXo'),oE=document.getElementById('expE'),oL=document.getElementById('expL'),oG=document.getElementById('expGap');
+  const X0=60,Y0=20,W=580,H=280;
+  const xmin=-2.6,xmax=1.6,ymin=-1.8,ymax=5;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(0),y1:Y0,x2:px(0),y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(xmax)-6,y:py(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // e^x red
+    let d='';for(let x=xmin;x<=xmax;x+=0.02){const y=Math.exp(x);d+=(d?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':4});
+    // x+1 blue tangent
+    el(svg,'line',{x1:px(xmin),y1:py(xmin+1),x2:px(xmax),y2:py(xmax+1),stroke:BLUE,'stroke-width':4});
+    // tangent point (0,1)
+    el(svg,'circle',{cx:px(0),cy:py(1),r:6,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(0)+8,y:py(1)-8,'font-size':12,'font-weight':900,fill:INK}).textContent='相切(0,1)';
+    el(svg,'text',{x:px(-2.5),y:py(4.6),'font-size':13,'font-weight':900,fill:RED}).textContent='y=e^x';
+    el(svg,'text',{x:px(-2.5),y:py(4.0),'font-size':13,'font-weight':900,fill:BLUE}).textContent='y=x+1 (切线)';
+    // moving gap
+    const xv=(+Xs.value)/10;const ev=Math.exp(xv),lv=xv+1,gap=ev-lv;
+    el(svg,'line',{x1:px(xv),y1:py(lv),x2:px(xv),y2:py(ev),stroke:GREEN,'stroke-width':4});
+    el(svg,'circle',{cx:px(xv),cy:py(ev),r:4,fill:RED});
+    el(svg,'circle',{cx:px(xv),cy:py(lv),r:4,fill:BLUE});
+    el(svg,'text',{x:px(xv)+6,y:(py(ev)+py(lv))/2,'font-size':11.5,'font-weight':900,fill:GREEN}).textContent='差='+gap.toFixed(2);
+    oX.textContent=xv.toFixed(1);oE.textContent=ev.toFixed(2);oL.textContent=lv.toFixed(2);oG.textContent=gap.toFixed(2);
+  }
+  Xs.oninput=draw;draw();
+})();
+
+/* ===== 互动4:ln x <= x-1 切线不等式 ===== */
+(function(){
+  const svg=document.getElementById('lnSvg');
+  const Xs=document.getElementById('lnX');
+  const oX=document.getElementById('lnXo'),oLn=document.getElementById('lnLn'),oL=document.getElementById('lnL'),oG=document.getElementById('lnGap');
+  const X0=60,Y0=20,W=580,H=280;
+  const xmin=0.05,xmax=5,ymin=-2.6,ymax=4.2;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(1),y1:Y0,x2:px(1),y2:Y0+H,stroke:INK,'stroke-width':1,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:px(xmax)-6,y:py(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // ln x green
+    let d='';let first=true;for(let x=0.06;x<=xmax;x+=0.02){const y=Math.log(x);d+=(first?'M':'L')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';first=false;}
+    el(svg,'path',{d:d,fill:'none',stroke:GREEN,'stroke-width':4});
+    // x-1 orange tangent
+    el(svg,'line',{x1:px(xmin),y1:py(xmin-1),x2:px(xmax),y2:py(xmax-1),stroke:ORANGE,'stroke-width':4});
+    el(svg,'circle',{cx:px(1),cy:py(0),r:6,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(1)+8,y:py(0)-8,'font-size':12,'font-weight':900,fill:INK}).textContent='相切(1,0)';
+    el(svg,'text',{x:px(3.4),y:py(3.6),'font-size':13,'font-weight':900,fill:ORANGE}).textContent='y=x−1 (切线)';
+    el(svg,'text',{x:px(2.6),y:py(1.4),'font-size':13,'font-weight':900,fill:GREEN}).textContent='y=ln x';
+    // moving gap
+    const xv=(+Xs.value)/10;const lnv=Math.log(xv),lv=xv-1,gap=lv-lnv;
+    el(svg,'line',{x1:px(xv),y1:py(lnv),x2:px(xv),y2:py(lv),stroke:BLUE,'stroke-width':4});
+    el(svg,'circle',{cx:px(xv),cy:py(lnv),r:4,fill:GREEN});
+    el(svg,'circle',{cx:px(xv),cy:py(lv),r:4,fill:ORANGE});
+    el(svg,'text',{x:px(xv)+6,y:(py(lnv)+py(lv))/2,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='差='+gap.toFixed(2);
+    oX.textContent=xv.toFixed(1);oLn.textContent=lnv.toFixed(2);oL.textContent=lv.toFixed(2);oG.textContent=gap.toFixed(2);
+  }
+  Xs.oninput=draw;draw();
+})();
+
+/* ===== 互动5:放缩链条 ===== */
+(function(){
+  const svg=document.getElementById('chainSvg');const note=document.getElementById('chainNote');
+  let c=0;
+  document.querySelectorAll('.chaincase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.chaincase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  const X0=60,Y0=20,W=580,H=230;
+  const xmin=-1.5,xmax=2.3,ymin=-1.5,ymax=6;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function curve(fn,col,dash){let d='';for(let x=xmin;x<=xmax;x+=0.02){const y=fn(x);if(y<ymin-1||y>ymax+1){d='';continue;}d+=(d?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';}el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':4,'stroke-dasharray':dash||'2 0'});}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(0),y1:Y0,x2:px(0),y2:Y0+H,stroke:INK,'stroke-width':2});
+    // e^x (red), x+1 (blue)
+    curve(x=>Math.exp(x),RED);
+    curve(x=>x+1,BLUE);
+    let target,msg,ok;
+    if(c===0){ target=x=>0.5*x+0.5; // 目标较低: 够用
+      curve(target,GREEN);
+      ok=true;msg='够用:e^x ≥ x+1 ≥ 0.5x+0.5(目标)。三层从上到下有序,放缩到中间量 x+1 就已经压住目标,链条成立。';
+    } else { target=x=>0.5*x*x; // 目标 x^2/2, 大x处超过 x+1
+      curve(target,GREEN);
+      ok=false;msg='过头:想证 e^x ≥ x²/2,却放到 x+1。x 较大时 x+1 < x²/2(绿线冒到蓝线上方),中间量掉到目标下面,链条断裂!必须换更强放缩或直接作差求导。';
+    }
+    el(svg,'text',{x:px(-1.4),y:py(5.6),'font-size':12.5,'font-weight':900,fill:RED}).textContent='e^x';
+    el(svg,'text',{x:px(-1.4),y:py(4.9),'font-size':12.5,'font-weight':900,fill:BLUE}).textContent='x+1(中间量)';
+    el(svg,'text',{x:px(-1.4),y:py(4.2),'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='目标';
+    note.innerHTML=(ok?'✅ ':'❌ ')+msg;
+    note.style.borderColor=ok?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动6:含参最值 h(x)=e^x - a x ===== */
+(function(){
+  const svg=document.getElementById('paramSvg');
+  const As=document.getElementById('paramA');
+  const oA=document.getElementById('paramAo'),oXm=document.getElementById('paramXm'),oMin=document.getElementById('paramMin'),oOk=document.getElementById('paramOk');
+  const X0=60,Y0=20,W=580,H=280;
+  const xmin=-1,xmax=3,ymin=-4,ymax=6;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function draw(){
+    clr(svg);
+    const a=(+As.value)/10; // -1 .. 4
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(0),y1:Y0,x2:px(0),y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(xmax)-6,y:py(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // h = e^x - a x
+    let d='';for(let x=xmin;x<=xmax;x+=0.02){const y=Math.exp(x)-a*x;if(y<ymin-1||y>ymax+1){d='';continue;}d+=(d?'L':'M')+px(x).toFixed(1)+','+py(y).toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':4});
+    el(svg,'text',{x:px(-0.9),y:py(5.5),'font-size':13,'font-weight':900,fill:VIO}).textContent='h(x)=e^x−a·x , a='+a.toFixed(1);
+    let xm,hmin,ok;
+    if(a>0){ xm=Math.log(a); hmin=a-a*Math.log(a);
+      const cy=Math.exp(xm)-a*xm;
+      el(svg,'circle',{cx:px(xm),cy:py(cy),r:6,fill:INK,stroke:YEL,'stroke-width':2});
+      el(svg,'text',{x:px(xm)+8,y:py(cy)+18,'font-size':11.5,'font-weight':900,fill:INK}).textContent='谷底 h_min='+hmin.toFixed(2);
+      ok=hmin>=-1e-9;
+      oXm.textContent='ln a='+xm.toFixed(2);oMin.textContent=hmin.toFixed(2);
+    } else {
+      hmin=null; oXm.textContent='无(h递增)';oMin.textContent='无下界/递增';ok=true;
+    }
+    oA.textContent=a.toFixed(1);
+    oOk.textContent=(a>0&&!ok)?'否 h_min<0':'是 h_min≥0';
+    oOk.style.color=(a>0&&!ok)?RED:GREEN;
+  }
+  As.oninput=draw;draw();
+})();
+
+/* ===== 互动7:双变量换元 phi(t) ===== */
+(function(){
+  const svg=document.getElementById('twoSvg');
+  const Ts=document.getElementById('twoT');
+  const oT=document.getElementById('twoTo'),oPhi=document.getElementById('twoPhi'),oP1=document.getElementById('twoP1'),oS=document.getElementById('twoSign');
+  const X0=60,Y0=20,W=580,H=250;
+  const xmin=0.5,xmax=8,ymin=-0.1,ymax=1.0;
+  function px(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function py(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  function phi(t){return Math.log(t)-2*(t-1)/(t+1);}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:px(xmin),y1:py(0),x2:px(xmax),y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(1),y1:Y0,x2:px(1),y2:Y0+H,stroke:INK,'stroke-width':1,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:px(xmax)-6,y:py(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    let d='';for(let t=0.55;t<=xmax;t+=0.02){const y=phi(t);d+=(d?'L':'M')+px(t).toFixed(1)+','+py(y).toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':4});
+    el(svg,'circle',{cx:px(1),cy:py(0),r:5,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(1)+8,y:py(0)-8,'font-size':12,'font-weight':900,fill:INK}).textContent='φ(1)=0';
+    el(svg,'text',{x:px(4.5),y:py(0.75),'font-size':13,'font-weight':900,fill:VIO}).textContent='φ(t)=ln t − 2(t−1)/(t+1)';
+    const tv=(+Ts.value)/10;const pv=phi(tv);
+    el(svg,'line',{x1:px(tv),y1:Y0,x2:px(tv),y2:Y0+H,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:px(tv),cy:py(pv),r:5,fill:RED,stroke:INK,'stroke-width':2});
+    oT.textContent=tv.toFixed(1);oPhi.textContent=pv.toFixed(3);oP1.textContent='0';
+    oS.textContent=pv>1e-4?'φ>0(t>1成立)':pv<-1e-4?'φ<0(t<1)':'=0';
+    oS.style.color=pv>1e-4?GREEN:pv<-1e-4?RED:INK;
+  }
+  Ts.oninput=draw;draw();
+})();
+
+/* ===== 互动8:数列放缩 ln(n+1) <= 调和和 ===== */
+(function(){
+  const svg=document.getElementById('seqSvg');
+  const Ns=document.getElementById('seqN');
+  const oN=document.getElementById('seqNo'),oLn=document.getElementById('seqLn'),oSum=document.getElementById('seqSum'),oOk=document.getElementById('seqOk');
+  const X0=50,Y0=20,W=600,H=240;
+  function draw(){
+    clr(svg);
+    const n=+Ns.value;
+    // compute harmonic partial sums and ln(k+1)
+    let sum=0;const sums=[];for(let k=1;k<=n;k++){sum+=1/k;sums.push(sum);}
+    const totalSum=sum, lnv=Math.log(n+1);
+    const ymax=Math.max(3.5, totalSum*1.1);
+    function py(y){return Y0+H-y/ymax*H;}
+    // axis
+    el(svg,'line',{x1:X0,y1:py(0),x2:X0+W,y2:py(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':2});
+    // bars = partial harmonic sum at each n' up to n
+    const bw=W/(n+1);
+    for(let k=1;k<=n;k++){
+      const h=py(0)-py(sums[k-1]);
+      el(svg,'rect',{x:X0+bw*(k-0.5)-bw*0.3,y:py(sums[k-1]),width:bw*0.6,height:h,fill:BLUE,stroke:INK,'stroke-width':2});
+    }
+    // ln(n'+1) green line across
+    let d='';for(let k=1;k<=n;k++){const y=Math.log(k+1);d+=(d?'L':'M')+(X0+bw*(k-0.5))+','+py(y)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:GREEN,'stroke-width':4});
+    for(let k=1;k<=n;k++){el(svg,'circle',{cx:X0+bw*(k-0.5),cy:py(Math.log(k+1)),r:3.5,fill:GREEN});}
+    el(svg,'text',{x:X0+10,y:Y0+16,'font-size':13,'font-weight':900,fill:BLUE}).textContent='蓝柱=Σ1/k';
+    el(svg,'text',{x:X0+150,y:Y0+16,'font-size':13,'font-weight':900,fill:GREEN}).textContent='绿线=ln(n+1) 下界';
+    oN.textContent=n;oLn.textContent=lnv.toFixed(3);oSum.textContent=totalSum.toFixed(3);
+    const ok=totalSum>=lnv-1e-9;
+    oOk.textContent=ok?'是 Σ1/k≥ln(n+1)':'否';
+    oOk.style.color=ok?GREEN:RED;
+  }
+  Ns.oninput=draw;draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 证不等式 f(x)>g(x) 的构造函数法总流程是什么？",a:"移项作差构造 h(x)=f(x)−g(x)（先写定义域）→ 求 h′(x) 判单调 → 找最小值 h_min → 证 h_min≥0，写取等条件。核心=作差构造+求最值。"},
+ {q:"2. 两条万能切线不等式是什么？各自取等条件？",a:"e^x≥x+1（取等当且仅当 x=0）；lnx≤x−1，即 x−1≥lnx（取等当且仅当 x=1）。它们分别来自 y=e^x、y=lnx 的切线。"},
+ {q:"3. 用构造函数法证明 e^x≥x+1（写出完整过程）。",a:"设 h(x)=e^x−x−1，x∈R，h′(x)=e^x−1。x<0 时 h′<0（减），x>0 时 h′>0（增），x=0 处 h′=0 取最小值 h(0)=1−0−1=0。故 h(x)≥0，即 e^x≥x+1，取等 x=0。"},
+ {q:"4. 构造出 h(x) 后，为什么第一件事要写定义域？",a:"定义域决定后面单调性判断的区间和最值位置。含 lnx→x>0、含 √x→x≥0。定义域写错，导数正负和最值全盘皆错。"},
+ {q:"5. 含参恒成立问题（求 a 范围）有哪两条主路？各何时用？",a:"① 分离参数：化 a≥φ(x)（则 a≥φ_max）或 a≤φ(x)（则 a≤φ_min），转求 φ 的最值——能把 a 单独拎出时首选。② 分类讨论：a 分不出来时，直接对 h(x) 求导，按 a 取值分类判 h_min。"},
+ {q:"6. 求 a 使 e^x≥a·x 对一切 x>0 恒成立。",a:"分离参数 a≤e^x/x=φ(x)（x>0）。φ′(x)=e^x(x−1)/x²，x=1 处取极小 φ(1)=e。故 a≤e。"},
+ {q:"7. 什么叫「放缩过头」？举例说明危害。",a:"放缩后缩得比目标还小，链条断裂。例：证 e^x≥x²/2 却用 e^x≥x+1，当 x 较大时 x+1<x²/2，链断，结论证不出。放缩要够用但不过分。"},
+ {q:"8. 双变量不等式的核心思路是什么？举一换元。",a:"降维：两变量化归为一变量。常令 t=x₁/x₂（或 t=x₁−x₂），整理成一元 φ(t)，写清 t 的范围（如 t>1），再求导证 φ 的符号。"},
+ {q:"9. 证对数均值不等式右半段 (x₁−x₂)/(lnx₁−lnx₂)<(x₁+x₂)/2（x₁≠x₂>0）。",a:"令 t=x₁/x₂>1，化为证 lnt>2(t−1)/(t+1)。设 φ(t)=lnt−2(t−1)/(t+1)，φ′(t)=(t−1)²/[t(t+1)²]>0，φ 增，φ(1)=0，故 t>1 时 φ>0，得证。"},
+ {q:"10. 用函数放缩证 ln(n+1)≤1+1/2+…+1/n。",a:"由 lnx≤x−1 取 x=(k+1)/k：ln(k+1)−lnk≤1/k。对 k=1..n 累加，左边裂项相消得 ln(n+1)，右边 Σ1/k，故 ln(n+1)≤Σ1/k。"},
+ {q:"11. 极值点一定是最值点吗？开区间上求最值要注意什么？",a:"不一定。要结合区间端点、定义域边界一起判断。开区间/边界上极值可能取不到，需用极限说明趋势，不能直接写 min。"},
+ {q:"12. 引用切线不等式 e^x≥x+1 放缩时，有什么规矩？",a:"必须先证明它（或注明来源），不能当公理直接搬。同时核对取等条件（x=0）是否与目标取等点对齐，否则严格/非严格会弄错。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

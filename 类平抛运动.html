@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>类平抛运动 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>类平抛运动</h1>
+    <p class="lead">平抛只是「初速度水平、合力竖直向下」的一个特例。把这个几何关系换个方向——只要<b>初速度与恒定合力互相垂直</b>——运动的「花样」完全一样,只是坐标轴倒了个角度。斜面上平抛、带电粒子进偏转电场、复合场里的抛物运动,本质都是它。学会「沿 v₀ 匀速 + 沿力匀加速」这一招,一类题全通。</p>
+
+    <div class="say">🗣️ <b>类平抛(人话版):</b> 类平抛 = <b>换了个方向的平抛</b>。别被斜面、电场、复合场吓到——只要满足一个条件:<b>初速度 v₀ 垂直于恒定的合力 F</b>,这个运动就一定能拆成两个:沿 v₀ 方向<b>匀速直线</b>(那个方向没有力),沿 F 方向<b>初速度为零的匀加速</b>(那个方向被力一路推)。坐标轴不一定是水平竖直,<b>要沿 v₀ 和沿 F 建</b>——这是全部诀窍。</div>
+
+    <div class="keybox"><b>一句话公式:</b> 沿 v₀ 方向 <b>x = v₀·t</b>(匀速);沿 F 方向 <b>y = ½at²</b>、<b>v_y = at</b>(初速为零匀加速,a = F/m)。合位移、合速度用勾股定理合成。成立的<b>唯一前提:v₀ ⊥ F 且 F 恒定</b>。</div>
+
+    <h2>① 类平抛的条件与本质:两个分运动</h2>
+    <div class="card">
+      <div class="eq">条件:初速度 v₀ ⊥ 合力 F，且 F 恒定不变</div>
+      <p style="margin:8px 0">满足这两条,任何物体的运动都能<b>正交分解</b>成两个互不干扰的分运动。关键:<b>坐标轴要沿 v₀ 方向和沿 F 方向建立</b>(不一定是水平/竖直!)。</p>
+      <table>
+        <tr><th>分方向</th><th>受力</th><th>运动性质</th><th>规律</th></tr>
+        <tr><td>沿 <b>v₀</b> 方向</td><td>无分力(F 与它垂直)</td><td><b>匀速直线</b></td><td>x = v₀·t</td></tr>
+        <tr><td>沿 <b>F</b> 方向</td><td>合力 F 全在这方向</td><td><b>初速为零匀加速</b></td><td>y = ½at²，v_y = at，a=F/m</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么能拆?</b> 因为运动的合成与分解:两个垂直方向的分运动彼此独立(<b>时间是它们唯一的联系</b>)。平抛就是这个的水平/竖直特例(v₀水平、F=mg竖直)。</p>
+      <p class="trap">⚠ 区别于<b>斜抛</b>!斜抛的初速度与重力<b>不垂直</b>(有个夹角),不能直接套「沿v₀匀速+沿力匀加速」,得先按水平/竖直分解、竖直方向有初速度。类平抛的招数只对「v₀ ⊥ F」这一类灵。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 类平抛轨迹实时分解:沿 v₀ 匀速 + 沿 F 匀加速，合成出抛物线</div>
+      <svg id="decSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="decGo">▶ 抛出</button><button id="decReset">↺ 重置</button>
+        <label>初速 v₀ <input id="decV" type="range" min="2" max="8" value="5" step="1"></label>
+        <label>加速度 a <input id="decA" type="range" min="2" max="10" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>沿 v₀ 位移 x=v₀t</b><span id="decX">0</span></div>
+        <div><b>沿 F 位移 y=½at²</b><span id="decY">0</span></div>
+        <div><b>沿 F 分速 v_y=at</b><span id="decVy">0</span></div>
+        <div><b>合速率 √(v₀²+v_y²)</b><span id="decVt">0</span></div>
+      </div>
+      <p class="small">蓝虚线=沿 v₀ 方向的匀速分运动(等间隔),绿虚线=沿 F 方向的匀加速分运动(间隔越来越大),红实线=两者合成的<b>抛物线</b>。方框始终在两条分位移的「对角」上。</p>
+    </div>
+
+    <h2 class="b">② 建正交坐标:沿 v₀ 和沿 F，不一定水平竖直</h2>
+    <div class="card">
+      <p style="margin:6px 0">类平抛最容易翻车的地方就是<b>坐标怎么建</b>。铁律:<b>一根轴沿 v₀(初速度)方向,另一根轴沿 F(合力)方向</b>。这样一分,一个轴纯匀速、一个轴纯匀加速,公式立刻套上。</p>
+      <table>
+        <tr><th>场景</th><th>v₀ 方向</th><th>F(合力)方向</th><th>坐标轴怎么建</th></tr>
+        <tr><td>普通平抛</td><td>水平</td><td>竖直向下(mg)</td><td>水平 + 竖直</td></tr>
+        <tr><td>沿斜面平抛(初速沿斜面)</td><td>沿斜面</td><td>垂直斜面向里(合力)</td><td>沿斜面 + 垂直斜面(倾斜坐标!)</td></tr>
+        <tr><td>带电粒子进偏转电场</td><td>沿电场板方向(水平)</td><td>沿电场力方向(竖直)</td><td>水平 + 竖直</td></tr>
+        <tr><td>复合场(重力+电场)</td><td>⊥ 合力方向</td><td>合力 F=mg±qE 方向</td><td>沿合力 + 垂直合力</td></tr>
+      </table>
+      <p class="trap">⚠ 斜面题里,如果初速度是<b>水平</b>射入斜面上方的,那还是普通平抛(水平竖直分解),别硬套倾斜坐标;只有当初速度<b>沿斜面</b>、合力垂直斜面时,才建倾斜坐标。看清 v₀ 和 F 谁垂直谁。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 6 — 正交坐标随合力方向旋转:v₀ ⊥ F 的坐标系怎么摆</div>
+      <svg id="axSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>合力方向角 θ_F <input id="axAng" type="range" min="0" max="180" value="90" step="5"></label>
+        <button class="axpre" data-a="90">平抛(力竖直)</button>
+        <button class="axpre" data-a="120">斜面(力斜向)</button>
+        <button class="axpre" data-a="45">复合场(力斜上)</button>
+      </div>
+      <div class="verdict" id="axNote"></div>
+      <p class="small">红箭=合力 F(方向可调),蓝箭=初速度 v₀(<b>始终自动保持与 F 垂直</b>)。灰色虚线格子=沿 v₀ 和沿 F 建立的正交坐标。看它随力方向一起旋转——这就是「坐标不一定水平竖直」的直观来源。</p>
+    </div>
+
+    <h2 class="g">③ 落点、速度、位移的求解</h2>
+    <div class="card">
+      <h3>三步通解(和平抛一模一样，只是换轴)</h3>
+      <div class="mono">第1步:确定 v₀ 方向(匀速轴)与 F 方向(匀加速轴)，算加速度 a=F/m。</div>
+      <div class="mono">第2步:沿 v₀ 轴 x=v₀t(匀速)；沿 F 轴 y=½at²、v_y=at(初速零匀加速)。时间 t 是两轴的桥梁。</div>
+      <div class="mono">第3步:合位移 s=√(x²+y²)，合速度 v=√(v₀²+v_y²)；落点/边界给一个几何约束，反解 t。</div>
+      <h3>两个偏角(高频考点)</h3>
+      <div class="eq">速度偏角:tanθ = v_y/v₀ = at/v₀　位移偏角:tanα = y/x = (½at²)/(v₀t) = at/(2v₀)</div>
+      <div class="keybox" style="margin:12px 0"><b>黄金关系:tanθ = 2·tanα</b>。速度方向与 v₀ 的夹角 θ,总是位移方向与 v₀ 夹角 α 的「两倍正切」。任何类平抛都成立!</div>
+      <p class="trap">⚠ 速度偏角 θ ≠ 位移偏角 α(θ 更大)。tanθ=2tanα,不是 θ=2α!是正切成 2 倍,角度本身不是 2 倍。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 4 — 速度偏角 vs 位移偏角:亲眼看 tanθ = 2·tanα</div>
+      <svg id="angSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="angGo">▶ 抛出</button><button id="angReset">↺ 重置</button>
+        <label>时刻 t <input id="angT" type="range" min="0.2" max="2" value="1.2" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>位移偏角 α</b><span id="angA">0</span></div>
+        <div><b>速度偏角 θ</b><span id="angTh">0</span></div>
+        <div><b>tanα</b><span id="angTa">0</span></div>
+        <div><b>tanθ / tanα</b><span id="angR">0</span></div>
+      </div>
+      <p class="small">橙线=位移方向(从抛点连到当前位置,偏角 α),紫线=速度方向(当前 v 的切线,偏角 θ)。无论 t 取多少,<b>tanθ/tanα 恒等于 2</b>——右下角比值永远是 2.00。</p>
+    </div>
+
+    <h2 class="o">④ 斜面上平抛:沿斜面 & 垂直斜面分解</h2>
+    <div class="card">
+      <p style="margin:6px 0">物体<b>沿斜面顶端水平抛出</b>是最经典的场景。这里 v₀ 水平、mg 竖直,两者并不垂直——但只要问题关心「何时落到斜面」或「垂直斜面的速度」,把坐标建成<b>沿斜面 x' + 垂直斜面 y'</b> 会最省事。</p>
+      <div class="eq">分解重力:沿斜面 g·sinβ，垂直斜面 g·cosβ　(β 为斜面倾角)</div>
+      <p style="margin:8px 0">此时沿斜面方向有初速度 v₀cosβ、加速度 g·sinβ(匀加速);垂直斜面方向初速度 v₀sinβ、加速度 −g·cosβ。当物体<b>回落到斜面</b>时,垂直斜面的位移 y'=0,由此解落到斜面的时间。</p>
+      <p style="margin:8px 0"><b>更常考的"贴着斜面"型:</b> 若物体从斜面上某点垂直于斜面射出、只受重力分量,或初速度沿斜面——这才是纯类平抛,直接沿斜面(匀速)+垂直斜面(匀加速)套公式。<b>看清 v₀ 和合力谁垂直谁。</b></p>
+      <p class="trap">⚠ 斜面题坐标最易建错:先问「v₀ 和合力垂直吗?」垂直→沿两者建轴(倾斜坐标);不垂直(如水平抛+竖直重力)→或用水平竖直、或把重力沿斜面分解。别一上来就把 x-y 建成水平竖直然后卡在「何时落斜面」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛰️ 互动 3 — 斜面上平抛:重力沿斜面 &amp; 垂直斜面的分解，看何时落回斜面</div>
+      <svg id="slpSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="slpGo">▶ 抛出</button><button id="slpReset">↺ 重置</button>
+        <label>倾角 β <input id="slpB" type="range" min="20" max="60" value="37" step="1"></label>
+        <label>初速 v₀ <input id="slpV" type="range" min="3" max="9" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>g∥ 沿斜面 (m/s²)</b><span id="slpGp">0</span></div>
+        <div><b>g⊥ 垂直斜面 (m/s²)</b><span id="slpGn">0</span></div>
+        <div><b>落斜面时间 t</b><span id="slpT">0</span></div>
+        <div><b>落点沿斜面距离</b><span id="slpL">0</span></div>
+      </div>
+      <p class="small">水平抛出后,把重力拆成沿斜面(橙,g·sinβ,让它沿坡加速)和垂直斜面(绿,g·cosβ,把它拉回斜面)。当垂直斜面位移回到 0 时,物体<b>落回斜面</b>——红点标出落点。</p>
+    </div>
+
+    <h2 class="b">⑤ 带电粒子进偏转电场:标准类平抛</h2>
+    <div class="card">
+      <p style="margin:6px 0">带电粒子以速度 v₀ <b>水平射入</b>平行板电容器,板间匀强电场 E 竖直。粒子受电场力 F=qE(重力常可忽略),恰好 v₀ ⊥ F——<b>教科书级类平抛</b>。</p>
+      <div class="eq">水平(沿v₀):x = v₀·t　竖直(沿F):y = ½·(qE/m)·t²，加速度 a = qE/m = qU/(md)</div>
+      <p style="margin:8px 0"><b>穿过极板(板长 L):</b> 在场中时间 t = L/v₀。射出时的<b>侧移</b> y = ½a(L/v₀)²,射出时竖直分速 v_y = a·L/v₀。射出后进入无场区做匀速直线(沿最后速度方向)。</p>
+      <p style="margin:8px 0"><b>偏转角:</b> tanθ = v_y/v₀ = aL/v₀² = qUL/(mdv₀²)。打在荧光屏上的总偏移 = 板内侧移 + 板外直线延伸(可用"从板中央射出的等效直线"快速求)。</p>
+      <p class="trap">⚠ 恰好不打在板上的<b>临界</b>:侧移 y = d/2(板间距一半)。q、E、v₀ 增大或减小如何影响"是否飞出",要靠 y=½a(L/v₀)² 一起判断。别忘了重力若不可忽略,合力要含 mg。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 2 — 带电粒子在偏转电场中的抛物线:可调初速度 / 场强，看轨迹与是否飞出</div>
+      <svg id="defSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="defGo">▶ 射入</button><button id="defReset">↺ 重置</button>
+        <label>初速 v₀ <input id="defV" type="range" min="3" max="10" value="6" step="1"></label>
+        <label>场强 E <input id="defE" type="range" min="1" max="10" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>加速度 a=qE/m</b><span id="defAcc">0</span></div>
+        <div><b>侧移 y=½a(L/v₀)²</b><span id="defY">0</span></div>
+        <div><b>偏转角 tanθ=aL/v₀²</b><span id="defTh">0</span></div>
+        <div><b>是否飞出(y&gt;d/2)</b><span id="defOut">0</span></div>
+      </div>
+      <p class="small">红点=带电粒子,水平射入两板间(初速沿 v₀ 匀速,竖直被电场力匀加速)。降低 v₀ 或加大 E → 侧移变大 → 可能<b>打在极板上(飞出)</b>。侧移超过 d/2 时上方警示。</p>
+    </div>
+
+    <h2 class="v">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 斜面上平抛(沿斜面 &amp; 垂直斜面分解)</h3>
+      <p><b class="tag">触发信号:</b>「从斜面顶端水平抛出」「物体落回斜面」，问落斜面时间、落点距离、落斜面时速度方向。</p>
+      <p><b class="tag">标准动作:</b>把重力分解为沿斜面 g·sinβ 与垂直斜面 g·cosβ。垂直斜面方向:初速 v₀sinβ、加速度 g·cosβ，落回斜面时该方向位移为 0，解出 t。再回代求落点/速度。</p>
+      <p><b class="tag">示例(带解):</b>斜面倾角 β=37°(sin=0.6,cos=0.8)，水平抛出 v₀=5m/s。取水平竖直分解:水平 x=v₀t，竖直 y=½gt²。落回斜面几何:tanβ=y/x → ½gt²/(v₀t)=tan37° → ½×10×t/5=0.75 → t=0.75s。落点水平距离 x=5×0.75=3.75m，沿斜面距离 L=x/cosβ=3.75/0.8=4.69m。</p>
+      <p class="trap">陷阱:坐标建错;把「落回斜面」当成「落到水平地面」;tanβ 用成落点速度偏角。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 带电粒子进偏转电场(标准类平抛)</h3>
+      <p><b class="tag">触发信号:</b>「以速度 v₀ 水平射入平行板」「板长 L、板间距 d、电压 U」，求侧移、偏转角、末速度、打屏位置。</p>
+      <p><b class="tag">标准动作:</b>a=qE/m=qU/(md)。水平 x=v₀t(匀速)，竖直 y=½at²。在场中 t=L/v₀。侧移 y=½a(L/v₀)²，v_y=aL/v₀，tanθ=v_y/v₀。出场后匀速直线。</p>
+      <p><b class="tag">示例(带解):</b>电子 v₀=6×10⁶m/s 水平入板，L=0.1m，a=qE/m=1.2×10¹⁴ m/s²。场中时间 t=L/v₀=0.1/6e6≈1.67×10⁻⁸s。侧移 y=½at²=½×1.2e14×(1.67e-8)²≈0.017m。tanθ=aL/v₀²=1.2e14×0.1/(6e6)²=0.033。</p>
+      <p class="trap">陷阱:忘了重力(若题目说明不可忽略要加 mg);混淆板内侧移与打屏总偏移;单位换算错。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 恒力场中的类平抛(复合场 / 一般恒力)</h3>
+      <p><b class="tag">触发信号:</b>「同时受重力和电场力(或其他恒力)」，初速度恰与合力垂直，求轨迹、落点、速度。</p>
+      <p><b class="tag">标准动作:</b>先求合力 F(重力与其他恒力矢量合成)及 a=F/m。检查 v₀ 是否 ⊥ F:若是→沿 v₀(匀速)+沿 F(匀加速)建倾斜坐标，套 x=v₀t、y=½at²。</p>
+      <p><b class="tag">示例(带解):</b>小球质量 m 带电，在竖直向下 mg 与水平电场力 qE 中，合力 F=√((mg)²+(qE)²)，方向偏离竖直。若初速度 v₀ 恰垂直于 F 射出，则沿 F 方向 a=F/m 匀加速、沿 v₀ 方向匀速，即标准类平抛，用倾斜坐标求解。</p>
+      <p class="trap">陷阱:没先合成合力就分解;误以为坐标必须水平竖直;v₀ 与 F 不垂直时硬套(那不是类平抛)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 求落点位置 / 落地速度方向</h3>
+      <p><b class="tag">触发信号:</b>「落在何处」「落地(落面)时速度方向与…成多少角」，给几何边界(斜面、屏、地面)。</p>
+      <p><b class="tag">标准动作:</b>沿两轴写 x=v₀t、y=½at²。用几何边界(如 y=某值、或落到斜面 tanβ=y/x)解 t，回代求落点。速度方向:tanθ=v_y/v₀=at/v₀。位移方向:tanα=y/x=at/(2v₀)，且 tanθ=2tanα。</p>
+      <p><b class="tag">示例(带解):</b>平抛落地时 v_y=v₀(速度偏角 θ=45°)，则 tanθ=1=at/v₀。位移偏角 tanα=at/(2v₀)=0.5，α=arctan0.5≈26.6°。速度偏角(45°)大于位移偏角(26.6°)，验证 tanθ=2tanα。</p>
+      <p class="trap">陷阱:速度偏角与位移偏角混用;以为 θ=2α(实为 tanθ=2tanα);落斜面的几何约束写成 tan=v_y/v_x。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 临界(恰好到达 / 恰好不飞出)</h3>
+      <p><b class="tag">触发信号:</b>「恰好从板边缘射出」「恰好不打在板上」「恰好落到斜面底端」，求临界初速度/场强/角度。</p>
+      <p><b class="tag">标准动作:</b>把「恰好」翻译成一个等式:偏转电场里"恰好飞出"= 侧移 y=d/2 且 x=L；斜面"恰好落到某点"= 落点坐标等于该点。列 x=v₀t、y=½at² 与临界条件联立解。</p>
+      <p><b class="tag">示例(带解):</b>粒子恰好从板边缘射出:x=L 且 y=d/2。由 t=L/v₀ 与 d/2=½a(L/v₀)² → v₀=L·√(a/d)。若 v₀ 大于此值则安全射出，小于则打在板上。</p>
+      <p class="trap">陷阱:临界条件写漏一个(只写 y=d/2 忘了 x=L);把「恰好飞出」与「恰好打板」的不等号方向搞反。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 坐标要<b>沿 v₀ 方向 + 沿合力 F 方向</b>建,<b>不一定是水平竖直</b>!斜面/复合场里就是倾斜坐标。</p>
+      <p class="trap">② 分解的前提是 <b>v₀ ⊥ F 且 F 恒定</b>。不垂直(如斜抛)不能用「沿v₀匀速+沿力匀加速」。</p>
+      <p class="trap">③ 速度偏角 θ 与位移偏角 α 关系是 <b>tanθ = 2·tanα</b>,不是 θ=2α!θ 比 α 大。</p>
+      <p class="trap">④ 沿 F 方向是<b>初速度为零</b>的匀加速(因为 v₀ 全在另一轴上),y=½at²,别写成有初速度。</p>
+      <p class="trap">⑤ 斜面上平抛坐标最易建错:先判断 v₀ 与合力是否垂直,再决定用水平竖直还是倾斜坐标。</p>
+      <p class="trap">⑥ 偏转电场里若重力<b>不可忽略</b>,合力要含 mg,加速度 a=F合/m。</p>
+      <p class="trap">⑦ 「恰好飞出/恰好不飞出」临界:侧移 y=d/2 同时 x=L,两个条件都要。</p>
+      <p class="trap">⑧ 两个分运动<b>唯一的联系是时间 t</b>,先用一个轴的边界解 t,再回代另一个轴。</p>
+      <p class="trap">⑨ 出偏转电场后进入<b>无场区做匀速直线</b>(沿射出时的合速度方向),不是继续抛物线。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 类平抛是平抛的「坐标旋转不变式」:</b> 平抛的物理内核是「一个方向无力→匀速,垂直方向恒力→初速零匀加速」。把整幅图连同坐标轴一起旋转任意角度,规律形式完全不变。所以判断一道题是不是类平抛,只需问一句:<b>初速度和恒定合力垂直吗?</b> 是,就照抄平抛全套公式,只把「水平/竖直」读成「沿v₀/沿F」。</p>
+      <p style="margin:8px 0"><b>② tanθ=2tanα 的来历要会现推:</b> tanα=y/x=(½at²)/(v₀t)=at/(2v₀);tanθ=v_y/v₀=at/v₀。相除立得 tanθ=2tanα。这个「2」来自匀加速位移 ½at² 里的 ½。别背结论,推一遍,任何类平抛(包括斜面、电场)都通用,还顺带记住了速度偏角总大于位移偏角。</p>
+      <p style="margin:8px 0"><b>③ 复合场先合成再分解,坐标跟着合力走:</b> 遇到「重力+电场力」这种多恒力,第一步永远是矢量合成得 F合,再看 v₀ 是否 ⊥ F合。若垂直→倾斜坐标类平抛;若初速度沿 F合→纯匀加速直线;若都不是→按水平竖直分解的一般抛体。会挑坐标,一半的分就到手了。</p>
+      <p style="margin:8px 0"><b>④ 偏转电场的「等效点」秒杀打屏偏移:</b> 粒子在板内做类平抛,出板后走直线,直线反向延长恰好过<b>板中央(L/2处)的轴线点</b>。于是打屏总偏移 Y = (L/2 + D)·tanθ(D 为板末到屏距离)。记住这个几何等效,一步跳过板内板外分段计算。</p>
+      <p style="margin:8px 0"><b>⑤ 临界问题=把"恰好"翻译成方程:</b> "恰好飞出"↔ x=L 且 y=d/2;"恰好落斜面底"↔ 落点坐标=底端坐标。所有临界题都是「多写一个等式约束」。掌握"翻译"这一步,复杂的电场/斜面临界都退化成解方程组,再判不等号方向即可。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:平抛运动、运动的合成与分解、带电粒子在电场中的运动</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:类平抛轨迹实时分解 ===== */
+(function(){
+  const svg=document.getElementById('decSvg');
+  const Vs=document.getElementById('decV'),As=document.getElementById('decA');
+  const oX=document.getElementById('decX'),oY=document.getElementById('decY'),oVy=document.getElementById('decVy'),oVt=document.getElementById('decVt');
+  let V=5,A=5,tt=0,running=false;
+  const OX=70,OY=40,scX=48,scY=13; // origin, scales
+  function sync(){V=+Vs.value;A=+As.value;}
+  Vs.oninput=As.oninput=()=>{sync();draw();};
+  function pos(t){return {x:OX+V*t*scX, y:OY+0.5*A*t*t*scY};}
+  function draw(){
+    clr(svg);
+    // frame
+    el(svg,'line',{x1:OX,y1:OY,x2:OX,y2:340,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:OX,y1:OY,x2:680,y2:OY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:685,y:OY+4,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'end'}).textContent='沿 v₀ (匀速)';
+    el(svg,'text',{x:OX+6,y:335,'font-size':13,'font-weight':900,fill:GREEN}).textContent='沿 F (匀加速)';
+    // full parabola faint
+    let path='M '+OX+' '+OY;
+    for(let t=0;t<=2;t+=0.05){const p=pos(t);if(p.x<690&&p.y<345)path+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    el(svg,'path',{d:path,fill:'none',stroke:'#d8cfb5','stroke-width':3});
+    // trajectory up to tt (red)
+    let rp='M '+OX+' '+OY;
+    for(let t=0;t<=tt;t+=0.03){const p=pos(t);rp+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    el(svg,'path',{d:rp,fill:'none',stroke:RED,'stroke-width':4});
+    const cur=pos(tt);
+    const cx=Math.min(cur.x,688),cy=Math.min(cur.y,342);
+    // decomposition dashed lines
+    el(svg,'line',{x1:OX,y1:OY,x2:cx,y2:OY,stroke:BLUE,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'line',{x1:OX,y1:OY,x2:OX,y2:cy,stroke:GREEN,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'line',{x1:cx,y1:OY,x2:cx,y2:cy,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'3 4'});
+    el(svg,'line',{x1:OX,y1:cy,x2:cx,y2:cy,stroke:BLUE,'stroke-width':2,'stroke-dasharray':'3 4'});
+    // equal-interval marks along v0 axis (uniform)
+    for(let t=0.25;t<tt+0.001;t+=0.25){const px=OX+V*t*scX;if(px<688)el(svg,'circle',{cx:px,cy:OY,r:4,fill:BLUE});}
+    // growing-interval marks along F axis (accel)
+    for(let t=0.25;t<tt+0.001;t+=0.25){const py=OY+0.5*A*t*t*scY;if(py<342)el(svg,'circle',{cx:OX,cy:py,r:4,fill:GREEN});}
+    // moving box
+    el(svg,'rect',{x:cx-9,y:cy-9,width:18,height:18,fill:RED,stroke:INK,'stroke-width':3});
+    // labels
+    const x=V*tt, y=0.5*A*tt*tt, vy=A*tt, vt=Math.sqrt(V*V+vy*vy);
+    oX.textContent=x.toFixed(2);oY.textContent=y.toFixed(2);oVy.textContent=vy.toFixed(2);oVt.textContent=vt.toFixed(2);
+  }
+  function loop(){if(!running)return;tt+=0.02;if(tt>=2){tt=2;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('decGo').onclick=()=>{sync();tt=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('decReset').onclick=()=>{sync();tt=0;running=false;draw();};
+  sync();tt=2;draw();
+})();
+
+/* ===== 互动6:正交坐标随合力方向旋转 ===== */
+(function(){
+  const svg=document.getElementById('axSvg');const note=document.getElementById('axNote');
+  const Ang=document.getElementById('axAng');
+  let thF=90;
+  function sync(){thF=+Ang.value;draw();}
+  Ang.oninput=sync;
+  document.querySelectorAll('.axpre').forEach(b=>b.onclick=()=>{Ang.value=b.dataset.a;sync();});
+  function draw(){
+    clr(svg);
+    const cx=350,cy=160;
+    // F direction: angle measured from +x axis, going down on screen. thF in degrees.
+    const rad=thF*Math.PI/180;
+    // F unit (screen: y grows down). Let F point at angle rad below horizontal-ish; use standard math then flip y.
+    const fx=Math.cos(rad), fy=Math.sin(rad); // screen down positive
+    // v0 perpendicular to F: rotate F by -90deg
+    const vx=fy, vy=-fx;
+    // grid lines along F and v0
+    for(let k=-3;k<=3;k++){
+      // lines parallel to v0 (offset along F)
+      const ox=fx*k*40, oy=fy*k*40;
+      el(svg,'line',{x1:cx+ox-vx*260,y1:cy+oy-vy*260,x2:cx+ox+vx*260,y2:cy+oy+vy*260,stroke:'#ddd3ba','stroke-width':k===0?3:1.5});
+      // lines parallel to F (offset along v0)
+      const px=vx*k*40, py=vy*k*40;
+      el(svg,'line',{x1:cx+px-fx*150,y1:cy+py-fy*150,x2:cx+px+fx*150,y2:cy+py+fy*150,stroke:'#ddd3ba','stroke-width':k===0?3:1.5});
+    }
+    // F arrow (red)
+    arr(svg,cx,cy,cx+fx*130,cy+fy*130,RED,'合力 F');
+    // v0 arrow (blue)
+    arr(svg,cx,cy,cx+vx*110,cy+vy*110,BLUE,'初速 v₀');
+    // right-angle marker
+    el(svg,'rect',{x:cx-1,y:cy-1,width:16,height:16,fill:'none',stroke:INK,'stroke-width':2,transform:'rotate('+thF+' '+cx+' '+cy+')'});
+    // note
+    let desc;
+    if(Math.abs(thF-90)<3)desc='合力竖直向下 → 就是普通平抛,坐标水平+竖直。';
+    else if(thF<90)desc='合力斜向下偏右 → 复合场情形,坐标随之倾斜。';
+    else desc='合力斜向下偏左(如沿斜面) → 坐标沿 v₀ 与沿 F 一起倾斜。';
+    note.innerHTML='合力方向角 θ_F='+thF+'°　→　'+desc+'　v₀ <b>始终 ⊥ F</b>,坐标随力旋转。';
+  }
+  function arr(p,x1,y1,x2,y2,col,lab){
+    el(p,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':5});
+    const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+    const px=-uy,py=ux;
+    el(p,'polygon',{points:x2+','+y2+' '+(x2-ux*14+px*7)+','+(y2-uy*14+py*7)+' '+(x2-ux*14-px*7)+','+(y2-uy*14-py*7),fill:col});
+    el(p,'text',{x:x2+ux*10,y:y2+uy*10,'font-size':12.5,'font-weight':900,fill:col}).textContent=lab;
+  }
+  sync();
+})();
+
+/* ===== 互动4:速度偏角 vs 位移偏角 tanθ=2tanα ===== */
+(function(){
+  const svg=document.getElementById('angSvg');
+  const Ts=document.getElementById('angT');
+  const oA=document.getElementById('angA'),oTh=document.getElementById('angTh'),oTa=document.getElementById('angTa'),oR=document.getElementById('angR');
+  const V=4,A=6; // fixed v0 and a for clarity
+  const OX=80,OY=40,scX=44,scY=11;
+  let tt=1.2,running=false;
+  Ts.oninput=()=>{tt=+Ts.value;running=false;draw();};
+  function pos(t){return {x:OX+V*t*scX, y:OY+0.5*A*t*t*scY};}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:OX,y1:OY,x2:OX,y2:335,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:OX,y1:OY,x2:680,y2:OY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:685,y:OY+4,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='沿 v₀';
+    el(svg,'text',{x:OX+6,y:330,'font-size':12.5,'font-weight':900,fill:INK}).textContent='沿 F';
+    // parabola
+    let path='M '+OX+' '+OY;
+    for(let t=0;t<=2;t+=0.04){const p=pos(t);if(p.x<690&&p.y<340)path+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    el(svg,'path',{d:path,fill:'none',stroke:'#d8cfb5','stroke-width':3});
+    const cur=pos(tt);const cx=cur.x,cy=cur.y;
+    // displacement line (orange) from origin
+    el(svg,'line',{x1:OX,y1:OY,x2:cx,y2:cy,stroke:ORANGE,'stroke-width':4});
+    el(svg,'text',{x:(OX+cx)/2-4,y:(OY+cy)/2-8,'font-size':12,'font-weight':900,fill:ORANGE}).textContent='位移 α';
+    // velocity direction (violet): slope = vy/vx = (a t)/V
+    const vy=A*tt, vx=V;
+    const vlen=90; const vm=Math.hypot(vx,vy);
+    const ex=cx+ (vx/vm)*vlen*scX/scX; // keep along direction; simpler: use scaled components
+    // draw velocity vector using screen scales to reflect true direction on screen
+    const dvx=(vx*scX)/ ( (vx*scX+ vy*scY) ); // not used
+    const sdx=vx*scX, sdy=vy*scY, sd=Math.hypot(sdx,sdy);
+    el(svg,'line',{x1:cx,y1:cy,x2:cx+sdx/sd*95,y2:cy+sdy/sd*95,stroke:VIO,'stroke-width':4});
+    el(svg,'text',{x:cx+sdx/sd*95+4,y:cy+sdy/sd*95+4,'font-size':12,'font-weight':900,fill:VIO}).textContent='速度 θ';
+    // box
+    el(svg,'rect',{x:cx-8,y:cy-8,width:16,height:16,fill:RED,stroke:INK,'stroke-width':3});
+    // compute true (physics) angles
+    const x=V*tt, y=0.5*A*tt*tt;
+    const tanA=y/x; const tanTh=(A*tt)/V;
+    const alpha=Math.atan(tanA)*180/Math.PI, theta=Math.atan(tanTh)*180/Math.PI;
+    oA.textContent=alpha.toFixed(1)+'°';oTh.textContent=theta.toFixed(1)+'°';oTa.textContent=tanA.toFixed(3);oR.textContent=(tanTh/tanA).toFixed(2);
+    el(svg,'text',{x:350,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='tanθ = 2·tanα（速度偏角总比位移偏角大）';
+  }
+  document.getElementById('angGo').onclick=()=>{tt=0;running=true;anim();};
+  document.getElementById('angReset').onclick=()=>{tt=1.2;Ts.value=1.2;running=false;draw();};
+  function anim(){if(!running)return;tt+=0.02;if(tt>=2){tt=2;running=false;}Ts.value=Math.min(2,tt).toFixed(1);draw();requestAnimationFrame(anim);}
+  draw();
+})();
+
+/* ===== 互动3:斜面上平抛 ===== */
+(function(){
+  const svg=document.getElementById('slpSvg');
+  const Bs=document.getElementById('slpB'),Vs=document.getElementById('slpV');
+  const oGp=document.getElementById('slpGp'),oGn=document.getElementById('slpGn'),oT=document.getElementById('slpT'),oL=document.getElementById('slpL');
+  const g=10;
+  let B=37,V=5,tt=0,running=false;
+  const AX=110,AY=70; // apex (launch point) on screen
+  const scX=42,scY=8;
+  function sync(){B=+Bs.value;V=+Vs.value;}
+  Bs.oninput=Vs.oninput=()=>{sync();stats();draw();};
+  function tFall(){const b=B*Math.PI/180;return 2*V*Math.tan(b)/g;} // time to return to incline (horizontal launch)
+  function stats(){
+    const b=B*Math.PI/180;
+    oGp.textContent=(g*Math.sin(b)).toFixed(2);
+    oGn.textContent=(g*Math.cos(b)).toFixed(2);
+    const t=tFall();oT.textContent=t.toFixed(2)+'s';
+    const x=V*t, y=0.5*g*t*t, L=Math.sqrt(x*x+y*y);
+    oL.textContent=L.toFixed(2);
+  }
+  function pos(t){return {x:AX+V*t*scX, y:AY+0.5*g*t*t*scY};}
+  function draw(){
+    clr(svg);
+    const b=B*Math.PI/180;
+    // incline: from apex going down-right at angle B below horizontal
+    const ix=Math.cos(b),iy=Math.sin(b);
+    const ex=AX+ix*560, ey=AY+iy*560*scY/scX;
+    // draw incline as triangle
+    el(svg,'polygon',{points:AX+','+AY+' '+ex.toFixed(0)+','+ey.toFixed(0)+' '+AX+','+ey.toFixed(0),fill:'#e9e0c6',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:AX+70,y:AY+40,'font-size':13,'font-weight':900,fill:BROWN}).textContent='β='+B+'°';
+    // full trajectory
+    const t=tFall();
+    let path='M '+AX+' '+AY;
+    for(let s=0;s<=t;s+=t/40){const p=pos(s);path+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    el(svg,'path',{d:path,fill:'none',stroke:'#d8cfb5','stroke-width':3});
+    // trajectory to tt
+    let rp='M '+AX+' '+AY;
+    for(let s=0;s<=tt;s+=Math.max(0.01,t/60)){const p=pos(s);rp+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    el(svg,'path',{d:rp,fill:'none',stroke:RED,'stroke-width':4});
+    const cur=pos(Math.min(tt,t));
+    // gravity decomposition arrows at current point
+    // g vector down
+    el(svg,'line',{x1:cur.x,y1:cur.y,x2:cur.x,y2:cur.y+50,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cur.x+4,y:cur.y+50,'font-size':11,'font-weight':800,fill:INK}).textContent='g';
+    // g parallel (orange) along incline
+    const gp=50*Math.sin(b);
+    el(svg,'line',{x1:cur.x,y1:cur.y,x2:cur.x+ix*gp,y2:cur.y+iy*gp,stroke:ORANGE,'stroke-width':4});
+    // g perp (green) into incline
+    const gn=50*Math.cos(b);
+    el(svg,'line',{x1:cur.x,y1:cur.y,x2:cur.x+iy*gn,y2:cur.y-ix*gn+gn*0,stroke:GREEN,'stroke-width':4});
+    // ball
+    el(svg,'circle',{cx:cur.x,cy:cur.y,r:9,fill:RED,stroke:INK,'stroke-width':3});
+    // landing point
+    const land=pos(t);
+    el(svg,'circle',{cx:land.x,cy:land.y,r:6,fill:INK});
+    el(svg,'text',{x:land.x+8,y:land.y+4,'font-size':11,'font-weight':800,fill:INK}).textContent='落点';
+    el(svg,'text',{x:AX,y:AY-14,'font-size':12,'font-weight':900,fill:INK}).textContent='水平抛出 v₀='+V;
+    el(svg,'text',{x:350,y:24,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='重力沿斜面(橙)加速下滑 + 垂直斜面(绿)拉回斜面';
+  }
+  function loop(){if(!running)return;const t=tFall();tt+=t/70;if(tt>=t){tt=t;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('slpGo').onclick=()=>{sync();stats();tt=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('slpReset').onclick=()=>{sync();stats();tt=0;running=false;draw();};
+  sync();stats();tt=tFall();draw();
+})();
+
+/* ===== 互动2:带电粒子偏转电场 ===== */
+(function(){
+  const svg=document.getElementById('defSvg');
+  const Vs=document.getElementById('defV'),Es=document.getElementById('defE');
+  const oAcc=document.getElementById('defAcc'),oY=document.getElementById('defY'),oTh=document.getElementById('defTh'),oOut=document.getElementById('defOut');
+  let V=6,E=4,tt=0,running=false;
+  const PX=120,PW=380,PYtop=90,PYbot=210; // plates
+  const midY=(PYtop+PYbot)/2; const d=(PYbot-PYtop); // pixel gap
+  const L=PW; // plate length px
+  const scT=1; // time scale
+  function sync(){V=+Vs.value;E=+Es.value;}
+  Vs.oninput=Es.oninput=()=>{sync();stats();draw();};
+  // physics-ish: a = kE (proportional). choose so visible
+  function accel(){return E*0.9;}
+  // map: horizontal position xpix = PX + vpix*t ; vpix ~ V*30
+  function pos(t){const a=accel();const xp=PX+V*30*t; const yp=midY+0.5*a*30*t*t; return {x:xp,y:yp};}
+  function tExit(){return (PX+L-PX)/(V*30);} // time to reach plate end
+  function stats(){
+    const a=accel();
+    const te=tExit();
+    const ypx=0.5*a*30*te*te; // side shift in px
+    const tanth=(a*30*te)/(V*30);
+    oAcc.textContent=a.toFixed(2);
+    oY.textContent=(ypx/30).toFixed(2);
+    oTh.textContent=tanth.toFixed(3);
+    oOut.textContent=(ypx> d/2)?'✗ 打在极板':'✓ 安全射出';
+  }
+  function draw(){
+    clr(svg);
+    // plates
+    el(svg,'rect',{x:PX,y:PYtop-10,width:PW,height:10,fill:'#5a5a5a',stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:PX,y:PYbot,width:PW,height:10,fill:'#5a5a5a',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:PX-8,y:PYtop-2,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'end'}).textContent='+';
+    el(svg,'text',{x:PX-8,y:PYbot+10,'font-size':12,'font-weight':800,fill:BLUE,'text-anchor':'end'}).textContent='−';
+    // field lines
+    for(let fx=PX+30;fx<PX+PW;fx+=60){el(svg,'line',{x1:fx,y1:PYtop,x2:fx,y2:PYbot,stroke:'#cfc6ad','stroke-width':1.5,'stroke-dasharray':'4 6'});}
+    // center axis
+    el(svg,'line',{x1:20,y1:midY,x2:680,y2:midY,stroke:'#bbb','stroke-width':1.5,'stroke-dasharray':'2 6'});
+    el(svg,'text',{x:30,y:midY-8,'font-size':12,'font-weight':800,fill:INK}).textContent='v₀→';
+    // entry region
+    el(svg,'line',{x1:20,y1:midY,x2:PX,y2:midY,stroke:GREEN,'stroke-width':3});
+    // trajectory inside plates
+    const te=tExit();
+    let path='M '+PX+' '+midY;
+    for(let t=0;t<=te;t+=te/40){const p=pos(t);path+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    el(svg,'path',{d:path,fill:'none',stroke:'#e2b8b2','stroke-width':3});
+    // exit straight line
+    const pe=pos(te);const a=accel();const vypx=a*30*te, vxpix=V*30;
+    const sd=Math.hypot(vxpix,vypx);
+    el(svg,'line',{x1:pe.x,y1:pe.y,x2:pe.x+vxpix/sd*140,y2:pe.y+vypx/sd*140,stroke:'#b9a7ea','stroke-width':3,'stroke-dasharray':'6 5'});
+    // clamp travel
+    let te2=Math.min(tt,te);
+    let rp='M '+PX+' '+midY;
+    for(let t=0;t<=te2;t+=te/60){const p=pos(t);rp+=' L '+p.x.toFixed(1)+' '+p.y.toFixed(1);}
+    // if exited, continue straight
+    let head;
+    if(tt<=te){head=pos(te2);}
+    else{const extra=(tt-te)*V*30; head={x:pe.x+vxpix/sd*Math.min(extra,140),y:pe.y+vypx/sd*Math.min(extra,140)}; rp+=' L '+pe.x+' '+pe.y+' L '+head.x.toFixed(1)+' '+head.y.toFixed(1);}
+    el(svg,'path',{d:rp,fill:'none',stroke:RED,'stroke-width':4});
+    // particle
+    el(svg,'circle',{cx:head.x,cy:head.y,r:8,fill:RED,stroke:INK,'stroke-width':3});
+    // out warning
+    const ypx=0.5*a*30*te*te;
+    if(ypx>d/2){el(svg,'text',{x:350,y:250,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='⚠ 侧移 > d/2 → 打在极板上!';}
+    else{el(svg,'text',{x:350,y:250,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='✓ 侧移 < d/2 → 安全射出，出场后走直线';}
+    el(svg,'text',{x:PX+PW+6,y:midY-6,'font-size':11,'font-weight':800,fill:INK}).textContent='板长 L';
+  }
+  function loop(){if(!running)return;tt+=tExit()/50;const te=tExit();if(tt>=te*2.2){tt=te*2.2;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('defGo').onclick=()=>{sync();stats();tt=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('defReset').onclick=()=>{sync();stats();tt=0;running=false;draw();};
+  sync();stats();tt=tExit();draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 类平抛运动成立的条件是什么？",a:"初速度 v₀ 与恒定的合力 F 互相垂直，且 F 大小方向都不变。满足这两条就能分解为「沿 v₀ 匀速 + 沿 F 初速为零匀加速」。"},
+ {q:"2. 类平抛的两个分运动分别是什么？坐标轴怎么建？",a:"沿 v₀ 方向:匀速直线 x=v₀t(那方向无力);沿 F 方向:初速度为零的匀加速 y=½at²、v_y=at(a=F/m)。坐标轴要沿 v₀ 和沿 F 建，不一定是水平竖直。"},
+ {q:"3. 类平抛和斜抛有什么本质区别？",a:"类平抛:初速度 ⊥ 合力，可分解为一匀速一匀加速。斜抛:初速度与重力有夹角(不垂直)，要按水平竖直分解，竖直方向有初速度，不能直接套类平抛公式。"},
+ {q:"4. 速度偏角 θ 与位移偏角 α 的关系是什么？",a:"tanθ = 2·tanα。因为 tanα=y/x=(½at²)/(v₀t)=at/(2v₀)，tanθ=v_y/v₀=at/v₀，相除得 2 倍。注意是正切成 2 倍，不是角度 θ=2α，且 θ>α。"},
+ {q:"5. 带电粒子水平射入偏转电场，加速度和侧移怎么算？",a:"a=qE/m=qU/(md)。在场中时间 t=L/v₀。侧移 y=½a(L/v₀)²，射出竖直分速 v_y=aL/v₀，偏转 tanθ=v_y/v₀=aL/v₀²。出场后做匀速直线。"},
+ {q:"6. 粒子「恰好不打在极板上(恰好飞出)」的临界条件是什么？",a:"侧移 y=d/2(板间距一半)且水平走完 x=L(板长)。联立 t=L/v₀ 与 d/2=½a(L/v₀)² 解临界 v₀ 或 E。"},
+ {q:"7. 斜面顶端水平抛出 v₀=5m/s，倾角 37°(sin0.6,cos0.8)，多久落回斜面？",a:"用水平竖直分解:tanβ=y/x=½gt²/(v₀t)。0.75=½×10×t/5 → t=0.75s。落点沿斜面 L=x/cosβ=(5×0.75)/0.8=4.69m。"},
+ {q:"8. 复合场(重力+电场力)中的类平抛怎么处理？",a:"先矢量合成得合力 F=√((mg)²+(qE)²)及方向，a=F/m。若初速度 v₀ 恰垂直 F，则沿 v₀ 匀速、沿 F 匀加速，用倾斜坐标套 x=v₀t、y=½at²。"},
+ {q:"9. 沿 F 方向的分运动初速度是多少？为什么？",a:"初速度为零。因为初速度 v₀ 完全在与 F 垂直的另一根轴上，在 F 方向上没有初速度分量，所以是初速为零的匀加速，y=½at²。"},
+ {q:"10. 两个分运动之间唯一的联系是什么？解题时怎么用？",a:"唯一的联系是时间 t(两分运动同时进行、同一个 t)。解题先用一个轴的几何边界(如落到斜面/侧移=d/2)解出 t，再回代另一个轴求位移或速度。"},
+ {q:"11. 平抛落地时速度偏角为 45°，位移偏角是多少？",a:"tanθ=tan45°=1=at/v₀。位移偏角 tanα=at/(2v₀)=0.5，α=arctan0.5≈26.6°。速度偏角(45°)大于位移偏角(26.6°)，符合 tanθ=2tanα。"},
+ {q:"12. 斜面上题目坐标最容易建错，判断标准是什么？",a:"先问「v₀ 与合力是否垂直」。垂直→沿 v₀ 和沿 F 建倾斜坐标(类平抛);不垂直(如水平抛+竖直重力)→用水平竖直分解、或把重力沿斜面分解。看清谁垂直谁再动手。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

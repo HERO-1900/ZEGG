@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>振动图像与波形图的转换 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>振动图像与波形图的转换</h1>
+    <p class="lead">机械波这一章最容易看混的两张图:<b>振动图像 y-t</b> 和 <b>波形图 y-x</b>。它们长得像,横轴意义却完全不同——一个是时间轴,一个是空间轴。搞清「由一张图读另一张图」「判断质点振动方向 / 波传播方向」「用 v=λ/T 串起周期波长波速」,这一章的图像题就全打通了。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 振动图像 y-t 是<b>一个质点的日记</b>——只记录它自己随时间上下怎么动;波形图 y-x 是<b>某一时刻全体质点的合影</b>——把整条绳上每个点此刻的位置一次拍下来。一个横轴是<b>时间 t</b>(记录一个点的过去和未来),一个横轴是<b>位置 x</b>(记录此刻所有点的样子)。别看混:看到横轴是 t 就是「日记」,看到横轴是 x 就是「合影」。</div>
+
+    <div class="keybox"><b>两把钥匙:</b> <b>y-t 图</b>横轴时间 → 读<b>周期 T</b>、某质点某时刻的位移与速度方向;<b>y-x 图</b>横轴位置 → 读<b>波长 λ</b>、某时刻各点的位移。桥梁是波速 <b>v = λ/T = λf</b>。由波的<b>传播方向</b>可判每个质点<b>下一刻的振动方向</b>(同侧法 / 上下坡法 / 带动法)。</div>
+
+    <h2>① 两张图的横轴,是两个世界</h2>
+    <div class="card">
+      <div class="eq">y-t 图:横轴 = 时间 t　|　y-x 图:横轴 = 位置 x</div>
+      <table>
+        <tr><th></th><th>振动图像 y-t</th><th>波形图 y-x</th></tr>
+        <tr><td>横轴</td><td><b>时间 t</b></td><td><b>位置 x</b></td></tr>
+        <tr><td>描述对象</td><td><b>一个</b>质点(过去+未来)</td><td><b>某一时刻</b>全体质点</td></tr>
+        <tr><td>比喻</td><td>一个质点的<b>日记</b></td><td>全体质点的<b>合影</b></td></tr>
+        <tr><td>直接读出</td><td>周期 <b>T</b>、该点此刻位移/速度方向</td><td>波长 <b>λ</b>、各点此刻位移</td></tr>
+        <tr><td>「一个格」的意义</td><td>一段<b>时间</b></td><td>一段<b>距离</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>致命相似:</b> 两图都是正弦曲线,纵轴都是位移 y。区别只在横轴标的是 t 还是 x。做题第一件事永远是——<b>看横轴单位</b>(s 还是 m)。</p>
+      <p class="trap">⚠ 把 y-t 图的横轴当波长、把 y-x 图的横轴当周期,是本章头号错误。y-t 图读出的是 T,y-x 图读出的是 λ,绝不可互换。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 1 — 同屏对比:左 y-t 图(单质点日记)↔ 右 y-x 图(整条波合影)联动</div>
+      <svg id="cmpSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cmpGo">▶ 播放</button><button id="cmpPause">⏸ 暂停</button><button id="cmpReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>横轴(左)</b><span>时间 t</span></div>
+        <div><b>横轴(右)</b><span>位置 x</span></div>
+        <div><b>左图读出</b><span>周期 T</span></div>
+        <div><b>右图读出</b><span>波长 λ</span></div>
+      </div>
+      <p class="small">左图是被红点标记的那个质点的 <b>y-t 日记</b>;右图是同一时刻整条绳的 <b>y-x 合影</b>,红点是它在合影里的位置。波向右传,红点只<b>上下</b>动、绝不左右移。看:两图纵坐标(红点高度)始终一致——因为是同一个点的同一时刻位移。</p>
+    </div>
+
+    <h2 class="b">② 由传播方向判质点振动方向:三种等价方法</h2>
+    <div class="card">
+      <p style="margin:6px 0">给你一张 y-x 波形图,又告诉你波往哪传,要你判断某个质点下一刻是<b>向上</b>还是<b>向下</b>动。三种方法本质相同,挑顺手的:</p>
+      <h3>方法一:同侧法(最快)</h3>
+      <p style="margin:6px 0">在质点处画波形的切线,看波<b>传来的那一侧</b>(逆着传播方向那边)波形比它高还是低——质点将朝那一侧「靠拢」。口诀:<b>质点的下一步,和它「上游」邻居的现在,在同一侧</b>(向波源方向看,邻居高我就向上,邻居低我就向下)。</p>
+      <h3>方法二:上下坡法</h3>
+      <p style="margin:6px 0"><b>让波形沿传播方向「往前挪一点点」</b>,原地不动的质点相当于站在坡上:波往前挪后,若它落到「下坡」→ 向下动,落到「上坡」→ 向上动。也可记成:沿传播方向看,<b>“上坡的点向下振,下坡的点向上振”</b>(挪波形自证一次即懂)。</p>
+      <h3>方法三:带动法(理解本质)</h3>
+      <p style="margin:6px 0">波是<b>靠近波源的质点带动远处质点</b>。每个质点都在<b>重复它「上游邻居」前一刻的动作</b>——上游邻居现在在哪,它下一刻就往哪去。这是前两法的物理根源。</p>
+      <p class="trap">⚠ 判方向前<b>必须先知道波往哪传</b>。同一张波形图,波向左传和向右传,所有质点的振动方向<b>全部相反</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 2 — 波形图选传播方向,各质点下一刻振动方向箭头自动标出</div>
+      <svg id="dirSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="dirbtn on" data-d="1">波向 +x（右）传</button>
+        <button class="dirbtn" data-d="-1">波向 −x（左）传</button>
+      </div>
+      <div class="verdict" id="dirNote"></div>
+      <p class="small">波形固定,只切换传播方向。每个采样质点上标一个<b>红箭头</b>=它下一刻的振动方向(↑向上 / ↓向下)。切换方向,你会看到<b>所有箭头整体翻转</b>——这就是「传播方向决定振动方向」。绿箭表示波的传播方向。</p>
+    </div>
+
+    <h2 class="g">③ 波形随时间平移 + 从波形描出某质点的 y-t 图</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>关键真相:</b> 波往前传,<b>整条波形不变形地平移</b>;但<b>每个质点只在原地上下振动</b>,并不随波迁移。经过时间 Δt,波形沿传播方向平移的距离是</p>
+      <div class="eq">Δx = v·Δt = (λ/T)·Δt</div>
+      <p style="margin:8px 0">特别地,经过<b>整数个周期 nT</b>,波形平移 <b>nλ</b> 后与原来<b>完全重合</b>(看起来没动)。想画某个质点的 y-t 图:盯住那一个 x 位置,让波形往前扫过它,把它每一刻的高度记下来,就是它的日记。</p>
+      <div class="mono">波形整体平移 = 空间上挪 Δx = vΔt;而每个质点 = 原地做简谐运动。</div>
+      <p class="trap">⚠ 别以为「波形往右跑,质点也往右跑」!质点<b>只上下动</b>,横向一步不迁移。传播的是「振动这件事」和能量,不是物质。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌊 互动 3 — 波形平移动画 + 某质点(红点)实时描出它的 y-t 图</div>
+      <canvas id="traceCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button id="trGo">▶ 播放</button><button id="trPause">⏸ 暂停</button><button id="trReset">↺ 重置</button>
+        <label>波速 v <input id="trV" type="range" min="1" max="6" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>波形状态</b><span>整体右移</span></div>
+        <div><b>红点运动</b><span>只上下振</span></div>
+        <div><b>右侧曲线</b><span>它的 y-t 图</span></div>
+        <div><b>红点是否迁移</b><span>否</span></div>
+      </div>
+      <p class="small">上半:波形整条<b>向右平移</b>,红点标住某个固定 x。红点只<b>上下</b>动,横向纹丝不动。下半:实时把红点的高度按时间画出来——那就是这个质点的 <b>y-t 振动图像</b>。对照两者:波形是「合影」,红线是「日记」。</p>
+    </div>
+
+    <h2 class="o">④ 上下坡法图解 + v=λ/T 参数联动</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>上下坡法一图说清:</b> 沿波的传播方向看波形——正在<b>下坡</b>(位置从高走低)的质点,下一刻<b>向上</b>振;正在<b>上坡</b>(位置从低走高)的质点,下一刻<b>向下</b>振。原理:把整条波形沿传播方向挪一小步,原地的质点就落到了新波形对应的高度。</p>
+      <p class="trap">⚠ “上坡”“下坡”是<b>沿传播方向</b>看的坡向,不是随便一个方向。方向弄反,结论全反。</p>
+      <h3>三个量的铁三角:v = λ/T = λf</h3>
+      <p style="margin:6px 0"><b>波速 v</b> 由介质决定(与波源无关);<b>波长 λ</b> 从 y-x 图读;<b>周期 T</b> 从 y-t 图读。三者知二求一,是全章计算的主干。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛰️ 互动 4 — 上下坡法图解:沿传播方向看,坡向直接给出振动方向</div>
+      <svg id="hillSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="hillbtn on" data-d="1">波向右传</button>
+        <button class="hillbtn" data-d="-1">波向左传</button>
+      </div>
+      <div class="verdict" id="hillNote"></div>
+      <p class="small">选中的质点(红点)所在处标出「上坡 / 下坡」。规则:沿传播方向,<b>下坡→质点向上振</b>,<b>上坡→质点向下振</b>。切换传播方向,坡的定义随之翻转,振动方向也翻转。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 5 — v=λ/T=λf 参数联动:拖 λ 与 T,看波速与波形一起变</div>
+      <svg id="vfSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>波长 λ (m) <input id="vfL" type="range" min="1" max="8" value="4" step="1"></label>
+        <label>周期 T (s) <input id="vfT" type="range" min="1" max="8" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>波长 λ (m)</b><span id="vfLo">0</span></div>
+        <div><b>周期 T (s)</b><span id="vfTo">0</span></div>
+        <div><b>频率 f=1/T (Hz)</b><span id="vfFo">0</span></div>
+        <div><b>波速 v=λ/T (m/s)</b><span id="vfVo">0</span></div>
+      </div>
+      <p class="small">波形(y-x)画的是空间上一个波长 λ。拖 λ 改变一个波形有多「宽」,拖 T 改变它每秒振几次。波速 <b>v=λ/T</b> 随之实时更新——λ 越大或 T 越小,波跑得越快。</p>
+    </div>
+
+    <h2 class="v">⑤ 多解问题:波速 / 传播方向不确定,答案是一串</h2>
+    <div class="card">
+      <p style="margin:6px 0">多解题是本章最考功力的一类。只要条件里出现「<b>可能</b>」「至少」「波沿 x 轴但方向未知」「经过时间只知道大概几个周期」,就要警惕答案<b>不止一个</b>。</p>
+      <h3>来源一:传播方向未知(两解)</h3>
+      <p style="margin:6px 0">若题目只说「波沿 x 轴传播」不说 + 还是 −,则向右传、向左传<b>都要算</b>,通常给出两组答案。</p>
+      <h3>来源二:时间跨越多个周期(周期性多解)</h3>
+      <p style="margin:6px 0">已知经过 Δt 波形前进了某段距离,但 Δt 可能包含<b>整数个周期 + 一段</b>。真实平移距离 = <b>nλ + Δx</b>(n=0,1,2,…),于是</p>
+      <div class="eq">v = (nλ + Δx) / Δt　(n = 0, 1, 2, …)</div>
+      <p style="margin:8px 0">每取一个 n 得一个可能的波速,答案是<b>一串数列</b>。若同时方向未知,还要各配 +Δx 与 −Δx 两种,解会更多。</p>
+      <p class="trap">⚠ 见到「可能的波速」「至少多大波速」,几乎一定是多解题。别只写一个答案就交卷——漏掉 nλ 是失分重灾区。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 6 — 多解演示:波形平移 nλ+Δx,不同 n 给出不同波速</div>
+      <svg id="multiSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>整周期数 n <input id="mN" type="range" min="0" max="3" value="0" step="1"></label>
+        <label>方向 <button id="mDir">切换：+x</button></label>
+      </div>
+      <div class="live">
+        <div><b>n (整周期数)</b><span id="moN">0</span></div>
+        <div><b>平移 nλ+Δx (m)</b><span id="moX">0</span></div>
+        <div><b>已知 Δt (s)</b><span id="moT">1.2</span></div>
+        <div><b>可能波速 v (m/s)</b><span id="moV">0</span></div>
+      </div>
+      <p class="small">虚线=初始波形,实线=经过 Δt 后的波形。取不同 n(多走几个整波长)或翻转方向,末波形都能和「观测到的样子」吻合,于是<b>每个 n 对应一个合法波速</b>。这就是多解的来源。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 由波形图 + 传播方向判质点振动方向</h3>
+      <p><b class="tag">触发信号:</b>给一张 y-x 波形图,标明波沿 +x 或 −x 传播,问某质点「此刻向上还是向下振」「速度方向」。</p>
+      <p><b class="tag">标准动作:</b>用同侧法/上下坡法:沿传播方向看,下坡点向上振、上坡点向下振;或看上游邻居现在的位置,质点朝那边动。</p>
+      <p><b class="tag">示例(带解):</b>波向 +x 传,质点 P 处波形正处于「下坡」(左高右低)。沿传播方向 P 在下坡→ P 下一刻<b>向上</b>振,速度方向向上(+y)。若改为波向 −x 传,则结论翻转为向下振。</p>
+      <p class="trap">陷阱:没先确定传播方向就下结论;把「坡向」按错误方向看;混淆位移方向与速度方向。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由振动图 + 波形图配合求波速与传播方向</h3>
+      <p><b class="tag">触发信号:</b>同时给 y-t 图和 y-x 图,问波速 v、周期 T、波长 λ,或波的传播方向。</p>
+      <p><b class="tag">标准动作:</b>从 y-t 图读 <b>T</b>,从 y-x 图读 <b>λ</b>,代入 v=λ/T。传播方向:由 y-t 图看某质点此刻在向上还是向下动,再回到 y-x 图用同侧法反推波往哪传。</p>
+      <p><b class="tag">示例(带解):</b>y-t 图读出 T=0.4s,y-x 图读出 λ=2m,则 v=λ/T=2/0.4=<b>5 m/s</b>。若 y-t 图显示 x=0 处质点此刻正向下运动,在 y-x 图上用同侧法即可定出波沿哪个方向传。</p>
+      <p class="trap">陷阱:把 y-t 图的横轴当波长、y-x 图横轴当周期;读 T、λ 时数错格数(半个周期看成一个)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 经过时间 Δt 波形平移</h3>
+      <p><b class="tag">触发信号:</b>「再经过 Δt 时间,波形变成什么样」「画出 t=… 时刻的波形」。</p>
+      <p><b class="tag">标准动作:</b>算平移量 Δx=vΔt,把整条波形沿传播方向平移 Δx(不变形)。若 Δt=nT,则平移 nλ,波形与原来重合。</p>
+      <p><b class="tag">示例(带解):</b>v=5m/s、λ=2m(故 T=0.4s),经过 Δt=0.5s。Δx=vΔt=5×0.5=2.5m=1.25λ。波形沿传播方向平移 1.25 个波长(=1λ 重合 + 再挪 0.25λ)。</p>
+      <p class="trap">陷阱:忘了整周期部分只是「重合」;平移方向弄反;把 Δx 当成质点走过的路程(质点其实原地上下动)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 多解问题(波速 / 传播方向不确定)</h3>
+      <p><b class="tag">触发信号:</b>「波沿 x 轴传播(方向未知)」「可能的波速」「至少经过多长时间」,或只知道 Δt 内波形「看起来这样」。</p>
+      <p><b class="tag">标准动作:</b>平移距离 = nλ+Δx(n=0,1,2,…),v=(nλ+Δx)/Δt。方向未知再各配 +x、−x 两套。把所有合法解写成通式或数列。</p>
+      <p><b class="tag">示例(带解):</b>λ=2m,已知 Δt=0.3s 内波形看起来向右移了 0.5m(不排除多走整波长)。则实际平移=n·2+0.5,v=(2n+0.5)/0.3=(1.67+6.67n) m/s,n=0,1,2,…;若方向也未知,向左时另有一套。</p>
+      <p class="trap">陷阱:漏掉 nλ 只写一个解;方向未知时忘了配两套;n 从 1 起算(应从 0 起)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 某质点位移-时间(y-t)关系</h3>
+      <p><b class="tag">触发信号:</b>给 y-x 波形图与传播方向,要求「画出某质点的振动图像」或「t=… 时该质点的位移」。</p>
+      <p><b class="tag">标准动作:</b>先由传播方向定该质点此刻的振动方向与位移(起点),再按周期 T 画简谐曲线;或让波形扫过该 x,逐刻记录高度。</p>
+      <p><b class="tag">示例(带解):</b>波向 +x 传,x=0 处质点此刻位移为 0 且正向下运动。则它的 y-t 图从原点出发先向下,是一条 y=−A·sin(2πt/T) 形状的曲线(先负后正,周期 T)。</p>
+      <p class="trap">陷阱:振动图起点方向搞反(没用传播方向定振动方向);把波形图直接抄成振动图(横轴意义不同,形状可能镜像)。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>两图横轴意义不同!</b> y-t 横轴是时间(读 T),y-x 横轴是位置(读 λ)。第一步永远先看横轴单位(s 还是 m)。</p>
+      <p class="trap">② 判振动方向的<b>“上下坡法”要沿传播方向看</b>:下坡点向上振、上坡点向下振。方向看反,结论全反。</p>
+      <p class="trap">③ 波沿 x 正 / 负方向<b>多解</b>:题目不给方向时,+x 与 −x 都要算,别只写一套。</p>
+      <p class="trap">④ 质点<b>只上下振动,不随波迁移</b>!波形整体平移,但每个质点原地做简谐运动,横向零位移。</p>
+      <p class="trap">⑤ 经过 Δt 的平移是 <b>nλ+Δx</b>,整周期部分只是「重合」,漏掉 nλ 是多解题失分大户。</p>
+      <p class="trap">⑥ <b>位移方向 ≠ 速度方向</b>。质点在最高/最低点位移最大但速度为 0,在平衡位置位移为 0 但速度最大。</p>
+      <p class="trap">⑦ 波速 v 由<b>介质</b>决定,与频率、波源无关;换介质 v 变,f 不变,λ 随之变(v=λf)。</p>
+      <p class="trap">⑧ 由 y-t 图定传播方向,要先看该质点此刻的<b>运动方向</b>,再回 y-x 图用同侧法反推,不能凭空猜。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一个统一图景:波是「振动在空间里的复制」。</b> y-t 是时间切片(盯一个点看它的全过程),y-x 是空间切片(定一个时刻看所有点)。同一个 y(x,t)=A·sin(2π(t/T − x/λ)) 沿 t 切得 y-t、沿 x 切得 y-x。理解这一步,两图的一切关系(为什么一个读 T 一个读 λ)都自动清楚。</p>
+      <p style="margin:8px 0"><b>② 传播方向 ↔ 振动方向的本质是「延迟」。</b> 下游质点在<b>重复上游质点前一刻</b>的动作。所以「看上游邻居的现在=我的下一刻」,同侧法、带动法、上下坡法只是同一句话的三个说法。抓住「谁带动谁」,永远不会记反。</p>
+      <p style="margin:8px 0"><b>③ 多解的根源是「周期性 + 方向对称性」。</b> 时间上每过 T 波形复原(→ nλ 的自由度),方向上题目没指定(→ ±x 两套)。见到「可能」二字先在草稿上写通式 v=(nλ±…)/Δt,把 n 和符号当自由参数,系统性地穷举,绝不会漏解。</p>
+      <p style="margin:8px 0"><b>④ 位移、速度、加速度的相位错开是简谐运动的命脉。</b> 质点在平衡位置:位移 0、速度最大、加速度 0;在最大位移处:位移最大、速度 0、加速度最大且指向平衡位置。把「速度方向」和「位移方向」分开处理,反弹类、找某时刻速度类的题就不会翻车。</p>
+      <p style="margin:8px 0"><b>⑤ 画 y-t 图的万能流程:定起点 → 定初速度方向 → 按 T 补完曲线。</b> 起点位移由 y-x 图当前高度给,初速度方向由传播方向 + 同侧法给,曲线形状由周期 T 给。三要素齐了,任何质点的振动图像都能一次画对,不用死记「先上还是先下」。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 机械波图像专题:振动图像 y-t ↔ 波形图 y-x 的转换</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:y-t 与 y-x 同屏联动 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');
+  let phase=0,running=false;
+  const A=42,T=2*Math.PI; // period in phase units
+  // left panel (y-t) : x range 0..280 maps to time; right panel (y-x): 380..680 maps to space
+  const LX0=50,LW=250,RX0=400,RW=270,midY=150;
+  function draw(){
+    clr(svg);
+    // axes left
+    el(svg,'line',{x1:LX0,y1:20,x2:LX0,y2:280,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:LX0,y1:midY,x2:LX0+LW,y2:midY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:LX0-8,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:LX0+LW,y:midY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    el(svg,'text',{x:LX0+LW/2,y:16,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='振动图像 y-t（一个质点的日记）';
+    // axes right
+    el(svg,'line',{x1:RX0,y1:20,x2:RX0,y2:280,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:RX0,y1:midY,x2:RX0+RW,y2:midY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:RX0-8,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:RX0+RW,y:midY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:RX0+RW/2,y:16,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='波形图 y-x（全体质点合影）';
+    // LEFT: y-t of the tracked particle up to now, its value = -sin(phase - t')
+    // The tracked particle sits at x=0 on the right panel. Its displacement over time:
+    let d1='';
+    for(let px=0;px<=LW;px+=3){
+      const tt=px/LW*(2.4*T); // time span ~2.4 periods
+      const yy=midY - A*Math.sin(phase - tt*0 + tt); // simple: y=A sin(phase') ; use rolling
+      // We want left curve to be the history of the point; simplest: y=A*sin(phase - (LW-px)/LW*...)
+    }
+    // Simpler robust approach: left curve is a sine that scrolls with phase
+    let dL='';
+    const cyc=2.4; // cycles shown
+    for(let i=0;i<=LW;i+=2){
+      const tt=(i/LW)*cyc*T;
+      const yy=midY - A*Math.sin(phase + tt);
+      dL+=(i===0?'M':'L')+(LX0+i)+' '+yy+' ';
+    }
+    el(svg,'path',{d:dL,fill:'none',stroke:RED,'stroke-width':3});
+    // current tracked value (at t=now => leftmost point i=0)
+    const yNow=midY - A*Math.sin(phase);
+    el(svg,'circle',{cx:LX0,cy:yNow,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    // RIGHT: snapshot of whole wave y=A*sin(phase + k x), tracked particle at x=0 (RX0)
+    let dR='';
+    const cycR=2; // wavelengths shown
+    for(let i=0;i<=RW;i+=2){
+      const xx=(i/RW)*cycR*T;
+      const yy=midY - A*Math.sin(phase + xx);
+      dR+=(i===0?'M':'L')+(RX0+i)+' '+yy+' ';
+    }
+    el(svg,'path',{d:dR,fill:'none',stroke:BLUE,'stroke-width':3});
+    // tracked particle on right at x=0 => same yNow
+    el(svg,'circle',{cx:RX0,cy:yNow,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    // dashed link showing equal height
+    el(svg,'line',{x1:LX0,y1:yNow,x2:RX0,y2:yNow,stroke:RED,'stroke-width':1.5,'stroke-dasharray':'4 4',opacity:0.5});
+    el(svg,'text',{x:RX0+RW/2,y:275,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='波向右传 →　红点只上下动，横向不迁移';
+  }
+  function loop(){if(!running)return;phase+=0.04;draw();requestAnimationFrame(loop);}
+  document.getElementById('cmpGo').onclick=()=>{if(!running){running=true;requestAnimationFrame(loop);}};
+  document.getElementById('cmpPause').onclick=()=>{running=false;};
+  document.getElementById('cmpReset').onclick=()=>{running=false;phase=0;draw();};
+  draw();
+})();
+
+/* ===== 互动2:传播方向 → 质点振动方向 ===== */
+(function(){
+  const svg=document.getElementById('dirSvg');const note=document.getElementById('dirNote');
+  let dir=1; // +1 right, -1 left
+  document.querySelectorAll('.dirbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.dirbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');dir=+b.dataset.d;draw();
+  });
+  const X0=40,W=620,midY=130,A=60;
+  // wave y=A*sin(k x); we sample particles and compute next-instant vy.
+  // For wave moving +x: y(x,t)=A sin(k x - w t). vy=dy/dt=-A w cos(kx-wt); at t=0 vy=-Aw cos(kx).
+  // For wave moving -x: y=A sin(kx + wt), vy=+Aw cos(kx). So sign flips with dir.
+  const k=2*Math.PI/ (W/2); // two wavelengths across... let's use one wavelength = W/2
+  function yAt(px){return midY - A*Math.sin(k*px);}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:midY,x2:X0+W,y2:midY,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 5'});
+    // wave path
+    let d='';
+    for(let i=0;i<=W;i+=2){d+=(i===0?'M':'L')+(X0+i)+' '+yAt(i)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3});
+    // propagation arrow
+    const ax=dir>0?X0+W-70:X0+70;
+    el(svg,'line',{x1:X0+W/2-60*dir,y1:26,x2:X0+W/2+60*dir,y2:26,stroke:GREEN,'stroke-width':5});
+    el(svg,'polygon',{points:(X0+W/2+60*dir)+',20 '+(X0+W/2+60*dir+12*dir)+',26 '+(X0+W/2+60*dir)+',32',fill:GREEN});
+    el(svg,'text',{x:X0+W/2,y:14,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='波传播方向 '+(dir>0?'→ (+x)':'← (−x)');
+    // sample particles
+    for(let px=60;px<=W-40;px+=90){
+      const y=yAt(px);
+      // vy sign: for +x wave vy = -Aw cos(kx) => sign -cos(kx); for -x wave => +cos(kx)
+      const s = dir>0 ? -Math.cos(k*px) : Math.cos(k*px);
+      const up = s>0; // s>0 means vy positive => y increasing => on screen moving UP means smaller screen-y
+      el(svg,'circle',{cx:X0+px,cy:y,r:6,fill:RED,stroke:INK,'stroke-width':2});
+      // arrow up or down (screen up = negative y). vy>0 (physical up) => arrow points up on screen
+      const ay= up ? -1 : 1; // screen dir
+      const ye=y+ay*34;
+      el(svg,'line',{x1:X0+px,y1:y,x2:X0+px,y2:ye,stroke:RED,'stroke-width':4});
+      el(svg,'polygon',{points:(X0+px-6)+','+(ye-ay*0)+' '+(X0+px+6)+','+(ye-ay*0)+' '+(X0+px)+','+(ye+ay*10),fill:RED});
+      el(svg,'text',{x:X0+px,y:up?ye-14:ye+22,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=up?'↑':'↓';
+    }
+    note.innerHTML='波沿 '+(dir>0?'+x（向右）':'−x（向左）')+' 传播 → 每个红点的箭头是它<b>下一刻的振动方向</b>。切到另一方向，你会看到所有箭头<b>整体翻转</b>——传播方向决定振动方向。';
+    note.style.borderColor=dir>0?BLUE:VIO;
+  }
+  draw();
+})();
+
+/* ===== 互动3:波形平移 + 描 y-t 图 ===== */
+(function(){
+  const cv=document.getElementById('traceCv');const ctx=cv.getContext('2d');
+  const Vs=document.getElementById('trV');
+  let V=3,phase=0,running=false;
+  const trackX=200; // fixed x for tracked particle (screen)
+  const X0=30,W=380,waveMid=80,A=48; // wave panel
+  const gMid=230,gW=300,gX0=360,gA=48; // graph panel
+  const k=2*Math.PI/160; // wavelength in px
+  let hist=[]; // recorded y-t of tracked particle
+  function reset(){phase=0;hist=[];running=false;draw();}
+  Vs.oninput=()=>{V=+Vs.value;};
+  function trackY(){return -A*Math.sin(k*(trackX-X0) - phase);} // physical y (up positive)
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // WAVE panel
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.setLineDash([5,5]);
+    ctx.beginPath();ctx.moveTo(X0,waveMid);ctx.lineTo(X0+W,waveMid);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=BLUE;ctx.font='bold 13px sans-serif';ctx.fillText('波形 y-x（整体向右平移）',X0,20);
+    // wave curve moving +x: y=A sin(k x - phase)
+    ctx.strokeStyle=BLUE;ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=W;i+=2){const yy=waveMid - A*Math.sin(k*i - phase);if(i===0)ctx.moveTo(X0+i,yy);else ctx.lineTo(X0+i,yy);}
+    ctx.stroke();
+    // propagation arrow
+    ctx.strokeStyle=GREEN;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(X0+W-70,40);ctx.lineTo(X0+W-20,40);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(X0+W-20,40);ctx.lineTo(X0+W-30,34);ctx.lineTo(X0+W-30,46);ctx.closePath();ctx.fillStyle=GREEN;ctx.fill();
+    // tracked particle (red), only moves vertically
+    const py=waveMid - A*Math.sin(k*(trackX-X0) - phase);
+    // vertical guide
+    ctx.strokeStyle='rgba(224,56,42,0.4)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(trackX,waveMid-A-6);ctx.lineTo(trackX,waveMid+A+6);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(trackX,py,7,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=RED;ctx.font='bold 11px sans-serif';ctx.fillText('红点：只上下动',trackX-30,waveMid+A+22);
+    // record history
+    hist.push(py-waveMid);
+    if(hist.length>gW)hist.shift();
+    // GRAPH panel (y-t)
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.setLineDash([5,5]);
+    ctx.beginPath();ctx.moveTo(gX0,gMid);ctx.lineTo(gX0+gW,gMid);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(gX0,gMid-gA-15);ctx.lineTo(gX0,gMid+gA+15);ctx.stroke();
+    ctx.fillStyle=RED;ctx.font='bold 13px sans-serif';ctx.fillText('它的振动图像 y-t（红点的日记）',gX0,gMid-gA-25);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText('t',gX0+gW-8,gMid+gA+28);ctx.fillText('y',gX0-14,gMid-gA-4);
+    // draw recorded curve
+    ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<hist.length;i++){const xx=gX0+i;const yy=gMid+hist[i];if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+    ctx.stroke();
+    // current dot on graph (rightmost)
+    if(hist.length){const xx=gX0+hist.length-1;const yy=gMid+hist[hist.length-1];ctx.fillStyle=RED;ctx.beginPath();ctx.arc(xx,yy,5,0,2*Math.PI);ctx.fill();}
+  }
+  function loop(){if(!running)return;phase+=0.03*V;draw();requestAnimationFrame(loop);}
+  document.getElementById('trGo').onclick=()=>{if(!running){running=true;requestAnimationFrame(loop);}};
+  document.getElementById('trPause').onclick=()=>{running=false;};
+  document.getElementById('trReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:上下坡法图解 ===== */
+(function(){
+  const svg=document.getElementById('hillSvg');const note=document.getElementById('hillNote');
+  let dir=1;
+  document.querySelectorAll('.hillbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.hillbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');dir=+b.dataset.d;draw();
+  });
+  const X0=40,W=620,midY=130,A=60;
+  const k=2*Math.PI/(W/2);
+  function yAt(px){return midY - A*Math.sin(k*px);}
+  // pick a particle on a slope (not crest/trough): choose px where slope is clear
+  const pPx=110; // a point on the wave
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:midY,x2:X0+W,y2:midY,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 5'});
+    let d='';for(let i=0;i<=W;i+=2){d+=(i===0?'M':'L')+(X0+i)+' '+yAt(i)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3});
+    // propagation arrow
+    el(svg,'line',{x1:X0+W/2-60*dir,y1:26,x2:X0+W/2+60*dir,y2:26,stroke:GREEN,'stroke-width':5});
+    el(svg,'polygon',{points:(X0+W/2+60*dir)+',20 '+(X0+W/2+60*dir+12*dir)+',26 '+(X0+W/2+60*dir)+',32',fill:GREEN});
+    el(svg,'text',{x:X0+W/2,y:14,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='传播方向 '+(dir>0?'→':'←');
+    // slope at pPx: dy/dx of screen curve. yAt derivative: d/dpx(midY - A sin(k px)) = -A k cos(k px)
+    const slopeScreen = -A*k*Math.cos(k*pPx); // screen slope (down-positive since y grows downward)
+    // "along propagation direction": look in +dir. Uphill if curve rises (screen y decreases) as we go in +dir
+    // moving in +dir, change in screen-y = slopeScreen*dir. negative => going up on screen => uphill
+    const goingScreen = slopeScreen*dir;
+    const uphill = goingScreen<0; // screen y decreasing => visually up => uphill
+    // rule: uphill => particle moves DOWN ; downhill => particle moves UP
+    const up = !uphill; // particle physical up?
+    const y=yAt(pPx);
+    el(svg,'circle',{cx:X0+pPx,cy:y,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    const ay=up?-1:1;const ye=y+ay*40;
+    el(svg,'line',{x1:X0+pPx,y1:y,x2:X0+pPx,y2:ye,stroke:RED,'stroke-width':4});
+    el(svg,'polygon',{points:(X0+pPx-6)+','+ye+' '+(X0+pPx+6)+','+ye+' '+(X0+pPx)+','+(ye+ay*10),fill:RED});
+    el(svg,'text',{x:X0+pPx+14,y:y,'font-size':13,'font-weight':900,fill:INK}).textContent=(uphill?'上坡':'下坡');
+    el(svg,'text',{x:X0+pPx,y:up?ye-12:ye+24,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=up?'↑ 向上振':'↓ 向下振';
+    note.innerHTML='沿传播方向看，该质点处于 <b>'+(uphill?'上坡':'下坡')+'</b> → 规则「'+(uphill?'上坡的点向下振':'下坡的点向上振')+'」→ 质点<b>'+(up?'向上':'向下')+'</b>运动。切换传播方向，坡向翻转，结论也翻转。';
+    note.style.borderColor=ORANGE;
+  }
+  draw();
+})();
+
+/* ===== 互动5:v=λ/T 参数联动 ===== */
+(function(){
+  const svg=document.getElementById('vfSvg');
+  const Ls=document.getElementById('vfL'),Ts=document.getElementById('vfT');
+  const oL=document.getElementById('vfLo'),oT=document.getElementById('vfTo'),oF=document.getElementById('vfFo'),oV=document.getElementById('vfVo');
+  let L=4,T=2;
+  function sync(){L=+Ls.value;T=+Ts.value;draw();}
+  Ls.oninput=Ts.oninput=sync;
+  const X0=50,W=600,midY=140,A=55;
+  function draw(){
+    clr(svg);
+    const f=1/T, v=L/T;
+    oL.textContent=L.toFixed(0);oT.textContent=T.toFixed(0);oF.textContent=f.toFixed(2);oV.textContent=v.toFixed(2);
+    // axes
+    el(svg,'line',{x1:X0,y1:20,x2:X0,y2:240,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:midY,x2:X0+W,y2:midY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:X0+W,y:midY+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x (m)';
+    el(svg,'text',{x:X0+W/2,y:16,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='波形图 y-x（一个波长 = λ）';
+    // wavelength in px: map so that λ meters -> some px per meter constant
+    const pxPerM=W/8; // 8m fills the axis
+    const lamPx=L*pxPerM;
+    let d='';
+    for(let i=0;i<=W;i+=2){const yy=midY - A*Math.sin(2*Math.PI*i/lamPx);d+=(i===0?'M':'L')+(X0+i)+' '+yy+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3});
+    // mark one wavelength bracket
+    el(svg,'line',{x1:X0,y1:midY+A+18,x2:X0+lamPx,y2:midY+A+18,stroke:RED,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:midY+A+12,x2:X0,y2:midY+A+24,stroke:RED,'stroke-width':3});
+    el(svg,'line',{x1:X0+lamPx,y1:midY+A+12,x2:X0+lamPx,y2:midY+A+24,stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X0+lamPx/2,y:midY+A+38,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='λ = '+L+' m';
+    el(svg,'text',{x:X0+W/2,y:232,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='v = λ/T = '+L+'/'+T+' = '+v.toFixed(2)+' m/s　(f = 1/T = '+f.toFixed(2)+' Hz)';
+  }
+  sync();
+})();
+
+/* ===== 互动6:多解演示 nλ+Δx ===== */
+(function(){
+  const svg=document.getElementById('multiSvg');
+  const Ns=document.getElementById('mN');const dirBtn=document.getElementById('mDir');
+  const oN=document.getElementById('moN'),oX=document.getElementById('moX'),oV=document.getElementById('moV');
+  let n=0,dir=1; // +1 = +x
+  const lam=4, dt=1.2, dx0=0.5; // fixed known: wavelength 4m, Δt=1.2s, base observed shift 0.5m
+  Ns.oninput=()=>{n=+Ns.value;draw();};
+  dirBtn.onclick=()=>{dir=-dir;dirBtn.textContent='切换：'+(dir>0?'+x':'−x');draw();};
+  const X0=50,W=600,midY=130,A=48;
+  const pxPerM=W/(3*lam); // show 3 wavelengths
+  const lamPx=lam*pxPerM;
+  function waveY(i,shiftM){const s=shiftM*pxPerM;return midY - A*Math.sin(2*Math.PI*(i - s)/lamPx);}
+  function draw(){
+    clr(svg);
+    const shiftM=(n*lam+dx0)*dir; // total physical shift with direction
+    const v=(n*lam+dx0)/dt;
+    oN.textContent=n;oX.textContent=(n*lam+dx0).toFixed(1);oV.textContent=v.toFixed(2);
+    el(svg,'line',{x1:X0,y1:midY,x2:X0+W,y2:midY,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 5'});
+    el(svg,'text',{x:X0+W/2,y:16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='波形平移 = nλ + Δx（λ='+lam+'m, Δx='+dx0+'m, Δt='+dt+'s）';
+    // initial (dashed)
+    let d0='';for(let i=0;i<=W;i+=2){d0+=(i===0?'M':'L')+(X0+i)+' '+waveY(i,0)+' ';}
+    el(svg,'path',{d:d0,fill:'none',stroke:'#9a8f70','stroke-width':2.5,'stroke-dasharray':'6 5'});
+    // shifted (solid)
+    let d1='';for(let i=0;i<=W;i+=2){d1+=(i===0?'M':'L')+(X0+i)+' '+waveY(i,shiftM)+' ';}
+    el(svg,'path',{d:d1,fill:'none',stroke:RED,'stroke-width':3});
+    // arrow
+    const ax=dir>0?X0+W-70:X0+70;
+    el(svg,'line',{x1:X0+W/2-60*dir,y1:210,x2:X0+W/2+60*dir,y2:210,stroke:GREEN,'stroke-width':5});
+    el(svg,'polygon',{points:(X0+W/2+60*dir)+',204 '+(X0+W/2+60*dir+12*dir)+',210 '+(X0+W/2+60*dir)+',216',fill:GREEN});
+    el(svg,'text',{x:X0+W/2,y:236,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='方向 '+(dir>0?'+x':'−x')+' → 可能波速 v = ('+n+'×'+lam+'+'+dx0+')/'+dt+' = '+v.toFixed(2)+' m/s';
+    el(svg,'text',{x:X0,y:60,'font-size':11.5,'font-weight':800,fill:'#7a6f50'}).textContent='灰虚线=初始波形';
+    el(svg,'text',{x:X0,y:200,'font-size':11.5,'font-weight':800,fill:RED}).textContent='红实线=经过 Δt 后波形';
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 振动图像 y-t 和波形图 y-x 的横轴分别是什么？各能直接读出什么量？",a:"y-t 横轴是时间 t，读出周期 T（及某质点某时刻的位移、速度方向）；y-x 横轴是位置 x，读出波长 λ（及某时刻各点的位移）。第一步永远先看横轴单位是 s 还是 m。"},
+ {q:"2. 用「日记」和「合影」怎么区分这两张图？",a:"y-t 是一个质点的日记（只记它自己随时间上下动）；y-x 是某一时刻全体质点的合影（把整条绳每个点此刻位置拍下来）。一个时间轴，一个空间轴。"},
+ {q:"3. 已知波形图和传播方向，怎么判某质点下一刻向上还是向下振？",a:"三法等价：①同侧法——质点朝「上游邻居现在的位置」靠拢；②上下坡法——沿传播方向，下坡点向上振、上坡点向下振；③带动法——每点重复上游邻居前一刻的动作。判断前必须先知道传播方向。"},
+ {q:"4. 同一张波形图，波向左传和向右传，质点振动方向有何关系？",a:"完全相反。所有质点的振动方向随传播方向一起翻转。所以不给传播方向就不能判振动方向。"},
+ {q:"5. 波向前传播时，质点会随波往前迁移吗？",a:"不会。波形整体不变形地平移，但每个质点只在原地做简谐运动（上下振），横向零位移。传播的是振动和能量，不是物质。"},
+ {q:"6. 经过时间 Δt，波形沿传播方向平移多少？经过 nT 呢？",a:"平移 Δx=vΔt=(λ/T)Δt。经过整数个周期 nT，平移 nλ，波形与原来完全重合（看起来没动）。"},
+ {q:"7. y-t 图读出 T=0.4s，y-x 图读出 λ=2m，波速是多少？",a:"v=λ/T=2/0.4=5 m/s。这是 y-t 与 y-x 配合求波速的标准套路：一个读 T、一个读 λ、代入 v=λ/T。"},
+ {q:"8. 「波沿 x 轴传播」但没说方向，答案会怎样？",a:"要分 +x 和 −x 两种情况各算一遍，通常给两组答案。方向未知是多解题的一个常见来源。"},
+ {q:"9. 只知道经过 Δt 波形「看起来」移了 Δx，为什么波速有多个可能？",a:"因为 Δt 可能包含整数个周期，实际平移=nλ+Δx（n=0,1,2,…），v=(nλ+Δx)/Δt，每个 n 给一个可能波速。漏掉 nλ 是失分重灾区。"},
+ {q:"10. λ=2m，Δt=0.3s 内波形向右移了 0.5m（不排除多走整波长），可能波速？",a:"平移=n·2+0.5，v=(2n+0.5)/0.3=(1.67+6.67n) m/s，n=0,1,2,…（n=0 时 1.67，n=1 时 8.33…）。若方向也未知，向左还有另一套。"},
+ {q:"11. 质点在最高点和平衡位置，位移与速度各是什么情况？",a:"最高/最低点：位移最大、速度为 0。平衡位置：位移为 0、速度最大。位移方向≠速度方向，这是简谐运动的相位错开。"},
+ {q:"12. 给波形图和传播方向，怎么画某质点的 y-t 振动图像？",a:"三要素：起点位移由波形图当前高度给；初速度方向由传播方向+同侧法给；曲线形状由周期 T 给。定起点→定初速度方向→按 T 补完曲线，任何质点都能一次画对。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

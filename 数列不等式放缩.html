@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数列不等式与放缩法 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>数列不等式与放缩法</h1>
+    <p class="lead">数列求和不等式,是压轴题的常客。难点不在求和,而在:很多和<b>求不出精确值</b>(比如 Σ1/n²)。放缩法的核心思路是——既然精确和求不出来,就把<b>每一项放大或缩小</b>成一个「能求和」的样子(裂项或等比),再累加,用这个能算的和去卡住原来的和。一句话:<b>放缩到可求和</b>。</p>
+
+    <div class="say">🗣️ <b>放缩法(人话版):</b> 你要证「一堆分数加起来 &lt; 某个定值」,但这堆分数直接加是加不出来的。怎么办?把每一项<b>换成一个更大、但能求和的东西</b>——比如把 1/n² 换成 1/(n−1)−1/n(裂项后一相消就只剩首尾),把 1/2ⁿ 直接当等比数列求和。换完之后,原和 &lt; 新和 = 一个能算出来的数,证毕。缩小同理,方向反过来。记住:<b>放大证「小于」,缩小证「大于」</b>,方向千万别搞反。</div>
+
+    <div class="keybox"><b>一句话模型:</b> <b>Σaₙ 求不出 → 找 bₙ 使 aₙ ≤ bₙ(或 ≥),且 Σbₙ 可求 → Σaₙ ≤ Σbₙ</b>。最常用的两把刀:① <b>裂项放缩</b> 1/n² &lt; 1/[n(n−1)] = 1/(n−1) − 1/n(相消);② <b>等比放缩</b> 把项压成 1/2ⁿ 型,用等比求和公式。做题第一步永远是:<b>看目标定值,倒推该放成什么形状</b>。</div>
+
+    <h2>① 裂项相消放缩:1/n² 的经典处理</h2>
+    <div class="card">
+      <div class="eq">1/n² &lt; 1/[n(n−1)] = 1/(n−1) − 1/n　(n ≥ 2)</div>
+      <p style="margin:8px 0"><b>为什么成立?</b> 因为 n(n−1) &lt; n²(分母变小),所以 1/[n(n−1)] &gt; 1/n²(分数变大)——这就把 1/n² <b>放大</b>了。而放大后的 1/[n(n−1)] 恰好能<b>裂项</b>成 1/(n−1) − 1/n,累加时中间全部相消,只剩首尾两项。</p>
+      <div class="mono">Σ(k=2→n) 1/k² &lt; Σ(k=2→n)[1/(k−1) − 1/k] = 1 − 1/n &lt; 1</div>
+      <p style="margin:8px 0">再补上第 1 项:1/1² + (1 − 1/n) = 2 − 1/n &lt; 2。这就证明了 <b>Σ1/n² &lt; 2</b>。这是放缩法的「祖师爷」例子——放大到能裂项、能相消、能求和。</p>
+      <p class="trap">⚠ 这个放缩从 <b>n ≥ 2</b> 才成立(n=1 时 1/[n(n−1)] 分母为 0)。所以第 1 项 1/1²=1 必须<b>单独保留</b>,不能一起放缩。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 1/n² 被 1/[n(n−1)] 逐项覆盖(条形对比,证 Σ1/n² &lt; 2)</div>
+      <svg id="coverSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="coverGo">▶ 逐项覆盖</button><button id="coverReset">↺ 重置</button>
+        <label>项数 n <input id="coverN" type="range" min="2" max="10" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>Σ1/k² (真实和)</b><span id="coS">0</span></div>
+        <div><b>放大后的和</b><span id="coB">0</span></div>
+        <div><b>2 − 1/n (上界)</b><span id="coU">0</span></div>
+        <div><b>是否 &lt; 2</b><span id="coOk">-</span></div>
+      </div>
+      <p class="small">红条=真实的 1/k²,蓝条=放大后的 1/[k(k−1)]。每根蓝条都<b>盖住</b>对应的红条(蓝≥红),所以真实和 ≤ 放大和 = 1 + (1 − 1/n) = 2 − 1/n &lt; 2。</p>
+    </div>
+
+    <h2 class="b">② 裂项相消:中间项全抵消,只剩首尾</h2>
+    <div class="card">
+      <div class="eq">1/(k−1) − 1/k 累加 → 中间相消 → 首 − 尾</div>
+      <p style="margin:8px 0">裂项放缩的威力全在<b>相消</b>:把每一项写成「前一个 − 后一个」的差,累加时后一个刚好被下一项的前一个抵消,像多米诺一样倒下,<b>只剩最前和最后</b>。常见裂项模型:</p>
+      <table>
+        <tr><th>原项</th><th>裂成</th><th>相消后</th></tr>
+        <tr><td>1/[n(n+1)]</td><td>1/n − 1/(n+1)</td><td>1 − 1/(n+1)</td></tr>
+        <tr><td>1/[n(n−1)]</td><td>1/(n−1) − 1/n</td><td>1 − 1/n</td></tr>
+        <tr><td>1/[(2n−1)(2n+1)]</td><td>½[1/(2n−1) − 1/(2n+1)]</td><td>½[1 − 1/(2n+1)]</td></tr>
+      </table>
+      <p class="trap">⚠ 裂项后系数别漏!比如 1/[(2n−1)(2n+1)] 裂开要<b>乘 ½</b>,否则和会算成 2 倍。相消也要看清:是隔一项消,还是相邻消,写出前 3 项和后 2 项验证一下。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 裂项相消动画:相邻项抵消,只剩首尾(点▶看多米诺)</div>
+      <svg id="cancelSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cancelGo">▶ 开始相消</button><button id="cancelReset">↺ 重置</button>
+        <label>项数 n <input id="cancelN" type="range" min="3" max="7" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>裂项形式</b><span id="caForm">1/k−1/(k+1)</span></div>
+        <div><b>相消后剩</b><span id="caLeft">-</span></div>
+        <div><b>和 = 1 − 1/(n+1)</b><span id="caSum">0</span></div>
+        <div><b>上界</b><span id="caU">&lt; 1</span></div>
+      </div>
+      <p class="small">每一项拆成 (+1/k) 和 (−1/(k+1)) 两个块。动画里相邻的「+」和「−」相遇就一起消失,最后只剩最左的 +1 和最右的 −1/(n+1),所以和 = 1 − 1/(n+1) &lt; 1。</p>
+    </div>
+
+    <h2 class="g">③ 等比放缩:压成 1/2ⁿ 型,用等比求和</h2>
+    <div class="card">
+      <div class="eq">Σ(k=1→n) 1/2ᵏ = 1 − 1/2ⁿ &lt; 1　(等比,公比 ½)</div>
+      <p style="margin:8px 0">当每一项能被放大/缩小成<b>等比数列</b>时,直接套等比求和公式 Sₙ = a₁(1−qⁿ)/(1−q)。这类放缩的关键是<b>找到一个公比 &lt; 1 的等比上界</b>。经典例:</p>
+      <div class="mono">1/(2ⁿ−1) &lt; 1/2ⁿ⁻¹?  不对; 常用 1/(2ⁿ+1) &lt; 1/2ⁿ, 或 n/2ⁿ 拆分</div>
+      <p style="margin:8px 0"><b>例:</b> 证 Σ(k=1→n) 1/(2ᵏ−1) &lt; 2。当 k≥2 时,2ᵏ−1 ≥ 2ᵏ⁻¹(因为 2ᵏ−1 ≥ 2ᵏ/2=2ᵏ⁻¹),所以 1/(2ᵏ−1) ≤ 1/2ᵏ⁻¹。首项 k=1 保留(=1),其余放缩:1 + Σ(k=2→n)1/2ᵏ⁻¹ = 1 + (½+¼+…) &lt; 1 + 1 = 2。</p>
+      <p class="trap">⚠ 等比放缩要保证公比 &lt; 1(否则求和发散,卡不住)。放大方向:分母缩小→分数放大。找上界时把分母压成 2 的幂最省事。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 3 — 等比放缩几何级数:1/2+1/4+1/8+… 无限逼近 1</div>
+      <svg id="geoSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="geoGo">▶ 逐项累加</button><button id="geoReset">↺ 重置</button>
+        <label>项数 n <input id="geoN" type="range" min="1" max="12" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前项 1/2ⁿ</b><span id="geT">0</span></div>
+        <div><b>部分和 Sₙ</b><span id="geS">0</span></div>
+        <div><b>1 − Sₙ (差距)</b><span id="geD">0</span></div>
+        <div><b>上界</b><span id="geU">&lt; 1</span></div>
+      </div>
+      <p class="small">一条长度为 1 的线段,每次填入剩余空白的一半:1/2、1/4、1/8……不管填多少次都<b>填不满</b>,和永远 &lt; 1。这就是等比放缩「卡得住」的几何直觉。</p>
+    </div>
+
+    <h2 class="o">④ 常见放缩模型库</h2>
+    <div class="card">
+      <p style="margin:6px 0">放缩题的本质是<b>模式识别</b>——看到某种项的形状,就往对应的模型上套。背熟这几个,压轴题的放缩方向就有了。</p>
+      <table>
+        <tr><th>项的形状</th><th>放缩方向</th><th>用途</th></tr>
+        <tr><td>1/n²</td><td>&lt; 1/[n(n−1)]=1/(n−1)−1/n</td><td>证和 &lt; 2(裂项)</td></tr>
+        <tr><td>1/n²</td><td>&gt; 1/[n(n+1)]=1/n−1/(n+1)</td><td>证和 &gt; 某值(下界)</td></tr>
+        <tr><td>1/√n</td><td>&gt; 2(√(n+1)−√n)</td><td>证和 &gt; 定值(发散)</td></tr>
+        <tr><td>1/√n</td><td>&lt; 2(√n−√(n−1))</td><td>证和的上界</td></tr>
+        <tr><td>n/2ⁿ</td><td>错位相减求精确和,或放缩</td><td>证和 &lt; 2</td></tr>
+        <tr><td>1/(2n−1)²</td><td>&lt; 1/[(2n−1)(2n−3)]</td><td>裂项证上界</td></tr>
+      </table>
+      <p class="trap">⚠ 同一个 1/n² 既能<b>放大</b>(用 n(n−1))证上界,又能<b>缩小</b>(用 n(n+1))证下界。方向由题目要证「&lt;」还是「&gt;」决定,别背死一个方向。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🗺️ 互动 4 — 放缩模型选择器:点项型,看该放成什么、卡出什么界</div>
+      <svg id="modelSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="modelcase on" data-c="0">1/n²</button>
+        <button class="modelcase" data-c="1">1/√n</button>
+        <button class="modelcase" data-c="2">n/2ⁿ</button>
+        <button class="modelcase" data-c="3">1/(2n−1)²</button>
+      </div>
+      <div class="verdict" id="modelNote"></div>
+      <p class="small">四种常见项。选一个,图里显示它该被放/缩成什么模型,以及最终能卡出的界。这就是拿到题第一眼要做的「模式匹配」。</p>
+    </div>
+
+    <h2 class="v">⑤ 从第几项开始放缩:前几项要保留</h2>
+    <div class="card">
+      <p style="margin:6px 0">放缩不等式常常<b>不能从第 1 项就开始放</b>,因为放大后可能<b>过头</b>(上界卡不住),或者放缩式在小 n 时不成立(如 1/[n(n−1)] 要 n≥2)。策略是:<b>前几项照原样保留(精确),从第 k 项起才放缩</b>。</p>
+      <div class="mono">S = a₁ + a₂ + … + a_{k−1} + [a_k + … + a_n]</div>
+      <div class="mono">　　└─── 保留精确 ───┘   └── 这部分放缩 ──┘</div>
+      <p style="margin:8px 0"><b>为什么有效?</b> 前几项本身值大,若一起放大会把上界撑爆;保留它们的精确值,只对「后面越来越小的尾巴」放缩,既合法(放缩式在大 n 成立)又不过头(上界更紧)。</p>
+      <p class="trap">⚠ 判断从第几项开始:① 看放缩式的成立条件(如 n≥2);② 看放大后会不会超过目标定值——若从第 1 项放就 &gt; 定值,说明要多保留几项。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 5 — 保留前 k 项再放缩:调 k,看上界怎么被「撑爆」或「卡住」</div>
+      <svg id="keepSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="keepGo">▶ 演示</button>
+        <label>保留前 k 项 <input id="keepK" type="range" min="0" max="4" value="1" step="1"></label>
+        <label>总项数 n <input id="keepN" type="range" min="5" max="10" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>保留部分(精确)</b><span id="keExact">0</span></div>
+        <div><b>放缩部分(上界)</b><span id="keUp">0</span></div>
+        <div><b>总上界</b><span id="keTot">0</span></div>
+        <div><b>目标 &lt; 2 ?</b><span id="keOk">-</span></div>
+      </div>
+      <p class="small">目标:证 Σ1/k² &lt; 2。k=0(全放缩)会把上界撑到 &gt; 2 卡不住;保留前 1 项(k=1)后,上界=1+(1−1/n)=2−1/n &lt; 2,刚好卡住。绿=保留的精确项,橙=放缩上界。</p>
+    </div>
+
+    <h2 class="r">⑥ Bounding:放缩的方向与「不能过头」</h2>
+    <div class="card">
+      <p style="margin:6px 0">放缩最容易翻车的地方是<b>方向</b>和<b>力度</b>。三条铁律:</p>
+      <h3>铁律一:方向要与目标一致</h3>
+      <p style="margin:6px 0">证「和 &lt; M」→ 每项<b>放大</b>(aₙ ≤ bₙ,则 Σaₙ ≤ Σbₙ ≤ M);证「和 &gt; M」→ 每项<b>缩小</b>。方向反了,不等号就废了。</p>
+      <h3>铁律二:方向要一致(不能一半放大一半缩小)</h3>
+      <p style="margin:6px 0">同一个和里,所有项<b>朝同一方向</b>放缩,才能保证 Σ 的不等号成立。混着放,加起来大小关系就乱了。</p>
+      <h3>铁律三:不能放过头</h3>
+      <p style="margin:6px 0">放大要放到「刚好能求和」,但不能放得太大以致超过目标定值(否则证出 Σ &lt; 更大的数,卡不住 M)。太松的上界证不出结论——这就是为什么要保留前几项。</p>
+      <p class="trap">⚠ 放过头 = 上界比目标还大 → 结论证不出。放不够 = 求不了和。放缩的艺术是「恰好放到能求和,又不超过目标」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚠️ 互动 6 — 放过头的反例警示:放大力度过大,上界超过目标,证明失败</div>
+      <svg id="overSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="overcase on" data-c="0">恰好(用 n(n−1))</button>
+        <button class="overcase" data-c="1">放过头(用 n)</button>
+      </div>
+      <div class="verdict" id="overNote"></div>
+      <p class="small">同样证 Σ1/n² &lt; 2。左:放成 1/[n(n−1)],上界 &lt; 2,✔证出。右:放成 1/n(把 1/n² 放大成 1/n,太狠),上界发散(调和级数),&gt; 2 卡不住,✘失败。放缩不是越大越好。</p>
+    </div>
+
+    <h2 class="b">⑦ 累加逼近:部分和向定值收敛</h2>
+    <div class="card">
+      <p style="margin:6px 0">放缩证「和 &lt; 定值」背后的直觉是:部分和 Sₙ <b>单调递增</b>(每项为正)但<b>有上界</b>,于是越加越接近某个天花板,永远碰不到。放缩就是找到这个天花板。</p>
+      <div class="eq">S₁ &lt; S₂ &lt; S₃ &lt; … &lt; 上界 M(单调有界 → 收敛)</div>
+      <p style="margin:8px 0">对 Σ1/n²:S₁=1,S₂=1.25,S₃≈1.361,…越来越接近 π²/6≈1.6449,始终 &lt; 2。放缩给的上界 2 虽然不紧,但足以证明「有界」这件事。</p>
+      <p class="trap">⚠ 部分和逼近定值 ≠ 部分和等于定值。放缩证的是「小于」,不是「等于」。别把上界当成和的精确值。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 7 — 累加逼近定值:部分和 Sₙ 单调上升,撞不到上界天花板</div>
+      <svg id="climbSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="climbGo">▶ 逐项累加</button><button id="climbReset">↺ 重置</button>
+        <label>数列 <select id="climbPick"><option value="0">Σ1/n² (→π²/6)</option><option value="1">Σ1/2ⁿ (→1)</option></select></label>
+      </div>
+      <div class="live">
+        <div><b>当前 n</b><span id="clN">0</span></div>
+        <div><b>部分和 Sₙ</b><span id="clS">0</span></div>
+        <div><b>逼近的真值</b><span id="clT">0</span></div>
+        <div><b>放缩上界</b><span id="clU">0</span></div>
+      </div>
+      <p class="small">折线=部分和 Sₙ,每加一项就往上跳一点,跳幅越来越小。红虚线=放缩给的上界,蓝虚线=真实极限。Sₙ 单调递增但被死死压在红线下面——这就是「单调有界必收敛」。</p>
+    </div>
+
+    <h2 class="g">⑧ 双向夹逼:同时卡上界和下界</h2>
+    <div class="card">
+      <p style="margin:6px 0">有些题要证 <b>M₁ &lt; Σaₙ &lt; M₂</b>,得<b>两个方向</b>都放缩:向上放大证 &lt; M₂,向下缩小证 &gt; M₁。这需要为同一项找<b>两个不同的裂项模型</b>。</p>
+      <div class="mono">下界:1/n² &gt; 1/[n(n+1)] = 1/n − 1/(n+1)</div>
+      <div class="mono">上界:1/n² &lt; 1/[n(n−1)] = 1/(n−1) − 1/n</div>
+      <p style="margin:8px 0"><b>对 Σ(k=2→n)1/k² 夹逼:</b> 下界用 n(n+1) 缩小得 &gt; ½−1/(n+1);上界用 n(n−1) 放大得 &lt; 1−1/n。两头一夹,和被锁在一个区间里。</p>
+      <p class="trap">⚠ 上下界要用<b>不同</b>的放缩式(一个放大、一个缩小)。别用同一个式子想证两个方向——那不可能。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔒 互动 8 — 双向夹逼:上界(蓝)与下界(绿)同时锁住真实和(红)</div>
+      <svg id="squeezeSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="sqGo">▶ 收紧夹逼</button><button id="sqReset">↺ 重置</button>
+        <label>项数 n <input id="sqN" type="range" min="2" max="12" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>下界(缩小)</b><span id="sqL">0</span></div>
+        <div><b>真实和 Σ1/k²</b><span id="sqM">0</span></div>
+        <div><b>上界(放大)</b><span id="sqU">0</span></div>
+        <div><b>真值在区间内?</b><span id="sqOk">-</span></div>
+      </div>
+      <p class="small">数轴上:绿点=下界、红点=真实和、蓝点=上界。三点始终满足 下界 ≤ 真实和 ≤ 上界。加项越多,上下界越收紧,把真实和夹得越死。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 裂项放缩证「和 &lt; 定值」</h3>
+      <p><b class="tag">触发信号:</b>求和求不出精确值,项形如 1/n²、1/[n(n+k)]、1/(2n−1)²,要证「Σ &lt; 某常数」。</p>
+      <p><b class="tag">标准动作:</b>把每项<b>放大</b>成能裂项的差 1/(n−1)−1/n → 累加相消只剩首尾 → 得上界 → &lt; 目标。必要时保留前几项。</p>
+      <p><b class="tag">示例(带解):</b>证 Σ(k=1→n)1/k² &lt; 2。① 首项 1/1²=1 保留。② k≥2 时 1/k² &lt; 1/[k(k−1)] = 1/(k−1)−1/k。③ Σ(k=2→n) = (1−½)+(½−⅓)+…+(1/(n−1)−1/n) = 1−1/n。④ 合计 &lt; 1+(1−1/n) = 2−1/n &lt; 2。✔</p>
+      <p class="trap">陷阱:第 1 项不保留就放缩(n=1 时式子非法);裂项相消没写清首尾;放成 1/n 过头。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 等比放缩证上界</h3>
+      <p><b class="tag">触发信号:</b>项里有 2ⁿ、3ⁿ 之类指数,如 1/(2ⁿ−1)、n/2ⁿ,要证「Σ &lt; 定值」。</p>
+      <p><b class="tag">标准动作:</b>把项放大成<b>公比 &lt; 1 的等比</b>(分母压成 2 的幂)→ 用等比求和 Sₙ=a₁(1−qⁿ)/(1−q) &lt; a₁/(1−q) → 得界。</p>
+      <p><b class="tag">示例(带解):</b>证 Σ(k=1→n)1/(2ᵏ−1) &lt; 2。① k=1 项 =1 保留。② k≥2:2ᵏ−1 ≥ 2ᵏ⁻¹,故 1/(2ᵏ−1) ≤ 1/2ᵏ⁻¹。③ Σ(k=2→n)1/2ᵏ⁻¹ = ½+¼+…+1/2ⁿ⁻¹ &lt; 1(等比和)。④ 合计 &lt; 1+1 = 2。✔</p>
+      <p class="trap">陷阱:公比 ≥ 1 时求和发散卡不住;首项没保留;放大方向搞反(分母该缩小)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 保留前几项再放缩</h3>
+      <p><b class="tag">触发信号:</b>直接从第 1 项放缩会超过目标定值,或放缩式要求 n≥某值才成立。</p>
+      <p><b class="tag">标准动作:</b>前 k 项写<b>精确值</b>相加,从第 k+1 项起放缩求和,两部分相加得总上界,再比目标。</p>
+      <p><b class="tag">示例(带解):</b>证 Σ(k=1→n)1/k² &lt; 7/4。若全放缩上界只能到 2,不够紧。保留前 2 项:1+1/4=5/4;从 k=3 起 Σ1/[k(k−1)]=1/2−1/n &lt; 1/2;合计 &lt; 5/4+1/2 = 7/4。✔ 多保留一项,界更紧。</p>
+      <p class="trap">陷阱:保留项数不够,上界仍超目标;保留部分算错;放缩起点写错(从 k=3 却按 k=2 算)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 双向夹逼(证区间)</h3>
+      <p><b class="tag">触发信号:</b>要证 M₁ &lt; Σ &lt; M₂,同时给出上下两个界。</p>
+      <p><b class="tag">标准动作:</b>下界:每项<b>缩小</b>成 1/[n(n+1)]=1/n−1/(n+1) 累加;上界:每项<b>放大</b>成 1/[n(n−1)] 累加。两次放缩方向相反。</p>
+      <p><b class="tag">示例(带解):</b>证 ½ &lt; Σ(k=2→n)1/k² &lt; 1(n≥2)。下界:1/k² &gt; 1/[k(k+1)]=1/k−1/(k+1),Σ=½−1/(n+1) …(下界略调);上界:1/k² &lt; 1/[k(k−1)],Σ=½−1/n &lt; ½。两头一夹,和被锁住。</p>
+      <p class="trap">陷阱:上下界用了同一个放缩式;方向弄反(下界却放大);区间端点算错。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 构造 + 放缩(先造中间量)</h3>
+      <p><b class="tag">触发信号:</b>项不能直接裂项,需要先<b>构造</b>一个可放缩的中间表达式(如利用 √ 的有理化、对数不等式 ln(1+x)&lt;x)。</p>
+      <p><b class="tag">标准动作:</b>先造出便于放缩的形式(有理化、拆项、配对),再套裂项或等比放缩,最后累加求界。</p>
+      <p><b class="tag">示例(带解):</b>证 Σ(k=1→n)1/√k &gt; 2(√(n+1)−1)。构造:1/√k &gt; 2/(√k+√(k+1)) = 2(√(k+1)−√k)(有理化)。Σ 累加相消 = 2(√(n+1)−1)。✔ 通过构造出「裂项差」实现放缩。</p>
+      <p class="trap">陷阱:构造方向错(该缩小却放大);有理化算错;相消后首尾项漏。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>放过头导致不等号反向:</b>把 1/n² 放成 1/n(太狠),上界成了调和级数(发散),证「&lt;2」直接失败。放缩要「刚好能求和,不超目标」。</p>
+      <p class="trap">② <b>裂项后没有完全相消:</b>写出前 3 项和后 2 项,确认中间真的抵消了,别以为一定只剩首尾——隔项裂项(如 (2n−1)(2n+1))剩的是<b>两头各一项</b>。</p>
+      <p class="trap">③ <b>该从第 2 项才开始放缩,却从第 1 项放:</b>1/[n(n−1)] 要 n≥2,第 1 项必须单独保留,否则分母为 0 或不成立。</p>
+      <p class="trap">④ <b>放大与缩小方向要与目标一致:</b>证「&lt;」用放大,证「&gt;」用缩小。方向反了整个证明作废。</p>
+      <p class="trap">⑤ <b>裂项系数漏乘:</b>1/[(2n−1)(2n+1)] 裂开要乘 ½,忘了和会大一倍。</p>
+      <p class="trap">⑥ <b>把上界当成精确和:</b>放缩证的是不等式,2 是上界不是 Σ1/n² 的值(真值 π²/6)。</p>
+      <p class="trap">⑦ <b>同一个和里混着放大和缩小:</b>所有项必须朝同一方向放缩,不等号才成立。</p>
+      <p class="trap">⑧ <b>等比放缩公比 ≥ 1:</b>放缩后的等比若公比 ≥1 则求和发散,卡不住,必须公比 &lt; 1。</p>
+      <p class="trap">⑨ <b>相消后忘写「&lt; 目标」的最后一步:</b>算出上界后要明确写出「上界 &lt; 目标定值」才算证完。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 放缩的本质是「用可求和的数列夹住不可求和的数列」:</b> Σ1/n² 没有初等的部分和公式,但 Σ[1/(n−1)−1/n] 有(=1−1/n)。放缩就是在「不可求和的世界」和「可求和的世界」之间架一座不等号的桥。想清楚这一点,你找放缩式时就会主动去找「能裂项/能等比」的邻居。</p>
+      <p style="margin:8px 0"><b>② 上界的「松紧」可以调:</b> 保留的精确项越多,放缩起点越靠后,上界越紧。证 &lt;2 保留 1 项就够,证 &lt;7/4 要保留 2 项,证 &lt;π²/6+ε 可能要保留很多项。上界紧不紧,由你保留几项、放成什么模型决定——这是一个可调的旋钮。</p>
+      <p style="margin:8px 0"><b>③ 裂项是「离散版的积分」:</b> 1/(n−1)−1/n 相消,和积分 ∫f′=f(b)−f(a) 的相消一模一样。1/√n &gt; 2(√(n+1)−√n) 对应 ∫1/(2√x)。会用「离散微积分」的眼光看裂项,放缩式就能自己造出来。</p>
+      <p style="margin:8px 0"><b>④ 放缩方向的选择 = 你想证的方向:</b> 同一个 1/n²,放大(n(n−1))得上界、缩小(n(n+1))得下界。看题目要「&lt;」还是「&gt;」,反推该放大还是缩小,再反推该用哪个裂项模型。这是一条从「目标」倒推「手段」的思维链。</p>
+      <p style="margin:8px 0"><b>⑤ 单调有界是放缩背后的理论保证:</b> 部分和为正 → 单调递增;放缩给出上界 → 有界;单调有界必收敛。放缩本质是在<b>手工证明数列收敛</b>——理解这层,压轴题的放缩就不是碰运气,而是有方向的构造。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 核心:放缩到可求和(裂项相消 / 等比求和)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:1/n² 被 1/[n(n-1)] 覆盖 ===== */
+(function(){
+  const svg=document.getElementById('coverSvg');
+  const Ns=document.getElementById('coverN');
+  const oS=document.getElementById('coS'),oB=document.getElementById('coB'),oU=document.getElementById('coU'),oOk=document.getElementById('coOk');
+  let N=6,shown=0,running=false;
+  function sync(){N=+Ns.value;shown=N;draw();}
+  Ns.oninput=()=>{sync();};
+  function realSum(n){let s=0;for(let k=1;k<=n;k++)s+=1/(k*k);return s;}
+  function bigSum(n){let s=1;for(let k=2;k<=n;k++)s+=1/(k*(k-1));return s;}
+  function draw(){
+    clr(svg);const X0=55,Y0=25,W=580,H=230;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='蓝条 1/[k(k−1)] 盖住红条 1/k² → 真实和 ≤ 放大和 < 2';
+    const bw=W/(N+1),maxV=1.0;
+    for(let k=1;k<=N;k++){
+      const cx=X0+bw*(k-0.5)+bw*0.15;
+      const real=1/(k*k);
+      const big=(k===1)?1:1/(k*(k-1));
+      const rh=(real/maxV)*H, bh=(big/maxV)*H;
+      const visible=k<=shown;
+      // blue (big) behind
+      if(visible){el(svg,'rect',{x:cx-bw*0.32,y:Y0+H-bh,width:bw*0.5,height:bh,fill:'rgba(20,80,200,0.35)',stroke:BLUE,'stroke-width':2});}
+      // red (real) front
+      el(svg,'rect',{x:cx-bw*0.20,y:Y0+H-rh,width:bw*0.3,height:rh,fill:'rgba(224,56,42,0.75)',stroke:RED,'stroke-width':2});
+      el(svg,'text',{x:cx-bw*0.05,y:Y0+H+16,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=k;
+    }
+    const s=realSum(shown),b=bigSum(shown),u=2-1/N;
+    oS.textContent=s.toFixed(4);oB.textContent=b.toFixed(4);oU.textContent=u.toFixed(4);
+    oOk.textContent=(b<2)?'✔ 是':'—';
+    oOk.style.color=(b<2)?GREEN:INK;
+  }
+  function loop(){if(!running)return;shown++;if(shown>=N){shown=N;running=false;}draw();setTimeout(()=>requestAnimationFrame(loop),260);}
+  document.getElementById('coverGo').onclick=()=>{sync();shown=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('coverReset').onclick=()=>{sync();};
+  sync();
+})();
+
+/* ===== 互动2:裂项相消动画 ===== */
+(function(){
+  const svg=document.getElementById('cancelSvg');
+  const Ns=document.getElementById('cancelN');
+  const oLeft=document.getElementById('caLeft'),oSum=document.getElementById('caSum');
+  let N=5,step=0,running=false;
+  function sync(){N=+Ns.value;step=0;draw();}
+  Ns.oninput=sync;
+  function draw(){
+    clr(svg);const X0=40,W=620,rowY=70,bh=34,gap=8;
+    el(svg,'text',{x:X0,y:26,'font-size':13,'font-weight':900,fill:INK}).textContent='每项 1/k − 1/(k+1)：相邻的 − 与 + 相遇即抵消';
+    const cellW=(W)/(N*2);
+    // blocks: for k=1..N -> [+1/k][-1/(k+1)]
+    let idx=0;
+    for(let k=1;k<=N;k++){
+      // + block
+      drawBlock(idx,'+',k,GREEN);idx++;
+      // - block
+      drawBlock(idx,'-',k+1,RED);idx++;
+    }
+    function drawBlock(i,sign,den,col){
+      const x=X0+i*cellW;
+      // determine if canceled: block i(neg, den=d) cancels with block i+1(pos, den=d)
+      // pairs: for interior, -1/(k+1) [odd index] cancels +1/(k+1)[next even]
+      const canceled=isCanceled(i);
+      const shownNow=step>=cancelStep(i)||!canceled;
+      const alive= !(canceled && step>=cancelStep(i));
+      const fill=alive?(sign==='+'?'rgba(30,158,134,0.30)':'rgba(224,56,42,0.30)'):'rgba(180,180,180,0.15)';
+      el(svg,'rect',{x:x+3,y:rowY,width:cellW-6,height:bh,fill:fill,stroke:alive?col:'#bbb','stroke-width':2});
+      el(svg,'text',{x:x+cellW/2,y:rowY+bh/2+5,'font-size':12.5,'font-weight':900,fill:alive?INK:'#bbb','text-anchor':'middle'}).textContent=(sign==='+'?'+':'−')+'1/'+den;
+      if(!alive){el(svg,'line',{x1:x+6,y1:rowY+4,x2:x+cellW-6,y2:rowY+bh-4,stroke:'#999','stroke-width':2});}
+    }
+    // surviving sum
+    const sum=1-1/(N+1);
+    oSum.textContent=sum.toFixed(4);
+    const done=step>=N;
+    oLeft.textContent=done?('+1 − 1/'+(N+1)):'...';
+    if(done){
+      el(svg,'text',{x:X0,y:rowY+bh+50,'font-size':14,'font-weight':900,fill:GREEN}).textContent='只剩首尾：+1/1 和 −1/'+(N+1)+' → 和 = 1 − 1/'+(N+1)+' = '+sum.toFixed(4)+' < 1';
+    }
+  }
+  // interior blocks: index 1..(2N-2) form cancel pairs (odd i with i+1)
+  function isCanceled(i){return i>=1 && i<=2*N-2;}
+  function cancelStep(i){return Math.ceil(i/2);} // pair k cancels at step k
+  function loop(){if(!running)return;step++;if(step>=N){step=N;running=false;}draw();setTimeout(()=>requestAnimationFrame(loop),420);}
+  document.getElementById('cancelGo').onclick=()=>{step=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('cancelReset').onclick=()=>{step=0;draw();};
+  sync();
+})();
+
+/* ===== 互动3:等比放缩几何级数 ===== */
+(function(){
+  const svg=document.getElementById('geoSvg');
+  const Ns=document.getElementById('geoN');
+  const oT=document.getElementById('geT'),oS=document.getElementById('geS'),oD=document.getElementById('geD');
+  let N=5,shown=0,running=false;
+  function sync(){N=+Ns.value;shown=N;draw();}
+  Ns.oninput=sync;
+  function draw(){
+    clr(svg);const X0=40,Y0=70,W=620,H=60;
+    el(svg,'text',{x:X0,y:40,'font-size':13,'font-weight':900,fill:INK}).textContent='长度 1 的线段：每次填剩余空白的一半 → 永远填不满 → 和 < 1';
+    el(svg,'rect',{x:X0,y:Y0,width:W,height:H,fill:'none',stroke:INK,'stroke-width':3});
+    let cur=X0;const cols=[BLUE,GREEN,ORANGE,VIO,RED,YEL];
+    let S=0;
+    for(let k=1;k<=shown;k++){
+      const frac=1/Math.pow(2,k);
+      const w=frac*W;
+      el(svg,'rect',{x:cur,y:Y0,width:w,height:H,fill:cols[(k-1)%cols.length],stroke:INK,'stroke-width':1.5,opacity:0.55});
+      if(w>26){el(svg,'text',{x:cur+w/2,y:Y0+H/2+5,'font-size':11.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='1/'+Math.pow(2,k);}
+      cur+=w;S+=frac;
+    }
+    // remaining gap label
+    const gapW=W-(cur-X0);
+    el(svg,'line',{x1:X0+W,y1:Y0-8,x2:X0+W,y2:Y0+H+8,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:X0+W+4,y:Y0+H/2,'font-size':12,'font-weight':900,fill:RED}).textContent='上界1';
+    el(svg,'text',{x:X0,y:Y0+H+40,'font-size':13,'font-weight':800,fill:INK}).textContent='部分和 Sₙ = 1 − 1/2ⁿ = '+S.toFixed(5)+'（剩余空白 = 1/2ⁿ = '+(1-S).toFixed(5)+'）';
+    oT.textContent=(1/Math.pow(2,shown)).toFixed(5);oS.textContent=S.toFixed(5);oD.textContent=(1-S).toFixed(5);
+  }
+  function loop(){if(!running)return;shown++;if(shown>=N){shown=N;running=false;}draw();setTimeout(()=>requestAnimationFrame(loop),300);}
+  document.getElementById('geoGo').onclick=()=>{shown=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('geoReset').onclick=()=>{sync();};
+  sync();
+})();
+
+/* ===== 互动4:放缩模型选择器 ===== */
+(function(){
+  const svg=document.getElementById('modelSvg');const note=document.getElementById('modelNote');
+  let c=0;
+  document.querySelectorAll('.modelcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.modelcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  const data=[
+    {name:'1/n²',up:'< 1/[n(n−1)] = 1/(n−1) − 1/n',bound:'Σ < 2（裂项相消）',col:RED,how:'放大→裂项→相消只剩首尾'},
+    {name:'1/√n',up:'> 2(√(n+1) − √n)',bound:'Σ > 2(√(n+1)−1)（下界）',col:BLUE,how:'有理化→裂项差→证发散下界'},
+    {name:'n/2ⁿ',up:'错位相减 或 放缩',bound:'Σ < 2（等比+错位）',col:GREEN,how:'错位相减求精确和，或压成等比'},
+    {name:'1/(2n−1)²',up:'< 1/[(2n−1)(2n−3)]',bound:'Σ < 常数（隔项裂项，系数½）',col:VIO,how:'放大→½·裂项差→相消'}
+  ];
+  function draw(){
+    clr(svg);const d=data[c];
+    el(svg,'rect',{x:40,y:30,width:180,height:60,fill:'rgba(224,56,42,0.12)',stroke:d.col,'stroke-width':3});
+    el(svg,'text',{x:130,y:55,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='项 aₙ =';
+    el(svg,'text',{x:130,y:80,'font-size':18,'font-weight':900,fill:d.col,'text-anchor':'middle'}).textContent=d.name;
+    // arrow
+    el(svg,'line',{x1:230,y1:60,x2:300,y2:60,stroke:INK,'stroke-width':4});
+    el(svg,'polygon',{points:'300,52 314,60 300,68',fill:INK});
+    el(svg,'text',{x:265,y:48,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='放缩';
+    el(svg,'rect',{x:320,y:30,width:340,height:60,fill:'rgba(20,80,200,0.10)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:490,y:65,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=d.up;
+    el(svg,'text',{x:40,y:130,'font-size':13,'font-weight':800,fill:INK}).textContent='手法：'+d.how;
+    el(svg,'rect',{x:40,y:150,width:620,height:44,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:178,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='结论：'+d.bound;
+    note.innerHTML='👉 看到 <b>'+d.name+'</b> → '+d.how+' → '+d.bound;
+    note.style.borderColor=d.col;
+  }
+  draw();
+})();
+
+/* ===== 互动5:保留前 k 项再放缩 ===== */
+(function(){
+  const svg=document.getElementById('keepSvg');
+  const Ks=document.getElementById('keepK'),Ns=document.getElementById('keepN');
+  const oE=document.getElementById('keExact'),oU=document.getElementById('keUp'),oT=document.getElementById('keTot'),oOk=document.getElementById('keOk');
+  let K=1,N=8;
+  function sync(){K=+Ks.value;N=+Ns.value;draw();}
+  Ks.oninput=Ns.oninput=sync;
+  function draw(){
+    clr(svg);const X0=45,Y0=30,W=600,H=170,base=Y0+H;
+    el(svg,'line',{x1:X0,y1:base,x2:X0+W,y2:base,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W/2,y:Y0-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='证 Σ1/k² < 2：绿=保留精确项，橙=放缩上界项';
+    const bw=W/(N+1),maxV=1.05;
+    let exact=0,up=0;
+    for(let k=1;k<=N;k++){
+      const cx=X0+bw*(k-0.5);
+      const real=1/(k*k);
+      let isKeep=(k<=K)|| (K===0&&false);
+      // if K==0, all approximated (but 1/[k(k-1)] invalid for k=1) -> show overflow
+      let val,col;
+      if(isKeep){val=real;col=GREEN;exact+=real;}
+      else{
+        // approximated by 1/[k(k-1)] if k>=2 else 1/k (over)
+        val=(k>=2)?1/(k*(k-1)):1; col=ORANGE; up+=(k>=2)?1/(k*(k-1)):1;
+      }
+      const h=(val/maxV)*H;
+      el(svg,'rect',{x:cx-bw*0.32,y:base-h,width:bw*0.64,height:h,fill:(col===GREEN?'rgba(30,158,134,0.55)':'rgba(232,106,23,0.5)'),stroke:col,'stroke-width':2});
+      el(svg,'text',{x:cx,y:base+15,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=k;
+    }
+    // compute upper bound properly
+    let exactSum=0;for(let k=1;k<=K;k++)exactSum+=1/(k*k);
+    let upSum;
+    if(K===0){upSum=Infinity;} // 1/k^2<1/[k(k-1)] invalid at k=1
+    else{ // from k=K+1: sum 1/[k(k-1)] = 1/K - 1/N
+      upSum=(1/K)-(1/N);
+    }
+    const tot=exactSum+ (isFinite(upSum)?upSum:99);
+    oE.textContent=exactSum.toFixed(4);
+    oU.textContent=isFinite(upSum)?upSum.toFixed(4):'∞(非法)';
+    oT.textContent=isFinite(upSum)?tot.toFixed(4):'发散';
+    const ok=isFinite(upSum)&&tot<2;
+    oOk.textContent=ok?'✔ 卡住':(K===0?'✘ 非法/爆':'✘ 超2');
+    oOk.style.color=ok?GREEN:RED;
+    // upper bound line
+    if(isFinite(tot)&&tot<2.2){
+      const y=base-(tot/1.05/ ( (N+1) ) *0); // not used as height ref; draw text
+    }
+    el(svg,'text',{x:X0,y:base+38,'font-size':12.5,'font-weight':800,fill:ok?GREEN:RED}).textContent='总上界 = 保留'+exactSum.toFixed(3)+' + 放缩'+(isFinite(upSum)?upSum.toFixed(3):'∞')+' = '+(isFinite(tot)?tot.toFixed(3):'发散')+(ok?'  < 2 ✔':'  ✘卡不住');
+  }
+  document.getElementById('keepGo').onclick=draw;
+  sync();
+})();
+
+/* ===== 互动6:放过头的反例 ===== */
+(function(){
+  const svg=document.getElementById('overSvg');const note=document.getElementById('overNote');
+  let c=0;
+  document.querySelectorAll('.overcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.overcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);const X0=45,Y0=30,W=600,H=150,base=Y0+H;const N=8;
+    el(svg,'line',{x1:X0,y1:base,x2:X0+W,y2:base,stroke:INK,'stroke-width':3});
+    const bw=W/(N+1),maxV=1.05;
+    let up=0;
+    for(let k=1;k<=N;k++){
+      const cx=X0+bw*(k-0.5);
+      const real=1/(k*k);
+      let big,col;
+      if(c===0){ // 恰好: 1/[k(k-1)], keep k=1
+        big=(k===1)?1:1/(k*(k-1)); col=GREEN;
+      }else{ // 放过头: 1/k
+        big=1/k; col=RED;
+      }
+      up+=big;
+      const rh=(real/maxV)*H,bh=(Math.min(big,maxV)/maxV)*H;
+      el(svg,'rect',{x:cx-bw*0.30,y:base-bh,width:bw*0.6,height:bh,fill:(c===0?'rgba(30,158,134,0.35)':'rgba(224,56,42,0.35)'),stroke:col,'stroke-width':2});
+      el(svg,'rect',{x:cx-bw*0.16,y:base-rh,width:bw*0.32,height:rh,fill:'rgba(22,18,10,0.6)',stroke:INK,'stroke-width':1.5});
+      el(svg,'text',{x:cx,y:base+15,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=k;
+    }
+    // target line = 2 -> position: sum reference; just annotate
+    if(c===0){
+      const upper=1+(1-1/N);
+      note.innerHTML='✅ 恰好：1/n² 放成 1/[n(n−1)]，上界 = 1 + (1 − 1/n) = '+upper.toFixed(3)+' < 2，成功卡住。放缩「刚好能求和」。';
+      note.style.borderColor=GREEN;
+    }else{
+      let hsum=0;for(let k=1;k<=N;k++)hsum+=1/k;
+      note.innerHTML='❌ 放过头：把 1/n² 放成 1/n（太狠）。上界成了调和级数 1+½+⅓+… 前8项已 = '+hsum.toFixed(3)+'，且发散 → 远超 2，卡不住！放缩不是越大越好。';
+      note.style.borderColor=RED;
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(c===0?'恰好放缩（绿）盖住 1/k²（黑），上界 < 2':'放过头（红=1/k）远大于 1/k²，上界发散');
+  }
+  draw();
+})();
+
+/* ===== 互动7:累加逼近定值 ===== */
+(function(){
+  const svg=document.getElementById('climbSvg');
+  const Pick=document.getElementById('climbPick');
+  const oN=document.getElementById('clN'),oS=document.getElementById('clS'),oT=document.getElementById('clT'),oU=document.getElementById('clU');
+  let mode=0,shown=1,running=false;const NMAX=14;
+  Pick.onchange=()=>{mode=+Pick.value;shown=NMAX;draw();};
+  function term(k){return mode===0?1/(k*k):1/Math.pow(2,k);}
+  function trueVal(){return mode===0?Math.PI*Math.PI/6:1;}
+  function upper(){return mode===0?2:1;}
+  function draw(){
+    clr(svg);const X0=50,Y0=25,W=600,H=190,base=Y0+H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:base,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:base,x2:X0+W,y2:base,stroke:INK,'stroke-width':3});
+    const yMax=upper()*1.15;
+    function Y(v){return base-(v/yMax)*H;}
+    // upper bound line
+    el(svg,'line',{x1:X0,y1:Y(upper()),x2:X0+W,y2:Y(upper()),stroke:RED,'stroke-width':2,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:X0+W-4,y:Y(upper())-6,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='放缩上界 = '+upper();
+    // true limit
+    el(svg,'line',{x1:X0,y1:Y(trueVal()),x2:X0+W,y2:Y(trueVal()),stroke:BLUE,'stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:X0+W-4,y:Y(trueVal())+16,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'end'}).textContent='真值 ≈ '+trueVal().toFixed(4);
+    // partial sums polyline
+    let S=0;const pts=[];
+    for(let k=1;k<=shown;k++){S+=term(k);const x=X0+(k/(NMAX))*W;pts.push([x,Y(S)]);}
+    let d='';pts.forEach((p,i)=>{d+=(i?'L':'M')+p[0]+' '+p[1]+' ';});
+    el(svg,'path',{d:d,fill:'none',stroke:GREEN,'stroke-width':3});
+    pts.forEach(p=>el(svg,'circle',{cx:p[0],cy:p[1],r:3.5,fill:GREEN,stroke:INK,'stroke-width':1.5}));
+    el(svg,'text',{x:X0+4,y:Y0+12,'font-size':12,'font-weight':900,fill:GREEN}).textContent='部分和 Sₙ（单调↑，被上界压住）';
+    oN.textContent=shown;oS.textContent=S.toFixed(5);oT.textContent=trueVal().toFixed(5);oU.textContent=upper().toFixed(2);
+  }
+  function loop(){if(!running)return;shown++;if(shown>=NMAX){shown=NMAX;running=false;}draw();setTimeout(()=>requestAnimationFrame(loop),260);}
+  document.getElementById('climbGo').onclick=()=>{shown=1;running=true;requestAnimationFrame(loop);};
+  document.getElementById('climbReset').onclick=()=>{shown=NMAX;draw();};
+  draw();
+})();
+
+/* ===== 互动8:双向夹逼 ===== */
+(function(){
+  const svg=document.getElementById('squeezeSvg');
+  const Ns=document.getElementById('sqN');
+  const oL=document.getElementById('sqL'),oM=document.getElementById('sqM'),oU=document.getElementById('sqU'),oOk=document.getElementById('sqOk');
+  let N=5,shown=5,running=false;
+  function sync(){N=+Ns.value;shown=N;draw();}
+  Ns.oninput=sync;
+  function realSum(n){let s=0;for(let k=2;k<=n;k++)s+=1/(k*k);return s;}
+  function draw(){
+    clr(svg);const X0=50,W=600,axisY=140,lo=0,hi=0.75;
+    // number line from lo to hi
+    el(svg,'line',{x1:X0,y1:axisY,x2:X0+W,y2:axisY,stroke:INK,'stroke-width':3});
+    function X(v){return X0+((v-lo)/(hi-lo))*W;}
+    for(let t=0;t<=0.75+1e-9;t+=0.25){el(svg,'line',{x1:X(t),y1:axisY-6,x2:X(t),y2:axisY+6,stroke:INK,'stroke-width':2});el(svg,'text',{x:X(t),y:axisY+22,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t.toFixed(2);}
+    el(svg,'text',{x:X0,y:30,'font-size':13,'font-weight':900,fill:INK}).textContent='夹逼 Σ(k=2→n)1/k²：下界(绿) ≤ 真实和(红) ≤ 上界(蓝)';
+    const n=shown;
+    // upper: sum 1/[k(k-1)] k=2..n = 1 - 1/n ... but for k=2..n of 1/k^2 upper via 1/[k(k-1)] = 1/(k-1)-1/k => sum = 1 - 1/n
+    const upper=1-1/n;
+    // lower: 1/k^2 > 1/[k(k+1)] = 1/k - 1/(k+1); sum k=2..n = 1/2 - 1/(n+1)
+    const lower=0.5-1/(n+1);
+    const real=realSum(n);
+    // clamp to axis range for display
+    function pt(v,col,lab,dy){const x=Math.min(X0+W,Math.max(X0,X(v)));el(svg,'circle',{cx:x,cy:axisY,r:7,fill:col,stroke:INK,'stroke-width':2});el(svg,'line',{x1:x,y1:axisY,x2:x,y2:axisY-42-dy,stroke:col,'stroke-width':2,'stroke-dasharray':'3 3'});el(svg,'text',{x:x,y:axisY-46-dy,'font-size':11.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab+'='+v.toFixed(4);}
+    // bracket
+    el(svg,'rect',{x:X(lower),y:axisY-14,width:Math.max(2,X(upper)-X(lower)),height:28,fill:'rgba(243,192,14,0.25)',stroke:'none'});
+    pt(lower,GREEN,'下界',0);
+    pt(upper,BLUE,'上界',44);
+    pt(real,RED,'真实和',22);
+    oL.textContent=lower.toFixed(4);oM.textContent=real.toFixed(4);oU.textContent=upper.toFixed(4);
+    const ok=(lower<=real+1e-9)&&(real<=upper+1e-9);
+    oOk.textContent=ok?'✔ 在区间内':'—';oOk.style.color=ok?GREEN:INK;
+  }
+  function loop(){if(!running)return;shown++;if(shown>=N){shown=N;running=false;}draw();setTimeout(()=>requestAnimationFrame(loop),300);}
+  document.getElementById('sqGo').onclick=()=>{shown=2;running=true;requestAnimationFrame(loop);};
+  document.getElementById('sqReset').onclick=()=>{sync();};
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 放缩法的核心思路是什么？为什么要放缩？",a:"很多数列的精确和求不出（如 Σ1/n²）。放缩就是把每一项放大或缩小成「能求和」的形式（裂项或等比），再累加，用能算的和去卡住原和。核心：放缩到可求和。"},
+ {q:"2. 证 Σ1/n² < 2 的经典放缩式是什么？为什么要保留第 1 项？",a:"1/n² < 1/[n(n−1)] = 1/(n−1)−1/n（n≥2）。第 1 项要保留，因为 1/[n(n−1)] 在 n=1 时分母为 0 非法。合计 1 + (1−1/n) = 2−1/n < 2。"},
+ {q:"3. 裂项相消后，一般剩下哪些项？如何验证？",a:"一般只剩首尾两项（中间全抵消）。验证方法：写出前 3 项和后 2 项，看中间是否真的成对抵消。隔项裂项（如 (2n−1)(2n+1)）剩的是两头各一项。"},
+ {q:"4. 等比放缩的关键要求是什么？举一个例子。",a:"关键：放缩后的等比数列公比必须 < 1（否则求和发散卡不住）。例：证 Σ1/(2ᵏ−1)<2，k≥2 时 2ᵏ−1≥2ᵏ⁻¹ 故 1/(2ᵏ−1)≤1/2ᵏ⁻¹，等比求和 <1，加首项 1 得 <2。"},
+ {q:"5. 同一个 1/n²，什么时候放大、什么时候缩小？",a:"证「和 < 定值」时放大（用 1/[n(n−1)]，得上界）；证「和 > 定值」时缩小（用 1/[n(n+1)]=1/n−1/(n+1)，得下界）。方向由目标不等号决定。"},
+ {q:"6. 什么叫「放过头」？会有什么后果？",a:"放大力度太大，比如把 1/n² 放成 1/n，上界成了发散的调和级数，远超目标定值，导致「Σ < 2」证不出来。放缩要「刚好能求和，又不超目标」。"},
+ {q:"7. 为什么有时要「保留前几项再放缩」？",a:"因为从第 1 项就放缩可能过头（上界撑爆），或放缩式在小 n 时不成立。保留前几项的精确值，只对后面的小尾巴放缩，既合法又让上界更紧。"},
+ {q:"8. 证 Σ1/k² < 7/4 时，为什么保留 2 项而不是 1 项？",a:"保留 1 项上界只到 2，不够紧证 <7/4。保留前 2 项：1+1/4=5/4，从 k=3 起 Σ1/[k(k−1)]=1/2−1/n<1/2，合计 <5/4+1/2=7/4。多保留一项，界更紧。"},
+ {q:"9. 双向夹逼证 M₁<Σ<M₂ 时，上下界的放缩式一样吗？",a:"不一样。上界要放大（如用 1/[n(n−1)]），下界要缩小（如用 1/[n(n+1)]）。两个方向必须用不同的放缩式，同一式子不可能同时证两个方向。"},
+ {q:"10. 裂项 1/[(2n−1)(2n+1)] 要注意什么？",a:"要乘系数 ½：1/[(2n−1)(2n+1)] = ½[1/(2n−1)−1/(2n+1)]。忘了乘 ½，和会算成 2 倍。裂项后相消剩 ½[1−1/(2n+1)]。"},
+ {q:"11. 1/√n 常用什么放缩？用于证什么？",a:"放大用 1/√n < 2(√n−√(n−1)) 证上界；缩小用 1/√n > 2(√(n+1)−√n) 证下界（发散）。通过有理化构造出「根式的裂项差」，累加相消。"},
+ {q:"12. 放缩法背后的收敛原理是什么？上界是和的精确值吗？",a:"部分和为正→单调递增，放缩给出上界→有界，单调有界必收敛。上界不是精确值：Σ1/n² 上界为 2，但真值是 π²/6≈1.6449。放缩证的是「小于」，不是「等于」。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

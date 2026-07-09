@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遗传比例异常与致死（9:3:3:1的变式）· 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>遗传比例异常与致死<span style="font-size:19px">（9:3:3:1的变式）</span></h1>
+    <p class="lead">自由组合定律里，AaBb 自交本该得 <b>9:3:3:1</b>。可考题里满屏都是 9:7、9:6:1、12:3:1、15:1、13:3、纯合致死后的 3:1……看着吓人，其实全是同一张 16 格棋盘，只是<b>被合并了几格</b>（基因互作）或<b>被划掉了几格</b>（致死）。抓住「16 份是怎么变的」，所有异常比一秒还原。</p>
+
+    <div class="say">🗣️ <b>说人话总览：</b> 所有异常比都是 9:3:3:1 的<b>变形</b>——把 16 份按题目规则<b>合并或删掉</b>几份，就得到新比例。基因互作让不同表型「长得一样」→ 把几类<b>合并</b>相加（9+7=16 的 9:7、9+3+3+1 拆成 9:6:1、12:3:1…）；致死让某些个体<b>活不到统计</b>→ 把几份<b>删掉</b>，分母跟着变小（16→少几份）。抓住「<b>总份数分母</b>」，就抓住了本质：先写死 9:3:3:1，再照规则加减，从不需要死背比例。</div>
+
+    <div class="keybox"><b>一句话心法：</b> <b>先写 9:3:3:1，再合并 / 删格。</b> 合并型分母仍是 16（9:7、9:6:1、12:3:1、15:1、13:3，各份加起来都=16）；致死型分母变小（删几份，剩几份做分母）。看到怪比例，<b>先还原成 9A_B_ : 3A_bb : 3aaB_ : 1aabb</b> 这 16 份，答案自己就跳出来了。</div>
+
+    <h2>① 母体：9:3:3:1 是所有变式的根</h2>
+    <div class="card">
+      <div class="eq">AaBb × AaBb → 9 A_B_ : 3 A_bb : 3 aaB_ : 1 aabb</div>
+      <p style="margin:8px 0"><b>为什么是 9:3:3:1？</b> 两对基因独立遗传，各自 3:1。A_ 占 3/4、aa 占 1/4；B_ 占 3/4、bb 占 1/4。相乘展开：A_B_=9/16、A_bb=3/16、aaB_=3/16、aabb=1/16。总份数 <b>16</b>，这是一切的分母基准。</p>
+      <table>
+        <tr><th>基因型类别</th><th>份数</th><th>含义</th></tr>
+        <tr><td><b>A_B_</b>（两显）</td><td>9</td><td>A 和 B 都至少有一个显性</td></tr>
+        <tr><td><b>A_bb</b>（只 A 显）</td><td>3</td><td>A 显，B 隐（bb）</td></tr>
+        <tr><td><b>aaB_</b>（只 B 显）</td><td>3</td><td>A 隐（aa），B 显</td></tr>
+        <tr><td><b>aabb</b>（两隐）</td><td>1</td><td>A、B 都隐</td></tr>
+      </table>
+      <p class="trap">⚠ 记住这四大类的排列顺序（9-3-3-1 对应 A_B_ / A_bb / aaB_ / aabb），所有变式都是在这四类上「合并同类项」或「划掉」。顺序背错，合并就错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 1 — 9:3:3:1 母体分解：16 格棋盘按四大类着色（4×4 配子表）</div>
+      <svg id="baseSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="baseGo">▶ 逐格填充</button><button id="baseReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>A_B_ (9/16)</b><span id="baseC1">9</span></div>
+        <div><b>A_bb (3/16)</b><span id="baseC2">3</span></div>
+        <div><b>aaB_ (3/16)</b><span id="baseC3">3</span></div>
+        <div><b>aabb (1/16)</b><span id="baseC4">1</span></div>
+      </div>
+      <p class="small">4×4 棋盘的行列各是父母的四种配子（AB、Ab、aB、ab）。每格填一个后代，按四大类着不同色：<b>绿=A_B_（9格）、蓝=A_bb（3格）、橙=aaB_（3格）、红=aabb（1格）</b>。这 16 格就是后面一切变式的「原料」。</p>
+    </div>
+
+    <h2 class="b">② 核心原理：合并 or 删格</h2>
+    <div class="card">
+      <h3>路线一：基因互作 → 表型合并（分母仍 16）</h3>
+      <p style="margin:6px 0">两对基因共同决定<b>一个</b>性状时，某些不同基因型会<b>长成同一表型</b>，于是把它们的份数相加合并：</p>
+      <table>
+        <tr><th>异常比</th><th>合并规则（在 9:3:3:1 上）</th><th>口诀</th></tr>
+        <tr><td><b>9:7</b></td><td>3+3+1 合并 = 7</td><td>两对<b>都显</b>才出新表型，缺一即同</td></tr>
+        <tr><td><b>9:6:1</b></td><td>3+3 合并 = 6</td><td>只有一个显（A_bb、aaB_ 一样）</td></tr>
+        <tr><td><b>12:3:1</b></td><td>9+3 合并 = 12</td><td>只要 A 显就压制（显性上位）</td></tr>
+        <tr><td><b>15:1</b></td><td>9+3+3 合并 = 15</td><td>只要有<b>一个</b>显性就同表型</td></tr>
+        <tr><td><b>13:3</b></td><td>9+3+1 合并 = 13</td><td>抑制型：aaB_ 单独，其余合并</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>验证：</b>每种合并后各份数相加仍 = 16（9+7、9+6+1、12+3+1、15+1、13+3）。这是判断「是不是纯合并型」的金标准。</p>
+      <h3>路线二：致死 → 删格（分母变小）</h3>
+      <p style="margin:6px 0">某些基因型的个体<b>死亡</b>，统计不到，就从 16 份里删掉，剩下的做新分母：</p>
+      <table>
+        <tr><th>致死类型</th><th>删掉什么</th><th>结果（举例 AaBb 自交/单基因 Aa 自交）</th></tr>
+        <tr><td><b>显性纯合致死</b>（AA 死）</td><td>删 AA 那一份</td><td>Aa 自交 1AA:2Aa:1aa → AA 死 → <b>2Aa:1aa = 2:1</b></td></tr>
+        <tr><td><b>隐性纯合致死</b>（aa 死）</td><td>删 aa 那一份</td><td>Aa 自交 → aa 死 → 只剩 AA:Aa = <b>全显（1:2，表型全一样）</b></td></tr>
+        <tr><td><b>某配子致死</b></td><td>删含该配子的所有后代</td><td>雄配子 a 致死等 → 改变配子比 → 后代比重算</td></tr>
+      </table>
+      <div class="mono">解题铁三步：① 先写 9:3:3:1（或 1:2:1）四类 → ② 合并（互作）或删格（致死）→ ③ 数剩下的份数作新比例。</div>
+      <p class="trap">⚠ 合并型分母永远 16（各份相加=16）；致死型分母&lt;16。若各份加起来不等于 16，一定动过「删格」，就要查致死。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎨 互动 2 — 16 格动态合并：点规则看棋盘重新着色成 9:7 / 9:6:1 / 12:3:1 / 15:1 / 13:3</div>
+      <svg id="mergeSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="mergeMode on" data-m="0">原始 9:3:3:1</button>
+        <button class="mergeMode" data-m="1">9:7</button>
+        <button class="mergeMode" data-m="2">9:6:1</button>
+        <button class="mergeMode" data-m="3">12:3:1</button>
+        <button class="mergeMode" data-m="4">15:1</button>
+        <button class="mergeMode" data-m="5">13:3</button>
+      </div>
+      <div class="verdict" id="mergeNote"></div>
+      <p class="small">同一张 16 格棋盘，选不同互作规则，格子就<b>重新分组着色</b>——合并的格子变同一颜色。数每种颜色几格，就是那个异常比。分母始终是 16。</p>
+    </div>
+
+    <h2 class="g">③ 致死：把格子划掉，分母跟着缩</h2>
+    <div class="card">
+      <p style="margin:6px 0">致死的本质是「<b>某些基因型统计不到</b>」。把对应格子从 16 份里<b>划掉</b>，剩下的份数重新做分母、重新算比例。</p>
+      <div class="eq">新比例 = 存活各类份数 : … （分母 = 16 − 死掉份数）</div>
+      <table>
+        <tr><th>题设</th><th>划掉</th><th>剩余 → 新比例</th></tr>
+        <tr><td>AaBb 自交，<b>AA 个体致死</b>（A 显性纯合致死）</td><td>凡含 AA 的格全删</td><td>A 那对 1AA:2Aa:1aa → 删 AA → Aa:aa=2:1；再乘 B 对 3:1 → <b>(2:1)×(3:1)=6:3:2:1</b></td></tr>
+        <tr><td>AaBb 自交，<b>aabb 致死</b></td><td>删那 1 格</td><td>9:3:3:0 → <b>9:3:3</b>（分母 15）</td></tr>
+        <tr><td>AaBb 自交，<b>双显 A_B_ 致死</b></td><td>删 9 格</td><td>剩 3:3:1（分母 7）→ <b>3:3:1</b></td></tr>
+        <tr><td>某种<b>雄配子 ab 致死</b></td><td>父方少一种配子 → 表格少一列</td><td>后代按剩下的配子组合重算</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>配子致死 vs 合子（个体）致死：</b> 配子致死改变的是<b>配子比</b>（少一种或某种减半），要在受精前动手；合子致死改变的是<b>后代基因型比</b>，在 16 份里直接删格。两者别混。</p>
+      <p class="trap">⚠ 显性纯合致死最爱考单基因：Aa 自交本 3:1，AA 死后变 <b>2:1</b>（全隐 aa 占 1/3，杂合显性 Aa 占 2/3）——不是 3:1！这是高频陷阱。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">💀 互动 3 — 致死型：划掉某些格子后重算比例（看分母怎么缩）</div>
+      <svg id="lethalSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="lethalMode on" data-m="0">正常 9:3:3:1</button>
+        <button class="lethalMode" data-m="1">aabb 致死</button>
+        <button class="lethalMode" data-m="2">A_B_ 致死</button>
+        <button class="lethalMode" data-m="3">含 AA 全致死</button>
+      </div>
+      <div class="verdict" id="lethalNote"></div>
+      <p class="small">被划掉（打叉、变灰）的格子代表死亡个体，不计入统计。<b>分母 = 16 − 死格数</b>，剩下的格子重新数就是新比例。注意「含 AA 致死」删的不止一格。</p>
+    </div>
+
+    <h2 class="o">④ 由异常比反推：先还原成 16 份</h2>
+    <div class="card">
+      <p style="margin:6px 0">给你一个怪比例，问基因型 / 互作类型 / 是否致死——<b>倒着走三步</b>：</p>
+      <div class="mono">第1步：把比例各份<b>加起来</b>。和=16（或 16 的因数如 8、4）→ 合并型；和&lt;16 且不整齐 → 致死型。</div>
+      <div class="mono">第2步：还原成 9:3:3:1 四类，看哪几类被<b>合并</b>（同色）或被<b>删</b>（缺格）。</div>
+      <div class="mono">第3步：由「哪些表型合并 / 哪份没了」反推互作规则或致死基因型。</div>
+      <table>
+        <tr><th>看到的比</th><th>各份和</th><th>判定</th></tr>
+        <tr><td>9:7</td><td>16</td><td>基因互作，双显才出新表型（3+3+1 合并）</td></tr>
+        <tr><td>9:6:1</td><td>16</td><td>互作，A_bb 与 aaB_ 合并（3+3）</td></tr>
+        <tr><td>12:3:1</td><td>16</td><td>显性上位，A_ 压制 B（9+3 合并）</td></tr>
+        <tr><td>15:1</td><td>16</td><td>累加/重复基因，只要一显就同（9+3+3）</td></tr>
+        <tr><td>13:3</td><td>16</td><td>抑制型，aaB_ 单出，余合并（9+3+1）</td></tr>
+        <tr><td>2:1</td><td>3</td><td>单基因显性纯合致死（AA 死）</td></tr>
+        <tr><td>6:3:2:1</td><td>12</td><td>AaBb 自交且 AA 致死（(2:1)×(3:1)）</td></tr>
+      </table>
+      <p class="trap">⚠ 反推第一件事永远是<b>还原成 16 份</b>。别被「9:7」这种数字唬住——把它看成 9 和 (3+3+1)，立刻现原形。和不等于 16 的，多半有致死。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌳 互动 4 — 由异常比反推决策树：输入一个比，走流程判类型</div>
+      <svg id="treeSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="treeCase on" data-c="0">9:7</button>
+        <button class="treeCase" data-c="1">9:6:1</button>
+        <button class="treeCase" data-c="2">12:3:1</button>
+        <button class="treeCase" data-c="3">15:1</button>
+        <button class="treeCase" data-c="4">2:1</button>
+        <button class="treeCase" data-c="5">6:3:2:1</button>
+      </div>
+      <div class="verdict" id="treeNote"></div>
+      <p class="small">决策树：<b>各份相加=16？</b> 是→合并型（看合并了哪几类）；否→致死型（看分母缩了多少）。选一个比例，看它一路走到哪个结论。</p>
+    </div>
+
+    <h2 class="v">⑤ 变式比例对照总表（可交互高亮）</h2>
+    <div class="card">
+      <p style="margin:6px 0">一张表看全所有变式：它们都从 9:3:3:1 来，区别只在「合并谁」或「删掉谁」。点下面按钮高亮对应行。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📋 互动 5 — 变式对照表：点比例高亮，看它由 9:3:3:1 怎么变来</div>
+      <svg id="cmpSvg" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cmpRow on" data-r="0">9:3:3:1</button>
+        <button class="cmpRow" data-r="1">9:7</button>
+        <button class="cmpRow" data-r="2">9:6:1</button>
+        <button class="cmpRow" data-r="3">12:3:1</button>
+        <button class="cmpRow" data-r="4">15:1</button>
+        <button class="cmpRow" data-r="5">13:3</button>
+        <button class="cmpRow" data-r="6">2:1</button>
+      </div>
+      <div class="verdict" id="cmpNote"></div>
+      <p class="small">左列是异常比，中列写「怎么从 9:3:3:1 变来」，右列写机制（互作/致死）。高亮的行就是当前选中的。看多了，你会发现它们其实是一家人。</p>
+    </div>
+
+    <h2 class="b">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 基因互作合并型（9:7 / 9:6:1 / 12:3:1 / 15:1 / 13:3）</h3>
+      <p><b class="tag">触发信号：</b>两对基因共同控制<b>一个</b>性状；F₂ 出现 9:7、9:6:1、12:3:1、15:1、13:3 等，各份相加 = 16。</p>
+      <p><b class="tag">标准动作：</b>先写 9A_B_:3A_bb:3aaB_:1aabb → 按题述表型把同表型的类合并相加 → 得比例。</p>
+      <p><b class="tag">示例（带解）：</b>两纯合白花亲本杂交，F₁ 全紫，F₁ 自交 F₂ 紫:白 = 9:7。分析：F₁ 为 AaBb，F₂ 中<b>只有 A_B_（9份）</b>才紫，A_bb+aaB_+aabb（3+3+1=7份）全白。结论：紫花需 A、B <b>两显同时存在</b>（互补基因），9:7 由此而来。</p>
+      <p class="trap">陷阱：把两对基因当两个独立性状（那才是真 9:3:3:1）；合并时数错哪几类同表型；忘了验证各份和=16。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 显性纯合致死型（AA 死 / BB 死）</h3>
+      <p><b class="tag">触发信号：</b>某显性纯合个体不能存活；F₂ 出现 2:1、6:3:2:1 等分母&lt;16 的比。</p>
+      <p><b class="tag">标准动作：</b>对致死那对基因，把 1AA:2Aa:1aa 里的 AA 删掉 → 变 2Aa:1aa（2:1）；另一对正常 3:1；两对相乘。</p>
+      <p><b class="tag">示例（带解）：</b>AaBb 自交，AA 个体致死，求 F₂ 表型比。A 对：删 AA → Aa:aa = 2:1（即 A_:aa = 2:1，注意 A_ 此时只剩 Aa）。B 对正常 B_:bb=3:1。相乘：A_B_:A_bb:aaB_:aabb = (2×3):(2×1):(1×3):(1×1) = <b>6:2:3:1</b>，共 12 份。</p>
+      <p class="trap">陷阱：单基因 Aa 自交 AA 死 → 是 <b>2:1</b> 不是 3:1；相乘时把 A_ 当 3 份（其实致死后只剩 2 份 Aa）；分母还写 16。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 配子致死型</h3>
+      <p><b class="tag">触发信号：</b>某种（雄或雌）配子不育 / 致死；比例不符合常规合子致死，需从配子比重算。</p>
+      <p><b class="tag">标准动作：</b>先确定死掉哪种配子 → 重写该性别的配子比（少一种或某种为 0）→ 用棋盘格重新组合后代。</p>
+      <p><b class="tag">示例（带解）：</b>Aa 个体，含 a 的<b>雄配子</b>全致死。则父方有效配子只剩 A（100%），母方仍 1/2 A、1/2 a。后代：A(父)×[1/2A+1/2a] = 1/2 AA + 1/2 Aa，<b>全为显性（AA:Aa=1:1）</b>，无 aa。若是含 a 的雌雄配子都死，则后代全 AA。</p>
+      <p class="trap">陷阱：把配子致死当合子致死（在 16 份里删格，错）；忘了只有<b>一个</b>性别的配子受影响；父母配子比要分别写。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 由异常比反推基因型 / 机制</h3>
+      <p><b class="tag">触发信号：</b>给出 F₂ 表型比，问亲本基因型、互作方式或是否有致死。</p>
+      <p><b class="tag">标准动作：</b>①各份求和判合并/致死 → ②还原成 9:3:3:1 四类 → ③由合并/缺失的类反推规则。</p>
+      <p><b class="tag">示例（带解）：</b>F₂ 出现 12:3:1。求和=16 → 合并型。还原：12=9+3（A_B_ 与 A_bb 合并，即只要 A 显就同表型），3=aaB_，1=aabb。结论：<b>A 对 B 为显性上位</b>——只要有 A（显性），不管 B 如何都是一种表型。亲本 F₁ 为 AaBb。</p>
+      <p class="trap">陷阱：不先求和就猜；把 12:3:1 的 12 看成一类而不拆成 9+3；分不清 12:3:1（A 上位）与 9:3:4（隐性上位，aa 掩盖 B）。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 连锁初步型（不完全自由组合）</h3>
+      <p><b class="tag">触发信号：</b>两对基因<b>不</b>符合 9:3:3:1，也不是简单合并/致死；亲本型后代明显偏多，重组型偏少。</p>
+      <p><b class="tag">标准动作：</b>判断两对基因是否在<b>同一对同源染色体</b>上（连锁）→ 若完全连锁，AaBb 只产生 AB、ab 两种配子（不产生 Ab、aB）→ 后代不呈 9:3:3:1。</p>
+      <p><b class="tag">示例（带解）：</b>AaBb（A、B 连锁在一条，a、b 在另一条）自交。配子只有 AB、ab 各 1/2。后代 1 AABB : 2 AaBb : 1 aabb → 表型 A_B_:aabb = <b>3:1</b>（像一对基因！）。这就是连锁把「两对」表现成「一对」的效果。</p>
+      <p class="trap">陷阱：把连锁结果硬套 9:3:3:1；混淆连锁（同染色体）与自由组合（不同染色体）；高中阶段一般只考完全连锁的定性判断。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 合并型（互作）分母<b>永远是 16</b>——9:7、9:6:1、12:3:1、15:1、13:3 各份相加都=16。加起来不是 16 就别当纯合并。</p>
+      <p class="trap">② 致死改变的是<b>分母总份数</b>：删几份分母就减几份。aabb 死→分母 15；A_B_ 死→分母 7；含 AA 死→分母 12。</p>
+      <p class="trap">③ 单基因显性纯合致死是 <b>2:1</b>（Aa 自交 AA 死），不是 3:1。这是最爱考的坑。</p>
+      <p class="trap">④ 基因互作要判断<b>哪些表型合并</b>：9:7（缺一即同）、12:3:1（A 上位）、9:3:4（aa 上位）、15:1（一显即同）——合并对象不同，比例不同。</p>
+      <p class="trap">⑤ 由比例反推<b>先还原成 16 份</b>：把 9:7 看成 9 与 (3+3+1)，12:3:1 看成 (9+3):3:1，原理立现。</p>
+      <p class="trap">⑥ <b>配子致死 ≠ 合子致死</b>：配子致死改配子比（受精前），合子致死在 16 份里删格（受精后）。</p>
+      <p class="trap">⑦ 两对基因控制<b>一个</b>性状（互作）才合并；控制<b>两个</b>独立性状才是真 9:3:3:1。审题看是「一个性状」还是「两个性状」。</p>
+      <p class="trap">⑧ 12:3:1（显性上位，A_ 压 B）与 13:3（抑制基因，aaB_ 单出）容易混——都含 12/13 这种大数，要看剩下的是 3:1 还是单个 3。</p>
+      <p class="trap">⑨ 连锁会把「两对基因」表现成「一对」（如 3:1），别硬套自由组合。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切变式=同一张 16 格棋盘的「重新分组」：</b> 基因互作是把格子<b>重新着色分类</b>（合并同表型），致死是把格子<b>擦掉</b>（删格）。两种操作都不改变每格的基因型，只改变「怎么数」。想清楚这点，你永远不用背比例——现场还原 9:3:3:1 再操作即可。</p>
+      <p style="margin:8px 0"><b>② 「各份之和」是最快的诊断指纹：</b> 和=16 → 纯互作合并；和&lt;16（12、7、15…）→ 有合子致死；和是奇怪的数且不能整除 → 查配子致死或连锁。一个加法就能锁定题型大类，比逐个套公式快得多。</p>
+      <p style="margin:8px 0"><b>③ 上位（epistasis）的方向要分清：</b> 显性上位 12:3:1（A_ 掩盖 B 的表现）vs 隐性上位 9:3:4（aa 掩盖 B）。关键看「哪个基因型压制了另一对的表达」。9:3:4 里的 4 = 3(A_bb)+1(aabb)，是 aa 把 B 的差异抹平了。</p>
+      <p style="margin:8px 0"><b>④ 致死的乘法拆分：</b> AaBb 自交且 AA 死 → 不必画 16 格，直接把两对<b>分别</b>处理再相乘：A 对 (2:1)、B 对 (3:1)，乘出 6:3:2:1。多基因致死题一律「分对处理、独立相乘」，比画大棋盘稳得多。</p>
+      <p style="margin:8px 0"><b>⑤ 用比例反推是「解方程」思维：</b> 已知结果比，倒推未知的互作规则或致死基因型，本质是找「哪种合并/删格能生成这个比」。培养「见比知型」的条件反射：3:1 想到致死或连锁，9:7 想到互补，12:3:1 想到显性上位，15:1 想到重复基因。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测（先想，再点开）</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套：自由组合定律基础、基因的自由组合与连锁</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#b8b2a0";
+
+/* 16 格棋盘数据：行=父配子，列=母配子，顺序 AB,Ab,aB,ab */
+const GAMS=["AB","Ab","aB","ab"];
+/* 每格的基因型（合并父母两个配子），及其四大类判定 */
+function cellGeno(r,c){
+  const g1=GAMS[r], g2=GAMS[c];
+  const A=(g1[0]==='A'||g2[0]==='A'); // 是否有显性 A
+  const B=(g1[1]==='B'||g2[1]==='B'); // 是否有显性 B
+  const AAhom=(g1[0]==='A'&&g2[0]==='A'); // AA 纯合
+  return {A:A,B:B,AA:AAhom, g1:g1, g2:g2};
+}
+/* 四大类归属：0=A_B_,1=A_bb,2=aaB_,3=aabb */
+function cellClass(cell){
+  if(cell.A&&cell.B)return 0;
+  if(cell.A&&!cell.B)return 1;
+  if(!cell.A&&cell.B)return 2;
+  return 3;
+}
+const CLASS_COLOR=[GREEN,BLUE,ORANGE,RED];
+
+/* ===== 互动1:9:3:3:1 母体分解棋盘 ===== */
+(function(){
+  const svg=document.getElementById('baseSvg');
+  const oC=[document.getElementById('baseC1'),document.getElementById('baseC2'),document.getElementById('baseC3'),document.getElementById('baseC4')];
+  const X0=120,Y0=70,CELL=68;
+  let shown=16,running=false;
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='AaBb × AaBb → 16 格后代（绿9 蓝3 橙3 红1）';
+    /* 表头：父配子（左列）、母配子（顶行） */
+    el(svg,'text',{x:X0-60,y:Y0-24,'font-size':12,'font-weight':900,fill:INK}).textContent='♀配子→';
+    el(svg,'text',{x:X0-88,y:Y0+CELL*2,'font-size':12,'font-weight':900,fill:INK}).textContent='♂配子';
+    for(let c=0;c<4;c++){
+      el(svg,'text',{x:X0+c*CELL+CELL/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=GAMS[c];
+    }
+    for(let r=0;r<4;r++){
+      el(svg,'text',{x:X0-14,y:Y0+r*CELL+CELL/2+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=GAMS[r];
+    }
+    let count=[0,0,0,0], idx=0;
+    for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+      const cell=cellGeno(r,c);const cls=cellClass(cell);
+      const x=X0+c*CELL,y=Y0+r*CELL;
+      const on=(idx<shown);
+      el(svg,'rect',{x:x,y:y,width:CELL-4,height:CELL-4,fill:on?CLASS_COLOR[cls]:'#fff',stroke:INK,'stroke-width':2.5,opacity:on?0.9:1});
+      if(on){
+        el(svg,'text',{x:x+(CELL-4)/2,y:y+(CELL-4)/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=cell.g1[0]+cell.g2[0]+cell.g1[1]+cell.g2[1];
+        count[cls]++;
+      }
+      idx++;
+    }
+    for(let i=0;i<4;i++)oC[i].textContent=count[i];
+  }
+  function loop(){if(!running)return;shown++;if(shown>=16){shown=16;running=false;}draw();if(running)setTimeout(loop,120);}
+  document.getElementById('baseGo').onclick=()=>{shown=0;running=true;draw();setTimeout(loop,120);};
+  document.getElementById('baseReset').onclick=()=>{shown=16;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动2:16 格动态合并 ===== */
+(function(){
+  const svg=document.getElementById('mergeSvg');const note=document.getElementById('mergeNote');
+  const X0=140,Y0=60,CELL=66;
+  let mode=0;
+  document.querySelectorAll('.mergeMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.mergeMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  /* 返回合并后的“分组ID”和颜色。分组ID相同=同表型 */
+  function group(cls){
+    /* cls: 0=A_B_,1=A_bb,2=aaB_,3=aabb */
+    if(mode===0)return cls; // 9:3:3:1 四组
+    if(mode===1)return (cls===0)?0:1; // 9:7 -> A_B_ 一组，其余一组
+    if(mode===2){ if(cls===0)return 0; if(cls===3)return 2; return 1; } // 9:6:1 -> 3,3合并
+    if(mode===3){ if(cls===0||cls===1)return 0; if(cls===2)return 1; return 2; } // 12:3:1 -> 9+3合并
+    if(mode===4)return (cls===3)?1:0; // 15:1 -> 只有 aabb 单独
+    if(mode===5){ if(cls===2)return 1; return 0; } // 13:3 -> aaB_ 单出
+    return cls;
+  }
+  const GCOLOR=[GREEN,ORANGE,VIO,RED,BLUE];
+  function draw(){
+    clr(svg);
+    const titles=["原始 9:3:3:1","9:7（双显才出）","9:6:1（只一个显合并）","12:3:1（A 显性上位）","15:1（一显即同）","13:3（抑制型）"];
+    el(svg,'text',{x:350,y:24,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=titles[mode];
+    let count={};
+    for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+      const cell=cellGeno(r,c);const cls=cellClass(cell);const g=group(cls);
+      const x=X0+c*CELL,y=Y0+r*CELL;
+      el(svg,'rect',{x:x,y:y,width:CELL-4,height:CELL-4,fill:GCOLOR[g],stroke:INK,'stroke-width':2.5,opacity:0.9});
+      el(svg,'text',{x:x+(CELL-4)/2,y:y+(CELL-4)/2+5,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=cell.g1[0]+cell.g2[0]+cell.g1[1]+cell.g2[1];
+      count[g]=(count[g]||0)+1;
+    }
+    /* 比例说明 */
+    const ratios=["9:3:3:1","9:7","9:6:1","12:3:1","15:1","13:3"];
+    const rules=["两对基因控制两个独立性状，不合并。","A_B_(9) 一色，A_bb+aaB_+aabb(3+3+1=7) 合并一色 → 9:7。","A_B_(9)、A_bb+aaB_(3+3=6)、aabb(1) → 9:6:1。","A_B_+A_bb(9+3=12)、aaB_(3)、aabb(1) → 12:3:1。","A_B_+A_bb+aaB_(9+3+3=15)、aabb(1) → 15:1。","A_B_+A_bb+aabb(9+3+1=13)、aaB_(3) → 13:3。"];
+    /* 数各组格子 */
+    let parts=Object.values(count).sort((a,b)=>b-a).join(":");
+    note.innerHTML='👉 比例 <b>'+ratios[mode]+'</b>（数出格子='+parts+'，和='+Object.values(count).reduce((a,b)=>a+b,0)+'）。'+rules[mode];
+    note.style.borderColor=mode===0?INK:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动3:致死型划格 ===== */
+(function(){
+  const svg=document.getElementById('lethalSvg');const note=document.getElementById('lethalNote');
+  const X0=140,Y0=60,CELL=66;
+  let mode=0;
+  document.querySelectorAll('.lethalMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.lethalMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function isDead(cell,cls){
+    if(mode===0)return false;
+    if(mode===1)return cls===3; // aabb 死
+    if(mode===2)return cls===0; // A_B_ 死
+    if(mode===3)return cell.AA;  // 含 AA 死
+    return false;
+  }
+  function draw(){
+    clr(svg);
+    const titles=["正常 9:3:3:1（无致死）","aabb 致死 → 9:3:3（分母15）","A_B_ 致死 → 3:3:1（分母7）","含 AA 全致死 → 6:2:3:1?（分母12）"];
+    el(svg,'text',{x:350,y:24,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=titles[mode];
+    let count=[0,0,0,0],dead=0;
+    for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+      const cell=cellGeno(r,c);const cls=cellClass(cell);const die=isDead(cell,cls);
+      const x=X0+c*CELL,y=Y0+r*CELL;
+      el(svg,'rect',{x:x,y:y,width:CELL-4,height:CELL-4,fill:die?GREY:CLASS_COLOR[cls],stroke:INK,'stroke-width':2.5,opacity:0.9});
+      el(svg,'text',{x:x+(CELL-4)/2,y:y+(CELL-4)/2+5,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=cell.g1[0]+cell.g2[0]+cell.g1[1]+cell.g2[1];
+      if(die){
+        el(svg,'line',{x1:x,y1:y,x2:x+CELL-4,y2:y+CELL-4,stroke:RED,'stroke-width':3});
+        el(svg,'line',{x1:x+CELL-4,y1:y,x2:x,y2:y+CELL-4,stroke:RED,'stroke-width':3});
+        dead++;
+      }else count[cls]++;
+    }
+    const alive=16-dead;
+    const parts=count.filter(x=>x>0).join(":");
+    let ratio;
+    if(mode===0)ratio="9:3:3:1（分母16）";
+    else if(mode===1)ratio="9:3:3（分母15，aabb 那1格死）";
+    else if(mode===2)ratio="3:3:1（分母7，A_B_ 9格死）";
+    else ratio="6:2:3:1（分母12，含AA的4格死，本质 (2:1)×(3:1)）";
+    note.innerHTML='💀 死 <b>'+dead+'</b> 格，存活 <b>'+alive+'</b> 格 → 各类存活份数 '+parts+' → 比例 <b>'+ratio+'</b>';
+    note.style.borderColor=mode===0?INK:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动4:反推决策树 ===== */
+(function(){
+  const svg=document.getElementById('treeSvg');const note=document.getElementById('treeNote');
+  let c=0;
+  document.querySelectorAll('.treeCase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.treeCase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  const DATA=[
+    {ratio:"9:7",sum:16,merge:true,concl:"合并型：A_B_(9) vs 其余(7)。双显才出新表型 → 互补基因。",path:"and16"},
+    {ratio:"9:6:1",sum:16,merge:true,concl:"合并型：A_bb 与 aaB_ 合并(6)。只一个显性即同 → 累加互作。",path:"and16"},
+    {ratio:"12:3:1",sum:16,merge:true,concl:"合并型：A_B_ 与 A_bb 合并(12)。只要 A 显就同 → 显性上位。",path:"and16"},
+    {ratio:"15:1",sum:16,merge:true,concl:"合并型：9+3+3=15 合并。只要有一显即同 → 重复/累加基因。",path:"and16"},
+    {ratio:"2:1",sum:3,merge:false,concl:"致死型：单基因 Aa 自交，AA 死 → 2Aa:1aa=2:1。",path:"lethal"},
+    {ratio:"6:3:2:1",sum:12,merge:false,concl:"致死型：AaBb 自交且 AA 死 → (2:1)×(3:1)。分母12。",path:"lethal"}
+  ];
+  function box(x,y,w,h,txt,col){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:col,stroke:INK,'stroke-width':3,rx:4});
+    const lines=txt.split("\n");
+    lines.forEach((t,i)=>el(svg,'text',{x:x+w/2,y:y+h/2+5-(lines.length-1)*8+i*16,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=t);
+  }
+  function line(x1,y1,x2,y2,col){el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col||INK,'stroke-width':3});}
+  function draw(){
+    clr(svg);
+    const d=DATA[c];
+    el(svg,'text',{x:350,y:24,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='输入比例：'+d.ratio+'　（各份之和 = '+d.sum+'）';
+    /* 顶：判断框 */
+    box(240,50,220,50,"各份之和 = 16 ?","#fff");
+    /* 左分支：是→合并型 */
+    const yesActive=d.merge, noActive=!d.merge;
+    line(280,100,180,150,yesActive?GREEN:GREY);
+    line(420,100,520,150,noActive?RED:GREY);
+    el(svg,'text',{x:210,y:135,'font-size':13,'font-weight':900,fill:yesActive?GREEN:GREY}).textContent='是';
+    el(svg,'text',{x:475,y:135,'font-size':13,'font-weight':900,fill:noActive?RED:GREY}).textContent='否';
+    box(70,150,220,50,"合并型（基因互作）\n分母仍=16",yesActive?"rgba(30,158,134,0.25)":"#f0ece0");
+    box(430,150,220,50,"致死型\n分母<16，删了格",noActive?"rgba(224,56,42,0.22)":"#f0ece0");
+    /* 结论框 */
+    const cx=yesActive?180:540;
+    line(cx,200,cx,240,yesActive?GREEN:RED);
+    box(120,240,460,72,d.concl,yesActive?"rgba(243,192,14,0.35)":"rgba(243,192,14,0.35)");
+    note.innerHTML='🌳 '+d.ratio+' → 各份和='+d.sum+(d.sum===16?'（=16，走合并型）':'（<16，走致死型）')+' → '+d.concl;
+    note.style.borderColor=yesActive?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动5:变式对照表高亮 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');const note=document.getElementById('cmpNote');
+  let row=0;
+  document.querySelectorAll('.cmpRow').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cmpRow').forEach(x=>x.classList.remove('on'));b.classList.add('on');row=+b.dataset.r;draw();
+  });
+  const ROWS=[
+    ["9:3:3:1","不合并、不删格（母体）","两对基因两个独立性状"],
+    ["9:7","3+3+1 合并=7","互补基因，双显才出新表型"],
+    ["9:6:1","3+3 合并=6","累加互作，只一个显即同"],
+    ["12:3:1","9+3 合并=12","显性上位，A_ 压制 B"],
+    ["15:1","9+3+3 合并=15","重复基因，一显即同"],
+    ["13:3","9+3+1 合并=13","抑制基因，aaB_ 单出"],
+    ["2:1","删 AA 格（分母3）","显性纯合致死（单基因）"]
+  ];
+  function draw(){
+    clr(svg);
+    const X0=30,Y0=50,RW=44,cols=[0,150,430],cw=[150,280,240];
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='变式对照表：都从 9:3:3:1 变来';
+    /* 表头 */
+    const heads=["异常比","怎么从 9:3:3:1 变","机制"];
+    heads.forEach((h,i)=>{
+      el(svg,'rect',{x:X0+cols[i],y:Y0,width:cw[i],height:RW,fill:INK,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0+cols[i]+cw[i]/2,y:Y0+RW/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=h;
+    });
+    ROWS.forEach((r,ri)=>{
+      const y=Y0+(ri+1)*RW;const hot=(ri===row);
+      for(let ci=0;ci<3;ci++){
+        el(svg,'rect',{x:X0+cols[ci],y:y,width:cw[ci],height:RW,fill:hot?YEL:'#fff',stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:X0+cols[ci]+8,y:y+RW/2+5,'font-size':ci===0?14:12,'font-weight':ci===0?900:700,fill:INK}).textContent=r[ci];
+      }
+    });
+    note.innerHTML='🔦 高亮：<b>'+ROWS[row][0]+'</b> — '+ROWS[row][1]+'（'+ROWS[row][2]+'）';
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. AaBb 自交为什么是 9:3:3:1？四大类分别是什么？",a:"两对基因独立遗传，各自 3:1，相乘展开：A_B_=9/16、A_bb=3/16、aaB_=3/16、aabb=1/16。总份数 16，是一切变式的分母基准。"},
+ {q:"2. 一句话说清：所有异常比和 9:3:3:1 是什么关系？",a:"都是 9:3:3:1 的变形——把 16 份按题目规则合并（基因互作，同表型相加）或删掉（致死，个体死亡不计），就得到新比例。抓住总份数分母即抓住本质。"},
+ {q:"3. 9:7 是怎么合并出来的？说明什么机制？",a:"A_B_(9份) 一类，A_bb+aaB_+aabb(3+3+1=7份) 合并成另一类。说明该性状需 A、B 两显同时存在（互补基因），缺一即为另一表型。"},
+ {q:"4. 9:6:1 里的 6 是哪两类合并的？",a:"A_bb(3) 与 aaB_(3) 合并成 6（只有一个显性基因时表型相同）。9=A_B_，1=aabb。这是累加/剂量型互作。"},
+ {q:"5. 12:3:1 说明什么互作？12 由哪两类合并？",a:"显性上位：A_ 只要存在就压制 B 的表现。12=A_B_(9)+A_bb(3)，3=aaB_，1=aabb。"},
+ {q:"6. 15:1 是怎么来的？",a:"A_B_+A_bb+aaB_(9+3+3=15) 合并成一类，只有 aabb(1) 单独。说明只要有一个显性基因就表现同一表型（重复/累加基因）。"},
+ {q:"7. 单基因 Aa 自交，AA 个体致死，后代比是多少？",a:"1AA:2Aa:1aa 中删掉 AA → 剩 2Aa:1aa = 2:1（不是 3:1！）。显性个体占 2/3，隐性占 1/3。这是高频陷阱。"},
+ {q:"8. AaBb 自交，AA 个体致死，F₂ 表型比？",a:"A 对删 AA → 2:1（A_只剩Aa）；B 对正常 3:1。相乘 (2:1)×(3:1)=6:2:3:1（A_B_:A_bb:aaB_:aabb），共 12 份。分母不再是 16。"},
+ {q:"9. 致死改变的是比例的什么？合并改变的又是什么？",a:"致死改变的是分母总份数（删几份分母减几份，分母<16）；合并（互作）不改分母（各份相加仍=16），只是把几类算作同一表型。"},
+ {q:"10. 给你比例 9:6:1，如何反推是合并型还是致死型？",a:"先求和：9+6+1=16=16，说明是合并型（互作），没有致死。再看 6 是 3+3 合并的，判定为累加型互作。反推第一步永远是还原成16份。"},
+ {q:"11. 配子致死和合子（个体）致死有何区别？",a:"配子致死改变配子比（受精前，某种配子减少或为0），要重写父/母配子比再组合；合子致死在16份后代里直接删格（受精后）。两者机制和处理位置不同。"},
+ {q:"12. 若两对基因完全连锁（AB连一条、ab连另一条），AaBb 自交后代表型比？",a:"配子只有 AB、ab 各 1/2 → 后代 1AABB:2AaBb:1aabb → 表型 A_B_:aabb=3:1，像一对基因。连锁把两对表现成一对，不呈 9:3:3:1。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

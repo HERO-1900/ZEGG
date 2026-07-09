@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>螺旋测微器与游标卡尺读数 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>螺旋测微器与游标卡尺读数</h1>
+    <p class="lead">这是实验题的送分点,也是最容易翻车的地方。两把尺子的读数逻辑<b>本质相同</b>:主尺读一个大数,副尺/微分筒读一个小数,加起来就是结果。难点只有三个:<b>精度对应</b>、<b>估读规则</b>、<b>半刻度是否露出</b>。搞定这三点,读数一分不丢。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 这两把尺子都是「<b>主尺读大数 + 副尺/微分筒读小数</b>」,加起来就是答案。区别只有两点:①<b>游标卡尺不估读</b>——找哪条游标线跟主尺对齐,数格数×精度即可,末位是死的;②<b>螺旋测微器要估读</b>——必须估到千分位(0.001mm),末位是你「估」出来的一位。记住:游标卡尺读到精度那位就停,螺旋测微器再往下多估一位。</div>
+
+    <div class="keybox"><b>两把尺子一句话公式:</b><br>游标卡尺:<b>读数 = 主尺整毫米数 + 对齐格数 n × 精度</b>(精度 = 1mm ÷ 分度数;不估读)。<br>螺旋测微器:<b>读数 = 固定刻度(含半刻度) + 可动刻度格数 × 0.01mm + 估读一位</b>(必须估到 0.001mm)。</div>
+
+    <h2>① 游标卡尺:主尺 + 游标,不估读</h2>
+    <div class="card">
+      <div class="eq">读数 = 主尺整毫米 + n × 精度　(精度 = 1mm ÷ 分度数)</div>
+      <p style="margin:8px 0">游标卡尺分两部分:<b>主尺</b>(以毫米为单位,直接读游标「0」刻线左边的整毫米数)和<b>游标尺</b>(数第几条线 n 跟主尺某条线<b>正好对齐</b>,乘以精度)。<b>游标卡尺不估读</b>——它靠「对齐」定位,末位是确定的。</p>
+      <table>
+        <tr><th>分度数</th><th>精度(分度值)</th><th>游标总长</th><th>末位到</th></tr>
+        <tr><td><b>10 分度</b></td><td>0.1 mm</td><td>9mm 分成 10 格</td><td>0.1 mm(1 位小数)</td></tr>
+        <tr><td><b>20 分度</b></td><td>0.05 mm</td><td>19mm 分成 20 格</td><td>0.05 mm(2 位小数)</td></tr>
+        <tr><td><b>50 分度</b></td><td>0.02 mm</td><td>49mm 分成 50 格</td><td>0.02 mm(2 位小数)</td></tr>
+      </table>
+      <p class="trap">⚠ 游标卡尺<b>绝对不估读</b>!读到精度那一位就结束。20 分度写成 0.05 的整数倍(如 .05、.10、.15…),50 分度写成 0.02 的整数倍(如 .02、.04、.06…),不许出现别的尾数。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 1 — 游标卡尺可拖动:主尺 + 游标对齐格高亮,实时算读数(10/20/50 分度可切换)</div>
+      <svg id="vcSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="vcmode on" data-n="10">10 分度</button>
+        <button class="vcmode" data-n="20">20 分度</button>
+        <button class="vcmode" data-n="50">50 分度</button>
+        <label>拖动游标 <input id="vcSlide" type="range" min="0" max="300" value="123" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>精度(分度值)</b><span id="vcPre">0</span></div>
+        <div><b>主尺整毫米</b><span id="vcMain">0</span></div>
+        <div><b>对齐格 n × 精度</b><span id="vcSub">0</span></div>
+        <div><b>读数 = 主 + 副</b><span id="vcTot">0</span></div>
+      </div>
+      <p class="small">拖动滑块移动游标,<b>红色高亮</b>的那条游标线就是与主尺刻线对齐的第 n 条。读数 = 游标「0」左侧整毫米 + n×精度。切换分度数看精度怎么变,注意<b>末位永远是精度的整数倍</b>。</p>
+    </div>
+
+    <h2 class="b">② 螺旋测微器:固定刻度 + 微分筒,要估读</h2>
+    <div class="card">
+      <div class="eq">读数 = 固定刻度(含半刻度) + 可动刻度 × 0.01 + 估读一位　(mm)</div>
+      <p style="margin:8px 0">螺旋测微器(千分尺)也分两部分:<b>固定刻度</b>(套筒上,主尺,每格 0.5mm——上排整毫米、下排半毫米交错)和<b>可动刻度</b>(微分筒上,一圈 50 格,每格 0.01mm)。读数时:</p>
+      <div class="mono">第1步:读固定刻度露出的整毫米数(看下沿最后一条露出的整刻线)。</div>
+      <div class="mono">第2步:看固定刻度的「半刻度线」有没有露出——露出就 +0.5mm,没露就不加。</div>
+      <div class="mono">第3步:读可动刻度与固定刻度中线对齐的格数 × 0.01mm,再往下估读一位(到 0.001mm)。</div>
+      <p style="margin:8px 0"><b>精度 0.01mm,估读到 0.001mm。</b> 螺旋测微器<b>必须估读一位</b>,末位是估出来的,结果一定有三位小数。</p>
+      <p class="trap">⚠ 半刻度线露出与否决定要不要 +0.5mm,这是头号失分点。可动刻度已经转过一整圈(50 格)就意味着半刻度露出,别漏了那 0.5mm。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌀 互动 2 — 螺旋测微器:旋转微分筒,固定刻度 + 可动刻度实时读数(含半刻度露出判断)</div>
+      <svg id="mcSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="mcRotL">◀ 退回</button><button id="mcRotR">拧进 ▶</button>
+        <label>整毫米 <input id="mcMain" type="range" min="0" max="10" value="5" step="1"></label>
+        <label>微分筒格数 <input id="mcThim" type="range" min="0" max="49.5" value="20" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>固定整毫米</b><span id="mcInt">0</span></div>
+        <div><b>半刻度露出?</b><span id="mcHalf">否</span></div>
+        <div><b>可动 × 0.01(估一位)</b><span id="mcFrac">0</span></div>
+        <div><b>读数(mm)</b><span id="mcTot">0</span></div>
+      </div>
+      <p class="small">左侧固定刻度:上排整毫米、下排半毫米(交错)。右侧微分筒转到与中线对齐的格数×0.01mm,末位<b>估读</b>。当微分筒格数 ≥ 已过半圈,固定刻度的<b>半刻度线露出</b>→ 读数要 <b>+0.5mm</b>。</p>
+    </div>
+
+    <h2 class="g">③ 估读规则:一个估,一个不估</h2>
+    <div class="card">
+      <p style="margin:6px 0">读数「读到哪一位、要不要估」是本主题的分水岭。规则极简,但年年有人搞反:</p>
+      <table>
+        <tr><th>仪器</th><th>精度</th><th>末位是</th><th>要不要估读</th></tr>
+        <tr><td><b>刻度尺</b>(mm 刻度)</td><td>1 mm</td><td>0.1mm 位</td><td>要,估读到 0.1mm</td></tr>
+        <tr><td><b>游标卡尺</b></td><td>0.1/0.05/0.02mm</td><td>精度那一位</td><td><b>不估读</b></td></tr>
+        <tr><td><b>螺旋测微器</b></td><td>0.01 mm</td><td>0.001mm 位</td><td><b>要,估读到 0.001mm</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一句话记忆:</b> 「<b>游标不估,螺旋要估;刻度尺也要估</b>」。凡是靠「对齐」定位的(游标卡尺),末位确定不估;凡是连续刻度需要「看比例」的(刻度尺、螺旋测微器),末位要估一位。</p>
+      <p class="trap">⚠ 螺旋测微器读数末尾必须写三位小数(哪怕估读是 0,也要写成 …0)。游标卡尺读数末尾必须是精度的整数倍,写多了小数位反而错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 3 — 估读位数示意:同一长度,三种仪器读到不同位数(估/不估对比)</div>
+      <svg id="esSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>被测长度 (mm) <input id="esLen" type="range" min="1" max="30" value="12.34" step="0.01"></label>
+      </div>
+      <div class="live">
+        <div><b>刻度尺(估到 0.1)</b><span id="esRuler">0</span></div>
+        <div><b>游标 50 分度(不估)</b><span id="esVern">0</span></div>
+        <div><b>螺旋(估到 0.001)</b><span id="esMic">0</span></div>
+        <div><b>末位性质</b><span id="esNote">-</span></div>
+      </div>
+      <p class="small">同一长度用三种仪器测:刻度尺读到 0.1mm(末位估)、游标卡尺读到精度位(末位<b>不</b>估、是精度整数倍)、螺旋测微器读到 0.001mm(末位估)。看三根尺子把同一个数「切」到不同精度。</p>
+    </div>
+
+    <h2 class="o">④ 精度对比:10 / 20 / 50 分度</h2>
+    <div class="card">
+      <p style="margin:6px 0">游标卡尺的精度全由分度数决定:<b>精度 = 主尺 1mm ÷ 分度数</b>。分度越密,精度越高,但读数末位规则也越严。</p>
+      <table>
+        <tr><th>分度数</th><th>游标每格</th><th>精度</th><th>合法末位举例</th></tr>
+        <tr><td>10</td><td>0.9 mm</td><td>0.1 mm</td><td>.1 .2 .3 … .9</td></tr>
+        <tr><td>20</td><td>0.95 mm</td><td>0.05 mm</td><td>.05 .10 .15 .20 …</td></tr>
+        <tr><td>50</td><td>0.98 mm</td><td>0.02 mm</td><td>.02 .04 .06 .08 …</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>原理:</b> 游标 n 格总长 =(每毫米数−精度)×格数,与主尺相差正好一个精度。所以第 n 条游标线对齐时,读数就多 n×精度。这就是「游标原理」——用「差一点点」放大出小数位。</p>
+      <p class="trap">⚠ 精度记反是重灾区:分度越多精度越<b>小</b>(越精确)。50 分度精度 0.02mm 最高,10 分度 0.1mm 最粗。别把 50 分度当成「精度 0.5」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 4 — 10/20/50 分度精度对比:三把游标并排,看格宽与精度关系</div>
+      <svg id="cpSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cphi on" data-n="10">高亮 10 分度</button>
+        <button class="cphi" data-n="20">高亮 20 分度</button>
+        <button class="cphi" data-n="50">高亮 50 分度</button>
+      </div>
+      <div class="verdict" id="cpNote"></div>
+      <p class="small">三把游标叠在同一段主尺上:10 分度每格 0.9mm(疏)、20 分度 0.95mm、50 分度 0.98mm(密)。游标格越接近 1mm,精度越高。<b>精度 = 1mm − 每格长</b>,一目了然。</p>
+    </div>
+
+    <h2 class="v">⑤ 量程与适用:选哪把尺</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>游标卡尺</th><th>螺旋测微器</th><th>刻度尺</th></tr>
+        <tr><td>精度</td><td>0.1~0.02 mm</td><td><b>0.01 mm</b>(最高)</td><td>1 mm(估到 0.1)</td></tr>
+        <tr><td>量程</td><td>较大(0~15cm 等)</td><td><b>较小</b>(常 0~25mm)</td><td>大</td></tr>
+        <tr><td>估读</td><td>不估</td><td>估一位</td><td>估一位</td></tr>
+        <tr><td>擅长测</td><td>内/外径、深度、长度</td><td>细丝直径、薄片厚度</td><td>较长物体粗测</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>选尺口诀:</b> 要<b>更高精度</b>(测细金属丝直径、薄纸厚度)→ 螺旋测微器;要<b>较大量程 + 测内外径/深度</b>→ 游标卡尺;只需粗测长物 → 刻度尺。题目给「测量精度要求 0.01mm」或「金属丝直径」→ 直接选螺旋测微器。</p>
+      <p class="trap">⚠ 别用螺旋测微器测大尺寸(量程小,常 25mm 以内);也别指望游标卡尺达到 0.01mm 精度(最高才 0.02mm)。选尺看两点:精度够不够、量程够不够。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 仪器选择器:给测量对象与精度要求,推荐用哪把尺</div>
+      <svg id="chSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="chcase on" data-c="0">测细铜丝直径</button>
+        <button class="chcase" data-c="1">测圆管内径</button>
+        <button class="chcase" data-c="2">测课本厚度</button>
+        <button class="chcase" data-c="3">测桌子长度</button>
+      </div>
+      <div class="verdict" id="chNote"></div>
+      <p class="small">点不同的测量任务,看系统按「所需精度 + 尺寸量程」推荐哪把尺,并说明理由。细丝/薄片 → 螺旋测微器;内外径/深度 → 游标卡尺;长物粗测 → 刻度尺。</p>
+    </div>
+
+    <h2 class="r">⑥ 读数三步分解</h2>
+    <div class="card">
+      <p style="margin:6px 0">无论哪把尺,读数都拆成「<b>大数 + 小数 + (估位)</b>」三步。把它拆开,就不会漏项或算错。</p>
+      <h3>游标卡尺三步</h3>
+      <div class="mono">① 主尺:游标「0」刻线左侧最近的整毫米数(如 12mm)。</div>
+      <div class="mono">② 游标:哪条线与主尺对齐 → 第 n 条 → n × 精度(如 6 × 0.05 = 0.30mm)。</div>
+      <div class="mono">③ 相加,不估读 → 12 + 0.30 = 12.30mm。</div>
+      <h3>螺旋测微器三步</h3>
+      <div class="mono">① 固定刻度整毫米 + 半刻度(露出加 0.5mm,如 5.5mm)。</div>
+      <div class="mono">② 可动刻度对齐格 × 0.01mm(如 20.0 × 0.01 = 0.200mm)。</div>
+      <div class="mono">③ 估读一位相加 → 5.5 + 0.200 = 5.700mm。</div>
+      <p class="trap">⚠ 螺旋测微器第①步的半刻度、第②步的估读位,是两处最常漏的地方。养成「整毫米→半刻度→格数→估读」四问的习惯。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧩 互动 6 — 读数三步分解:任给一个读数,动画拆成 大数 + 小数 + 估位</div>
+      <svg id="stSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="stmode on" data-m="0">游标 50 分度</button>
+        <button class="stmode" data-m="1">螺旋测微器</button>
+        <button id="stStep">▶ 逐步分解</button>
+      </div>
+      <div class="verdict" id="stNote"></div>
+      <p class="small">点「逐步分解」,把一个读数一步步拆开:先亮出「主尺大数」,再加「副尺/微分筒小数」,螺旋测微器最后再加「估读位」。看清每一位从哪来。</p>
+    </div>
+
+    <h2 class="b">⑦ 由读数反推:还原尺的位置</h2>
+    <div class="card">
+      <p style="margin:6px 0">高考常反着考:<b>给你一个读数,问游标第几条线对齐 / 微分筒转到第几格</b>。这是检验你是否真懂读数原理。</p>
+      <h3>游标卡尺反推</h3>
+      <div class="mono">读数 12.30mm,50 分度:小数部分 0.30mm ÷ 0.02 = 第 15 条游标线对齐;主尺 0 刻线落在 12mm 与 13mm 之间。</div>
+      <h3>螺旋测微器反推</h3>
+      <div class="mono">读数 5.700mm:固定刻度 5.5mm(半刻度已露),可动刻度 (5.700−5.5)÷0.01 = 20.0 格与中线对齐。</div>
+      <p class="trap">⚠ 反推时先分离「大数」和「小数」:游标卡尺小数÷精度=第几条线;螺旋测微器要先判断有没有半刻度(小数 ≥0.5 就有),减掉后再÷0.01 得格数。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 7 — 由读数还原尺的位置:输入读数,反向画出游标/微分筒该停在哪</div>
+      <svg id="rvSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rvmode on" data-m="0">游标 50 分度</button>
+        <button class="rvmode" data-m="1">螺旋测微器</button>
+        <label>目标读数 <input id="rvVal" type="range" min="0" max="25" value="12.30" step="0.01"></label>
+      </div>
+      <div class="live">
+        <div><b>目标读数(mm)</b><span id="rvR">0</span></div>
+        <div><b>主尺整毫米</b><span id="rvInt">0</span></div>
+        <div><b>小数部分</b><span id="rvFrac">0</span></div>
+        <div><b>对齐第几格</b><span id="rvGrid">0</span></div>
+      </div>
+      <p class="small">拨动目标读数,程序反推:主尺整毫米数、小数部分,以及游标第几条线(或微分筒第几格)与主尺对齐,并把它画出来。这是读数原理的「逆运算」。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 游标卡尺 10 分度读数</h3>
+      <p><b class="tag">触发信号:</b>图上游标共 10 格(9mm 长),或题目写「10 分度游标卡尺」,精度 0.1mm。</p>
+      <p><b class="tag">标准动作:</b>① 读游标「0」左侧整毫米;② 找对齐的第 n 条游标线,乘 0.1mm;③ 相加,<b>不估读</b>,结果一位小数。</p>
+      <p><b class="tag">示例(带解):</b>游标「0」在主尺 21mm 与 22mm 之间 → 主尺 21mm;第 4 条游标线与主尺对齐 → 4×0.1=0.4mm。读数 = 21+0.4 = <b>21.4mm</b>。</p>
+      <p class="trap">陷阱:给 10 分度硬加估读位(写 21.40 是错的);主尺整毫米数看多一格。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 游标卡尺 20 / 50 分度读数</h3>
+      <p><b class="tag">触发信号:</b>游标 20 格(精度 0.05mm)或 50 格(精度 0.02mm);末位要写两位小数。</p>
+      <p><b class="tag">标准动作:</b>主尺整毫米 + n×精度。20 分度末位是 0.05 的整数倍,50 分度末位是 0.02 的整数倍。<b>不估读</b>。</p>
+      <p><b class="tag">示例(带解):</b>50 分度,主尺读 8mm,第 15 条游标线对齐 → 15×0.02=0.30mm。读数 = 8+0.30 = <b>8.30mm</b>。(注意 0.30 是 0.02 的 15 倍,合法。)</p>
+      <p class="trap">陷阱:50 分度末位写成 0.03(不是 0.02 整数倍);数错对齐的第几条线;精度记成 0.05/0.02 互换。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 螺旋测微器读数(半刻度露 / 不露)</h3>
+      <p><b class="tag">触发信号:</b>图中固定套筒 + 微分筒;要判断固定刻度的半毫米线是否露出。精度 0.01mm,估到 0.001mm。</p>
+      <p><b class="tag">标准动作:</b>固定整毫米 →(半刻度露出 +0.5)→ 可动格数×0.01 → 估读一位,四项相加。</p>
+      <p><b class="tag">示例(带解):</b>固定刻度露出 5mm,且半刻度线<b>已露</b> → 5.5mm;微分筒 20.0 格与中线对齐 → 0.200mm;估读 0。读数 = 5.5+0.200 = <b>5.700mm</b>。若半刻度<b>没露</b>,则只 5+0.200 = 5.200mm。</p>
+      <p class="trap">陷阱:漏掉 +0.5mm(最常见!);忘记估读一位(少写第三位小数);微分筒格数看错方向。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 仪器选择与精度</h3>
+      <p><b class="tag">触发信号:</b>「用什么仪器测更合适」「精度要求 0.01mm」「测金属丝直径 / 内外径 / 长物」。</p>
+      <p><b class="tag">标准动作:</b>看两点——所需精度、尺寸量程。要 0.01mm 或测细丝薄片 → 螺旋测微器;测内外径/深度且量程大 → 游标卡尺;长物粗测 → 刻度尺。</p>
+      <p><b class="tag">示例(带解):</b>「测一根细铜丝直径,精度到 0.01mm」→ 选<b>螺旋测微器</b>(精度 0.01mm、量程适配细丝);游标卡尺最高才 0.02mm,不够。</p>
+      <p class="trap">陷阱:用螺旋测微器测大尺寸(量程不够);用游标卡尺想达 0.01mm(达不到)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 由读数反推对齐格</h3>
+      <p><b class="tag">触发信号:</b>给一个读数,问「游标第几条线对齐」「微分筒转到第几格」「主尺 0 落在哪」。</p>
+      <p><b class="tag">标准动作:</b>分离大数与小数。游标:小数÷精度=第 n 条线。螺旋:先判半刻度(小数≥0.5 则有),扣掉后÷0.01=格数。</p>
+      <p><b class="tag">示例(带解):</b>读数 8.30mm、50 分度 → 整数 8mm,小数 0.30÷0.02=<b>第 15 条</b>游标线对齐。读数 5.700mm 螺旋 → 半刻度露(5.5),(5.700−5.5)÷0.01=<b>20.0 格</b>。</p>
+      <p class="trap">陷阱:螺旋测微器忘判半刻度就直接÷0.01(格数会超过 50);游标÷错精度。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 读数综合(多次测量取平均/误差)</h3>
+      <p><b class="tag">触发信号:</b>给多组读数求平均值,或结合零误差(初读数不为 0)修正。</p>
+      <p><b class="tag">标准动作:</b>先按各自规则读出每组值(游标不估、螺旋估一位),再平均。有零误差要「测量值 − 零误差」。</p>
+      <p><b class="tag">示例(带解):</b>螺旋测微器零读数为 +0.005mm(未夹时),测得 5.700mm → 真实值 = 5.700−0.005 = <b>5.695mm</b>。多次测量则先各自修正再取平均。</p>
+      <p class="trap">陷阱:忘减零误差;平均时把游标读数也加了估读位;正负零误差方向搞反。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>游标卡尺不估读!</b>读到精度那一位就停。10 分度写一位小数、20/50 分度写两位小数,末位必须是精度整数倍。</p>
+      <p class="trap">② <b>螺旋测微器必须估读一位!</b>末位到 0.001mm,结果一定三位小数(哪怕估读是 0 也要写 …0)。</p>
+      <p class="trap">③ <b>半毫米刻度是否露出</b>决定要不要 +0.5mm。露出就加,没露就不加——头号失分点。</p>
+      <p class="trap">④ 精度对应别记反:分度越多精度越<b>小</b>。10→0.1、20→0.05、50→0.02;螺旋 0.01。</p>
+      <p class="trap">⑤ 单位统一为 <b>mm</b>。别把 0.30mm 写成 0.3cm;别把主尺当 cm 读。</p>
+      <p class="trap">⑥ 数「第几条游标线对齐」要数<b>正好重合</b>的那条,不是最接近的——对齐是唯一的。</p>
+      <p class="trap">⑦ 螺旋测微器读数四步:整毫米 → 半刻度 → 格数×0.01 → 估读,一步都不能漏。</p>
+      <p class="trap">⑧ 有<b>零误差</b>时:真实值 = 测量值 − 零误差(带正负号)。别忘修正。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 游标原理的本质是「差频放大」:</b> 游标 n 格总长比主尺短 n×精度。当第 k 条游标线与主尺重合,意味着游标「0」偏离整毫米正好 k×精度。理解这点,任何分度数你都能现推精度(1mm÷分度数),不用背表。</p>
+      <p style="margin:8px 0"><b>② 「估不估」由定位方式决定:</b> 靠「刻线重合」定位的(游标卡尺),位置是离散确定的,末位没有可估的余地 → 不估;靠「连续刻度看比例」的(刻度尺、螺旋测微器),末位在两刻线之间,天然要估一位。抓住这条,永远不会记反。</p>
+      <p style="margin:8px 0"><b>③ 螺旋测微器 = 「螺距放大」:</b> 微分筒转一圈,主尺前进一个螺距 0.5mm,而微分筒圆周被分成 50 格 → 每格 0.01mm。把「转动」放大成「圆周长度」,才能读到 0.01mm 并估到 0.001mm。半刻度就是「转过了整数圈之外还多半圈」的痕迹。</p>
+      <p style="margin:8px 0"><b>④ 有效数字位数由精度决定:</b> 读数末位应恰好落在仪器精度那一位(游标)或再估一位(螺旋)。写多写少都算错。判卷时「位数」本身就是得分点,养成「末位与仪器精度对齐」的直觉。</p>
+      <p style="margin:8px 0"><b>⑤ 零误差修正是系统误差思维:</b> 未夹物时的读数(零点漂移)是恒定系统误差,真实值 = 测量值 − 零误差。它不随被测量变化,所以能「一减了之」。这与随机误差(靠多次平均消除)是两套思路,别混。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 实验读数专题:游标卡尺 + 螺旋测微器</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:游标卡尺可拖动 ===== */
+(function(){
+  const svg=document.getElementById('vcSvg');
+  const slide=document.getElementById('vcSlide');
+  const oPre=document.getElementById('vcPre'),oMain=document.getElementById('vcMain'),oSub=document.getElementById('vcSub'),oTot=document.getElementById('vcTot');
+  let N=10;
+  document.querySelectorAll('.vcmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.vcmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');N=+b.dataset.n;draw();
+  });
+  slide.oninput=draw;
+  function draw(){
+    clr(svg);
+    const prec=1/N; // mm per grade
+    // reading determined by slider: reading in mm
+    const maxR=25;
+    const reading=(+slide.value/300)*maxR; // 0..25 mm
+    // decompose
+    const mainMM=Math.floor(reading);
+    // aligned grade n = round(frac/prec), snap reading to grid (vernier is discrete)
+    let frac=reading-mainMM;
+    let n=Math.round(frac/prec);
+    if(n>=N){n=0;} // wrap handled by main
+    const snapReading=mainMM+n*prec;
+    // geometry
+    const X0=40,scale=18; // px per mm on main scale
+    const mainY=70,vernY=130;
+    // main scale ruler
+    el(svg,'rect',{x:X0-10,y:mainY-40,width:640,height:40,fill:'#fbf7ea',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0-6,y:mainY-46,'font-size':12,'font-weight':900,fill:INK}).textContent='主尺 (mm)';
+    for(let mm=0;mm<=32;mm++){
+      const x=X0+mm*scale;
+      if(x>660)break;
+      const big=(mm%5===0);
+      el(svg,'line',{x1:x,y1:mainY,x2:x,y2:mainY-(big?26:14),stroke:INK,'stroke-width':big?2.5:1.4});
+      if(big)el(svg,'text',{x:x,y:mainY-30,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=mm;
+    }
+    // vernier position: its "0" sits at snapReading
+    const vernX0=X0+snapReading*scale;
+    // vernier body
+    const vernLen=(N-1)*1*scale; // (N-1) mm long in main units? vernier total = (N* (1-prec)) mm
+    const vTotal=N*(1-prec); // total length of vernier in mm = 9,19,49 -> too long; use scale for drawing
+    const vDrawLen=vTotal*scale;
+    el(svg,'rect',{x:vernX0-4,y:vernY-2,width:vDrawLen+8,height:44,fill:'rgba(243,192,14,0.16)',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:vernX0-4,y:vernY+58,'font-size':12,'font-weight':900,fill:INK}).textContent='游标 ('+N+'分度, 精度'+prec.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'mm)';
+    // vernier ticks: grade i at (i*(1-prec)) mm from vernX0
+    for(let i=0;i<=N;i++){
+      const gx=vernX0+i*(1-prec)*scale;
+      const isN=(i===n);
+      const big=(i%5===0)||isN;
+      el(svg,'line',{x1:gx,y1:vernY,x2:gx,y2:vernY+(big?30:18),stroke:isN?RED:INK,'stroke-width':isN?3.5:(big?2.2:1.3)});
+      if(i%5===0||isN)el(svg,'text',{x:gx,y:vernY+44,'font-size':10.5,'font-weight':isN?900:700,fill:isN?RED:INK,'text-anchor':'middle'}).textContent=i;
+    }
+    // highlight aligned line up to main scale
+    const alignX=vernX0+n*(1-prec)*scale;
+    el(svg,'line',{x1:alignX,y1:mainY,x2:alignX,y2:vernY,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:alignX,y:mainY+16,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='第'+n+'线对齐';
+    // pointer for vernier 0
+    el(svg,'polygon',{points:vernX0+','+(mainY+4)+' '+(vernX0-6)+','+(mainY+16)+' '+(vernX0+6)+','+(mainY+16),fill:RED});
+    // stats
+    oPre.textContent=prec.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'mm';
+    oMain.textContent=mainMM+'mm';
+    oSub.textContent=n+'×'+prec.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'='+(n*prec).toFixed(2)+'mm';
+    const dec=(N===10)?1:2;
+    oTot.textContent=snapReading.toFixed(dec)+'mm';
+  }
+  draw();
+})();
+
+/* ===== 互动2:螺旋测微器 ===== */
+(function(){
+  const svg=document.getElementById('mcSvg');
+  const mainS=document.getElementById('mcMain'),thimS=document.getElementById('mcThim');
+  const oInt=document.getElementById('mcInt'),oHalf=document.getElementById('mcHalf'),oFrac=document.getElementById('mcFrac'),oTot=document.getElementById('mcTot');
+  let intMM=5,thim=20;
+  mainS.oninput=thimS.oninput=draw;
+  document.getElementById('mcRotR').onclick=()=>{thim=Math.min(49.5,thim+2.5);thimS.value=thim;draw();};
+  document.getElementById('mcRotL').onclick=()=>{thim=Math.max(0,thim-2.5);thimS.value=thim;draw();};
+  function draw(){
+    clr(svg);
+    intMM=+mainS.value;thim=+thimS.value;
+    // half exposed when thimble beyond half turn -> we let user decide via thimble>=25 as "half revealed" demo?
+    // Convention: 半刻度露出 if the thimble edge passes the half line. We'll say half exposed when thim>=25.
+    const half=(thim>=25);
+    const est=0; // estimated digit fixed 0 for clarity (or derive)
+    const frac=thim*0.01;
+    const reading=intMM+(half?0.5:0)+frac;
+    // ---- draw fixed scale (sleeve) ----
+    const sx=60,sy=80,sw=380;
+    el(svg,'rect',{x:sx,y:sy,width:sw,height:70,fill:'#f2ede0',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sx,y:sy-8,'font-size':12,'font-weight':900,fill:INK}).textContent='固定刻度(套筒), 每格0.5mm';
+    // center reference line
+    const midY=sy+35;
+    el(svg,'line',{x1:sx,y1:midY,x2:sx+sw,y2:midY,stroke:RED,'stroke-width':2});
+    el(svg,'text',{x:sx+sw+4,y:midY+4,'font-size':10.5,'font-weight':800,fill:RED}).textContent='中线';
+    // tick spacing: each 0.5mm shown; how many revealed = intMM*2 (+1 if half)
+    const revealed=intMM*2+(half?1:0);
+    const perGrade=18;
+    for(let i=0;i<=revealed;i++){
+      const x=sx+8+i*perGrade;
+      if(x>sx+sw-6)break;
+      const isInt=(i%2===0);
+      // upper tick = integer mm, lower tick = half mm
+      if(isInt){
+        el(svg,'line',{x1:x,y1:midY,x2:x,y2:sy+8,stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:x,y:sy+6,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(i/2);
+      }else{
+        el(svg,'line',{x1:x,y1:midY,x2:x,y2:sy+62,stroke:INK,'stroke-width':1.6});
+      }
+    }
+    // edge of thimble (moving barrel) at position after revealed
+    const edgeX=sx+8+revealed*perGrade+4;
+    // ---- draw thimble (rotating) on right ----
+    const tx=sx+sw+30,ty=sy-6,tw=170,th=88;
+    if(tx+tw<690){
+      el(svg,'rect',{x:tx,y:ty,width:tw,height:th,fill:'#efe7d2',stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:tx,y:ty-2,'font-size':12,'font-weight':900,fill:INK}).textContent='微分筒(50格/圈)';
+      // show 5 grades around the aligned one
+      const alignGrade=Math.round(thim*2)/2;
+      const midTY=ty+th/2;
+      el(svg,'line',{x1:tx,y1:midTY,x2:tx+tw,y2:midTY,stroke:RED,'stroke-width':2});
+      const gapv=15;
+      for(let k=-3;k<=3;k++){
+        const val=alignGrade+k;
+        const yy=midTY-k*gapv;
+        if(yy<ty+6||yy>ty+th-6)continue;
+        const cur=(k===0);
+        el(svg,'line',{x1:tx+tw-26,y1:yy,x2:tx+tw-6,y2:yy,stroke:cur?RED:INK,'stroke-width':cur?3:1.6});
+        if(val>=0&&val<50)el(svg,'text',{x:tx+tw-32,y:yy+4,'font-size':10.5,'font-weight':cur?900:700,fill:cur?RED:INK,'text-anchor':'end'}).textContent=Math.round(val);
+      }
+      el(svg,'text',{x:tx+tw/2,y:ty+th+16,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='对齐第 '+thim.toFixed(1)+' 格 → '+(thim*0.01).toFixed(3)+'mm';
+    }
+    // reading banner
+    el(svg,'text',{x:60,y:200,'font-size':14,'font-weight':900,fill:INK}).textContent='读数 = '+intMM+(half?' + 0.5(半刻度露)':' (半刻度未露)')+' + '+(thim*0.01).toFixed(3)+' = '+reading.toFixed(3)+' mm';
+    el(svg,'text',{x:60,y:222,'font-size':11.5,'font-weight':800,fill:'#6b5d3a'}).textContent='末位为估读位(此处估读取0),结果保留三位小数。';
+    // stats
+    oInt.textContent=intMM+'mm';
+    oHalf.textContent=half?'是(+0.5)':'否';
+    oFrac.textContent=(thim*0.01).toFixed(3)+'mm';
+    oTot.textContent=reading.toFixed(3)+'mm';
+  }
+  draw();
+})();
+
+/* ===== 互动3:估读位数示意 ===== */
+(function(){
+  const svg=document.getElementById('esSvg');
+  const len=document.getElementById('esLen');
+  const oR=document.getElementById('esRuler'),oV=document.getElementById('esVern'),oM=document.getElementById('esMic'),oN=document.getElementById('esNote');
+  len.oninput=draw;
+  function draw(){
+    clr(svg);
+    const L=+len.value;
+    // ruler read to 0.1 (estimate last)
+    const rRuler=Math.round(L*10)/10;
+    // vernier 50 division: snap to 0.02
+    const rVern=Math.round(L/0.02)*0.02;
+    // micrometer: to 0.001 (estimate) -> just show L to 3 decimals
+    const rMic=Math.round(L*1000)/1000;
+    // draw three number lines
+    const rows=[
+      {y:60,lab:'刻度尺(精度1mm,估到0.1)',val:rRuler,dec:1,est:true,col:BLUE},
+      {y:130,lab:'游标50分度(精度0.02,不估)',val:rVern,dec:2,est:false,col:GREEN},
+      {y:200,lab:'螺旋测微器(精度0.01,估到0.001)',val:rMic,dec:3,est:true,col:RED}
+    ];
+    rows.forEach(r=>{
+      const X0=50,W=560,scale=W/30;
+      el(svg,'line',{x1:X0,y1:r.y,x2:X0+W,y2:r.y,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0,y:r.y-22,'font-size':12,'font-weight':900,fill:r.col}).textContent=r.lab;
+      for(let mm=0;mm<=30;mm++){
+        const x=X0+mm*scale;const big=mm%5===0;
+        el(svg,'line',{x1:x,y1:r.y,x2:x,y2:r.y-(big?12:6),stroke:INK,'stroke-width':big?2:1});
+        if(big)el(svg,'text',{x:x,y:r.y+16,'font-size':9.5,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=mm;
+      }
+      const px=X0+r.val*scale;
+      el(svg,'line',{x1:px,y1:r.y-14,x2:px,y2:r.y+8,stroke:r.col,'stroke-width':3});
+      el(svg,'circle',{cx:px,cy:r.y,r:4,fill:r.col});
+      const txt=r.val.toFixed(r.dec)+'mm'+(r.est?' (末位估)':' (不估)');
+      el(svg,'text',{x:px,y:r.y-30,'font-size':12,'font-weight':900,fill:r.col,'text-anchor':px>500?'end':'middle'}).textContent=txt;
+    });
+    oR.textContent=rRuler.toFixed(1)+'mm';
+    oV.textContent=rVern.toFixed(2)+'mm';
+    oM.textContent=rMic.toFixed(3)+'mm';
+    oN.textContent='游标不估, 其余估一位';
+  }
+  draw();
+})();
+
+/* ===== 互动4:10/20/50 分度精度对比 ===== */
+(function(){
+  const svg=document.getElementById('cpSvg');const note=document.getElementById('cpNote');
+  let hi=10;
+  document.querySelectorAll('.cphi').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cphi').forEach(x=>x.classList.remove('on'));b.classList.add('on');hi=+b.dataset.n;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=50,scale=13;
+    // main scale on top
+    el(svg,'text',{x:X0,y:24,'font-size':12,'font-weight':900,fill:INK}).textContent='主尺(每格1mm)';
+    for(let mm=0;mm<=48;mm++){
+      const x=X0+mm*scale;if(x>660)break;const big=mm%5===0;
+      el(svg,'line',{x1:x,y1:34,x2:x,y2:34-(big?14:8),stroke:INK,'stroke-width':big?2:1});
+      if(big)el(svg,'text',{x:x,y:20,'font-size':9.5,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=mm;
+    }
+    el(svg,'line',{x1:X0,y1:34,x2:660,y2:34,stroke:INK,'stroke-width':2});
+    const configs=[{n:10,y:90,col:BLUE,per:0.9,prec:0.1},{n:20,y:170,col:ORANGE,per:0.95,prec:0.05},{n:50,y:250,col:VIO,per:0.98,prec:0.02}];
+    configs.forEach(c=>{
+      const on=(c.n===hi);
+      el(svg,'text',{x:X0,y:c.y-32,'font-size':12.5,'font-weight':900,fill:on?c.col:'#8a7f5e'}).textContent=c.n+'分度: 每格'+c.per+'mm, 精度'+c.prec+'mm'+(on?'  ★':'');
+      el(svg,'line',{x1:X0,y1:c.y,x2:660,y2:c.y,stroke:on?c.col:'#c9be9c','stroke-width':on?2.5:1.5});
+      const show=Math.min(c.n,12);
+      for(let i=0;i<=show;i++){
+        const x=X0+i*c.per*scale;if(x>660)break;
+        el(svg,'line',{x1:x,y1:c.y,x2:x,y2:c.y-18,stroke:on?c.col:'#b0a480','stroke-width':on?2:1.2});
+        if(i%5===0)el(svg,'text',{x:x,y:c.y+14,'font-size':9,'font-weight':700,fill:on?c.col:'#8a7f5e','text-anchor':'middle'}).textContent=i;
+      }
+    });
+    const cur=configs.find(c=>c.n===hi);
+    note.innerHTML='👉 <b>'+hi+' 分度</b>:游标每格 '+cur.per+'mm(比主尺 1mm 短 '+cur.prec+'mm)→ 精度 = 1 − '+cur.per+' = <b>'+cur.prec+'mm</b>。分度越多,每格越接近 1mm,精度越高。';
+    note.style.borderColor=cur.col;
+  }
+  draw();
+})();
+
+/* ===== 互动5:仪器选择器 ===== */
+(function(){
+  const svg=document.getElementById('chSvg');const note=document.getElementById('chNote');
+  let c=0;
+  const cases=[
+    {name:'细铜丝直径(约0.5mm)',need:'0.01mm',size:'极小',pick:'螺旋测微器',col:RED,why:'需要0.01mm精度且尺寸极小,只有螺旋测微器胜任;游标最高0.02mm不够。'},
+    {name:'圆管内径(约20mm)',need:'0.02mm',size:'中等',pick:'游标卡尺',col:GREEN,why:'游标卡尺有专门的内测量爪,量程与精度(0.02mm)都合适;螺旋测微器量程小且难测内径。'},
+    {name:'课本厚度(约10mm)',need:'0.01mm',size:'薄片',pick:'螺旋测微器',col:RED,why:'薄片厚度要高精度,螺旋测微器0.01mm最合适(可夹整叠再除页数)。'},
+    {name:'桌子长度(约1m)',need:'1mm',size:'很大',pick:'刻度尺/卷尺',col:BLUE,why:'尺寸大、精度要求低,用刻度尺/卷尺即可;游标/螺旋量程都不够。'}
+  ];
+  document.querySelectorAll('.chcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.chcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const d=cases[c];
+    el(svg,'text',{x:40,y:36,'font-size':14,'font-weight':900,fill:INK}).textContent='测量对象:'+d.name;
+    el(svg,'text',{x:40,y:62,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent='所需精度:'+d.need+'　　尺寸量程:'+d.size;
+    // three instrument boxes
+    const insts=[{n:'刻度尺',p:'1mm'},{n:'游标卡尺',p:'0.02mm'},{n:'螺旋测微器',p:'0.01mm'}];
+    insts.forEach((it,i)=>{
+      const x=50+i*210,y=90,w=180,h=64;
+      const chosen=d.pick.indexOf(it.n)>=0||(it.n==='刻度尺'&&d.pick.indexOf('刻度尺')>=0);
+      el(svg,'rect',{x:x,y:y,width:w,height:h,fill:chosen?'rgba(30,158,134,0.18)':'#f2ede0',stroke:chosen?d.col:INK,'stroke-width':chosen?4:2});
+      el(svg,'text',{x:x+w/2,y:y+26,'font-size':13,'font-weight':900,fill:chosen?d.col:INK,'text-anchor':'middle'}).textContent=it.n;
+      el(svg,'text',{x:x+w/2,y:y+48,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='精度 '+it.p;
+      if(chosen)el(svg,'text',{x:x+w-14,y:y+18,'font-size':16,'font-weight':900,fill:d.col,'text-anchor':'end'}).textContent='✔';
+    });
+    note.innerHTML='👉 推荐:<b>'+d.pick+'</b>。'+d.why;
+    note.style.borderColor=d.col;
+  }
+  draw();
+})();
+
+/* ===== 互动6:读数三步分解 ===== */
+(function(){
+  const svg=document.getElementById('stSvg');const note=document.getElementById('stNote');
+  let mode=0,step=0;
+  document.querySelectorAll('.stmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.stmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;step=0;draw();
+  });
+  document.getElementById('stStep').onclick=()=>{const maxS=(mode===0)?2:3;step=(step+1)%(maxS+1);draw();};
+  function draw(){
+    clr(svg);
+    if(mode===0){
+      // vernier 50: 12.30mm = 12 + 15*0.02
+      const parts=[
+        {lab:'① 主尺整毫米',val:'12 mm',col:BLUE},
+        {lab:'② 游标第15线×0.02',val:'0.30 mm',col:GREEN},
+        {lab:'= 读数(不估读)',val:'12.30 mm',col:RED}
+      ];
+      el(svg,'text',{x:40,y:34,'font-size':14,'font-weight':900,fill:INK}).textContent='游标卡尺(50分度)读数分解:12.30 mm';
+      drawParts(parts);
+      note.innerHTML='游标卡尺 = 主尺大数 + 游标小数,<b>不估读</b>。末位 0.30 是 0.02 的整数倍(15 倍)。';
+    }else{
+      const parts=[
+        {lab:'① 固定整毫米',val:'5 mm',col:BLUE},
+        {lab:'② 半刻度露出',val:'+0.5 mm',col:ORANGE},
+        {lab:'③ 微分筒20.0×0.01',val:'0.200 mm',col:GREEN},
+        {lab:'= 读数(估读一位)',val:'5.700 mm',col:RED}
+      ];
+      el(svg,'text',{x:40,y:34,'font-size':14,'font-weight':900,fill:INK}).textContent='螺旋测微器读数分解:5.700 mm';
+      drawParts(parts);
+      note.innerHTML='螺旋测微器 = 整毫米 + 半刻度 + 格数 + <b>估读一位</b>,结果三位小数(此处估读取 0)。';
+    }
+    note.style.borderColor=(mode===0)?GREEN:RED;
+    function drawParts(parts){
+      const y0=70,gap=42;
+      parts.forEach((p,i)=>{
+        const on=(i<=step);
+        const y=y0+i*gap;
+        el(svg,'rect',{x:60,y:y-22,width:560,height:34,fill:on?'#fff':'#f0ead9',stroke:on?p.col:'#c9be9c','stroke-width':on?3:1.5,opacity:on?1:0.5});
+        el(svg,'text',{x:76,y:y,'font-size':13,'font-weight':900,fill:on?INK:'#9a8f6e'}).textContent=p.lab;
+        el(svg,'text',{x:600,y:y,'font-size':14,'font-weight':900,fill:on?p.col:'#9a8f6e','text-anchor':'end'}).textContent=p.val;
+      });
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动7:由读数还原尺的位置 ===== */
+(function(){
+  const svg=document.getElementById('rvSvg');
+  const val=document.getElementById('rvVal');
+  const oR=document.getElementById('rvR'),oInt=document.getElementById('rvInt'),oFrac=document.getElementById('rvFrac'),oGrid=document.getElementById('rvGrid');
+  let mode=0;
+  document.querySelectorAll('.rvmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.rvmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  val.oninput=draw;
+  function draw(){
+    clr(svg);
+    let R=+val.value;
+    if(mode===0){
+      // vernier 50 division, snap to 0.02
+      R=Math.round(R/0.02)*0.02;
+      const intMM=Math.floor(R+1e-9);
+      const frac=R-intMM;
+      const n=Math.round(frac/0.02);
+      // draw main + vernier
+      const X0=40,scale=20;
+      const mainY=90;
+      el(svg,'text',{x:X0,y:34,'font-size':13,'font-weight':900,fill:INK}).textContent='目标读数 '+R.toFixed(2)+'mm → 主尺'+intMM+'mm, 游标第'+n+'线对齐';
+      el(svg,'rect',{x:X0-8,y:mainY-40,width:660,height:38,fill:'#fbf7ea',stroke:INK,'stroke-width':2});
+      const startMM=Math.max(0,intMM-3);
+      for(let mm=startMM;mm<=startMM+16;mm++){
+        const x=X0+(mm-startMM)*scale;if(x>660)break;const big=mm%5===0;
+        el(svg,'line',{x1:x,y1:mainY,x2:x,y2:mainY-(big?24:14),stroke:INK,'stroke-width':big?2.5:1.4});
+        el(svg,'text',{x:x,y:mainY-28,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=mm;
+      }
+      // vernier 0 at reading position
+      const vernX0=X0+(R-startMM)*scale;
+      const vernY=140,prec=0.02;
+      el(svg,'rect',{x:vernX0-4,y:vernY-2,width:50*(1-prec)*scale+8,height:40,fill:'rgba(243,192,14,0.16)',stroke:INK,'stroke-width':2,clip:'auto'});
+      for(let i=0;i<=50;i++){
+        const gx=vernX0+i*(1-prec)*scale;if(gx>665)break;
+        const isN=(i===n);const big=(i%5===0)||isN;
+        el(svg,'line',{x1:gx,y1:vernY,x2:gx,y2:vernY+(big?28:16),stroke:isN?RED:INK,'stroke-width':isN?3.5:(big?2:1.2)});
+        if(i%5===0||isN)el(svg,'text',{x:gx,y:vernY+40,'font-size':9.5,'font-weight':isN?900:700,fill:isN?RED:INK,'text-anchor':'middle'}).textContent=i;
+      }
+      const alignX=vernX0+n*(1-prec)*scale;
+      el(svg,'line',{x1:alignX,y1:mainY,x2:alignX,y2:vernY,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+      el(svg,'polygon',{points:vernX0+','+(mainY+4)+' '+(vernX0-6)+','+(mainY+16)+' '+(vernX0+6)+','+(mainY+16),fill:RED});
+      oR.textContent=R.toFixed(2)+'mm';oInt.textContent=intMM+'mm';oFrac.textContent=frac.toFixed(2)+'mm';oGrid.textContent='第'+n+'线';
+    }else{
+      // micrometer reconstruct
+      R=Math.round(R*1000)/1000;
+      const intMM=Math.floor(R+1e-9);
+      let rem=R-intMM;
+      const half=(rem>=0.5-1e-9);
+      if(half)rem-=0.5;
+      const grid=rem/0.01;
+      // draw sleeve + thimble grade
+      el(svg,'text',{x:40,y:34,'font-size':13,'font-weight':900,fill:INK}).textContent='目标读数 '+R.toFixed(3)+'mm → 固定'+(intMM+(half?0.5:0)).toFixed(1)+'mm, 微分筒第'+grid.toFixed(1)+'格';
+      const sx=50,sy=70,sw=380,perGrade=18;
+      el(svg,'rect',{x:sx,y:sy,width:sw,height:60,fill:'#f2ede0',stroke:INK,'stroke-width':2});
+      const midY=sy+30;
+      el(svg,'line',{x1:sx,y1:midY,x2:sx+sw,y2:midY,stroke:RED,'stroke-width':2});
+      const revealed=intMM*2+(half?1:0);
+      for(let i=0;i<=revealed;i++){
+        const x=sx+8+i*perGrade;if(x>sx+sw-6)break;
+        if(i%2===0){el(svg,'line',{x1:x,y1:midY,x2:x,y2:sy+6,stroke:INK,'stroke-width':2});el(svg,'text',{x:x,y:sy+4,'font-size':9,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(i/2);}
+        else{el(svg,'line',{x1:x,y1:midY,x2:x,y2:sy+54,stroke:INK,'stroke-width':1.5});}
+      }
+      // thimble grade marker
+      const tx=sx+sw+30,ty=sy-4,tw=170,th=80;
+      if(tx+tw<690){
+        el(svg,'rect',{x:tx,y:ty,width:tw,height:th,fill:'#efe7d2',stroke:INK,'stroke-width':2});
+        const midTY=ty+th/2;
+        el(svg,'line',{x1:tx,y1:midTY,x2:tx+tw,y2:midTY,stroke:RED,'stroke-width':2});
+        const gv=14;
+        for(let k=-3;k<=3;k++){
+          const gval=Math.round(grid*2)/2+k;const yy=midTY-k*gv;
+          if(yy<ty+6||yy>ty+th-6)continue;const cur=(k===0);
+          el(svg,'line',{x1:tx+tw-26,y1:yy,x2:tx+tw-6,y2:yy,stroke:cur?RED:INK,'stroke-width':cur?3:1.5});
+          if(gval>=0&&gval<50)el(svg,'text',{x:tx+tw-32,y:yy+4,'font-size':10,'font-weight':cur?900:700,fill:cur?RED:INK,'text-anchor':'end'}).textContent=Math.round(gval);
+        }
+        el(svg,'text',{x:tx+tw/2,y:ty+th+16,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='第 '+grid.toFixed(1)+' 格对齐';
+      }
+      el(svg,'text',{x:50,y:200,'font-size':11.5,'font-weight':800,fill:'#6b5d3a'}).textContent='半刻度'+(half?'露出(读数≥.5)':'未露')+' → 微分筒 '+grid.toFixed(1)+' 格 → ×0.01 = '+(grid*0.01).toFixed(3)+'mm';
+      oR.textContent=R.toFixed(3)+'mm';oInt.textContent=(intMM+(half?0.5:0)).toFixed(1)+'mm';oFrac.textContent=(grid*0.01).toFixed(3)+'mm';oGrid.textContent='第'+grid.toFixed(1)+'格';
+    }
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 游标卡尺和螺旋测微器读数的共同逻辑是什么?",a:"都是「主尺读大数 + 副尺/微分筒读小数」相加。区别:游标卡尺不估读,螺旋测微器要估读到千分位(0.001mm)。"},
+ {q:"2. 游标卡尺 10/20/50 分度的精度分别是多少?",a:"精度 = 1mm÷分度数。10 分度→0.1mm,20 分度→0.05mm,50 分度→0.02mm。分度越多精度越高(数越小)。"},
+ {q:"3. 游标卡尺要不要估读?末位有什么要求?",a:"不估读!读到精度那一位就停。末位必须是精度的整数倍:10 分度写一位小数,20/50 分度写两位小数。"},
+ {q:"4. 螺旋测微器的精度和估读要求?结果有几位小数?",a:"精度 0.01mm,必须估读一位到 0.001mm。结果一定是三位小数(哪怕估读位是 0 也要写)。"},
+ {q:"5. 螺旋测微器读数的完整步骤?",a:"① 固定刻度整毫米;② 判断半刻度线是否露出(露出+0.5mm);③ 可动刻度对齐格数×0.01mm;④ 估读一位,四项相加。"},
+ {q:"6. 「半刻度是否露出」影响什么?怎么判断?",a:"决定要不要 +0.5mm。若固定刻度下排的半毫米线已露出(微分筒已转过整数圈再多半圈),就加 0.5mm,否则不加。这是头号失分点。"},
+ {q:"7. 50 分度游标卡尺:主尺 8mm,第 15 条游标线对齐,读数?",a:"8 + 15×0.02 = 8 + 0.30 = 8.30mm。不估读,末位 0.30 是 0.02 的 15 倍(合法)。"},
+ {q:"8. 螺旋测微器:固定露 5mm、半刻度已露、微分筒 20.0 格,读数?",a:"5 + 0.5 + 20.0×0.01 = 5.5 + 0.200 = 5.700mm(估读位取 0)。若半刻度没露则为 5.200mm。"},
+ {q:"9. 要测一根细金属丝的直径(精度 0.01mm),该选哪把尺?为什么?",a:"选螺旋测微器。它精度 0.01mm、量程适配细丝;游标卡尺最高才 0.02mm,精度不够。"},
+ {q:"10. 游标卡尺读数 12.30mm(50 分度),反推游标第几条线对齐?",a:"整数 12mm,小数 0.30mm。0.30÷0.02 = 第 15 条游标线与主尺对齐,主尺 0 刻线在 12~13mm 之间。"},
+ {q:"11. 为什么游标卡尺不估读而螺旋测微器要估读?",a:"游标卡尺靠「刻线重合」离散定位,末位确定、无可估;螺旋测微器靠连续刻度看比例,末位在两线之间,天然要估一位。"},
+ {q:"12. 螺旋测微器零读数为 +0.005mm,测得 5.700mm,真实直径?",a:"真实值 = 测量值 − 零误差 = 5.700 − 0.005 = 5.695mm。零误差是系统误差,直接扣除。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

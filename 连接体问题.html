@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>连接体问题（整体法与隔离法） · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>连接体问题（整体法与隔离法）</h1>
+    <p class="lead">两个甚至一串物体绑在一起、叠在一起、推在一起——这类「多物体系统」题，就靠<b>整体法</b>和<b>隔离法</b>两把刀砍。整体法先算出<b>系统的加速度</b>，隔离法再单拎一个出来算<b>它们之间的内力</b>（绳张力、接触力）。叠放、并排、绳连、杆连，全是这一套。</p>
+
+    <div class="say">🗣️ <b>连接体(人话版):</b> <b>整体法</b>就是把一串物体看成一个「大胖子」——外面推它多少力、它多重，直接算出<b>整个系统的加速度 a</b>，因为它们连在一起<b>加速度相同</b>，内力在里头相互抵消、根本不出现。<b>隔离法</b>就是从这堆里<b>单拎一个出来</b>，只画它自己受的力，用 F=ma 算它和别人之间的那份<b>内力</b>。口诀:<b>先整体求 a，后隔离求内力</b>。求 a 用大胖子，求内力单拎一个。</div>
+
+    <div class="keybox"><b>两把刀，各管一段:</b> <b>整体法</b>—求系统加速度 a 或求外力(内力不出现):(ΣF外) = (Σm)·a。<b>隔离法</b>—求内力/绳张力/接触力:对<b>单个物体</b>列 F=ma，内力这时候才「露头」被算出来。<b>加速度相同时,内力按质量比例分配</b>是秒杀神器。</div>
+
+    <h2>① 整体法:把一串物体当「一个大胖子」</h2>
+    <div class="card">
+      <div class="eq">整体法:ΣF外 = (m₁+m₂+…)·a</div>
+      <p style="margin:8px 0"><b>核心思想:</b> 当几个物体<b>一起运动、加速度相同</b>时，把它们看成一个总质量为 Σm 的「大整体」。这个整体只受<b>外力</b>(推力、重力、地面摩擦、外接的绳拉力…)，内部物体之间的相互作用力(内力)在整体内<b>成对抵消，完全不出现</b>。</p>
+      <table>
+        <tr><th>整体法适用</th><th>为什么方便</th></tr>
+        <tr><td>求<b>系统加速度 a</b></td><td>一步 ΣF外=(Σm)a，不用管内部怎么互相拉</td></tr>
+        <tr><td>求某个<b>外力</b>(如地面摩擦、外接绳张力)</td><td>内力不出现，方程最少</td></tr>
+      </table>
+      <p class="trap">⚠ 整体法<b>永远求不出内力</b>!内力是系统内部两物体间的力，被整体「吃」掉了。想求内力，必须切换到隔离法。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📦 互动 1 — 整体法 vs 隔离法:并排两块被推，整体求 a、隔离求接触力 N</div>
+      <svg id="wholeSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="wGo">▶ 施力演示</button><button id="wReset">↺ 重置</button>
+        <label>推力 F <input id="wF" type="range" min="4" max="20" value="12" step="1"></label>
+        <label>m₁(前) <input id="wM1" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>m₂(后) <input id="wM2" type="range" min="1" max="5" value="1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>整体 a=F/(m₁+m₂)</b><span id="wA">0</span></div>
+        <div><b>隔离前块:N=m₁·a</b><span id="wN">0</span></div>
+        <div><b>验证:后块 F−N=m₂a</b><span id="wChk">0</span></div>
+        <div><b>接触力 N (N)</b><span id="wN2">0</span></div>
+      </div>
+      <p class="small">推后块 m₂，它把前块 m₁ 顶着走。整体法:a=F/(m₁+m₂)。隔离前块(只受 N):N=m₁a。红色接触力 N 就是它俩之间的内力，整体法里看不到它。</p>
+    </div>
+
+    <h2 class="b">② 隔离法:单拎一个出来,内力才「露头」</h2>
+    <div class="card">
+      <div class="eq">隔离法:对单个物体 ΣF(含内力) = m·a</div>
+      <p style="margin:8px 0"><b>核心思想:</b> 从系统里<b>把一个物体单独拿出来</b>，只画<b>它自己</b>受的所有力(包括别人对它的内力!)，对它用牛顿第二定律。因为整体已经把 a 求出来了，这里把 a 当已知，方程里唯一的未知就是那个<b>内力</b>。</p>
+      <h3>解题黄金流程:先整体,后隔离</h3>
+      <div class="mono">第1步:整体法求加速度——ΣF外 = (Σm)·a，解出 a。</div>
+      <div class="mono">第2步:隔离一个物体——挑受力最简单的那个(受内力少的)。</div>
+      <div class="mono">第3步:对它列 F=ma——把 a 代入，解出唯一未知的内力。</div>
+      <p style="margin:8px 0"><b>挑谁隔离?</b> 挑「受力最简单」的那个物体。比如推 A 带 B，想求 A、B 间接触力，隔离<b>被推着走的那个</b>(它只受一个接触力)最省事。</p>
+      <p class="trap">⚠ 隔离时<b>必须把内力画上</b>——别人对它的拉/推/顶都要画。少画一个力，方程就错。</p>
+    </div>
+
+    <h2 class="g">③ 加速度相同时:内力按质量比例分配</h2>
+    <div class="card">
+      <div class="eq">相邻界面的内力 T = (界面后方总质量 / 总质量) × F外</div>
+      <p style="margin:8px 0"><b>秒杀结论:</b> 当整串物体加速度相同、外力 F 从一端施加时，某个界面上的内力，等于「这个界面<b>另一侧(远离施力端)所有物体的质量</b>」占「总质量」的比例，乘以外力 F。因为界面另一侧那堆物体的加速全靠这个界面的内力提供。</p>
+      <div class="mono">推 m₁+m₂(推 m₁ 端):a=F/(m₁+m₂)；界面内力 N=m₂·a=[m₂/(m₁+m₂)]·F</div>
+      <p style="margin:8px 0"><b>直觉:</b> 界面内力只负责「拖动它后面那部分」。后面越重(m₂ 越大)，需要的内力越大。同一根绳串三个物体，越靠近拉力端的那段绳张力越大(它要拖动后面更多质量)。</p>
+      <p class="trap">⚠ 这个比例只在<b>加速度相同</b>时成立!一旦绳松、面分离(加速度不再相同)，比例失效，必须回到隔离法逐个列式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 2 — 内力比例分配:三物体串联，看每段绳张力 = 后方质量占比 × F</div>
+      <svg id="ratioSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>拉力 F <input id="rF" type="range" min="6" max="30" value="18" step="1"></label>
+        <label>mA(前) <input id="rA" type="range" min="1" max="4" value="1" step="1"></label>
+        <label>mB(中) <input id="rB" type="range" min="1" max="4" value="2" step="1"></label>
+        <label>mC(后) <input id="rC" type="range" min="1" max="4" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>整体 a</b><span id="rAcc">0</span></div>
+        <div><b>绳1张力 T₁(拉A)</b><span id="rT1">0</span></div>
+        <div><b>绳2张力 T₂(A-B间)</b><span id="rT2">0</span></div>
+        <div><b>绳3张力 T₃(B-C间)</b><span id="rT3">0</span></div>
+      </div>
+      <p class="small">前端拉 F 拖着 A-B-C 三块走。T₁ 要拖全部三块(=F)，T₂ 只拖 B+C，T₃ 只拖 C。越靠后张力越小，比例 = 后方质量/总质量。</p>
+    </div>
+
+    <h2 class="o">④ 内力随「施力位置」变:推 A 还是推 B?</h2>
+    <div class="card">
+      <p style="margin:6px 0">同样两块 m₁、m₂ 并排，同样大小的力 F，<b>推哪一块，它们之间的接触力不一样!</b> 这是连接体最爱考的一个「反直觉」点。</p>
+      <table>
+        <tr><th>推 m₁(它顶 m₂)</th><th>推 m₂(它顶 m₁)</th></tr>
+        <tr><td>接触力 N=[m₂/(m₁+m₂)]·F</td><td>接触力 N=[m₁/(m₁+m₂)]·F</td></tr>
+        <tr><td>N 只需拖动后方的 m₂</td><td>N 只需拖动后方的 m₁</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>规律:</b> 接触力 = 「被顶着走的那块」质量占比 × F。推轻的去顶重的，接触力大;推重的去顶轻的，接触力小。加速度 a 两种情况一样(都是 F/(m₁+m₂))，但内力不同。</p>
+      <p class="trap">⚠ 别以为「推哪块内力都一样」。a 一样，但内力 N 取决于<b>被推着走的那块有多重</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">👉 互动 3 — 推 A vs 推 B:同 F 同质量，接触力却不同(切换施力端看 N 变化)</div>
+      <svg id="pushSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="pushside on" data-s="0">推 A(左块顶右块)</button>
+        <button class="pushside" data-s="1">推 B(右块顶左块)</button>
+        <label>mA <input id="pA" type="range" min="1" max="5" value="3" step="1"></label>
+        <label>mB <input id="pB" type="range" min="1" max="5" value="1" step="1"></label>
+        <label>F <input id="pF" type="range" min="4" max="20" value="12" step="1"></label>
+      </div>
+      <div class="verdict" id="pushNote"></div>
+      <p class="small">加速度 a 两种推法完全一样，但接触力 N 不同:N = 被顶着那块的质量占比 × F。推 A 时 N 拖 B，推 B 时 N 拖 A。</p>
+    </div>
+
+    <h2 class="v">⑤ 绳连 / 杆连:绳只能拉,杆能拉能推</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>绳连接:</b> 绳(轻绳)<b>只能拉不能推</b>，张力沿绳、指向绳的收缩方向。绳张力永远是「拉」，绝不会「顶」。</p>
+      <p style="margin:6px 0"><b>杆连接:</b> 轻杆<b>既能拉也能推</b>——内力可以是拉力(杆被拉伸)也可以是压力/支撑力(杆被压缩)。方向要根据运动状态判断，不一定沿杆(斜杆时可能有横向力，但高中常简化沿杆)。</p>
+      <div class="eq">轻绳/轻杆内力处处相等(不计质量),两端受力等大反向</div>
+      <p style="margin:8px 0"><b>典型:绳跨定滑轮连两物</b>——绳把两物的加速度<b>绑成相等</b>(大小)，张力两端相等。列式:重的一侧 mg−T=ma，轻的一侧 T−m'g=m'a(竖直悬挂时)，联立解 a 和 T。</p>
+      <p class="trap">⚠ 绳被<b>压</b>的情形不存在——若算出绳张力为负，说明绳已经松了(张力=0)，得重新分析。杆才允许压力(内力为负=杆在推)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪢 互动 4 — 绳连体:定滑轮两侧质量决定 a 和绳张力 T(拖滑块看数值)</div>
+      <canvas id="ropeCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="ropeGo">▶ 释放</button><button id="ropeReset">↺ 重置</button>
+        <label>左挂重 m₁ <input id="ropeM1" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>右挂重 m₂ <input id="ropeM2" type="range" min="1" max="6" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>系统 a</b><span id="ropeA">0</span></div>
+        <div><b>绳张力 T</b><span id="ropeT">0</span></div>
+        <div><b>验证 m₁g−T=m₁a</b><span id="ropeC1">0</span></div>
+        <div><b>验证 T−m₂g=m₂a</b><span id="ropeC2">0</span></div>
+      </div>
+      <p class="small">两物用一根绳跨过定滑轮相连:重的下落、轻的上升，a 相同。整体法:a=(m₁−m₂)g/(m₁+m₂)。隔离任一侧求绳张力 T。注意 T 介于两物重力之间。</p>
+    </div>
+
+    <h2 class="r">⑥ 斜面连接体:先分解,再整体+隔离</h2>
+    <div class="card">
+      <p style="margin:6px 0">斜面上的连接体，多了一步<b>把重力沿斜面/垂直斜面分解</b>。分解完，沿斜面方向就是一个一维连接体问题，整体法+隔离法照旧。</p>
+      <div class="eq">沿斜面分量:mg·sinθ(下滑)　垂直分量:mg·cosθ(压斜面)</div>
+      <p style="margin:8px 0"><b>典型:斜面上叠放/串联两物一起下滑或被拉。</b> 整体法沿斜面列:Σ(mg sinθ) − 摩擦 = (Σm)·a(若有拉力再加拉力项)。隔离某物求它们之间的接触力/绳张力(沿斜面方向列式)。</p>
+      <p style="margin:8px 0"><b>关键:</b> 所有力都要<b>沿斜面方向和垂直斜面方向</b>分解后再列式，别用水平竖直方向硬套。</p>
+      <p class="trap">⚠ 斜面上别忘了<b>垂直方向的摩擦</b>:摩擦力 f=μN=μ·mg·cosθ，用的是垂直斜面的正压力 mg cosθ，不是 mg。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛰️ 互动 5 — 斜面连接体:重力沿斜面分解，整体求 a、隔离求内力(调角度看分量)</div>
+      <svg id="slopeSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>倾角 θ <input id="slT" type="range" min="10" max="60" value="30" step="5"></label>
+        <label>上块 m₁ <input id="slM1" type="range" min="1" max="4" value="2" step="1"></label>
+        <label>下块 m₂ <input id="slM2" type="range" min="1" max="4" value="1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>整体 a=g·sinθ</b><span id="slA">0</span></div>
+        <div><b>m₁沿斜面分量</b><span id="slG1">0</span></div>
+        <div><b>接触力 N(m₁顶m₂)</b><span id="slN">0</span></div>
+        <div><b>N=m₂(gsinθ−a)?</b><span id="slChk">0</span></div>
+      </div>
+      <p class="small">两块叠着沿光滑斜面下滑，a=g·sinθ(与质量无关)。因为无摩擦、加速度相同，它们之间接触力 N=0!改成有摩擦或不同摩擦系数，N 才出现——这是斜面连接体的经典考点。</p>
+    </div>
+
+    <h2 class="b">⑦ 临界问题:绳张力为零 / 接触面分离</h2>
+    <div class="card">
+      <p style="margin:6px 0">连接体的<b>临界</b>问题，问的是「加速度加大到多少，绳会松/两物会分离」。临界条件就一句话:</p>
+      <div class="eq">临界:绳张力 T=0，或接触面弹力 N=0</div>
+      <p style="margin:8px 0"><b>绳松临界(T→0):</b> 当系统加速度大到某值，绳不再需要拉力，T 降为 0。此后绳松弛，两物加速度可以不同了。求临界加速度:令 T=0，对某物列 F=ma。</p>
+      <p style="margin:8px 0"><b>分离临界(N→0):</b> 叠放/接触的两物，当接触力 N 降为 0 的瞬间，它们即将分离。分离的临界条件是<b>N=0</b>，而不是速度相等或位置分开。求临界:令 N=0，对被「甩掉」的那块单独列式，解出临界加速度或临界拉力。</p>
+      <div class="mono">分离临界示例:上下叠放，向上拉下块。当拉力大到 N=0，上块只靠自身重力，a临界=g(上块此时 a=g)。</div>
+      <p class="trap">⚠ 分离条件是<b>弹力 N=0</b>，不是「速度差」或「距离拉开」!很多人写成速度相等，错。弹力刚好为零那一刻就是分离临界。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚨 互动 6 — 分离临界:向上拉的叠放体，拉力增大到接触力 N=0 即分离</div>
+      <svg id="critSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>拉力 F(拉下块) <input id="crF" type="range" min="20" max="120" value="40" step="2"></label>
+        <label>下块 m₁ <input id="crM1" type="range" min="1" max="4" value="2" step="1"></label>
+        <label>上块 m₂ <input id="crM2" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>整体 a=F/(m₁+m₂)−g</b><span id="crA">0</span></div>
+        <div><b>上块受接触力 N</b><span id="crN">0</span></div>
+        <div><b>临界拉力 F临界</b><span id="crFc">0</span></div>
+        <div><b>状态</b><span id="crState">—</span></div>
+      </div>
+      <p class="small">下块被向上拉 F，托着上块 m₂ 一起上升。上块靠接触力 N 被托起:N=m₂(a+g)。整体加速 a=F/(m₁+m₂)−g。F 越大 a 越大…等等，N 随 a 增大而增大?看清:向上拉时 N=m₂(g+a)，此模型 N 不会归零。真正的分离临界见下方说明与题型 D。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔓 互动 7 — 真·分离临界:上块放在下块上，向下压/撤力，弹力 N→0 的那一刻分离</div>
+      <svg id="crit2Svg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>向下加速度 a <input id="c2A" type="range" min="0" max="20" value="4" step="1"></label>
+        <label>上块 m₂ <input id="c2M" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>上块弹力 N=m₂(g−a)</b><span id="c2N">0</span></div>
+        <div><b>临界加速度 a=g</b><span id="c2Ac">0</span></div>
+        <div><b>状态</b><span id="c2St">—</span></div>
+        <div><b>N 是否为零</b><span id="c2Z">—</span></div>
+      </div>
+      <p class="small">上块 m₂ 放在下块上，整体向下加速 a。上块受重力 m₂g 向下、下块支持力 N 向上:m₂g−N=m₂a → N=m₂(g−a)。当向下加速度 a 增大到 g，N=0，上块「飘」起来即将分离。a&gt;g 时上块跟不上，脱离。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 水平面连接体求内力</h3>
+      <p><b class="tag">触发信号:</b>几个物体并排/推着走，问它们之间的「接触力」「压力」，或多物体求某段绳张力。</p>
+      <p><b class="tag">标准动作:</b>①整体法求 a=F/(Σm)。②隔离受力最简单的那块，列 F=ma 解内力。或直接用比例式 N=[后方质量/总质量]·F。</p>
+      <p><b class="tag">示例(带解):</b>光滑水平面，推 m₁=2kg 顶着 m₂=1kg，F=12N。整体:a=12/(2+1)=4 m/s²。隔离后块 m₂(只受接触力 N):N=m₂a=1×4=4N。验证前块:F−N=12−4=8=m₁a=2×4=8 ✓。</p>
+      <p class="trap">陷阱:用整体法去求内力(求不出);隔离时漏画接触力;搞错「谁顶谁」导致比例算反。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 叠放体(共同加速 / 相对滑动临界)</h3>
+      <p><b class="tag">触发信号:</b>上下叠放两块，水平拉下块(或上块)，问共同加速、上块靠什么加速、拉力多大会滑动。</p>
+      <p><b class="tag">标准动作:</b>①先假设一起走，整体 a=F/(Σm)。②隔离上块，它只靠<b>摩擦力</b>加速:f=m上·a。③检验 f 是否≤最大静摩擦 μm上g，超了就相对滑动，临界 F=μg(Σm)。</p>
+      <p><b class="tag">示例(带解):</b>上块 m₂=1kg 放在下块 m₁=2kg 上，μ(上下之间)=0.4，地面光滑，拉下块 F。共同走时上块靠摩擦:f=m₂a=1×a。最大静摩擦=μm₂g=0.4×1×10=4N。令 f=4 → a=4 → F临界=(Σm)a=3×4=12N。F&gt;12N 上块跟不上，打滑。</p>
+      <p class="trap">陷阱:忘了上块只靠摩擦提供加速度;把 μ 乘错正压力;临界后还当共同加速算。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 绳 / 杆连接型</h3>
+      <p><b class="tag">触发信号:</b>物体用轻绳/轻杆相连(可跨滑轮)，问加速度、绳张力、杆的内力(拉还是压)。</p>
+      <p><b class="tag">标准动作:</b>①整体法(把连体当一个)求 a。②隔离一端求绳张力/杆力。绳只拉、杆可拉可压——算出负值即杆在推(压力)。</p>
+      <p><b class="tag">示例(带解):</b>轻绳跨定滑轮，左挂 m₁=3kg、右挂 m₂=2kg。整体:a=(m₁−m₂)g/(m₁+m₂)=(3−2)×10/5=2 m/s²。隔离右块(上升):T−m₂g=m₂a → T=m₂(g+a)=2×12=24N。验证左块:m₁g−T=30−24=6=m₁a=3×2=6 ✓。</p>
+      <p class="trap">陷阱:以为绳张力=某物重力(错,T 介于两重之间);绳当成能推;杆内力方向不判断。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 斜面连接体</h3>
+      <p><b class="tag">触发信号:</b>斜面上两物体叠放/串联一起下滑或被拉，问 a、它们之间接触力/绳张力。</p>
+      <p><b class="tag">标准动作:</b>①把重力沿斜面/垂直斜面分解。②沿斜面整体法求 a。③隔离一物沿斜面列式求内力。摩擦用 f=μmg cosθ。</p>
+      <p><b class="tag">示例(带解):</b>光滑斜面 θ=30°，两块叠放一起下滑。整体:a=g sinθ=10×0.5=5 m/s²(与质量无关)。隔离上块 m₁沿斜面:m₁g sinθ − N = m₁a → N=m₁(g sinθ − a)=m₁(5−5)=0。光滑无摩擦时接触力为零!若两块摩擦系数不同，N 才出现。</p>
+      <p class="trap">陷阱:力不分解就硬列;摩擦用 mg 而非 mg cosθ;忘了光滑等加速时内力可能为零。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 加速度分配比例型</h3>
+      <p><b class="tag">触发信号:</b>一串物体被一端拉/推，问某段绳张力或某个界面内力占外力的比例。</p>
+      <p><b class="tag">标准动作:</b>直接用比例结论:某界面内力 = (界面后方总质量 / 系统总质量) × F外。不用逐个隔离，一步出答案。</p>
+      <p><b class="tag">示例(带解):</b>前端拉 F=18N，串联 mA=1、mB=2、mC=3(共 6kg)。a=18/6=3 m/s²。A、B 间绳张力只拖 B+C:T=（2+3)/6×18=15N;B、C 间只拖 C:T=3/6×18=9N。越靠后张力越小。</p>
+      <p class="trap">陷阱:比例算成前方质量;忘了此结论只在加速度相同时成立;施力端搞反。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 临界(分离 / 张力为零)型</h3>
+      <p><b class="tag">触发信号:</b>问「加速度多大绳会松」「拉力多大两物分离」「恰好分离时」。</p>
+      <p><b class="tag">标准动作:</b>写出临界条件:绳松 T=0，或接触面 N=0。把这个条件代入被「甩掉」那块的方程，解临界加速度或临界外力。</p>
+      <p><b class="tag">示例(带解):</b>上块 m₂放下块上，整体竖直向下加速 a。隔离上块:m₂g−N=m₂a → N=m₂(g−a)。令 N=0 → a临界=g=10 m/s²。向下加速度超过 g，上块托不住，分离。</p>
+      <p class="trap">陷阱:把分离条件写成「速度相等」或「位移拉开」(错,是 N=0);临界后还按连在一起算;绳松临界忘了此后加速度不再相同。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>内力不能用整体法求</b>!整体法把内力抵消掉了，求内力(接触力/绳张力)必须用隔离法单拎一个物体。</p>
+      <p class="trap">② <b>绳只能拉不能推</b>。绳张力永远沿绳、方向是「拉」。若算出绳张力为负，说明绳已松弛(T=0)，要重新分析。</p>
+      <p class="trap">③ <b>杆能拉也能推</b>。杆内力算出负值≠错，代表杆在「压/推」(压力),这是杆与绳的关键区别。</p>
+      <p class="trap">④ <b>接触面分离的条件是弹力 N=0</b>，不是「速度相等」或「距离拉开」!弹力刚好为零那一刻即分离临界。</p>
+      <p class="trap">⑤ <b>加速度方向</b>要先判断:连体各物加速度方向相同、大小相同(刚性连接),列式前统一取正方向。</p>
+      <p class="trap">⑥ 隔离时<b>别漏画内力</b>——别人对它的拉/推/顶/摩擦都要画上，少一个方程就废。</p>
+      <p class="trap">⑦ 「内力按质量比例分配」只在<b>加速度相同</b>时成立;绳松、面分离后加速度不同，比例失效。</p>
+      <p class="trap">⑧ 斜面上摩擦力 f=μ·mg·<b>cosθ</b>(用垂直斜面的正压力)，不是 μmg;所有力要沿斜面分解。</p>
+      <p class="trap">⑨ 叠放体「谁靠什么加速」要想清:上块常常<b>只靠摩擦力</b>加速，摩擦不够就相对滑动。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 整体法与隔离法是「同一牛顿定律的两个投影」:</b> 整体法 = 对系统用牛二(内力成对抵消)，隔离法 = 对单体用牛二(内力露头)。它们不是两个定理，是一个 F=ma 在不同「研究对象」上的应用。先整体求 a(未知最少)，再隔离求内力(把 a 当已知)，本质是「解方程时先解耦合度低的」。</p>
+      <p style="margin:8px 0"><b>② 内力比例分配的深层原因是「加速度共享」:</b> 因为刚性连接强制所有物体 a 相同，每个界面的内力必须「恰好把它后方的质量拽到这个 a」。所以内力 = 后方质量 × a = (后方质量/总质量)×F。理解了这一点，一串 N 个物体任意界面的内力你都能一秒写出，不用逐个隔离。</p>
+      <p style="margin:8px 0"><b>③ 临界问题的统一钥匙是「某个约束力恰好为零」:</b> 绳松 = 张力为零，分离 = 弹力为零。约束力为零意味着「这个约束即将失效，两物即将获得不同的加速度」。解临界的套路永远是:令该约束力=0，对失去约束的那块单独列牛二，解出临界值。把「分离」翻译成「N=0」是所有临界题的通用第一步。</p>
+      <p style="margin:8px 0"><b>④ 绳 vs 杆 = 单向约束 vs 双向约束:</b> 绳只提供拉力(单向,T≥0)，杆可拉可压(双向,内力可正可负)。做题时先假设一个方向，算出的符号告诉你真实方向;绳若算出「负张力」直接判定松弛，杆则接受负值(=压力)。这个「符号即物理」的思维能救很多临界题。</p>
+      <p style="margin:8px 0"><b>⑤ 叠放体的「摩擦极限」决定共同还是分离:</b> 上块能否跟着一起加速，取决于所需摩擦是否≤最大静摩擦 μmg。所需摩擦 f=m上·a，随外力增大而增大;一旦 f 达到 μm上g，就到相对滑动临界，临界加速度 a=μg，此后上下块加速度分家。把「共同加速」和「相对滑动」的分界点用 f=μN 卡出来，是叠放体所有难题的命门。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 连接体两把刀:整体法求 a、隔离法求内力</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const G=10;
+
+/* ===== 互动1:整体法 vs 隔离法(并排两块) ===== */
+(function(){
+  const svg=document.getElementById('wholeSvg');
+  const Fs=document.getElementById('wF'),M1s=document.getElementById('wM1'),M2s=document.getElementById('wM2');
+  const oA=document.getElementById('wA'),oN=document.getElementById('wN'),oChk=document.getElementById('wChk'),oN2=document.getElementById('wN2');
+  let F=12,M1=2,M2=1,anim=0,running=false;
+  function sync(){F=+Fs.value;M1=+M1s.value;M2=+M2s.value;}
+  Fs.oninput=M1s.oninput=M2s.oninput=()=>{sync();anim=0;draw();};
+  function draw(){
+    clr(svg);
+    const a=F/(M1+M2);
+    const N=M1*a;
+    oA.textContent=a.toFixed(2)+' m/s²';
+    oN.textContent=N.toFixed(2)+' N';
+    oChk.textContent=(F-N).toFixed(1)+'='+(M2*a).toFixed(1)+' ✓';
+    oN2.textContent=N.toFixed(2)+' N';
+    const groundY=210;const shift=anim*80;
+    el(svg,'line',{x1:0,y1:groundY,x2:700,y2:groundY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:20,y:26,'font-size':13,'font-weight':900,fill:INK}).textContent='推后块 m₂，它顶着前块 m₁ 一起走(光滑地面)';
+    // block m2 (rear, pushed) then m1 (front)
+    const w2=40+M2*14, w1=40+M1*14;
+    const x2=140+shift, y2=groundY-40-M2*10;
+    // m2 rear
+    el(svg,'rect',{x:x2,y:y2,width:w2,height:groundY-y2,fill:VIO,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x2+w2/2,y:(y2+groundY)/2+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m₂='+M2;
+    // m1 front, right of m2
+    const x1=x2+w2, y1=groundY-40-M1*10;
+    el(svg,'rect',{x:x1,y:y1,width:w1,height:groundY-y1,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x1+w1/2,y:(y1+groundY)/2+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m₁='+M1;
+    // push force F on m2 left
+    arrow(svg,x2-8,y2+ (groundY-y2)/2, -Math.min(70,F*4), RED,'F='+F);
+    // contact force N at interface (on m1 pointing right)
+    const iy=(Math.max(y1,y2)+groundY)/2;
+    arrow(svg,x1+2,iy, Math.min(50,N*5+8), GREEN,'N='+N.toFixed(0));
+    // labels
+    el(svg,'text',{x:350,y:groundY+30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='整体 a='+a.toFixed(2)+' m/s²   |   接触力 N=m₁·a='+N.toFixed(1)+' N';
+    el(svg,'text',{x:350,y:groundY+52,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='整体法看不到 N(内力被抵消);隔离前块才求出 N';
+  }
+  function arrow(p,x,y,len,col,lab){
+    if(Math.abs(len)<2){return;}
+    const dir=len>=0?1:-1;
+    el(p,'line',{x1:x,y1:y,x2:x+len,y2:y,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x+len)+','+(y-6)+' '+(x+len+dir*10)+','+y+' '+(x+len)+','+(y+6),fill:col});
+    el(p,'text',{x:len>=0?x+len+6:x+len-6,y:y-9,'font-size':12,'font-weight':900,fill:col,'text-anchor':len>=0?'end':'start'}).textContent=lab;
+  }
+  function loop(){if(!running)return;anim+=0.02;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('wGo').onclick=()=>{sync();anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('wReset').onclick=()=>{sync();anim=0;draw();};
+  sync();draw();
+})();
+
+/* ===== 互动2:内力比例分配(三物串联) ===== */
+(function(){
+  const svg=document.getElementById('ratioSvg');
+  const Fs=document.getElementById('rF'),As=document.getElementById('rA'),Bs=document.getElementById('rB'),Cs=document.getElementById('rC');
+  const oAcc=document.getElementById('rAcc'),oT1=document.getElementById('rT1'),oT2=document.getElementById('rT2'),oT3=document.getElementById('rT3');
+  let F=18,mA=1,mB=2,mC=3;
+  function sync(){F=+Fs.value;mA=+As.value;mB=+Bs.value;mC=+Cs.value;draw();}
+  Fs.oninput=As.oninput=Bs.oninput=Cs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const tot=mA+mB+mC;
+    const a=F/tot;
+    const T1=F;             // pulls all A+B+C
+    const T2=(mB+mC)/tot*F; // pulls B+C
+    const T3=mC/tot*F;      // pulls C
+    oAcc.textContent=a.toFixed(2)+' m/s²';
+    oT1.textContent=T1.toFixed(1)+' N';
+    oT2.textContent=T2.toFixed(1)+' N';
+    oT3.textContent=T3.toFixed(1)+' N';
+    const groundY=210;
+    el(svg,'line',{x1:0,y1:groundY,x2:700,y2:groundY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='前端拉 F，拖着 A-B-C 三块;每段绳张力=后方质量占比×F';
+    // three blocks left to right: A(front) B C(rear) ; pull at front-left
+    const bx=170;
+    const wA=34+mA*10,wB=34+mB*10,wC=34+mC*10;
+    const gap=40;
+    let x=bx;
+    const cols=[BLUE,GREEN,VIO];const names=['A','B','C'];const ms=[mA,mB,mC];
+    const xs=[];
+    for(let i=0;i<3;i++){
+      const w=[wA,wB,wC][i];const y=groundY-34-ms[i]*8;
+      el(svg,'rect',{x:x,y:y,width:w,height:groundY-y,fill:cols[i],stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+w/2,y:(y+groundY)/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=names[i]+'='+ms[i];
+      xs.push({x:x,w:w,y:y});
+      x+=w+gap;
+    }
+    // pull F at far left of A
+    arrow(svg,xs[0].x-6,groundY-40,-60,RED,'F='+F);
+    // ropes with tension labels
+    ropeLabel(svg,xs[0].x-6,groundY-40, xs[0].x-6-60, 'T₁='+T1.toFixed(0),RED,-1); // near pull, but T1=F shown at pull
+    // rope A-B
+    drawRope(svg,xs[0].x+xs[0].w,xs[1].x,groundY-40,'T₂='+T2.toFixed(1),ORANGE);
+    // rope B-C
+    drawRope(svg,xs[1].x+xs[1].w,xs[2].x,groundY-40,'T₃='+T3.toFixed(1),GREEN);
+    el(svg,'text',{x:350,y:groundY+34,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='T₁=F(拖A+B+C) > T₂(拖B+C) > T₃(拖C):越靠后张力越小';
+    el(svg,'text',{x:350,y:groundY+54,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='a='+a.toFixed(2)+' m/s²   |   总质量='+tot+' kg';
+  }
+  function drawRope(p,x1,x2,y,lab,col){
+    el(p,'line',{x1:x1,y1:y,x2:x2,y2:y,stroke:col,'stroke-width':4});
+    el(p,'text',{x:(x1+x2)/2,y:y-8,'font-size':11.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+  }
+  function ropeLabel(p,x1,y,x2,lab,col,dir){
+    el(p,'text',{x:x2-4,y:y-8,'font-size':11.5,'font-weight':900,fill:col,'text-anchor':'end'}).textContent=lab;
+  }
+  function arrow(p,x,y,len,col,lab){
+    const dir=len>=0?1:-1;
+    el(p,'line',{x1:x,y1:y,x2:x+len,y2:y,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x+len)+','+(y-6)+' '+(x+len+dir*10)+','+y+' '+(x+len)+','+(y+6),fill:col});
+  }
+  sync();
+})();
+
+/* ===== 互动3:推A vs 推B(接触力不同) ===== */
+(function(){
+  const svg=document.getElementById('pushSvg');const note=document.getElementById('pushNote');
+  const As=document.getElementById('pA'),Bs=document.getElementById('pB'),Fs=document.getElementById('pF');
+  let side=0,mA=3,mB=1,F=12;
+  document.querySelectorAll('.pushside').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.pushside').forEach(x=>x.classList.remove('on'));b.classList.add('on');side=+b.dataset.s;draw();
+  });
+  As.oninput=Bs.oninput=Fs.oninput=()=>{mA=+As.value;mB=+Bs.value;F=+Fs.value;draw();};
+  function draw(){
+    clr(svg);
+    const tot=mA+mB;const a=F/tot;
+    // N = mass of the block being pushed-forward (the far one from push)
+    let N,pushed,front;
+    if(side===0){ N=mB/tot*F; pushed='B'; } // push A, A pushes B; N drags B
+    else { N=mA/tot*F; pushed='A'; }
+    const groundY=200;
+    el(svg,'line',{x1:0,y1:groundY,x2:700,y2:groundY,stroke:INK,'stroke-width':3});
+    // layout: A left, B right always
+    const wA=40+mA*12,wB=40+mB*12;
+    const xA=250,yA=groundY-40-mA*10;
+    const xB=xA+wA,yB=groundY-40-mB*10;
+    el(svg,'rect',{x:xA,y:yA,width:wA,height:groundY-yA,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:xA+wA/2,y:(yA+groundY)/2+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='A='+mA;
+    el(svg,'rect',{x:xB,y:yB,width:wB,height:groundY-yB,fill:VIO,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:xB+wB/2,y:(yB+groundY)/2+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='B='+mB;
+    // push arrow
+    if(side===0){ arrow(svg,xA-6,yA+(groundY-yA)/2,-60,RED,'F='+F+'→推A'); }
+    else { arrow(svg,xB+wB+6,yB+(groundY-yB)/2,60,RED,'F='+F+'←推B'); }
+    // contact force at interface (draw on both, opposite)
+    const iy=(Math.max(yA,yB)+groundY)/2-6;
+    el(svg,'text',{x:(xA+wA),y:iy-16,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='接触力 N='+N.toFixed(1)+'N';
+    el(svg,'line',{x1:xA+wA,y1:iy,x2:xA+wA,y2:groundY-4,stroke:GREEN,'stroke-width':4,'stroke-dasharray':'4 3'});
+    note.innerHTML='👉 '+(side===0?'推 A(它顶 B)':'推 B(它顶 A)')+':加速度 a='+a.toFixed(2)+' m/s²(两种推法<b>相同</b>)。但接触力 N=['+(pushed)+'质量占比]×F = '+N.toFixed(2)+' N。<b>被顶着走的是 '+pushed+'</b>，N 只需拖动它。';
+    note.style.borderColor=side===0?BLUE:VIO;
+  }
+  function arrow(p,x,y,len,col,lab){
+    const dir=len>=0?1:-1;
+    el(p,'line',{x1:x,y1:y,x2:x+len,y2:y,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x+len)+','+(y-6)+' '+(x+len+dir*10)+','+y+' '+(x+len)+','+(y+6),fill:col});
+    el(p,'text',{x:len>=0?x+len+6:x+len-6,y:y-9,'font-size':12,'font-weight':900,fill:col,'text-anchor':len>=0?'end':'start'}).textContent=lab;
+  }
+  draw();
+})();
+
+/* ===== 互动4:绳连体(定滑轮) ===== */
+(function(){
+  const cv=document.getElementById('ropeCv');const ctx=cv.getContext('2d');
+  const M1s=document.getElementById('ropeM1'),M2s=document.getElementById('ropeM2');
+  const oA=document.getElementById('ropeA'),oT=document.getElementById('ropeT'),oC1=document.getElementById('ropeC1'),oC2=document.getElementById('ropeC2');
+  let m1=3,m2=2,off=0,running=false,v=0;
+  function sync(){m1=+M1s.value;m2=+M2s.value;stats();off=0;v=0;draw();}
+  M1s.oninput=M2s.oninput=sync;
+  function stats(){
+    const a=Math.abs(m1-m2)*G/(m1+m2);
+    const T=2*m1*m2*G/(m1+m2);
+    oA.textContent=a.toFixed(2)+' m/s²';
+    oT.textContent=T.toFixed(1)+' N';
+    oC1.textContent=(m1*G-T).toFixed(1)+'='+(m1*a).toFixed(1);
+    oC2.textContent=(T-m2*G).toFixed(1)+'='+(m2*a).toFixed(1);
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // pulley
+    const px=350,py=40,pr=26;
+    ctx.fillStyle='#bbb';ctx.beginPath();ctx.arc(px,py,pr,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle=INK;ctx.beginPath();ctx.arc(px,py,4,0,2*Math.PI);ctx.fill();
+    // support
+    ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(px,py-pr);ctx.lineTo(px,8);ctx.stroke();
+    ctx.fillRect(px-40,2,80,7);
+    // rope down both sides
+    const lx=px-pr,rx=px+pr;
+    // heavier side goes down; assume m1 left, m2 right; m1 falls if heavier
+    const dir=(m1>=m2)?1:-1;
+    const y1=90+off*dir, y2=90-off*dir;
+    ctx.strokeStyle=BROWN;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(lx,py);ctx.lineTo(lx,y1);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(rx,py);ctx.lineTo(rx,y2);ctx.stroke();
+    // blocks
+    box(lx,y1,m1,'m₁',BLUE);
+    box(rx,y2,m2,'m₂',VIO);
+    // labels
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('左挂 m₁='+m1+'kg',30,150);ctx.fillText('右挂 m₂='+m2+'kg',560,150);
+    ctx.fillStyle=RED;ctx.font='bold 12px sans-serif';
+    ctx.fillText('绳张力 T 两端相等',260,215);
+  }
+  function box(cx,topY,m,lab,col){
+    const s=26+m*6;
+    ctx.fillStyle=col;ctx.fillRect(cx-s/2,topY,s,s);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(cx-s/2,topY,s,s);
+    ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+    ctx.fillText(lab,cx,topY+s/2+4);ctx.textAlign='left';
+  }
+  function loop(){
+    if(!running)return;
+    const a=Math.abs(m1-m2)*G/(m1+m2);
+    v+=a*0.02;off+=v*0.6;
+    if(off>60){off=60;running=false;}
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('ropeGo').onclick=()=>{off=0;v=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('ropeReset').onclick=()=>{off=0;v=0;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动5:斜面连接体 ===== */
+(function(){
+  const svg=document.getElementById('slopeSvg');
+  const Ts=document.getElementById('slT'),M1s=document.getElementById('slM1'),M2s=document.getElementById('slM2');
+  const oA=document.getElementById('slA'),oG1=document.getElementById('slG1'),oN=document.getElementById('slN'),oChk=document.getElementById('slChk');
+  let th=30,m1=2,m2=1;
+  function sync(){th=+Ts.value;m1=+M1s.value;m2=+M2s.value;draw();}
+  Ts.oninput=M1s.oninput=M2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const rad=th*Math.PI/180;
+    const a=G*Math.sin(rad); // smooth incline
+    const g1=m1*G*Math.sin(rad);
+    const N=m2*(G*Math.sin(rad)-a); // =0 for smooth
+    oA.textContent=a.toFixed(2)+' m/s²';
+    oG1.textContent=g1.toFixed(1)+' N';
+    oN.textContent=N.toFixed(2)+' N';
+    oChk.textContent=N.toFixed(2)+'='+(m2*(G*Math.sin(rad)-a)).toFixed(2)+' ✓';
+    // incline triangle
+    const ax=80,ay=250,len=520;
+    const bx=ax+len,by=ay;
+    const tx=ax,ty=ay-len*Math.tan(rad);
+    el(svg,'polygon',{points:ax+','+ay+' '+bx+','+by+' '+ax+','+ty,fill:'#e8dcc0',stroke:INK,'stroke-width':3});
+    // blocks on incline (two stacked along slope): place along hypotenuse
+    // hypotenuse from (ax,ty) to (bx,by)
+    const ux=(bx-ax),uy=(by-ty);const ul=Math.hypot(ux,uy);const nx=ux/ul,ny=uy/ul;
+    // position block along slope
+    function place(t,m,col,lab){
+      const cx=ax+nx*t, cy=ty+ny*t;
+      const s=22+m*6;
+      // block drawn as rotated square roughly
+      const px=cx - ny*(s/2), py=cy + nx*(s/2);
+      el(svg,'rect',{x:cx-s/2,y:cy-s-6,width:s,height:s,fill:col,stroke:INK,'stroke-width':3,transform:'rotate('+th+','+cx+','+(cy-s/2-6)+')'});
+      el(svg,'text',{x:cx,y:cy-s/2-2,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle',transform:'rotate('+th+','+cx+','+(cy-s/2-6)+')'}).textContent=lab+'='+m;
+      return {cx:cx,cy:cy};
+    }
+    const p1=place(ul*0.35,m1,BLUE,'m₁');
+    const p2=place(ul*0.60,m2,VIO,'m₂');
+    // gravity component arrow along slope on m1
+    const gx=nx, gy=ny;
+    arrow(svg,p1.cx,p1.cy-14, gx*Math.min(70,g1*4), gy*Math.min(70,g1*4), RED,'mg·sinθ');
+    // angle label
+    el(svg,'text',{x:ax+40,y:ay-8,'font-size':13,'font-weight':900,fill:INK}).textContent='θ='+th+'°';
+    el(svg,'text',{x:350,y:280,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='光滑斜面:a=g·sinθ='+a.toFixed(2)+'(与质量无关) → 接触力 N='+N.toFixed(1)+'N(光滑时为0!)';
+  }
+  function arrow(p,x,y,dx,dy,col,lab){
+    if(Math.hypot(dx,dy)<3)return;
+    const x2=x+dx,y2=y+dy;const L=Math.hypot(dx,dy);const ux=dx/L,uy=dy/L;
+    el(p,'line',{x1:x,y1:y,x2:x2,y2:y2,stroke:col,'stroke-width':4});
+    el(p,'polygon',{points:x2+','+y2+' '+(x2-ux*10-uy*6)+','+(y2-uy*10+ux*6)+' '+(x2-ux*10+uy*6)+','+(y2-uy*10-ux*6),fill:col});
+    el(p,'text',{x:x2+ux*8,y:y2+uy*8+4,'font-size':11.5,'font-weight':900,fill:col}).textContent=lab;
+  }
+  sync();
+})();
+
+/* ===== 互动6:向上拉的叠放体(接触力随a) ===== */
+(function(){
+  const svg=document.getElementById('critSvg');
+  const Fs=document.getElementById('crF'),M1s=document.getElementById('crM1'),M2s=document.getElementById('crM2');
+  const oA=document.getElementById('crA'),oN=document.getElementById('crN'),oFc=document.getElementById('crFc'),oSt=document.getElementById('crState');
+  let F=40,m1=2,m2=2;
+  function sync(){F=+Fs.value;m1=+M1s.value;m2=+M2s.value;draw();}
+  Fs.oninput=M1s.oninput=M2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const tot=m1+m2;
+    const a=F/tot-G; // net upward accel
+    const N=m2*(a+G); // upper block support (upward). always >=0 while lifted together
+    const Fc=tot*G; // just to lift off ground (a=0)
+    oA.textContent=a.toFixed(2)+' m/s²';
+    oN.textContent=N.toFixed(1)+' N';
+    oFc.textContent=Fc.toFixed(0)+' N(离地)';
+    oSt.textContent = a<0? '拉力不足,未离地' : '一起上升(N>0)';
+    const cx=350,baseY=250;
+    // ground
+    el(svg,'line',{x1:60,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    const lift = a>0? Math.min(60,a*10):0;
+    const y1=baseY-70-lift; // lower block top
+    const w=90;
+    // lower block m1
+    el(svg,'rect',{x:cx-w/2,y:y1,width:w,height:60,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:y1+34,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='下块 m₁='+m1;
+    // upper block m2 on top
+    const w2=70,y2=y1-52;
+    el(svg,'rect',{x:cx-w2/2,y:y2,width:w2,height:50,fill:VIO,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:y2+30,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='上块 m₂='+m2;
+    // pull F upward on lower block
+    arrowV(svg,cx-w/2+14,y1, -Math.min(70,F),RED,'F='+F);
+    // support N on upper block (upward, from interface)
+    arrowV(svg,cx,y1, -Math.min(46,N*0.7+6),GREEN,'N='+N.toFixed(0));
+    el(svg,'text',{x:350,y:baseY+30,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='向上拉下块，托着上块升:上块受接触力 N=m₂(g+a) — 此模型 N 不归零';
+    el(svg,'text',{x:350,y:baseY+50,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='真正的「分离临界(N→0)」是向下加速情形,见下方互动7';
+  }
+  function arrowV(p,x,y,len,col,lab){
+    const dir=len>=0?1:-1;
+    el(p,'line',{x1:x,y1:y,x2:x,y2:y+len,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x-6)+','+(y+len)+' '+x+','+(y+len+dir*10)+' '+(x+6)+','+(y+len),fill:col});
+    el(p,'text',{x:x+9,y:y+len/2,'font-size':12,'font-weight':900,fill:col}).textContent=lab;
+  }
+  sync();
+})();
+
+/* ===== 互动7:真·分离临界(向下加速,N→0) ===== */
+(function(){
+  const svg=document.getElementById('crit2Svg');
+  const As=document.getElementById('c2A'),Ms=document.getElementById('c2M');
+  const oN=document.getElementById('c2N'),oAc=document.getElementById('c2Ac'),oSt=document.getElementById('c2St'),oZ=document.getElementById('c2Z');
+  let a=4,m2=2;
+  function sync(){a=+As.value;m2=+Ms.value;draw();}
+  As.oninput=Ms.oninput=sync;
+  function draw(){
+    clr(svg);
+    const N=m2*(G-a); // >=0 while pressed; =0 at a=g; <0 impossible (separated)
+    const sep=a>=G;
+    oN.textContent=(N>0?N.toFixed(1):'0.0')+' N';
+    oAc.textContent='g = '+G+' m/s²';
+    oSt.textContent= a<G? '接触加速(N>0)' : (a===G?'★恰好分离临界':'已分离(上块跟不上)');
+    oZ.textContent= a>=G? '是!N=0→分离' : '否(N='+N.toFixed(1)+'N)';
+    const cx=350,topY=60;
+    // downward accel arrow
+    arrowV(svg,120,90, Math.min(90,a*6+6), RED,'a='+a+' ↓');
+    // lower block
+    const y1=140,w=100;
+    el(svg,'rect',{x:cx-w/2,y:y1,width:w,height:60,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:y1+34,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='下块(被带着向下加速)';
+    // upper block, if separated show a gap
+    const gap=sep? Math.min(40,(a-G)*8+8):2;
+    const w2=72,y2=y1-52-gap;
+    el(svg,'rect',{x:cx-w2/2,y:y2,width:w2,height:50,fill:sep?ORANGE:VIO,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:y2+30,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='上块 m₂='+m2;
+    // forces on upper block: weight down, support N up
+    arrowV(svg,cx-24,y2+50, 34, INK,'m₂g');
+    if(!sep){ arrowV(svg,cx+24,y2, -Math.min(40,N*0.9+4), GREEN,'N='+(N>0?N.toFixed(0):'0')); }
+    else { el(svg,'text',{x:cx+30,y:y2+10,'font-size':12,'font-weight':900,fill:RED}).textContent='N=0 已分离!'; }
+    el(svg,'text',{x:350,y:250,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='隔离上块:m₂g − N = m₂a → N=m₂(g−a)';
+    el(svg,'text',{x:350,y:272,'font-size':12.5,'font-weight':900,fill:sep?RED:GREEN,'text-anchor':'middle'}).textContent='令 N=0 → a临界=g='+G+' m/s²(向下加速度超过 g，上块即分离)';
+  }
+  function arrowV(p,x,y,len,col,lab){
+    if(Math.abs(len)<2)return;
+    const dir=len>=0?1:-1;
+    el(p,'line',{x1:x,y1:y,x2:x,y2:y+len,stroke:col,'stroke-width':5});
+    el(p,'polygon',{points:(x-6)+','+(y+len)+' '+x+','+(y+len+dir*10)+' '+(x+6)+','+(y+len),fill:col});
+    el(p,'text',{x:x+9,y:y+len/2,'font-size':12,'font-weight':900,fill:col}).textContent=lab;
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 整体法和隔离法各自求什么?一句话口诀?",a:"整体法求系统加速度 a 或求外力(内力不出现);隔离法单拎一个物体求它们之间的内力(接触力/绳张力)。口诀:先整体求 a，后隔离求内力。"},
+ {q:"2. 为什么整体法求不出内力?",a:"因为整体法把系统当一个对象，内部物体间的相互作用力(内力)成对出现、相互抵消，在整体方程里根本不出现。要求内力必须切换到隔离法。"},
+ {q:"3. 光滑水平面推 m₁=2kg 顶着 m₂=1kg，F=12N，求 a 和它们间接触力。",a:"整体:a=F/(m₁+m₂)=12/3=4 m/s²。隔离后块 m₂(只受接触力 N):N=m₂a=1×4=4N。验证前块 F−N=12−4=8=m₁a=2×4=8 ✓。"},
+ {q:"4. 加速度相同时，某界面内力如何快速求?",a:"内力=(界面后方总质量/系统总质量)×F外。因为界面内力只负责把它后方那部分质量拽到共同加速度 a。"},
+ {q:"5. 同 F 同质量，推 A(顶B) 和推 B(顶A)，加速度和接触力一样吗?",a:"加速度一样(都是 F/(m₁+m₂))，但接触力不同。接触力=被顶着走那块的质量占比×F。推 A 时 N 拖 B，推 B 时 N 拖 A。"},
+ {q:"6. 绳和杆的内力有什么关键区别?",a:"绳只能拉不能推(张力 T≥0，算出负值说明绳松 T=0);杆既能拉也能推(内力可正可负，负值代表杆在压/推)。"},
+ {q:"7. 轻绳跨定滑轮，左挂 3kg、右挂 2kg，求 a 和绳张力 T。",a:"整体:a=(m₁−m₂)g/(m₁+m₂)=(3−2)×10/5=2 m/s²。隔离右块(上升):T−m₂g=m₂a → T=2×(10+2)=24N。验证左块:30−24=6=3×2 ✓。T 介于两重之间。"},
+ {q:"8. 光滑斜面上两块叠放一起下滑，加速度多大?它们之间接触力多大?",a:"a=g·sinθ(与质量无关)。隔离上块沿斜面:mg sinθ − N = ma → N=m(g sinθ − a)=0。光滑无摩擦、加速度相同时，接触力为零!"},
+ {q:"9. 斜面上摩擦力怎么算?正压力用什么?",a:"f=μN=μ·mg·cosθ。正压力是垂直斜面方向的分量 mg cosθ，不是 mg。所有力都要沿斜面/垂直斜面分解。"},
+ {q:"10. 接触面分离的临界条件是什么?常见错误写法是什么?",a:"临界条件是接触面弹力 N=0(那一刻即将分离)。常见错误:写成「速度相等」或「距离拉开」——都错，分离看的是弹力归零。"},
+ {q:"11. 上块放下块上，整体竖直向下加速 a，求上块弹力，何时分离?",a:"隔离上块:m₂g−N=m₂a → N=m₂(g−a)。令 N=0 → a临界=g。向下加速度超过 g，上块托不住脱离(分离)。"},
+ {q:"12. 叠放体拉下块，上块靠什么加速?什么时候相对滑动?",a:"上块只靠上下面之间的摩擦力加速:f=m上·a。当所需摩擦达到最大静摩擦 μm上g 时到临界，a临界=μg;拉力再大就相对滑动，上块跟不上。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

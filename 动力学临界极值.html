@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动力学中的临界与极值问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>动力学中的临界与极值问题</h1>
+    <p class="lead">牛顿运动定律的题目大多是「稳态求解」;而临界问题问的是那个<b>状态即将改变的转折瞬间</b>——刚要打滑、绳刚要松、物体刚要离开接触面。抓住这个「刚刚好」的临界条件,列出方程,最大/最小的加速度或力就落到你手里。这是动力学里区分中等生和尖子生的分水岭。</p>
+
+    <div class="say">🗣️ <b>临界问题(人话版):</b> 临界问题就是找那个「<b>刚刚好</b>」的转折点。物体的行为在某个瞬间会「变脸」——本来一起走、突然打滑;本来绳绷着、突然松了;本来贴着面、突然飞出去。题目里只要出现「<b>恰好 / 最大 / 最小 / 刚好不</b>」这几个词,十有八九就是在问这个转折点的<b>临界值</b>。解题诀窍:先假设物体正处在这个「变脸」的瞬间,把这一瞬的特殊条件(摩擦到顶了、绳张力为零、支持力为零)写成方程,答案自然浮现。</div>
+
+    <div class="keybox"><b>四大临界条件(背下来):</b> ① 两物即将<b>相对滑动</b> → 摩擦力达到最大静摩擦 <b>f=μN</b>;② 绳恰好<b>松弛</b> → 绳张力 <b>T=0</b>;③ 物体恰好<b>离开接触面</b> → 支持力 <b>N=0</b>;④ 叠放体恰好<b>共同加速</b> → 靠摩擦提供的加速度达到上限 <b>a=μg</b>(或对应值)。解题主线:<b>先设临界状态 → 写临界条件方程 → 联立求极值</b>。</div>
+
+    <h2>① 临界法:先抓住那个「刚刚好」的瞬间</h2>
+    <div class="card">
+      <div class="eq">临界状态 = 一个物理量恰好等于它的极限值</div>
+      <p style="margin:8px 0">临界状态是系统从一种运动方式<b>过渡到另一种</b>的分界瞬间。在这一瞬,某个力或某个量恰好取到它的<b>边界值</b>(最大或为零)。这就是「临界条件」。</p>
+      <table>
+        <tr><th>临界类型</th><th>临界条件(方程里要写的)</th></tr>
+        <tr><td><b>即将相对滑动</b></td><td>摩擦力 f 达到最大静摩擦 <b>f=μN</b></td></tr>
+        <tr><td><b>绳恰好松弛</b></td><td>绳的张力 <b>T=0</b></td></tr>
+        <tr><td><b>恰好离开接触面</b></td><td>支持力 <b>N=0</b></td></tr>
+        <tr><td><b>叠放体恰好共同加速</b></td><td>摩擦提供的加速度到上限,<b>a=μg</b>(或所受最大静摩擦÷质量)</td></tr>
+      </table>
+      <p class="trap">⚠ 临界状态是「<b>恰好</b>」的那一瞬,不是稳态。写方程时要用临界条件替换那个恰好到顶/归零的量,别还按常规稳态去列。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 恰好不滑动:力从小增大,看静摩擦怎样爬到 f=μN 后打滑</div>
+      <svg id="frSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="frGo">▶ 力缓慢增大</button><button id="frReset">↺ 重置</button>
+        <label>外力 F <input id="frF" type="range" min="0" max="30" value="6" step="1"></label>
+        <label>动摩擦因数 μ <input id="frMu" type="range" min="0.1" max="0.6" value="0.4" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>外力 F (N)</b><span id="frOF">0</span></div>
+        <div><b>最大静摩擦 μN (N)</b><span id="frMax">0</span></div>
+        <div><b>实际摩擦 f (N)</b><span id="frf">0</span></div>
+        <div><b>状态</b><span id="frState">静止</span></div>
+      </div>
+      <p class="small">物体重 mg=20N。外力 F 从 0 增大,静摩擦<b>自动跟着变大</b>(f=F,保持静止);一旦 F 超过 <b>μN=最大静摩擦</b>,摩擦力被「顶到头」不能再增,物体<b>开始滑动</b>——那个刚好相等的 F 就是临界力。</p>
+    </div>
+
+    <h2 class="b">② 极值法:临界值往往就是最大/最小的答案</h2>
+    <div class="card">
+      <div class="eq">最大 a / 最大 F / 最小 T ⟺ 某临界条件成立时</div>
+      <p style="margin:8px 0"><b>为什么临界点对应极值?</b> 因为超过临界点系统就「变脸」了(打滑、松绳、脱离)。所以在<b>不变脸的前提下</b>,允许的加速度或外力的极限,恰好就是临界状态下算出来的那个值。</p>
+      <h3>两种典型极值</h3>
+      <div class="mono">求「最大共同加速度」:摩擦提供的加速度到上限 → a_max=μg(叠放/斜面同步)。</div>
+      <div class="mono">求「最大外力/最小外力」:某个力恰好为零或达上限 → 代入求 F 的边界。</div>
+      <p style="margin:8px 0"><b>数学极值 vs 物理临界:</b> 有些极值靠物理临界条件(N=0、T=0、f=μN)一步求出;另一些(如绳与竖直成角的力)要用<b>三角函数或二次函数</b>找数学极值。两条路都要会。</p>
+      <p class="trap">⚠ 「最大」不一定对应「力最大」,要看是<b>哪个约束先被打破</b>。先判断临界的是摩擦、绳、还是支持力,再对症下药。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 2 — 叠放体最大共同加速度:滑块调 a,看上块所需摩擦何时超过 μmg 阈值</div>
+      <svg id="thSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>共同加速度 a <input id="thA" type="range" min="0" max="6" value="2" step="0.2"></label>
+        <label>动摩擦因数 μ <input id="thMu" type="range" min="0.1" max="0.5" value="0.3" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>上块需要的力 ma (N)</b><span id="thNeed">0</span></div>
+        <div><b>能提供的上限 μmg (N)</b><span id="thMax">0</span></div>
+        <div><b>临界加速度 a_max=μg</b><span id="thAc">0</span></div>
+        <div><b>状态</b><span id="thState">同步</span></div>
+      </div>
+      <p class="small">上块只靠<b>下块给它的静摩擦</b>被带着一起加速。所需力 = ma,能提供的上限 = μmg。当 <b>a 超过 μg</b>,摩擦不够用,上块被「甩」在后面开始相对滑动。绿=同步,红=打滑。</p>
+    </div>
+
+    <h2 class="g">③ 绳-球在加速系统中:松弛与成角的临界</h2>
+    <div class="card">
+      <p style="margin:6px 0">悬挂在加速车厢/小车上的小球,绳的行为随加速度 a 变化,有两个关键临界:</p>
+      <h3>临界一:绳恰好松弛 T=0</h3>
+      <p style="margin:6px 0">当小球被斜面/挡板同时支撑时,加速度增大到某值,绳<b>张力恰好为零(T=0)</b>——再大绳就松掉、由别的力接管。此时对小球:仅靠支持力的水平分量提供 ma。</p>
+      <h3>临界二:恰好离开斜面 N=0</h3>
+      <p style="margin:6px 0">反向情形:加速度增大,支持力<b>恰好为零(N=0)</b>,小球即将离开斜面,只由绳张力和重力提供 ma。绳与竖直的夹角 θ 满足 tanθ=a/g。</p>
+      <div class="eq">悬绳偏角:tanθ = a/g　(θ 越大 → a 越大)</div>
+      <p class="trap">⚠ 判断先松绳还是先脱面,要看几何:比较「临界 a」的大小。加速度小时靠面撑,大时绳绷紧、面脱离。别默认某个力一直存在。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧵 互动 3 — 加速小车上的悬球:拖 a 看绳偏角 tanθ=a/g,以及绳/支持力何时归零</div>
+      <svg id="pdSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="pdGo">▶ 加速演示</button><button id="pdReset">↺ 重置</button>
+        <label>加速度 a <input id="pdA" type="range" min="0" max="15" value="6" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>偏角 θ=atan(a/g)</b><span id="pdTh">0</span></div>
+        <div><b>绳张力 T (N)</b><span id="pdT">0</span></div>
+        <div><b>支持力 N (N)</b><span id="pdN">0</span></div>
+        <div><b>临界</b><span id="pdCrit">—</span></div>
+      </div>
+      <p class="small">小球 m=1kg,靠<b>竖直挡板</b>(给水平支持力 N)和<b>斜绳</b>共同约束。a 小时挡板出力;a 增大到 <b>tanθ=a/g</b> 对应角度,支持力 <b>N 恰好归零</b>,球即将离板,之后全靠绳。看 T 与 N 谁先到零。</p>
+    </div>
+
+    <h2 class="o">④ 接触面脱离:N=0 是命门(不是 v=0!)</h2>
+    <div class="card">
+      <p style="margin:6px 0">「恰好离开接触面」是最容易被误解的临界:很多同学以为是「速度为零」,<b>大错</b>。物体脱离接触面的唯一标志是<b>支持力 N=0</b>。</p>
+      <div class="eq">恰好脱离接触面 ⟺ N = 0</div>
+      <h3>竖直圆周最高点</h3>
+      <p style="margin:6px 0">绳/轨道内侧约束的小球过最高点,<b>恰好通过</b>的临界:N=0,重力独自提供向心力 → mg=mv²/r → <b>v_min=√(gr)</b>。速度<b>不为零</b>,反而是有最小值。</p>
+      <h3>其它脱离情形</h3>
+      <p style="margin:6px 0">圆弧顶部滑下的物体、加速下降的电梯里的秤、被拉离桌面的木块——统统用 N=0 判定脱离瞬间。</p>
+      <p class="trap">⚠ 「恰好离开接触面」= <b>N=0</b>,而不是速度为零!竖直圆最高点恰好通过时速度反而有下限 √(gr)。把 N=0 和 v=0 弄混是本类最大失分点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎡 互动 4 — 竖直圆最高点:调速度看支持力 N 随 v 变化,N=0 即临界 v=√(gr)</div>
+      <svg id="ciSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>顶点速度 v <input id="ciV" type="range" min="0" max="8" value="4" step="0.2"></label>
+        <label>半径 r <input id="ciR" type="range" min="0.5" max="2" value="1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>向心力需求 mv²/r (N)</b><span id="ciFc">0</span></div>
+        <div><b>重力 mg (N)</b><span id="ciMg">0</span></div>
+        <div><b>轨道力 N (N)</b><span id="ciN">0</span></div>
+        <div><b>临界 v=√(gr)</b><span id="ciVc">0</span></div>
+      </div>
+      <p class="small">小球 m=1kg 在<b>圆管内</b>过最高点。向心力 = mg + N(轨道)。v 大 → 需求 mv²/r 大 → N>0(外轨压);v 减到 <b>√(gr)</b> → 需求恰好=mg → <b>N=0</b>;再小则内轨顶(N反向)。看 N 何时穿过零。</p>
+    </div>
+
+    <h2 class="v">⑤ 弹簧瞬时临界:剪断/撤除瞬间的「变」与「不变」</h2>
+    <div class="card">
+      <p style="margin:6px 0">瞬时问题考的是「某个约束突然消失的<b>那一刹那</b>」加速度是多少。核心区分两类元件:</p>
+      <table>
+        <tr><th>元件</th><th>被剪断/突变瞬间</th></tr>
+        <tr><td><b>轻绳 / 硬杆 / 接触面</b></td><td>力<b>可以突变</b>(瞬间变为0或新值)</td></tr>
+        <tr><td><b>弹簧 / 橡皮筋</b></td><td>力<b>不能突变</b>(形变来不及变,弹力保持原值)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么?</b> 弹簧的弹力由形变量决定,形变量在一瞬间来不及改变,所以<b>剪断相邻绳的瞬间,弹簧的弹力仍是原来的值</b>;而绳、接触面的力靠瞬时平衡维持,约束一断立刻归零。</p>
+      <p class="trap">⚠ 剪断瞬间:绳/杆的力 → 立刻消失;弹簧的力 → 保持不变。把弹簧当绳(以为弹力也瞬间归零)是弹簧瞬时问题的头号错误。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 5 — 剪断瞬间对比:同一装置剪绳,绳力立刻归零 vs 弹簧力保持,瞬时 a 不同</div>
+      <svg id="spSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="spcase on" data-c="0">剪断:上方是绳</button>
+        <button class="spcase" data-c="1">剪断:上方是弹簧</button>
+      </div>
+      <div class="verdict" id="spNote"></div>
+      <p class="small">下挂小球 m=1kg,另有一根<b>水平弹簧</b>拉住(原来平衡)。剪断上方连接的瞬间:若上方是<b>绳</b>→绳力消失,弹簧力还在,瞬时 a 由重力和弹簧合成;若上方是<b>弹簧</b>→该弹簧力保持,只有它承担变化,瞬时 a 不同。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 叠放体相对滑动临界(求最大共同加速度 / 最大外力)</h3>
+      <p><b class="tag">触发信号:</b>上下叠放的两块(或用绳/皮带连的多物),问「一起运动的<b>最大加速度</b>」「不打滑的<b>最大拉力</b>」。</p>
+      <p><b class="tag">标准动作:</b>设临界 = <b>即将相对滑动</b>,接触面摩擦取<b>最大静摩擦 f=μN</b>。先隔离<b>被摩擦带动的那一块</b>(它只受摩擦这一个水平力)求 a_max=f/m=μg;再对整体求最大外力 F_max=(M+m)·a_max。</p>
+      <p><b class="tag">示例(带解):</b>上块 m=1kg 叠在下块 M=3kg 上,μ=0.4,g=10。拉下块。上块靠摩擦被带,最大摩擦=μmg=0.4×1×10=4N → a_max=4/1=4 m/s²。对整体:F_max=(M+m)·a_max=4×4=<b>16N</b>。超过 16N 上块就打滑。</p>
+      <p class="trap">陷阱:忘了摩擦要取<b>最大值 μN</b>;隔离错对象(该隔离被带动的那块);把 N 当成只有上块重力而漏算叠加。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 绳-球在加速系统中(绳松弛 / 成角临界)</h3>
+      <p><b class="tag">触发信号:</b>加速小车/车厢里悬绳挂球,靠挡板或斜面辅助,问「加速度多大时绳<b>恰好松弛(T=0)</b>」「<b>恰好离开</b>斜面/挡板」。</p>
+      <p><b class="tag">标准动作:</b>设临界条件 <b>T=0</b> 或 <b>N=0</b>,画受力图,水平方向合力=ma、竖直方向合力=0,联立解临界 a。悬绳偏角用 <b>tanθ=a/g</b>。</p>
+      <p><b class="tag">示例(带解):</b>小球靠斜绳(与竖直成 37°)悬挂,下方竖直挡板给水平支持力 N。当 a 增大到球恰好离开挡板:N=0,只剩绳和重力。竖直:Tcos37°=mg;水平:Tsin37°=ma → tan37°=a/g → a=g·tan37°=10×0.75=<b>7.5 m/s²</b>。</p>
+      <p class="trap">陷阱:不确定先松绳还是先脱面(要比较临界 a);漏掉挡板支持力;tanθ 的角度取错(是与竖直的夹角)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 接触面脱离(N=0)</h3>
+      <p><b class="tag">触发信号:</b>「恰好离开」桌面/斜面/轨道,竖直圆最高点「<b>恰好通过</b>」,电梯里物体「对秤压力为零」。</p>
+      <p><b class="tag">标准动作:</b>临界条件写 <b>N=0</b>,此时由剩余的力(重力/绳)独立提供合力或向心力,解出临界速度或加速度。竖直圆最高点:mg=mv²/r → v_min=√(gr)。</p>
+      <p><b class="tag">示例(带解):</b>绳系小球在竖直面内做圆周,r=0.4m,g=10。恰好过最高点:N=0(绳松),重力提供向心力 → mg=mv²/r → v²=gr=10×0.4=4 → v_min=<b>2 m/s</b>。速度不为零!</p>
+      <p class="trap">陷阱:把「离开接触面」当成 v=0(应是 N=0);竖直圆最高点误以为速度可以为零(有下限 √gr);轨道内外侧受力方向搞反。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 传送带 / 斜面「恰好」类</h3>
+      <p><b class="tag">触发信号:</b>传送带上物体「<b>恰好</b>不滑回」「恰好到达顶端速度为零」;斜面上「恰好不下滑」「恰好匀速」。</p>
+      <p><b class="tag">标准动作:</b>分析物体与带/面的<b>相对运动方向</b>定摩擦方向;临界常是「速度恰好相等(共速)」或「恰好静止不滑」→ 此时列平衡或牛二方程求 μ、角度或长度。</p>
+      <p><b class="tag">示例(带解):</b>斜面倾角 θ,物体恰好不下滑(临界)→ 静摩擦达最大且沿斜面向上恰好平衡下滑分量:μmgcosθ=mgsinθ → <b>μ=tanθ</b>。这就是「恰好不滑」的临界因数。</p>
+      <p class="trap">陷阱:摩擦方向判错(要看相对滑动/趋势方向);「恰好共速」后摩擦可能反向;临界是最大静摩擦而非动摩擦。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 弹簧瞬时临界(剪断 / 撤除)</h3>
+      <p><b class="tag">触发信号:</b>「<b>剪断</b>某绳/撤去某力的<b>瞬间</b>,加速度多大」,装置里同时有弹簧和绳/杆。</p>
+      <p><b class="tag">标准动作:</b>判断被剪的是绳还是弹簧。<b>绳/杆/接触面力剪断瞬间立刻归零</b>;<b>弹簧力保持原值不变</b>。用剪断后的受力对物体列牛二求瞬时 a。</p>
+      <p><b class="tag">示例(带解):</b>小球用竖直弹簧连天花板、下方再用绳吊住,平衡时弹簧伸长。剪断下方绳的瞬间:弹簧力<b>保持不变</b>(=原来两力平衡值),而绳力消失。对球:合力=剪断前绳给的那份力大小,方向随之反向 → 瞬时 a=(原绳张力)/m,方向由合力定。</p>
+      <p class="trap">陷阱:把弹簧当绳(误以为弹力瞬间归零);剪断后忘了重力仍在;方向判断错。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 双临界 / 力的取值范围(区间型)</h3>
+      <p><b class="tag">触发信号:</b>「外力 F 在什么<b>范围</b>内物体不滑动/不脱离」,答案是一个<b>区间</b> [F_min, F_max]。</p>
+      <p><b class="tag">标准动作:</b>找<b>两个临界</b>:一个对应即将往一个方向滑(摩擦取一个方向的 μN),另一个对应即将往反方向滑(摩擦反向 μN)。分别求 F,得到区间。</p>
+      <p><b class="tag">示例(带解):</b>斜面上物体,μ=0.5,θ=30°,mg=20。水平外力 F 使其不滑。F 太小→下滑临界:摩擦向上取 μN;F 太大→上滑临界:摩擦向下取 μN。分别解出 F_min 和 F_max,得<b>不滑区间</b>。</p>
+      <p class="trap">陷阱:只算一个临界(漏掉另一方向);两个临界摩擦方向相反,别用同一方向;N 也随 F 变,要同步更新。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 临界时摩擦取<b>最大静摩擦 f=μN</b>,不是取动摩擦、也不是取任意值。「即将滑动」这一瞬摩擦刚好到顶。</p>
+      <p class="trap">② 「恰好离开接触面」= <b>N=0</b>,<b>不是</b>速度为零!竖直圆最高点恰好通过时速度反而有下限 v=√(gr)。</p>
+      <p class="trap">③ 叠放体能否共同加速,靠<b>摩擦力上限判断</b>:所需 ma 与能提供的 μmg 比大小。a>μg 就打滑。</p>
+      <p class="trap">④ 绳「恰好松弛」写 <b>T=0</b>;绳能拉不能推,松弛后就退出受力,别继续把它画进图里。</p>
+      <p class="trap">⑤ 弹簧力<b>不能突变</b>,剪断相邻绳的瞬间弹簧力保持原值;绳/杆/接触面力可以瞬间归零。</p>
+      <p class="trap">⑥ 「最大」到底是力最大还是加速度最大,要看<b>哪个约束先破</b>。先判临界的是摩擦、绳还是支持力。</p>
+      <p class="trap">⑦ 区间型(不滑动范围)有<b>两个临界</b>,摩擦方向相反,别只算一头。</p>
+      <p class="trap">⑧ 悬绳偏角 <b>tanθ=a/g</b>,θ 是与<b>竖直</b>的夹角;别和与水平的夹角混了。</p>
+      <p class="trap">⑨ 隔离法选对象:求叠放体临界,隔离<b>被摩擦带动的那一块</b>(它水平方向只有摩擦一个力),最省事。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 临界问题的统一思路是「设-列-解」:</b> 先<b>设</b>系统正处于临界的那一瞬,再把临界条件(f=μN / T=0 / N=0 / a=μg)<b>列</b>成方程,最后<b>解</b>出极值。所有临界题都是这个骨架——你要训练的是「一眼看出哪个量恰好到边界」。</p>
+      <p style="margin:8px 0"><b>② 极值的两个来源要分清:</b> 一类是<b>物理临界</b>(某力到边界:N=0、T=0、f=μN),一步代入即得;另一类是<b>数学极值</b>(合力方向可变时,用 tanθ、二次函数配方或求导找最值)。前者靠受力洞察,后者靠数学工具,尖子生两手都硬。</p>
+      <p style="margin:8px 0"><b>③ 「哪个约束先破」是判断临界的核心直觉:</b> 一个系统常有多个可能的临界(先松绳?先脱面?先打滑?)。把每个临界对应的 a(或 F)都算出来,<b>最先到达的那个</b>才是真正生效的临界。别凭感觉默认某一个。</p>
+      <p style="margin:8px 0"><b>④ 静摩擦是「智能的」:</b> 它在 0 到 μN 之间<b>自动调节</b>,永远刚好平衡趋势——直到被顶到 μN 才「投降」打滑。理解这一点,你就懂了为什么临界一定发生在 f=μN:这是静摩擦的能力上限。</p>
+      <p style="margin:8px 0"><b>⑤ 瞬时问题看「谁能突变、谁不能」:</b> 绳/杆/面靠瞬时平衡,约束一断力立刻归零;弹簧/橡皮筋靠形变储力,形变来不及变、力就保持。这条「突变规则」是弹簧瞬时题的唯一钥匙,背下来遇题即秒。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:牛顿运动定律、圆周运动攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const G=10;
+
+/* ===== 互动1:恰好不滑动 —— 静摩擦爬到 μN ===== */
+(function(){
+  const svg=document.getElementById('frSvg');
+  const Fs=document.getElementById('frF'),Mus=document.getElementById('frMu');
+  const oF=document.getElementById('frOF'),oMax=document.getElementById('frMax'),of=document.getElementById('frf'),oState=document.getElementById('frState');
+  const mg=20;
+  let F=6,mu=0.4,anim=1,running=false;
+  function sync(){F=+Fs.value;mu=+Mus.value;}
+  Fs.oninput=Mus.oninput=()=>{sync();draw();};
+  function draw(){
+    clr(svg);
+    const N=mg,fmax=mu*N;
+    const f=Math.min(F,fmax);
+    const slide=F>fmax+0.001;
+    // ground
+    el(svg,'line',{x1:40,y1:210,x2:660,y2:210,stroke:INK,'stroke-width':4});
+    for(let x=40;x<660;x+=22){el(svg,'line',{x1:x,y1:210,x2:x-10,y2:222,stroke:INK,'stroke-width':2});}
+    // block
+    const bx=slide?300+anim*60:300;
+    el(svg,'rect',{x:bx,y:150,width:120,height:60,fill:slide?RED:GREEN,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:bx+60,y:186,'font-size':15,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m';
+    // applied force arrow (right)
+    const fl=F*5;
+    el(svg,'line',{x1:bx+120,y1:180,x2:bx+120+fl,y2:180,stroke:BLUE,'stroke-width':6});
+    el(svg,'polygon',{points:(bx+120+fl)+',174 '+(bx+130+fl)+',180 '+(bx+120+fl)+',186',fill:BLUE});
+    el(svg,'text',{x:bx+128+fl,y:172,'font-size':13,'font-weight':900,fill:BLUE}).textContent='F='+F;
+    // friction arrow (left)
+    const frl=f*5;
+    el(svg,'line',{x1:bx,y1:200,x2:bx-frl,y2:200,stroke:RED,'stroke-width':6});
+    if(frl>4)el(svg,'polygon',{points:(bx-frl)+',194 '+(bx-frl-10)+',200 '+(bx-frl)+',206',fill:RED});
+    el(svg,'text',{x:bx-frl-6,y:214,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='f='+f.toFixed(1);
+    // bar chart: f vs fmax
+    const bx0=90,by=280,bw=48;
+    el(svg,'text',{x:250,y:250,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='静摩擦上限 μN='+fmax.toFixed(1)+'N';
+    el(svg,'line',{x1:70,y1:by-fmax*3.5,x2:430,y2:by-fmax*3.5,stroke:INK,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:440,y:by-fmax*3.5+4,'font-size':12,'font-weight':800,fill:INK}).textContent='μN 上限';
+    el(svg,'rect',{x:bx0,y:by-f*3.5,width:bw,height:f*3.5,fill:slide?RED:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx0+bw/2,y:by+16,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='实际 f';
+    // title
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=slide?'F 超过 μN → 摩擦到顶,物体打滑!':'F ≤ μN → 静摩擦自动平衡,静止';
+    // outputs
+    oF.textContent=F.toFixed(0);oMax.textContent=fmax.toFixed(1);of.textContent=f.toFixed(1);
+    oState.textContent=slide?'滑动':'静止';oState.style.color=slide?RED:GREEN;
+  }
+  function loop(){if(!running)return;anim+=0.05;if(anim>2){running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('frGo').onclick=()=>{sync();anim=1;running=true;requestAnimationFrame(loop);};
+  document.getElementById('frReset').onclick=()=>{sync();anim=1;running=false;draw();};
+  sync();draw();
+})();
+
+/* ===== 互动2:叠放体最大共同加速度 ===== */
+(function(){
+  const svg=document.getElementById('thSvg');
+  const As=document.getElementById('thA'),Mus=document.getElementById('thMu');
+  const oNeed=document.getElementById('thNeed'),oMax=document.getElementById('thMax'),oAc=document.getElementById('thAc'),oState=document.getElementById('thState');
+  const m=2; // 上块质量 kg
+  let a=2,mu=0.3;
+  function sync(){a=+As.value;mu=+Mus.value;draw();}
+  As.oninput=Mus.oninput=sync;
+  function draw(){
+    clr(svg);
+    const need=m*a, cap=mu*m*G, ac=mu*G;
+    const slide=need>cap+0.001;
+    // ground
+    el(svg,'line',{x1:40,y1:230,x2:660,y2:230,stroke:INK,'stroke-width':4});
+    // lower block M
+    el(svg,'rect',{x:200,y:170,width:280,height:60,fill:'#c9bfa0',stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:340,y:206,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='下块 M（被拉）';
+    // upper block m (slides right relative if slide)
+    const off=slide?40:0;
+    el(svg,'rect',{x:260-off,y:110,width:150,height:60,fill:slide?RED:GREEN,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:335-off,y:146,'font-size':15,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='上块 m';
+    // friction on upper block (drives it, points in accel dir = right)
+    el(svg,'line',{x1:335-off,y1:165,x2:335-off+need*7,y2:165,stroke:VIO,'stroke-width':6});
+    el(svg,'polygon',{points:(335-off+need*7)+',159 '+(345-off+need*7)+',165 '+(335-off+need*7)+',171',fill:VIO});
+    el(svg,'text',{x:335-off+need*7+6,y:158,'font-size':12,'font-weight':900,fill:VIO}).textContent='f需='+need.toFixed(1);
+    // pull arrow on lower
+    el(svg,'line',{x1:480,y1:200,x2:540,y2:200,stroke:BLUE,'stroke-width':6});
+    el(svg,'polygon',{points:'540,194 550,200 540,206',fill:BLUE});
+    // bar comparison
+    const by=100,bx0=520;
+    el(svg,'text',{x:585,y:130,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='需求 vs 上限';
+    el(svg,'rect',{x:bx0,y:by-need*5,width:34,height:need*5,fill:slide?RED:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:bx0+50,y:by-cap*5,width:34,height:cap*5,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx0+17,y:by+14,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='ma';
+    el(svg,'text',{x:bx0+67,y:by+14,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='μmg';
+    // title
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=slide?('a='+a.toFixed(1)+' > μg='+ac.toFixed(1)+' → 摩擦不够,上块打滑!'):('a='+a.toFixed(1)+' ≤ μg='+ac.toFixed(1)+' → 摩擦够用,同步加速');
+    el(svg,'text',{x:350,y:255,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='上块所需 ma='+need.toFixed(1)+'N,能提供 μmg='+cap.toFixed(1)+'N';
+    oNeed.textContent=need.toFixed(1);oMax.textContent=cap.toFixed(1);oAc.textContent=ac.toFixed(1);
+    oState.textContent=slide?'打滑':'同步';oState.style.color=slide?RED:GREEN;
+  }
+  sync();
+})();
+
+/* ===== 互动3:加速小车上的悬球 ===== */
+(function(){
+  const svg=document.getElementById('pdSvg');
+  const As=document.getElementById('pdA');
+  const oTh=document.getElementById('pdTh'),oT=document.getElementById('pdT'),oN=document.getElementById('pdN'),oCrit=document.getElementById('pdCrit');
+  const m=1;
+  // 绳与竖直固定成 37°(cos=0.8,sin=0.6);挡板在球左侧给水平支持力 N(向右为正)
+  const ang=37*Math.PI/180, cosA=0.8, sinA=0.6;
+  let a=6,anim=1,running=false;
+  function sync(){a=+As.value;}
+  As.oninput=()=>{sync();draw();};
+  function compute(){
+    // 竖直: T*cosA = mg  => T = mg/cosA (只要绳绷紧,球被绳定在 37°方向)
+    // 水平: T*sinA + N = m*a  => N = m*a - T*sinA
+    // 临界离板 N=0 时 a = T*sinA/m = (mg/cosA)*sinA/m = g*tanA = 7.5
+    const T=m*G/cosA;
+    let N=m*a - T*sinA;
+    let critN = N<=0.01;
+    // 若 N<0 表示球已离板,此时绳角自动增大满足 tanθ=a/g,N=0
+    let Teff, Neff, theta;
+    if(N>0){Teff=T;Neff=N;theta=ang;}
+    else{theta=Math.atan(a/G);Teff=m*Math.sqrt(a*a+G*G);Neff=0;}
+    return {T:Teff,N:Neff,theta:theta,离板:N<=0.01};
+  }
+  function draw(){
+    clr(svg);
+    const r=compute();
+    // 小车(车厢)
+    el(svg,'rect',{x:180,y:70,width:340,height:170,fill:'none',stroke:INK,'stroke-width':4});
+    // 顶部悬挂点
+    const ox=350,oy=80;
+    el(svg,'circle',{cx:ox,cy:oy,r:5,fill:INK});
+    // 绳:与竖直成 theta,向右后方摆(加速向右,球向后甩→绳向左倾;这里向左画)
+    const L=110;
+    const bx=ox - L*Math.sin(r.theta), by=oy + L*Math.cos(r.theta);
+    el(svg,'line',{x1:ox,y1:oy,x2:bx,y2:by,stroke:BROWN,'stroke-width':4});
+    // 挡板(竖直,在球左侧)
+    el(svg,'line',{x1:200,y1:90,x2:200,y2:230,stroke:'#888','stroke-width':8});
+    el(svg,'text',{x:196,y:130,'font-size':12,'font-weight':900,fill:'#666','text-anchor':'end'}).textContent='挡板';
+    // 球
+    el(svg,'circle',{cx:bx,cy:by,r:18,fill:r.离板?RED:GREEN,stroke:INK,'stroke-width':4});
+    // 加速度箭头(向右)
+    el(svg,'line',{x1:540,y1:50,x2:600,y2:50,stroke:VIO,'stroke-width':6});
+    el(svg,'polygon',{points:'600,44 612,50 600,56',fill:VIO});
+    el(svg,'text',{x:560,y:42,'font-size':13,'font-weight':900,fill:VIO}).textContent='a='+a.toFixed(1);
+    // 角度标注
+    el(svg,'line',{x1:ox,y1:oy,x2:ox,y2:oy+40,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:ox-6,y:oy+30,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='θ';
+    // title
+    el(svg,'text',{x:350,y:266,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=r.离板?('a≥7.5 → N=0,球恰好离开挡板,全靠绳(tanθ=a/g)'):('a<7.5 → 挡板给支持力 N='+r.N.toFixed(1)+'N,绳保持 37°');
+    el(svg,'text',{x:350,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='临界:N=0 时 a=g·tan37°=7.5 m/s²';
+    oTh.textContent=(r.theta*180/Math.PI).toFixed(1)+'°';
+    oT.textContent=r.T.toFixed(1);oN.textContent=r.N.toFixed(1);
+    oCrit.textContent=r.离板?'N=0 已临界':'—';oCrit.style.color=r.离板?RED:INK;
+  }
+  function loop(){if(!running)return;a+=0.1;if(a>=15){a=15;running=false;}As.value=a;draw();requestAnimationFrame(loop);}
+  document.getElementById('pdGo').onclick=()=>{a=0;As.value=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('pdReset').onclick=()=>{a=6;As.value=6;running=false;draw();};
+  sync();draw();
+})();
+
+/* ===== 互动4:竖直圆最高点 N 随 v 变化 ===== */
+(function(){
+  const svg=document.getElementById('ciSvg');
+  const Vs=document.getElementById('ciV'),Rs=document.getElementById('ciR');
+  const oFc=document.getElementById('ciFc'),oMg=document.getElementById('ciMg'),oN=document.getElementById('ciN'),oVc=document.getElementById('ciVc');
+  const m=1;
+  let v=4,r=1;
+  function sync(){v=+Vs.value;r=+Rs.value;draw();}
+  Vs.oninput=Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const Fc=m*v*v/r, mg=m*G;
+    const N=Fc-mg; // 圆管:N>0 外轨压(向下),N<0 内轨顶(向上)
+    const vc=Math.sqrt(G*r);
+    // 圆
+    const cx=230,cy=170,R=95;
+    el(svg,'circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:INK,'stroke-width':4});
+    // 小球在最高点
+    const px=cx,py=cy-R;
+    el(svg,'circle',{cx:px,cy:py,r:15,fill:Math.abs(N)<0.1?YEL:(N>0?BLUE:RED),stroke:INK,'stroke-width':4});
+    // 重力箭头(向下)
+    el(svg,'line',{x1:px,y1:py,x2:px,y2:py-40,stroke:INK,'stroke-width':5});
+    el(svg,'line',{x1:px,y1:py+18,x2:px,y2:py+18+mg*4,stroke:GREEN,'stroke-width':5});
+    el(svg,'polygon',{points:(px-6)+','+(py+18+mg*4)+' '+px+','+(py+30+mg*4)+' '+(px+6)+','+(py+18+mg*4),fill:GREEN});
+    el(svg,'text',{x:px+10,y:py+40,'font-size':12,'font-weight':900,fill:GREEN}).textContent='mg';
+    // 轨道力箭头
+    if(Math.abs(N)>0.1){
+      const dir=N>0?1:-1; // N>0 外轨向下压
+      const col=N>0?BLUE:RED;
+      const y2=py+18+dir*Math.min(60,Math.abs(N)*4);
+      el(svg,'line',{x1:px+22,y1:py+18,x2:px+22,y2:y2,stroke:col,'stroke-width':5});
+      el(svg,'polygon',{points:(px+16)+','+y2+' '+(px+22)+','+(y2+dir*12)+' '+(px+28)+','+y2,fill:col});
+      el(svg,'text',{x:px+30,y:(py+18+y2)/2,'font-size':12,'font-weight':900,fill:col}).textContent='N='+Math.abs(N).toFixed(1);
+    }
+    // 数轴:N 随 v
+    const axX=420,axY0=60,axY1=270,axZero=(axY0+axY1)/2;
+    el(svg,'line',{x1:axX,y1:axY0,x2:axX,y2:axY1,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:axX-8,y1:axZero,x2:axX+240,y2:axZero,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:axX+245,y:axZero+4,'font-size':11,'font-weight':800,fill:INK}).textContent='N=0';
+    el(svg,'text',{x:axX,y:axY0-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='N';
+    // 当前点
+    const ny=axZero - N*6;
+    const nyC=Math.max(axY0,Math.min(axY1,ny));
+    el(svg,'circle',{cx:axX+120,cy:nyC,r:7,fill:Math.abs(N)<0.1?YEL:(N>0?BLUE:RED),stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:axX+135,y:nyC+4,'font-size':12,'font-weight':900,fill:INK}).textContent='v='+v.toFixed(1);
+    el(svg,'text',{x:axX+30,y:axY0+14,'font-size':11,'font-weight':800,fill:BLUE}).textContent='v大→N>0(外轨压)';
+    el(svg,'text',{x:axX+30,y:axY1-6,'font-size':11,'font-weight':800,fill:RED}).textContent='v小→N<0(内轨顶)';
+    // title
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=Math.abs(N)<0.1?('恰好 N=0!v=√(gr)='+vc.toFixed(2)+' m/s(临界)'):'最高点:mv²/r = mg + N(N可正可负)';
+    oFc.textContent=Fc.toFixed(1);oMg.textContent=mg.toFixed(1);oN.textContent=N.toFixed(1);oVc.textContent=vc.toFixed(2);
+  }
+  sync();
+})();
+
+/* ===== 互动5:剪断瞬间 绳 vs 弹簧 ===== */
+(function(){
+  const svg=document.getElementById('spSvg');const note=document.getElementById('spNote');
+  let c=0;
+  const m=1;
+  document.querySelectorAll('.spcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.spcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    // 装置:球下挂,水平弹簧拉住(平衡时弹簧水平力 = Fs,竖直方向靠上方连接件平衡)
+    // 平衡:上方连接件竖直力承担 mg;水平弹簧 Fs 与... 这里简化:平衡时上方力=mg(竖直),弹簧水平力设为 6N被墙的另一约束平衡(仅演示突变规则)
+    const mg=m*G, Fs=6;
+    // 天花板
+    el(svg,'line',{x1:100,y1:50,x2:600,y2:50,stroke:INK,'stroke-width':5});
+    for(let x=110;x<600;x+=26){el(svg,'line',{x1:x,y1:50,x2:x-10,y2:40,stroke:INK,'stroke-width':2});}
+    const bx=350,by=190;
+    // 上方连接件(被剪)
+    if(c===0){ // 绳
+      el(svg,'line',{x1:bx,y1:50,x2:bx,y2:by-18,stroke:BROWN,'stroke-width':4});
+      el(svg,'text',{x:bx+10,y:120,'font-size':13,'font-weight':900,fill:BROWN}).textContent='绳(剪)';
+    }else{ // 弹簧(竖直画成锯齿)
+      let d='M '+bx+' 50';for(let i=0;i<8;i++){d+=' L '+(bx+(i%2?12:-12))+' '+(66+i*15);}d+=' L '+bx+' '+(by-18);
+      el(svg,'path',{d:d,fill:'none',stroke:VIO,'stroke-width':3});
+      el(svg,'text',{x:bx+18,y:120,'font-size':13,'font-weight':900,fill:VIO}).textContent='弹簧(剪)';
+    }
+    // 剪刀标记
+    el(svg,'text',{x:bx-40,y:125,'font-size':22}).textContent='✂';
+    // 水平弹簧(左侧墙到球)
+    el(svg,'line',{x1:120,y1:60,x2:120,y2:230,stroke:INK,'stroke-width':5});
+    let hd='M 130 '+by;const seg=(bx-18-140)/8;for(let i=0;i<8;i++){hd+=' L '+(140+i*seg)+' '+(by+(i%2?10:-10));}hd+=' L '+(bx-18)+' '+by;
+    el(svg,'path',{d:hd,fill:'none',stroke:VIO,'stroke-width':3});
+    el(svg,'text',{x:230,y:by-16,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='水平弹簧 Fs='+Fs;
+    // 球
+    el(svg,'circle',{cx:bx,cy:by,r:18,fill:GREEN,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:bx,y:by+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='m';
+    // 剪断瞬间受力与 a
+    // 剪断瞬间:重力 mg 始终在(竖直向下)
+    // 水平弹簧力:形变来不及变 → 保持 Fs(水平)
+    // 上方连接:若是绳→剪断后力=0;若是弹簧→本装置里被剪的就是它,它的力消失
+    // (为演示"弹簧不能突变":当剪的是绳时,水平弹簧力保持;瞬时合力=mg(下)+Fs(水平)?
+    //  实际此简化装置突出"水平弹簧力保持不变")
+    let axv, ayv, amag, msg;
+    if(c===0){ // 剪绳:绳力(竖直)瞬间消失;水平弹簧力保持 Fs
+      axv=Fs; ayv=mg; // 合力 = 水平弹簧 + 重力
+      amag=Math.sqrt(axv*axv+ayv*ayv)/m;
+      msg='剪断的是<b>绳</b>：绳的竖直力瞬间归零；但<b>水平弹簧力保持 Fs='+Fs+'N 不变</b>。瞬时合力 = 重力('+mg+'N,下) + 弹簧力('+Fs+'N,横) → 瞬时 a='+amag.toFixed(2)+' m/s²（斜向）。';
+    }else{ // 剪弹簧(竖直那根):它的力消失;水平弹簧力保持;绳不存在
+      // 这里假设竖直方向原由被剪弹簧承担部分... 简化:剪断后仅重力+水平弹簧
+      axv=Fs; ayv=mg;
+      amag=Math.sqrt(axv*axv+ayv*ayv)/m;
+      msg='剪断的是<b>竖直弹簧</b>：<b>被剪的这根弹簧力瞬间消失</b>(它被剪断了)。剩下重力+仍保持的水平弹簧力 → 瞬时 a='+amag.toFixed(2)+' m/s²。对比要点：<b>没被剪的弹簧力才保持不变</b>。';
+    }
+    // 合力箭头
+    el(svg,'line',{x1:bx,y1:by,x2:bx+axv*7,y2:by+ayv*4,stroke:RED,'stroke-width':5});
+    el(svg,'text',{x:bx+axv*7+4,y:by+ayv*4,'font-size':12,'font-weight':900,fill:RED}).textContent='合力→a';
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=c===0?BROWN:VIO;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 临界问题的三步通用解法是什么？",a:"设-列-解：先设系统处于临界的那一瞬，再把临界条件（f=μN / T=0 / N=0 / a=μg）列成方程，最后联立解出极值。"},
+ {q:"2. 两物体『即将相对滑动』的临界条件是什么？摩擦力取多少？",a:"临界条件是接触面摩擦力达到最大静摩擦 f=μN（不是动摩擦、也不是任意值）。此刻摩擦刚好被顶到上限。"},
+ {q:"3. 『恰好离开接触面』的判据是速度为零吗？",a:"不是！判据是支持力 N=0。速度可以不为零（如竖直圆最高点恰好通过时速度反而有下限 √gr）。"},
+ {q:"4. 上块 m=1kg 叠在下块上，μ=0.4，g=10，拉下块。两者共同的最大加速度是多少？",a:"上块只靠摩擦被带：最大摩擦 μmg=0.4×1×10=4N，a_max=4/1=4 m/s²（即 a_max=μg）。超过就打滑。"},
+ {q:"5. 承上，下块 M=3kg，能施加的最大拉力是多少？",a:"对整体：F_max=(M+m)·a_max=(3+1)×4=16N。超过 16N 上块相对下块滑动。"},
+ {q:"6. 竖直圆最高点『恰好通过』，最小速度是多少？为什么不是零？",a:"N=0，重力独自提供向心力：mg=mv²/r → v_min=√(gr)。若 v<√gr 则不足以维持圆周，会脱离，所以有速度下限而非零。"},
+ {q:"7. 加速小车上斜绳（与竖直成37°）挂球、下有挡板。球恰好离开挡板时 a 多大？",a:"临界 N=0：竖直 Tcos37°=mg，水平 Tsin37°=ma → tan37°=a/g → a=g·tan37°=10×0.75=7.5 m/s²。"},
+ {q:"8. 悬绳偏角与加速度的关系式？θ 是与谁的夹角？",a:"tanθ=a/g，θ 是绳与竖直方向的夹角。a 越大偏角越大。"},
+ {q:"9. 剪断相邻绳的瞬间，弹簧的弹力会立刻变吗？绳、杆呢？",a:"弹簧（橡皮筋）弹力由形变决定、来不及突变，剪断瞬间保持原值；绳、杆、接触面的力可以瞬间突变（约束一断立刻归零）。"},
+ {q:"10. 斜面上物体『恰好不下滑』的临界动摩擦因数是多少？",a:"静摩擦达最大且沿斜面向上恰好平衡下滑分量：μmgcosθ=mgsinθ → μ=tanθ。"},
+ {q:"11. 求『不滑动的外力范围』为什么会得到一个区间？",a:"因为有两个临界：F 太小→即将下滑（摩擦取一方向 μN），F 太大→即将上滑（摩擦反向 μN）。分别求得 F_min 与 F_max，构成区间。"},
+ {q:"12. 判断一个系统『先松绳还是先脱面』的方法？",a:"分别算出对应『T=0』和『N=0』的临界加速度，谁先被达到（数值小的那个），谁就是真正生效的临界，不能凭感觉默认。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遗传实验设计与探究 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>遗传实验设计与探究</h1>
+    <p class="lead">这一页不背结论,而是教你<b>设计</b>：怎么选一个「杂交组合」,让相互竞争的假设产生<b>不同的后代比例</b>,再用真实的实验结果<b>反推</b>出真相。判显隐、判纯合杂合、判基因在常染色体还是 X 染色体——全都是同一套「让区别显现出来」的思路,加上假说演绎法的骨架。</p>
+
+    <div class="say">🗣️ <b>遗传实验设计(人话版):</b> 你面前有两三个说不清对错的假设。设计实验的核心,就是<b>选一对合适的亲本去杂交(或让它自交)</b>,使得「假设 A 成立」和「假设 B 成立」会给出<b>肉眼可区分的不同后代比例</b>。实验做完看结果——出现哪种比例,就反推是哪个假设。一句话:<b>让区别显现出来</b>,再「若…则…」地读结果。这就是全部套路。</div>
+
+    <div class="keybox"><b>一句话骨架(假说演绎法):</b> <b>提出假设 → 演绎预期(若假设成立,则后代应出现某比例) → 实验验证 → 对照结果下结论</b>。答题时结论必须<b>分情况讨论</b>:若出现结果①则结论是甲,若出现结果②则结论是乙。永远别只写一种可能。</div>
+
+    <h2>① 判断显隐性:让后代替你说话</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>核心逻辑:</b> 显性性状能「盖住」隐性。所以只要制造出一次杂合,新出现的、被盖住的那个就是隐性。有两条路:</p>
+      <table>
+        <tr><th>已知条件</th><th>方法</th><th>判读</th></tr>
+        <tr><td><b>一对相对性状的纯合亲本</b></td><td>让两亲本<b>杂交</b></td><td>子一代(F1)表现出的性状 = <b>显性</b>;未表现的 = 隐性</td></tr>
+        <tr><td><b>同种性状的个体</b>(不知纯杂)</td><td>让相同性状的个体<b>自交</b></td><td>后代若<b>发生性状分离</b>(出现不同性状),则亲本性状为<b>显性</b>,新出现的为隐性</td></tr>
+      </table>
+      <div class="eq">纯合亲本杂交 → F1 谁出现,谁显性</div>
+      <div class="eq">同性状自交 → 出现分离,则亲本为显性</div>
+      <p class="trap">⚠ 「自交出现分离」只能证明<b>亲本是显性且为杂合</b>;若自交后代不分离,不能立即下结论(可能亲本是纯显性,也可能是纯隐性)。判显隐首选「纯合亲本杂交」,一步到位。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌱 互动 1 — 显隐判断:纯合亲本杂交 / 同性状自交,看后代告诉你谁是显性</div>
+      <svg id="dominSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="dommode on" data-m="0">纯合亲本杂交</button>
+        <button class="dommode" data-m="1">显性纯合自交</button>
+        <button class="dommode" data-m="2">杂合体自交</button>
+      </div>
+      <div class="verdict" id="dominNote"></div>
+      <p class="small">紫花(A)对白花(a)。看 F1 里谁出现、自交后代会不会「分离」。凡是子代新冒出一个被盖住的性状,那个就是隐性。</p>
+    </div>
+
+    <h2 class="b">② 判断纯合 / 杂合:自交 vs 测交</h2>
+    <div class="card">
+      <p style="margin:8px 0">一个<b>显性个体</b>,基因型可能是 AA(纯合)也可能是 Aa(杂合),外表一模一样。想区分,靠让它繁殖、看后代会不会「露出隐性」。</p>
+      <table>
+        <tr><th>方法</th><th>怎么做</th><th>若纯合(AA)</th><th>若杂合(Aa)</th></tr>
+        <tr><td><b>自交</b></td><td>让它自花授粉/同基因型相交</td><td>后代全显性(AA)</td><td>后代 <b>3显:1隐</b>(出现隐性)</td></tr>
+        <tr><td><b>测交</b></td><td>与<b>隐性纯合(aa)</b>杂交</td><td>后代全显性(Aa)</td><td>后代 <b>1显:1隐</b>(出现隐性)</td></tr>
+      </table>
+      <div class="eq">自交:全显 → AA　;　3:1 → Aa</div>
+      <div class="eq">测交:全显 → AA　;　1:1 → Aa</div>
+      <p style="margin:8px 0"><b>怎么选?</b> <b>植物、能自交</b>→ 优先自交(操作简单、后代多、3:1 分离比更醒目、无需另找隐性亲本)。<b>动物不能自交</b>,或身边正好有隐性纯合个体 → 用测交。</p>
+      <p class="trap">⚠ 测交必须找<b>隐性纯合(aa)</b>作对象,不能随便找个显性去交。测交的另一大用途是:<b>验证 F1 产生配子的种类和比例</b>(下面第 ⑤ 节)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎲 互动 2 — 测交棋盘格:与 aa 杂交,后代比例直接暴露待测个体的基因型</div>
+      <svg id="testSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="testmode on" data-g="AA">待测=AA(纯合)</button>
+        <button class="testmode" data-g="Aa">待测=Aa(杂合)</button>
+      </div>
+      <div class="verdict" id="testNote"></div>
+      <p class="small">左边未知个体(显性,可能 AA 或 Aa)× 右边隐性纯合 aa。棋盘格填出后代:全显 → 待测是 AA;1显1隐 → 待测是 Aa。测交把「藏起来的 a」逼了出来。</p>
+    </div>
+
+    <h2 class="g">③ 判断基因在常染色体还是 X 染色体</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>核心逻辑:</b> 若基因在 <b>X</b> 上,遗传就会「和性别挂钩」——因为雄性只有一条 X(X<sup>a</sup>Y 就表现隐性),雌雄的基因型/表现型不对称。所以判断的关键是:<b>让性状的分布和性别是否相关联显现出来</b>。</p>
+      <h3>方法一:正交、反交结果对比(最常用)</h3>
+      <p style="margin:6px 0">拿一对相对性状的纯合亲本,做两组相反的杂交(正交、反交),看<b>后代表现是否与性别有关、正反交是否一致</b>。</p>
+      <table>
+        <tr><th></th><th>常染色体上</th><th>X 染色体上</th></tr>
+        <tr><td>正交 vs 反交</td><td><b>结果相同</b>(与谁作父母无关)</td><td><b>结果不同</b>(交叉遗传)</td></tr>
+        <tr><td>性状与性别</td><td>无关(雌雄比例一样)</td><td><b>相关</b>(常出现某性状只在一种性别)</td></tr>
+      </table>
+      <h3>方法二:一次杂交看后代是否与性别关联</h3>
+      <p style="margin:6px 0">若已知显隐,用<b>隐性雌 × 显性雄</b>这类组合:常染色体则子代性状与性别无关;X 染色体则出现「儿子随母、女儿随父」的交叉遗传,性状与性别绑定。</p>
+      <div class="eq">正反交结果不同 / 性状与性别绑定 → X 染色体</div>
+      <div class="eq">正反交结果相同 / 性状与性别无关 → 常染色体</div>
+      <p class="trap">⚠ 判「常 vs X」几乎一定要用<b>正反交</b>或含性别信息的组合。只做一个方向、又不看性别,常和 X 会给出相同比例,分不开。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 3 — 正反交对比:同一对亲本,常染色体 vs X 染色体给出的后代天差地别</div>
+      <svg id="crossSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="crmode on" data-m="auto">常染色体</button>
+        <button class="crmode" data-m="x">X 染色体</button>
+      </div>
+      <div class="verdict" id="crossNote"></div>
+      <p class="small">上排=正交(隐性母×显性父),下排=反交(显性母×隐性父)。切换「常」和「X」:常染色体时正反交一样、性状与性别无关;X 染色体时正反交不同、性状锁死在性别上。这一眼的差别就是判位置的钥匙。</p>
+    </div>
+
+    <h2 class="o">④ 假说演绎法:实验设计的通用骨架</h2>
+    <div class="card">
+      <p style="margin:8px 0">孟德尔用它发现遗传规律,你用它答所有「探究/设计」题。五步一条龙:</p>
+      <div class="mono">第1步 观察现象、提出问题(为什么会出现这个比例?)</div>
+      <div class="mono">第2步 提出假设(如:该基因位于 X 染色体上 / 该个体为杂合)</div>
+      <div class="mono">第3步 演绎推理(若假设成立,则某杂交组合的后代应出现某比例)</div>
+      <div class="mono">第4步 设计并实施实验验证(选对杂交组合,统计后代)</div>
+      <div class="mono">第5步 得出结论(分情况:若出现①则…,若出现②则…)</div>
+      <p style="margin:8px 0"><b>关键词对照:</b> 孟德尔提出「遗传因子(基因)」是<b>假设</b>;「若 F1(Dd)是杂合,则测交后代应 1:1」是<b>演绎推理</b>;真去做测交、数出接近 1:1 是<b>实验验证</b>。</p>
+      <p class="trap">⚠ 别把「假说」和「演绎」搞反:假说是<b>提出的解释</b>,演绎是<b>由假说推出可检验的预期</b>(若…则…)。测交实验是「验证」环节,不是假说本身。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 4 — 假说演绎法流程图:点亮每一步,看孟德尔怎么一步步逼近真相</div>
+      <svg id="hdSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="hdStep">▶ 下一步</button><button id="hdReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="hdNote"></div>
+      <p class="small">五个方块依次点亮:提出问题 → 提出假设 → 演绎预期 → 实验验证 → 得出结论。看清「假设」和「演绎(若…则…)」是两个不同环节,测交是「验证」那一步。</p>
+    </div>
+
+    <h2 class="v">⑤ 测交的双重身份 & 对照原则</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>测交(× 隐性纯合 aa)有两大用途,别只记一个:</b></p>
+      <p style="margin:6px 0">① <b>鉴定基因型</b>(显性个体是 AA 还是 Aa,见第 ② 节)。</p>
+      <p style="margin:6px 0">② <b>验证配子种类和比例</b>:让 F1(如 Dd 或 DdRr)测交,隐性亲本只提供隐性配子(相当于「透明背景」),后代表现型的比例就<b>直接等于 F1 产生的配子比例</b>。这是孟德尔验证「分离定律 / 自由组合」的关键实验。</p>
+      <div class="eq">测交后代表现型比 = F1 配子种类与比例</div>
+      <h3>控制变量与对照(设计题的通用要求)</h3>
+      <p style="margin:6px 0"><b>单一变量:</b> 每次只改一个条件(基因位置/基因型),其余(数量、环境、统计方式)保持一致。<b>对照:</b> 正交 vs 反交互为对照;实验组要有可比的参照组。<b>足够样本:</b> 后代数量要多,比例才可靠(个别偏差不代表规律)。</p>
+      <p class="trap">⚠ 测交后代 1:1 别误读成「验证了显隐」;它验证的是 F1 <b>产生两种配子且比例相等</b>。用途一(测基因型)和用途二(验配子)要分清题目问的是哪个。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 5 — 自交后代分离比:Aa 自交出 3:1,棋盘格看「显性掩盖 + 分离」怎么算</div>
+      <svg id="selfSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>统计后代数 N <input id="selfN" type="range" min="4" max="400" value="120" step="4"></label>
+        <button id="selfRoll">🎲 抽样统计</button>
+      </div>
+      <div class="live">
+        <div><b>显性(A_)理论</b><span id="selfDT">3/4</span></div>
+        <div><b>隐性(aa)理论</b><span id="selfRT">1/4</span></div>
+        <div><b>抽样显性数</b><span id="selfDN">0</span></div>
+        <div><b>抽样隐性数</b><span id="selfRN">0</span></div>
+      </div>
+      <p class="small">Aa 自交:棋盘格得基因型 1AA:2Aa:1aa,因显性掩盖,表现型 <b>3显:1隐</b>。样本越大,抽样比越接近 3:1——这就是「足够样本」的意义。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断显隐性</h3>
+      <p><b class="tag">触发信号:</b>给一对相对性状,问「谁显谁隐」「如何判断显隐关系」;或给某性状个体让你自己设计。</p>
+      <p><b class="tag">标准动作:</b>有纯合亲本 → 让二者杂交,F1 表现的即显性。只有同种性状个体 → 让其自交,若后代出现性状分离,则亲本性状为显性。</p>
+      <p><b class="tag">示例(带方案设计):</b>紫花与白花两纯合品系,判断显隐。<b>方案:</b>紫花 × 白花杂交,统计 F1。<b>预期与结论:</b>若 F1 全为紫花,则紫花为显性、白花为隐性;若 F1 全为白花,则白花为显性。(若两品系纯合性未知,可各自自交:自交后代出现分离的那个为杂合,分离出的新性状为隐性。)</p>
+      <p class="trap">陷阱:用「后代多的就是显性」判断——错,要看是否有杂合、是否分离;自交不分离不能直接定显隐。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断纯合 / 杂合(鉴定基因型)</h3>
+      <p><b class="tag">触发信号:</b>一个显性个体,问「它是纯合还是杂合」「如何鉴定其基因型」。</p>
+      <p><b class="tag">标准动作:</b>能自交(植物)→ 自交看是否 3:1;不能自交或有隐性纯合(动物)→ 测交(×aa)看是否 1:1。</p>
+      <p><b class="tag">示例(带方案设计):</b>一株高茎豌豆(高 D 对矮 d 显性),鉴定 DD 还是 Dd。<b>方案:</b>让其自交,统计后代。<b>预期与结论:</b>若后代全为高茎,则为 DD(纯合);若后代出现高:矮≈3:1(即出现矮茎),则为 Dd(杂合)。若为动物,则改用测交(×矮茎 dd):后代全高 → DD;高:矮≈1:1 → Dd。</p>
+      <p class="trap">陷阱:测交对象找错(必须 aa);把自交 3:1 记成测交 1:1;动物题误用自交。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 判断基因在常染色体还是 X 染色体</h3>
+      <p><b class="tag">触发信号:</b>给一对性状,问「基因位于常染色体还是 X 染色体」;或性状表现有明显雌雄差异。</p>
+      <p><b class="tag">标准动作:</b>做<b>正交与反交</b>,或用「隐性雌 × 显性雄」的组合,看后代<b>性状是否与性别关联、正反交是否一致</b>。</p>
+      <p><b class="tag">示例(带方案设计):</b>某昆虫红眼对白眼显性,基因位置未知。<b>方案:</b>取白眼雌 × 红眼雄(纯合),统计 F1 雌雄眼色。<b>预期与结论:</b>若在常染色体(设 Aa×aa 等价):F1 雌雄眼色比例相同、与性别无关;若在 X 染色体(X<sup>a</sup>X<sup>a</sup> × X<sup>A</sup>Y):F1 雌全红(X<sup>A</sup>X<sup>a</sup>)、雄全白(X<sup>a</sup>Y),<b>性状与性别绑定(交叉遗传)</b>,即可判定基因在 X 上。</p>
+      <p class="trap">陷阱:只做一个方向又不看性别 → 常和 X 分不开;忘了 X 上遗传会「交叉」(儿子随母、女儿随父)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 区分两个假设,设计判别方案</h3>
+      <p><b class="tag">触发信号:</b>「基因位于 X 还是 X 与 Y 同源区」「一对还是两对基因控制」「显性纯合致死还是不致死」等给出两种可能,要你设计实验分辨。</p>
+      <p><b class="tag">标准动作:</b>找一个<b>能让两假设产生不同后代比例</b>的杂交组合(这是设计的核心!),再「若…则…」判读。</p>
+      <p><b class="tag">示例(带方案设计):</b>某性状由一对基因(假设甲)或两对独立基因(假设乙)控制,现有纯合亲本。<b>方案:</b>取显×隐纯合亲本杂交得 F1,再让 F1 自交,统计 F2 分离比。<b>预期与结论:</b>若 F2 呈 3:1,则为一对基因(假设甲);若 F2 呈 9:7 或 15:1 等两对基因的变式,则为两对基因(假设乙)。关键是选到「让两假设比例不同」的组合。</p>
+      <p class="trap">陷阱:选的组合让两假设给出相同比例(白设计);漏写「若…则…」的分情况结论。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 完善实验步骤与预期结论</h3>
+      <p><b class="tag">触发信号:</b>给半成品实验(有目的、材料),要你「补全步骤」「写出预期结果和相应结论」。</p>
+      <p><b class="tag">标准动作:</b>按「选材/分组(单一变量+对照)→ 处理(杂交/自交/测交)→ 统计后代 → 分情况写结论」补齐。结论必须<b>穷尽可能、逐一对应</b>。</p>
+      <p><b class="tag">示例(带方案设计):</b>目的:判断某显性个体基因型。<b>补全步骤:</b>① 让该个体与隐性纯合个体测交;② 统计足够数量的后代表现型及比例。<b>预期与结论:</b>若后代全为显性,则该个体为纯合子(AA);若后代显:隐≈1:1,则为杂合子(Aa)。</p>
+      <p class="trap">陷阱:步骤缺「统计足够后代」;结论只写一种情况;没写「比例」直接写「有隐性就是杂合」(个别可能是偶然,要看比例)。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>正反交</b>与<b>测交</b>用途混淆:正反交用来判「常染色体 vs X 染色体」(看性别关联);测交(×aa)用来判「纯合 vs 杂合」或验配子比例。别张冠李戴。</p>
+      <p class="trap">② 判「常 vs X」几乎一定要<b>正反交</b>或带性别信息的组合。只做单向且不看性别,常与 X 会给出相同比例,分不开。</p>
+      <p class="trap">③ 结论必须<b>分情况讨论</b>:「若出现结果 A,则结论甲;若出现结果 B,则结论乙。」只写一种可能=不完整,严重失分。</p>
+      <p class="trap">④ 自交与测交的分离比记混:自交(杂合)后代 <b>3:1</b>;测交后代 <b>1:1</b>。全显都可能是纯合。</p>
+      <p class="trap">⑤ 测交对象必须是<b>隐性纯合(aa)</b>,不能随便找显性;测交既能测基因型,也能验 F1 配子比例——看题目问哪个。</p>
+      <p class="trap">⑥ 「假说」≠「演绎」:假说是提出的解释,演绎是由假说推出的可检验预期(若…则…);测交实验属于「验证」环节。</p>
+      <p class="trap">⑦ X 染色体遗传的标志是<b>交叉遗传</b>(母传子、父传女)和性状与性别绑定,别只盯着比例数字。</p>
+      <p class="trap">⑧ 设计题要满足<b>单一变量 + 对照 + 足够样本</b>;后代太少、比例偶然偏差,不能作为结论依据。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 设计的本质是「制造可区分的信号」:</b> 好的杂交组合,能让互相竞争的假设产生<b>肉眼可分</b>的不同比例(3:1 vs 1:1 vs 9:7…)。设计前先在草稿上把每个假设的预期后代都推一遍,专挑「结果分岔最大」的那个组合去做——这才叫会设计,而不是随便交一下。</p>
+      <p style="margin:8px 0"><b>② 隐性纯合是「显影剂」:</b> 测交里的 aa 只提供隐性配子,相当于给待测个体的配子照了一张「无干扰」的相片——后代表现型比 = 待测配子比。凡是想「看清楚一个个体到底产生了哪些配子」,就用 aa 去测。这一招统一了鉴定基因型和验证自由组合两类题。</p>
+      <p style="margin:8px 0"><b>③ 「和性别是否绑定」是判位置的总开关:</b> 常染色体的遗传对雌雄一视同仁;X 染色体因雄性半合子(X<sup>a</sup>Y 就表现)必然打破对称。所以判常/X 不必死记比例,只问一句:<b>换父母角色(正反交)结果会不会变?性状会不会只落在一种性别?</b>会变、会绑定,就是 X。</p>
+      <p style="margin:8px 0"><b>④ 假说演绎法是可迁移的「科研模板」:</b> 提出假设→演绎(若…则…)→验证→结论,这套骨架不止用于孟德尔,也是所有探究实验的答题公式。写方案时按这五步分点,结论一律「若…则…」穷尽分岔,几乎不会漏点。</p>
+      <p style="margin:8px 0"><b>⑤ 学会「反推」:从比例倒查基因型:</b> 看到后代 3:1 想到亲本杂合自交;1:1 想到测交或杂合×隐性;9:3:3:1 想到双杂合自由组合;性状与性别绑定想到 X。把「常见比例 → 亲本组合」的对应表背熟,读结果就像查字典,再用它设计正向实验。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 遗传实验设计与探究 · 配套:分离定律与自由组合、伴性遗传</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:显隐判断 ===== */
+(function(){
+  const svg=document.getElementById('dominSvg');const note=document.getElementById('dominNote');
+  let m=0;
+  document.querySelectorAll('.dommode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.dommode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function flower(x,y,col,lab){
+    for(let i=0;i<5;i++){const a=i*2*Math.PI/5-Math.PI/2;el(svg,'ellipse',{cx:x+Math.cos(a)*13,cy:y+Math.sin(a)*13,rx:9,ry:14,transform:'rotate('+(a*180/Math.PI+90)+' '+(x+Math.cos(a)*13)+' '+(y+Math.sin(a)*13)+')',fill:col,stroke:INK,'stroke-width':2});}
+    el(svg,'circle',{cx:x,cy:y,r:8,fill:YEL,stroke:INK,'stroke-width':2});
+    if(lab)el(svg,'text',{x:x,y:y+40,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+  }
+  const PUR="#7A3FF2",WHT="#ffffff";
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='紫花(A)对白花(a)　—　看后代谁出现、会不会分离';
+    let pcol1,pcol2,plab1,plab2,children,msg,title;
+    if(m===0){ // AA x aa cross -> F1 all purple Aa
+      pcol1=PUR;plab1='紫花 AA';pcol2=WHT;plab2='白花 aa';
+      children=[[PUR,'紫花 Aa']];title='纯合亲本杂交';
+      msg='F1 全为紫花(Aa)。子代表现出的紫花即为★显性★,被盖住的白花为隐性。一步定显隐。';
+    }else if(m===1){ // AA self -> all purple
+      pcol1=PUR;plab1='紫花 AA';pcol2=PUR;plab2='紫花 AA';
+      children=[[PUR,'紫花 AA']];title='显性纯合自交';
+      msg='后代全为紫花,不分离。纯合自交不分离,不能单靠这个下显隐结论(纯隐自交同样不分离)。';
+    }else{ // Aa self -> 3:1 split
+      pcol1=PUR;plab1='紫花 Aa';pcol2=PUR;plab2='紫花 Aa';
+      children=[[PUR,'紫花 A_'],[PUR,'紫花 A_'],[PUR,'紫花 A_'],[WHT,'白花 aa']];title='杂合体自交';
+      msg='后代发生★性状分离★,紫:白≈3:1。既然亲本紫花分离出白花,说明紫花为显性、白花为隐性,且亲本是杂合。';
+    }
+    el(svg,'text',{x:350,y:52,'font-size':13,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent=title;
+    // parents
+    flower(200,110,pcol1,plab1);
+    el(svg,'text',{x:350,y:110,'font-size':22,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='×';
+    flower(500,110,pcol2,plab2);
+    // arrow down
+    el(svg,'line',{x1:350,y1:150,x2:350,y2:185,stroke:INK,'stroke-width':3});
+    el(svg,'polygon',{points:'344,178 356,178 350,190',fill:INK});
+    el(svg,'text',{x:390,y:175,'font-size':12,'font-weight':800,fill:INK}).textContent='后代 F';
+    // children row
+    const n=children.length;const startX=350-(n-1)*70/1;const step=n>1?Math.min(120,560/n):0;
+    const x0=350-(n-1)*step/2;
+    children.forEach((c,i)=>{flower(x0+i*step,240,c[0],c[1]);});
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=m===2?VIO:INK;
+  }
+  draw();
+})();
+
+/* ===== 互动2:测交棋盘格 ===== */
+(function(){
+  const svg=document.getElementById('testSvg');const note=document.getElementById('testNote');
+  let g="AA";
+  document.querySelectorAll('.testmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.testmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');g=b.dataset.g;draw();
+  });
+  function cell(x,y,w,h,txt,fill){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:fill,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x+w/2,y:y+h/2+6,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=txt;
+  }
+  const PURF="rgba(122,63,242,0.28)",WHF="#ffffff";
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='测交:待测显性个体 × 隐性纯合 aa';
+    // gametes of tester
+    const testG = g==="AA"?["A","A"]:["A","a"];
+    const aaG=["a","a"];
+    el(svg,'text',{x:350,y:48,'font-size':13,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='待测('+g+') 配子:'+testG.join('、')+'　|　aa 配子:a、a';
+    // grid: rows = aa gametes (a,a), cols = tester gametes
+    const gx=250,gy=80,cw=110,ch=70;
+    // header cells (tester gametes) top
+    cell(gx,gy,cw,ch,testG[0],YEL);
+    cell(gx+cw,gy,cw,ch,testG[1],YEL);
+    // left header (aa gametes)
+    cell(gx-cw,gy+ch,cw,ch,aaG[0],YEL);
+    cell(gx-cw,gy+2*ch,cw,ch,aaG[1],YEL);
+    // corner
+    cell(gx-cw,gy,cw,ch,"×","#EBE4D2");
+    // body 2x2
+    let dom=0,rec=0;
+    for(let r=0;r<2;r++){for(let c=0;c<2;c++){
+      const geno=(testG[c]+aaG[r]).split('').sort().reverse().join(''); // sort so A first
+      const isDom=geno.indexOf('A')>=0;
+      if(isDom)dom++;else rec++;
+      cell(gx+c*cw,gy+(r+1)*ch,cw,ch,geno,isDom?PURF:WHF);
+    }}
+    // verdict
+    let msg;
+    if(g==="AA"){
+      msg='后代基因型全为 Aa → 全表现显性(紫)。★出现"全显性"→ 待测个体是纯合 AA。★ 隐性配子 a 被 A 盖住,没露出来。';
+    }else{
+      msg='后代 Aa:aa = 1:1 → 显性:隐性 ≈ 1:1。★出现隐性(1:1)→ 待测个体是杂合 Aa。★ 藏着的 a 被 aa 逼了出来。';
+    }
+    el(svg,'text',{x:350,y:300,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='后代:显性 '+dom+' : 隐性 '+rec;
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=g==="Aa"?VIO:INK;
+  }
+  draw();
+})();
+
+/* ===== 互动3:正反交对比 常 vs X ===== */
+(function(){
+  const svg=document.getElementById('crossSvg');const note=document.getElementById('crossNote');
+  let m="auto";
+  document.querySelectorAll('.crmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.crmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=b.dataset.m;draw();
+  });
+  const PUR="#7A3FF2";
+  function icon(x,y,sex,col,lab){
+    // sex: 'F' female circle, 'M' male square
+    if(sex==='F')el(svg,'circle',{cx:x,cy:y,r:15,fill:col,stroke:INK,'stroke-width':3});
+    else el(svg,'rect',{x:x-14,y:y-14,width:28,height:28,fill:col,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x,y:y+5,'font-size':13,'font-weight':900,fill:col==='#ffffff'?INK:'#fff','text-anchor':'middle'}).textContent=sex==='F'?'♀':'♂';
+    if(lab)el(svg,'text',{x:x,y:y+34,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=lab;
+  }
+  const WHT="#ffffff";
+  function row(y,title,momCol,momLab,dadCol,dadLab,kids){
+    el(svg,'text',{x:40,y:y-30,'font-size':13,'font-weight':900,fill:INK}).textContent=title;
+    icon(120,y,'F',momCol,momLab);
+    el(svg,'text',{x:175,y:y+5,'font-size':18,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='×';
+    icon(230,y,'M',dadCol,dadLab);
+    el(svg,'text',{x:300,y:y+5,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='→';
+    // kids
+    kids.forEach((k,i)=>{icon(380+i*90,y,k.sex,k.col,k.lab);});
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='正交 vs 反交:紫(显)对白(隐)';
+    let msg;
+    if(m==="auto"){
+      // autosomal: cross white x purple; F1 all Aa purple both sexes
+      row(90,'正交:白♀ × 紫♂(纯合)',WHT,'aa',PUR,'AA',
+        [{sex:'F',col:PUR,lab:'紫 Aa'},{sex:'M',col:PUR,lab:'紫 Aa'}]);
+      row(230,'反交:紫♀(纯合) × 白♂',PUR,'AA',WHT,'aa',
+        [{sex:'F',col:PUR,lab:'紫 Aa'},{sex:'M',col:PUR,lab:'紫 Aa'}]);
+      msg='常染色体:正交、反交★结果相同★,F1 雌雄全为紫花,性状与性别无关。谁当爹妈都一样 → 基因在常染色体。';
+    }else{
+      // X-linked: purple X^A dominant
+      // 正交: white female Xa Xa × purple male XA Y  -> daughters XA Xa (purple), sons Xa Y (white)
+      row(90,'正交:白♀(XᵃXᵃ) × 紫♂(XᴬY)',WHT,'XᵃXᵃ',PUR,'XᴬY',
+        [{sex:'F',col:PUR,lab:'紫 XᴬXᵃ'},{sex:'M',col:WHT,lab:'白 XᵃY'}]);
+      // 反交: purple female XA XA × white male Xa Y -> daughters XA Xa purple, sons XA Y purple
+      row(230,'反交:紫♀(XᴬXᴬ) × 白♂(XᵃY)',PUR,'XᴬXᴬ',WHT,'XᵃY',
+        [{sex:'F',col:PUR,lab:'紫 XᴬXᵃ'},{sex:'M',col:PUR,lab:'紫 XᴬY'}]);
+      msg='X 染色体:正交、反交★结果不同★!正交时儿子全白(随母)、女儿全紫,交叉遗传,性状与性别绑定 → 基因在 X 染色体。';
+    }
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=m==="x"?GREEN:INK;
+  }
+  draw();
+})();
+
+/* ===== 互动4:假说演绎法流程 ===== */
+(function(){
+  const svg=document.getElementById('hdSvg');const note=document.getElementById('hdNote');
+  const steps=[
+    {t:'① 提出问题',d:'观察 F2 出现 3:1,为什么?',c:BLUE},
+    {t:'② 提出假设',d:'假设:遗传因子成对存在,配子中只含一个(分离)。',c:VIO},
+    {t:'③ 演绎推理',d:'若假设成立,则 F1(Dd)测交后代应为 1:1(若…则…)。',c:ORANGE},
+    {t:'④ 实验验证',d:'真做测交:F1 × 隐性纯合 dd,统计后代。',c:GREEN},
+    {t:'⑤ 得出结论',d:'实测≈1:1,与预期一致 → 假设成立,分离定律确立。',c:RED}
+  ];
+  let cur=0;
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='假说演绎法五步(点"下一步"依次点亮)';
+    const bx=60,bw=580,bh=40,gap=8;let y=44;
+    steps.forEach((s,i)=>{
+      const on=i<=cur;
+      el(svg,'rect',{x:bx,y:y,width:bw,height:bh,fill:on?s.c:'#ffffff',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:bx+10,y:y+25,'font-size':14,'font-weight':900,fill:on?'#fff':INK}).textContent=s.t;
+      el(svg,'text',{x:bx+120,y:y+25,'font-size':11.5,'font-weight':700,fill:on?'#fff':'#6b5d3a'}).textContent=s.d;
+      if(i<steps.length-1){el(svg,'line',{x1:bx+bw/2,y1:y+bh,x2:bx+bw/2,y2:y+bh+gap,stroke:INK,'stroke-width':3});}
+      y+=bh+gap;
+    });
+    note.innerHTML='👉 当前:<b>'+steps[cur].t+'</b> — '+steps[cur].d+(cur===1?'　【这是"假设",不是实验】':cur===2?'　【这是"演绎:若…则…",不是假设本身】':cur===3?'　【测交是"验证"环节】':'');
+    note.style.borderColor=steps[cur].c;
+  }
+  document.getElementById('hdStep').onclick=()=>{cur=(cur+1)%steps.length;draw();};
+  document.getElementById('hdReset').onclick=()=>{cur=0;draw();};
+  draw();
+})();
+
+/* ===== 互动5:自交 3:1 抽样 ===== */
+(function(){
+  const svg=document.getElementById('selfSvg');
+  const Ns=document.getElementById('selfN');
+  const oDN=document.getElementById('selfDN'),oRN=document.getElementById('selfRN');
+  let N=120;
+  function sync(){N=+Ns.value;draw(null);}
+  Ns.oninput=sync;
+  const PURF="rgba(122,63,242,0.28)",WHF="#ffffff";
+  function cell(x,y,w,h,txt,fill){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:fill,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x+w/2,y:y+h/2+6,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=txt;
+  }
+  function draw(sample){
+    clr(svg);
+    el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='Aa 自交:棋盘格 → 基因型 1AA:2Aa:1aa → 表现型 3显:1隐';
+    // punnett
+    const gx=250,gy=44,cw=90,ch=56;
+    cell(gx-cw,gy,cw,ch,'×','#EBE4D2');
+    cell(gx,gy,cw,ch,'A',YEL);cell(gx+cw,gy,cw,ch,'a',YEL);
+    cell(gx-cw,gy+ch,cw,ch,'A',YEL);cell(gx-cw,gy+2*ch,cw,ch,'a',YEL);
+    const genos=[['AA','Aa'],['Aa','aa']];
+    for(let r=0;r<2;r++)for(let c=0;c<2;c++){
+      const gg=genos[r][c];const dom=gg.indexOf('A')>=0;
+      cell(gx+c*cw,gy+(r+1)*ch,cw,ch,gg,dom?PURF:WHF);
+    }
+    el(svg,'text',{x:350,y:gy+3*ch+26,'font-size':13,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='理论:显性 3/4,隐性 1/4';
+    // sampling result
+    if(sample){
+      el(svg,'text',{x:350,y:gy+3*ch+50,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='抽样 N='+sample.N+':显 '+sample.d+' : 隐 '+sample.r+' ≈ '+(sample.d/Math.max(1,sample.r)).toFixed(2)+':1';
+    }else{
+      el(svg,'text',{x:350,y:gy+3*ch+50,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点"抽样统计"看 N='+N+' 时实际比例接近 3:1 的程度';
+    }
+  }
+  document.getElementById('selfRoll').onclick=()=>{
+    let d=0,r=0;
+    for(let i=0;i<N;i++){if(Math.random()<0.75)d++;else r++;}
+    oDN.textContent=d;oRN.textContent=r;
+    draw({N:N,d:d,r:r});
+  };
+  draw(null);
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 有一对相对性状的纯合亲本,怎样判断显隐性?",a:"让两纯合亲本杂交,统计 F1。子一代表现出来的性状为显性,未表现的为隐性(纯合亲本杂交,一步定显隐)。"},
+ {q:"2. 只有同种性状的个体、不知纯杂,如何判显隐?",a:"让其自交。若后代发生性状分离(出现不同性状),则亲本表现的性状为显性、新出现的为隐性,且亲本为杂合。若不分离,不能仅凭此下结论。"},
+ {q:"3. 一个显性个体,如何鉴定它是纯合还是杂合?两种方法各看什么比例?",a:"自交:后代全显→纯合(AA);后代3显:1隐→杂合(Aa)。测交(×aa):后代全显→纯合;1显:1隐→杂合。"},
+ {q:"4. 鉴定基因型时,自交和测交怎么选?",a:"能自交的植物优先自交(简单、后代多、3:1更醒目、无需另找隐性亲本);不能自交的动物、或身边有隐性纯合个体时,用测交。"},
+ {q:"5. 测交的对象必须是什么?测交有哪两大用途?",a:"对象必须是隐性纯合(aa)。用途:①鉴定显性个体基因型;②验证 F1 产生配子的种类和比例(测交后代表现型比=F1配子比)。"},
+ {q:"6. 判断基因在常染色体还是 X 染色体,最常用什么方法?依据是什么?",a:"用正交与反交(或含性别信息的组合)。依据:常染色体上正反交结果相同、性状与性别无关;X 染色体上正反交结果不同、性状与性别绑定(交叉遗传)。"},
+ {q:"7. 为什么判'常 vs X'不能只做一个方向、又不看性别?",a:"因为只做单向且不看性别时,常染色体和 X 染色体常给出相同的后代比例,无法区分。必须用正反交或看性状是否与性别关联,才能显现差异。"},
+ {q:"8. 假说演绎法的五个步骤是什么?",a:"①提出问题 ②提出假设 ③演绎推理(若…则…) ④实验验证 ⑤得出结论。孟德尔:提出遗传因子(假设)→推出测交应1:1(演绎)→做测交(验证)→确立分离定律(结论)。"},
+ {q:"9. '假说'和'演绎'有什么区别?测交属于哪一步?",a:"假说是提出的解释(如基因成对、分离);演绎是由假说推出的可检验预期(若…则…,如测交后代应1:1)。测交实验属于'实验验证'环节,不是假说也不是演绎。"},
+ {q:"10. 某昆虫红眼对白眼显性,基因位置未知,如何设计实验判断在常还是X?",a:"取白眼雌×红眼雄(纯合)。若在常染色体:F1雌雄眼色相同、与性别无关;若在X:F1雌全红、雄全白(交叉遗传),性状与性别绑定,即可判定在X上。"},
+ {q:"11. 设计遗传实验题,结论部分为什么必须'分情况讨论'?",a:"因为实验结果有多种可能,每种结果对应不同结论。必须写'若出现结果A则结论甲;若出现结果B则结论乙',穷尽可能、逐一对应,只写一种可能会失分。"},
+ {q:"12. 一株高茎豌豆(高D对矮d显性),用自交鉴定其基因型,写出方案与预期结论。",a:"方案:让该株自交,统计足够数量的后代。预期与结论:若后代全为高茎,则为纯合DD;若后代高:矮≈3:1(出现矮茎),则为杂合Dd。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

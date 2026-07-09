@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>种群数量增长曲线 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>种群数量增长曲线</h1>
+    <p class="lead">同一群生物,放在<b>食物空间无限</b>的理想国里,数量会像利滚利一样炸开——这是 <b>J 形曲线</b>;放回<b>资源有限</b>的真实世界,数量涨到某个「天花板」就被压住不再涨——这是 <b>S 形曲线</b>。这一页把 J 形的 Nt=N₀λ^t、S 形的 K 值与 K/2、以及最容易搞混的<b>增长率 vs 增长速率</b>一次讲透。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> <b>J 形</b>=食物、空间、天敌全都不设限的「理想国」,种群按固定倍数 λ 每代翻涨,公式 <b>Nt=N₀λ^t</b>,画出来越翘越陡,永不停;<b>S 形</b>=资源有限,头顶有块叫 <b>K 值</b>(环境容纳量)的天花板压着,越接近 K 增长越慢,最后贴着 K 走平。现实中没有真正的理想国,<b>真实种群总在 S 形附近晃</b>。记住一句:J 形是「敞开吃」,S 形是「有天花板」。</div>
+
+    <div class="keybox"><b>一句话公式:</b> J 形 <b>Nt = N₀·λ^t</b>(λ 是<b>倍数</b>不是增长率,λ=1 数量不变);S 形有<b>环境阻力</b>和 <b>K 值</b>,<b>增长速率</b>(数量曲线的斜率)在 <b>K/2</b> 处最大。判断题眼:说「增长率恒定/无限增长」→ J 形;说「有 K 值/先快后慢/S 形」→ 逻辑斯谛,K/2 是命门。</div>
+
+    <h2>① J 形曲线:食物空间无限的「理想国」</h2>
+    <div class="card">
+      <div class="eq">J 形数学模型:Nt = N₀ · λ^t　(理想条件)</div>
+      <p style="margin:8px 0"><b>成立条件:</b>食物和空间条件<b>充裕</b>、气候适宜、<b>没有</b>天敌和传染病——即「理想条件」。此时种群按<b>固定倍数</b>持续增长,曲线呈 J 形,越来越陡,理论上无上限。</p>
+      <table>
+        <tr><th>符号</th><th>含义</th></tr>
+        <tr><td><b>N₀</b></td><td>起始种群数量(第 0 代/初始)</td></tr>
+        <tr><td><b>Nt</b></td><td>t 年(代)后的种群数量</td></tr>
+        <tr><td><b>λ</b></td><td>一年(一代)后数量是原来的<b>倍数</b>(Nt₊₁ / Nt)</td></tr>
+        <tr><td><b>t</b></td><td>经过的时间(年数/代数)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>λ 的含义(高频陷阱):</b> λ 是<b>倍数</b>,不是增长率!λ>1 增多,λ=1 <b>不变</b>,0<λ<1 减少。增长率 =(λ−1)×100%。J 形里 λ <b>恒定不变</b>,所以增长率也恒定。</p>
+      <p class="trap">⚠ 把 λ 当成增长率是头号错误。λ=1.5 表示每年变成 1.5 倍(增长率 50%),而不是增长 1.5 倍;λ=1 时数量<b>保持不变</b>(增长率 0)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 1 — J 形 vs S 形叠加:阴影 = 环境阻力(被 K 值「天花板」削掉的那部分)</div>
+      <svg id="jsSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="jsGo">▶ 让种群生长</button><button id="jsReset">↺ 重置</button>
+        <label>K 值(天花板) <input id="jsK" type="range" min="200" max="600" value="400" step="20"></label>
+      </div>
+      <div class="live">
+        <div><b>J 形当前数量</b><span id="jsJ">0</span></div>
+        <div><b>S 形当前数量</b><span id="jsS">0</span></div>
+        <div><b>K 值</b><span id="jsKv">0</span></div>
+        <div><b>环境阻力(差)</b><span id="jsGap">0</span></div>
+      </div>
+      <p class="small">蓝线 = J 形(理想国,越翘越陡);绿线 = S 形(被 K 值压住,走平)。两线之间的<b>红色阴影</b> = 环境阻力(食物、空间、天敌…)淘汰掉、没能出生的那部分个体。K 值越低,天花板越矮,阴影越大。</p>
+    </div>
+
+    <h2 class="g">② S 形曲线:被 K 值「天花板」压住</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>为什么变 S 形?</b> 真实环境资源有限。随着数量增多,食物空间变紧张、种内竞争加剧、天敌增多——出生率下降、死亡率升高,这就是<b>环境阻力</b>。数量越多阻力越大,增长越来越慢,最后<b>贴着 K 值走平</b>。</p>
+      <div class="eq">K 值 = 环境容纳量(该环境能维持的种群数量最大值)</div>
+      <p style="margin:8px 0"><b>K 值不是固定的!</b> K 值由<b>环境</b>决定,同一种群在不同环境 K 值不同。改善环境(食物变多)→ K 升高;破坏环境(栖息地缩小)→ K 降低。在 K 值处出生率 = 死亡率,增长速率 = 0,数量在 K 附近上下波动。</p>
+      <h3>四个关键位置</h3>
+      <table>
+        <tr><th>位置</th><th>增长速率(斜率)</th><th>说明</th></tr>
+        <tr><td>起点(数量少)</td><td>较小</td><td>基数小,总增量不大</td></tr>
+        <tr><td><b>K/2</b></td><td><b>最大!</b></td><td>斜率最陡,单位时间增加个体最多</td></tr>
+        <tr><td>K/2 → K</td><td>逐渐减小</td><td>阻力越来越大,越来越慢</td></tr>
+        <tr><td><b>K 值</b></td><td><b>= 0</b></td><td>出生率 = 死亡率,数量稳定</td></tr>
+      </table>
+      <p class="trap">⚠ 增长速率最大在 <b>K/2</b>,不是 K!到了 K 增长速率反而是 0(不再增长)。这是 S 形最核心、最爱考的点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 2 — 在 S 形曲线上滑动:任意一点的「增长速率」= 该点切线斜率</div>
+      <svg id="slopeSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>时间点 t <input id="slT" type="range" min="0" max="100" value="50" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>此刻数量 N</b><span id="slN">0</span></div>
+        <div><b>N 相对 K</b><span id="slR">0</span></div>
+        <div><b>增长速率(斜率)</b><span id="slV">0</span></div>
+        <div><b>是否 K/2 附近</b><span id="slFlag">0</span></div>
+      </div>
+      <p class="small">红点在 S 形曲线上滑动,红色短线是该点<b>切线</b>——切线越陡,增长速率越大。你会发现:切线在<b>曲线中段(N=K/2)最陡</b>,到顶部(接近 K)几乎水平(斜率≈0)。这就是「增长速率在 K/2 最大」的图像来源。</p>
+    </div>
+
+    <h2 class="b">③ 增长率 vs 增长速率:最爱混的一对</h2>
+    <div class="card">
+      <p style="margin:8px 0">这两个词一字之差,含义完全不同,是本主题的<b>头号辨析陷阱</b>。</p>
+      <table>
+        <tr><th></th><th>增长速率</th><th>增长率</th></tr>
+        <tr><td>是什么</td><td>单位时间<b>增加的个体数</b></td><td>单位时间增加量占原来的<b>比例</b></td></tr>
+        <tr><td>怎么算</td><td>(Nt₊₁ − Nt) ÷ 时间</td><td>(Nt₊₁ − Nt) ÷ Nt ×100%</td></tr>
+        <tr><td>图上是</td><td>数量曲线的<b>斜率</b></td><td>=(λ−1),与 λ 挂钩</td></tr>
+        <tr><td>J 形中</td><td>越来越大(越翘越陡)</td><td><b>恒定不变</b>(λ 恒定)</td></tr>
+        <tr><td>S 形中</td><td>先增后减,<b>K/2 最大</b>,K 时为 0</td><td><b>一直下降</b>,K 时为 0</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>记忆口诀:</b> 「速率看<b>斜率</b>(个数),率看<b>比例</b>(百分比)」。J 形:增长率恒定、增长速率暴涨;S 形:增长率一路降、增长速率是个「先升后降」的驼峰。</p>
+      <p class="trap">⚠ 别把「增长速率曲线」当成「数量曲线」。S 形数量曲线是 S 形;它的增长速率曲线是<b>先升后降的钟形(峰在 K/2)</b>;它的增长率曲线是<b>单调下降</b>的。三条曲线长得完全不一样。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 3 — 增长速率曲线:S 形数量对应的增长速率是「钟形」,峰在 K/2</div>
+      <svg id="rateSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rateview on" data-v="0">数量曲线(S 形)</button>
+        <button class="rateview" data-v="1">增长速率曲线(钟形)</button>
+        <button class="rateview" data-v="2">两条对照</button>
+      </div>
+      <div class="verdict" id="rateNote"></div>
+      <p class="small">同一个 S 形种群,「数量-时间」是 S 形;「增长速率-时间」却是<b>先升后降的钟形</b>,顶点正对着数量 = K/2 的那一刻。切「两条对照」看:数量爬到半山腰(K/2)时,增长速率恰好冲到最高点。</p>
+    </div>
+
+    <h2 class="o">④ λ 与增长率:滑块看 Nt=N₀λ^t</h2>
+    <div class="card">
+      <div class="eq">Nt = N₀·λ^t　　增长率 =(λ − 1)×100%</div>
+      <p style="margin:8px 0"><b>λ 的三种情形</b>(一定要背熟):</p>
+      <table>
+        <tr><th>λ 取值</th><th>种群变化</th><th>增长率</th></tr>
+        <tr><td>λ > 1</td><td>增多(J 形上升)</td><td>正(如 λ=1.3 → 增长率 30%)</td></tr>
+        <tr><td><b>λ = 1</b></td><td><b>保持不变!</b></td><td><b>0</b>(既不增也不减)</td></tr>
+        <tr><td>0 < λ < 1</td><td>减少(数量下降)</td><td>负(如 λ=0.8 → 减少 20%)</td></tr>
+      </table>
+      <p style="margin:8px 0">只要 λ 保持不变且 >1,数量就是 J 形爆炸式增长。λ 稍微增大一点,几代之后数量差距就天壤之别(指数的威力)。</p>
+      <p class="trap">⚠ λ=1 极易失分:很多同学看到 λ=1 以为「还在增长」,其实是<b>数量不变</b>。判断增减看 λ 与 <b>1</b> 比,不是与 0 比。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 4 — λ 滑块:看 Nt=N₀λ^t 怎样随 λ 爆炸/持平/衰减</div>
+      <svg id="lamSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>初始 N₀ <input id="lamN0" type="range" min="5" max="40" value="10" step="1"></label>
+        <label>倍数 λ <input id="lamL" type="range" min="0.6" max="1.6" value="1.3" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>N₀</b><span id="lamN0v">0</span></div>
+        <div><b>λ</b><span id="lamLv">0</span></div>
+        <div><b>增长率(λ−1)</b><span id="lamGr">0</span></div>
+        <div><b>第 8 代 N₈</b><span id="lamN8">0</span></div>
+      </div>
+      <p class="small">拖 λ 滑块:λ>1 曲线像 J 形往上爆炸;<b>λ=1 变成一条水平线(数量不变)</b>;λ<1 曲线往下衰减。注意增长率读数 =(λ−1),λ=1 时增长率恰为 0。</p>
+    </div>
+
+    <h2 class="v">⑤ K/2 的应用:捕捞、放牧、灭鼠</h2>
+    <div class="card">
+      <p style="margin:8px 0">K/2 是增长速率最大的点,这个「最快回血点」在生产上有两类相反的用途:</p>
+      <h3>① 想让种群多产(渔业/放牧):留在 K/2 附近</h3>
+      <p style="margin:6px 0"><b>捕捞后剩余量维持在 K/2</b>。因为 K/2 时增长速率最大,种群「回血最快」,能<b>持续获得最大产量</b>,又不破坏资源。捕鱼、放牧、林木采伐都遵循这一原则。</p>
+      <h3>② 想灭掉有害种群(害虫/灭鼠):把 K 值降下去</h3>
+      <p style="margin:6px 0">对付老鼠、蝗虫,光靠杀(降数量)不够,数量会回弹。根本办法是<b>降低 K 值</b>——断绝食物、清理垃圾、封堵栖息处,把「天花板」拆矮,种群自然维持在低水平。</p>
+      <p class="trap">⚠ 捕捞留 <b>K/2</b>(增长速率最大→产量最大),别留 K(增长速率 0,不再增长)。灭鼠要降 <b>K 值</b>(治本),单纯捕杀降数量只能治标,数量会反弹回 K。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎣 互动 5 — K/2 捕捞策略:剩余量停在哪里,单位时间产量最高?</div>
+      <svg id="harvSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>捕后剩余量(占 K) <input id="hvR" type="range" min="5" max="95" value="50" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>剩余量 N/K</b><span id="hvN">0</span></div>
+        <div><b>该点增长速率</b><span id="hvV">0</span></div>
+        <div><b>可持续产量</b><span id="hvY">0</span></div>
+        <div><b>是否最优</b><span id="hvOpt">0</span></div>
+      </div>
+      <p class="small">钟形曲线 = 各剩余量对应的增长速率(=可持续捕捞产量)。拖滑块把剩余量停在不同位置:停在 <b>K/2</b>(50%)时曲线到达顶点→产量最大;停太低(资源枯竭)或太高(接近 K,增长慢)产量都低。</p>
+    </div>
+
+    <h2 class="b">⑥ λ 与增长率关系:两者不是一回事</h2>
+    <div class="card">
+      <p style="margin:8px 0">再单独拎出 λ 与增长率的关系,因为这是选择题高频考点:</p>
+      <div class="eq">增长率 =(λ − 1)　⟺　λ = 增长率 + 1</div>
+      <p style="margin:8px 0"><b>J 形</b>中 λ 恒定 → 增长率恒定(一条水平线);<b>S 形</b>中相当于 λ 逐渐减小并趋近 1 → 增长率逐渐下降到 0。所以:</p>
+      <table>
+        <tr><th>曲线</th><th>λ 变化</th><th>增长率变化</th><th>增长速率变化</th></tr>
+        <tr><td>J 形</td><td>恒定(>1)</td><td>恒定不变</td><td>不断增大</td></tr>
+        <tr><td>S 形</td><td>由大变小,趋近 1</td><td>逐渐下降至 0</td><td>先增后减(K/2 最大)</td></tr>
+      </table>
+      <p class="trap">⚠ 这张表是本主题的「总账」。三个量(λ、增长率、增长速率)在 J/S 形里的走向千万别记串。J 形增长率恒定但速率飙升,S 形增长率降但速率是驼峰。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 6 — λ 与增长率关系:一根滑块同时看 λ、增长率、几代后数量</div>
+      <svg id="grSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>倍数 λ <input id="grL" type="range" min="0.6" max="1.6" value="1.2" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>λ</b><span id="grLv">0</span></div>
+        <div><b>增长率 =(λ−1)</b><span id="grRate">0</span></div>
+        <div><b>趋势</b><span id="grTrend">0</span></div>
+        <div><b>5 代变化倍数 λ⁵</b><span id="grPow">0</span></div>
+      </div>
+      <p class="small">左边条形:λ 与「1」的差就是增长率——λ 柱高于虚线(1)= 正增长率,平齐 = 0,低于 = 负。右边小字给出 λ⁵,展示指数放大效应:λ 只差一点点,5 代后数量差很多。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — J 形 λ 计算型</h3>
+      <p><b class="tag">触发信号:</b>「理想条件/食物空间无限/无天敌」,给 N₀、λ、t 求 Nt,或给两代数量求 λ。</p>
+      <p><b class="tag">标准动作:</b>套 Nt=N₀·λ^t。求 λ 用相邻两代之比 λ=Nt₊₁/Nt;求增长率 =(λ−1)×100%。</p>
+      <p><b class="tag">示例(带解):</b>某细菌 N₀=100,理想条件下每 20min 分裂一次(每代变 2 倍,λ=2)。经 5 代(t=5)后 Nt=100×2⁵=100×32=<b>3200</b>。增长率 =(2−1)×100%=100%,恒定。</p>
+      <p class="trap">陷阱:把 λ 当增长率;t 的单位(代/小时)看错;λ=1 误判为增长。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — S 形 K 值与 K/2 应用型</h3>
+      <p><b class="tag">触发信号:</b>出现 S 形曲线、「环境容纳量」「K 值」,问某位置增长速率大小、何处速率最大。</p>
+      <p><b class="tag">标准动作:</b>定位 K(平台高度)与 K/2(半高)。增长速率:K/2 最大,K 处为 0,两端小。增长率:一路下降。</p>
+      <p><b class="tag">示例(带解):</b>某鱼塘鲤鱼 K=2000 条。增长速率最大时数量 = K/2 = <b>1000</b> 条。此时出生率远大于死亡率;到 2000 条时出生率 = 死亡率,增长速率 = 0。</p>
+      <p class="trap">陷阱:把增长速率最大位置说成 K;误以为 K 值固定不随环境变。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 增长速率曲线与数量曲线对应型</h3>
+      <p><b class="tag">触发信号:</b>给一张「增长速率-时间」钟形图,问对应的数量曲线;或反过来。</p>
+      <p><b class="tag">标准动作:</b>钟形峰值处 ⟷ 数量曲线 N=K/2(最陡处);钟形回到 0 处 ⟷ 数量到达 K(走平)。把「速率峰」对齐「数量半高」。</p>
+      <p><b class="tag">示例(带解):</b>增长速率先升后降、第 t₁ 时刻达峰、第 t₂ 时刻降为 0。则数量曲线:t₁ 时 N=K/2(斜率最大),t₂ 及以后 N=K(稳定)。速率钟形 = 数量 S 形的斜率图。</p>
+      <p class="trap">陷阱:把钟形增长速率曲线当成数量曲线;把峰值对到 K 而非 K/2。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 增长率 vs 增长速率辨析型</h3>
+      <p><b class="tag">触发信号:</b>问「增长率如何变化」还是「增长速率如何变化」,或让判断某条曲线是哪个量。</p>
+      <p><b class="tag">标准动作:</b>先看问的是「率(比例/百分比,与 λ 挂钩)」还是「速率(个体数/斜率)」。J 形:率恒定、速率增;S 形:率降、速率驼峰。</p>
+      <p><b class="tag">示例(带解):</b>问「S 形增长中种群增长速率如何变?」答:先增大后减小,K/2 时最大,K 时为 0。若问「增长率如何变?」答:一直减小,K 时为 0。两答案不同,别写反。</p>
+      <p class="trap">陷阱:看到「率」就当同一个量;把 J 形增长率写成「增大」(其实恒定)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 实际应用(捕捞留 K/2、灭鼠降 K 值)型</h3>
+      <p><b class="tag">触发信号:</b>「持续最大捕捞量」「怎样放牧最合理」「怎样彻底防治鼠害/虫害」。</p>
+      <p><b class="tag">标准动作:</b>要产量 → 捕/牧后剩余量维持 <b>K/2</b>(速率最大);要防治害虫鼠患 → <b>降低 K 值</b>(断粮、清障、缩栖息地),而非只靠捕杀。</p>
+      <p><b class="tag">示例(带解):</b>渔场 K=8000,想年年高产:捕到剩 K/2=<b>4000</b> 停手,让它以最大速率回补。灭鼠:仅毒杀数量会回弹到 K;把粮仓封好、垃圾清掉,K 值下降,鼠群自然维持低位。</p>
+      <p class="trap">陷阱:捕捞留成 K(不再增长);灭鼠只想着降数量不想降 K,导致反弹。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>λ 是倍数,不是增长率!</b> 增长率 =(λ−1)。λ=1 时数量<b>不变</b>(增长率 0),不是「还在长」;λ 与 1 比,不是与 0 比。</p>
+      <p class="trap">② <b>增长速率最大在 K/2,不在 K。</b> 到了 K,增长速率 = 0(出生率 = 死亡率),数量不再增长。</p>
+      <p class="trap">③ <b>增长率在 J 形恒定、在 S 形一路下降。</b> 别把 J 形增长率说成「增大」;J 形增大的是增长速率(越翘越陡)。</p>
+      <p class="trap">④ <b>K 值不是定值,</b>随环境变:环境变好 K 升高,栖息地被破坏 K 降低。同种群不同环境 K 不同。</p>
+      <p class="trap">⑤ <b>三条曲线别混:</b>S 形数量曲线是 S 形;它的增长速率曲线是钟形(峰在 K/2);它的增长率曲线是单调下降。</p>
+      <p class="trap">⑥ <b>J 形只是理想模型,</b>现实中资源有限,真实种群是 S 形。J 形与 S 形之间的差就是<b>环境阻力</b>(淘汰掉的个体)。</p>
+      <p class="trap">⑦ <b>「S 形早期近似 J 形」</b>——数量很少时资源相对充裕,增长接近指数;越往后阻力越大越偏离 J 形。</p>
+      <p class="trap">⑧ 捕捞留 <b>K/2</b> 求最大可持续产量;灭鼠/治虫核心是<b>降 K 值</b>,单纯捕杀会反弹。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① J 形是「指数」,S 形是「指数被环境阻力刹住」:</b> J 形 Nt=N₀λ^t 本质是等比数列(指数增长);S 形可看成 J 形乘上一个「越接近 K 越接近 0」的刹车因子。理解这层,就明白为什么 S 形早期像 J 形(刹车还没踩)、后期趋平(刹车踩死)。</p>
+      <p style="margin:8px 0"><b>② 「增长速率是数量曲线的斜率」是万能钥匙:</b> 把数量-时间曲线的<b>斜率</b>读出来就是增长速率。S 形斜率先增后减、中段(K/2)最陡→增长速率钟形,峰在 K/2。凡是问速率大小,一律去看曲线陡不陡,不用记结论。</p>
+      <p style="margin:8px 0"><b>③ K/2 产量最大的底层逻辑:</b> 可持续捕捞量 = 种群的补充速度 = 增长速率。增长速率在 K/2 达峰,所以剩余量维持 K/2 时「回血最快」,能年年拿走最多而资源不衰竭。这是最大可持续产量(MSY)思想的中学版。</p>
+      <p style="margin:8px 0"><b>④ 三个量一张「关系网」:</b> λ →(减 1)→ 增长率;增长率 × 当前数量 ≈ 增长速率。J 形数量在涨、增长率恒定,所以增长速率(率×数量)跟着涨;S 形增长率在降但数量在升,两者相乘先升后降→驼峰。用「率×量」串起三者,再不会记混。</p>
+      <p style="margin:8px 0"><b>⑤ 「降 K」远优于「降 N」治本思维:</b> 只降数量 N 而不动 K,种群会顺着 S 形重新爬回 K(反弹);降低 K(拆天花板),平衡点整体下移,才是治本。这套「改变系统上限而非当前状态」的思路,在生态、防疫、资源管理里通用。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:种群密度调查、群落演替攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+/* 逻辑斯谛 S 形:N(t)=K/(1+A e^{-r t}) */
+function logistic(t,K,r,A){return K/(1+A*Math.exp(-r*t));}
+
+/* ===== 互动1:J 形 vs S 形叠加 ===== */
+(function(){
+  const svg=document.getElementById('jsSvg');
+  const Ks=document.getElementById('jsK');
+  const oJ=document.getElementById('jsJ'),oS=document.getElementById('jsS'),oKv=document.getElementById('jsKv'),oGap=document.getElementById('jsGap');
+  let K=400,anim=1,running=false;
+  const X0=60,Y0=30,W=580,H=250,Tmax=14,r=0.6,A=40,lam=1.28;
+  function sync(){K=+Ks.value;}
+  Ks.oninput=()=>{sync();anim=1;draw();};
+  function yOf(N){const Nmax=650;return Y0+H-Math.min(N,Nmax)/Nmax*H;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='N';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    /* K line */
+    const yK=yOf(K);
+    el(svg,'line',{x1:X0,y1:yK,x2:X0+W,y2:yK,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+W-4,y:yK-6,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'end'}).textContent='K 值(天花板)';
+    const N=Math.round(Tmax*anim);
+    /* shaded gap between J and S */
+    let poly='';
+    for(let i=0;i<=N;i++){const t=i;const x=X0+t/Tmax*W;poly+=x+','+yOf(10*Math.pow(lam,t))+' ';}
+    for(let i=N;i>=0;i--){const t=i;const x=X0+t/Tmax*W;poly+=x+','+yOf(logistic(t,K,r,A))+' ';}
+    if(N>0)el(svg,'polygon',{points:poly,fill:'rgba(224,56,42,0.18)',stroke:'none'});
+    /* J curve */
+    let jp='';for(let i=0;i<=N;i++){const t=i;jp+=(i?'L':'M')+(X0+t/Tmax*W)+' '+yOf(10*Math.pow(lam,t));}
+    el(svg,'path',{d:jp,fill:'none',stroke:BLUE,'stroke-width':4});
+    /* S curve */
+    let sp='';for(let i=0;i<=N;i++){const t=i;sp+=(i?'L':'M')+(X0+t/Tmax*W)+' '+yOf(logistic(t,K,r,A));}
+    el(svg,'path',{d:sp,fill:'none',stroke:GREEN,'stroke-width':4});
+    /* labels */
+    el(svg,'text',{x:X0+W*0.42,y:Y0+30,'font-size':13,'font-weight':900,fill:BLUE}).textContent='J 形(理想国)';
+    el(svg,'text',{x:X0+W*0.5,y:yK+26,'font-size':13,'font-weight':900,fill:GREEN}).textContent='S 形(真实)';
+    el(svg,'text',{x:X0+W*0.28,y:Y0+H*0.55,'font-size':12.5,'font-weight':900,fill:RED}).textContent='环境阻力';
+    /* readouts */
+    const jN=10*Math.pow(lam,N),sN=logistic(N,K,r,A);
+    oJ.textContent=Math.round(jN);oS.textContent=Math.round(sN);oKv.textContent=K;oGap.textContent=Math.round(jN-sN);
+  }
+  function loop(){if(!running)return;anim+=0.02;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('jsGo').onclick=()=>{sync();anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('jsReset').onclick=()=>{sync();anim=1;draw();};
+  sync();anim=1;draw();
+})();
+
+/* ===== 互动2:S 形上滑动看斜率 ===== */
+(function(){
+  const svg=document.getElementById('slopeSvg');
+  const Ts=document.getElementById('slT');
+  const oN=document.getElementById('slN'),oR=document.getElementById('slR'),oV=document.getElementById('slV'),oFlag=document.getElementById('slFlag');
+  const X0=60,Y0=30,W=580,H=250,K=500,r=0.7,A=60,Tmax=16;
+  function yOf(N){return Y0+H-N/(K*1.15)*H;}
+  function xOf(t){return X0+t/Tmax*W;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='N';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    /* K and K/2 lines */
+    el(svg,'line',{x1:X0,y1:yOf(K),x2:X0+W,y2:yOf(K),stroke:GREEN,'stroke-width':2,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+W-4,y:yOf(K)-6,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'end'}).textContent='K';
+    el(svg,'line',{x1:X0,y1:yOf(K/2),x2:X0+W,y2:yOf(K/2),stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:X0+W-4,y:yOf(K/2)-6,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'end'}).textContent='K/2';
+    /* S curve */
+    let sp='';for(let i=0;i<=160;i++){const t=i/160*Tmax;sp+=(i?'L':'M')+xOf(t)+' '+yOf(logistic(t,K,r,A));}
+    el(svg,'path',{d:sp,fill:'none',stroke:BLUE,'stroke-width':4});
+    /* moving point + tangent */
+    const t=+Ts.value/100*Tmax;
+    const N=logistic(t,K,r,A);
+    const slope=r*N*(1-N/K); /* dN/dt logistic, per unit t */
+    const px=xOf(t),py=yOf(N);
+    /* tangent line: draw over dt range, convert slope to pixel */
+    const dt=1.6;const N1=N-slope*dt,N2=N+slope*dt;
+    el(svg,'line',{x1:xOf(t-dt),y1:yOf(N1),x2:xOf(t+dt),y2:yOf(N2),stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:px,cy:py,r:8,fill:RED,stroke:INK,'stroke-width':3});
+    /* readouts */
+    const near=Math.abs(N-K/2)<K*0.08;
+    oN.textContent=Math.round(N);oR.textContent=(N/K*100).toFixed(0)+'%';
+    oV.textContent=slope.toFixed(1);oFlag.textContent=near?'★ 是(最陡)':'否';
+  }
+  Ts.oninput=draw;draw();
+})();
+
+/* ===== 互动3:增长速率钟形曲线 ===== */
+(function(){
+  const svg=document.getElementById('rateSvg');const note=document.getElementById('rateNote');
+  let view=0;
+  const X0=60,Y0=30,W=580,H=250,K=500,r=0.7,A=60,Tmax=16;
+  document.querySelectorAll('.rateview').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.rateview').forEach(x=>x.classList.remove('on'));b.classList.add('on');view=+b.dataset.v;draw();
+  });
+  function xOf(t){return X0+t/Tmax*W;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    /* find tPeak where N=K/2 */
+    let tPeak=Math.log(A)/r;
+    const vMax=r*(K/2)*(1-0.5);
+    function yN(N){return Y0+H-N/(K*1.15)*H;}
+    function yV(v){return Y0+H-v/(vMax*1.15)*H;}
+    if(view===0||view===2){
+      let sp='';for(let i=0;i<=160;i++){const t=i/160*Tmax;sp+=(i?'L':'M')+xOf(t)+' '+yN(logistic(t,K,r,A));}
+      el(svg,'path',{d:sp,fill:'none',stroke:BLUE,'stroke-width':4});
+      el(svg,'text',{x:X0+W*0.55,y:Y0+40,'font-size':13,'font-weight':900,fill:BLUE}).textContent='数量 N(S 形)';
+      el(svg,'line',{x1:X0,y1:yN(K/2),x2:X0+W,y2:yN(K/2),stroke:ORANGE,'stroke-width':1.5,'stroke-dasharray':'4 4'});
+    }
+    if(view===1||view===2){
+      let vp='';for(let i=0;i<=160;i++){const t=i/160*Tmax;const N=logistic(t,K,r,A);const v=r*N*(1-N/K);vp+=(i?'L':'M')+xOf(t)+' '+yV(v);}
+      el(svg,'path',{d:vp,fill:'none',stroke:RED,'stroke-width':4});
+      el(svg,'text',{x:X0+W*0.1,y:Y0+40,'font-size':13,'font-weight':900,fill:RED}).textContent='增长速率(钟形)';
+    }
+    /* peak marker */
+    el(svg,'line',{x1:xOf(tPeak),y1:Y0,x2:xOf(tPeak),y2:Y0+H,stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:xOf(tPeak),y:Y0+H+22,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='N=K/2';
+    let msg;
+    if(view===0)msg='数量-时间:S 形。前期慢→中段快(N=K/2 最陡)→后期趋近 K 走平。';
+    else if(view===1)msg='增长速率-时间:钟形(先升后降)。峰值正对着数量 N=K/2 那一刻,到 K 时速率归 0。';
+    else msg='两图对照:数量爬到半山腰(K/2,橙虚线)时,增长速率(红)恰好冲上最高点。速率钟形 = 数量 S 形的斜率图。';
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=view===1?RED:view===2?ORANGE:BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动4:λ 滑块 Nt=N0 λ^t ===== */
+(function(){
+  const svg=document.getElementById('lamSvg');
+  const N0s=document.getElementById('lamN0'),Ls=document.getElementById('lamL');
+  const oN0=document.getElementById('lamN0v'),oL=document.getElementById('lamLv'),oGr=document.getElementById('lamGr'),oN8=document.getElementById('lamN8');
+  const X0=60,Y0=30,W=580,H=250,Tmax=8;
+  function draw(){
+    clr(svg);
+    const N0=+N0s.value,lam=+Ls.value;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='N';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t(代)';
+    /* find max for scale */
+    let Nmax=Math.max(N0, N0*Math.pow(lam,Tmax), N0);
+    if(Nmax<N0*1.2)Nmax=N0*1.2;
+    function yOf(N){return Y0+H-Math.min(N,Nmax)/Nmax*H;}
+    /* initial line reference */
+    el(svg,'line',{x1:X0,y1:yOf(N0),x2:X0+W,y2:yOf(N0),stroke:'#bbb','stroke-width':1.5,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:X0+4,y:yOf(N0)-5,'font-size':11,'font-weight':800,fill:'#888'}).textContent='N₀='+N0;
+    /* curve */
+    let dp='';const dots=[];
+    for(let t=0;t<=Tmax;t++){const N=N0*Math.pow(lam,t);const x=X0+t/Tmax*W;const y=yOf(N);dp+=(t?'L':'M')+x+' '+y;dots.push([x,y]);}
+    const col=lam>1?RED:lam===1?INK:BLUE;
+    el(svg,'path',{d:dp,fill:'none',stroke:col,'stroke-width':4});
+    dots.forEach(d=>el(svg,'circle',{cx:d[0],cy:d[1],r:4,fill:col}));
+    /* title */
+    let tag=lam>1?'J 形上升(爆炸)':lam===1?'水平线:数量不变!':'衰减下降';
+    el(svg,'text',{x:X0+W*0.5,y:Y0+16,'font-size':14,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='Nt=N₀·λ^t → '+tag;
+    /* readouts */
+    oN0.textContent=N0;oL.textContent=lam.toFixed(2);
+    oGr.textContent=((lam-1)*100).toFixed(0)+'%';
+    oN8.textContent=Math.round(N0*Math.pow(lam,8));
+  }
+  N0s.oninput=Ls.oninput=draw;draw();
+})();
+
+/* ===== 互动5:K/2 捕捞策略 ===== */
+(function(){
+  const svg=document.getElementById('harvSvg');
+  const Rs=document.getElementById('hvR');
+  const oN=document.getElementById('hvN'),oV=document.getElementById('hvV'),oY=document.getElementById('hvY'),oOpt=document.getElementById('hvOpt');
+  const X0=60,Y0=30,W=580,H=210,K=1;const r=1;
+  function xOf(frac){return X0+frac*W;}
+  function yOf(v,vMax){return Y0+H-v/(vMax*1.15)*H;}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='产量';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='剩余量 N/K';
+    const vMax=r*0.5*(1-0.5); /* =0.25 at N/K=0.5 */
+    /* growth-rate parabola: v = r*(N/K)*(1-N/K) */
+    let dp='';for(let i=0;i<=160;i++){const f=i/160;const v=r*f*(1-f);dp+=(i?'L':'M')+xOf(f)+' '+yOf(v,vMax);}
+    el(svg,'path',{d:dp,fill:'none',stroke:GREEN,'stroke-width':4});
+    /* K/2 line */
+    el(svg,'line',{x1:xOf(0.5),y1:Y0,x2:xOf(0.5),y2:Y0+H,stroke:ORANGE,'stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:xOf(0.5),y:Y0-6,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='K/2(产量最大)';
+    /* current point */
+    const f=+Rs.value/100;const v=r*f*(1-f);
+    el(svg,'line',{x1:xOf(f),y1:yOf(v,vMax),x2:xOf(f),y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'circle',{cx:xOf(f),cy:yOf(v,vMax),r:8,fill:RED,stroke:INK,'stroke-width':3});
+    /* readouts */
+    const opt=Math.abs(f-0.5)<0.06;
+    oN.textContent=(f*100).toFixed(0)+'%';
+    oV.textContent=(v/vMax*100).toFixed(0)+'%';
+    oY.textContent=(v*4).toFixed(2);
+    oOpt.textContent=opt?'★ 最优(K/2)':(f<0.5?'偏低':'偏高');
+  }
+  Rs.oninput=draw;draw();
+})();
+
+/* ===== 互动6:λ 与增长率关系 ===== */
+(function(){
+  const svg=document.getElementById('grSvg');
+  const Ls=document.getElementById('grL');
+  const oL=document.getElementById('grLv'),oR=document.getElementById('grRate'),oT=document.getElementById('grTrend'),oP=document.getElementById('grPow');
+  function draw(){
+    clr(svg);
+    const lam=+Ls.value;
+    const baseY=190,maxH=150,cx=200,bw=110;
+    /* reference line at lambda=1 */
+    const oneH=(1/1.6)*maxH;
+    const yOne=baseY-oneH;
+    el(svg,'line',{x1:120,y1:baseY,x2:560,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:120,y1:yOne,x2:560,y2:yOne,stroke:'#888','stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:566,y:yOne+4,'font-size':12,'font-weight':900,fill:'#888','text-anchor':'start'}).textContent='λ=1';
+    /* lambda bar */
+    const lh=(lam/1.6)*maxH;
+    const col=lam>1?RED:lam===1?INK:BLUE;
+    el(svg,'rect',{x:cx,y:baseY-lh,width:bw,height:lh,fill:col,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='λ='+lam.toFixed(2);
+    el(svg,'text',{x:cx+bw/2,y:baseY-lh-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lam.toFixed(2);
+    /* growth-rate segment (from 1-line to lambda top) */
+    if(Math.abs(lam-1)>0.001){
+      const yTop=baseY-lh;
+      el(svg,'line',{x1:cx+bw+30,y1:yOne,x2:cx+bw+30,y2:yTop,stroke:GREEN,'stroke-width':6});
+      el(svg,'text',{x:cx+bw+40,y:(yOne+yTop)/2+4,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='增长率=(λ−1)='+((lam-1)*100).toFixed(0)+'%';
+    } else {
+      el(svg,'text',{x:cx+bw+40,y:yOne+4,'font-size':12.5,'font-weight':900,fill:INK}).textContent='增长率=0(数量不变)';
+    }
+    el(svg,'text',{x:200,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='增长率 =(λ − 1)';
+    /* readouts */
+    oL.textContent=lam.toFixed(2);
+    oR.textContent=((lam-1)*100).toFixed(0)+'%';
+    oT.textContent=lam>1?'增多(J 形)':lam===1?'不变':'减少';
+    oP.textContent=Math.pow(lam,5).toFixed(2);
+  }
+  Ls.oninput=draw;draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. J 形曲线的数学模型是什么？成立条件是什么？",a:"Nt=N₀·λ^t。成立条件:食物和空间充裕、气候适宜、没有天敌和传染病等——即理想条件。此时数量按固定倍数 λ 持续增长,呈 J 形。"},
+ {q:"2. λ 是增长率吗？λ=1、λ>1、0<λ<1 分别表示什么？",a:"λ 是倍数不是增长率。增长率=(λ−1)。λ>1 增多;λ=1 数量保持不变(增长率 0);0<λ<1 减少。判断增减看 λ 与 1 比。"},
+ {q:"3. S 形曲线为什么会「拐弯走平」？K 值是什么？",a:"资源有限,数量增多→环境阻力(食物空间紧张、种内竞争、天敌增多)使出生率降、死亡率升,增长变慢,最后贴着 K 值走平。K 值 = 环境容纳量,该环境能维持的最大种群数量。"},
+ {q:"4. S 形曲线中,增长速率何时最大？何时为 0？",a:"增长速率在 N=K/2 时最大(曲线最陡);在 N=K 时为 0(出生率=死亡率,不再增长)。不是 K,是 K/2!"},
+ {q:"5. K 值是固定不变的吗？受什么影响？",a:"不固定。K 值由环境决定:环境改善(食物变多)→K 升高;栖息地被破坏→K 降低。同一种群在不同环境 K 值不同。"},
+ {q:"6. 增长率和增长速率有什么区别？",a:"增长速率 = 单位时间增加的个体数(数量曲线的斜率);增长率 = 增加量占原数量的比例=(λ−1)。速率看斜率/个数,率看比例/百分比。"},
+ {q:"7. J 形中增长率和增长速率各怎么变？",a:"增长率恒定不变(λ 恒定);增长速率不断增大(曲线越翘越陡,基数越来越大)。两者走向相反,别记混。"},
+ {q:"8. S 形中增长率和增长速率各怎么变？",a:"增长率一直下降,到 K 时为 0;增长速率先增大后减小,K/2 时最大,K 时为 0(钟形)。"},
+ {q:"9. S 形数量曲线、增长速率曲线、增长率曲线分别长什么样？",a:"数量曲线是 S 形;增长速率曲线是钟形(先升后降,峰在 K/2);增长率曲线是单调下降。三条完全不同,别混。"},
+ {q:"10. 渔业捕捞想获得最大可持续产量,捕后应把种群剩余量维持在哪里？为什么？",a:"维持在 K/2。因为 K/2 时增长速率最大,种群回补最快,能持续获得最大产量而不破坏资源。"},
+ {q:"11. 防治鼠害、虫害的根本办法是什么？只靠捕杀为什么不行？",a:"根本办法是降低 K 值(断绝食物、清理垃圾、封堵栖息处)。只捕杀只是降低数量 N,种群会顺着 S 形反弹回 K,治标不治本;降 K 才能长期把种群压在低位。"},
+ {q:"12. 某细菌 N₀=100,理想条件每代变 2 倍(λ=2),第 5 代数量是多少？增长率多少？",a:"Nt=N₀·λ^t=100×2⁵=100×32=3200。增长率=(2−1)×100%=100%,理想条件下恒定不变。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

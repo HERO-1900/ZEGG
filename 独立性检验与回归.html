@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>独立性检验与线性回归 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+  .cellinput{width:56px;font-family:"SF Mono",Consolas,monospace;font-size:15px;font-weight:900;text-align:center;border:3px solid var(--ink);padding:6px 2px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>独立性检验与线性回归</h1>
+    <p class="lead">统计里最爱考的两件事:一是「两个分类变量到底有没有关系」——用一个数 <b>K²</b> 来判(独立性检验);二是「一堆散点最贴合的那条直线是什么」——用<b>最小二乘</b>求回归方程 ŷ=b̂x+â。前者靠公式代入 + 查临界值下结论;后者靠算 x̄、ȳ、b̂、â 四步走。全是套路,套路吃透就是白送分。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> <b>独立性检验</b> = 用一个数 K² 衡量两个分类变量(比如「性别」和「是否近视」)到底有没有关系。K² 越大 → 越有关系;K² 小 → 没关系(相互独立)。把它跟临界值(3.841、6.635)一比,超过了就说「有把握认为有关」。<b>线性回归</b> = 给一堆散点找一条最贴合的直线,让所有点到直线的竖直距离平方之和最小(这就是「最小二乘」),这条直线一定<b>穿过样本中心 (x̄, ȳ)</b>。</div>
+
+    <div class="keybox"><b>两把核心公式:</b> ① 卡方 <b>K² = n(ad−bc)² / [(a+b)(c+d)(a+c)(b+d)]</b>,n=a+b+c+d 为总数;K² > 临界值 → 有关(否定独立)。② 回归 <b>ŷ = b̂x + â</b>,其中 <b>b̂ = Σ(x<sub>i</sub>−x̄)(y<sub>i</sub>−ȳ) / Σ(x<sub>i</sub>−x̄)²</b>,<b>â = ȳ − b̂·x̄</b>。回归直线必过样本中心点 <b>(x̄, ȳ)</b>。</div>
+
+    <h2>① 2×2 列联表:把「有没有关系」摆成一张表</h2>
+    <div class="card">
+      <p style="margin:8px 0">研究两个「分类变量」(每个只有两类,如 患病/健康、吸烟/不吸烟)是否有关,先把频数填成 2×2 表:</p>
+      <table>
+        <tr><th></th><th>类别 y₁</th><th>类别 y₂</th><th>合计</th></tr>
+        <tr><td><b>类别 x₁</b></td><td>a</td><td>b</td><td>a+b</td></tr>
+        <tr><td><b>类别 x₂</b></td><td>c</td><td>d</td><td>c+d</td></tr>
+        <tr><td><b>合计</b></td><td>a+c</td><td>b+d</td><td>n=a+b+c+d</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>直觉判断法:</b> 比较两个比例 a/(a+b) 与 c/(c+d)。差得越多,两变量越可能有关;几乎相等 → 可能独立。但直觉不够严谨,要用 K² 定量。</p>
+      <p class="trap">⚠ a、b、c、d 是<b>频数</b>(人数、个数),不是比例、不是百分数!四个格子加起来 = 总样本 n。摆表时行、列的对应关系别放错。</p>
+    </div>
+
+    <h2 class="b">② 卡方 K² 公式与临界值:一个数说了算</h2>
+    <div class="card">
+      <div class="eq">K² = n(ad − bc)² / [(a+b)(c+d)(a+c)(b+d)]</div>
+      <p style="margin:8px 0">分子是 <b>n·(ad−bc)²</b>(对角线乘积之差,平方后必非负);分母是<b>四个「边缘合计」的乘积</b>((a+b)(c+d) 是两行合计,(a+c)(b+d) 是两列合计)。K² ≥ 0,<b>K² 越大 → 两变量关联越强</b>。若 ad=bc,则 K²=0,完全独立。</p>
+      <h3>临界值表(务必记住这两行)</h3>
+      <table>
+        <tr><th>把握程度</th><th>显著性水平 α</th><th>临界值 k₀</th></tr>
+        <tr><td>90%</td><td>0.10</td><td>2.706</td></tr>
+        <tr><td><b>95%</b></td><td>0.05</td><td><b>3.841</b></td></tr>
+        <tr><td><b>99%</b></td><td>0.01</td><td><b>6.635</b></td></tr>
+        <tr><td>99.5%</td><td>0.005</td><td>7.879</td></tr>
+        <tr><td>99.9%</td><td>0.001</td><td>10.828</td></tr>
+      </table>
+      <h3>下结论的逻辑</h3>
+      <div class="mono">若 K² > 3.841 → 有 95% 的把握认为两变量有关(否定「独立」假设)。</div>
+      <div class="mono">若 K² > 6.635 → 有 99% 的把握认为两变量有关。</div>
+      <div class="mono">若 K² ≤ 3.841 → 没有充分证据,不能认为两变量有关。</div>
+      <p class="trap">⚠ K² 是拿来<b>否定「独立」</b>的。K² 大 = 有关;K² 小 ≠ 「一定独立」,只能说「证据不足,不能认为有关」。表述要小心。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 1 — 2×2 列联表填数,实时算 K² 并与临界值比较(变色显示是否相关)</div>
+      <svg id="chiSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>a <input class="cellinput" id="cA" type="number" value="40" min="0"></label>
+        <label>b <input class="cellinput" id="cB" type="number" value="10" min="0"></label>
+        <label>c <input class="cellinput" id="cC" type="number" value="15" min="0"></label>
+        <label>d <input class="cellinput" id="cD" type="number" value="35" min="0"></label>
+        <button id="chiReset">↺ 复位</button>
+      </div>
+      <div class="live">
+        <div><b>总数 n</b><span id="chiN">0</span></div>
+        <div><b>ad−bc</b><span id="chiAdbc">0</span></div>
+        <div><b>K²</b><span id="chiK">0</span></div>
+        <div><b>结论</b><span id="chiV">—</span></div>
+      </div>
+      <p class="small">改四个格子的频数,K² 立刻重算。绿=没把握认为有关(K²≤3.841)、橙=95%有关、红=99%有关。试试把 a、d 调大、b、c 调小 → 对角越悬殊 K² 越大。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 2 — K² 大小与关联强度:同一张表,把对角差异放大,看 K² 与结论怎么跳</div>
+      <svg id="strSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>对角悬殊度 <input id="strK" type="range" min="0" max="100" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>a=d</b><span id="strAD">0</span></div>
+        <div><b>b=c</b><span id="strBC">0</span></div>
+        <div><b>K²</b><span id="strKv">0</span></div>
+        <div><b>结论</b><span id="strV">—</span></div>
+      </div>
+      <p class="small">总数固定 n=100,滑块把 a=d 拉大、b=c 拉小(对角越悬殊)。指针在临界值刻度尺上移动:越过 3.841 变橙、越过 6.635 变红。K² 越大 = 关联越强。</p>
+    </div>
+
+    <h2 class="g">③ 线性回归方程:给散点找最贴合的直线</h2>
+    <div class="card">
+      <div class="eq">回归方程:ŷ = b̂x + â</div>
+      <p style="margin:8px 0">ŷ(读作 y-hat)是<b>预测值/估计值</b>,不是真实观测值。b̂ 是斜率(x 每增 1,ŷ 平均变化 b̂),â 是截距。求它俩靠<b>最小二乘法</b>——让所有点到直线的<b>竖直偏差平方和最小</b>。</p>
+      <h3>最小二乘公式(背熟)</h3>
+      <div class="eq">b̂ = Σ(x<sub>i</sub>−x̄)(y<sub>i</sub>−ȳ) / Σ(x<sub>i</sub>−x̄)²</div>
+      <div class="eq">â = ȳ − b̂·x̄</div>
+      <p style="margin:8px 0">等价常用式:b̂ = (Σx<sub>i</sub>y<sub>i</sub> − n·x̄·ȳ) / (Σx<sub>i</sub>² − n·x̄²)。算的时候先求 <b>x̄、ȳ</b>,再算分子分母,得 b̂,最后 â=ȳ−b̂x̄。</p>
+      <h3>解题四步走</h3>
+      <div class="mono">第1步:算平均 x̄=(Σxᵢ)/n,ȳ=(Σyᵢ)/n。</div>
+      <div class="mono">第2步:算分子 Σ(xᵢ−x̄)(yᵢ−ȳ) 与分母 Σ(xᵢ−x̄)²(列表算最稳)。</div>
+      <div class="mono">第3步:b̂ = 分子/分母,â = ȳ − b̂·x̄。</div>
+      <div class="mono">第4步:写出 ŷ = b̂x + â,并可代入 x 做预测。</div>
+      <p class="trap">⚠ â=ȳ−b̂x̄,不是 ȳ−b̂!分母是 Σ(xᵢ−x̄)²(只含 x),别把 y 也放进分母。ŷ 是估计值,写作带帽子的 ŷ。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 散点 + 回归直线:拖动任意一个点,看最小二乘直线随之移动(始终过中心)</div>
+      <svg id="lsSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="lsReset">↺ 恢复默认点</button>
+      </div>
+      <div class="live">
+        <div><b>斜率 b̂</b><span id="lsB">0</span></div>
+        <div><b>截距 â</b><span id="lsA">0</span></div>
+        <div><b>中心 (x̄, ȳ)</b><span id="lsC">0</span></div>
+        <div><b>残差平方和</b><span id="lsSSE">0</span></div>
+      </div>
+      <p class="small">红点可拖动。蓝线=最小二乘回归直线,黄虚线=每个点到直线的竖直偏差(残差)。拖动任一点,直线立刻重算,而且<b>永远穿过绿色的样本中心 (x̄, ȳ)</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 4 — 回归直线必过样本中心 (x̄, ȳ):平移直线试试,只有过中心时残差和才最小</div>
+      <svg id="ctrSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>上下平移直线 <input id="ctrShift" type="range" min="-60" max="60" value="0" step="1"></label>
+        <button id="ctrBest">⭐ 回到最优(过中心)</button>
+      </div>
+      <div class="live">
+        <div><b>直线是否过中心</b><span id="ctrPass">—</span></div>
+        <div><b>当前残差平方和</b><span id="ctrSSE">0</span></div>
+        <div><b>最小残差平方和</b><span id="ctrMin">0</span></div>
+        <div><b>偏离</b><span id="ctrGap">0</span></div>
+      </div>
+      <p class="small">保持斜率不变,上下平移这条直线。绿点 = 样本中心 (x̄, ȳ)。只有当直线正好压在绿点上时,残差平方和才达到最小 → 这就是「回归直线必过 (x̄, ȳ)」的几何解释。</p>
+    </div>
+
+    <h2 class="o">④ 相关系数 r:线性关系强不强</h2>
+    <div class="card">
+      <div class="eq">r = Σ(x<sub>i</sub>−x̄)(y<sub>i</sub>−ȳ) / √[Σ(x<sub>i</sub>−x̄)²·Σ(y<sub>i</sub>−ȳ)²]</div>
+      <p style="margin:8px 0"><b>r 衡量线性相关的强弱和方向</b>,取值范围 <b>−1 ≤ r ≤ 1</b>。</p>
+      <table>
+        <tr><th>r 的值</th><th>含义</th></tr>
+        <tr><td>r > 0</td><td>正相关(x 增 y 也增,直线上升)</td></tr>
+        <tr><td>r < 0</td><td>负相关(x 增 y 减,直线下降)</td></tr>
+        <tr><td>|r| 接近 1</td><td>线性相关<b>很强</b>(点几乎在一条直线上)</td></tr>
+        <tr><td>|r| 接近 0</td><td>线性相关<b>很弱</b>(点很散乱)</td></tr>
+        <tr><td>r = ±1</td><td>所有点严格在一条直线上(完全相关)</td></tr>
+      </table>
+      <p style="margin:8px 0">经验:通常 |r| > 0.75 认为线性相关较强。r 的正负号<b>与斜率 b̂ 的正负号一致</b>(分子相同)。</p>
+      <p class="trap">⚠ r 接近 0 只说明「线性」关系弱,可能仍有非线性关系(如抛物线)。相关 ≠ 因果!r 大只表示统计上相关,不代表一个导致另一个。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 5 — 相关系数 r 的不同取值:对比六组散点,直观感受 r 从 −1 到 +1</div>
+      <svg id="rSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rcase on" data-r="1">r≈+0.98 强正</button>
+        <button class="rcase" data-r="2">r≈+0.6 弱正</button>
+        <button class="rcase" data-r="3">r≈0 无相关</button>
+        <button class="rcase" data-r="4">r≈−0.6 弱负</button>
+        <button class="rcase" data-r="5">r≈−0.98 强负</button>
+      </div>
+      <div class="verdict" id="rNote"></div>
+      <p class="small">点云越「细长贴一条线」→ |r| 越接近 1;越「圆滚滚散开」→ |r| 越接近 0。上升为正、下降为负。红线为该组的趋势方向。</p>
+    </div>
+
+    <h2 class="v">⑤ 非线性回归:取对数变直线</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多真实数据不是直线,而是<b>指数型 y=c·e^(bx)</b> 或<b>幂/对数型</b>。直接最小二乘拟合曲线很难,套路是<b>取对数,把曲线掰直</b>,转成线性再用最小二乘。</p>
+      <table>
+        <tr><th>原模型</th><th>变换</th><th>变成的线性关系</th></tr>
+        <tr><td>指数 y = c·e^(bx)</td><td>令 z = ln y</td><td>z = bx + ln c(z 对 x 线性)</td></tr>
+        <tr><td>幂 y = c·xⁿ</td><td>令 z=ln y, w=ln x</td><td>z = n·w + ln c</td></tr>
+        <tr><td>对数 y = a + b·ln x</td><td>令 w = ln x</td><td>y = b·w + a</td></tr>
+      </table>
+      <h3>指数模型的完整套路</h3>
+      <div class="mono">① 令 z=ln y,对 (x, z) 做线性回归 ẑ = b̂x + â。</div>
+      <div class="mono">② 对照 z=bx+ln c:斜率 b̂ 就是 b,截距 â=ln c → c=e^â。</div>
+      <div class="mono">③ 回代:ŷ = e^â · e^(b̂x)。</div>
+      <p class="trap">⚠ 取对数后是对 <b>(x, ln y)</b> 做回归,别忘了最后要 e 的幂<b>换回来</b>。截距 â 是 ln c,c=e^â,不是 â 本身!</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪄 互动 6 — 非线性取对数变直线:左边弯曲的 y-x,右边取 ln y 后变成一条直线</div>
+      <svg id="logSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="logmode on" data-m="0">原始 y = c·e^(bx)（弯）</button>
+        <button class="logmode" data-m="1">取对数 z = ln y（直）</button>
+        <label>增长率 b <input id="logB" type="range" min="0.1" max="0.6" value="0.35" step="0.05"></label>
+      </div>
+      <div class="verdict" id="logNote"></div>
+      <p class="small">同一批数据:左视图 y 随 x 指数式弯曲上翘;点「取对数」后,右视图里 z=ln y 变成一条<b>笔直的线</b> → 可以用最小二乘拟合了。这就是「非线性化线性」的魔法。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 列联表求 K² 判断相关</h3>
+      <p><b class="tag">触发信号:</b>给一张 2×2 列联表(或让你先填表),问「是否有关」「有多大把握认为有关」。</p>
+      <p><b class="tag">标准动作:</b>读出 a、b、c、d 和 n → 代 K²=n(ad−bc)²/[(a+b)(c+d)(a+c)(b+d)] → 与临界值比较下结论。</p>
+      <p><b class="tag">示例(带解):</b>a=40,b=10,c=15,d=35,n=100。ad−bc=40×35−10×15=1400−150=1250。K²=100×1250²/(50×50×55×45)=100×1562500/6187500≈25.25。25.25>6.635 → 有 99% 把握认为两变量有关。</p>
+      <p class="trap">陷阱:格子填反;分母漏乘一项;把频数当成百分数代入。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 查临界值下结论</h3>
+      <p><b class="tag">触发信号:</b>已算出 K²(或题目直接给),问「能否在某把握下认为有关」。</p>
+      <p><b class="tag">标准动作:</b>把 K² 和临界值比:>3.841(95%)、>6.635(99%)、>10.828(99.9%)。找出「刚好超过」的那一档就是最高把握。</p>
+      <p><b class="tag">示例(带解):</b>K²=7.2。7.2>6.635 但 <7.879,故有 99% 把握认为有关(还达不到 99.5%)。若 K²=3.5<3.841 → 没有充分证据认为有关。</p>
+      <p class="trap">陷阱:表述写成「有关的概率是95%」(错,是「有95%的把握」);K²小时说成「一定独立/无关」(应说「证据不足」)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 求线性回归方程</h3>
+      <p><b class="tag">触发信号:</b>给一组 (xᵢ,yᵢ) 数据,求「回归直线方程 ŷ=b̂x+â」。</p>
+      <p><b class="tag">标准动作:</b>算 x̄、ȳ → 算 Σ(xᵢ−x̄)(yᵢ−ȳ) 和 Σ(xᵢ−x̄)² → b̂=前者/后者 → â=ȳ−b̂x̄ → 写方程。</p>
+      <p><b class="tag">示例(带解):</b>x:1,2,3,4,5;y:2,4,5,4,5。x̄=3,ȳ=4。Σ(xᵢ−x̄)(yᵢ−ȳ)=(−2)(−2)+(−1)(0)+0+(1)(0)+(2)(1)=4+0+0+0+2=6。Σ(xᵢ−x̄)²=4+1+0+1+4=10。b̂=6/10=0.6,â=4−0.6×3=2.2。故 ŷ=0.6x+2.2。</p>
+      <p class="trap">陷阱:x̄、ȳ 算错;分母混入 y;â 公式记错;忘了最后写成 ŷ 形式。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 用回归方程预测</h3>
+      <p><b class="tag">触发信号:</b>已有回归方程,问「当 x=某值时,y 的估计/预测值」。</p>
+      <p><b class="tag">标准动作:</b>把 x 代入 ŷ=b̂x+â 直接算 ŷ。答的是「估计值/预测值」而非精确值。</p>
+      <p><b class="tag">示例(带解):</b>ŷ=0.6x+2.2,预测 x=6 时 ŷ=0.6×6+2.2=5.8。即估计 y 约为 5.8(是趋势估计,不是准确数)。</p>
+      <p class="trap">陷阱:把 ŷ 当精确值;外推太远(x 远超样本范围时预测不可靠);算术代入错。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 非线性回归转化</h3>
+      <p><b class="tag">触发信号:</b>散点明显弯曲,题目给「y=c·e^(bx)」这类模型,或提示「令 z=ln y」。</p>
+      <p><b class="tag">标准动作:</b>取对数令 z=ln y → 对 (x,z) 做线性回归得 ẑ=b̂x+â → b=b̂、c=e^â → 回代 ŷ=e^â·e^(b̂x)。</p>
+      <p><b class="tag">示例(带解):</b>设 y=c·e^(bx),取 z=ln y 得 z=bx+ln c。若线性回归得 ẑ=0.25x+0.5,则 b=0.25,ln c=0.5 → c=e^0.5≈1.65。故 ŷ=1.65·e^(0.25x)。</p>
+      <p class="trap">陷阱:忘了把 â 换算成 c=e^â;对 x 也取对数(指数模型只对 y 取对数);最后不回代还留在 z。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 相关系数判断相关强弱</h3>
+      <p><b class="tag">触发信号:</b>给数据或给 r 值,问「相关性强不强、正负、能否用线性回归」。</p>
+      <p><b class="tag">标准动作:</b>算(或读)r → 看正负定方向 → 看 |r| 接近 1 与否定强弱。|r|>0.75 一般认为线性相关较强,可用线性回归。</p>
+      <p><b class="tag">示例(带解):</b>r=0.98 → 强正相关,点几乎在上升直线上,适合线性回归。r=−0.2 → 弱负相关,线性关系不明显,直接线性拟合意义不大。</p>
+      <p class="trap">陷阱:把 |r| 大当因果;r≈0 就断言「无任何关系」(可能是非线性);符号看错。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① K² 公式代入:分子 n(ad−bc)²,分母是<b>四个边缘合计相乘</b> (a+b)(c+d)(a+c)(b+d),一项都不能漏或错位。a,b,c,d 是频数不是比例。</p>
+      <p class="trap">② 回归直线<b>必过样本中心 (x̄, ȳ)</b>。选择题里「回归直线一定经过某点」→ 就是 (x̄,ȳ);求截距用 â=ȳ−b̂x̄ 也是这个道理。</p>
+      <p class="trap">③ 表述:是「有 95% 的<b>把握</b>认为有关」,不是「有关的概率是 95%」,也不是「95% 的样本有关」。</p>
+      <p class="trap">④ ŷ 是<b>估计值/预测值</b>,不是精确值。预测只是趋势估计,x 外推太远不可靠。</p>
+      <p class="trap">⑤ 相关系数 <b>|r| 接近 ±1 才是强相关</b>;接近 0 是弱(线性)相关。r 的符号与斜率 b̂ 同号。</p>
+      <p class="trap">⑥ b̂ 的分母只含 x:Σ(xᵢ−x̄)²,别混进 y。â=ȳ−b̂·x̄,不是 ȳ−b̂。</p>
+      <p class="trap">⑦ K² 大 → 有关;K² 小 → 只能说「证据不足,不能认为有关」,不能说「一定独立/无关」。</p>
+      <p class="trap">⑧ 非线性(指数)只对 <b>y</b> 取对数令 z=ln y;做完回归 c=e^â 要换回来,别留在 z。</p>
+      <p class="trap">⑨ 相关 ≠ 因果:r 大或 K² 大只表示统计相关,不代表一个导致另一个。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① K² 度量的是「偏离独立」的程度:</b> 如果两变量独立,期望频数应满足「行比例=列比例」,即 ad≈bc。K² 本质是把「实际频数」与「独立假设下的期望频数」的差异平方后加权求和。ad−bc 越远离 0,K² 越大,越该否定独立。理解这一层,你就知道为什么 ad=bc 时 K²=0。</p>
+      <p style="margin:8px 0"><b>② 最小二乘 = 让残差平方和 Q(â,b̂)=Σ(yᵢ−b̂xᵢ−â)² 最小:</b> 对 â、b̂ 分别求偏导置零,就解出那两个公式。由 ∂Q/∂â=0 直接得到「回归直线过 (x̄,ȳ)」;由 ∂Q/∂b̂=0 得到 b̂ 的表达式。所以「过中心」不是巧合,是最优化的必然结果。</p>
+      <p style="margin:8px 0"><b>③ b̂ 与 r 同源:</b> b̂=Σ(xᵢ−x̄)(yᵢ−ȳ)/Σ(xᵢ−x̄)²,r=同样的分子除以 √[Σ(xᵢ−x̄)²·Σ(yᵢ−ȳ)²]。它们分子相同 → 符号必然一致。还有 b̂=r·(sᵧ/sₓ)(标准差之比)。看懂这个关系,r 与 b̂ 的题就一通百通。</p>
+      <p style="margin:8px 0"><b>④ 取对数是「把乘法变加法、把指数变线性」:</b> ln(c·e^(bx))=ln c + bx。任何「成倍增长/幂律」的模型,取对数后都塌成直线。选模型时先画散点:直线用线性回归,上翘弯曲用指数(对 y 取 ln),整体缓增用对数(对 x 取 ln)。</p>
+      <p style="margin:8px 0"><b>⑤ 统计推断的谦逊:</b> 独立性检验给的是「把握程度」而非「真相」;回归给的是「趋势估计」而非「精确预言」。尖子生答题时用词精准——「有 99% 把握认为有关」「预测值约为」——这些措辞本身就是得分点,阅卷老师专挑这里扣分。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 独立性检验(判有没有关系)+ 线性回归(找最贴合的直线)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#8a8272";
+function chiSquare(a,b,c,d){
+  const n=a+b+c+d;
+  const den=(a+b)*(c+d)*(a+c)*(b+d);
+  if(den===0)return 0;
+  return n*Math.pow(a*d-b*c,2)/den;
+}
+function verdict(k){
+  if(k>6.635)return{txt:"99% 有关",col:RED};
+  if(k>3.841)return{txt:"95% 有关",col:ORANGE};
+  return{txt:"证据不足",col:GREEN};
+}
+
+/* ===== 互动1:2x2 列联表实时算 K² ===== */
+(function(){
+  const svg=document.getElementById('chiSvg');
+  const iA=document.getElementById('cA'),iB=document.getElementById('cB'),iC=document.getElementById('cC'),iD=document.getElementById('cD');
+  const oN=document.getElementById('chiN'),oAd=document.getElementById('chiAdbc'),oK=document.getElementById('chiK'),oV=document.getElementById('chiV');
+  function draw(){
+    clr(svg);
+    const a=+iA.value||0,b=+iB.value||0,c=+iC.value||0,d=+iD.value||0;
+    const n=a+b+c+d;
+    const k=chiSquare(a,b,c,d);
+    const v=verdict(k);
+    // table grid
+    const X0=60,Y0=30,cw=120,ch=44;
+    const cols=["","y₁","y₂","合计"];
+    const rows=[["","","",""],["x₁",a,b,a+b],["x₂",c,d,c+d],["合计",a+c,b+d,n]];
+    // header row
+    for(let j=0;j<4;j++){
+      el(svg,'rect',{x:X0+j*cw,y:Y0,width:cw,height:ch,fill:INK,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0+j*cw+cw/2,y:Y0+ch/2+5,'font-size':15,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=cols[j];
+    }
+    for(let i=1;i<4;i++){
+      for(let j=0;j<4;j++){
+        let fill='#fff';
+        if(j===0)fill=INK;
+        else if(i===3||j===3)fill='#efe8d4';
+        // highlight diagonal a,d
+        if((i===1&&j===1)||(i===2&&j===2))fill='rgba(224,56,42,0.18)';
+        el(svg,'rect',{x:X0+j*cw,y:Y0+i*ch,width:cw,height:ch,fill:fill,stroke:INK,'stroke-width':2});
+        const val=rows[i][j];
+        const tc=(j===0)?'#fff':INK;
+        el(svg,'text',{x:X0+j*cw+cw/2,y:Y0+i*ch+ch/2+5,'font-size':15,'font-weight':900,fill:tc,'text-anchor':'middle'}).textContent=(val===''?'':val);
+      }
+    }
+    // scale bar under table
+    const barY=Y0+4*ch+26,barX=X0,barW=480;
+    el(svg,'text',{x:barX,y:barY-8,'font-size':12.5,'font-weight':800,fill:INK}).textContent='K² 刻度尺（临界 3.841 / 6.635）';
+    el(svg,'rect',{x:barX,y:barY,width:barW,height:16,fill:'#efe8d4',stroke:INK,'stroke-width':2});
+    const Kmax=15;
+    function px(val){return barX+Math.min(val,Kmax)/Kmax*barW;}
+    // zones
+    el(svg,'rect',{x:barX,y:barY,width:px(3.841)-barX,height:16,fill:'rgba(30,158,134,0.35)'});
+    el(svg,'rect',{x:px(3.841),y:barY,width:px(6.635)-px(3.841),height:16,fill:'rgba(232,106,23,0.35)'});
+    el(svg,'rect',{x:px(6.635),y:barY,width:barX+barW-px(6.635),height:16,fill:'rgba(224,56,42,0.35)'});
+    el(svg,'line',{x1:px(3.841),y1:barY-3,x2:px(3.841),y2:barY+19,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:px(6.635),y1:barY-3,x2:px(6.635),y2:barY+19,stroke:INK,'stroke-width':2});
+    // pointer
+    const kx=px(k);
+    el(svg,'polygon',{points:kx+','+(barY-4)+' '+(kx-6)+','+(barY-14)+' '+(kx+6)+','+(barY-14),fill:v.col,stroke:INK,'stroke-width':1.5});
+    el(svg,'text',{x:Math.min(kx,barX+barW-30),y:barY+34,'font-size':12.5,'font-weight':900,fill:v.col,'text-anchor':'middle'}).textContent='K²='+k.toFixed(2);
+    // readout
+    oN.textContent=n;
+    oAd.textContent=(a*d-b*c);
+    oK.textContent=k.toFixed(2);
+    oV.textContent=v.txt;oV.style.color=v.col;
+  }
+  iA.oninput=iB.oninput=iC.oninput=iD.oninput=draw;
+  document.getElementById('chiReset').onclick=()=>{iA.value=40;iB.value=10;iC.value=15;iD.value=35;draw();};
+  draw();
+})();
+
+/* ===== 互动2:K² 大小与关联强度 ===== */
+(function(){
+  const svg=document.getElementById('strSvg');
+  const s=document.getElementById('strK');
+  const oAD=document.getElementById('strAD'),oBC=document.getElementById('strBC'),oKv=document.getElementById('strKv'),oV=document.getElementById('strV');
+  function draw(){
+    clr(svg);
+    const t=+s.value/100; // 0..1 diagonal skew
+    // n=100, split 50/50 rows, distribute
+    const a=Math.round(25+t*24),d=a; // 25..49
+    const b=50-a,c=b;                // 25..1
+    const k=chiSquare(a,b,c,d);
+    const v=verdict(k);
+    // draw ruler
+    const barX=60,barY=120,barW=560,Kmax=40;
+    el(svg,'text',{x:barX,y:50,'font-size':14,'font-weight':900,fill:INK}).textContent='固定 n=100，对角 a=d 越大、b=c 越小 → K² 越大 → 关联越强';
+    el(svg,'text',{x:barX,y:barY-14,'font-size':12.5,'font-weight':800,fill:INK}).textContent='K² 刻度尺';
+    el(svg,'rect',{x:barX,y:barY,width:barW,height:20,fill:'#efe8d4',stroke:INK,'stroke-width':3});
+    function px(val){return barX+Math.min(val,Kmax)/Kmax*barW;}
+    el(svg,'rect',{x:barX,y:barY,width:px(3.841)-barX,height:20,fill:'rgba(30,158,134,0.35)'});
+    el(svg,'rect',{x:px(3.841),y:barY,width:px(6.635)-px(3.841),height:20,fill:'rgba(232,106,23,0.35)'});
+    el(svg,'rect',{x:px(6.635),y:barY,width:barX+barW-px(6.635),height:20,fill:'rgba(224,56,42,0.35)'});
+    el(svg,'line',{x1:px(3.841),y1:barY-6,x2:px(3.841),y2:barY+26,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(3.841),y:barY+42,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='3.841';
+    el(svg,'line',{x1:px(6.635),y1:barY-6,x2:px(6.635),y2:barY+26,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(6.635),y:barY+42,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='6.635';
+    const kx=px(k);
+    el(svg,'polygon',{points:kx+','+(barY-6)+' '+(kx-8)+','+(barY-20)+' '+(kx+8)+','+(barY-20),fill:v.col,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Math.min(Math.max(kx,barX+30),barX+barW-40),y:barY-26,'font-size':13,'font-weight':900,fill:v.col,'text-anchor':'middle'}).textContent='K²='+k.toFixed(2);
+    oAD.textContent=a;oBC.textContent=b;oKv.textContent=k.toFixed(2);oV.textContent=v.txt;oV.style.color=v.col;
+  }
+  s.oninput=draw;draw();
+})();
+
+/* ===== 互动3:散点 + 最小二乘回归(可拖点) ===== */
+(function(){
+  const svg=document.getElementById('lsSvg');
+  const oB=document.getElementById('lsB'),oA=document.getElementById('lsA'),oC=document.getElementById('lsC'),oS=document.getElementById('lsSSE');
+  // plot area in data coords x:0..10, y:0..10
+  const PX0=60,PY0=30,PW=580,PH=300;
+  const defPts=[[1,2.2],[2,3.6],[3,3.4],[4,5.2],[5,5.6],[6,6.9],[7,7.1],[8,8.6]];
+  let pts=defPts.map(p=>[p[0],p[1]]);
+  let drag=-1;
+  function sx(x){return PX0+x/10*PW;}
+  function sy(y){return PY0+PH-y/10*PH;}
+  function invx(px){return (px-PX0)/PW*10;}
+  function invy(py){return (PY0+PH-py)/PH*10;}
+  function regress(){
+    const n=pts.length;
+    let mx=0,my=0;pts.forEach(p=>{mx+=p[0];my+=p[1];});mx/=n;my/=n;
+    let num=0,den=0;pts.forEach(p=>{num+=(p[0]-mx)*(p[1]-my);den+=(p[0]-mx)*(p[0]-mx);});
+    const b=den===0?0:num/den;const a=my-b*mx;
+    let sse=0;pts.forEach(p=>{const e=p[1]-(b*p[0]+a);sse+=e*e;});
+    return{b,a,mx,my,sse};
+  }
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:PX0,y1:PY0,x2:PX0,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:PX0,y1:PY0+PH,x2:PX0+PW,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:PX0-8,y:PY0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:PX0+PW,y:PY0+PH+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // grid
+    for(let g=2;g<=10;g+=2){
+      el(svg,'line',{x1:sx(g),y1:PY0,x2:sx(g),y2:PY0+PH,stroke:'#ddd6c2','stroke-width':1});
+      el(svg,'line',{x1:PX0,y1:sy(g),x2:PX0+PW,y2:sy(g),stroke:'#ddd6c2','stroke-width':1});
+    }
+    const r=regress();
+    // regression line across x=0..10
+    const y0=r.b*0+r.a,y10=r.b*10+r.a;
+    el(svg,'line',{x1:sx(0),y1:sy(y0),x2:sx(10),y2:sy(y10),stroke:BLUE,'stroke-width':4});
+    // residual dashed
+    pts.forEach(p=>{
+      const yhat=r.b*p[0]+r.a;
+      el(svg,'line',{x1:sx(p[0]),y1:sy(p[1]),x2:sx(p[0]),y2:sy(yhat),stroke:YEL,'stroke-width':2.5,'stroke-dasharray':'4 3'});
+    });
+    // center point
+    el(svg,'circle',{cx:sx(r.mx),cy:sy(r.my),r:9,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:sx(r.mx)+12,y:sy(r.my)-10,'font-size':12,'font-weight':900,fill:GREEN}).textContent='(x̄,ȳ)';
+    // data points
+    pts.forEach((p,i)=>{
+      el(svg,'circle',{cx:sx(p[0]),cy:sy(p[1]),r:8,fill:RED,stroke:INK,'stroke-width':3,style:'cursor:grab'});
+    });
+    el(svg,'text',{x:PX0+PW/2,y:PY0-10,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='ŷ = '+r.b.toFixed(2)+'x + '+r.a.toFixed(2);
+    oB.textContent=r.b.toFixed(3);oA.textContent=r.a.toFixed(3);
+    oC.textContent='('+r.mx.toFixed(2)+', '+r.my.toFixed(2)+')';oS.textContent=r.sse.toFixed(2);
+  }
+  function pointerPos(ev){
+    const rect=svg.getBoundingClientRect();
+    const scaleX=700/rect.width;
+    const cx=(ev.clientX-rect.left)*scaleX;
+    const cy=(ev.clientY-rect.top)*(380/rect.height);
+    return[cx,cy];
+  }
+  svg.addEventListener('pointerdown',ev=>{
+    const[cx,cy]=pointerPos(ev);
+    let best=-1,bd=1e9;
+    pts.forEach((p,i)=>{const dx=sx(p[0])-cx,dy=sy(p[1])-cy;const dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=i;}});
+    if(bd<400){drag=best;svg.setPointerCapture(ev.pointerId);}
+  });
+  svg.addEventListener('pointermove',ev=>{
+    if(drag<0)return;
+    const[cx,cy]=pointerPos(ev);
+    let nx=invx(cx),ny=invy(cy);
+    nx=Math.max(0,Math.min(10,nx));ny=Math.max(0,Math.min(10,ny));
+    pts[drag]=[nx,ny];draw();
+  });
+  svg.addEventListener('pointerup',()=>{drag=-1;});
+  svg.addEventListener('pointerleave',()=>{drag=-1;});
+  document.getElementById('lsReset').onclick=()=>{pts=defPts.map(p=>[p[0],p[1]]);draw();};
+  draw();
+})();
+
+/* ===== 互动4:回归直线必过 (x̄,ȳ) ===== */
+(function(){
+  const svg=document.getElementById('ctrSvg');
+  const sh=document.getElementById('ctrShift');
+  const oPass=document.getElementById('ctrPass'),oSSE=document.getElementById('ctrSSE'),oMin=document.getElementById('ctrMin'),oGap=document.getElementById('ctrGap');
+  const PX0=60,PY0=30,PW=580,PH=280;
+  const pts=[[1,2.5],[2,3.2],[3,4.6],[4,5.1],[5,6.4],[6,6.8],[7,8.2]];
+  function sx(x){return PX0+x/10*PW;}
+  function sy(y){return PY0+PH-y/10*PH;}
+  let mx=0,my=0;pts.forEach(p=>{mx+=p[0];my+=p[1];});mx/=pts.length;my/=pts.length;
+  let num=0,den=0;pts.forEach(p=>{num+=(p[0]-mx)*(p[1]-my);den+=(p[0]-mx)*(p[0]-mx);});
+  const bBest=num/den, aBest=my-bBest*mx;
+  let minSSE=0;pts.forEach(p=>{const e=p[1]-(bBest*p[0]+aBest);minSSE+=e*e;});
+  function draw(){
+    clr(svg);
+    const shift=+sh.value/20; // data-unit vertical shift
+    const a=aBest+shift; // same slope bBest
+    // axes
+    el(svg,'line',{x1:PX0,y1:PY0,x2:PX0,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:PX0,y1:PY0+PH,x2:PX0+PW,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:PX0-8,y:PY0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:PX0+PW,y:PY0+PH+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    for(let g=2;g<=10;g+=2){
+      el(svg,'line',{x1:sx(g),y1:PY0,x2:sx(g),y2:PY0+PH,stroke:'#ddd6c2','stroke-width':1});
+      el(svg,'line',{x1:PX0,y1:sy(g),x2:PX0+PW,y2:sy(g),stroke:'#ddd6c2','stroke-width':1});
+    }
+    // moving line
+    const y0=bBest*0+a,y10=bBest*10+a;
+    el(svg,'line',{x1:sx(0),y1:sy(y0),x2:sx(10),y2:sy(y10),stroke:VIO,'stroke-width':4});
+    // residuals + sse
+    let sse=0;
+    pts.forEach(p=>{
+      const yhat=bBest*p[0]+a;const e=p[1]-yhat;sse+=e*e;
+      el(svg,'line',{x1:sx(p[0]),y1:sy(p[1]),x2:sx(p[0]),y2:sy(yhat),stroke:YEL,'stroke-width':2.5,'stroke-dasharray':'4 3'});
+    });
+    pts.forEach(p=>{el(svg,'circle',{cx:sx(p[0]),cy:sy(p[1]),r:7,fill:RED,stroke:INK,'stroke-width':3});});
+    // center
+    el(svg,'circle',{cx:sx(mx),cy:sy(my),r:9,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:sx(mx)+12,y:sy(my)-10,'font-size':12,'font-weight':900,fill:GREEN}).textContent='(x̄,ȳ)';
+    // line value at x=mx
+    const lineAtMx=bBest*mx+a;
+    const gap=Math.abs(lineAtMx-my);
+    const passes=gap<0.06;
+    el(svg,'text',{x:PX0+PW/2,y:PY0-10,'font-size':13,'font-weight':900,fill:passes?GREEN:VIO,'text-anchor':'middle'}).textContent=passes?'✔ 直线正好过样本中心 → 残差平方和最小':'直线偏离中心 → 残差平方和偏大';
+    oPass.textContent=passes?'是 ✔':'否';oPass.style.color=passes?GREEN:VIO;
+    oSSE.textContent=sse.toFixed(2);oMin.textContent=minSSE.toFixed(2);
+    oGap.textContent=(sse-minSSE).toFixed(2);
+  }
+  sh.oninput=draw;
+  document.getElementById('ctrBest').onclick=()=>{sh.value=0;draw();};
+  draw();
+})();
+
+/* ===== 互动5:相关系数 r 不同取值 ===== */
+(function(){
+  const svg=document.getElementById('rSvg');const note=document.getElementById('rNote');
+  let mode=1;
+  const PX0=60,PY0=24,PW=580,PH=190;
+  function sx(x){return PX0+x/10*PW;}
+  function sy(y){return PY0+PH-y/10*PH;}
+  function rnd(seed){ // simple deterministic pseudo-random
+    let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280;};
+  }
+  document.querySelectorAll('.rcase').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.rcase').forEach(x=>x.classList.remove('on'));btn.classList.add('on');mode=+btn.dataset.r;draw();
+  });
+  function genPts(mode){
+    const rand=rnd(mode*137+7);
+    const pts=[];const N=22;
+    for(let i=0;i<N;i++){
+      const x=0.5+9*rand();
+      let base=x; // upward
+      let noise=(rand()-0.5);
+      let y;
+      if(mode===1){y=x*0.85+0.7+noise*0.6;}      // strong +
+      else if(mode===2){y=x*0.6+2+noise*2.6;}    // weak +
+      else if(mode===3){y=5+ (rand()-0.5)*8;}    // ~0
+      else if(mode===4){y=(10-x)*0.6+2+noise*2.6;} // weak -
+      else{y=(10-x)*0.85+0.7+noise*0.6;}         // strong -
+      y=Math.max(0.3,Math.min(9.7,y));
+      pts.push([x,y]);
+    }
+    return pts;
+  }
+  function corr(pts){
+    const n=pts.length;let mx=0,my=0;pts.forEach(p=>{mx+=p[0];my+=p[1];});mx/=n;my/=n;
+    let num=0,dx=0,dy=0;pts.forEach(p=>{num+=(p[0]-mx)*(p[1]-my);dx+=(p[0]-mx)**2;dy+=(p[1]-my)**2;});
+    return{r:num/Math.sqrt(dx*dy),mx,my,b:num/dx};
+  }
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:PX0,y1:PY0,x2:PX0,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:PX0,y1:PY0+PH,x2:PX0+PW,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:PX0-8,y:PY0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:PX0+PW,y:PY0+PH+18,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    const pts=genPts(mode);const c=corr(pts);
+    // trend line
+    const a=c.my-c.b*c.mx;
+    el(svg,'line',{x1:sx(0),y1:sy(a),x2:sx(10),y2:sy(c.b*10+a),stroke:RED,'stroke-width':3.5});
+    pts.forEach(p=>{el(svg,'circle',{cx:sx(p[0]),cy:sy(p[1]),r:5,fill:BLUE,stroke:INK,'stroke-width':2});});
+    const rr=c.r;
+    let desc;
+    if(mode===1)desc='强正相关：点几乎贴在一条上升直线上，|r|≈0.98 接近 1，线性关系很强，适合线性回归。';
+    else if(mode===2)desc='弱正相关：整体上升但比较散，|r|≈0.6，有正相关但不够强。';
+    else if(mode===3)desc='几乎无相关：点云圆滚滚随机散开，r≈0，线性关系几乎没有（不代表毫无关系，可能非线性）。';
+    else if(mode===4)desc='弱负相关：整体下降但较散，|r|≈0.6，x 增大 y 略减。';
+    else desc='强负相关：点几乎贴在下降直线上，|r|≈0.98，负向线性关系很强。';
+    note.innerHTML='📌 实测 r ≈ <b>'+rr.toFixed(2)+'</b>　—　'+desc;
+    note.style.borderColor=Math.abs(rr)>0.85?(rr>0?GREEN:RED):INK;
+    el(svg,'text',{x:PX0+PW/2,y:PY0-6,'font-size':13,'font-weight':900,fill:rr>0?GREEN:(Math.abs(rr)<0.2?INK:RED),'text-anchor':'middle'}).textContent='r ≈ '+rr.toFixed(2);
+  }
+  draw();
+})();
+
+/* ===== 互动6:非线性取对数变直线 ===== */
+(function(){
+  const svg=document.getElementById('logSvg');const note=document.getElementById('logNote');
+  const sB=document.getElementById('logB');
+  let mode=0;
+  const PX0=64,PY0=30,PW=560,PH=250;
+  document.querySelectorAll('.logmode').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.logmode').forEach(x=>x.classList.remove('on'));btn.classList.add('on');mode=+btn.dataset.m;draw();
+  });
+  const cC=1.2; // c constant
+  function draw(){
+    clr(svg);
+    const b=+sB.value;
+    // data x=1..8
+    const xs=[1,2,3,4,5,6,7,8];
+    const ys=xs.map(x=>cC*Math.exp(b*x));
+    const zs=ys.map(y=>Math.log(y));
+    // axes
+    el(svg,'line',{x1:PX0,y1:PY0,x2:PX0,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:PX0,y1:PY0+PH,x2:PX0+PW,y2:PY0+PH,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:PX0+PW,y:PY0+PH+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    const xmax=9;
+    function px(x){return PX0+x/xmax*PW;}
+    if(mode===0){
+      // plot y (exponential curve)
+      const ymax=Math.max.apply(null,ys)*1.1;
+      function py(y){return PY0+PH-y/ymax*PH;}
+      el(svg,'text',{x:PX0-8,y:PY0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+      // curve
+      let dPath='';
+      for(let xx=1;xx<=8;xx+=0.1){const yy=cC*Math.exp(b*xx);dPath+=(dPath?'L':'M')+px(xx)+','+py(yy)+' ';}
+      el(svg,'path',{d:dPath,fill:'none',stroke:ORANGE,'stroke-width':3.5});
+      xs.forEach((x,i)=>{el(svg,'circle',{cx:px(x),cy:py(ys[i]),r:6,fill:RED,stroke:INK,'stroke-width':2.5});});
+      el(svg,'text',{x:PX0+PW/2,y:PY0-10,'font-size':14,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='y = c·e^(bx)　弯曲上翘（无法直接线性回归）';
+      note.innerHTML='👉 原始数据 y 随 x <b>指数式弯曲</b>上翘，用直线拟合会很差。下一步：对每个 y 取自然对数 z=ln y。';
+      note.style.borderColor=ORANGE;
+    } else {
+      // plot z=ln y (straight line)
+      const zmin=Math.min.apply(null,zs)-0.4,zmax=Math.max.apply(null,zs)+0.4;
+      function py(z){return PY0+PH-(z-zmin)/(zmax-zmin)*PH;}
+      el(svg,'text',{x:PX0-8,y:PY0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='z=ln y';
+      // straight line z = b*x + ln c
+      const lnc=Math.log(cC);
+      el(svg,'line',{x1:px(0.5),y1:py(b*0.5+lnc),x2:px(8.5),y2:py(b*8.5+lnc),stroke:GREEN,'stroke-width':4});
+      xs.forEach((x,i)=>{el(svg,'circle',{cx:px(x),cy:py(zs[i]),r:6,fill:BLUE,stroke:INK,'stroke-width':2.5});});
+      el(svg,'text',{x:PX0+PW/2,y:PY0-10,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='z = ln y = b·x + ln c　变成一条直线！';
+      note.innerHTML='✔ 取对数后 <b>z=ln y 对 x 是直线</b>：斜率 = b ('+b.toFixed(2)+')，截距 = ln c ('+Math.log(cC).toFixed(2)+')。现在可以用最小二乘拟合，再 c=e^截距 换回原模型。';
+      note.style.borderColor=GREEN;
+    }
+  }
+  sB.oninput=draw;draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 独立性检验里，K² 越大说明什么？拿它和什么比较来下结论？",a:"K² 越大，两个分类变量越可能有关（关联越强）。把 K² 和临界值比较：K²>3.841 → 有95%把握认为有关；>6.635 → 99%把握；≤3.841 → 证据不足，不能认为有关。"},
+ {q:"2. 写出 2×2 列联表的 K² 计算公式。",a:"K² = n(ad−bc)² / [(a+b)(c+d)(a+c)(b+d)]，其中 n=a+b+c+d 为总频数。分子是 n 乘对角乘积差的平方，分母是四个边缘合计的乘积。"},
+ {q:"3. a=40,b=10,c=15,d=35,n=100，求 K² 并下结论。",a:"ad−bc=40×35−10×15=1400−150=1250。K²=100×1250²/(50×50×55×45)=100×1562500/6187500≈25.25。25.25>6.635，故有99%把握认为两变量有关。"},
+ {q:"4. 「有95%的把握认为有关」这句话，哪些常见错误说法要避免？",a:"不能说成「有关的概率是95%」，也不能说「95%的样本有关」。正确是「有95%的把握（置信度）认为两变量有关」。K²小时也不能说「一定独立/无关」，只能说「证据不足」。"},
+ {q:"5. 线性回归方程的形式？b̂ 和 â 的最小二乘公式分别是什么？",a:"ŷ=b̂x+â。b̂=Σ(xᵢ−x̄)(yᵢ−ȳ)/Σ(xᵢ−x̄)²，â=ȳ−b̂·x̄。ŷ 是估计值。"},
+ {q:"6. x:1,2,3,4,5；y:2,4,5,4,5。求回归方程。",a:"x̄=3,ȳ=4。分子Σ(xᵢ−x̄)(yᵢ−ȳ)=(−2)(−2)+(−1)(0)+0+0+(2)(1)=6。分母Σ(xᵢ−x̄)²=4+1+0+1+4=10。b̂=0.6，â=4−0.6×3=2.2。故 ŷ=0.6x+2.2。"},
+ {q:"7. 回归直线一定经过哪个点？为什么？",a:"一定经过样本中心 (x̄,ȳ)。因为由 â=ȳ−b̂x̄ 得 ȳ=b̂x̄+â，即把 x=x̄ 代入回归方程正好得 ŷ=ȳ。这是最小二乘（残差平方和最小）的必然结果。"},
+ {q:"8. 用 ŷ=0.6x+2.2 预测 x=6 时的 y。这个结果是精确值吗？",a:"ŷ=0.6×6+2.2=5.8。这是估计值/预测值，不是精确值，只反映趋势；x 外推太远时预测不可靠。"},
+ {q:"9. 相关系数 r 的取值范围？|r| 接近多少才算强相关？r 的符号和什么一致？",a:"−1≤r≤1。|r| 接近1（如>0.75）为强线性相关，接近0为弱。r 的符号与斜率 b̂ 同号：r>0 正相关（上升），r<0 负相关（下降）。"},
+ {q:"10. r≈0 是否说明两变量毫无关系？相关能否推出因果？",a:"r≈0 只说明「线性」相关弱，可能仍存在非线性关系（如抛物线）。相关≠因果，r 大只表示统计相关，不代表一个导致另一个。"},
+ {q:"11. 对指数模型 y=c·e^(bx) 做回归的套路是什么？",a:"令 z=ln y，则 z=bx+ln c 是线性的。对 (x,z) 做最小二乘得 ẑ=b̂x+â：斜率 b̂ 就是 b，截距 â=ln c → c=e^â。回代得 ŷ=e^â·e^(b̂x)。"},
+ {q:"12. 若对指数模型取对数后线性回归得 ẑ=0.25x+0.5，还原出原回归方程。",a:"b=0.25，ln c=0.5 → c=e^0.5≈1.65。故 ŷ=1.65·e^(0.25x)。注意截距要 e 的幂换回来，不是直接用 0.5。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
