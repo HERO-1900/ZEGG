@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>波的干涉、衍射与多普勒效应 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>波的干涉、衍射与多普勒效应</h1>
+    <p class="lead">机械波的「个性」全在这三件事里:两列波相遇时怎么<b>叠加</b>(独立传播 vs 干涉)、遇到障碍物怎么<b>绕行</b>(衍射)、波源和观察者相对运动时接收到的<b>频率会不会变</b>(多普勒)。这三块常常放在一起考,考的不是公式量多,而是<b>抓关键词、认条件</b>。</p>
+
+    <div class="say">🗣️ <b>人话版:</b> 两列水波相遇,水面该怎么动就怎么动,互不干扰——这叫<b>叠加</b>;如果这两列波频率一样、"步调"锁死,水面上就会出现固定不变的<b>波纹强弱花纹</b>——这叫<b>干涉</b>;波遇到一个和自己波长差不多大小的小孔或障碍物,会"拐弯"绕过去——这叫<b>衍射</b>;救护车开近你时笛声变尖、开远时变低,是因为你<b>接收到的频率</b>变了,救护车喇叭本身发的频率从没变过——这叫<b>多普勒效应</b>。</div>
+
+    <div class="keybox"><b>一句话地图:</b> 叠加是「所有波都有」的基本原理;<b>干涉</b>=叠加的特殊稳定情形(需频率相同、相位差恒定);<b>衍射</b>=波绕过障碍物,是波特有现象,条件是孔/障碍物尺寸与波长可比拟;<b>多普勒</b>=接收频率因相对运动而变,波源频率不变。四个概念环环相扣,但各自的<b>触发条件必须分清</b>。</div>
+
+    <h2>① 波的叠加原理:各走各的,相遇不打架</h2>
+    <div class="card">
+      <div class="eq">相遇区域质点位移 = 各波单独引起位移的矢量和</div>
+      <p style="margin:8px 0">几列波在同一区域相遇时,该区域内每个质点的位移,等于<b>各列波单独存在时</b>在该点引起的位移的<b>矢量和</b>(同向叠加变大,反向叠加变小或抵消)。这是一切波动现象(包括干涉、衍射)的根基。</p>
+      <p style="margin:8px 0"><b>相遇后各自独立传播:</b> 波峰、波谷相遇后,两列波会<b>各自恢复原来的波形</b>继续向前传播,好像没遇到过对方一样——传播方向、频率、波长都不受影响,这叫波的<b>独立传播特性</b>(可叠加不可"碰撞")。</p>
+      <table>
+        <tr><th>情形</th><th>叠加结果</th></tr>
+        <tr><td>两波峰相遇</td><td>合位移=两振幅之和,波峰更高(振动加强)</td></tr>
+        <tr><td>波峰遇波谷</td><td>合位移=两位移之差,可能部分抵消甚至完全抵消</td></tr>
+        <tr><td>相遇后</td><td>各波保持原有频率、波长、传播方向继续前进,互不影响</td></tr>
+      </table>
+      <p class="trap">⚠ 叠加原理对<b>任意</b>波都成立(不要求频率相同);而下面要学的「干涉」是叠加中更特殊、更苛刻的一种情形——出现<b>稳定不变</b>的强弱图样,需要额外条件。别把"叠加"和"干涉"划等号。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌊 互动 1 — 两列波叠加与独立传播:合位移=矢量和,相遇后各自继续前进</div>
+      <canvas id="supCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <button id="supGo">▶ 播放/暂停</button><button id="supReset">↺ 重置</button>
+        <label>波1振幅 <input id="supA1" type="range" min="10" max="40" value="25" step="1"></label>
+        <label>波2振幅 <input id="supA2" type="range" min="10" max="40" value="25" step="1"></label>
+        <label>波2方向 <input id="supDir" type="range" min="0" max="1" value="0" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>波1振幅</b><span id="supO1">0</span></div>
+        <div><b>波2振幅</b><span id="supO2">0</span></div>
+        <div><b>相遇处合位移</b><span id="supSum">0</span></div>
+        <div><b>波2方向</b><span id="supDirO">→</span></div>
+      </div>
+      <p class="small">上排=波1单独波形,中排=波2单独波形(可调方向相向/同向),下排=红线为<b>逐点矢量和</b>(真实合成波形)。拖到重叠区域看合位移如何等于两波位移相加;继续播放会看到两波"穿过"彼此,波形不变地分开。</p>
+    </div>
+
+    <h2 class="b">② 波的干涉:频率相同的两列波,叠出"永久花纹"</h2>
+    <div class="card">
+      <div class="eq">频率相同的相干波叠加 → 加强点、减弱点位置固定 → 稳定干涉图样</div>
+      <p style="margin:8px 0">当<b>两列频率相同</b>的波在介质中叠加,且两波源振动的<b>相位差保持恒定</b>(相干条件),某些点的振动会<b>始终加强</b>,另一些点会<b>始终减弱</b>,这种强弱分布<b>固定不动、不随时间改变</b>的图样,叫<b>干涉图样</b>。这两列波叫<b>相干波</b>,两个波源叫<b>相干波源</b>。</p>
+      <h3>加强点与减弱点的判据(路程差 Δr)</h3>
+      <table>
+        <tr><th>条件</th><th>结果</th></tr>
+        <tr><td>Δr = 到两波源路程差 = <b>nλ</b>(n=0,1,2…,波长整数倍)</td><td><b>振动加强点</b>:振幅=两波振幅之和,始终最强</td></tr>
+        <tr><td>Δr = <b>(2n+1)λ/2</b>(半波长的奇数倍)</td><td><b>振动减弱点</b>:振幅=两波振幅之差,始终最弱</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>相干条件(必须同时满足):</b> ① 两波<b>频率相同</b>;② 两波源振动的<b>相位差恒定</b>(常考的简化情形是两波源振动步调完全一致,即同相)。缺一不可——频率不同,强弱位置会不断移动,不能形成稳定图样。</p>
+      <p class="trap">⚠ 加强点的质点并<b>不是不动</b>!加强点仍在随时间振动(位移在 −2A 到 +2A 间变化),只是它的<b>振幅</b>始终是两波振幅之和,是同类点里振动幅度最大的。别把"加强"理解成"永远在最高点"。</p>
+      <p class="trap">⚠ 减弱点也<b>不一定静止</b>。只有当两列波振幅<b>相等</b>时,减弱点合振幅为 0 才会保持静止;若两波振幅不等,减弱点仍会有小幅振动(振幅=|A₁−A₂|)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 双波源干涉图样:拖波长看加强线/减弱线分布,标出 Δr</div>
+      <canvas id="intfCv" width="700" height="320"></canvas>
+      <div class="ctrl">
+        <label>波长 λ <input id="intfLam" type="range" min="20" max="60" value="36" step="2"></label>
+        <label>波源间距 d <input id="intfD" type="range" min="120" max="300" value="200" step="10"></label>
+        <button id="intfToggle">切换:显示合成波纹 / 只显示加强·减弱点</button>
+      </div>
+      <div class="live">
+        <div><b>波长 λ (px)</b><span id="intfLamO">0</span></div>
+        <div><b>波源间距 d (px)</b><span id="intfDO">0</span></div>
+        <div><b>加强线条数(估)</b><span id="intfN">0</span></div>
+        <div><b>模式</b><span id="intfMode">波纹</span></div>
+      </div>
+      <p class="small">两个红点是相干波源(同相、同频)。红色区域=振动加强(Δr=nλ),蓝色区域=振动减弱(Δr=半波长奇数倍)。拖波长滑块,强弱条纹的间距会跟着变——波长越长,条纹越稀疏。</p>
+    </div>
+
+    <h2 class="g">③ 路程差 Δr 判定:干涉计算的核心动作</h2>
+    <div class="card">
+      <p style="margin:6px 0">干涉题的计算,几乎都归结为一件事:<b>求某点到两波源的路程差 Δr</b>,再对照 nλ 或 (2n+1)λ/2 判断加强还是减弱。</p>
+      <div class="mono">第1步:量出(或算出)P 点到波源S₁、S₂的距离 r₁、r₂。</div>
+      <div class="mono">第2步:求路程差 Δr = |r₁ − r₂|。</div>
+      <div class="mono">第3步:Δr÷λ,看是不是整数(→加强)还是半整数(→减弱),都不是则介于两者之间。</div>
+      <p style="margin:8px 0"><b>特例:</b> 在两波源连线的<b>中垂线</b>上,任一点到两波源距离相等(r₁=r₂,Δr=0=0×λ),恒为<b>加强点</b>——中垂线是最容易判断、也最常考的一条加强线。</p>
+      <p class="trap">⚠ 千万别只看 Δr 的数值大小来"感觉"强弱,必须严格除以 λ 看是整数倍还是半奇数倍关系;Δr=0 也算 n=0 的整数倍,同样是加强点,不是"没有干涉"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 3 — 路程差判加强减弱:拖 P 点看 Δr 与 nλ / 半波长奇数倍的关系</div>
+      <svg id="drSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="drDrag">拖动下方滑块移动 P 点 →</button>
+        <input id="drPx" type="range" min="0" max="640" value="320" step="2" style="flex:1;min-width:160px">
+        <label>波长 λ <input id="drLam" type="range" min="30" max="80" value="50" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>r₁ (到S₁)</b><span id="drR1">0</span></div>
+        <div><b>r₂ (到S₂)</b><span id="drR2">0</span></div>
+        <div><b>Δr=|r₁−r₂|</b><span id="drDr">0</span></div>
+        <div><b>判定</b><span id="drJudge">-</span></div>
+      </div>
+      <p class="small">拖动滑块移动 P 点,实时计算 Δr 并除以 λ:整数→红色「加强点」,半整数(如 0.5、1.5)→蓝色「减弱点」,其它→灰色「一般」。中点位置 Δr=0,必为加强点。</p>
+    </div>
+
+    <h2 class="o">④ 波的衍射:绕过障碍物继续传播</h2>
+    <div class="card">
+      <div class="eq">波绕过障碍物(或孔)的边缘,继续向前传播 —— 衍射</div>
+      <p style="margin:8px 0">波在传播中遇到<b>障碍物</b>或<b>孔</b>,不是简单地被挡住投下"影子",而是能<b>绕过边缘</b>继续向外扩散传播,这种现象叫<b>波的衍射</b>。</p>
+      <h3>发生明显衍射的条件</h3>
+      <div class="keybox" style="margin:10px 0">缝、孔或障碍物的尺寸,与波长<b>相差不多</b>,或<b>比波长更小</b>,才能观察到明显的衍射现象。尺寸远大于波长时,衍射不明显,波近似沿直线传播(像光影一样有清晰"阴影")。</div>
+      <table>
+        <tr><th>孔/障碍物尺寸 d 与波长 λ 关系</th><th>衍射效果</th></tr>
+        <tr><td>d 与 λ 相差不多,或 d ≤ λ</td><td>衍射<b>明显</b>,波大范围绕射扩散,边界模糊</td></tr>
+        <tr><td>d ≫ λ(远大于波长)</td><td>衍射<b>不明显</b>,近似直线传播,出现清晰阴影区</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一切波都能发生衍射,衍射是波特有的现象。</b> 只是当孔/障碍物远大于波长时,衍射效果太弱、不易察觉,并不代表"没有衍射"。声波波长较长(米级),容易绕过墙角、房门,所以隔墙能听到说话声;可见光波长极短(纳米级),日常物体的孔缝都远大于光波长,所以光看起来是直线传播的。</p>
+      <p class="trap">⚠ "能不能发生衍射"和"衍射明不明显"是两回事——一切波都能衍射,只是可见光因为波长太短、常见障碍物太大,衍射现象不容易看到,不能反过来说光不会衍射。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚪 互动 4 — 衍射随缝宽变化:缝越窄(越接近波长),衍射越明显</div>
+      <canvas id="diffCv" width="700" height="280"></canvas>
+      <div class="ctrl">
+        <button id="diffGo">▶ 播放</button><button id="diffReset">↺ 重置</button>
+        <label>缝宽 d <input id="diffSlit" type="range" min="10" max="140" value="30" step="2"></label>
+        <label>波长 λ <input id="diffLam" type="range" min="20" max="50" value="30" step="2"></label>
+      </div>
+      <div class="live">
+        <div><b>缝宽 d (px)</b><span id="diffD">0</span></div>
+        <div><b>波长 λ (px)</b><span id="diffL">0</span></div>
+        <div><b>d/λ 比值</b><span id="diffRatio">0</span></div>
+        <div><b>衍射程度</b><span id="diffJudge">-</span></div>
+      </div>
+      <p class="small">左侧平面波向右传播,穿过中间挡板上的缝。d/λ 越接近1或更小,缝后波纹越呈圆弧状向四周扩散(明显衍射);d/λ 远大于1时,波在缝后基本保持直线传播,两侧出现"阴影"。</p>
+    </div>
+
+    <h2 class="v">⑤ 多普勒效应:接收频率因相对运动而变</h2>
+    <div class="card">
+      <div class="eq">相互靠近 → 接收频率变高　|　相互远离 → 接收频率变低</div>
+      <p style="margin:8px 0">当<b>波源</b>和<b>观察者</b>之间发生<b>相对运动</b>时,观察者接收到的波的<b>频率</b>会发生变化——这种现象叫<b>多普勒效应</b>。</p>
+      <table>
+        <tr><th>相对运动情形</th><th>接收频率变化</th></tr>
+        <tr><td>波源与观察者相互<b>靠近</b>(距离变小)</td><td>接收频率<b>变高</b>(比波源频率大)</td></tr>
+        <tr><td>波源与观察者相互<b>远离</b>(距离变大)</td><td>接收频率<b>变低</b>(比波源频率小)</td></tr>
+        <tr><td>相对静止(无相对运动)</td><td>接收频率 = 波源频率,不变</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键澄清:变的是"接收频率",不是"波源频率"。</b> 波源本身振动发声的频率<b>始终不变</b>(由波源自身决定);变化的是<b>观察者单位时间内接收到的完整波的个数</b>——靠近时观察者单位时间截获的波更"密集"(接收频率变高),远离时更"稀疏"(接收频率变低)。</p>
+      <h3>常见例子</h3>
+      <div class="chips" style="margin:8px 0">
+        <span class="chip">火车鸣笛驶近,声调变高(尖)</span><span class="chip">驶远后声调变低(闷)</span><span class="chip">救护车呼啸而过音调骤降</span><span class="chip">星光"红移"说明天体正在远离</span>
+      </div>
+      <p style="margin:8px 0"><b>声波、光波都有多普勒效应。</b> 声音的例子最直观(火车、救护车鸣笛);光的多普勒效应则用于天文学——恒星、星系的光谱线若向红端偏移(<b>红移</b>),说明该天体正在<b>远离</b>我们(这是宇宙膨胀的重要证据之一);若向蓝端偏移(蓝移),说明正在靠近。</p>
+      <p class="trap">⚠ 最常见丢分点:题目问"波源频率变了吗",标准答案永远是<b>没变</b>;变的只是接收者听到/测到的频率。别把两者混为一谈,更别说成"波速变了"——介质中波速由介质本身决定,不因波源或观察者运动而改变。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚑 互动 5 — 多普勒效应:波源移动时波前疏密变化,接收频率实时显示</div>
+      <canvas id="dopCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <button id="dopGo">▶ 播放/暂停</button><button id="dopReset">↺ 重置</button>
+        <label>波源速度 <input id="dopV" type="range" min="0" max="8" value="4" step="1"></label>
+        <label>波源频率(参考) <input id="dopF" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>波源频率 f₀(不变)</b><span id="dopF0">0</span></div>
+        <div><b>前方观察者接收 f</b><span id="dopFFront">0</span></div>
+        <div><b>后方观察者接收 f</b><span id="dopFBack">0</span></div>
+        <div><b>波源状态</b><span id="dopState">-</span></div>
+      </div>
+      <p class="small">红点=波源,向右运动并持续发出圆形波前(每隔固定时间发一个)。可见波源<b>前方</b>波前挤在一起(波长变短→接收频率变高),<b>后方</b>波前被拉开(波长变长→接收频率变低)。波源自身发波的频率 f₀ 全程不变。</p>
+    </div>
+
+    <h2 class="r">⑥ 干涉 / 衍射 / 多普勒 三者辨析</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>干涉</th><th>衍射</th><th>多普勒效应</th></tr>
+        <tr><td>本质</td><td>两列相干波叠加,强弱固定分布</td><td>波绕过障碍物/孔继续传播</td><td>相对运动改变<b>接收</b>频率</td></tr>
+        <tr><td>发生条件</td><td>频率相同 + 相位差恒定(相干)</td><td>孔/障碍物尺寸与波长可比拟</td><td>波源与观察者有相对运动</td></tr>
+        <tr><td>是否所有波都有</td><td>只有<b>相干波</b>才能形成稳定干涉</td><td>是,一切波都能衍射(明显与否是另一回事)</td><td>是,声、光等一切波都有</td></tr>
+        <tr><td>波源频率</td><td>不变(各自频率不变,叠加而已)</td><td>不变</td><td><b>不变</b>,变的是接收频率</td></tr>
+        <tr><td>典型考法</td><td>求 Δr、判加强减弱点</td><td>判断缝宽/波长比,明显与否</td><td>判断靠近/远离,频率变高变低</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>怎么分辨考的是哪个?</b> 题目出现"两列波""叠加""路程差""振动始终加强/减弱" → 干涉;出现"绕过""缝""孔""障碍物""阴影" → 衍射;出现"运动的波源/观察者""音调变化""红移蓝移""频率变高变低" → 多普勒。三者常在同一大题里分小问出现,先圈关键词再动笔。</p>
+      <p class="trap">⚠ 干涉和衍射都是"波独有"的现象,可用来判断某种运动/现象是不是波动(比如判断微观粒子是否具有波动性,就看它能不能发生干涉、衍射)。多普勒效应则任何波都有,不能用来鉴别是否为波动(它甚至有经典力学的类比)。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 波的叠加与独立传播</h3>
+      <p><b class="tag">触发信号:</b>「两个波脉冲相遇」「相遇后波形怎样」「叠加位移」等关键词,给出两列波形图或脉冲。</p>
+      <p><b class="tag">标准动作:</b>相遇区域:合位移=两波单独位移的<b>矢量和</b>(逐点相加,注意正负);相遇后:各波保持原有振幅、波长、方向,各自继续传播,不受影响。</p>
+      <p><b class="tag">示例(带解):</b>两个等大反向的三角形脉冲相向而行,某时刻正好完全重合于同一区域。此刻该区域各点合位移=对应两脉冲位移之和;若两脉冲一正一负等大,该时刻合位移处处为0(但两脉冲各自仍在传播,并非消失),再过一会儿两脉冲各自分开,波形恢复原样。</p>
+      <p class="trap">陷阱:以为叠加后位移为0就是"波消失了";误以为叠加需要频率相同(叠加原理对任意波都成立,干涉才需要频率相同)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 干涉图样与加强减弱点判断</h3>
+      <p><b class="tag">触发信号:</b>「两个相干波源」「振动加强/减弱点」「稳定干涉图样」,给出波源位置、波长、频率。</p>
+      <p><b class="tag">标准动作:</b>验证相干条件(频率相同、相位差恒定)→ 求 P 点到两波源路程差 Δr=|r₁−r₂| → 判定:Δr=nλ 加强,Δr=(2n+1)λ/2 减弱。</p>
+      <p><b class="tag">示例(带解):</b>S₁、S₂为同相相干波源,波长 λ=2m。P点到S₁距离6m,到S₂距离9m。Δr=|9−6|=3m=1.5λ=(2×1+1)λ/2,是半波长的奇数倍(n=1)→ P为振动<b>减弱点</b>。</p>
+      <p class="trap">陷阱:漏掉验证"频率相同";把 Δr 算成 r₁+r₂ 而非差值;分不清 nλ 与半波长奇数倍谁对应加强、谁对应减弱。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 中垂线与特殊点判断</h3>
+      <p><b class="tag">触发信号:</b>「两波源连线中垂线上」「与两波源等距的点」。</p>
+      <p><b class="tag">标准动作:</b>中垂线上任意点 r₁=r₂,Δr=0=0×λ,恒为<b>加强点</b>(n=0的特殊情形),整条中垂线都是加强线。</p>
+      <p><b class="tag">示例(带解):</b>两相干同相波源S₁S₂相距4m,P在其连线中垂线上。则P到S₁、S₂距离相等,Δr=0,满足Δr=nλ(n=0)→P为加强点,且中垂线上所有点都是加强点,连成一条"加强线"。</p>
+      <p class="trap">陷阱:误以为Δr=0"没有路程差"就不算满足条件;其实0是nλ最特殊的一种(n=0),仍是加强点,不是"既不加强也不减弱"。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 衍射明显与否的判断</h3>
+      <p><b class="tag">触发信号:</b>给出孔/缝/障碍物尺寸和波长,问"能否观察到明显衍射"或"衍射现象是否明显"。</p>
+      <p><b class="tag">标准动作:</b>比较孔/障碍物尺寸 d 与波长 λ:d 与 λ 相差不多或 d≤λ → 衍射明显;d≫λ → 衍射不明显,近似直线传播。记住"一切波都能衍射",只是明显不明显的区别。</p>
+      <p><b class="tag">示例(带解):</b>教室门宽约1m,人说话声波长约1m(声速340m/s,频率约340Hz),d与λ相差不多→隔壁能清楚听到说话声(衍射明显)。可见光波长约5×10⁻⁷m,门宽1m远大于波长→光几乎不绕射,门缝里看不到隔壁的光"绕过来"照亮房间各个角落(衍射不明显,近似直线传播)。</p>
+      <p class="trap">陷阱:说"可见光不会衍射"(错,是不明显,不是不发生);只看d或只看λ的绝对大小,而不比较两者的比例关系。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 多普勒效应:靠近/远离判断接收频率</h3>
+      <p><b class="tag">触发信号:</b>「鸣笛驶近/驶远」「音调变高/变低」「红移/蓝移」「观察者接收到的频率」。</p>
+      <p><b class="tag">标准动作:</b>先判断波源与观察者是靠近还是远离:靠近→接收频率变高(音调变高、光谱蓝移);远离→接收频率变低(音调变低、光谱红移)。波源自身振动频率始终不变。</p>
+      <p><b class="tag">示例(带解):</b>救护车鸣笛频率为f₀,匀速驶向静止的路人后又驶离。驶近阶段路人听到的音调比f₀对应的音调<b>高</b>(接收频率>f₀);驶离阶段音调比原来<b>低</b>(接收频率<f₀);无论哪个阶段,救护车喇叭本身振动发声的频率始终等于f₀,没有变化。</p>
+      <p class="trap">陷阱:说成"波源频率变高/变低了"(错,是接收频率变,波源频率不变);把"波速变了"当成原因(错,介质中波速由介质决定,不随波源/观察者运动改变)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 波动现象综合辨析</h3>
+      <p><b class="tag">触发信号:</b>给出一段现象描述,要求判断这是干涉、衍射还是多普勒效应,或判断某现象能否证明"是波"。</p>
+      <p><b class="tag">标准动作:</b>抓关键词分类:「两列波叠加、路程差、强弱固定」→干涉;「绕过、拐弯、孔缝、阴影」→衍射;「相对运动、音调/频率随运动变化、红移蓝移」→多普勒。若问"能否证明是波动性",答案看是否具有<b>干涉或衍射</b>特性(多普勒不能作为判据,因为经典粒子也有类似效应)。</p>
+      <p><b class="tag">示例(带解):</b>某同学观察到:①水波绕过防波堤缺口后向后方扩散;②两个音叉发出等频声波在空间中形成固定的强弱区域;③警车驶近时鸣笛声调变尖。分别对应:①衍射;②干涉;③多普勒效应。</p>
+      <p class="trap">陷阱:把"声音绕过墙角能听到"错判成多普勒(其实是衍射,没有相对运动就不是多普勒);把音调变化误判成干涉。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 叠加原理对<b>任意</b>波都成立(不要求频率相同);干涉是叠加中<b>更苛刻</b>的特例,必须频率相同、相位差恒定,才能形成<b>稳定</b>不变的强弱图样。</p>
+      <p class="trap">② 判断加强/减弱看路程差 <b>Δr 与波长/半波长的整数倍关系</b>,不是看 Δr 数值本身大小;Δr=0 也是加强点(n=0)。</p>
+      <p class="trap">③ 干涉<b>加强点</b>的质点仍在随时间振动(位移在±2A间变化),只是振幅始终最大;不是"永远静止在最高点"。</p>
+      <p class="trap">④ 干涉<b>减弱点</b>不一定完全静止——只有当两波振幅<b>相等</b>时,减弱点合振幅才为0(真正静止);振幅不等时减弱点仍有小振动。</p>
+      <p class="trap">⑤ 发生明显衍射的条件是孔/障碍物尺寸<b>与波长相差不多或更小</b>,不是"孔越大衍射越明显"——恰恰相反,孔越小(越接近或小于波长)衍射越明显。</p>
+      <p class="trap">⑥ <b>一切波都能发生衍射和干涉</b>,这是波区别于粒子的本质特征;可见光衍射不明显是因为波长太短、常见障碍物太大,不代表光没有衍射。</p>
+      <p class="trap">⑦ 多普勒效应中,变化的是<b>接收频率</b>,<b>波源振动频率始终不变</b>;不要说成"波源频率变化了"。</p>
+      <p class="trap">⑧ 多普勒效应中<b>波速不变</b>(介质中波速由介质本身性质决定),变的是观察者接收到的疏密程度(等效频率),不是波传播速度本身在变。</p>
+      <p class="trap">⑨ 光谱<b>红移</b>说明波源(天体)在<b>远离</b>观察者,<b>蓝移</b>说明在<b>靠近</b>——别记反。</p>
+      <p class="trap">⑩ 多普勒效应不能用来判断某现象是否具有波动性(经典力学中运动物体也有类似效应),能作为波动性判据的是<b>干涉、衍射</b>。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 干涉是叠加原理在"稳定条件"下的特例:</b> 任何两列波相遇都会叠加,但只有频率相同、相位差恒定时,每一点的合振幅才不随时间改变位置——这本质是因为两列波在该点的相位差不随时间变化,所以"加强"或"减弱"的判决结果被"锁死"了。频率一旦不同,相位差会持续漂移,强弱位置就会不停移动,肉眼看不出固定花纹。</p>
+      <p style="margin:8px 0"><b>② 衍射的本质是惠更斯次波源的矢量叠加:</b> 波前上每一点都可看作新的次波源向四周发出球面子波,孔越窄,能"独立发光"的次波源数目越少、间距越接近波长,子波叠加后越容易在侧向也形成显著振动,于是衍射越明显。这和"孔小衍射强"的结论是同一件事的两种说法。</p>
+      <p style="margin:8px 0"><b>③ 多普勒效应的本质是"波长被压缩或拉伸":</b> 波源靠近观察者时,它在移动中连续发出的波前,后一个波前比前一个波前晚发出、但出发点更靠近观察者,于是前方波长实际变短(不是波源"发得更快"),观察者单位时间接收到的完整波数增多,等效频率升高。理解了"波长变化"这个中间环节,你就不需要死记"靠近变高、远离变低",而是能推导任意角度、任意相对速度的定性结果。</p>
+      <p style="margin:8px 0"><b>④ 干涉与衍射是波动性的"试金石":</b> 历史上正是因为光能发生干涉(杨氏双缝实验)和衍射(泊松亮斑),才确立了光的波动说;后来德布罗意提出实物粒子也有波动性,电子衍射实验证实了这一点。所以遇到"如何证明某种东西具有波动性"的题目,思路永远是"去找它的干涉或衍射现象",而不是多普勒效应。</p>
+      <p style="margin:8px 0"><b>⑤ 红移不仅用于判断"远离",还用于测速:</b> 天文学中通过测量光谱线红移/蓝移的<b>程度</b>(不只是方向),结合多普勒效应的定量关系,可以反推天体相对我们的<b>径向速度</b>大小。哈勃发现几乎所有遥远星系的光谱都发生红移,且红移量与距离成正比,这正是"宇宙在膨胀"这一重大结论的关键证据之一——多普勒效应从课本例题一路用到了宇宙学前沿。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 波的干涉、衍射与多普勒效应</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:两列波叠加与独立传播 ===== */
+(function(){
+  const cv=document.getElementById('supCv');const ctx=cv.getContext('2d');
+  const A1s=document.getElementById('supA1'),A2s=document.getElementById('supA2'),Dirs=document.getElementById('supDir');
+  const oO1=document.getElementById('supO1'),oO2=document.getElementById('supO2'),oSum=document.getElementById('supSum'),oDirO=document.getElementById('supDirO');
+  let A1=25,A2=25,dirOpp=true,t=0,running=false;
+  const W=700,rowH=80,lam=60;
+  function sync(){A1=+A1s.value;A2=+A2s.value;dirOpp=(+Dirs.value)===0;oDirO.textContent=dirOpp?'相向而行':'同向而行';draw();}
+  A1s.oninput=A2s.oninput=Dirs.oninput=sync;
+  function wave1(x,tt){ // moving right, pulse-like
+    const cx=(tt*90)%(W+160)-80;
+    const dx=x-cx;
+    return Math.abs(dx)<40 ? A1*Math.cos((dx/40)*Math.PI/2) : 0;
+  }
+  function wave2(x,tt){
+    let cx;
+    if(dirOpp){ cx=W+80-((tt*90)%(W+160)); }
+    else { cx=(tt*90)%(W+160)-80; }
+    const dx=x-cx;
+    return Math.abs(dx)<40 ? A2*Math.cos((dx/40)*Math.PI/2) : 0;
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const y1=50,y2=140,y3=230;
+    ctx.strokeStyle=INK;ctx.lineWidth=2;
+    [y1,y2,y3].forEach(y=>{ctx.beginPath();ctx.moveTo(10,y);ctx.lineTo(690,y);ctx.stroke();});
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('波1(单独)',14,y1-24);
+    ctx.fillText('波2(单独)',14,y2-24);
+    ctx.fillText('合成波(矢量和,红线)',14,y3-24);
+    // wave1
+    ctx.strokeStyle=BLUE;ctx.lineWidth=2.5;ctx.beginPath();
+    for(let x=10;x<=690;x+=2){const v=wave1(x,t);const yy=y1-v;if(x===10)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);}
+    ctx.stroke();
+    // wave2
+    ctx.strokeStyle=GREEN;ctx.lineWidth=2.5;ctx.beginPath();
+    for(let x=10;x<=690;x+=2){const v=wave2(x,t);const yy=y2-v;if(x===10)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);}
+    ctx.stroke();
+    // sum
+    ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.beginPath();
+    let maxSum=0,maxX=0;
+    for(let x=10;x<=690;x+=2){
+      const v=wave1(x,t)+wave2(x,t);
+      if(Math.abs(v)>Math.abs(maxSum)){maxSum=v;maxX=x;}
+      const yy=y3-v;if(x===10)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);
+    }
+    ctx.stroke();
+    // mark overlap sum point
+    if(Math.abs(maxSum)>1){
+      ctx.fillStyle=RED;ctx.beginPath();ctx.arc(maxX,y3-maxSum,4,0,2*Math.PI);ctx.fill();
+    }
+    const o1=wave1(350,t),o2=wave2(350,t);
+    oO1.textContent=o1.toFixed(1);oO2.textContent=o2.toFixed(1);oSum.textContent=(o1+o2).toFixed(1);
+  }
+  function loop(){if(!running)return;t+=0.02;draw();requestAnimationFrame(loop);}
+  document.getElementById('supGo').onclick=()=>{running=!running;if(running)requestAnimationFrame(loop);};
+  document.getElementById('supReset').onclick=()=>{t=0;running=false;sync();};
+  sync();
+})();
+
+/* ===== 互动2:双波源干涉图样 ===== */
+(function(){
+  const cv=document.getElementById('intfCv');const ctx=cv.getContext('2d');
+  const Lams=document.getElementById('intfLam'),Ds=document.getElementById('intfD');
+  const oLam=document.getElementById('intfLamO'),oD=document.getElementById('intfDO'),oN=document.getElementById('intfN'),oMode=document.getElementById('intfMode');
+  let lam=36,d=200,mode=0,t=0,running=true;
+  const cx=350,cy=170;
+  function sync(){lam=+Lams.value;d=+Ds.value;draw();}
+  Lams.oninput=Ds.oninput=sync;
+  document.getElementById('intfToggle').onclick=()=>{mode=1-mode;oMode.textContent=mode===0?'波纹':'加强/减弱点';draw();};
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const s1x=cx-d/2, s2x=cx+d/2, sy=cy;
+    let nApprox=Math.floor(d/lam)*2+1;
+    oLam.textContent=lam;oD.textContent=d;oN.textContent=nApprox;
+    if(mode===0){
+      // shade grid: compute path diff, classify
+      const step=4;
+      for(let x=10;x<690;x+=step){
+        for(let y=20;y<320;y+=step){
+          const r1=Math.hypot(x-s1x,y-sy), r2=Math.hypot(x-s2x,y-sy);
+          const dr=Math.abs(r1-r2);
+          const ratio=dr/lam;
+          const frac=ratio-Math.floor(ratio);
+          let col=null;
+          if(frac<0.12||frac>0.88) col='rgba(224,56,42,0.30)';
+          else if(Math.abs(frac-0.5)<0.12) col='rgba(20,80,200,0.28)';
+          if(col){ctx.fillStyle=col;ctx.fillRect(x,y,step,step);}
+        }
+      }
+    } else {
+      // discrete lines from sources outward at angles
+      ctx.strokeStyle='rgba(224,56,42,0.5)';
+      for(let n=-6;n<=6;n++){
+        // hyperbola-ish: sample points where dr = n*lam
+        ctx.beginPath();let started=false;
+        for(let y=20;y<320;y+=3){
+          for(let x=10;x<690;x+=3){
+            const r1=Math.hypot(x-s1x,y-sy), r2=Math.hypot(x-s2x,y-sy);
+            const dr=r1-r2;
+            if(Math.abs(dr-n*lam)<2){
+              if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+            }
+          }
+        }
+        ctx.stroke();
+      }
+    }
+    // sources
+    [ [s1x,'S1'], [s2x,'S2'] ].forEach(pair=>{
+      ctx.fillStyle=RED;ctx.beginPath();ctx.arc(pair[0],sy,7,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText(pair[1],pair[0]-8,sy+24);
+    });
+    // midline
+    ctx.strokeStyle='#999';ctx.setLineDash([5,4]);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx,20);ctx.lineTo(cx,320);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.fillText('中垂线(恒加强)',cx+6,34);
+    ctx.fillStyle=INK;ctx.font='bold 12.5px sans-serif';
+    ctx.fillText('红=加强(Δr=nλ)　蓝=减弱(Δr=半波长奇数倍)',14,300);
+  }
+  sync();
+})();
+
+/* ===== 互动3:路程差判加强减弱 ===== */
+(function(){
+  const svg=document.getElementById('drSvg');
+  const Px=document.getElementById('drPx'),Lam=document.getElementById('drLam');
+  const oR1=document.getElementById('drR1'),oR2=document.getElementById('drR2'),oDr=document.getElementById('drDr'),oJ=document.getElementById('drJudge');
+  const s1={x:100,y:260},s2={x:600,y:260};
+  function sync(){draw();}
+  Px.oninput=Lam.oninput=sync;
+  function draw(){
+    clr(svg);
+    const lam=+Lam.value;
+    const px=+Px.value+30, py=80;
+    const r1=Math.hypot(px-s1.x,py-s1.y), r2=Math.hypot(px-s2.x,py-s2.y);
+    const dr=Math.abs(r1-r2);
+    const ratio=dr/lam;
+    const frac=ratio-Math.floor(ratio);
+    let judge='一般点',col=INK;
+    if(frac<0.1||frac>0.9){judge='加强点 (Δr≈'+Math.round(ratio)+'λ)';col=RED;}
+    else if(Math.abs(frac-0.5)<0.1){judge='减弱点 (Δr≈半波长奇数倍)';col=BLUE;}
+    oR1.textContent=r1.toFixed(0);oR2.textContent=r2.toFixed(0);oDr.textContent=dr.toFixed(0);oJ.textContent=judge;
+    // baseline
+    el(svg,'line',{x1:40,y1:260,x2:660,y2:260,stroke:INK,'stroke-width':2});
+    // sources
+    [s1,s2].forEach((s,i)=>{
+      el(svg,'circle',{cx:s.x,cy:s.y,r:8,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:s.x,y:s.y+26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='S'+(i+1);
+    });
+    // P point
+    el(svg,'circle',{cx:px,cy:py,r:8,fill:col,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px,y:py-14,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='P';
+    // lines to sources
+    el(svg,'line',{x1:s1.x,y1:s1.y,x2:px,y2:py,stroke:BLUE,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'line',{x1:s2.x,y1:s2.y,x2:px,y2:py,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:(s1.x+px)/2-30,y:(s1.y+py)/2,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='r1='+r1.toFixed(0);
+    el(svg,'text',{x:(s2.x+px)/2+6,y:(s2.y+py)/2,'font-size':11.5,'font-weight':800,fill:GREEN}).textContent='r2='+r2.toFixed(0);
+    // judge banner
+    el(svg,'text',{x:350,y:30,'font-size':15,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='Δr='+dr.toFixed(0)+'px, λ='+lam+'px, Δr/λ='+ratio.toFixed(2)+' → '+judge;
+  }
+  sync();
+})();
+
+/* ===== 互动4:衍射随缝宽变化 ===== */
+(function(){
+  const cv=document.getElementById('diffCv');const ctx=cv.getContext('2d');
+  const Slit=document.getElementById('diffSlit'),Lam=document.getElementById('diffLam');
+  const oD=document.getElementById('diffD'),oL=document.getElementById('diffL'),oR=document.getElementById('diffRatio'),oJ=document.getElementById('diffJudge');
+  let slit=30,lam=30,t=0,running=false;
+  const wallX=340,gapY=140;
+  function sync(){slit=+Slit.value;lam=+Lam.value;const ratio=slit/lam;oD.textContent=slit;oL.textContent=lam;oR.textContent=ratio.toFixed(2);
+    oJ.textContent=ratio<=1.3?'明显衍射(绕射扩散)':(ratio<3?'部分衍射':'不明显(近似直线)');
+    draw();}
+  Slit.oninput=Lam.oninput=sync;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const H=280,slitTop=gapY-slit/2, slitBot=gapY+slit/2;
+    // incoming plane wavefronts (left side, straight vertical lines moving right)
+    ctx.strokeStyle='rgba(20,80,200,0.55)';ctx.lineWidth=2;
+    for(let i=0;i<8;i++){
+      const x=((t*40+i*lam)%(wallX-10))+5;
+      if(x<wallX-2){ctx.beginPath();ctx.moveTo(x,10);ctx.lineTo(x,H-10);ctx.stroke();}
+    }
+    // wall with slit
+    ctx.fillStyle='#5a5a5a';
+    ctx.fillRect(wallX,0,14,slitTop);
+    ctx.fillRect(wallX,slitBot,14,H-slitBot);
+    ctx.strokeStyle=INK;ctx.lineWidth=2;
+    ctx.strokeRect(wallX,0,14,slitTop);ctx.strokeRect(wallX,slitBot,14,H-slitBot);
+    // diffracted circular wavefronts beyond slit
+    const ratio=slit/lam;
+    const spreadAngle = ratio<=1.3 ? Math.PI*0.42 : (ratio<3 ? Math.PI*0.24 : Math.PI*0.08);
+    ctx.strokeStyle='rgba(224,56,42,0.6)';ctx.lineWidth=2;
+    for(let i=0;i<6;i++){
+      const rad=((t*40+i*lam)%300);
+      if(rad>4 && rad<300){
+        ctx.beginPath();
+        ctx.arc(wallX+14,gapY,rad,-spreadAngle,spreadAngle);
+        ctx.stroke();
+      }
+    }
+    // shadow hint zones when not diffracting much
+    if(ratio>3){
+      ctx.fillStyle='rgba(0,0,0,0.06)';
+      ctx.beginPath();ctx.moveTo(wallX+14,0);ctx.lineTo(700,0);ctx.lineTo(700,slitTop);ctx.lineTo(wallX+14,gapY);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(wallX+14,H);ctx.lineTo(700,H);ctx.lineTo(700,slitBot);ctx.lineTo(wallX+14,gapY);ctx.closePath();ctx.fill();
+      ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('阴影区(直线传播为主)',450,40);
+    }
+    ctx.fillStyle=INK;ctx.font='bold 12.5px sans-serif';
+    ctx.fillText('缝宽d='+slit+'px, λ='+lam+'px, d/λ='+ratio.toFixed(2),14,20);
+  }
+  function loop(){if(!running)return;t+=0.35;draw();requestAnimationFrame(loop);}
+  document.getElementById('diffGo').onclick=()=>{running=!running;if(running)requestAnimationFrame(loop);};
+  document.getElementById('diffReset').onclick=()=>{t=0;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动5:多普勒效应 ===== */
+(function(){
+  const cv=document.getElementById('dopCv');const ctx=cv.getContext('2d');
+  const Vs=document.getElementById('dopV'),Fs=document.getElementById('dopF');
+  const oF0=document.getElementById('dopF0'),oFF=document.getElementById('dopFFront'),oFB=document.getElementById('dopFBack'),oState=document.getElementById('dopState');
+  let v=4,f0=3,t=0,running=false,sx=100;
+  const emits=[]; // {x0, y0, born}
+  let lastEmit=-999;
+  function sync(){v=+Vs.value;f0=+Fs.value;oF0.textContent=f0;reset();}
+  Vs.oninput=Fs.oninput=sync;
+  function reset(){t=0;sx=100;emits.length=0;lastEmit=-999;running=false;
+    oState.textContent=v===0?'静止(无多普勒效应)':'向右运动';
+    draw();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const cy=130;
+    // draw wavefronts (circles)
+    ctx.strokeStyle='rgba(20,80,200,0.55)';ctx.lineWidth=2;
+    emits.forEach(e=>{
+      const r=(t-e.born)*55;
+      if(r>2&&r<650){ctx.beginPath();ctx.arc(e.x,cy,r,0,2*Math.PI);ctx.stroke();}
+    });
+    // source
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(sx,cy,8,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('波源',sx-14,cy-16);
+    // observers
+    ctx.fillStyle=GREEN;ctx.beginPath();ctx.arc(660,cy,6,0,2*Math.PI);ctx.fill();
+    ctx.fillText('前方观察者',600,cy-14);
+    ctx.fillStyle=VIO;ctx.beginPath();ctx.arc(30,cy,6,0,2*Math.PI);ctx.fill();
+    ctx.fillText('后方观察者',10,cy-14);
+    ctx.fillStyle=INK;ctx.fillText('波源向右运动 v='+v+'　发波频率 f0='+f0+'(不变)',14,20);
+    // compute apparent frequency using doppler formula with wave speed c=55(px/s unit)
+    const c=55;
+    const fFront = v<c ? (f0*c/(c-v)) : f0*3;
+    const fBack = f0*c/(c+v);
+    oFF.textContent=fFront.toFixed(2);
+    oFB.textContent=fBack.toFixed(2);
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.03;
+    sx+=v*0.5;
+    if(sx>620){sx=100;emits.length=0;lastEmit=-999;}
+    const period=f0>0?1/f0:999;
+    if(t-lastEmit>=period){emits.push({x:sx,y:130,born:t});lastEmit=t;}
+    while(emits.length>40)emits.shift();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('dopGo').onclick=()=>{running=!running;if(running)requestAnimationFrame(loop);};
+  document.getElementById('dopReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 波的叠加原理怎么表述?两波相遇后各自还能正常传播吗?",a:"相遇区域内质点的位移,等于各波单独引起位移的矢量和。相遇后两列波各自恢复原波形继续传播,频率、波长、方向都不受影响(独立传播)。"},
+ {q:"2. 形成稳定干涉图样需要什么条件?",a:"两列波频率相同,且振动的相位差保持恒定(相干条件)。这样的两列波叫相干波,两个波源叫相干波源。"},
+ {q:"3. 振动加强点和减弱点的判据分别是什么?",a:"设P点到两波源路程差为Δr:Δr=nλ(波长整数倍)→振动加强点;Δr=(2n+1)λ/2(半波长奇数倍)→振动减弱点。"},
+ {q:"4. 加强点的质点是不是一直不动?",a:"不是。加强点仍随时间振动,位移在−2A到+2A之间变化,只是它的振幅始终是两波振幅之和,是同类点里振幅最大的,并非静止。"},
+ {q:"5. 减弱点一定完全静止吗?",a:"不一定。只有当两列波振幅相等时,减弱点合振幅才为0(真正静止);若振幅不等,减弱点仍有小幅振动,振幅=|A1−A2|。"},
+ {q:"6. 发生明显衍射的条件是什么?",a:"缝、孔或障碍物的尺寸与波长相差不多,或比波长更小。尺寸远大于波长时衍射不明显,近似直线传播。"},
+ {q:"7. 所有波都能发生衍射吗?可见光为什么衍射不明显?",a:"一切波都能发生衍射,衍射是波特有的现象。可见光波长极短(纳米级),日常孔缝、障碍物尺寸远大于光波长,所以衍射效果太弱不易察觉,不代表光不发生衍射。"},
+ {q:"8. 多普勒效应中,波源与观察者靠近/远离时接收频率怎么变?",a:"相互靠近→接收频率变高;相互远离→接收频率变低;相对静止→接收频率等于波源频率,不变。"},
+ {q:"9. 多普勒效应中,波源振动发声的频率变了吗?变的是什么?",a:"波源自身振动发声的频率始终不变。变化的是观察者接收到的频率(单位时间截获的完整波数)。"},
+ {q:"10. 星光红移说明什么?蓝移说明什么?",a:"红移说明该天体正在远离我们(多普勒效应使接收到的光频率降低、波长变长偏向红端);蓝移说明正在靠近。"},
+ {q:"11. 干涉、衍射、多普勒效应,哪些能用来判断某现象具有波动性?",a:"干涉和衍射是波特有的现象,能作为判断波动性的依据(如电子衍射证明电子具有波动性)。多普勒效应任何波(甚至经典运动物体的类似效应)都可能出现,不能单独作为波动性的判据。"},
+ {q:"12. 两个同相相干波源S1、S2,波长λ=2m,P点到S1为7m、到S2为10m,P是加强点还是减弱点?",a:"Δr=|10−7|=3m=1.5λ=(2×1+1)λ/2,是半波长的奇数倍(n=1)→P为振动减弱点。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

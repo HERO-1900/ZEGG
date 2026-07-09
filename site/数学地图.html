@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学 · 知识图谱 / 题型地图 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--pink:#C81E6E;--shadow:6px 6px 0 var(--ink);--accent:#E86A17;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  .topnav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:12px 18px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:38px;height:38px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}.logomark svg{width:24px;height:24px}.brand b{font-size:21px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 16px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:800;border-left:3px solid var(--ink)}.links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:11px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .hd{max-width:1180px;margin:0 auto;padding:16px 18px 6px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:5px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:27px;font-weight:900;letter-spacing:-1px;margin:8px 0 4px}
+  .sub{font-size:14.5px;font-weight:600;max-width:820px;margin:0}
+  .prog{display:inline-block;margin-left:8px;background:var(--ink);color:#fff;font-weight:900;font-size:12px;padding:3px 10px;border:2px solid var(--ink)}
+  .toolbar{max-width:1180px;margin:10px auto 0;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toolbar input{border:3px solid var(--ink);padding:7px 11px;font-size:14px;font-weight:700;font-family:inherit;box-shadow:3px 3px 0 var(--ink);min-width:170px}
+  .tbtn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:3px 3px 0 var(--accent)}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12.5px;font-weight:800;margin-left:auto}
+  .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%}.sw.todo{background:#FBF8EF;border-style:dashed;border-color:#b3a880}
+  .stage{position:relative;max-width:1180px;margin:12px auto;padding:0 18px}
+  .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
+  svg#graph{display:block;width:100%;height:78vh;min-height:540px;touch-action:none;cursor:grab}
+  svg#graph.grabbing{cursor:grabbing}
+  .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
+  .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+  .zoombtns button{width:34px;height:34px;border:3px solid var(--ink);background:#fff;font-weight:900;font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .panel{position:absolute;top:12px;right:12px;width:310px;max-width:80%;background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;display:none;z-index:5}
+  .panel.show{display:block}
+  .panel .pcat{display:inline-block;font-size:11px;font-weight:900;letter-spacing:1px;padding:2px 8px;border:2px solid var(--ink);color:#fff;text-transform:uppercase}
+  .panel h3{font-size:19px;font-weight:900;margin:8px 0 6px}
+  .panel .row{font-size:13.5px;font-weight:600;margin:7px 0}.panel .row b{font-weight:900}
+  .panel .trig{border-left:8px solid var(--blue);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel .act{border-left:8px solid var(--green);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel a.go{display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+  .panel .soon{display:inline-block;margin-top:8px;background:#FBF8EF;color:#7a6f54;border:3px dashed #b3a880;padding:6px 12px;font-weight:800;font-size:12.5px}
+  .panel .x{position:absolute;top:8px;right:10px;font-weight:900;cursor:pointer;font-size:18px;border:none;background:none}
+  .nl{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3.5px;stroke-linejoin:round}
+  .foot{max-width:1180px;margin:0 auto;padding:8px 18px 60px;font-size:12.5px;font-weight:700;color:#6b5d3a}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="题型地图.html">题型地图</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="hd">
+    <a href="题型地图.html" style="display:inline-block;font-weight:800;font-size:13px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);margin-bottom:10px;text-decoration:none;color:var(--ink)">← 返回总地图</a>
+    <div class="kicker">数学 · 知识图谱</div>
+    <h1>数学 · 题型地图 <span class="prog" id="prog"></span></h1>
+    <p class="sub">活的知识网:<b>拖任意节点,整张网会被弹簧牵着一起动</b>。七大板块各成一团,实心★=已上线攻坚包(可点开),空心=待开发。点节点看「触发信号+标准动作」。滚轮缩放 · 拖背景平移。</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" placeholder="🔍 搜板块 / 题型…" autocomplete="off">
+    <button class="tbtn" id="resetBtn">复位 / 重排</button>
+    <div class="legend">
+      <span><i class="sw" style="background:#16120A"></i>学科</span>
+      <span><i class="sw" style="background:#E86A17"></i>板块</span>
+      <span><i class="sw" style="background:#F3C00E"></i>★已上线</span>
+      <span><i class="sw todo"></i>待开发</span>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="canvaswrap">
+      <svg id="graph" viewBox="0 0 1600 1120"></svg>
+      <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
+      <div class="hint">拖节点扯动整张网 · 滚轮缩放 · 点节点看详情</div>
+      <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
+    </div>
+  </div>
+  <div class="foot">thebest2dan · 数学知识图谱(完整版) · ★=已上线;空心=待开发,按歼灭名单逐周补齐</div>
+
+<script>
+/* ====== GRAPH DATA (数学 · 完整) ====== */
+const ACCENT="#E86A17";
+const AREAS=[
+  {id:"A",label:"函数与导数"},{id:"B",label:"三角函数"},{id:"C",label:"数列"},
+  {id:"D",label:"立体几何"},{id:"E",label:"解析几何"},{id:"F",label:"概率统计"},
+  {id:"G",label:"不等式与逻辑"}
+];
+const LEAVES=[
+  {id:"a96",label:"函数零点",cluster:"A",pack:"函数零点.html",trigger:"零点个数/存在性/根的分布/零点定理",action:"零点=图象交点=方程根;零点存在定理f(a)f(b)<0;数形结合分离参数;根分布列不等式组"},
+  {id:"g96",label:"线性规划",cluster:"G",pack:"线性规划.html",trigger:"线性约束/可行域/目标最值/z=ax+by",action:"画可行域;平移目标直线截距最值;顶点代入;含参讨论斜率;整点问题"},
+  {id:"d96",label:"外接球与内切球",cluster:"D",pack:"外接球与内切球.html",trigger:"外接球/内切球/半径/球心",action:"找球心过外心作垂线;补形法2R=体对角线;正棱锥方程R²=r²+d²;内切球等体积r=3V/S"},
+  {id:"d97",label:"三视图与表面积",cluster:"D",pack:"三视图与表面积.html",trigger:"三视图还原/表面积/体积/组合体",action:"长对正高平齐宽相等;先俯视定底再定高;组合体接触面不重复计;斜二测尺寸还原"},
+  {id:"c96",label:"数学归纳法",cluster:"C",pack:"数学归纳法.html",trigger:"n∈N*猜想证明/递推/整除不等式",action:"两步缺一不可;验起始项;假设n=k成立必须用上;k→k+1拆凑放缩搭桥"},
+  {id:"f96",label:"条件概率",cluster:"F",pack:"条件概率.html",trigger:"已知A求B/全概率/贝叶斯/独立",action:"P(B|A)=P(AB)/P(A)缩样本空间;乘法公式;全概率分类求和;贝叶斯反推;独立≠互斥"},
+  {id:"a94",label:"函数的性质",cluster:"A",pack:"函数性质.html",trigger:"单调/奇偶/周期/对称性综合",action:"奇偶先看定义域对称;单调区间不用∪;抽象条件推周期;对称+奇偶→周期"},
+  {id:"a95",label:"指数对数幂函数",cluster:"A",pack:"指数对数函数.html",trigger:"指对幂运算/图象/比较大小/解不等式",action:"换底log_ab=lgb/lga;a>1增0<a<1减;真数>0;比较大小用0/1中间量;底数分类讨论"},
+  {id:"g92",label:"集合与常用逻辑用语",cluster:"G",pack:"集合与逻辑.html",trigger:"集合运算/子集/充分必要/量词否定",action:"空集易漏;2^n个子集;小充分大必要;命题否定改量词并否定结论;互异性"},
+  {id:"f92",label:"古典概型与几何概型",cluster:"F",pack:"古典概型.html",trigger:"古典/几何概型/至少/会面问题",action:"古典P=m/n列举不重不漏;至少用对立;几何概型测度之比;会面问题画区域"},
+  {id:"a91",label:"恒成立与能成立",cluster:"A",pack:"恒成立问题.html",trigger:"∀/∃恒成立能成立、分离参数、双变量",action:"∀→取min、∃→取max(方向相反);分离参数除负变号;双变量量词配对"},
+  {id:"e91",label:"直线与圆",cluster:"E",pack:"直线与圆.html",trigger:"直线圆方程、位置关系、弦长、切线",action:"点斜式漏斜率不存在;d与r比位置;弦长2√(r²-d²);圆外点两切线勿漏竖直"},
+ {id:"b6",label:"平面向量",cluster:"B",pack:"平面向量.html",trigger:"共线垂直、数量积求夹角模、几何应用",action:"a·b=x₁x₂+y₁y₂;垂直a·b=0共线x₁y₂−x₂y₁=0;三点共线系数和为1"},
+ {id:"g5",label:"复数",cluster:"G",pack:"复数.html",trigger:"实虚部纯虚数、模与共轭、四则运算、几何意义",action:"i²=−1;除法乘共轭;|z−z₀|=r是圆;z·z̄=|z|²"},
+  {id:"a1",label:"函数性质",cluster:"A",note:"单调、奇偶、周期、对称四性质综合应用。"},
+  {id:"a2",label:"指对幂函数",cluster:"A",note:"图像性质、比较大小、指对运算与方程。"},
+  {id:"a3",label:"函数零点",cluster:"A",note:"零点存在定理、数形结合、根的个数判断。"},
+  {id:"a4",label:"导数几何意义",cluster:"A",note:"切线斜率f'(x₀)、切线方程、公切线问题。"},
+  {id:"a5",label:"导数单调极值最值",cluster:"A",pack:"导数应用.html",trigger:"求切线、单调区间、极值最值、已知单调求参数。",action:"先定义域;f′>0增f′<0减;极值看f′变号;闭区间比极值与端点。"},
+  {id:"a6",label:"导数压轴",cluster:"A",pack:"数学压轴.html",trigger:"含参单调/极值/零点、不等式恒成立或证明、双极值、排列组合。",action:"求导分类讨论;双极值比值换元t;放缩;计数用捆绑/插空/隔板。"},
+  {id:"b1",label:"三角恒等变换",cluster:"B",pack:"三角恒等变换.html",trigger:"求值化简、给值求值/求角、辅助角",action:"切化弦1的代换拆角;辅助角R=√(a²+b²);求角先定范围"},
+  {id:"b2",label:"三角图像与性质",cluster:"B",pack:"三角函数图像.html",trigger:"由图求解析式、单调区间、对称轴/中心、图象变换、ω范围。",action:"定A、k→由周期定ω→特殊点定φ;单调对称用整体代入。"},
+  {id:"b3",label:"解三角形",cluster:"B",pack:"解三角形.html",trigger:"正余弦定理求边角、面积、判断形状、范围最值。",action:"边角互化;余弦定理配角;面积½ab·sinC;范围用余弦+基本不等式。"},
+  {id:"b4",label:"三角函数定义",cluster:"B",note:"任意角弧度、三角函数值、诱导公式化简。"},
+  {id:"c1",label:"等差等比数列",cluster:"C",note:"通项与求和公式、性质、基本量an d q求解。"},
+  {id:"c2",label:"求通项",cluster:"C",pack:"数列求通项.html",trigger:"由递推求aₙ:累加/累乘/构造等比/Sₙ与aₙ。",action:"认递推形态对号入座;aₙ=Sₙ−Sₙ₋₁验n=1;aₙ₊₁=paₙ+q加常数构造。"},
+  {id:"c3",label:"数列求和",cluster:"C",pack:"数列求和.html",trigger:"求Sₙ:错位相减/裂项/分组/含(-1)ⁿ。",action:"先认通项形态选方法;错位相减错位对齐相减;裂项相消只剩首尾。"},
+  {id:"c4",label:"数列与不等式",cluster:"C",note:"放缩证明、求和比较、数列单调最值问题。"},
+  {id:"d1",label:"线面位置关系",cluster:"D",pack:"立体几何线面.html",trigger:"证平行垂直、异面角",action:"线线↔线面↔面面转化;线面垂直需两相交线;面面垂直性质垂直交线"},
+  {id:"d2",label:"空间向量",cluster:"D",pack:"空间向量.html",trigger:"用向量法求线线/线面/二面角、点面距、平行垂直证明。",action:"建系写坐标→求法向量→套公式;二面角看图定正负。"},
+  {id:"d3",label:"二面角与距离",cluster:"D",pack:"空间向量.html",trigger:"求二面角、线面角、点到平面距离。",action:"线面角sin=|cos<a,n>|;二面角cos=±cos<n₁,n₂>;距离d=|AP·n|/|n|。"},
+  {id:"d4",label:"外接球",cluster:"D",note:"补形找球心、R²公式、内切外接球半径。"},
+  {id:"d5",label:"表面积体积",cluster:"D",note:"柱锥台球面积体积、三视图还原、割补法。"},
+  {id:"e1",label:"直线与圆",cluster:"E",note:"直线方程、圆方程、位置关系、弦长切线。"},
+  {id:"e2",label:"椭圆双曲线抛物线",cluster:"E",note:"定义、标准方程、离心率、几何性质求解。"},
+  {id:"e3",label:"圆锥曲线综合",cluster:"E",pack:"圆锥曲线.html",trigger:"弦长、中点弦、定点定值、面积最值、离心率。",action:"联立写判别式→韦达x₁+x₂、x₁x₂→设而不求;点差法求中点弦。"},
+  {id:"e4",label:"轨迹方程",cluster:"E",note:"定义法、直接法、相关点代入法求轨迹。"},
+  {id:"e5",label:"离心率问题",cluster:"E",pack:"离心率.html",trigger:"求e值或e的取值范围、渐近线与e。",action:"找只含a、c的齐次等式同除a;双曲线e²=1+(b/a)²;范围转成含e不等式。"},
+  {id:"f1",label:"计数原理",cluster:"F",pack:"排列组合与二项式.html",trigger:"分类分步、排列组合、二项式通项系数",action:"捆绑插空优先;通项T(k+1)=C(n,k)...;赋值法求系数和"},
+  {id:"f2",label:"古典概率",cluster:"F",note:"等可能事件、列举计数求概率、互斥对立。"},
+  {id:"f3",label:"分布列与期望",cluster:"F",pack:"概率分布.html",trigger:"写分布列求E(X)/D(X)、二项/超几何、条件概率、正态。",action:"Σpᵢ=1;E=Σxᵢpᵢ;二项E=np;超几何≠二项;正态看对称。"},
+  {id:"f4",label:"二项分布超几何",cluster:"F",note:"B(n,p)与超几何辨析、期望方差公式套用。"},
+  {id:"f5",label:"正态分布与统计",cluster:"F",pack:"统计.html",trigger:"抽样、直方图、回归、独立性检验、正态",action:"分层按比例;回归过中心点(x̄,ȳ);χ²越大关联越强;正态3σ对称"},
+  {id:"f6",label:"状态转移/新定义",cluster:"F",pack:"数学状态转移.html",trigger:"新定义题、概率递推、马尔科夫两状态、正难则反。",action:"读定义→翻译→套用;构造等比;不动点法;补集法。"},
+  {id:"g1",label:"集合与常用逻辑",cluster:"G",note:"集合运算、充要条件、全称特称命题与否定。"},
+  {id:"g2",label:"基本不等式",cluster:"G",pack:"基本不等式.html",trigger:"用a+b≥2√ab求最值、1的代换、凑配。",action:"一正二定三相等;和定积最大/积定和最小;验证取等能否成立。"},
+  {id:"g3",label:"线性规划",cluster:"G",note:"画可行域、目标函数平移、最优解与范围。"},
+  {id:"g4",label:"不等式恒成立能成立",cluster:"G",pack:"二次函数最值.html",trigger:"恒成立/能成立求参数范围、二次函数区间最值、含参分类",action:"恒成立⇔最值:a≥g(x)恒成立⇔a≥g(x)max;能成立(∃)⇔a≥g(x)min;区间最值先看开口再看对称轴三类"}
+];
+/* ====== LIVE FORCE ENGINE (springs + repulsion + collision, draggable) ====== */
+(function(){
+ const svg=document.getElementById('graph');const NS="http://www.w3.org/2000/svg";
+ const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
+ const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
+ const W=1600,H=1120,cx=W/2,cy=H/2;
+ // build node list: root + areas + leaves
+ const nodes=[],idx={};
+ const root={id:"__root",label:"数学",cat:"root"};nodes.push(root);idx[root.id]=root;
+ const na=AREAS.length;
+ AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*430;a.y=cy+Math.sin(ang)*430;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
+ const byC={};
+ LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*90+(Math.random()*20-10);l.y=a.y+Math.sin(ang)*90+(Math.random()*20-10);l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
+ root.x=cx;root.y=cy;root.vx=0;root.vy=0;
+ // links
+ const L=[];AREAS.forEach(a=>L.push([root.id,a.id]));LEAVES.forEach(l=>L.push([l.cluster,l.id]));
+ [["d1","d2"],["e2","e3"],["e3","e4"],["f1","f3"],["f2","f3"],["i3","i5"],["i4","i5"],["a4","a5"],["c1","c2"],["d4","d3"],["j5","j6"]].forEach(x=>L.push(x));
+ const links=L.filter(l=>idx[l[0]]&&idx[l[1]]).map(l=>({s:idx[l[0]],t:idx[l[1]]}));
+ const R={root:34,area:25,live:17,todo:13};
+ function rad(n){return n.cat==="root"?R.root:n.cat==="area"?R.area:(n.pack?R.live:R.todo);}
+ // SVG els
+ const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width',(l.s.cat==="root"||l.t.cat==="root")?2.2:1.7);e.setAttribute('stroke-opacity',(l.s.cat==="root"||l.t.cat==="root")?.32:.42);linkG.appendChild(e);return e;});
+ let live=0,total=0;
+ nodes.forEach(n=>{
+   if(n.cat==="leaf"){total++;if(n.pack)live++;}
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const c=document.createElementNS(NS,'circle');c.setAttribute('r',rad(n));
+   if(n.cat==="root"){c.setAttribute('fill','#16120A');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else if(n.cat==="area"){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',3.5);}
+   else if(n.pack){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width',2.5);c.setAttribute('stroke-dasharray','5 4');}
+   g.appendChild(c);
+   if(n.pack){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');t.setAttribute('y',rad(n)+14);
+   t.setAttribute('font-size',n.cat==="root"?18:n.cat==="area"?15:12);t.setAttribute('fill',(n.cat==="leaf"&&!n.pack)?'#6b5d3a':'#16120A');t.textContent=n.label;g.appendChild(t);
+   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=n;moved=false;n._fix=true;alpha=Math.max(alpha,.7);try{g.setPointerCapture(ev.pointerId);}catch(e){}});
+ });
+ document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
+ // view
+ let view={k:0.6,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ function fit(){view.k=0.6;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
+ // simulation
+ let alpha=1;
+ function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+42;if(a.cat==="area"&&b.cat==="area")return base+200;return base+34;}
+ function tick(){
+   const N=nodes.length;
+   for(let i=0;i<N;i++){const a=nodes[i];if(a.cat==="root"){continue;}
+     a.vx+=(cx-a.x)*0.0011*alpha; a.vy+=(cy-a.y)*0.0011*alpha;
+     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.009*alpha;a.vy+=(ar.y-a.y)*0.009*alpha;}
+   }
+   // repulsion + collision (pairwise)
+   for(let i=0;i<N;i++){const a=nodes[i];for(let j=i+1;j<N;j++){const b=nodes[j];
+     let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random()-0.5;dy=Math.random()-0.5;}
+     const d=Math.sqrt(d2);const rep=7600*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
+     if(a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(b.cat!=="root"){b.vx-=fx;b.vy-=fy;}
+     const ms=sep(a,b);if(d<ms){const push=(ms-d)*0.5;const ox=dx/d*push,oy=dy/d*push;if(!a._fix&&a.cat!=="root"){a.x+=ox;a.y+=oy;}if(!b._fix&&b.cat!=="root"){b.x-=ox;b.y-=oy;}}
+   }}
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?250:124;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
+   nodes.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
+   if(alpha>0.04)alpha*=0.99;
+   render();
+ }
+ function render(){links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});}
+ function loop(){tick();requestAnimationFrame(loop);}loop();
+ // interaction
+ function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
+ let drag=null,moved=false,pan=null;
+ svg.addEventListener('pointermove',ev=>{
+   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;drag.vx=0;drag.vy=0;alpha=Math.max(alpha,.5);return;}
+   if(pan){view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();}
+ });
+ window.addEventListener('pointerup',()=>{if(drag){drag._fix=false;if(!moved)openPanel(drag);drag=null;}if(pan){pan=null;svg.classList.remove('grabbing');}});
+ svg.addEventListener('pointerdown',ev=>{if(drag)return;pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.13:0.88;const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zb(1.2);document.getElementById('zout').onclick=()=>zb(1/1.2);
+ function zb(f){const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{nodes.forEach(n=>{if(n.cat==="root")return;const a=n.cat==="area"?n:idx[n.cluster];n.vx=0;n.vy=0;});alpha=1;fit();};
+ const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
+ document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
+ function openPanel(d){
+   const isLive=!!d.pack,isTodo=d.cat==="leaf"&&!d.pack;
+   const catName=d.cat==="root"?'学科':d.cat==="area"?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
+   const col=d.cat==="area"?ACCENT:isLive?'#C8930E':d.cat==="root"?'#16120A':'#9a8f74';
+   let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+d.label+'</h3>';
+   if(d.cat==="area"){const kids=byC[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。拖一拖,或点周围节点看详情。</div>';}
+   if(d.cat==="root")h+='<div class="row">整张数学知识网。拖动任意节点会牵动相连的板块与题型。</div>';
+   if(d.note)h+='<div class="row">'+d.note+'</div>';
+   if(d.trigger)h+='<div class="trig"><b>触发信号:</b>'+d.trigger+'</div>';
+   if(d.action)h+='<div class="act"><b>标准动作:</b>'+d.action+'</div>';
+   if(isLive)h+='<a class="go" href="'+d.pack+'">打开攻坚包 →</a>';
+   if(isTodo)h+='<div class="soon">⛏ 待开发攻坚包 · 已列入计划,将按周逐个攻克</div>';
+   pbody.innerHTML=h;panel.classList.add('show');
+ }
+ const search=document.getElementById('search');
+ search.addEventListener('input',()=>{const q=search.value.trim();nodes.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.13);d._t.setAttribute('opacity',hit?1:0.13);if(q&&hit&&d.cat==="leaf"){d._c.setAttribute('stroke','#E0382A');}else if(d.cat==="leaf"){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
+})();
+</script>
+</body>
+</html>

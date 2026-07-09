@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>胚胎工程 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>胚胎工程</h1>
+    <p class="lead">胚胎工程讲的是「在体外操纵哺乳动物的受精与早期发育」这条完整链条:从精子怎么获得受精能力、卵子怎么防止被多个精子钻进去,到受精卵怎么一步步分裂成能着床的胚胎,再到人怎么把这些环节搬到体外(试管)、搬回体内(移植)、甚至一分为二(分割)。抓住「谁在什么阶段、防什么、靠什么结构」,题目就是送分。</p>
+
+    <div class="say">🗣️ <b>胚胎工程(人话版):</b> 受精是「一场资格审查」——精子要先「获能」才有资格冲刺,冲到卵子外面还要顶体反应「破门」,而卵子一旦被第一个精子破门,立刻拉响<b>两道警报</b>(透明带反应+卵细胞膜反应)把后面的精子全部挡在门外,防止「一女多夫」式的多精入卵。受精卵之后开始<b>卵裂</b>——只分裂不长个,细胞越分越小、总体积不变,一路分到桑椹胚、囊胚(挖出一个腔,内部细胞团+外层滋养层),这个囊胚就是移植、分割、试管技术操作的核心对象。</div>
+
+    <div class="keybox"><b>一条主线记忆:</b> <b>获能 → 顶体反应 → (透明带反应+卵细胞膜反应)防多精 → 雌雄原核融合 → 卵裂(体积不增)→ 桑椹胚 → 囊胚(内细胞团+滋养层+囊胚腔)→ 原肠胚</b>。胚胎工程四大技术(体外受精、胚胎移植、胚胎分割、试管动物/婴儿)全部是围着这条链条做操作,移植永远是最终环节。</div>
+
+    <h2>① 受精:精子的资格审查</h2>
+    <div class="card">
+      <div class="eq">获能 → 顶体反应(释放顶体酶,溶解放射冠、透明带)→ 精卵融合</div>
+      <p style="margin:8px 0"><b>获能:</b> 刚射出的精子并不具备受精能力,必须在雌性生殖道(或体外用获能液处理)停留一段时间,经历<b>获能</b>过程才能获得受精能力。体外受精时,必须用<b>获能液</b>处理精子,模拟这一生理过程。</p>
+      <p style="margin:8px 0"><b>顶体反应:</b> 获能后的精子接触卵母细胞外的放射冠和透明带,顶体膜破裂,释放<b>顶体酶</b>,溶解放射冠细胞间物质和透明带,精子得以钻入,最终一个精子的细胞膜与卵细胞膜融合,精子核进入卵细胞。</p>
+      <table>
+        <tr><th>步骤</th><th>发生的事</th></tr>
+        <tr><td>获能</td><td>精子获得受精能力(体内自然发生 / 体外用获能液)</td></tr>
+        <tr><td>顶体反应</td><td>释放顶体酶,溶解放射冠与透明带,精子穿入</td></tr>
+        <tr><td>膜融合</td><td>精子细胞膜与卵细胞膜融合,精子核(连同中心体)进入卵细胞质</td></tr>
+      </table>
+      <p class="trap">⚠ 顶体反应≠获能。获能发生在精子接触卵子<b>之前</b>,是「拿到入场券」;顶体反应发生在精子接触卵子<b>之时</b>,是「破门而入」。两者顺序不能颠倒,也不能合并成一步。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 1 — 受精过程动画:获能 → 顶体反应 → 膜融合(逐步播放)</div>
+      <svg id="fertSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fertGo">▶ 播放受精过程</button><button id="fertReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前阶段</b><span id="fertStage">未开始</span></div>
+        <div><b>顶体酶</b><span id="fertEnz">未释放</span></div>
+        <div><b>放射冠/透明带</b><span id="fertZP">完整</span></div>
+        <div><b>膜融合</b><span id="fertFuse">未发生</span></div>
+      </div>
+      <p class="small">点击播放,精子从左侧游向卵母细胞:先"获能"变亮(获得受精能力),接触透明带触发顶体反应释放顶体酶(黄色扩散),溶解屏障后与卵细胞膜融合(绿色闪烁)。</p>
+    </div>
+
+    <h2 class="b">② 防止多精入卵:两道屏障</h2>
+    <div class="card">
+      <p style="margin:6px 0">正常受精只允许<b>一个</b>精子进入卵细胞。第一个精子刚完成膜融合的瞬间,卵细胞会立刻启动两道屏障,把后续精子彻底挡在外面:</p>
+      <table>
+        <tr><th>屏障</th><th>发生位置</th><th>作用</th></tr>
+        <tr><td><b>透明带反应</b></td><td>透明带(卵外层糖蛋白层)</td><td>透明带结构迅速改变、变硬,其他精子的顶体酶无法再溶解它,精子无法穿透</td></tr>
+        <tr><td><b>卵细胞膜反应</b></td><td>卵细胞膜(紧贴透明带内侧)</td><td>膜电位/膜结构改变,阻止其他精子与卵细胞膜发生二次融合</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>时间顺序:</b> 卵细胞膜反应几乎瞬时发生(快速阻断),透明带反应稍慢但更持久(慢速阻断),两者共同构成「快+慢」双保险,确保<b>只有一个精核</b>进入卵细胞质。</p>
+      <p class="trap">⚠ 最高频陷阱:很多同学只记得「透明带反应」,漏掉「卵细胞膜反应」——防止多精入卵是<b>两道</b>屏障,缺一不写全就要扣分。切勿把两者合并成一句话。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🛡️ 互动 2 — 防止多精入卵:两道屏障阻挡后续精子</div>
+      <svg id="blockSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="blockGo">▶ 模拟多精子冲击</button><button id="blockReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>已进入精子数</b><span id="blkN">0</span></div>
+        <div><b>透明带状态</b><span id="blkZP">正常</span></div>
+        <div><b>卵细胞膜状态</b><span id="blkMem">正常</span></div>
+        <div><b>结论</b><span id="blkRes">—</span></div>
+      </div>
+      <p class="small">多个精子同时冲向卵母细胞,第一个成功融合后,透明带(外层)变硬 + 卵细胞膜(内层)改变,后续精子(灰色箭头)被同步弹开,始终只有 1 个精核进入。</p>
+    </div>
+
+    <h2 class="g">③ 早期胚胎发育:卵裂不长个</h2>
+    <div class="card">
+      <div class="eq">受精卵 → 卵裂期 → 桑椹胚 → 囊胚 → 原肠胚</div>
+      <p style="margin:8px 0"><b>雌雄原核融合:</b> 精核、卵核各自形成雌原核、雄原核,两者融合恢复染色体数目(2n),标志受精完成,细胞进入卵裂。</p>
+      <p style="margin:8px 0"><b>卵裂期的核心特点:</b> 细胞连续进行有丝分裂,<b>细胞数目倍增、单个细胞体积变小,但胚胎总体积基本不变</b>(卵裂球被透明带包裹,总体积受限)。这是选择题的高频考点。</p>
+      <table>
+        <tr><th>阶段</th><th>特征</th></tr>
+        <tr><td>卵裂期</td><td>细胞数目增多,单个细胞变小,总体积不增大</td></tr>
+        <tr><td>桑椹胚</td><td>卵裂球紧密聚集成实心球,形似桑椹</td></tr>
+        <tr><td>囊胚</td><td>出现囊胚腔,分化出内细胞团和滋养层(详见④)</td></tr>
+        <tr><td>原肠胚</td><td>细胞进一步分化、迁移,为器官发生做准备</td></tr>
+      </table>
+      <p class="trap">⚠ 「卵裂期总体积不增大」是送分也是送命题——很多同学下意识认为细胞分裂=体积变大,这里恰恰相反,考的就是这个反直觉点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 3 — 早期胚胎发育:受精卵→卵裂→桑椹胚→囊胚→原肠胚(总体积不变)</div>
+      <svg id="devSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="devPrev">◀ 上一阶段</button><button id="devNext">下一阶段 ▶</button><button id="devReset">↺ 回到受精卵</button>
+      </div>
+      <div class="live">
+        <div><b>阶段</b><span id="devStage">受精卵</span></div>
+        <div><b>细胞数</b><span id="devN">1</span></div>
+        <div><b>单细胞体积</b><span id="devV">大</span></div>
+        <div><b>胚胎总体积</b><span id="devTot">不变</span></div>
+      </div>
+      <p class="small">外层虚线圆代表透明带边界(总体积恒定)。点击"下一阶段",细胞不断均等分裂、变小,总体积始终被限制在同一个边界内,直到囊胚出现内部结构分化。</p>
+    </div>
+
+    <h2 class="o">④ 囊胚结构:三个部件</h2>
+    <div class="card">
+      <p style="margin:6px 0">囊胚是胚胎移植、胚胎分割、体外培养操作的<b>关键对象</b>,内部结构必须记牢:</p>
+      <table>
+        <tr><th>结构</th><th>位置</th><th>命运/作用</th></tr>
+        <tr><td><b>滋养层</b></td><td>外层单层细胞</td><td>将来发育为绒毛膜等胎膜结构,参与形成胎盘的胎儿部分</td></tr>
+        <tr><td><b>内细胞团</b></td><td>囊胚腔一端的细胞团</td><td>将来发育为胚胎本体(未来的动物个体)</td></tr>
+        <tr><td><b>囊胚腔</b></td><td>中央充满液体的腔</td><td>由卵裂球间隙融合形成,无细胞</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么这个结构重要:</b> 胚胎分割必须<b>均等分割内细胞团</b>(内细胞团才是未来个体的来源),分割滋养层不影响;胚胎干细胞通常也从内细胞团分离获得。</p>
+      <p class="trap">⚠ 别把「内细胞团」和「滋养层」的命运记反——内细胞团→胚胎本体,滋养层→胎膜(不是胚胎本体)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚪ 互动 4 — 囊胚结构:点击查看内细胞团/滋养层/囊胚腔各自命运</div>
+      <svg id="blastSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="blastPart on" data-p="icm">内细胞团</button>
+        <button class="blastPart" data-p="tro">滋养层</button>
+        <button class="blastPart" data-p="cav">囊胚腔</button>
+      </div>
+      <div class="verdict" id="blastNote"></div>
+      <p class="small">点击不同结构按钮,对应区域在图中高亮,下方文字说明该结构的位置与未来命运。</p>
+    </div>
+
+    <h2 class="v">⑤ 胚胎工程技术①②:体外受精 + 胚胎移植</h2>
+    <div class="card">
+      <h3>体外受精(试管技术的基础)</h3>
+      <p style="margin:6px 0"><b>卵母细胞采集与培养:</b> 从供体卵巢采集的卵母细胞通常处于第一次减数分裂前期,必须在体外<b>培养到减数第二次分裂中期(MII 中期)</b>才具备受精能力,这是体外受精能否成功的前提。</p>
+      <p style="margin:6px 0"><b>体外受精:</b> 将获能处理后的精子与培养成熟(MII 中期)的卵母细胞放在合适的培养液中,使其自然结合完成受精。</p>
+      <p style="margin:6px 0"><b>早期胚胎培养:</b> 受精卵在体外培养液中继续发育,经卵裂到桑椹胚或囊胚阶段,才具备移植条件。</p>
+      <h3>胚胎移植(繁殖新技术的最终技术环节)</h3>
+      <p style="margin:6px 0"><b>供体母体:</b> 需注射促性腺激素处理,实现<b>超数排卵</b>(一次排出比正常多得多的卵子),提高可用胚胎数量。</p>
+      <p style="margin:6px 0"><b>受体母体:</b> 需处理使其达到<b>同期发情</b>(生理状态与胚胎发育时期同步),这样子宫内膜状态才适合接受胚胎着床。</p>
+      <p style="margin:6px 0"><b>生理学基础:</b> 供体和受体的生殖生理状态必须<b>保持一致</b>(同期发情),这是胚胎移植成功、不被排斥、能够继续发育的生理学基础。</p>
+      <div class="mono">胚胎移植是哺乳动物胚胎工程技术流程中的最终技术环节——前面所有操作,最终都要通过移植回受体子宫来实现「诞生」。</div>
+      <p class="trap">⚠ 超数排卵处理的是<b>供体</b>,同期发情处理的是<b>受体</b>,别把两者主体搞反;卵母细胞必须培养到<b>MII中期</b>才能体外受精,不是排出就能用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🐄 互动 5 — 胚胎移植全流程:供体超排 → 体外受精 → 受体同期发情 → 移植</div>
+      <svg id="transferSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="trPrev">◀ 上一步</button><button id="trNext">下一步 ▶</button><button id="trReset">↺ 回到起点</button>
+      </div>
+      <div class="live">
+        <div><b>当前步骤</b><span id="trStep">1/5</span></div>
+        <div><b>供体状态</b><span id="trDonor">待处理</span></div>
+        <div><b>受体状态</b><span id="trRecip">待处理</span></div>
+        <div><b>说明</b><span id="trDesc" style="font-size:11px">—</span></div>
+      </div>
+      <p class="small">五步流程条:①供体促超数排卵 ②采卵+体外受精 ③早期胚胎培养 ④受体同期发情处理 ⑤胚胎移植入受体子宫。点击"下一步"逐步推进,观察供体、受体两条线如何在移植这一步汇合。</p>
+    </div>
+
+    <h2 class="r">⑥ 胚胎工程技术③④:胚胎分割 + 试管动物/婴儿</h2>
+    <div class="card">
+      <h3>胚胎分割(获得同卵双胎/多胎)</h3>
+      <p style="margin:6px 0">将<b>囊胚</b>用显微手术刀分割成两份或多份,每份都<b>必须包含内细胞团的一部分</b>(均等分割内细胞团),再分别培养或直接移植,即可获得基因型完全相同的同卵双胎或多胎。</p>
+      <p class="trap">⚠ 分割的关键是「均等分割内细胞团」——若只分到滋养层没分到内细胞团,那一份无法发育为完整个体。</p>
+      <h3>试管动物 / 试管婴儿</h3>
+      <p style="margin:6px 0">试管动物(试管婴儿)技术 = <b>体外受精</b> + <b>早期胚胎培养</b> + <b>胚胎移植</b> 三大环节的组合应用。整个过程精子和卵细胞都要经历正常的受精过程(细胞核仍然融合、遗传物质仍然重组),只是受精和早期发育的场所从体内搬到了体外培养皿。</p>
+      <p class="trap">⚠ 试管婴儿依然是<b>有性生殖</b>(精卵结合、经历减数分裂和受精),不是无性生殖、不是克隆,后代遗传信息来自父母双方而非单一亲本。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">👯 互动 6 — 胚胎分割获得同卵双胎:必须均等分割内细胞团</div>
+      <svg id="splitSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="splitMode on" data-m="good">正确:均等分割内细胞团</button>
+        <button class="splitMode" data-m="bad">错误:未均等分割</button>
+      </div>
+      <div class="verdict" id="splitNote"></div>
+      <p class="small">切换两种分割方式对比:左图正确切法让内细胞团一分为二各自完整,两份都能发育成正常个体;右图错误切法内细胞团全落一侧,另一份缺失发育关键部分。</p>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 受精过程与顶体反应</h3>
+      <p><b class="tag">触发信号:</b>题干出现「获能」「顶体酶」「放射冠」「透明带」「原核融合」等词,问受精先后顺序或某结构的作用。</p>
+      <p><b class="tag">标准动作:</b>按顺序核对「获能→接触放射冠/透明带→顶体反应释放顶体酶→溶解屏障→精卵膜融合→原核形成→原核融合」,逐一比对题干描述是否符合顺序与因果。</p>
+      <p><b class="tag">示例(带解):</b>题干:「精子释放顶体酶溶解透明带发生在获能之前」,判断对错。答:错误。获能必须先于顶体反应,顶体反应是获能后精子接触卵子时才发生的,顺序不能颠倒。</p>
+      <p class="trap">陷阱:把获能和顶体反应顺序颠倒;误以为顶体酶溶解的是卵细胞膜而非放射冠和透明带。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 防止多精入卵</h3>
+      <p><b class="tag">触发信号:</b>问「卵细胞如何保证只有一个精子受精」「防止多精入卵的机制」。</p>
+      <p><b class="tag">标准动作:</b>必须同时答出两道屏障——透明带反应(透明带结构改变变硬)+ 卵细胞膜反应(膜阻止再融合),缺一不可,可加时间上"快慢"配合说明。</p>
+      <p><b class="tag">示例(带解):</b>「简述哺乳动物受精时防止多精入卵的机制」。答:第一个精子与卵细胞膜融合后,迅速引发卵细胞膜反应阻止其他精子与卵膜融合,同时透明带反应使透明带结构改变、变硬,其他精子的顶体酶无法再将其溶解,双重屏障保证只有一个精核进入卵细胞。</p>
+      <p class="trap">陷阱:只写透明带反应,漏答卵细胞膜反应;把两者机制描述反。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 卵裂期与胚胎发育顺序</h3>
+      <p><b class="tag">触发信号:</b>给出发育阶段图或描述,问排序、命名,或问某阶段的体积/细胞数变化。</p>
+      <p><b class="tag">标准动作:</b>牢记顺序「受精卵→卵裂→桑椹胚→囊胚→原肠胚」,凡问卵裂期体积,答案固定是"细胞数目增多、单个细胞变小、总体积不变"。</p>
+      <p><b class="tag">示例(带解):</b>「受精卵经过多次卵裂后,总体积与受精卵相比如何变化?」答:基本不变。卵裂期细胞只进行分裂不经历生长期,细胞数目增多但总体积受透明带限制,不增大。</p>
+      <p class="trap">陷阱:误以为细胞数增多=总体积增大;把桑椹胚和囊胚顺序搞反。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 囊胚结构辨认</h3>
+      <p><b class="tag">触发信号:</b>给囊胚示意图,标注a/b/c结构,问名称、位置和发育命运。</p>
+      <p><b class="tag">标准动作:</b>外层单细胞层→滋养层(→胎膜);内部细胞团→内细胞团(→胚胎本体);中央空腔→囊胚腔(无细胞、液体)。</p>
+      <p><b class="tag">示例(带解):</b>「囊胚中将来发育为动物体本身的结构是?」答:内细胞团。滋养层将来发育为绒毛膜等胎膜结构,不是胚胎本体。</p>
+      <p class="trap">陷阱:内细胞团与滋养层命运答反;把囊胚腔误认为含细胞的结构。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 胚胎移植与超数排卵/同期发情</h3>
+      <p><b class="tag">触发信号:</b>题干出现「供体」「受体」「促性腺激素」「同期发情」「最终技术环节」等词。</p>
+      <p><b class="tag">标准动作:</b>分清主体——超数排卵处理供体(提高排卵数),同期发情处理受体(使生理状态与供体/胚胎同步),移植是整个流程的最后一步。</p>
+      <p><b class="tag">示例(带解):</b>「进行胚胎移植前为什么要对受体母畜进行同期发情处理?」答:使受体母畜的生殖生理状态(尤其是子宫内膜状态)与供体提供的胚胎发育时期保持同步一致,这是胚胎能够存活、着床、继续发育的生理学基础。</p>
+      <p class="trap">陷阱:把超数排卵和同期发情的处理对象(供体/受体)搞混;误以为胚胎移植不是必需环节。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 胚胎分割与试管技术辨析</h3>
+      <p><b class="tag">触发信号:</b>问「同卵双胎怎么获得」「试管婴儿是不是无性生殖」「分割哪个结构」。</p>
+      <p><b class="tag">标准动作:</b>分割囊胚需均等分割内细胞团;试管婴儿=体外受精+胚胎移植,本质仍是有性生殖(减数分裂+受精),遗传物质来自父母双方。</p>
+      <p><b class="tag">示例(带解):</b>「试管婴儿技术是否属于无性生殖?」答:不是。试管婴儿的精子和卵细胞都经过正常的减数分裂和受精(核融合),只是受精场所在体外,遗传信息仍来自父母双方,属于有性生殖。</p>
+      <p class="trap">陷阱:误把试管婴儿等同于克隆(无性生殖);分割时忽略"必须均等分割内细胞团"这一限定条件。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 防止多精入卵是<b>两道屏障</b>:透明带反应 + 卵细胞膜反应,只答一个不给全分。</p>
+      <p class="trap">② 获能发生在受精<b>之前</b>(拿到入场券),顶体反应发生在精子接触卵子<b>之时</b>(破门释放顶体酶),顺序不能颠倒。</p>
+      <p class="trap">③ 卵裂期细胞数目增多、单细胞体积变小,但<b>胚胎总体积基本不变</b>——不是体积越分越大。</p>
+      <p class="trap">④ 内细胞团 → 胚胎本体;滋养层 → 胎膜(绒毛膜等);两者命运不能记反。</p>
+      <p class="trap">⑤ 胚胎移植是哺乳动物繁殖新技术流程中的<b>最终技术环节</b>,前面的体外受精、早期培养都要靠它落地。</p>
+      <p class="trap">⑥ 超数排卵处理<b>供体</b>(注射促性腺激素),同期发情处理<b>受体</b>,两者主体不同、不能混用。</p>
+      <p class="trap">⑦ 卵母细胞体外培养必须达到<b>减数第二次分裂中期(MII中期)</b>才能进行体外受精,不是采集下来就直接能用。</p>
+      <p class="trap">⑧ 胚胎分割必须<b>均等分割内细胞团</b>,只切滋养层没用,内细胞团分配不均会导致其中一份无法正常发育。</p>
+      <p class="trap">⑨ 试管婴儿/试管动物技术仍是<b>有性生殖</b>(精卵结合、减数分裂、受精),不是无性生殖,更不是克隆技术。</p>
+      <p class="trap">⑩ 供体与受体的<b>生理状态必须一致(同期发情)</b>,这是胚胎移植成功的生理学基础,不是随意搭配。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 两道屏障是「快机制+慢机制」的组合拳:</b> 卵细胞膜反应几乎瞬时启动(阻止再融合),透明带反应稍慢但更彻底、更持久(结构性变硬)。理解这种"快速阻断+持久巩固"的搭配逻辑,遇到新情境(比如题目给出反应发生的时间先后曲线)也能推理判断,而不是死记两个名词。</p>
+      <p style="margin:8px 0"><b>② 卵裂期"总体积不变"背后是"透明带的物理限制+无生长期分裂"两个原因叠加:</b> 一方面卵裂球被外层透明带包裹,总体积受物理边界限制;另一方面卵裂的有丝分裂之间几乎没有正常细胞周期该有的生长期(G1、G2很短),所以细胞只是被"切割"变小,而非先长大再分裂。两条原因都能写进论述题。</p>
+      <p style="margin:8px 0"><b>③ 囊胚是整条技术链的"操作枢纽":</b> 胚胎移植移的是囊胚(或桑椹胚),胚胎分割切的是囊胚,胚胎干细胞取的是囊胚的内细胞团。把囊胚的三个结构(内细胞团/滋养层/囊胚腔)吃透,后面几乎所有技术题都能秒懂"操作对象是谁、动的是哪一部分"。</p>
+      <p style="margin:8px 0"><b>④ 供体—受体的"同步"本质是激素调控的时间轴对齐:</b> 供体超数排卵是让"卵源"变多,受体同期发情是让"子宫环境"和"胚胎发育进度"对上表。两条时间轴不同步,胚胎移植过去也不会着床——这解释了为什么"同期发情"是移植成功的生理学基础,而不只是操作步骤。</p>
+      <p style="margin:8px 0"><b>⑤ 试管婴儿≠基因改造≠无性生殖,三个概念要分开:</b> 试管婴儿只是把受精、早期培养的"场所"搬到体外,精卵结合、减数分裂、基因重组全部正常发生,遗传本质与自然受孕完全一致;不要和"转基因"(改变基因)、"克隆"(无性生殖、体细胞核移植)混为一谈,这是命题人爱设的概念混淆陷阱。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 胚胎工程:受精→早期发育→体外受精/移植/分割/试管技术</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GRAY="#8a8a8a";
+
+/* ===== 互动1:受精过程动画 ===== */
+(function(){
+  const svg=document.getElementById('fertSvg');
+  const oStage=document.getElementById('fertStage'),oEnz=document.getElementById('fertEnz'),oZP=document.getElementById('fertZP'),oFuse=document.getElementById('fertFuse');
+  let stage=0,running=false,animT=0;
+  const stages=["未开始","1.获能中","2.顶体反应(释放顶体酶)","3.溶解放射冠/透明带","4.精卵膜融合完成"];
+  function draw(){
+    clr(svg);
+    const cx=500,cy=130,rOuter=95,rZP=78,rMem=62;
+    // egg layers
+    el(svg,'circle',{cx:cx,cy:cy,r:rOuter,fill:'#fbead6',stroke:INK,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:cx,y:cy-rOuter-8,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='放射冠';
+    const zpColor=stage>=3?'#cbb98a':'#e8cf9a';
+    el(svg,'circle',{cx:cx,cy:cy,r:rZP,fill:'none',stroke:zpColor,'stroke-width':10});
+    el(svg,'text',{x:cx,y:cy-rZP-6,'font-size':11.5,'font-weight':800,fill:'#8a6a2b','text-anchor':'middle'}).textContent='透明带';
+    const memColor=stage>=4?GREEN:'#f5c98a';
+    el(svg,'circle',{cx:cx,cy:cy,r:rMem,fill:'#fff7e6',stroke:memColor,'stroke-width':5});
+    el(svg,'circle',{cx:cx,cy:cy,r:18,fill:'#e8b84b',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx,y:cy+5,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='卵核';
+    // sperm
+    let sx;
+    if(stage===0)sx=60;
+    else if(stage===1)sx=60+40*Math.min(animT,1);
+    else if(stage===2)sx=cx-rZP-10;
+    else if(stage===3)sx=cx-rMem+5;
+    else sx=cx-18;
+    const spermColor=stage>=1?BLUE:GRAY;
+    el(svg,'ellipse',{cx:sx,cy:cy,rx:14,ry:8,fill:spermColor,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:sx-14,y1:cy,x2:sx-46,y2:cy,stroke:spermColor,'stroke-width':3});
+    el(svg,'text',{x:sx,y:cy-16,'font-size':11,'font-weight':900,fill:spermColor,'text-anchor':'middle'}).textContent='精子';
+    if(stage===1){el(svg,'text',{x:sx,y:cy+26,'font-size':11,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='获能中...';}
+    // acrosome enzyme burst
+    if(stage>=2){
+      for(let i=0;i<6;i++){
+        const ang=(i/6)*2*Math.PI;
+        const ex=cx-rZP+Math.cos(ang)*22,ey=cy+Math.sin(ang)*22;
+        el(svg,'circle',{cx:ex,cy:ey,r:4,fill:YEL,opacity:stage>=2?0.85:0});
+      }
+      el(svg,'text',{x:cx-rZP-30,y:cy+40,'font-size':11,'font-weight':800,fill:'#b8860b','text-anchor':'middle'}).textContent='顶体酶';
+    }
+    if(stage>=4){
+      el(svg,'circle',{cx:cx-18,cy:cy,r:26,fill:'none',stroke:GREEN,'stroke-width':4,opacity:0.7});
+      el(svg,'text',{x:cx,y:cy+90,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='精卵膜融合，精核进入卵细胞';
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='受精过程：'+stages[stage];
+    oStage.textContent=stages[stage];
+    oEnz.textContent=stage>=2?'已释放':'未释放';
+    oZP.textContent=stage>=3?'已溶解':'完整';
+    oFuse.textContent=stage>=4?'已发生':'未发生';
+  }
+  function loop(){
+    if(!running)return;
+    animT+=0.05;
+    if(animT>=1){animT=0;stage++;if(stage>4){stage=4;running=false;}}
+    draw();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('fertGo').onclick=()=>{if(stage>=4)return;running=true;animT=0;if(stage===0)stage=1;requestAnimationFrame(loop);};
+  document.getElementById('fertReset').onclick=()=>{stage=0;animT=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动2:防止多精入卵 ===== */
+(function(){
+  const svg=document.getElementById('blockSvg');
+  const oN=document.getElementById('blkN'),oZP=document.getElementById('blkZP'),oMem=document.getElementById('blkMem'),oRes=document.getElementById('blkRes');
+  let entered=0,blocked=false,running=false,t=0;
+  const cx=420,cy=130,rZP=90,rMem=68;
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='多个精子冲击卵母细胞：只有第一个能成功进入';
+    const zpCol=blocked?'#a08050':'#e8cf9a';
+    el(svg,'circle',{cx:cx,cy:cy,r:rZP,fill:'none',stroke:zpCol,'stroke-width':12});
+    el(svg,'text',{x:cx,y:cy-rZP-10,'font-size':11.5,'font-weight':800,fill:'#8a6a2b','text-anchor':'middle'}).textContent='透明带'+(blocked?'（已变硬）':'');
+    const memCol=blocked?GREEN:'#f5c98a';
+    el(svg,'circle',{cx:cx,cy:cy,r:rMem,fill:'#fff7e6',stroke:memCol,'stroke-width':5});
+    el(svg,'text',{x:cx,y:cy+rMem+18,'font-size':11.5,'font-weight':800,fill:memCol,'text-anchor':'middle'}).textContent='卵细胞膜'+(blocked?'（已改变，阻止再融合）':'');
+    el(svg,'circle',{cx:cx,cy:cy,r:16,fill:'#e8b84b',stroke:INK,'stroke-width':2});
+    // 4 sperm from different angles
+    const angles=[Math.PI,Math.PI*0.75,Math.PI*1.25,Math.PI*0.5];
+    angles.forEach((ang,i)=>{
+      let dist;
+      if(i===0){ // the winner
+        dist=blocked?rMem-4:150-t*(150-(rMem-4));
+        dist=Math.max(rMem-4,150-t*(150-(rMem-4)));
+      } else {
+        // blocked ones stop at zp boundary once blocked, else approach
+        const target=blocked?rZP+20:rMem-4;
+        dist=Math.max(target,150-t*(150-target));
+      }
+      const sx=cx+Math.cos(ang)*dist,sy=cy+Math.sin(ang)*dist;
+      const col=(i===0)?GREEN:(blocked?GRAY:BLUE);
+      el(svg,'ellipse',{cx:sx,cy:sy,rx:10,ry:6,fill:col,stroke:INK,'stroke-width':1.6,transform:'rotate('+(ang*180/Math.PI)+' '+sx+' '+sy+')'});
+    });
+    oN.textContent=blocked?'1':'0';
+    oZP.textContent=blocked?'变硬（透明带反应）':'正常';
+    oMem.textContent=blocked?'已改变（卵细胞膜反应）':'正常';
+    oRes.textContent=blocked?'仅1个精核进入，多精被挡':'—';
+  }
+  function loop(){
+    if(!running)return;
+    t+=0.04;
+    if(t>=1){t=1;blocked=true;running=false;}
+    draw();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('blockGo').onclick=()=>{if(blocked)return;running=true;t=0;requestAnimationFrame(loop);};
+  document.getElementById('blockReset').onclick=()=>{blocked=false;t=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动3:早期胚胎发育 ===== */
+(function(){
+  const svg=document.getElementById('devSvg');
+  const oStage=document.getElementById('devStage'),oN=document.getElementById('devN'),oV=document.getElementById('devV'),oTot=document.getElementById('devTot');
+  const stages=[
+    {name:'受精卵',n:1},
+    {name:'卵裂 2细胞',n:2},
+    {name:'卵裂 4细胞',n:4},
+    {name:'卵裂 8细胞',n:8},
+    {name:'桑椹胚',n:16},
+    {name:'囊胚',n:32},
+    {name:'原肠胚',n:32}
+  ];
+  let idx=0;
+  function draw(){
+    clr(svg);
+    const cx=350,cy=140,R=90;
+    el(svg,'circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:cx,y:cy-R-12,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='透明带边界（总体积恒定）';
+    const s=stages[idx];
+    if(s.name==='囊胚'||s.name==='原肠胚'){
+      // draw blastocyst-like: outer layer + inner cell mass + cavity
+      el(svg,'circle',{cx:cx,cy:cy,r:R-8,fill:'#eaf6f2',stroke:GREEN,'stroke-width':4});
+      // trophoblast dots around
+      const cnt=22;
+      for(let i=0;i<cnt;i++){
+        const ang=(i/cnt)*2*Math.PI;
+        el(svg,'circle',{cx:cx+Math.cos(ang)*(R-8),cy:cy+Math.sin(ang)*(R-8),r:6,fill:BLUE,stroke:INK,'stroke-width':1.4});
+      }
+      // inner cell mass cluster
+      const icmCx=cx-30,icmCy=cy+30;
+      for(let i=0;i<7;i++){
+        const ang=(i/7)*2*Math.PI;
+        el(svg,'circle',{cx:icmCx+Math.cos(ang)*14,cy:icmCy+Math.sin(ang)*14,r:8,fill:ORANGE,stroke:INK,'stroke-width':1.6});
+      }
+      el(svg,'text',{x:icmCx,y:icmCy+34,'font-size':10,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='内细胞团';
+      el(svg,'text',{x:cx+50,y:cy-60,'font-size':10,'font-weight':800,fill:BLUE}).textContent='滋养层';
+    } else {
+      const n=s.n;
+      const cellR=Math.max(10,42/Math.sqrt(n));
+      const cols=Math.ceil(Math.sqrt(n));
+      let i=0;
+      const positions=[];
+      if(n===1){positions.push([cx,cy]);}
+      else{
+        for(let row=0;row<cols&&i<n;row++){
+          for(let c=0;c<cols&&i<n;c++){
+            const gx=cx-((cols-1)*cellR*1.15)/2+c*cellR*1.15;
+            const gy=cy-((cols-1)*cellR*1.15)/2+row*cellR*1.15;
+            positions.push([gx,gy]);
+            i++;
+          }
+        }
+      }
+      positions.forEach(p=>{
+        el(svg,'circle',{cx:p[0],cy:p[1],r:cellR*0.95,fill:'#fbead6',stroke:INK,'stroke-width':1.8});
+      });
+    }
+    el(svg,'text',{x:20,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='阶段：'+s.name+'（细胞数≈'+s.n+'）';
+    el(svg,'text',{x:20,y:220,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='注意：总体积始终不超过外层虚线边界（透明带范围内）';
+    oStage.textContent=s.name;
+    oN.textContent=s.n;
+    oV.textContent=idx===0?'大':(s.n>=32?'很小':'变小');
+    oTot.textContent='不变';
+  }
+  document.getElementById('devNext').onclick=()=>{if(idx<stages.length-1)idx++;draw();};
+  document.getElementById('devPrev').onclick=()=>{if(idx>0)idx--;draw();};
+  document.getElementById('devReset').onclick=()=>{idx=0;draw();};
+  draw();
+})();
+
+/* ===== 互动4:囊胚结构 ===== */
+(function(){
+  const svg=document.getElementById('blastSvg');
+  const note=document.getElementById('blastNote');
+  let part='icm';
+  document.querySelectorAll('.blastPart').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.blastPart').forEach(x=>x.classList.remove('on'));b.classList.add('on');part=b.dataset.p;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cx=350,cy=130,R=100;
+    // cavity
+    el(svg,'circle',{cx:cx,cy:cy,r:R-14,fill:part==='cav'?'#cfe8ff':'#f0f8ff',stroke:part==='cav'?BLUE:'#b8d4ea','stroke-width':part==='cav'?5:2});
+    // trophoblast ring
+    const cnt=26;
+    for(let i=0;i<cnt;i++){
+      const ang=(i/cnt)*2*Math.PI;
+      const col=part==='tro'?BLUE:'#a8bfe0';
+      el(svg,'circle',{cx:cx+Math.cos(ang)*(R-6),cy:cy+Math.sin(ang)*(R-6),r:8,fill:col,stroke:INK,'stroke-width':1.6});
+    }
+    // inner cell mass
+    const icmCx=cx-40,icmCy=cy+40;
+    for(let i=0;i<8;i++){
+      const ang=(i/8)*2*Math.PI;
+      const col=part==='icm'?ORANGE:'#e0c8a8';
+      el(svg,'circle',{cx:icmCx+Math.cos(ang)*16,cy:icmCy+Math.sin(ang)*16,r:9,fill:col,stroke:INK,'stroke-width':1.8});
+    }
+    el(svg,'text',{x:cx,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='囊胚结构：滋养层（外层）／内细胞团（一端细胞群）／囊胚腔（中央空腔）';
+    let msg;
+    if(part==='icm')msg='内细胞团：位于囊胚腔一端的细胞群，将来发育为<b>胚胎本体</b>（动物个体本身）。胚胎分割必须均等分割这一部分，胚胎干细胞也常从这里获取。';
+    else if(part==='tro')msg='滋养层：包裹在囊胚最外层的单层细胞，将来发育为<b>绒毛膜等胎膜结构</b>，参与形成胎盘的胎儿侧部分，不是胚胎本体。';
+    else msg='囊胚腔：由卵裂球间隙充液融合形成的<b>中央空腔</b>，内部没有细胞，起支撑、分隔内细胞团与滋养层的作用。';
+    note.innerHTML=msg;
+    note.style.borderColor=part==='icm'?ORANGE:part==='tro'?BLUE:'#4a90d9';
+  }
+  draw();
+})();
+
+/* ===== 互动5:胚胎移植流程 ===== */
+(function(){
+  const svg=document.getElementById('transferSvg');
+  const oStep=document.getElementById('trStep'),oDonor=document.getElementById('trDonor'),oRecip=document.getElementById('trRecip'),oDesc=document.getElementById('trDesc');
+  const steps=[
+    {donor:'待处理',recip:'待处理',desc:'起点：供体、受体母畜均为正常生理状态'},
+    {donor:'促超数排卵',recip:'待处理',desc:'①供体注射促性腺激素，实现超数排卵'},
+    {donor:'采卵+体外受精',recip:'待处理',desc:'②采集卵母细胞（培养至MII中期）+ 获能精子体外受精'},
+    {donor:'早期胚胎培养中',recip:'同期发情处理',desc:'③早期胚胎体外培养；同时④受体进行同期发情处理'},
+    {donor:'胚胎发育至可移植期',recip:'生理状态与供体同步',desc:'⑤供体、受体生理状态一致，具备移植条件'},
+    {donor:'完成',recip:'胚胎移植完成',desc:'⑥胚胎移植入受体子宫——繁殖新技术的最终技术环节'}
+  ];
+  let idx=0;
+  function draw(){
+    clr(svg);
+    const s=steps[idx];
+    // donor line (top) and recipient line (bottom)
+    el(svg,'text',{x:20,y:28,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='供体母体 →';
+    el(svg,'line',{x1:130,y1:24,x2:640,y2:24,stroke:'#e0c8a8','stroke-width':4});
+    el(svg,'text',{x:20,y:180,'font-size':13,'font-weight':900,fill:VIO}).textContent='受体母体 →';
+    el(svg,'line',{x1:130,y1:176,x2:640,y2:176,stroke:'#d8c8f0','stroke-width':4});
+    // progress marker
+    const progX=130+(idx/(steps.length-1))*510;
+    el(svg,'circle',{cx:progX,cy:24,r:12,fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'circle',{cx:progX,cy:176,r:12,fill:VIO,stroke:INK,'stroke-width':3});
+    // convergence at final step
+    if(idx===steps.length-1){
+      el(svg,'line',{x1:progX,y1:36,x2:progX,y2:164,stroke:GREEN,'stroke-width':5,'stroke-dasharray':'6 4'});
+      el(svg,'text',{x:progX,y:105,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='移植';
+      el(svg,'circle',{cx:progX,cy:100,r:20,fill:'#eaf6f2',stroke:GREEN,'stroke-width':4});
+    }
+    el(svg,'text',{x:350,y:230,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=s.desc;
+    // labels below each dot area
+    oStep.textContent=(idx+1)+'/'+steps.length;
+    oDonor.textContent=s.donor;
+    oRecip.textContent=s.recip;
+    oDesc.textContent=s.desc;
+  }
+  document.getElementById('trNext').onclick=()=>{if(idx<steps.length-1)idx++;draw();};
+  document.getElementById('trPrev').onclick=()=>{if(idx>0)idx--;draw();};
+  document.getElementById('trReset').onclick=()=>{idx=0;draw();};
+  draw();
+})();
+
+/* ===== 互动6:胚胎分割 ===== */
+(function(){
+  const svg=document.getElementById('splitSvg');
+  const note=document.getElementById('splitNote');
+  let mode='good';
+  document.querySelectorAll('.splitMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.splitMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;draw();
+  });
+  function blastocyst(svgEl,cx,cy,R,icmAngleStart,icmCount,label){
+    el(svgEl,'circle',{cx:cx,cy:cy,r:R-10,fill:'#f0f8ff',stroke:'#b8d4ea','stroke-width':2});
+    const cnt=18;
+    for(let i=0;i<cnt;i++){
+      const ang=(i/cnt)*2*Math.PI;
+      el(svgEl,'circle',{cx:cx+Math.cos(ang)*(R-6),cy:cy+Math.sin(ang)*(R-6),r:6,fill:'#a8bfe0',stroke:INK,'stroke-width':1.2});
+    }
+    for(let i=0;i<icmCount;i++){
+      const ang=icmAngleStart+(i/6)*1.6;
+      el(svgEl,'circle',{cx:cx+Math.cos(ang)*22-10,cy:cy+Math.sin(ang)*22+10,r:7,fill:ORANGE,stroke:INK,'stroke-width':1.4});
+    }
+    el(svgEl,'text',{x:cx,y:cy+R+20,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=label;
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=mode==='good'?'正确：切割线穿过内细胞团中央，均分为二':'错误：切割线偏向一侧，内细胞团全部落在左半';
+    // original blastocyst with split line
+    const cx=350,cy=110,R=75;
+    el(svg,'circle',{cx:cx,cy:cy,r:R-10,fill:'#f0f8ff',stroke:'#b8d4ea','stroke-width':2});
+    const cnt=20;
+    for(let i=0;i<cnt;i++){
+      const ang=(i/cnt)*2*Math.PI;
+      el(svg,'circle',{cx:cx+Math.cos(ang)*(R-6),cy:cy+Math.sin(ang)*(R-6),r:6,fill:'#a8bfe0',stroke:INK,'stroke-width':1.2});
+    }
+    if(mode==='good'){
+      // icm split evenly across the cut line (vertical)
+      [-12,12].forEach(dx=>{
+        for(let i=0;i<4;i++){
+          const ang=(i/4)*Math.PI-Math.PI/2;
+          el(svg,'circle',{cx:cx+dx+Math.cos(ang)*10,cy:cy+20+Math.sin(ang)*10,r:7,fill:ORANGE,stroke:INK,'stroke-width':1.4});
+        }
+      });
+      el(svg,'line',{x1:cx,y1:cy-R+2,x2:cx,y2:cy+R-2,stroke:RED,'stroke-width':4,'stroke-dasharray':'6 4'});
+    } else {
+      // icm all on left side
+      for(let i=0;i<8;i++){
+        const ang=(i/8)*2*Math.PI;
+        el(svg,'circle',{cx:cx-28+Math.cos(ang)*16,cy:cy+22+Math.sin(ang)*16,r:7,fill:ORANGE,stroke:INK,'stroke-width':1.4});
+      }
+      el(svg,'line',{x1:cx-8,y1:cy-R+2,x2:cx-8,y2:cy+R-2,stroke:RED,'stroke-width':4,'stroke-dasharray':'6 4'});
+    }
+    // resulting two embryos
+    if(mode==='good'){
+      blastocyst(svg,180,210,42,-0.8,3,'个体①：正常发育');
+      blastocyst(svg,520,210,42,-0.8,3,'个体②：正常发育');
+      el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='两份都含内细胞团 → 均可发育为完整同卵双胎';
+    } else {
+      blastocyst(svg,180,210,42,-0.8,6,'个体①：含完整内细胞团');
+      // bad one with no icm
+      el(svg,'circle',{cx:520,cy:210,r:32,fill:'#f0f8ff',stroke:'#b8d4ea','stroke-width':2});
+      const cnt2=14;
+      for(let i=0;i<cnt2;i++){
+        const ang=(i/cnt2)*2*Math.PI;
+        el(svg,'circle',{cx:520+Math.cos(ang)*26,cy:210+Math.sin(ang)*26,r:5,fill:'#a8bfe0',stroke:INK,'stroke-width':1});
+      }
+      el(svg,'text',{x:520,y:210+32+20,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='个体②：无内细胞团';
+      el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='一份缺失内细胞团 → 无法发育为完整个体';
+    }
+    note.innerHTML=mode==='good'?'✅ 均等分割内细胞团：两个半囊胚各含一部分内细胞团和滋养层，分别培养/移植后都能发育为正常个体，即获得<b>同卵双胎</b>。':'❌ 切割线未经过内细胞团中央：内细胞团全部留在一侧，另一侧只有滋养层，<b>无法发育为完整胚胎</b>。这是胚胎分割操作的关键失败原因。';
+    note.style.borderColor=mode==='good'?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 精子的「获能」和「顶体反应」分别是什么？顺序能否颠倒？",a:"获能是精子在受精前获得受精能力的过程（体内自然发生或体外用获能液处理）；顶体反应是获能后的精子接触卵子时，顶体膜破裂释放顶体酶溶解放射冠和透明带。获能必须在顶体反应之前，顺序不能颠倒。"},
+ {q:"2. 卵细胞防止多精入卵靠哪两道屏障？分别发生在哪里？",a:"透明带反应（透明带结构改变变硬，阻止精子穿透）和卵细胞膜反应（卵细胞膜改变，阻止其他精子再融合）。两者共同保证只有一个精核进入卵细胞。"},
+ {q:"3. 受精卵到囊胚要经过哪几个阶段？",a:"受精卵→卵裂期→桑椹胚→囊胚→原肠胚。"},
+ {q:"4. 卵裂期有什么特殊之处？总体积会增大吗？",a:"卵裂期细胞连续进行有丝分裂，细胞数目不断增多、单个细胞体积变小，但胚胎总体积基本不变（受透明带限制，且分裂间几乎无生长期）。"},
+ {q:"5. 囊胚由哪三部分结构组成？各自将来发育为什么？",a:"内细胞团（将来发育为胚胎本体/动物个体）、滋养层（将来发育为绒毛膜等胎膜结构）、囊胚腔（中央空腔，无细胞，起支撑分隔作用）。"},
+ {q:"6. 体外受精前，卵母细胞需要培养到什么时期才能使用？",a:"减数第二次分裂中期（MII中期）。只有发育到这一时期的卵母细胞才具备受精能力。"},
+ {q:"7. 胚胎移植前，供体和受体母畜分别要做什么处理？为什么？",a:"供体注射促性腺激素进行超数排卵，提高可用卵子/胚胎数量；受体进行同期发情处理，使其生理状态（尤其子宫内膜）与供体胚胎发育时期同步，这是移植成功的生理学基础。"},
+ {q:"8. 胚胎移植在哺乳动物繁殖新技术中处于什么地位？",a:"胚胎移植是整个繁殖新技术流程中的最终技术环节，前面体外受精、早期胚胎培养的成果都要通过移植回受体子宫才能实现个体诞生。"},
+ {q:"9. 胚胎分割获得同卵双胎的关键操作要求是什么？",a:"分割囊胚时必须均等分割内细胞团，使每一份都含有部分内细胞团和滋养层，否则缺失内细胞团的一份无法发育为完整个体。"},
+ {q:"10. 试管婴儿技术包含哪些环节？它属于有性生殖还是无性生殖？",a:"试管婴儿=体外受精+早期胚胎培养+胚胎移植。精卵仍经历正常的减数分裂和受精（核融合），遗传信息来自父母双方，属于有性生殖，不是无性生殖或克隆。"},
+ {q:"11. 雌雄原核融合标志着什么？",a:"标志受精过程完成，染色体数目恢复为体细胞数（2n），随后细胞进入卵裂。"},
+ {q:"12. 「超数排卵」处理的对象是供体还是受体？「同期发情」呢？",a:"超数排卵处理供体（提高排卵数量）；同期发情处理受体（使生理状态与胚胎/供体同步），两者主体不同，不能混淆。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

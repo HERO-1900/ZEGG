@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生物 · 知识图谱 / 题型地图 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--pink:#C81E6E;--shadow:6px 6px 0 var(--ink);--accent:#7A3FF2;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  .topnav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:12px 18px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:38px;height:38px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}.logomark svg{width:24px;height:24px}.brand b{font-size:21px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 16px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:800;border-left:3px solid var(--ink)}.links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:11px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .hd{max-width:1180px;margin:0 auto;padding:16px 18px 6px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:5px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:27px;font-weight:900;letter-spacing:-1px;margin:8px 0 4px}
+  .sub{font-size:14.5px;font-weight:600;max-width:820px;margin:0}
+  .prog{display:inline-block;margin-left:8px;background:var(--ink);color:#fff;font-weight:900;font-size:12px;padding:3px 10px;border:2px solid var(--ink)}
+  .toolbar{max-width:1180px;margin:10px auto 0;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toolbar input{border:3px solid var(--ink);padding:7px 11px;font-size:14px;font-weight:700;font-family:inherit;box-shadow:3px 3px 0 var(--ink);min-width:170px}
+  .tbtn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:3px 3px 0 var(--accent)}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12.5px;font-weight:800;margin-left:auto}
+  .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%}.sw.todo{background:#FBF8EF;border-style:dashed;border-color:#b3a880}
+  .stage{position:relative;max-width:1180px;margin:12px auto;padding:0 18px}
+  .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
+  svg#graph{display:block;width:100%;height:78vh;min-height:540px;touch-action:none;cursor:grab}
+  svg#graph.grabbing{cursor:grabbing}
+  .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
+  .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+  .zoombtns button{width:34px;height:34px;border:3px solid var(--ink);background:#fff;font-weight:900;font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .panel{position:absolute;top:12px;right:12px;width:310px;max-width:80%;background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;display:none;z-index:5}
+  .panel.show{display:block}
+  .panel .pcat{display:inline-block;font-size:11px;font-weight:900;letter-spacing:1px;padding:2px 8px;border:2px solid var(--ink);color:#fff;text-transform:uppercase}
+  .panel h3{font-size:19px;font-weight:900;margin:8px 0 6px}
+  .panel .row{font-size:13.5px;font-weight:600;margin:7px 0}.panel .row b{font-weight:900}
+  .panel .trig{border-left:8px solid var(--blue);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel .act{border-left:8px solid var(--green);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel a.go{display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+  .panel .soon{display:inline-block;margin-top:8px;background:#FBF8EF;color:#7a6f54;border:3px dashed #b3a880;padding:6px 12px;font-weight:800;font-size:12.5px}
+  .panel .x{position:absolute;top:8px;right:10px;font-weight:900;cursor:pointer;font-size:18px;border:none;background:none}
+  .nl{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3.5px;stroke-linejoin:round}
+  .foot{max-width:1180px;margin:0 auto;padding:8px 18px 60px;font-size:12.5px;font-weight:700;color:#6b5d3a}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="题型地图.html">题型地图</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="hd">
+    <a href="题型地图.html" style="display:inline-block;font-weight:800;font-size:13px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);margin-bottom:10px;text-decoration:none;color:var(--ink)">← 返回总地图</a>
+    <div class="kicker">生物 · 知识图谱</div>
+    <h1>生物 · 题型地图 <span class="prog" id="prog"></span></h1>
+    <p class="sub">活的知识网:<b>拖任意节点,整张网会被弹簧牵着一起动</b>。九大板块各成一团,实心★=已上线攻坚包(可点开),空心=待开发。点节点看「触发信号+标准动作」。滚轮缩放 · 拖背景平移。</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" placeholder="🔍 搜板块 / 题型…" autocomplete="off">
+    <button class="tbtn" id="resetBtn">复位 / 重排</button>
+    <div class="legend">
+      <span><i class="sw" style="background:#16120A"></i>学科</span>
+      <span><i class="sw" style="background:#7A3FF2"></i>板块</span>
+      <span><i class="sw" style="background:#F3C00E"></i>★已上线</span>
+      <span><i class="sw todo"></i>待开发</span>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="canvaswrap">
+      <svg id="graph" viewBox="0 0 1600 1120"></svg>
+      <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
+      <div class="hint">拖节点扯动整张网 · 滚轮缩放 · 点节点看详情</div>
+      <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
+    </div>
+  </div>
+  <div class="foot">thebest2dan · 生物知识图谱(完整版) · ★=已上线;空心=待开发,按歼灭名单逐周补齐</div>
+
+<script>
+/* ====== GRAPH DATA (生物 · 完整) ====== */
+const ACCENT="#7A3FF2";
+const AREAS=[
+  {id:"A",label:"分子与细胞"},{id:"B",label:"光合与呼吸"},{id:"C",label:"细胞生命历程"},
+  {id:"D",label:"遗传分子基础"},{id:"E",label:"遗传定律"},{id:"F",label:"生物进化"},
+  {id:"G",label:"稳态与调节"},{id:"H",label:"生物与环境"},{id:"I",label:"实验与技术"}
+];
+const LEAVES=[
+  {id:"h96",label:"群落演替",cluster:"H",pack:"群落演替.html",trigger:"初生/次生演替/演替方向/顶极群落",action:"初生从无土开始;次生保留繁殖体更快;人类活动改变速度方向;趋向物种丰富稳定"},
+  {id:"h97",label:"生态工程",cluster:"H",pack:"生态工程.html",trigger:"生态工程原理/沼气/桑基鱼塘/物质循环",action:"物质循环再生;物种多样性;协调平衡;整体;因地制宜;能量多级利用减少污染"},
+  {id:"f96",label:"基因频率计算",cluster:"F",pack:"基因频率计算.html",trigger:"基因/基因型频率/哈代温伯格/自交自由交配",action:"频率=该等位基因数/总;哈温p²+2pq+q²;伴X特殊计数;自交vs自由交配变化;进化=频率改变"},
+  {id:"g96",label:"免疫失调与应用",cluster:"G",pack:"免疫失调与应用.html",trigger:"过敏/自身免疫/免疫缺陷/疫苗抗体",action:"过敏=再次接触已致敏机体;自身免疫攻击自身;艾滋病破坏T细胞;疫苗诱导记忆细胞"},
+  {id:"g97",label:"水盐与体温调节",cluster:"G",pack:"水盐与体温调节.html",trigger:"抗利尿激素/渗透压/产热散热/下丘脑",action:"下丘脑渗透压感受器→ADH→肾小管重吸收;体温产热散热平衡;寒冷战栗甲状腺素升"},
+  {id:"i96",label:"胚胎工程",cluster:"I",pack:"胚胎工程.html",trigger:"体外受精/早期胚胎培养/胚胎移植/核移植",action:"受精获能;卵裂桑椹囊胚;胚胎移植免疫赦免;胚胎分割克隆;与基因工程结合"},
+  {id:"h98",label:"生物多样性",cluster:"H",pack:"生物多样性.html",trigger:"基因/物种/生态系统多样性/保护措施",action:"三层次多样性;直接间接潜在价值;就地保护(自然保护区)为主;易地保护为辅"},
+  {id:"d96",label:"转录翻译",cluster:"D",pack:"转录翻译.html",trigger:"转录/翻译/密码子/中心法则/碱基计算",action:"转录以DNA一条链为模板配U;翻译mRNA→氨基酸;密码子tRNA反密码;碱基与氨基酸数量比"},
+  {id:"h99",label:"信息传递与稳定性",cluster:"H",pack:"信息传递与稳定性.html",trigger:"物理化学行为信息/负反馈/抵抗力恢复力",action:"信息传递调节种间关系维持稳定;负反馈是自我调节基础;抵抗力与恢复力常负相关"},
+  {id:"a92",label:"生物膜系统与分泌蛋白",cluster:"A",pack:"生物膜系统.html",trigger:"分泌蛋白合成分泌路径/膜系统/膜面积变化",action:"核糖体→内质网→高尔基体→细胞膜胞吐;内质网膜↓细胞膜↑;线粒体供能;同位素追踪"},
+  {id:"g92",label:"血糖平衡的调节",cluster:"G",pack:"血糖调节.html",trigger:"血糖来源去路/胰岛素胰高血糖素/糖尿病",action:"胰岛素唯一降糖(B细胞);胰高血糖素升糖(A细胞)拮抗;负反馈;三多一少"},
+  {id:"d92",label:"基因突变与基因重组",cluster:"D",pack:"基因突变.html",trigger:"基因突变特点/碱基替换增删/基因重组类型/变异区分",action:"突变是根本来源;增删致移码;重组不产新基因(自由组合+交叉互换);三种变异区分"},
+  {id:"i93",label:"物质提取与分离",cluster:"I",pack:"物质提取与分离.html",trigger:"DNA粗提取/色素分离/萃取蒸馏",action:"DNA在0.14mol/L NaCl溶解度最低;冷酒精析出;二苯胺水浴显蓝;纸层析色素带顺序"},
+  {id:"i94",label:"细胞工程",cluster:"I",pack:"细胞工程.html",trigger:"植物组培/动物细胞培养/细胞融合/单克隆抗体",action:"全能性;脱分化→再分化;灭活病毒诱导融合;杂交瘤细胞两次筛选出单抗"},
+  {id:"b91",label:"光合呼吸曲线分析",cluster:"B",pack:"光合呼吸曲线.html",trigger:"净/真光合、补偿点饱和点、限制因素、昼夜积累",action:"真光合=净光合+呼吸;拐点前该量是限制因素;比白天净积累与夜间呼吸"},
+  {id:"e91",label:"遗传系谱图分析",cluster:"E",pack:"遗传系谱图.html",trigger:"系谱判显隐/常伴性/基因型/概率",action:"无中生有为隐;父病女必病是伴X显特征;分步相乘算概率"},
+  {id:"h91",label:"能量流动计算",cluster:"H",pack:"能量流动计算.html",trigger:"传递效率、最多最少消耗计算",action:"效率10%-20%;求高营养级最多用20%,求消耗生产者最多用10%(方向相反)"},
+  {id:"h92",label:"物质循环与碳循环",cluster:"H",pack:"物质循环.html",trigger:"碳循环/氮循环/与能量流动关系/生物富集",action:"群落内以有机物、与无机环境间以CO2;物质可循环能量不可;温室效应"},
+  {id:"i91",label:"基因工程",cluster:"I",pack:"基因工程.html",trigger:"工具酶、载体、四步骤、PCR、检测",action:"限制酶黏性末端;载体三要素;PCR变性复性延伸2^n;分子杂交检测"},
+  {id:"i92",label:"微生物培养与计数",cluster:"I",pack:"微生物培养.html",trigger:"无菌技术、选择/鉴别培养基、稀释涂布计数",action:"灭菌vs消毒;稀释涂布可计数;活菌计数偏小因菌落重叠"},
+  {id:"a1",label:"蛋白质核酸",cluster:"A",pack:"细胞分子组成.html",trigger:"肽键/水分子数计算、多样性、核酸组成",action:"脱水缩合肽键数=氨基酸数−肽链数;多样性由种类数目排列顺序及空间结构;核苷酸=磷酸+五碳糖+碱基"},
+  {id:"a2",label:"糖类脂质",cluster:"A",pack:"细胞分子组成.html",trigger:"糖脂类别与功能、元素、检测",action:"多糖淀粉糖原纤维素;脂肪储能磷脂成膜固醇调节;检测斐林砖红苏丹Ⅲ橙黄双缩脲紫"},
+  {id:"a3",label:"细胞结构与细胞器",cluster:"A",pack:"细胞结构.html",trigger:"细胞器功能、原核真核、分泌蛋白途径",action:"核糖体无膜、线粒体叶绿体双膜;分泌蛋白核糖体→内质网→高尔基体→膜"},
+  {id:"a4",label:"物质跨膜运输",cluster:"A",pack:"物质跨膜运输.html",trigger:"运输方式判断、质壁分离、曲线识别",action:"逆浓度需能=主动运输;水是自由扩散;载体饱和限速;O₂只影响主动"},
+  {id:"a5",label:"酶的特性",cluster:"A",pack:"酶与ATP.html",trigger:"酶特性、温度pH曲线、实验变量",action:"酶降活化能不供能;高温失活不可逆、低温抑制可恢复;控制变量"},
+  {id:"a6",label:"ATP与能量",cluster:"A",pack:"酶与ATP.html",trigger:"ATP结构、ATP↔ADP转化、能量来源",action:"A—P~P~P;水解放能供生命活动、合成需能来自呼吸/光合;直接能源"},
+  {id:"b1",label:"光反应暗反应",cluster:"B",pack:"光合作用机理.html",trigger:"光暗反应物质变化、停光/停CO₂",action:"光反应水光解出[H]ATP O₂;暗反应CO₂固定C₃还原;停光C₃↑C₅↓、停CO₂C₃↓C₅↑"},
+  {id:"b2",label:"有氧无氧呼吸",cluster:"B",pack:"呼吸作用.html",trigger:"三阶段场所产物、有氧无氧、O₂曲线",action:"CO₂只在第二阶段、O₂只在第三阶段;无氧只第一阶段放能;产CO₂不一定有氧"},
+  {id:"b3",label:"光合呼吸速率",cluster:"B",pack:"光合呼吸.html",trigger:"光合/呼吸速率、曲线、补偿点饱和点、真净光合。",action:"真(总)光合=净(表观)光合+呼吸;限制因子判断;黑白瓶。"},
+  {id:"b4",label:"影响光合因素",cluster:"B",pack:"光合作用机理.html",trigger:"光照/CO₂/温度曲线、限制因子",action:"单因子曲线找限制因素;补偿点饱和点;总光合=净光合+呼吸"},
+  {id:"b5",label:"光合呼吸实验探究",cluster:"B",pack:"光合色素探究.html",trigger:"色素提取分离、影响因素探究、指标测定",action:"乙醇提取SiO₂研磨CaCO₃保护;四色素带顺序;真光合=净光合+呼吸(白瓶−黑瓶)"},
+  {id:"c1",label:"有丝分裂",cluster:"C",pack:"有丝分裂.html",trigger:"判断时期、染色体/DNA/单体数目、装片实验",action:"膜仁消失现两体→中期最清晰→后期着丝点裂数目加倍→两消两现;数染色体只数着丝点"},
+  {id:"c2",label:"减数分裂",cluster:"C",pack:"减数分裂.html",trigger:"判分裂时期与方式、数目变化曲线、配子种类数、异常配子。",action:"减I同源分离、减II着丝点分裂;联会四分体是减数独有;n对同源→2ⁿ配子。"},
+  {id:"c3",label:"分化衰老凋亡",cluster:"C",pack:"细胞生命历程.html",trigger:"分化本质、全能性比较、衰老凋亡",action:"分化=基因选择性表达不改变遗传物质;凋亡主动有利;全能性受精卵最高"},
+  {id:"c4",label:"细胞癌变",cluster:"C",pack:"细胞生命历程.html",trigger:"癌变机制、癌细胞特征",action:"原癌基因+抑癌基因突变;癌细胞无限增殖、形态变、膜糖蛋白减少易转移"},
+  {id:"d1",label:"DNA结构与复制",cluster:"D",pack:"基因表达.html",trigger:"半保留复制、碱基互补配对与比例计算。",action:"A-T/G-C配对;半保留15N标记恒为2个含标记;两条链都作模板。"},
+  {id:"d2",label:"转录翻译中心法则",cluster:"D",pack:"基因表达.html",trigger:"转录/翻译模板产物、密码子反密码子、中心法则。",action:"转录一条链模板A-U;密码子在mRNA、反密码子在tRNA;含逆转录。"},
+  {id:"d3",label:"基因与性状",cluster:"D",pack:"伴性遗传.html",trigger:"基因控制性状、伴性遗传、系谱、遗传病",action:"直接控蛋白/间接控酶;伴X隐交叉遗传男多于女;系谱无中生有为隐"},
+  {id:"d4",label:"DNA是遗传物质",cluster:"D",pack:"DNA遗传物质.html",trigger:"经典实验逻辑、放射性分布、结论辨析",action:"艾弗里关键在分离;³²P标DNA进沉淀、³⁵S标蛋白留上清;DNA是主要遗传物质"},
+  {id:"e1",label:"分离定律",cluster:"E",pack:"遗传定律.html",trigger:"显隐判断、测交验证、3:1",action:"F2性状分离3:1;测交验F1基因型;实质=减一同源染色体分开等位基因分离"},
+  {id:"e2",label:"自由组合",cluster:"E",pack:"遗传定律.html",trigger:"9:3:3:1及变式、概率计算",action:"先拆成单对用分离定律再相乘;变式9:7/9:6:1/15:1由9:3:3:1合并;致死改比例"},
+  {id:"e3",label:"遗传计算与系谱",cluster:"E",pack:"遗传计算.html",trigger:"分离/自由组合、概率、系谱、伴性遗传。",action:"分步分类相乘相加;系谱口诀定显隐与常/X;逆推亲本。"},
+  {id:"e4",label:"变异类型",cluster:"E",pack:"变异与育种.html",trigger:"判断变异类型、区分基因突变与基因重组。",action:"突变产生新基因;重组只重新组合;染色体变异看结构/数目。"},
+  {id:"e5",label:"育种方法",cluster:"E",pack:"变异与育种.html",trigger:"选择育种方法并写流程、单倍体/多倍体。",action:"目标定方法;单倍体育种明显缩短年限;秋水仙素使染色体加倍。"},
+  {id:"f1",label:"现代进化理论",cluster:"F",pack:"现代生物进化.html",trigger:"进化观点辨析、自然选择方向",action:"进化实质=基因频率改变;种群是单位;变异不定向、选择定向"},
+  {id:"f2",label:"基因频率计算",cluster:"F",pack:"现代生物进化.html",trigger:"基因频率↔基因型频率、哈迪温伯格",action:"p+q=1、p²+2pq+q²=1;发病率=q²不是q"},
+  {id:"f3",label:"物种形成与隔离",cluster:"F",pack:"现代生物进化.html",trigger:"隔离类型、物种形成过程",action:"生殖隔离是新物种唯一标志;渐变式=地理隔离→基因库分化→生殖隔离"},
+  {id:"g1",label:"内环境稳态",cluster:"G",pack:"内环境稳态.html",trigger:"判断内环境成分、三液关系、稳态失调",action:"血浆↔组织液↔淋巴;神经-体液-免疫共同维持稳态"},
+  {id:"g2",label:"神经调节",cluster:"G",pack:"神经调节.html",trigger:"反射弧结构与损伤、膜电位曲线、电流表偏转、突触方向。",action:"静息外正内负、动作Na⁺内流;离体双向在体单向;突触递质单向。"},
+  {id:"g3",label:"体液调节",cluster:"G",pack:"体液调节.html",trigger:"血糖/体温/水盐调节、激素功能、分级反馈",action:"胰岛素降胰高血糖素升拮抗;下丘脑-垂体-腺体分级+负反馈"},
+  {id:"g4",label:"免疫调节",cluster:"G",pack:"免疫调节.html",trigger:"体液/细胞免疫过程、二次免疫、免疫失调",action:"抗原→呈递→辅助T→B增殖分化浆细胞→抗体;记忆细胞使二次更快更强"},
+  {id:"g5",label:"植物激素",cluster:"G",pack:"植物激素.html",trigger:"发现实验、两重性曲线、向性解释",action:"生长素低促高抑、根>芽>茎;极性运输主动耗能;顶端优势=侧芽浓度高被抑"},
+  {id:"h1",label:"种群数量",cluster:"H",pack:"种群与群落.html",trigger:"标志重捕、J/S曲线K值、年龄组成",action:"S型在K/2增长速率最大;N=标记×重捕/重捕中标记"},
+  {id:"h2",label:"群落结构与演替",cluster:"H",pack:"种群与群落.html",trigger:"种间关系、垂直水平结构、演替类型",action:"初生vs次生看有无土壤繁殖体;分层由光照/水分决定"},
+  {id:"h3",label:"生态系统结构",cluster:"H",pack:"生态系统.html",trigger:"成分判断、食物链网、营养级",action:"生产者是基石、分解者不算营养级;食物链只算捕食、从生产者起"},
+  {id:"h4",label:"能量流动物质循环",cluster:"H",pack:"生态系统.html",trigger:"能量流动计算、10%~20%、碳循环",action:"单向流动逐级递减;求最多按20%最少按10%;碳在环境↔群落以CO₂"},
+  {id:"h5",label:"稳定性与环保",cluster:"H",pack:"生态环境.html",trigger:"抵抗力vs恢复力、多样性价值、环境问题",action:"自我调节靠负反馈;抵抗力与恢复力一般负相关;间接价值>直接;就地保护最有效"},
+  {id:"i1",label:"显微观察类",cluster:"I",pack:"生物实验探究.html",trigger:"显微镜操作、装片、放大计算",action:"偏哪移哪;先低倍找到再换高倍;放大倍数=目镜×物镜"},
+  {id:"i2",label:"探究实验设计",cluster:"I",pack:"实验探究.html",trigger:"找三变量、选对照、补步骤、预测结果",action:"单一变量+等量+对照;探究性分类讨论结果、验证性唯一;无关变量相同且适宜"},
+  {id:"i3",label:"教材经典实验",cluster:"I",pack:"生物实验探究.html",trigger:"经典实验试剂与现象",action:"斐林砖红需水浴、双缩脲紫不加热;甲基绿吡罗红;健那绿染线粒体"},
+  {id:"i4",label:"实验结果与结论",cluster:"I",pack:"生物实验探究.html",trigger:"预测结果、分析数据、得结论",action:"探究性分类讨论、验证性唯一;对照与单一变量"}
+];
+/* ====== LIVE FORCE ENGINE (springs + repulsion + collision, draggable) ====== */
+(function(){
+ const svg=document.getElementById('graph');const NS="http://www.w3.org/2000/svg";
+ const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
+ const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
+ const W=1600,H=1120,cx=W/2,cy=H/2;
+ // build node list: root + areas + leaves
+ const nodes=[],idx={};
+ const root={id:"__root",label:"生物",cat:"root"};nodes.push(root);idx[root.id]=root;
+ const na=AREAS.length;
+ AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*430;a.y=cy+Math.sin(ang)*430;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
+ const byC={};
+ LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*90+(Math.random()*20-10);l.y=a.y+Math.sin(ang)*90+(Math.random()*20-10);l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
+ root.x=cx;root.y=cy;root.vx=0;root.vy=0;
+ // links
+ const L=[];AREAS.forEach(a=>L.push([root.id,a.id]));LEAVES.forEach(l=>L.push([l.cluster,l.id]));
+ [["d1","d2"],["e2","e3"],["e3","e4"],["f1","f3"],["f2","f3"],["i3","i5"],["i4","i5"],["a4","a5"],["c1","c2"],["d4","d3"],["j5","j6"]].forEach(x=>L.push(x));
+ const links=L.filter(l=>idx[l[0]]&&idx[l[1]]).map(l=>({s:idx[l[0]],t:idx[l[1]]}));
+ const R={root:34,area:25,live:17,todo:13};
+ function rad(n){return n.cat==="root"?R.root:n.cat==="area"?R.area:(n.pack?R.live:R.todo);}
+ // SVG els
+ const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width',(l.s.cat==="root"||l.t.cat==="root")?2.2:1.7);e.setAttribute('stroke-opacity',(l.s.cat==="root"||l.t.cat==="root")?.32:.42);linkG.appendChild(e);return e;});
+ let live=0,total=0;
+ nodes.forEach(n=>{
+   if(n.cat==="leaf"){total++;if(n.pack)live++;}
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const c=document.createElementNS(NS,'circle');c.setAttribute('r',rad(n));
+   if(n.cat==="root"){c.setAttribute('fill','#16120A');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else if(n.cat==="area"){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',3.5);}
+   else if(n.pack){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width',2.5);c.setAttribute('stroke-dasharray','5 4');}
+   g.appendChild(c);
+   if(n.pack){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');t.setAttribute('y',rad(n)+14);
+   t.setAttribute('font-size',n.cat==="root"?18:n.cat==="area"?15:12);t.setAttribute('fill',(n.cat==="leaf"&&!n.pack)?'#6b5d3a':'#16120A');t.textContent=n.label;g.appendChild(t);
+   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=n;moved=false;n._fix=true;alpha=Math.max(alpha,.7);try{g.setPointerCapture(ev.pointerId);}catch(e){}});
+ });
+ document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
+ // view
+ let view={k:0.6,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ function fit(){view.k=0.6;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
+ // simulation
+ let alpha=1;
+ function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+42;if(a.cat==="area"&&b.cat==="area")return base+200;return base+34;}
+ function tick(){
+   const N=nodes.length;
+   for(let i=0;i<N;i++){const a=nodes[i];if(a.cat==="root"){continue;}
+     a.vx+=(cx-a.x)*0.0011*alpha; a.vy+=(cy-a.y)*0.0011*alpha;
+     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.009*alpha;a.vy+=(ar.y-a.y)*0.009*alpha;}
+   }
+   // repulsion + collision (pairwise)
+   for(let i=0;i<N;i++){const a=nodes[i];for(let j=i+1;j<N;j++){const b=nodes[j];
+     let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random()-0.5;dy=Math.random()-0.5;}
+     const d=Math.sqrt(d2);const rep=7600*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
+     if(a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(b.cat!=="root"){b.vx-=fx;b.vy-=fy;}
+     const ms=sep(a,b);if(d<ms){const push=(ms-d)*0.5;const ox=dx/d*push,oy=dy/d*push;if(!a._fix&&a.cat!=="root"){a.x+=ox;a.y+=oy;}if(!b._fix&&b.cat!=="root"){b.x-=ox;b.y-=oy;}}
+   }}
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?250:124;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
+   nodes.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
+   if(alpha>0.04)alpha*=0.99;
+   render();
+ }
+ function render(){links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});}
+ function loop(){tick();requestAnimationFrame(loop);}loop();
+ // interaction
+ function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
+ let drag=null,moved=false,pan=null;
+ svg.addEventListener('pointermove',ev=>{
+   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;drag.vx=0;drag.vy=0;alpha=Math.max(alpha,.5);return;}
+   if(pan){view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();}
+ });
+ window.addEventListener('pointerup',()=>{if(drag){drag._fix=false;if(!moved)openPanel(drag);drag=null;}if(pan){pan=null;svg.classList.remove('grabbing');}});
+ svg.addEventListener('pointerdown',ev=>{if(drag)return;pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.13:0.88;const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zb(1.2);document.getElementById('zout').onclick=()=>zb(1/1.2);
+ function zb(f){const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{nodes.forEach(n=>{if(n.cat==="root")return;const a=n.cat==="area"?n:idx[n.cluster];n.vx=0;n.vy=0;});alpha=1;fit();};
+ const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
+ document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
+ function openPanel(d){
+   const isLive=!!d.pack,isTodo=d.cat==="leaf"&&!d.pack;
+   const catName=d.cat==="root"?'学科':d.cat==="area"?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
+   const col=d.cat==="area"?ACCENT:isLive?'#C8930E':d.cat==="root"?'#16120A':'#9a8f74';
+   let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+d.label+'</h3>';
+   if(d.cat==="area"){const kids=byC[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。拖一拖,或点周围节点看详情。</div>';}
+   if(d.cat==="root")h+='<div class="row">整张生物知识网。拖动任意节点会牵动相连的板块与题型。</div>';
+   if(d.note)h+='<div class="row">'+d.note+'</div>';
+   if(d.trigger)h+='<div class="trig"><b>触发信号:</b>'+d.trigger+'</div>';
+   if(d.action)h+='<div class="act"><b>标准动作:</b>'+d.action+'</div>';
+   if(isLive)h+='<a class="go" href="'+d.pack+'">打开攻坚包 →</a>';
+   if(isTodo)h+='<div class="soon">⛏ 待开发攻坚包 · 已列入计划,将按周逐个攻克</div>';
+   pbody.innerHTML=h;panel.classList.add('show');
+ }
+ const search=document.getElementById('search');
+ search.addEventListener('input',()=>{const q=search.value.trim();nodes.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.13);d._t.setAttribute('opacity',hit?1:0.13);if(q&&hit&&d.cat==="leaf"){d._c.setAttribute('stroke','#E0382A');}else if(d.cat==="leaf"){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>函数的零点与方程的根 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>函数的零点与方程的根</h1>
+    <p class="lead">函数图象、方程、坐标轴交点——本来是<b>同一件事</b>的三种说法。这一页把「零点⇔根⇔交点」的等价关系讲透,把零点存在定理的边界条件(连续、变号、只保证「至少」)讲清楚,再教你判断零点个数的三条路:直接解、数形结合、分离参数。含参讨论是压轴常客,重点练。</p>
+
+    <div class="say">🗣️ <b>零点(人话版):</b> 「零点」不是一个点,是一个<b>数</b>——让 f(x)=0 成立的那个 x 的值。图象上它对应与 x 轴的交点的<b>横坐标</b>。三件事说的是一回事:①函数 y=f(x) 有个零点 x₀ ②方程 f(x)=0 有个实数根 x₀ ③图象在 x=x₀ 处穿过(或触碰)x 轴。做题时,哪个视角好算就换哪个——这就是「转化与化归」。</div>
+
+    <div class="keybox"><b>核心等价链:</b> 函数 y=f(x) 的零点 x₀　⟺　方程 f(x)=0 的实数根 x₀　⟺　函数图象与 x 轴交点的横坐标 x₀。三者<b>互相转化,缺一不可</b>——题目问零点个数,常常要转成「两个图象交点个数」才好数。</div>
+
+    <h2>① 三者等价:零点 ⇔ 根 ⇔ 交点</h2>
+    <div class="card">
+      <div class="eq">f(x₀)=0　⟺　x₀ 是方程 f(x)=0 的根　⟺　(x₀,0) 是 y=f(x) 图象与 x 轴的交点</div>
+      <p style="margin:8px 0">零点<b>是一个实数</b>,不是坐标点(x₀,0)——很多同学把「零点」答成「(x₀,0)」,这是表述错误。函数有几个零点,就是图象与 x 轴有几个交点,也就是方程有几个实数根。</p>
+      <table>
+        <tr><th>视角</th><th>研究对象</th><th>常用工具</th></tr>
+        <tr><td>零点</td><td>使 f(x)=0 的 x 值</td><td>直接代入验证、求导判单调性</td></tr>
+        <tr><td>方程的根</td><td>f(x)=0 这个方程</td><td>因式分解、求根公式、换元</td></tr>
+        <tr><td>图象交点</td><td>y=f(x) 与 x 轴</td><td>画图、数形结合、看单调区间</td></tr>
+      </table>
+      <p class="trap">⚠ 零点是<b>实数</b>,写成「零点为(2,0)」是错的,应写「零点为 2」。方程无实数根 ⟺ 函数无零点 ⟺ 图象不与 x 轴相交,三句话对应说。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动1 — 三者等价关系联动:拖动 x,同步看「f(x) 的值 / 方程根标记 / 图象交点」</div>
+      <svg id="equivSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>拖动 x <input id="eqX" type="range" min="-30" max="60" value="10" step="1"></label>
+        <button id="eqSnap">🎯 吸附到最近零点</button>
+      </div>
+      <div class="live">
+        <div><b>当前 x</b><span id="eqXv">0</span></div>
+        <div><b>f(x)</b><span id="eqFv">0</span></div>
+        <div><b>是零点吗</b><span id="eqIs">-</span></div>
+        <div><b>f(x)=x²−x−2 的零点</b><span id="eqRoots">-1, 2</span></div>
+      </div>
+      <p class="small">用 f(x)=x²−x−2。拖动滑块移动 x,红点在图象上同步移动,f(x) 的值同步显示。当 f(x)=0(红点落在 x 轴上)时,这个 x 同时是「零点」「方程的根」「图象交点的横坐标」——三个身份重合。</p>
+    </div>
+
+    <h2 class="b">② 零点存在定理:变号必有零点,但只保证「至少一个」</h2>
+    <div class="card">
+      <div class="eq">若 f(x) 在 [a,b] 上<b>图象连续不断</b>,且 f(a)·f(b) &lt; 0　⟹　f(x) 在 (a,b) 内<b>至少有一个</b>零点</div>
+      <p style="margin:8px 0"><b>三个条件缺一不可:</b> ①闭区间 [a,b] 上<b>连续</b>(图象不能断开,比如分段函数、含渐近线的函数要特别小心);②端点函数值<b>异号</b> f(a)·f(b)&lt;0;③结论只是「<b>至少</b>一个」,不是「恰好一个」——如果函数在区间内不是单调的,可能有 1、3、5…奇数个零点。</p>
+      <h3>逆命题不成立!</h3>
+      <p style="margin:6px 0">「f(x) 在 (a,b) 内有零点」<b>不能推出</b> f(a)·f(b)&lt;0。反例:f(x)=x² 在 [-1,1] 上有零点 x=0,但 f(-1)·f(1)=1×1=1&gt;0(图象只是<b>触碰</b>x轴没有穿过,零点是偶次)。</p>
+      <p class="trap">⚠ f(a)·f(b)&gt;0 时不能断言「无零点」——可能有偶数个零点(图象两次穿过或触碰又弹回)。定理是<b>充分不必要</b>条件,只能正向用,不能反向用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动2 — 零点存在定理:拖动 a、b 端点,看 f(a)·f(b) 符号与区间内零点个数的关系</div>
+      <svg id="ivtSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>端点 a <input id="ivtA" type="range" min="-30" max="10" value="-25" step="1"></label>
+        <label>端点 b <input id="ivtB" type="range" min="15" max="55" value="45" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>f(a)</b><span id="ivtFa">0</span></div>
+        <div><b>f(b)</b><span id="ivtFb">0</span></div>
+        <div><b>f(a)·f(b)</b><span id="ivtProd">0</span></div>
+        <div><b>区间内零点个数</b><span id="ivtCnt">0</span></div>
+      </div>
+      <div class="verdict" id="ivtNote"></div>
+      <p class="small">用三次函数 f(x)=(x-(-1))(x-1)(x-3)(缩放显示),它有零点 x=-1,1,3。拖 a、b 看:异号时至少 1 个零点(可能 1 或 3 个);同号时可能 0 个或 2 个——定理只在异号时才敢下"至少一个"的结论。</p>
+    </div>
+
+    <h2 class="g">③ 二分法:用「异号夹逼」求近似零点</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>思想:</b> 已知 f(a)·f(b)&lt;0,取中点 m=(a+b)/2,算 f(m)。若 f(m)=0,m 就是零点;若 f(a)·f(m)&lt;0,零点在 (a,m),令 b=m;否则零点在 (m,b),令 a=m。重复,区间越夹越窄,直到长度小于精度 ε。</p>
+      <div class="mono">步骤:①验证 f(a)f(b)&lt;0 ②取中点 m ③判断符号,更新区间端点 ④重复直到区间长度 &lt; ε,任取区间内一点作为近似零点</div>
+      <p style="margin:8px 0">每二分一次,区间长度减半,是<b>指数级</b>收敛,几步就能逼近到很高精度。这是数值方法的基本思想,前提仍然是零点存在定理。</p>
+      <p class="trap">⚠ 二分法要求<b>先满足</b>零点存在定理的条件(连续+异号),否则中点判断可能找错方向,或者跳过一对零点(该区间实际有偶数个零点)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动3 — 二分法逐步逼近:每点一次"二分",区间对半收缩,逼近零点</div>
+      <svg id="bisectSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="bsStep">➡ 二分一步</button><button id="bsReset">↺ 重置</button>
+        <label>精度 ε <input id="bsEps" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>区间 [a,b]</b><span id="bsAB">-</span></div>
+        <div><b>中点 m</b><span id="bsM">-</span></div>
+        <div><b>f(m)</b><span id="bsFm">-</span></div>
+        <div><b>区间长度</b><span id="bsLen">-</span></div>
+      </div>
+      <p class="small">用 f(x)=x²-2(求 √2 的近似零点),初始区间 [1,2]。每点一次"二分一步",看区间怎样对半收窄夹向 x≈1.414。精度滑块调整何时停止。</p>
+    </div>
+
+    <h2 class="o">④ 判断零点个数:三条路</h2>
+    <div class="card">
+      <h3>路一:直接解方程 f(x)=0</h3>
+      <p style="margin:6px 0">能因式分解、能配方、能用求根公式的,直接解出所有根,数一数有几个——最直接但只对"好算"的方程管用。</p>
+      <h3>路二:数形结合——把 f(x)=0 拆成 g(x)=h(x)</h3>
+      <p style="margin:6px 0">把方程变形为两个熟悉函数相等:g(x)=h(x),那么 f(x)=0 的实数根个数　=　y=g(x) 与 y=h(x) <b>图象交点个数</b>。拆分原则:两边都要是画得出图的"熟悉函数"(直线、指数、对数、幂函数等)。</p>
+      <h3>路三:分离参数——把含参方程变成 a=φ(x)</h3>
+      <p style="margin:6px 0">若方程里的参数 a 能被单独分离出来(化成 a=φ(x) 的形式),那么方程根的个数　=　水平直线 y=a 与曲线 y=φ(x) <b>交点个数</b>。画出 φ(x) 的图象(尤其极值点、单调区间、渐近趋势),让 y=a 这条动直线上下平移,数交点随 a 变化的规律。</p>
+      <p class="trap">⚠ 分离参数时注意<b>定义域限制和除法条件</b>(分离时若除以了一个可能为0或变号的式子,要单独讨论)。数形结合拆分时,两个函数图象都要画准确(尤其单调性、凹凸、渐近线),否则交点数会数错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🖼️ 互动4 — 数形结合:f(x)=0 拆成 g(x)=h(x),看两图象交点个数</div>
+      <svg id="gxhxSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="gxmode on" data-m="0">ln x = x - 2</button>
+        <button class="gxmode" data-m="1">2^x = -x + 3</button>
+        <button class="gxmode" data-m="2">x² = 2x + 1</button>
+      </div>
+      <div class="verdict" id="gxNote"></div>
+      <p class="small">原方程直接解很麻烦(比如超越方程 ln x = x-2 无法用初等方法精确求根),但画出 y=g(x)(蓝)与 y=h(x)(橙)两条曲线,数交点个数就等于原方程实数根个数——这是数形结合的核心用途。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动5 — 分离参数:方程含参数 a,拆成 a=φ(x),拖动水平线 y=a 看交点个数随 a 变化</div>
+      <svg id="sepSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>参数 a <input id="sepA" type="range" min="-30" max="60" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>a 的值</b><span id="sepAv">0</span></div>
+        <div><b>交点个数</b><span id="sepCnt">0</span></div>
+        <div><b>φ(x) 极值</b><span id="sepExt">-</span></div>
+        <div><b>原方程根的个数</b><span id="sepRoot">0</span></div>
+      </div>
+      <div class="verdict" id="sepNote"></div>
+      <p class="small">方程 x³-3x-a=0 分离参数得 a=φ(x)=x³-3x。φ(x) 有极大值 φ(-1)=2、极小值 φ(1)=-2。拖动 a:a&gt;2 或 a&lt;-2 时 1 个交点(1 个根);a=±2 时 2 个交点(1 个是切点,共2个根,其中一个是二重根);-2&lt;a&lt;2 时 3 个交点(3 个根)。</p>
+    </div>
+
+    <h2 class="v">⑤ 含参数的零点讨论</h2>
+    <div class="card">
+      <p style="margin:6px 0">含参零点问题常见形式:讨论 f(x)=x²-2ax+a+2 (或类似二次/复合函数)的零点个数<b>随参数 a 变化</b>的情况。</p>
+      <h3>二次函数含参:看判别式 Δ</h3>
+      <div class="mono">Δ&gt;0 ⟹ 2个零点　|　Δ=0 ⟹ 1个零点(二重根,图象与x轴相切)　|　Δ&lt;0 ⟹ 0个零点</div>
+      <p style="margin:8px 0">先把 Δ 表示成关于参数 a 的不等式,解出 a 的分界值,再分段讨论。若题目还限定零点在某个区间内(比如"两个零点都大于1"),还要结合<b>对称轴位置 + 端点函数值符号</b>一起判断——三个条件(Δ、对称轴、端点值)缺一不可。</p>
+      <h3>复合函数零点:先换元</h3>
+      <p style="margin:6px 0">形如 f(g(x))=0 的复合函数零点问题,先设 t=g(x) 换元,把外层 f(t)=0 的根 t₁,t₂,… 求出来,再回代逐一解 g(x)=tᵢ,数每个方程的解的个数,加总。<b>换元后要注意 t 的取值范围</b>(g(x) 的值域限制了 t 能取哪些值)。</p>
+      <p class="trap">⚠ 复合函数零点最容易漏掉"换元后 t 的范围限制"这一步——如果 t=g(x) 的值域是 [0,+∞),那么 f(t)=0 在 t&lt;0 的根要舍去,不能直接代回去解。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎛️ 互动6 — 含参零点个数随参数变化:f(x)=x²-2ax+a+2,拖 a 看 Δ 符号与零点个数联动</div>
+      <svg id="paramSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="paramGo">▶ 播放 a 扫描</button><button id="paramReset">↺ 重置</button>
+        <label>参数 a <input id="paramA" type="range" min="-10" max="30" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>a 的值</b><span id="paA">0</span></div>
+        <div><b>判别式 Δ=4a²-4a-8</b><span id="paD">0</span></div>
+        <div><b>零点个数</b><span id="paCnt">0</span></div>
+        <div><b>Δ=0 的临界 a</b><span id="paCrit">-1, 2</span></div>
+      </div>
+      <p class="small">f(x)=x²-2ax+a+2,Δ=4a²-4(a+2)=4a²-4a-8=4(a-2)(a+1)。拖动 a:a&lt;-1 或 a&gt;2 时 Δ&gt;0(2个零点);a=-1或a=2时 Δ=0(1个零点,相切);-1&lt;a&lt;2 时 Δ&lt;0(0个零点,图象与x轴不相交)。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断/证明零点存在(用零点存在定理)</h3>
+      <p><b class="tag">触发信号:</b>「证明 f(x) 在区间 (a,b) 内存在零点」「说明方程 f(x)=0 在…内有实数根」。</p>
+      <p><b class="tag">标准动作:</b>先说明 f(x) 在 [a,b] 上<b>连续</b>(初等函数在定义域内天然连续,写一句即可),再算 f(a)、f(b) 并证明 f(a)·f(b)&lt;0,由零点存在定理得结论。</p>
+      <p><b class="tag">示例(带解):</b>证明 f(x)=x³-3x+1 在 (0,1) 内有零点。f(x) 是多项式函数,在 [0,1] 上连续;f(0)=1&gt;0,f(1)=1-3+1=-1&lt;0,f(0)·f(1)=-1&lt;0,由零点存在定理,f(x) 在 (0,1) 内至少有一个零点。</p>
+      <p class="trap">陷阱:忘写"连续"这个前提条件;算错端点值符号;误以为定理能给出"恰好一个"零点(要另外结合单调性说明唯一性)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 求零点个数(能直接解的方程)</h3>
+      <p><b class="tag">触发信号:</b>给出可因式分解或化简的 f(x),问"零点个数"或"方程实数根个数"。</p>
+      <p><b class="tag">标准动作:</b>令 f(x)=0,尝试因式分解、换元或用求根公式,直接解出所有 x,数出互不相同的实数解的个数。</p>
+      <p><b class="tag">示例(带解):</b>求 f(x)=x³-4x 的零点个数。f(x)=x(x²-4)=x(x-2)(x+2)=0,得 x=0,2,-2,共 <b>3 个零点</b>。</p>
+      <p class="trap">陷阱:重根算重了(x=0 若是二重根,应算 1 个零点而非 2 个,除非题目要求"计重数");漏解(如遗漏 x=0 这种整式因子)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 数形结合求零点/交点个数</h3>
+      <p><b class="tag">触发信号:</b>方程含超越式(ln、e^x、三角函数混合幂函数等),直接解不出来,问"根的个数"。</p>
+      <p><b class="tag">标准动作:</b>把方程 f(x)=0 变形为 g(x)=h(x),画出 y=g(x) 与 y=h(x) 的图象(标出单调性、特殊点、渐近趋势),数交点个数。</p>
+      <p><b class="tag">示例(带解):</b>方程 ln x = x-2 的实数根个数。设 g(x)=ln x(定义域 x&gt;0,增,下凸),h(x)=x-2(直线)。在 x=1 处 g(1)=0&gt;h(1)=-1;x=e 附近渐渐被直线超过。画图可见两曲线恰好交 <b>2 次</b>,故原方程有 2 个实数根。</p>
+      <p class="trap">陷阱:图象画错单调性或凹凸方向导致漏交点或多交点;忽略定义域(比如 ln x 只在 x&gt;0 有定义)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 分离参数求零点个数(含参)</h3>
+      <p><b class="tag">触发信号:</b>方程/零点个数问题中含参数 a,且 a 能整理到方程一侧单独出现,如"讨论方程 f(x)=a 根的个数"。</p>
+      <p><b class="tag">标准动作:</b>分离出 a=φ(x),对 φ(x) 求导画出图象(标极值点、单调区间、端点/渐近趋势),把 y=a 看成动直线上下平移,按 a 的范围分类讨论交点个数。</p>
+      <p><b class="tag">示例(带解):</b>方程 x³-3x-a=0 在 R 上根的个数随 a 变化的讨论。设 φ(x)=x³-3x,φ′(x)=3x²-3=0 得 x=±1,φ(-1)=2(极大),φ(1)=-2(极小)。当 a&gt;2 或 a&lt;-2:1个根;a=±2:2个根;-2&lt;a&lt;2:3个根。</p>
+      <p class="trap">陷阱:分离参数时除以了可能变号或为零的式子未加讨论;只画了 φ(x) 局部图象,漏看两端趋于 ±∞ 的走向,导致交点数判断遗漏。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 含参二次函数零点个数(判别式法)</h3>
+      <p><b class="tag">触发信号:</b>f(x)=ax²+bx+c(或可化为二次)中含参数,问零点个数/是否有零点,常配合"在某区间内"的限制。</p>
+      <p><b class="tag">标准动作:</b>先算判别式 Δ,按 Δ&gt;0/=0/&lt;0 分类;若限定零点所在区间,再加对称轴位置和端点函数值符号两个条件联立。</p>
+      <p><b class="tag">示例(带解):</b>讨论 f(x)=x²-2ax+a+2 的零点个数。Δ=4a²-4a-8=4(a-2)(a+1)。a&lt;-1 或 a&gt;2:Δ&gt;0,2个零点;a=-1或2:Δ=0,1个零点;-1&lt;a&lt;2:Δ&lt;0,0个零点。</p>
+      <p class="trap">陷阱:忘记讨论二次项系数是否为0(若含参的是 a·x²,a=0 时退化为一次方程,零点个数骤变);限定区间时只看 Δ 忘了检验零点是否真的落在区间内。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 复合函数零点(先换元)</h3>
+      <p><b class="tag">触发信号:</b>f(g(x))=0 或形如 f(2^x)、f(sin x)=0 这种"函数套函数"的零点问题。</p>
+      <p><b class="tag">标准动作:</b>设 t=g(x),先解外层方程 f(t)=0 得 t 的所有解 t₁,t₂,…,再求 g(x) 的值域限制 t 的范围(舍去超范围的 t),对每个合法 tᵢ 回代解 g(x)=tᵢ,分别数解的个数后加总。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=(2^x-1)(2^x-4) 的零点个数。设 t=2^x,t&gt;0 恒成立。解 (t-1)(t-4)=0 得 t=1 或 t=4,都满足 t&gt;0。回代:2^x=1 得 x=0;2^x=4 得 x=2。共 <b>2 个零点</b>。</p>
+      <p class="trap">陷阱:忘记换元后 t 有范围限制(如 t=2^x&gt;0,若解出 t=-1 之类要舍去);漏掉某个 tᵢ 回代后 g(x)=tᵢ 可能有多个 x 解未数全。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 零点是<b>实数</b>,不是坐标点!写「零点为(2,0)」是错误表述,应写「零点为 2」或「x=2」。</p>
+      <p class="trap">② f(a)·f(b)&gt;0 <b>不能</b>断言区间内无零点——可能有偶数个零点(图象穿两次或触碰又弹回)。定理只能正向用。</p>
+      <p class="trap">③ 零点存在定理要求 f(x) 在 [a,b] 上<b>连续</b>——分段函数、含渐近线(如 1/x 在0附近)的函数要单独检查连续性,不能直接套用。</p>
+      <p class="trap">④ 定理结论只是「<b>至少</b>一个」零点,不是「恰好一个」。要证明"唯一"零点,还需另外说明 f(x) 在该区间<b>单调</b>。</p>
+      <p class="trap">⑤ 逆命题不成立:「区间内有零点」推不出「f(a)f(b)&lt;0」(偶次零点、切点情形都是反例,如 f(x)=x² 在 [-1,1])。</p>
+      <p class="trap">⑥ 分离参数时如果除以了一个<b>可能为0或变号</b>的式子,必须单独讨论该式子为0或变号的情况,不能直接除过去。</p>
+      <p class="trap">⑦ 复合函数换元后,新变量 t 的取值范围<b>受原函数值域限制</b>——解出的 t 超出范围要舍去,这是最容易漏的一步。</p>
+      <p class="trap">⑧ 数形结合拆分 g(x)=h(x) 时,画图必须准确反映<b>单调性、凹凸性、渐近趋势</b>,否则会数错交点个数(尤其指数、对数函数的增长速度对比)。</p>
+      <p class="trap">⑨ 含参二次函数零点问题,若二次项系数本身含参,要先讨论<b>是否退化为一次方程</b>(系数为0的临界情形单独讨论)。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 零点存在定理的本质是「连续函数介值定理」的特例:</b> 完整的介值定理说,连续函数在 [a,b] 上能取到 f(a) 与 f(b) 之间的<b>任何值</b>。零点存在定理只是取「0」这个特殊值的情形。理解这一层,你就能推广:要证明 f(x)=k 有解,只需证 f(a)&lt;k&lt;f(b)(或反过来),不必先把方程改写成"=0"的形式再套定理。</p>
+      <p style="margin:8px 0"><b>② 分离参数的本质是把「二元问题」拆成「一元函数图象+一条动直线」:</b> 原方程 f(x,a)=0 涉及两个变量,直接讨论很复杂;分离出 a=φ(x) 后,a 变成了「纵轴截距」,x 是唯一自变量——整个问题降了一维。这是处理含参问题最强的降维武器,遇到"能分离就分离"应该是条件反射。</p>
+      <p style="margin:8px 0"><b>③ 极值点是交点个数变化的"相变点":</b> 在分离参数图里,φ(x) 的极大值、极小值把 a 轴分成几段,每一段内交点个数不变,只有跨过极值(a 等于某个极值)时交点个数才会突变(通常是±1或±2)。考试压轴题本质就是在问"临界值是多少、每一段交点数是几"。</p>
+      <p style="margin:8px 0"><b>④ 奇偶次零点决定图象是「穿过」还是「触碰」:</b> 若 x₀ 是 f(x) 的奇数重零点(如1重、3重),图象在 x₀ 处<b>穿过</b> x 轴,附近异号;若是偶数重零点(如2重),图象只<b>触碰</b>x轴后弹回,附近同号。这解释了为什么 f(a)f(b)&gt;0 时还可能"藏着"偶数个零点——它们都是同号触碰型。</p>
+      <p style="margin:8px 0"><b>⑤ 二分法收敛速度是"指数级",这是数值方法的通用直觉:</b> 每二分一次误差减半,n 次之后误差是初始区间长度的 1/2ⁿ。想达到精度 ε,大约需要 log₂(区间长度/ε) 步——这个"对数级步数"的直觉,在后续学习数值算法、导数逼近甚至编程里的二分查找时都会反复用到,是同一套思想的不同外壳。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 零点是转化与化归思想的入口:一个问题,三种视角,哪个好算换哪个</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 通用坐标映射构造器:给定像素区域和数学范围,返回 toPx / toMath 函数 */
+function makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax){
+  function px(x){return X0+(x-xMin)/(xMax-xMin)*W;}
+  function py(y){return Y0+H-(y-yMin)/(yMax-yMin)*H;}
+  // axes lines
+  const yZeroPx=py(0), xZeroPx=px(0);
+  el(svg,'line',{x1:X0,y1:Math.max(Y0,Math.min(Y0+H,yZeroPx)),x2:X0+W,y2:Math.max(Y0,Math.min(Y0+H,yZeroPx)),stroke:INK,'stroke-width':2});
+  el(svg,'line',{x1:Math.max(X0,Math.min(X0+W,xZeroPx)),y1:Y0,x2:Math.max(X0,Math.min(X0+W,xZeroPx)),y2:Y0+H,stroke:INK,'stroke-width':2});
+  el(svg,'rect',{x:X0,y:Y0,width:W,height:H,fill:'none',stroke:INK,'stroke-width':3});
+  return {px:px,py:py};
+}
+function pathFromFn(svg,px,py,fn,x0,x1,n,col,w){
+  let d='';
+  for(let i=0;i<=n;i++){
+    const x=x0+(x1-x0)*i/n;
+    const y=fn(x);
+    if(!isFinite(y)){d+='';continue;}
+    const X=px(x),Y=py(y);
+    d+=(d===''?'M':'L')+X.toFixed(1)+' '+Y.toFixed(1)+' ';
+  }
+  el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':w||3});
+}
+
+/* ===== 互动1:三者等价关系联动 ===== */
+(function(){
+  const svg=document.getElementById('equivSvg');
+  const Xs=document.getElementById('eqX');
+  const oXv=document.getElementById('eqXv'),oFv=document.getElementById('eqFv'),oIs=document.getElementById('eqIs');
+  function f(x){return x*x-x-2;} // roots at -1, 2
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=250;
+    const xMin=-4,xMax=6,yMin=-6,yMax=14;
+    const ax=makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax);
+    pathFromFn(svg,ax.px,ax.py,f,xMin,xMax,120,BLUE,4);
+    // roots markers
+    [-1,2].forEach(function(r){
+      const X=ax.px(r),Y=ax.py(0);
+      el(svg,'circle',{cx:X,cy:Y,r:7,fill:GREEN,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X,y:Y+22,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='零点'+r;
+    });
+    const x=+Xs.value/10;
+    const y=f(x);
+    const isZero=Math.abs(y)<0.15;
+    const X=ax.px(x),Y=ax.py(y);
+    const Y0line=ax.py(0);
+    // vertical dashed from point to axis
+    el(svg,'line',{x1:X,y1:Y,x2:X,y2:Y0line,stroke:isZero?RED:ORANGE,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:X,cy:Y,r:8,fill:isZero?RED:ORANGE,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:X,cy:Y0line,r:5,fill:INK});
+    el(svg,'text',{x:X0+8,y:Y0-4,'font-size':13,'font-weight':900,fill:INK}).textContent='f(x)=x²-x-2 （绿点=零点，红/橙点=当前 x 对应位置）';
+    oXv.textContent=x.toFixed(1);
+    oFv.textContent=y.toFixed(2);
+    oIs.textContent=isZero?'是零点!(三重身份合一)':'不是';
+  }
+  Xs.oninput=draw;
+  document.getElementById('eqSnap').onclick=function(){
+    const x=+Xs.value/10;
+    const nearest=Math.abs(x-(-1))<Math.abs(x-2)?-1:2;
+    Xs.value=nearest*10;
+    draw();
+  };
+  draw();
+})();
+
+/* ===== 互动2:零点存在定理 ===== */
+(function(){
+  const svg=document.getElementById('ivtSvg');
+  const As=document.getElementById('ivtA'),Bs=document.getElementById('ivtB');
+  const oFa=document.getElementById('ivtFa'),oFb=document.getElementById('ivtFb'),oProd=document.getElementById('ivtProd'),oCnt=document.getElementById('ivtCnt');
+  const note=document.getElementById('ivtNote');
+  function f(x){return (x+1)*(x-1)*(x-3)/6;} // roots -1,1,3, scaled down
+  function countRootsIn(a,b){
+    const roots=[-1,1,3];
+    let c=0;
+    roots.forEach(function(r){if(r>Math.min(a,b)&&r<Math.max(a,b))c++;});
+    return c;
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=250;
+    const xMin=-4,xMax=6,yMin=-4,yMax=4;
+    const ax=makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax);
+    pathFromFn(svg,ax.px,ax.py,f,xMin,xMax,150,BLUE,4);
+    [-1,1,3].forEach(function(r){
+      const X=ax.px(r),Y=ax.py(0);
+      el(svg,'circle',{cx:X,cy:Y,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    });
+    const a=+As.value/10, b=+Bs.value/10;
+    const fa=f(a), fb=f(b);
+    // shade interval [a,b]
+    const Xa=ax.px(a),Xb=ax.px(b);
+    el(svg,'rect',{x:Math.min(Xa,Xb),y:Y0,width:Math.abs(Xb-Xa),height:H,fill:'rgba(224,56,42,0.10)'});
+    el(svg,'circle',{cx:Xa,cy:ax.py(fa),r:8,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:Xb,cy:ax.py(fb),r:8,fill:ORANGE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Xa,y:ax.py(fa)-12,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='a='+a.toFixed(1);
+    el(svg,'text',{x:Xb,y:ax.py(fb)-12,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='b='+b.toFixed(1);
+    el(svg,'text',{x:X0+8,y:Y0-4,'font-size':12.5,'font-weight':900,fill:INK}).textContent='f(x)=(x+1)(x-1)(x-3)/6　绿点=真实零点(-1,1,3)';
+    const prod=fa*fb;
+    const cnt=countRootsIn(a,b);
+    oFa.textContent=fa.toFixed(2);oFb.textContent=fb.toFixed(2);oProd.textContent=prod.toFixed(2);oCnt.textContent=cnt;
+    if(prod<0){
+      note.innerHTML='f(a)·f(b) &lt; 0　→　由零点存在定理，(a,b) 内<b>至少 1 个</b>零点。实际有 '+cnt+' 个。';
+      note.style.borderColor=GREEN;
+    }else if(prod>0){
+      note.innerHTML='f(a)·f(b) &gt; 0　→　定理<b>不能使用</b>，不能断言无零点！实际区间内有 '+cnt+' 个零点（可能是 0 或偶数个）。';
+      note.style.borderColor=RED;
+    }else{
+      note.innerHTML='f(a) 或 f(b) 恰好=0　→　端点本身就是零点。';
+      note.style.borderColor=YEL;
+    }
+  }
+  As.oninput=draw;Bs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:二分法 ===== */
+(function(){
+  const svg=document.getElementById('bisectSvg');
+  const epsSel=document.getElementById('bsEps');
+  const oAB=document.getElementById('bsAB'),oM=document.getElementById('bsM'),oFm=document.getElementById('bsFm'),oLen=document.getElementById('bsLen');
+  function f(x){return x*x-2;} // root at sqrt(2)
+  let a=1,b=2,history=[];
+  function reset(){a=1;b=2;history=[];draw();}
+  function step(){
+    const eps=Math.pow(10,-(+epsSel.value));
+    if(b-a<eps)return;
+    const m=(a+b)/2;
+    const fm=f(m);
+    history.push({a:a,b:b,m:m});
+    if(Math.abs(fm)<1e-9){a=m;b=m;}
+    else if(f(a)*fm<0){b=m;}
+    else{a=m;}
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=200;
+    const xMin=0.8,xMax=2.2,yMin=-2,yMax=3;
+    const ax=makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax);
+    pathFromFn(svg,ax.px,ax.py,f,xMin,xMax,100,BLUE,4);
+    const rootX=Math.sqrt(2);
+    el(svg,'circle',{cx:ax.px(rootX),cy:ax.py(0),r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:ax.px(rootX),y:ax.py(0)+20,'font-size':11.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='√2≈1.414';
+    // history bars (fading)
+    history.forEach(function(h,i){
+      const alpha=0.15+0.5*(i/Math.max(1,history.length-1));
+      const y=Y0+H+14+i*10;
+    });
+    // current interval bar below axis area
+    const barY=Y0+H+16;
+    el(svg,'line',{x1:ax.px(a),y1:barY,x2:ax.px(b),y2:barY,stroke:RED,'stroke-width':6});
+    el(svg,'circle',{cx:ax.px(a),cy:barY,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:ax.px(b),cy:barY,r:6,fill:ORANGE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:ax.px(a),y:barY+18,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='a='+a.toFixed(4);
+    el(svg,'text',{x:ax.px(b),y:barY+18,'font-size':11,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='b='+b.toFixed(4);
+    // vertical lines from a,b to curve
+    el(svg,'line',{x1:ax.px(a),y1:ax.py(f(a)),x2:ax.px(a),y2:barY,stroke:RED,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:ax.px(b),y1:ax.py(f(b)),x2:ax.px(b),y2:barY,stroke:ORANGE,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    if(b>a){
+      const m=(a+b)/2;
+      el(svg,'circle',{cx:ax.px(m),cy:ax.py(f(m)),r:6,fill:VIO,stroke:INK,'stroke-width':2});
+      el(svg,'line',{x1:ax.px(m),y1:ax.py(f(m)),x2:ax.px(m),y2:barY,stroke:VIO,'stroke-width':1.5,'stroke-dasharray':'2 2'});
+      oM.textContent=m.toFixed(4);oFm.textContent=f(m).toFixed(4);
+    }else{
+      oM.textContent='-';oFm.textContent='-';
+    }
+    el(svg,'text',{x:X0+8,y:Y0-4,'font-size':12.5,'font-weight':900,fill:INK}).textContent='f(x)=x²-2，求 √2 的近似零点';
+    oAB.textContent='['+a.toFixed(4)+', '+b.toFixed(4)+']';
+    oLen.textContent=(b-a).toFixed(4);
+  }
+  document.getElementById('bsStep').onclick=step;
+  document.getElementById('bsReset').onclick=reset;
+  epsSel.oninput=draw;
+  reset();
+})();
+
+/* ===== 互动4:数形结合 g(x)=h(x) ===== */
+(function(){
+  const svg=document.getElementById('gxhxSvg');
+  const note=document.getElementById('gxNote');
+  let mode=0;
+  document.querySelectorAll('.gxmode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.gxmode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=+b.dataset.m;draw();
+    };
+  });
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=250;
+    let xMin,xMax,yMin,yMax,g,h,desc,cnt;
+    if(mode===0){
+      xMin=0.1;xMax=8;yMin=-3;yMax=6;
+      g=function(x){return Math.log(x);};
+      h=function(x){return x-2;};
+      desc='ln x = x - 2　→　g(x)=ln x（增,凹）与 h(x)=x-2（直线）交 2 次 → 原方程 2 个实数根。';
+      cnt=2;
+    }else if(mode===1){
+      xMin=-4;xMax=4;yMin=-2;yMax=10;
+      g=function(x){return Math.pow(2,x);};
+      h=function(x){return -x+3;};
+      desc='2^x = -x + 3　→　g(x)=2^x（增,凹）与 h(x)=-x+3（减直线）恰好交 1 次 → 原方程 1 个实数根。';
+      cnt=1;
+    }else{
+      xMin=-3;xMax=5;yMin=-3;yMax=16;
+      g=function(x){return x*x;};
+      h=function(x){return 2*x+1;};
+      desc='x² = 2x+1　→　g(x)=x²（抛物线）与 h(x)=2x+1（直线）交 2 次 → 原方程 2 个实数根（可验证 x=1±√2）。';
+      cnt=2;
+    }
+    const ax=makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax);
+    pathFromFn(svg,ax.px,ax.py,g,xMin,xMax,150,BLUE,4);
+    pathFromFn(svg,ax.px,ax.py,h,xMin,xMax,150,ORANGE,4);
+    el(svg,'text',{x:X0+8,y:Y0-4,'font-size':12.5,'font-weight':900,fill:BLUE}).textContent='蓝=g(x)';
+    el(svg,'text',{x:X0+90,y:Y0-4,'font-size':12.5,'font-weight':900,fill:ORANGE}).textContent='橙=h(x)';
+    note.innerHTML=desc;
+    note.style.borderColor=BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动5:分离参数 ===== */
+(function(){
+  const svg=document.getElementById('sepSvg');
+  const As=document.getElementById('sepA');
+  const oAv=document.getElementById('sepAv'),oCnt=document.getElementById('sepCnt'),oExt=document.getElementById('sepExt'),oRoot=document.getElementById('sepRoot');
+  const note=document.getElementById('sepNote');
+  function phi(x){return x*x*x-3*x;} // phi(-1)=2 max, phi(1)=-2 min
+  function countIntersections(a){
+    // phi(x)=a for x^3-3x-a=0, count real roots
+    // derivative zero at x=-1(max=2), x=1(min=-2)
+    if(a>2||a< -2)return 1;
+    if(a===2||a===-2)return 2;
+    return 3;
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=250;
+    const xMin=-3,xMax=3,yMin=-6,yMax=6;
+    const ax=makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax);
+    pathFromFn(svg,ax.px,ax.py,phi,xMin,xMax,150,BLUE,4);
+    // extrema markers
+    el(svg,'circle',{cx:ax.px(-1),cy:ax.py(2),r:5,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:ax.px(-1),y:ax.py(2)-12,'font-size':11,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='极大(-1,2)';
+    el(svg,'circle',{cx:ax.px(1),cy:ax.py(-2),r:5,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:ax.px(1),y:ax.py(-2)+18,'font-size':11,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='极小(1,-2)';
+    const a=+As.value/10;
+    // horizontal line y=a
+    const Ya=ax.py(a);
+    el(svg,'line',{x1:X0,y1:Ya,x2:X0+W,y2:Ya,stroke:RED,'stroke-width':3,'stroke-dasharray':'8 5'});
+    el(svg,'text',{x:X0+W-4,y:Ya-8,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='y=a='+a.toFixed(1);
+    const cnt=countIntersections(a);
+    el(svg,'text',{x:X0+8,y:Y0-4,'font-size':12.5,'font-weight':900,fill:INK}).textContent='φ(x)=x³-3x　（方程 x³-3x-a=0 分离参数后）';
+    oAv.textContent=a.toFixed(1);
+    oCnt.textContent=cnt;
+    oExt.textContent='极大φ(-1)=2, 极小φ(1)=-2';
+    oRoot.textContent=cnt;
+    let msg;
+    if(a>2)msg='a &gt; 2：动直线在极大值上方，只与曲线交 <b>1</b> 次 → 方程 1 个实根。';
+    else if(a< -2)msg='a &lt; -2：动直线在极小值下方，只与曲线交 <b>1</b> 次 → 方程 1 个实根。';
+    else if(Math.abs(a-2)<0.05||Math.abs(a+2)<0.05)msg='a = ±2：动直线正好过极值点（相切）→ 交 <b>2</b> 次（含一个二重根）→ 方程 2 个实根。';
+    else msg='-2 &lt; a &lt; 2：动直线穿过"波浪"中段，交 <b>3</b> 次 → 方程 3 个实根。';
+    note.innerHTML=msg;
+    note.style.borderColor=cnt===3?GREEN:cnt===2?YEL:RED;
+  }
+  As.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:含参零点个数(判别式) ===== */
+(function(){
+  const svg=document.getElementById('paramSvg');
+  const As=document.getElementById('paramA');
+  const oA=document.getElementById('paA'),oD=document.getElementById('paD'),oCnt=document.getElementById('paCnt');
+  let running=false,scanVal=-10;
+  function f(x,a){return x*x-2*a*x+a+2;}
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=250;
+    const xMin=-8,xMax=14,yMin=-10,yMax=20;
+    const ax=makeAxes(svg,X0,Y0,W,H,xMin,xMax,yMin,yMax);
+    const a=+As.value/10;
+    pathFromFn(svg,ax.px,ax.py,function(x){return f(x,a);},xMin,xMax,150,BLUE,4);
+    const D=4*a*a-4*a-8;
+    let cnt,roots=[];
+    if(D>1e-9){
+      cnt=2;
+      const sq=Math.sqrt(D);
+      roots=[a-sq/2,a+sq/2];
+    }else if(Math.abs(D)<=1e-9){
+      cnt=1;roots=[a];
+    }else{
+      cnt=0;
+    }
+    roots.forEach(function(r){
+      const X=ax.px(r),Y=ax.py(0);
+      if(X>=X0&&X<=X0+W){
+        el(svg,'circle',{cx:X,cy:Y,r:7,fill:RED,stroke:INK,'stroke-width':2});
+      }
+    });
+    el(svg,'text',{x:X0+8,y:Y0-4,'font-size':12.5,'font-weight':900,fill:INK}).textContent='f(x)=x²-2ax+a+2，当前 a='+a.toFixed(1)+'，Δ='+D.toFixed(2);
+    oA.textContent=a.toFixed(1);oD.textContent=D.toFixed(2);oCnt.textContent=cnt;
+  }
+  As.oninput=function(){running=false;draw();};
+  function scanLoop(){
+    if(!running)return;
+    scanVal+=0.3;
+    if(scanVal>30){scanVal=-10;}
+    As.value=Math.round(scanVal*10);
+    draw();
+    requestAnimationFrame(scanLoop);
+  }
+  document.getElementById('paramGo').onclick=function(){running=true;scanVal=-10;requestAnimationFrame(scanLoop);};
+  document.getElementById('paramReset').onclick=function(){running=false;As.value=50;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 函数零点、方程的根、图象交点，这三者的关系是什么？",a:"三者等价：函数 y=f(x) 的零点 x₀ ⟺ 方程 f(x)=0 的实数根 x₀ ⟺ 图象与 x 轴交点的横坐标 x₀。零点是一个实数，不是坐标点。"},
+ {q:"2. 零点存在定理的完整表述？三个条件分别是什么？",a:"若 f(x) 在 [a,b] 上连续，且 f(a)·f(b)<0，则 f(x) 在 (a,b) 内至少有一个零点。三条件：①连续 ②端点异号 ③结论只是「至少一个」。"},
+ {q:"3. f(a)·f(b)>0 能说明区间内没有零点吗？为什么？",a:"不能。可能有偶数个零点（图象两次穿过或触碰又弹回，同号）。定理是充分不必要条件，只能正向用。"},
+ {q:"4. 举一个「区间内有零点但 f(a)f(b)>0」的反例。",a:"f(x)=x² 在 [-1,1] 上，f(-1)=1>0，f(1)=1>0，乘积>0，但 x=0 是零点（图象只触碰x轴未穿过，偶次零点）。"},
+ {q:"5. 二分法求近似零点的步骤是什么？前提条件是什么？",a:"取中点 m=(a+b)/2，判断 f(a)f(m) 符号缩小区间，重复直到区间长度<ε。前提：先满足零点存在定理（连续+端点异号）。"},
+ {q:"6. 判断零点个数有哪三条路？分别适用什么情况？",a:"①直接解方程（能因式分解/求根公式的）②数形结合，拆成g(x)=h(x)看交点（含超越式解不出的）③分离参数a=φ(x)，看y=a与曲线交点（含参数问题）。"},
+ {q:"7. 什么是「分离参数」？分离后怎么数根的个数？",a:"把方程中的参数a单独移到一边，化成a=φ(x)。根的个数=水平直线y=a与曲线y=φ(x)的交点个数，按a的范围（尤其跨过极值时）分类讨论。"},
+ {q:"8. 分离参数时要特别注意什么陷阱？",a:"若分离过程中除以了一个可能为0或变号的式子，必须单独讨论该式子为0或变号的情形，不能直接除过去。"},
+ {q:"9. 复合函数 f(g(x))=0 的零点怎么求？换元后要注意什么？",a:"设t=g(x)，先解外层f(t)=0得t的解，再看g(x)的值域限制哪些t是合法的（舍去超范围的t），对每个合法t回代解g(x)=t，数解的个数后加总。"},
+ {q:"10. 含参二次函数 f(x)=x²-2ax+a+2 的零点个数怎么讨论？",a:"算判别式Δ=4a²-4a-8=4(a-2)(a+1)。a<-1或a>2时Δ>0，2个零点；a=-1或2时Δ=0，1个零点；-1<a<2时Δ<0，0个零点。"},
+ {q:"11. 图象与 x 轴「穿过」和「触碰」分别对应零点的什么性质？",a:"奇数重零点（1重、3重...）图象穿过x轴，附近异号；偶数重零点（2重...）图象只触碰x轴后弹回，附近同号。"},
+ {q:"12. 为什么零点存在定理不能反过来用（逆命题为什么不成立）？",a:"因为区间内可能存在偶数个零点（含偶次零点），此时端点函数值可能同号。定理只给出「异号⟹至少一个零点」这一个方向的推断，不是充要条件。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){
+  const d=document.createElement('div');
+  d.style.cssText='margin:12px 0;font-weight:700';
+  d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';
+  d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};
+  quiz.appendChild(d);
+});
+</script>
+</body>
+</html>

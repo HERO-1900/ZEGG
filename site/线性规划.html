@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简单的线性规划 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>简单的线性规划</h1>
+    <p class="lead">线性规划就是「用一条能动的直线,在一块由不等式围出来的区域里,找最高点或最低点」。全部套路只有三步:<b>画区域</b>(可行域)、<b>定目标</b>(把 z=ax+by 变形成斜率截距式)、<b>平移找顶点</b>(最值几乎总在顶点上)。看懂这三步,这一类题就再也不会丢分。</p>
+
+    <div class="say">🗣️ <b>线性规划(人话版):</b> 每一个二元一次不等式 Ax+By+C≥0(或&gt;0),都在切一刀平面——直线 Ax+By+C=0 把平面分成两半,不等式选<b>其中一半</b>(哪一半用「代个点试试」就知道)。几个不等式一起画,阴影重叠的那一块就是<b>可行域</b>——所有能取的 (x,y) 都在这里面。然后目标函数 z=ax+by 变形成 y=−(a/b)x+z/b,这是一族<b>平行线</b>,截距 z/b 随 z 变——平移这条线扫过可行域,截距最大或最小的位置,通常就正好卡在可行域的<b>某个顶点</b>上。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>Ax+By+C≥0 定半平面 → 交集定可行域 → z=ax+by ⟺ y=−(a/b)x+z/b 定平移直线 → 顶点法找最值</b>。全程只需要:画图准、代点判、变形对、顶点全算一遍。</div>
+
+    <h2>① 二元一次不等式(组)表示平面区域</h2>
+    <div class="card">
+      <div class="eq">直线 Ax+By+C=0 把平面分成两个半平面</div>
+      <p style="margin:8px 0"><b>三步定区域:</b> ① 画出边界直线 Ax+By+C=0(先当作等号画一条直线);② 判断边界是<b>实线还是虚线</b>:不等式含「=」(≥、≤)→<b>实线</b>(包含边界);不含「=」(&gt;、&lt;)→<b>虚线</b>(不包含边界);③ 取一个<b>不在直线上的特殊点</b>(最常用原点 (0,0),若直线过原点则换 (1,0) 或 (0,1))代入不等式左边,成立就说明这一侧就是所求区域,不成立就取另一侧。</p>
+      <table>
+        <tr><th>不等号</th><th>边界线</th><th>含义</th></tr>
+        <tr><td>Ax+By+C&gt;0 / &lt;0</td><td><b>虚线</b>(不含边界)</td><td>区域<b>不</b>包含直线本身</td></tr>
+        <tr><td>Ax+By+C≥0 / ≤0</td><td><b>实线</b>(含边界)</td><td>区域<b>包含</b>直线本身</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>快速判断哪一侧:</b> 若原点不在直线上,把 (0,0) 代入 Ax+By+C:结果与「0」的大小关系和不等式方向一致的那一侧,就是原点所在的一侧;否则是另一侧。例如 x+y−2≤0,代入原点:0+0−2=−2≤0 成立,所以原点所在的一侧(直线左下方)就是所求区域。</p>
+      <p class="trap">⚠ 忘记判断实线虚线是最常见的丢分点;直线过原点时不能再用原点代入判断,必须换一个点,如 (1,0) 或 (0,1)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 二元一次不等式画区域:选不等式看阴影(实线=含边界,虚线=不含边界)</div>
+      <svg id="halfSvg" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="halfmode on" data-m="0">x+y−4≤0</button>
+        <button class="halfmode" data-m="1">x+y−4&lt;0</button>
+        <button class="halfmode" data-m="2">2x−y+1≥0</button>
+        <button class="halfmode" data-m="3">x−2y+3&gt;0</button>
+      </div>
+      <div class="verdict" id="halfNote"></div>
+      <p class="small">边界直线始终画出;阴影=不等式成立的一侧。实线(≤、≥)边界算数;虚线(&lt;、&gt;)边界不算数(图中虚线画成短划线)。判定法:把原点代入不等式左边,看是否成立。</p>
+    </div>
+
+    <h2 class="b">② 线性约束条件与可行域</h2>
+    <div class="card">
+      <p style="margin:6px 0">把变量 x、y 要满足的<b>一组</b>二元一次不等式(或方程)叫<b>线性约束条件</b>。每条不等式画出一个半平面,把它们的阴影<b>叠在一起</b>,重叠(交集)部分就是<b>可行域</b>——所有约束同时满足的点 (x,y) 的集合。可行域通常是一个<b>凸多边形</b>(有界)或一片延伸到无穷的区域(无界)。</p>
+      <div class="mono">可行域 = 各约束不等式所表示区域的交集</div>
+      <p style="margin:8px 0"><b>画可行域标准流程:</b> ① 逐条画出每条边界直线,标出实线/虚线;② 逐条判断阴影方向(代点);③ 找出所有阴影<b>都覆盖</b>到的公共区域,就是可行域;④ 求出可行域各<b>顶点</b>坐标(通常联立相邻两条边界直线方程求交点)。</p>
+      <p class="trap">⚠ 可行域是<b>交集</b>不是并集——每一条约束都要同时满足,少判断一条约束、多画一块阴影,整个可行域就错了。顶点坐标一定要联立方程组算准,不能只在图上估读。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔷 互动 2 — 可行域:多个约束的交集(勾选约束看可行域怎样一步步收紧)</div>
+      <svg id="feasSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label><input type="checkbox" id="fc1" checked> x≥0</label>
+        <label><input type="checkbox" id="fc2" checked> y≥0</label>
+        <label><input type="checkbox" id="fc3" checked> x+y≤6</label>
+        <label><input type="checkbox" id="fc4" checked> 2x+y≤8</label>
+      </div>
+      <div class="live" id="feasLive"></div>
+      <p class="small">四条约束全选时,可行域是一个四边形(含坐标轴上的顶点)。取消勾选某条约束,阴影会相应「放宽」,可行域变大——直观感受「交集」是怎么一步步被夹出来的。</p>
+    </div>
+
+    <h2 class="g">③ 目标函数与直线平移</h2>
+    <div class="card">
+      <div class="eq">z = ax + by　⟺　y = −(a/b)x + z/b　(b≠0)</div>
+      <p style="margin:8px 0">目标函数 z=ax+by 里,(x,y) 是可行域里的点,z 是要求最值的量。把它<b>变形成斜率截距式</b> y=−(a/b)x+z/b:斜率 −a/b 是<b>固定的</b>(由 a、b 决定),截距 z/b <b>随 z 变化</b>——这说明对每一个 z 的取值,y=−(a/b)x+z/b 都是一条与原直线<b>平行</b>的直线,z 变化就是这条直线在<b>平行移动</b>。</p>
+      <table>
+        <tr><th>情形</th><th>z 与截距 z/b 的关系</th><th>平移方向找最值</th></tr>
+        <tr><td><b>b&gt;0</b></td><td>z 越大,截距 z/b 越大</td><td>直线往<b>上</b>移,z 变大;求最大值往上移到可行域边界</td></tr>
+        <tr><td><b>b&lt;0</b></td><td>z 越大,截距 z/b 越<b>小</b></td><td>直线往<b>下</b>移,z 反而变大;方向与 b&gt;0 时相反</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>操作步骤:</b> ① 画出可行域;② 把目标直线 ax+by=0 画出来(作为「参照斜率」的虚拟直线);③ 保持斜率不变,平行移动这条直线,让它扫过可行域;④ 直线最后一次与可行域「擦边」接触的位置(通常是顶点),就是最值点。</p>
+      <p class="trap">⚠ 平移方向不能凭直觉猜——必须先看 b 的正负号,再确定「z 变大对应截距变大还是变小」。b&lt;0 时,直线往上移 z 反而在减小,这是最容易搞反的地方。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 目标函数直线平移求最值:拖动滑块平移直线,看 z 怎么变、何时触边</div>
+      <svg id="moveSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="moveMax">▶ 演示找最大值</button><button id="moveReset">↺ 重置</button>
+        <label>截距 z/b <input id="moveZ" type="range" min="-2" max="14" value="0" step="0.2"></label>
+      </div>
+      <div class="live" id="moveLive"></div>
+      <p class="small">目标函数 z=x+2y(a=1,b=2&gt;0)。绿色虚线是 x+2y=z 的等值线,拖滑块=平移直线。当直线移到刚好经过某个顶点、且再移一点就要离开可行域时,该点就是最优解。</p>
+    </div>
+
+    <h2 class="o">④ 顶点法求最值</h2>
+    <div class="card">
+      <p style="margin:6px 0">因为目标函数的等值线是<b>一族平行直线</b>,而可行域是<b>凸多边形</b>,平移直线扫过凸多边形时,最先或最后接触到的点<b>只能是顶点</b>(或顶点间的整条边,此时边上所有点都取到最值)。这就是<b>顶点法</b>的道理:不用画图慢慢平移,直接把可行域<b>每个顶点坐标代入</b> z=ax+by,比较大小即可。</p>
+      <div class="mono">顶点法:求出可行域各顶点坐标 → 逐一代入 z=ax+by → 比较得最大值与最小值</div>
+      <p style="margin:8px 0"><b>什么时候最值在整条边上(无穷多最优解)?</b> 当目标直线的斜率 −a/b <b>恰好等于</b>可行域某条边界的斜率时,平移到贴合该边界的瞬间,这条边上所有点的 z 值都相等,边的两端点(两个顶点)和边上其他点都是最优解。</p>
+      <p class="trap">⚠ 顶点法只对<b>线性</b>目标函数成立(z=ax+by),因为只有线性目标的等值线才是直线。顶点坐标必须联立方程组精确求解,不能读图估值,否则比较大小会出错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 4 — 顶点法:高亮每个顶点,算出对应的 z 值,自动比大小</div>
+      <svg id="vertSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="vertpick" data-i="0">顶点A</button>
+        <button class="vertpick" data-i="1">顶点B</button>
+        <button class="vertpick" data-i="2">顶点C</button>
+        <button class="vertpick" data-i="3">顶点D</button>
+        <button id="vertAll">全部比较</button>
+      </div>
+      <div class="verdict" id="vertNote"></div>
+      <p class="small">可行域(与互动2同一个四边形)有 4 个顶点。目标函数 z=x+2y,依次点击每个顶点看它的 z 值,再点「全部比较」直接给出最大值和最小值在哪个顶点取得。</p>
+    </div>
+
+    <h2 class="v">⑤ 非线性目标函数的几何意义</h2>
+    <div class="card">
+      <p style="margin:6px 0">目标函数不总是 ax+by 这种线性式,还可能带平方或分式,这时<b>顶点法直接失效</b>,要靠<b>几何意义</b>转化。</p>
+      <table>
+        <tr><th>目标函数形式</th><th>几何意义</th><th>找最值的方法</th></tr>
+        <tr><td>z = (x−a)² + (y−b)²</td><td>点 (x,y) 到定点 (a,b) 的<b>距离的平方</b></td><td>找可行域内到 (a,b) 最近/最远的点(常是顶点或垂足)</td></tr>
+        <tr><td>z = y/x</td><td>点 (x,y) 与<b>原点</b>连线的<b>斜率</b></td><td>看哪个顶点与原点连线斜率最大/最小(旋转动线法)</td></tr>
+        <tr><td>z = (y−b)/(x−a)</td><td>点 (x,y) 与定点 (a,b) 连线的<b>斜率</b></td><td>同上,把参照点从原点换成 (a,b)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>距离类:</b> z=(x−a)²+(y−b)² 中,√z 是点到 (a,b) 的距离,所以先找「可行域内离 (a,b) 最近/最远的点」,最近点若不在顶点,常是 (a,b) 向可行域边界作垂线的垂足;最远点几乎总在顶点(离得越远,顶点往往越占优)。</p>
+      <p style="margin:8px 0"><b>斜率类:</b> z=y/x 是可行域内的点与原点连线的斜率,把这条连线想象成绕原点转动的「动直线」,转到与可行域边界相切或经过顶点的位置,斜率取得最大或最小。斜率类目标函数<b>不能用顶点法直接代入比大小当作唯一判据</b>——还要注意连线是否会被可行域「挡住」,一般结论是最值仍在顶点取得,但方向感要靠画图配合验证。</p>
+      <p class="trap">⚠ 非线性目标函数绝不能套用「等值线是平行直线」的平移图像;距离类看到的是<b>圆</b>在扩大缩小,斜率类看到的是<b>直线绕定点旋转</b>。混用平移法会得到完全错误的答案。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 5 — 非线性目标函数的几何意义:距离平方 z=x²+y² 与斜率 z=y/x</div>
+      <svg id="geoSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="geomode on" data-g="0">距离平方 z=x²+y²</button>
+        <button class="geomode" data-g="1">斜率 z=y/x</button>
+      </div>
+      <div class="verdict" id="geoNote"></div>
+      <p class="small">距离模式:蓝色圆是以原点为圆心的等值圆,圆扩大触到可行域最远点=最大值,缩到刚好碰到可行域=最小值。斜率模式:绿色射线从原点转动,扫过可行域的两条极限位置对应斜率最大与最小。</p>
+    </div>
+
+    <h2 class="b">⑥ 整点最优解</h2>
+    <div class="card">
+      <p style="margin:6px 0">实际问题(比如「安排多少辆车」「生产多少件产品」)里,x、y 往往必须是<b>非负整数</b>。这时约束条件不变,但可行域内的候选点只能是<b>整点(格点)</b>——普通线性规划求出的最优解如果坐标不是整数,就<b>不能直接用</b>,必须在附近重新找整点。</p>
+      <div class="mono">整点最优解 = 在可行域内(含边界)的整点中,使 z 最大/最小的点</div>
+      <p style="margin:8px 0"><b>找整点最优解的常用方法:</b> ① 先用顶点法求出「理论最优点」(可能不是整点);② 若不是整点,则以该点为中心,在可行域<b>内部</b>沿目标直线方向平移检验,找出附近满足约束的整点,逐一代入 z 比较;③ 也可以直接在可行域内<b>逐个枚举</b>整点(若整点数量不多)。</p>
+      <p class="trap">⚠ 千万不能把「非整数最优点」直接四舍五入当作答案——四舍五入后的点可能<b>已经跑出可行域</b>,必须验证是否满足所有约束条件,再比较 z 值。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 6 — 整点最优解:在可行域内标出所有整点,自动找出使 z 最大的整点</div>
+      <svg id="intSvg" viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="intShow">▶ 显示可行域内整点</button><button id="intReset">↺ 重置</button>
+      </div>
+      <div class="live" id="intLive"></div>
+      <p class="small">约束同互动2的可行域,目标函数 z=x+2y。理论最优顶点坐标不一定是整数;图中所有蓝点是可行域内的整点,红点是使 z 最大的整点最优解。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 画区域 / 判断点是否在区域内</h3>
+      <p><b class="tag">触发信号:</b>给出一个或多个二元一次不等式,要求画出所表示的平面区域,或判断某点是否满足。</p>
+      <p><b class="tag">标准动作:</b>画边界直线 → 定实虚线(含等号实线,不含虚线)→ 代特殊点(通常原点)判方向。判断点是否满足直接代入不等式检验真假。</p>
+      <p><b class="tag">示例(带解):</b>画出 2x−y−2≥0 表示的区域。边界 2x−y−2=0(实线,过(1,0)、(0,−2))。代原点:2×0−0−2=−2≥0 不成立,所以原点不在区域内,区域在直线的右下方(不含原点一侧)。</p>
+      <p class="trap">陷阱:忘记实线虚线;直线过原点时仍用原点代入(必须换点,如(1,0));把「不成立」误判为「原点所在一侧就是区域」。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 画可行域并求顶点坐标</h3>
+      <p><b class="tag">触发信号:</b>给出一组线性约束条件(通常3条及以上,常含x≥0,y≥0),要求画出可行域。</p>
+      <p><b class="tag">标准动作:</b>逐条画边界定方向 → 找公共阴影部分 → 相邻边界直线联立方程组求交点坐标(顶点)。</p>
+      <p><b class="tag">示例(带解):</b>约束 x≥0,y≥0,x+y≤6,2x+y≤8。四条边界交出一个四边形,顶点为(0,0)、(4,0)(由2x+y=8与y=0联立)、(2,4)(由x+y=6与2x+y=8联立)、(0,6)(由x+y=6与x=0联立)。</p>
+      <p class="trap">陷阱:漏掉某条约束导致可行域画大;顶点坐标只在图上估读不联立方程组算,造成后续比较 z 值出错。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 线性目标函数求最值(顶点法)</h3>
+      <p><b class="tag">触发信号:</b>目标函数形如 z=ax+by,要求在可行域内求最大值或最小值。</p>
+      <p><b class="tag">标准动作:</b>求出可行域各顶点坐标 → 逐一代入 z=ax+by → 比较得最大/最小值;或变形 y=−(a/b)x+z/b 平移直线找触边点,两法结果一致,顶点法更快更准。</p>
+      <p><b class="tag">示例(带解):</b>沿用题型B的可行域,z=x+2y。代入顶点:(0,0)→0;(4,0)→4;(2,4)→2+8=10;(0,6)→0+12=12。最大值 z=12,在顶点(0,6)取得;最小值 z=0,在(0,0)取得。</p>
+      <p class="trap">陷阱:漏代某个顶点;b为负时平移方向理解反了;把最大值和最小值对应的顶点弄混。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 已知最值反求参数</h3>
+      <p><b class="tag">触发信号:</b>给出目标函数含参数(如 z=ax+y),已知在某点取最大/最小值,要求参数取值范围或具体值。</p>
+      <p><b class="tag">标准动作:</b>把「该点是最优解」翻译成「该点对应的 z 值不小于(或不大于)其余所有顶点的 z 值」,列不等式组解参数;也可从斜率角度:目标直线斜率需落在该顶点相邻两条边界斜率之间。</p>
+      <p><b class="tag">示例(带解):</b>可行域顶点同上,z=ax+y 在(2,4)处取最大值,求a的范围。需 2a+4 ≥ 0(顶点(0,0))、2a+4 ≥ 4a(顶点(4,0))、2a+4 ≥ 6(顶点(0,6))。由第二式 a≤2;由第三式 a≥1。结合需为最大值(非最小)进一步验证方向,范围为 1≤a≤2。</p>
+      <p class="trap">陷阱:不等号方向弄反(最大值要「≥所有其他顶点」,最小值要「≤」);漏掉某个顶点的比较条件;混淆求最大值和求最小值时不等式方向。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 非线性目标函数(距离/斜率型)</h3>
+      <p><b class="tag">触发信号:</b>目标函数形如 z=(x−a)²+(y−b)²、z=y/x、z=(y−b)/(x−a),不是简单的 ax+by。</p>
+      <p><b class="tag">标准动作:</b>先识别几何意义(距离平方 / 斜率),再画出对应的圆或动直线,结合可行域图形找临界位置(垂足或顶点),必要时用点到直线距离公式或联立方程求切点、交点。</p>
+      <p><b class="tag">示例(带解):</b>可行域同上,求 z=x²+y² 的最小值。z 是点到原点距离的平方,可行域是第一象限内的四边形,离原点最近的点是顶点(0,0)本身(它在可行域内),所以最小值 z=0。若要最大值,比较各顶点到原点距离平方:(4,0)→16,(2,4)→20,(0,6)→36,最大值为 36,在(0,6)取得。</p>
+      <p class="trap">陷阱:把距离类目标函数当线性目标函数硬套顶点法比大小(顶点法对距离类"求最大值"凑巧常对,但求最小值经常不在顶点,需要判断垂足是否落在可行域内);斜率类忘记讨论分母为0或点与参照点共线的特殊情况。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 实际应用建模(整点最优解)</h3>
+      <p><b class="tag">触发信号:</b>应用题背景(生产安排、运输调配、原料配比等),要求「安排多少」「至少/至多需要多少」,答案必须是整数。</p>
+      <p><b class="tag">标准动作:</b>设未知数(通常为非负整数)→ 根据题意列出线性约束条件和目标函数 → 画可行域求理论最优顶点 → 若顶点非整点,在可行域内附近的整点中逐一比较,确定真正的整点最优解,并结合实际意义作答。</p>
+      <p><b class="tag">示例(带解):</b>某工厂用两种原料生产,约束化简后得可行域顶点之一为(2.5,3),目标利润 z=200x+300y。因x需为整数,检验附近整点(2,3)与(3,2)(需满足原约束)代入比较:z(2,3)=1300,z(3,2)=1200,若(2,3)满足所有约束,则最大利润在x=2,y=3时取得,为1300元。</p>
+      <p class="trap">陷阱:直接对非整数顶点四舍五入而不检验是否仍满足约束;漏写「非负整数」这一隐含约束;实际意义作答时忘记写单位或写反哪个是最大哪个是最小。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 实线虚线搞反:不等式<b>含等号</b>(≥、≤)边界是<b>实线</b>(包含),<b>不含等号</b>(&gt;、&lt;)边界是<b>虚线</b>(不包含)。</p>
+      <p class="trap">② 代入原点判断方向时,若直线<b>恰好过原点</b>,原点代入两边都得0,无法判断,必须换一个不在直线上的点,如 (1,0) 或 (0,1)。</p>
+      <p class="trap">③ 可行域是所有约束的<b>交集</b>,不是某一条约束单独的区域,更不是并集——漏判一条约束会让可行域画错。</p>
+      <p class="trap">④ z=ax+by 变形为 y=−(a/b)x+z/b 后,<b>z 与截距 z/b 的关系取决于 b 的正负</b>:b&gt;0 时 z 增大截距增大(直线上移z变大);b&lt;0 时 z 增大截距反而减小,平移方向的判断容易搞反。</p>
+      <p class="trap">⑤ 最值<b>不一定</b>只在一个顶点取得——当目标直线斜率与可行域某条边斜率相等时,整条边上都是最优解(无穷多解)。</p>
+      <p class="trap">⑥ 非线性目标函数(距离、斜率型)<b>不能</b>用平移直线找截距的方法,必须先转化成对应的几何图形(圆、动直线)分析。</p>
+      <p class="trap">⑦ 距离类 z=(x−a)²+(y−b)² 的<b>最小值</b>不一定在顶点取得,可能在可行域边界上的垂足处,要判断垂足是否落在边界线段内。</p>
+      <p class="trap">⑧ 整点问题不能把非整数最优解简单四舍五入,必须重新在可行域<b>内部</b>逐一检验附近整点是否满足全部约束。</p>
+      <p class="trap">⑨ 斜率型 z=y/x 或 z=(y−b)/(x−a),分母为 0(x=0 或 x=a)时斜率不存在,要单独讨论或排除这类点。</p>
+      <p class="trap">⑩ 求顶点坐标时联立方程组算错(比如符号、消元出错),会导致后面比较 z 值全盘皆错,建议算完顶点后代回两条边界方程各验证一次。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 可行域是凸集,这是顶点法成立的根本原因:</b> 若干半平面的交集一定是<b>凸集</b>(凸多边形或凸的无界区域)。线性函数在凸集上取最值,必在<b>极点(顶点)</b>处取得——这是凸优化里最基础的结论,线性规划顶点法就是它在二维、两个约束以下的具体体现。理解这一点,你就明白为什么不需要检验区域内部的点,只需扫顶点。</p>
+      <p style="margin:8px 0"><b>② 目标函数的等值线族是「解的搜索方向」:</b> z=ax+by 的梯度方向是 (a,b),这个方向就是 z <b>增长最快</b>的方向。平移直线找最大值,本质是在凸多边形里沿梯度方向"推"到底,推到的最后一个顶点就是解——这也是为什么 b 的正负决定了平移方向:梯度分量 b 为正,直线往上移 z 才在增大。</p>
+      <p style="margin:8px 0"><b>③ 距离类目标的最值,是「圆与凸域的相切/相离」问题的特例:</b> z=(x−a)²+(y−b)² 的等值线是同心圆,最小值对应「最小的能碰到可行域的圆」——如果圆心 (a,b) 本身在可行域内,最小值就是 0;否则最小值对应圆心到可行域<b>最近点</b>的距离平方,这个最近点要么是垂足(落在某条边内部),要么退化为顶点。带着这套「圆扩张/收缩」的图像去想,就不会死记「最值在顶点」这种对非线性目标不总成立的结论。</p>
+      <p style="margin:8px 0"><b>④ 斜率类目标是「动直线绕定点旋转」,极值出现在动直线与可行域边界相切(即经过顶点)的瞬间:</b> 把 z=y/x 想象成一条过原点、绕原点匀速旋转的射线,转到贴住可行域「上边缘」或「下边缘」的那一刻,对应的顶点就是最大或最小斜率所在处。这套图像同样能处理"过定点的直线与曲线相切求参数范围"这类更难的题目,是同一根思路的延伸。</p>
+      <p style="margin:8px 0"><b>⑤ 参数反求问题的本质是「顶点占优」不等式组:</b> 已知在某顶点取最值,等价于该顶点的 z 值<b>不劣于</b>所有相邻顶点(凸多边形只需比相邻顶点,因为凸性保证局部最优即全局最优),由此列出的不等式组,几何意义就是「目标直线斜率落在该顶点两条邻边斜率之间」。会用这条几何捷径,可以跳过繁琐的逐点代入比较,直接夹出参数范围。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 简单的线性规划</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* common coordinate mapping helper: data (x,y) with x,y in [0,10] -> svg pixel */
+function mkFrame(svg,W,H,pad,xmax,ymax){
+  const X0=pad,Y0=20,PW=W-pad-20,PH=H-pad-30;
+  function px(x){return X0+(x/xmax)*PW;}
+  function py(y){return Y0+PH-(y/ymax)*PH;}
+  el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+PH,stroke:INK,'stroke-width':3});
+  el(svg,'line',{x1:X0,y1:Y0+PH,x2:X0+PW,y2:Y0+PH,stroke:INK,'stroke-width':3});
+  el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+  el(svg,'text',{x:X0+PW,y:Y0+PH+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+  for(let i=0;i<=xmax;i+=2){
+    el(svg,'line',{x1:px(i),y1:Y0+PH,x2:px(i),y2:Y0+PH+5,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px(i),y:Y0+PH+18,'font-size':10.5,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=i;
+  }
+  for(let i=0;i<=ymax;i+=2){
+    el(svg,'line',{x1:X0-5,y1:py(i),x2:X0,y2:py(i),stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0-9,y:py(i)+4,'font-size':10.5,'font-weight':700,fill:INK,'text-anchor':'end'}).textContent=i;
+  }
+  return {px:px,py:py,X0:X0,Y0:Y0,PW:PW,PH:PH};
+}
+
+/* ===== 互动1: 二元一次不等式画区域 ===== */
+(function(){
+  const svg=document.getElementById('halfSvg');const note=document.getElementById('halfNote');
+  let mode=0;
+  document.querySelectorAll('.halfmode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.halfmode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=+b.dataset.m;draw();
+    };
+  });
+  const cases=[
+    {A:1,B:1,C:-4,strict:false,name:'x+y-4<=0'},
+    {A:1,B:1,C:-4,strict:true,name:'x+y-4<0'},
+    {A:2,B:-1,C:1,strict:false,name:'2x-y+1>=0'},
+    {A:1,B:-2,C:3,strict:true,name:'x-2y+3>0'}
+  ];
+  function draw(){
+    clr(svg);
+    const f=mkFrame(svg,700,420,60,10,10);
+    const c=cases[mode];
+    const A=c.A,B=c.B,C=c.C;
+    // shade region: sample grid, test A*x+B*y+C >=0(or >0) style, but for opposite side ineq flip test
+    // determine which side: original inequality is A*x+B*y+C REL 0 where REL depends on case wording (all are already in that form)
+    const pts=[];
+    for(let xi=0;xi<=10;xi+=0.5){
+      for(let yi=0;yi<=10;yi+=0.5){
+        let val=A*xi+B*yi+C;
+        let ok;
+        if(mode===0){ok=val<=0;}
+        else if(mode===1){ok=val<0;}
+        else if(mode===2){ok=val>=0;}
+        else{ok=val>0;}
+        if(ok)pts.push([xi,yi]);
+      }
+    }
+    pts.forEach(function(p){
+      el(svg,'circle',{cx:f.px(p[0]),cy:f.py(p[1]),r:2.4,fill:'rgba(20,80,200,0.28)'});
+    });
+    // boundary line: solve for two endpoints within [0,10]x[0,10]
+    let endpts=[];
+    if(B!==0){
+      const y0=(-C-A*0)/B, y10=(-C-A*10)/B;
+      endpts=[[0,y0],[10,y10]];
+    } else {
+      const x0=-C/A;
+      endpts=[[x0,0],[x0,10]];
+    }
+    const dash=c.strict?'10 8':'0';
+    el(svg,'line',{x1:f.px(endpts[0][0]),y1:f.py(endpts[0][1]),x2:f.px(endpts[1][0]),y2:f.py(endpts[1][1]),stroke:RED,'stroke-width':4,'stroke-dasharray':dash});
+    el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='边界: '+A+'x'+(B>=0?'+':'')+B+'y'+(C>=0?'+':'')+C+' = 0 （'+(c.strict?'虚线':'实线')+'）';
+    const testVal=A*0+B*0+C;
+    let holds;
+    if(mode===0)holds=testVal<=0; else if(mode===1)holds=testVal<0; else if(mode===2)holds=testVal>=0; else holds=testVal>0;
+    note.innerHTML='原点代入: '+A+'×0'+(B>=0?'+':'')+B+'×0'+(C>=0?'+':'')+C+' = '+testVal+' → '+(holds?'成立，原点在阴影一侧':'不成立，阴影在原点对侧')+'　（'+(c.strict?'虚线不含边界':'实线含边界')+'）';
+  }
+  draw();
+})();
+
+/* ===== 互动2: 可行域(多约束交集) ===== */
+(function(){
+  const svg=document.getElementById('feasSvg');const live=document.getElementById('feasLive');
+  const c1=document.getElementById('fc1'),c2=document.getElementById('fc2'),c3=document.getElementById('fc3'),c4=document.getElementById('fc4');
+  [c1,c2,c3,c4].forEach(function(c){c.onchange=draw;});
+  function inRegion(x,y){
+    if(c1.checked&&x<0)return false;
+    if(c2.checked&&y<0)return false;
+    if(c3.checked&&(x+y)>6)return false;
+    if(c4.checked&&(2*x+y)>8)return false;
+    return true;
+  }
+  function draw(){
+    clr(svg);
+    const f=mkFrame(svg,700,460,60,10,10);
+    const pts=[];
+    for(let xi=0;xi<=10;xi+=0.15){
+      for(let yi=0;yi<=10;yi+=0.15){
+        if(inRegion(xi,yi))pts.push([xi,yi]);
+      }
+    }
+    pts.forEach(function(p){
+      el(svg,'circle',{cx:f.px(p[0]),cy:f.py(p[1]),r:1.8,fill:'rgba(30,158,134,0.35)'});
+    });
+    // draw boundary lines that are active
+    if(c3.checked){
+      el(svg,'line',{x1:f.px(0),y1:f.py(6),x2:f.px(6),y2:f.py(0),stroke:BLUE,'stroke-width':3});
+      el(svg,'text',{x:f.px(6.2),y:f.py(0)-4,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='x+y=6';
+    }
+    if(c4.checked){
+      el(svg,'line',{x1:f.px(0),y1:f.py(8),x2:f.px(4),y2:f.py(0),stroke:ORANGE,'stroke-width':3});
+      el(svg,'text',{x:f.px(4.2),y:f.py(0)-4,'font-size':11.5,'font-weight':800,fill:ORANGE}).textContent='2x+y=8';
+    }
+    if(c1.checked){
+      el(svg,'line',{x1:f.px(0),y1:f.py(0),x2:f.px(0),y2:f.py(10),stroke:VIO,'stroke-width':3});
+    }
+    if(c2.checked){
+      el(svg,'line',{x1:f.px(0),y1:f.py(0),x2:f.px(10),y2:f.py(0),stroke:VIO,'stroke-width':3});
+    }
+    el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='勾选的约束越多，阴影(可行域)越收紧';
+    const n=[c1.checked,c2.checked,c3.checked,c4.checked].filter(Boolean).length;
+    live.innerHTML='<div><b>已勾选约束数</b><span>'+n+'</span></div><div><b>x&ge;0</b><span>'+(c1.checked?'开':'关')+'</span></div><div><b>y&ge;0</b><span>'+(c2.checked?'开':'关')+'</span></div><div><b>x+y&le;6 且 2x+y&le;8</b><span>'+((c3.checked?'开':'关')+'/'+(c4.checked?'开':'关'))+'</span></div>';
+  }
+  draw();
+})();
+
+/* ===== 互动3: 目标函数直线平移 ===== */
+(function(){
+  const svg=document.getElementById('moveSvg');const live=document.getElementById('moveLive');
+  const zs=document.getElementById('moveZ');
+  const a=1,b=2;
+  // feasible region vertices (same as sections 2/4): (0,0),(4,0),(2,4),(0,6)
+  const verts=[[0,0],[4,0],[2,4],[0,6]];
+  function inRegion(x,y){return x>=-1e-9&&y>=-1e-9&&(x+y)<=6+1e-9&&(2*x+y)<=8+1e-9;}
+  let running=false;
+  function draw(){
+    clr(svg);
+    const f=mkFrame(svg,700,460,60,10,10);
+    // shade feasible region
+    for(let xi=0;xi<=10;xi+=0.15){
+      for(let yi=0;yi<=10;yi+=0.15){
+        if(inRegion(xi,yi))el(svg,'circle',{cx:f.px(xi),cy:f.py(yi),r:1.8,fill:'rgba(30,158,134,0.30)'});
+      }
+    }
+    // polygon outline
+    const poly=verts.map(function(v){return f.px(v[0])+','+f.py(v[1]);}).join(' ');
+    el(svg,'polygon',{points:poly,fill:'none',stroke:INK,'stroke-width':3});
+    // moving line: x+2y=zval -> y=(zval-x)/2
+    const zval=+zs.value;
+    const x0=0,y0=zval/b;
+    const x1=10,y1=(zval-a*10)/b;
+    el(svg,'line',{x1:f.px(x0),y1:f.py(y0),x2:f.px(x1),y2:f.py(y1),stroke:GREEN,'stroke-width':4,'stroke-dasharray':'9 6'});
+    el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='等值线 x+2y='+zval.toFixed(1)+'　(截距 z/b='+(zval/b).toFixed(2)+')';
+    // check which vertex is currently touched / max among verts <= zval frontier
+    let bestV=null,bestZ=-Infinity;
+    verts.forEach(function(v){const zz=a*v[0]+b*v[1];if(zz>bestZ){bestZ=zz;bestV=v;}});
+    el(svg,'circle',{cx:f.px(bestV[0]),cy:f.py(bestV[1]),r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:f.px(bestV[0])+10,y:f.py(bestV[1])-8,'font-size':12,'font-weight':900,fill:RED}).textContent='最大值点 z='+bestZ;
+    live.innerHTML='<div><b>当前 z=x+2y</b><span>'+zval.toFixed(1)+'</span></div><div><b>可行域最大值</b><span>'+bestZ+' 于('+bestV[0]+','+bestV[1]+')</span></div><div><b>b 的符号</b><span>b=2&gt;0，z增大截距增大</span></div><div><b>平移方向</b><span>向右上方移动z变大</span></div>';
+  }
+  zs.oninput=function(){running=false;draw();};
+  function animate(){
+    running=true;let z=-2;
+    zs.value=z;draw();
+    function step(){
+      if(!running)return;
+      z+=0.15;
+      if(z>=12){z=12;running=false;}
+      zs.value=z;draw();
+      if(running)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  document.getElementById('moveMax').onclick=animate;
+  document.getElementById('moveReset').onclick=function(){running=false;zs.value=0;draw();};
+  draw();
+})();
+
+/* ===== 互动4: 顶点法 ===== */
+(function(){
+  const svg=document.getElementById('vertSvg');const note=document.getElementById('vertNote');
+  const a=1,b=2;
+  const verts=[[0,0],[4,0],[2,4],[0,6]];
+  const labels=['A','B','C','D'];
+  function inRegion(x,y){return x>=-1e-9&&y>=-1e-9&&(x+y)<=6+1e-9&&(2*x+y)<=8+1e-9;}
+  let picked=-1,showAll=false;
+  document.querySelectorAll('.vertpick').forEach(function(btn){
+    btn.onclick=function(){picked=+btn.dataset.i;showAll=false;draw();};
+  });
+  document.getElementById('vertAll').onclick=function(){showAll=true;picked=-1;draw();};
+  function draw(){
+    clr(svg);
+    const f=mkFrame(svg,700,460,60,10,10);
+    for(let xi=0;xi<=10;xi+=0.15){
+      for(let yi=0;yi<=10;yi+=0.15){
+        if(inRegion(xi,yi))el(svg,'circle',{cx:f.px(xi),cy:f.py(yi),r:1.8,fill:'rgba(30,158,134,0.25)'});
+      }
+    }
+    const poly=verts.map(function(v){return f.px(v[0])+','+f.py(v[1]);}).join(' ');
+    el(svg,'polygon',{points:poly,fill:'none',stroke:INK,'stroke-width':3});
+    verts.forEach(function(v,i){
+      const z=a*v[0]+b*v[1];
+      const isPicked=(picked===i)||showAll;
+      el(svg,'circle',{cx:f.px(v[0]),cy:f.py(v[1]),r:isPicked?7:5,fill:isPicked?RED:BLUE,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:f.px(v[0])+10,y:f.py(v[1])-8,'font-size':12,'font-weight':900,fill:INK}).textContent=labels[i]+'('+v[0]+','+v[1]+')'+(isPicked?' z='+z:'');
+    });
+    el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='目标函数 z=x+2y，点击顶点按钮查看各点z值';
+    if(showAll){
+      const zs=verts.map(function(v){return a*v[0]+b*v[1];});
+      const maxZ=Math.max.apply(null,zs), minZ=Math.min.apply(null,zs);
+      const maxI=zs.indexOf(maxZ), minI=zs.indexOf(minZ);
+      note.innerHTML='各顶点 z 值: A=0, B=4, C=10, D=12。最大值 z='+maxZ+' 在顶点'+labels[maxI]+'；最小值 z='+minZ+' 在顶点'+labels[minI]+'。';
+    } else if(picked>=0){
+      const v=verts[picked];const z=a*v[0]+b*v[1];
+      note.innerHTML='顶点'+labels[picked]+'('+v[0]+','+v[1]+')： z = 1×'+v[0]+' + 2×'+v[1]+' = '+z;
+    } else {
+      note.innerHTML='点击上方按钮选择一个顶点，或点「全部比较」查看最值。';
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动5: 非线性目标几何意义 ===== */
+(function(){
+  const svg=document.getElementById('geoSvg');const note=document.getElementById('geoNote');
+  const verts=[[0,0],[4,0],[2,4],[0,6]];
+  const labels=['A','B','C','D'];
+  let g=0;
+  function inRegion(x,y){return x>=-1e-9&&y>=-1e-9&&(x+y)<=6+1e-9&&(2*x+y)<=8+1e-9;}
+  document.querySelectorAll('.geomode').forEach(function(btn){
+    btn.onclick=function(){
+      document.querySelectorAll('.geomode').forEach(function(x){x.classList.remove('on');});
+      btn.classList.add('on');g=+btn.dataset.g;draw();
+    };
+  });
+  function draw(){
+    clr(svg);
+    const f=mkFrame(svg,700,460,60,10,10);
+    for(let xi=0;xi<=10;xi+=0.15){
+      for(let yi=0;yi<=10;yi+=0.15){
+        if(inRegion(xi,yi))el(svg,'circle',{cx:f.px(xi),cy:f.py(yi),r:1.8,fill:'rgba(30,158,134,0.25)'});
+      }
+    }
+    const poly=verts.map(function(v){return f.px(v[0])+','+f.py(v[1]);}).join(' ');
+    el(svg,'polygon',{points:poly,fill:'none',stroke:INK,'stroke-width':3});
+    verts.forEach(function(v,i){
+      el(svg,'circle',{cx:f.px(v[0]),cy:f.py(v[1]),r:5,fill:BLUE,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:f.px(v[0])+8,y:f.py(v[1])-8,'font-size':11.5,'font-weight':800,fill:INK}).textContent=labels[i]+'('+v[0]+','+v[1]+')';
+    });
+    if(g===0){
+      // distance squared from origin
+      const dists=verts.map(function(v){return v[0]*v[0]+v[1]*v[1];});
+      const maxD=Math.max.apply(null,dists), minD=Math.min.apply(null,dists);
+      const maxI=dists.indexOf(maxD), minI=dists.indexOf(minD);
+      // draw circles at min and max radius
+      const rMin=Math.sqrt(minD), rMax=Math.sqrt(maxD);
+      const rMinPx=(rMin/10)*f.PW, rMaxPx=(rMax/10)*f.PW;
+      el(svg,'circle',{cx:f.px(0),cy:f.py(0),r:rMinPx,fill:'none',stroke:BLUE,'stroke-width':2.5,'stroke-dasharray':'6 5'});
+      el(svg,'circle',{cx:f.px(0),cy:f.py(0),r:rMaxPx,fill:'none',stroke:RED,'stroke-width':2.5,'stroke-dasharray':'6 5'});
+      el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='z=x²+y²：到原点距离的平方（虚线圆=等值线）';
+      note.innerHTML='最小值 z='+minD+' 在顶点'+labels[minI]+'（原点本身在可行域内，距离为0）；最大值 z='+maxD+' 在顶点'+labels[maxI]+'（离原点最远的顶点）。';
+    } else {
+      // slope y/x from origin, exclude (0,0) division by zero
+      let best=-Infinity,worst=Infinity,bestI=-1,worstI=-1;
+      verts.forEach(function(v,i){
+        if(v[0]===0)return;
+        const s=v[1]/v[0];
+        if(s>best){best=s;bestI=i;}
+        if(s<worst){worst=s;worstI=i;}
+      });
+      // draw rays from origin to bestI and worstI
+      if(bestI>=0){
+        el(svg,'line',{x1:f.px(0),y1:f.py(0),x2:f.px(verts[bestI][0]),y2:f.py(verts[bestI][1]),stroke:GREEN,'stroke-width':3});
+      }
+      if(worstI>=0){
+        el(svg,'line',{x1:f.px(0),y1:f.py(0),x2:f.px(verts[worstI][0]),y2:f.py(verts[worstI][1]),stroke:ORANGE,'stroke-width':3});
+      }
+      el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='z=y/x：与原点连线的斜率（射线=等值线）';
+      note.innerHTML='最大斜率 z='+best.toFixed(2)+' 在顶点'+labels[bestI]+'；最小斜率(不含x=0点) z='+worst.toFixed(2)+' 在顶点'+labels[worstI]+'。顶点A(0,0)因x=0无斜率，不参与比较。';
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动6: 整点最优解 ===== */
+(function(){
+  const svg=document.getElementById('intSvg');const live=document.getElementById('intLive');
+  const a=1,b=2;
+  const verts=[[0,0],[4,0],[2,4],[0,6]];
+  function inRegion(x,y){return x>=-1e-9&&y>=-1e-9&&(x+y)<=6+1e-9&&(2*x+y)<=8+1e-9;}
+  let shown=false;
+  function draw(){
+    clr(svg);
+    const f=mkFrame(svg,700,460,60,10,10);
+    for(let xi=0;xi<=10;xi+=0.15){
+      for(let yi=0;yi<=10;yi+=0.15){
+        if(inRegion(xi,yi))el(svg,'circle',{cx:f.px(xi),cy:f.py(yi),r:1.8,fill:'rgba(30,158,134,0.20)'});
+      }
+    }
+    const poly=verts.map(function(v){return f.px(v[0])+','+f.py(v[1]);}).join(' ');
+    el(svg,'polygon',{points:poly,fill:'none',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:f.X0+f.PW/2,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='可行域内的整点（格点），目标函数 z=x+2y';
+    if(!shown){
+      live.innerHTML='<div><b>提示</b><span>点击按钮显示整点</span></div>';
+      return;
+    }
+    const intPts=[];
+    for(let xi=0;xi<=10;xi++){
+      for(let yi=0;yi<=10;yi++){
+        if(inRegion(xi,yi))intPts.push([xi,yi]);
+      }
+    }
+    let bestZ=-Infinity,bestP=null;
+    intPts.forEach(function(p){
+      const z=a*p[0]+b*p[1];
+      const isBest=false;
+      el(svg,'circle',{cx:f.px(p[0]),cy:f.py(p[1]),r:5,fill:BLUE,stroke:INK,'stroke-width':1.5});
+      if(z>bestZ){bestZ=z;bestP=p;}
+    });
+    el(svg,'circle',{cx:f.px(bestP[0]),cy:f.py(bestP[1]),r:8,fill:RED,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:f.px(bestP[0])+10,y:f.py(bestP[1])-10,'font-size':12.5,'font-weight':900,fill:RED}).textContent='整点最优('+bestP[0]+','+bestP[1]+') z='+bestZ;
+    live.innerHTML='<div><b>可行域内整点数</b><span>'+intPts.length+'</span></div><div><b>理论顶点最大值</b><span>z=12 于(0,6)（本身是整点）</span></div><div><b>整点最优</b><span>('+bestP[0]+','+bestP[1]+')</span></div><div><b>整点最优 z</b><span>'+bestZ+'</span></div>';
+  }
+  document.getElementById('intShow').onclick=function(){shown=true;draw();};
+  document.getElementById('intReset').onclick=function(){shown=false;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 判断二元一次不等式表示的区域，标准三步是什么？",a:"①画边界直线Ax+By+C=0；②定实线虚线（含等号=实线含边界，不含等号=虚线不含边界）；③代一个不在直线上的特殊点（常用原点）判断哪一侧成立。"},
+ {q:"2. 直线恰好过原点时，怎么判断不等式表示的区域？",a:"不能用原点代入（两边都是0无法判断），要换一个不在直线上的点，比如(1,0)或(0,1)代入检验。"},
+ {q:"3. 可行域是什么？是几个约束区域的并集还是交集？",a:"可行域是所有线性约束条件表示的平面区域的交集——每一条约束都必须同时满足。"},
+ {q:"4. 目标函数z=ax+by怎么变形？b的正负如何影响平移方向找最值？",a:"变形为y=−(a/b)x+z/b，是斜率−a/b固定的一族平行直线。b>0时z越大截距z/b越大（直线上移z变大）；b<0时z越大截距反而越小，方向相反。"},
+ {q:"5. 为什么线性目标函数的最值通常在可行域的顶点取得？",a:"可行域是凸多边形，目标函数等值线是一族平行直线，平移直线扫过凸多边形时最先或最后接触到的点只能是顶点（或某条边）。"},
+ {q:"6. 什么情况下最值在一整条边上取得，而不是单个顶点？",a:"当目标直线的斜率−a/b恰好等于可行域某条边界的斜率时，这条边上所有点z值相等，两端点及边上其他点都是最优解。"},
+ {q:"7. z=(x−2)²+(y−1)²的几何意义是什么？怎么求最值？",a:"表示点(x,y)到定点(2,1)的距离的平方。求最值要看可行域内到(2,1)最近/最远的点：若(2,1)在可行域内，最小值为0；否则找最近点（可能是垂足）和最远点（常是顶点）分别代入。"},
+ {q:"8. z=y/x的几何意义是什么？怎么找最值？",a:"表示点(x,y)与原点连线的斜率。把连线看作绕原点旋转的动直线，转到贴住可行域边界（常为顶点）的位置对应最大或最小斜率；注意x=0的点斜率不存在需排除。"},
+ {q:"9. 整点最优解问题中，为什么不能把非整数的理论最优点直接四舍五入？",a:"四舍五入后的点可能不再满足原来的约束条件（跑出可行域），必须在可行域内部重新检验附近的整点是否满足所有约束，再比较z值。"},
+ {q:"10. z=ax+by在某顶点取得最大值，怎样列不等式求参数a的范围？",a:"把「该顶点是最大值点」翻译成该顶点的z值不小于所有其他顶点的z值，对每个顶点分别列出不等式，联立解出a的范围（凸多边形只需比相邻顶点即可保证全局最优）。"},
+ {q:"11. 可行域顶点坐标一般怎么求？能不能只靠读图估计？",a:"应联立相邻两条边界直线的方程组求交点坐标，不能只靠图上估读，否则代入z值比较大小容易出错。"},
+ {q:"12. 线性规划实际应用题中，为什么必须先设变量为非负整数？漏掉这个约束会怎样？",a:"因为实际背景（人数、车辆、产品件数等）本身就必须是非负整数。漏掉这个隐含约束，会把理论上的非整数最优点当成答案，导致结果在实际中无法执行。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){
+  const d=document.createElement('div');
+  d.style.cssText='margin:12px 0;font-weight:700';
+  d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';
+  d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};
+  quiz.appendChild(d);
+});
+</script>
+</body>
+</html>

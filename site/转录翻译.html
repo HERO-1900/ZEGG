@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>转录、翻译与遗传密码 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>转录、翻译与遗传密码</h1>
+    <p class="lead">DNA 是「设计图」，锁在细胞核里不出门；蛋白质是「产品」，要在细胞质里的核糖体上造出来。中间必须有一个「快递员」——mRNA，把图纸信息抄一份带出去。这一页讲清楚：<b>转录</b>怎么抄、<b>翻译</b>怎么读、<b>密码子</b>怎么对应氨基酸，以及最容易丢分的<b>碱基数量计算</b>。</p>
+
+    <div class="say">🗣️ <b>中心法则(人话版):</b> DNA 是图书馆里的<b>原版书</b>，不外借。要用的时候，先<b>转录</b>抄一份「活页笔记」(mRNA)带到车间(核糖体)，车间里的搬运工(tRNA)按活页上的三字密码，把对应的氨基酸一个个搬来，拼成蛋白质——这叫<b>翻译</b>。少数病毒(如逆转录病毒)会反过来，把 RNA 抄成 DNA，叫<b>逆转录</b>。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>DNA --转录--> mRNA --翻译--> 蛋白质</b>。转录是「DNA 语言→RNA 语言」(碱基配对)，翻译是「RNA 语言→蛋白质语言」(密码子→氨基酸)。转录在<b>细胞核</b>(真核)，翻译在<b>核糖体</b>。模板不是同一个:转录模板是 <b>DNA 的一条链</b>，翻译模板是 <b>mRNA</b>。</div>
+
+    <h2>① 中心法则总图:遗传信息的传递方向</h2>
+    <div class="card">
+      <div class="eq">DNA --复制--> DNA　|　DNA --转录--> mRNA --翻译--> 蛋白质　|　(部分病毒) RNA --逆转录--> DNA　|　RNA --复制--> RNA</div>
+      <p style="margin:8px 0"><b>主干:</b> 复制(DNA→DNA，传代)、转录(DNA→RNA，产信息副本)、翻译(RNA→蛋白质，造功能分子)。<b>缺口补充:</b> 逆转录病毒(如 HIV)能以 RNA 为模板合成 DNA(逆转录酶)；某些 RNA 病毒能以 RNA 为模板直接复制 RNA(RNA 复制酶)。这些是对中心法则的<b>补充</b>，不是推翻。</p>
+      <table>
+        <tr><th>过程</th><th>模板</th><th>产物</th><th>酶</th><th>场所(真核)</th></tr>
+        <tr><td>复制</td><td>DNA 两条链</td><td>DNA</td><td>DNA 聚合酶</td><td>细胞核</td></tr>
+        <tr><td>转录</td><td>DNA 一条链(模板链)</td><td>mRNA</td><td>RNA 聚合酶</td><td>细胞核</td></tr>
+        <tr><td>翻译</td><td>mRNA</td><td>蛋白质(多肽链)</td><td>(核糖体上多种酶)</td><td>细胞质·核糖体</td></tr>
+        <tr><td>逆转录</td><td>RNA</td><td>DNA</td><td>逆转录酶</td><td>(部分病毒感染细胞内)</td></tr>
+      </table>
+      <p class="trap">⚠ 中心法则不是「DNA→RNA→蛋白质」单行道，别忘了复制(DNA→DNA)和逆转录/RNA复制这两条支线，选择题常考「遗传信息的流动方向能否是蛋白质→核酸」——不能，蛋白质是终点，信息不会从蛋白质流回核酸。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 1 — 中心法则总图:点箭头看过程·模板·产物·酶</div>
+      <svg id="cdSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="cdNote">点击图中任意箭头，查看该过程的模板 / 产物 / 酶。</div>
+      <p class="small">五个箭头对应五种信息流动：复制、转录、翻译、逆转录、RNA 复制。点一下箭头，下方文字会告诉你这条箭头「谁抄谁、用什么酶」。</p>
+    </div>
+
+    <h2 class="b">② 转录:以 DNA 一条链为模板合成 mRNA</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>场所:</b> 主要在细胞核(真核生物)。<b>模板:</b> DNA 双链中的<b>一条链</b>(模板链，又叫反义链)；另一条不作模板的链叫编码链(有义链)。<b>原料:</b> 四种核糖核苷酸(含 A、U、G、C)。<b>酶:</b> RNA 聚合酶。<b>产物:</b> mRNA(单链)。</p>
+      <div class="eq">模板链(DNA) A—T—G—C　配对→　mRNA　U—A—C—G</div>
+      <p style="margin:8px 0"><b>碱基配对规则(转录):</b> DNA 模板链的 A 配 mRNA 的 U；DNA 的 T 配 mRNA 的 A；DNA 的 G 配 mRNA 的 C；DNA 的 C 配 mRNA 的 G。注意 RNA 里<b>没有 T，只有 U</b>，凡模板链上是 A，转录出来对面一定是 U，不是 T。</p>
+      <table>
+        <tr><th>DNA 模板链碱基</th><th>A</th><th>T</th><th>G</th><th>C</th></tr>
+        <tr><td>转录出的 mRNA 碱基</td><td>U</td><td>A</td><td>C</td><td>G</td></tr>
+      </table>
+      <p class="trap">⚠ 转录的模板是 DNA 的<b>一条链</b>，不是两条都作模板(那样会得到两种不同的 mRNA，矛盾)。也别把「模板链的 A 配 mRNA 的 U」错记成「配 T」——RNA 从来没有 T。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧬 互动 2 — 转录动画:DNA 解旋、按模板链合成 mRNA(逐碱基配对)</div>
+      <svg id="trSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="trGo">▶ 开始转录</button><button id="trReset">↺ 重置</button>
+        <button id="trStep">➜ 单步</button>
+      </div>
+      <div class="live">
+        <div><b>已转录碱基数</b><span id="trN">0</span></div>
+        <div><b>当前模板碱基</b><span id="trBase">-</span></div>
+        <div><b>配对生成</b><span id="trPair">-</span></div>
+        <div><b>RNA 聚合酶</b><span id="trEnz">待启动</span></div>
+      </div>
+      <p class="small">上排是 DNA 模板链，RNA 聚合酶沿模板链移动，按 A-U、T-A、G-C、C-G 规则逐个把游离的核糖核苷酸配对连接成 mRNA(下排橙色链)。</p>
+    </div>
+
+    <h2 class="g">③ 翻译:核糖体上，mRNA 指导氨基酸连成蛋白质</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>场所:</b> 核糖体(附着在内质网上或游离于细胞质基质)。<b>模板:</b> mRNA。<b>原料:</b> 氨基酸。<b>搬运工:</b> tRNA——一端是<b>反密码子</b>(三个碱基，识别 mRNA 上的密码子)，另一端<b>携带一种特定的氨基酸</b>。</p>
+      <div class="eq">mRNA 密码子(3 碱基) 配对 tRNA 反密码子(3 碱基) → 该 tRNA 卸下对应氨基酸</div>
+      <p style="margin:8px 0"><b>过程简述:</b> 核糖体沿 mRNA 从 5′ 向 3′ 方向移动，每次「读」一个密码子；携带对应氨基酸的 tRNA 通过反密码子与密码子碱基互补配对进入核糖体；核糖体催化氨基酸之间形成肽键，肽链逐渐延长；读到终止密码子时，无 tRNA 与之配对，翻译终止，多肽链释放。</p>
+      <p class="trap">⚠ 一个 tRNA <b>只能携带一种特定氨基酸</b>，但一次只搬<b>一个</b>氨基酸分子(不是一次搬很多个)；密码子在 <b>mRNA</b> 上，反密码子在 <b>tRNA</b> 上，两者别记反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🏭 互动 3 — 翻译动画:核糖体沿 mRNA 移动，tRNA 携氨基酸对号入座</div>
+      <svg id="tlSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="tlGo">▶ 开始翻译</button><button id="tlReset">↺ 重置</button>
+        <button id="tlStep">➜ 单步</button>
+      </div>
+      <div class="live">
+        <div><b>当前密码子</b><span id="tlCodon">-</span></div>
+        <div><b>tRNA 反密码子</b><span id="tlAnti">-</span></div>
+        <div><b>搬入氨基酸</b><span id="tlAA">-</span></div>
+        <div><b>肽链长度</b><span id="tlLen">0</span></div>
+      </div>
+      <p class="small">mRNA 序列 AUG-GCU-UUU-CGA-UAA。核糖体每读一个密码子，配对的 tRNA 就送来一个氨基酸并接上肽链；读到 UAA(终止密码子)时无 tRNA 配对，翻译停止，肽链释放。</p>
+    </div>
+
+    <h2 class="o">④ 密码子表:64 个密码子，61 个编码 + 3 个终止</h2>
+    <div class="card">
+      <p style="margin:6px 0">mRNA 上每 <b>3 个相邻碱基</b>决定一个密码子，共有 4×4×4=<b>64</b> 种排列组合。其中 <b>61 个</b>编码氨基酸，<b>3 个(UAA、UAG、UGA)是终止密码子</b>，不编码任何氨基酸，只起「停止翻译」的信号作用。<b>起始密码子</b>通常是 <b>AUG</b>(同时也编码甲硫氨酸)。</p>
+      <p style="margin:6px 0"><b>简并性(简并密码子):</b> 一种氨基酸可以对应<b>多个</b>密码子(比如亮氨酸有 6 个密码子)，但一个密码子只能编码<b>一种</b>氨基酸——这是「多对一」，不是「一对多」。简并性使得某些碱基突变不改变氨基酸序列(沉默突变)，对生物有一定的保护意义。</p>
+      <p class="trap">⚠ 61 与 64 别混：64 是密码子<b>总数</b>，61 是<b>编码氨基酸</b>的密码子数(64−3终止=61)。氨基酸只有 20 种左右，所以必然有简并——密码子数(61) &gt; 氨基酸种数(约20)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📋 互动 4 — 密码子表:点密码子看对应氨基酸(含简并性与终止密码子)</div>
+      <svg id="ccSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="ccNote">点击任意密码子方块，查看它编码的氨基酸（或是否为起始/终止密码子）。</div>
+      <div class="live">
+        <div><b>密码子总数</b><span>64</span></div>
+        <div><b>终止密码子数</b><span>3</span></div>
+        <div><b>编码氨基酸的密码子</b><span>61</span></div>
+        <div><b>起始密码子</b><span>AUG</span></div>
+      </div>
+      <p class="small">简化版密码子表（按首碱基分四组展示代表性密码子）。红色块=终止密码子(UAA/UAG/UGA)，金色块=起始密码子(AUG，同时编码甲硫氨酸)。同一种氨基酸对应多个密码子＝简并性。</p>
+    </div>
+
+    <h2 class="v">⑤ 碱基数量关系:基因:mRNA:氨基酸 ≈ 6:3:1</h2>
+    <div class="card">
+      <div class="eq">基因(DNA)碱基对数 : mRNA 碱基数 : 氨基酸数 ≤ 6 : 3 : 1</div>
+      <p style="margin:8px 0"><b>为什么是 6:3:1(上限):</b> 1 个氨基酸由 mRNA 上 <b>3 个</b>碱基(1个密码子)决定；这 3 个 mRNA 碱基来自 DNA 模板链的 3 个碱基，而 DNA 是双链，对应<b>3 个碱基对</b>，即 <b>6 个脱氧核苷酸(碱基)</b>。所以：DNA碱基数=2×mRNA碱基数=6×氨基酸数。</p>
+      <p style="margin:8px 0"><b>为什么说是「上限」，实际往往更少:</b> ① mRNA 上的终止密码子<b>不编码</b>氨基酸，会占掉 3 个碱基但不产生氨基酸；② 真核基因常含<b>内含子</b>(不翻译的间隔序列)，转录后经剪切去除，实际参与翻译的碱基比基因全长少。所以严格公式要写成「≤」，只有不考虑终止密码子和内含子时才精确等于 6:3:1。</p>
+      <p class="trap">⚠ 6:3:1 只是<b>理论上限比例</b>，用于估算数量级；具体题目里若提到终止密码子、内含子、UTR(非翻译区)，都要在上限基础上做<b>减法</b>，不能直接套比例算出「精确」答案。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 5 — 6:3:1 碱基数量计算器:拖动氨基酸数看基因/mRNA碱基数</div>
+      <svg id="ratioSvg" viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>蛋白质氨基酸数 <input id="raA" type="range" min="1" max="60" value="20" step="1"></label>
+        <label>是否含终止密码子(占3个mRNA碱基) <input id="raStop" type="checkbox" checked></label>
+      </div>
+      <div class="live">
+        <div><b>氨基酸数</b><span id="raOut1">0</span></div>
+        <div><b>mRNA 碱基数(≥)</b><span id="raOut2">0</span></div>
+        <div><b>基因碱基对数(≥)</b><span id="raOut3">0</span></div>
+        <div><b>基因碱基总数(≥)</b><span id="raOut4">0</span></div>
+      </div>
+      <p class="small">公式：mRNA碱基数 = 氨基酸数×3(+终止密码子3)；基因碱基对数 = mRNA碱基数；基因碱基总数(双链) = mRNA碱基数×2。这是「不含内含子」时的最小估算，真实基因常更长。</p>
+    </div>
+
+    <h2 class="r">⑥ 多聚核糖体:一条 mRNA，多个核糖体同时翻译</h2>
+    <div class="card">
+      <p style="margin:6px 0">一条 mRNA 通常不是只被一个核糖体翻译，而是能被<b>多个核糖体同时</b>结合、各自独立翻译，形成「多聚核糖体(polysome)」。这样<b>短时间内可以合成多条相同的多肽链</b>，大大提高翻译效率——这也是细胞快速大量合成某种蛋白质(比如分泌蛋白)的策略。</p>
+      <p style="margin:6px 0"><b>关键点:</b> 各个核糖体在同一条 mRNA 上处于<b>不同位置</b>(有先有后)，越靠近起始端(5′端)的核糖体合成的肽链越短，越靠近终止端(3′端)的越长；但它们读的<b>密码子顺序和翻译规则完全相同</b>，只是进度不同。</p>
+      <p class="trap">⚠ 多聚核糖体不是「一个核糖体翻译出多种蛋白质」，而是「多个核糖体同时翻译同一条 mRNA，产出多条<b>相同</b>的多肽链」。真核细胞转录(核内)和翻译(细胞质)<b>不同时不同地</b>；而原核细胞没有核膜，转录尚未结束翻译就可以边转录边翻译，<b>可以同时进行</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚙️ 互动 6 — 多聚核糖体:多个核糖体同时沿同一 mRNA 翻译，各自产出肽链</div>
+      <svg id="polySvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="polyGo">▶ 启动多聚核糖体</button><button id="polyReset">↺ 重置</button>
+        <label>核糖体数 <input id="polyN" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>核糖体数量</b><span id="polyCount">3</span></div>
+        <div><b>已完成肽链数</b><span id="polyDone">0</span></div>
+        <div><b>效率倍数</b><span id="polyEff">×3</span></div>
+      </div>
+      <p class="small">同一条 mRNA 上挂着若干核糖体，各自向右移动、各自合成一条肽链。核糖体数越多，同样时间内产出的肽链条数越多——这就是多聚核糖体提高翻译效率的原理。</p>
+    </div>
+
+    <h2 class="b">⑦ 转录 vs 翻译:模板、产物、场所一次对比</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>转录</th><th>翻译</th></tr>
+        <tr><td>模板</td><td>DNA 的一条链(模板链)</td><td>mRNA</td></tr>
+        <tr><td>原料</td><td>4 种核糖核苷酸</td><td>20 种左右氨基酸</td></tr>
+        <tr><td>产物</td><td>mRNA(单链)</td><td>多肽链(蛋白质)</td></tr>
+        <tr><td>场所(真核)</td><td>细胞核(主要)</td><td>核糖体(细胞质)</td></tr>
+        <tr><td>酶</td><td>RNA 聚合酶</td><td>(核糖体自身催化肽键形成)</td></tr>
+        <tr><td>配对方式</td><td>碱基互补配对(A-U,T-A,G-C,C-G)</td><td>密码子-反密码子互补配对</td></tr>
+        <tr><td>方向性</td><td>沿 DNA 模板链读取</td><td>沿 mRNA 5′→3′读取</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>串起来记:</b> 转录是「DNA→RNA」的碱基对碱基抄写；翻译是「RNA→蛋白质」的密码子对氨基酸翻译，中间要靠 tRNA 当「字典+搬运工」。两步合起来才是基因指导蛋白质合成的完整过程。</p>
+      <p class="trap">⚠ 别把两步的模板搞混:一提「翻译的模板」立刻反应是 <b>mRNA</b>，不是 DNA；一提「转录的模板」立刻反应是 <b>DNA 的一条链</b>，不是 mRNA。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 转录碱基互补配对</h3>
+      <p><b class="tag">触发信号:</b> 给一段 DNA 模板链序列，求转录出的 mRNA 序列(或反过来)。</p>
+      <p><b class="tag">标准动作:</b> 按 A-U、T-A、G-C、C-G 逐位配对，模板链的 A→mRNA的U，模板链的T→mRNA的A，模板链的G→mRNA的C，模板链的C→mRNA的G。</p>
+      <p><b class="tag">示例(带解):</b> DNA 模板链为 3′-TACGGATCC-5′，转录出的 mRNA 为 5′-AUGCCUAGG-3′(T→A,A→U,C→G,G→C,G→C,A→U,T→A,C→G,C→G，注意方向：mRNA与模板链反向互补)。</p>
+      <p class="trap">陷阱:把 A 配成 T(RNA没有T，只能是U)；忽略模板链与mRNA走向相反(反向平行)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 翻译:密码子→反密码子→氨基酸</h3>
+      <p><b class="tag">触发信号:</b> 给 mRNA 序列或密码子，求对应的反密码子、氨基酸种类或肽链氨基酸数。</p>
+      <p><b class="tag">标准动作:</b> mRNA 密码子与 tRNA 反密码子互补配对(A-U,G-C)；查密码子表得氨基酸；起始密码子AUG对应甲硫氨酸，终止密码子不对应氨基酸。</p>
+      <p><b class="tag">示例(带解):</b> mRNA 片段 AUG-GCU-UAA，起始密码子AUG(甲硫氨酸)，GCU对应丙氨酸，UAA是终止密码子不编码。所以该片段翻译出 2 个氨基酸(甲硫氨酸-丙氨酸)。</p>
+      <p class="trap">陷阱:把终止密码子也算成一个氨基酸；把密码子和反密码子的位置搞反(密码子在mRNA，反密码子在tRNA)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 6:3:1 碱基数量计算</h3>
+      <p><b class="tag">触发信号:</b> 「已知蛋白质有 x 个氨基酸，求基因至少含多少个碱基对/mRNA至少多少个碱基」。</p>
+      <p><b class="tag">标准动作:</b> mRNA碱基数(不含终止密码子)=氨基酸数×3；若题目要求含终止密码子则+3；基因碱基对数=mRNA碱基数(等量对应)；基因碱基总数=mRNA碱基数×2。</p>
+      <p><b class="tag">示例(带解):</b> 某蛋白质含 100 个氨基酸，则翻译该蛋白质的 mRNA 至少含 100×3=300 个碱基(不算终止密码子)，若算上终止密码子则 303 个；对应基因(不考虑内含子)至少含 300 个碱基对，即 600 个碱基。</p>
+      <p class="trap">陷阱:直接用「氨基酸数×6」当基因碱基<b>对</b>数(应是氨基酸数×3才是碱基对数，×6是碱基总数)；忘记这是「至少/上限」估算，题目提内含子/终止密码子要另外处理。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 密码子简并性与突变</h3>
+      <p><b class="tag">触发信号:</b> 「基因中一个碱基发生突变，翻译出的氨基酸是否一定改变？」。</p>
+      <p><b class="tag">标准动作:</b> 查密码子表：若突变后的密码子仍编码同一种氨基酸(简并性)，则氨基酸<b>不变</b>(沉默突变)；若编码不同氨基酸，则蛋白质结构可能改变；若变成终止密码子，翻译提前终止，肽链变短。</p>
+      <p><b class="tag">示例(带解):</b> 密码子 GCU(丙氨酸)第三位突变为 GCC，查表 GCC 仍编码丙氨酸(简并性)，蛋白质不变。但若 CGA(精氨酸)突变为 UGA(终止密码子)，翻译会提前终止，肽链严重变短。</p>
+      <p class="trap">陷阱:认为碱基突变必然导致氨基酸改变(简并性可以「兜住」部分突变)；忽视突变成终止密码子的严重后果。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 转录翻译的时空关系(真核 vs 原核)</h3>
+      <p><b class="tag">触发信号:</b> 比较真核细胞和原核细胞(或病毒)中转录、翻译能否同时进行。</p>
+      <p><b class="tag">标准动作:</b> 真核细胞有核膜，转录(核内)与翻译(细胞质)被核膜分隔，<b>不同时不同地</b>，须先转录完、mRNA运出核后才能翻译；原核细胞无核膜，转录与翻译在同一空间，<b>可以边转录边翻译(同时进行)</b>。</p>
+      <p><b class="tag">示例(带解):</b> 大肠杆菌(原核)中，RNA聚合酶还在合成mRNA的后半段时，前半段mRNA已经可以被核糖体结合翻译，实现转录翻译同步偶联，提高基因表达效率。</p>
+      <p class="trap">陷阱:把原核细胞的「同时同地」错用到真核细胞上；忽视真核mRNA需要经过加工(如去除内含子)才能被翻译。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 多聚核糖体与翻译效率</h3>
+      <p><b class="tag">触发信号:</b> 「一条mRNA上同时结合多个核糖体，有什么意义？各核糖体合成的肽链是否相同？」。</p>
+      <p><b class="tag">标准动作:</b> 多个核糖体同时在同一mRNA上、各自独立翻译，短时间内产出多条<b>氨基酸序列相同</b>的多肽链(因为读的是同一条mRNA、同样的密码子顺序)；进度不同的核糖体上肽链长度不同。</p>
+      <p><b class="tag">示例(带解):</b> 一条长度可编码200个氨基酸的mRNA上同时结合5个核糖体，理论上可在同一段时间内合成5条(几乎)相同的200个氨基酸的多肽链，比单个核糖体翻译效率提高约5倍。</p>
+      <p class="trap">陷阱:误以为多个核糖体在同一mRNA上会翻译出不同的蛋白质(实际氨基酸序列相同，只是合成进度不同)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 转录的模板是 DNA 的<b>一条链(模板链)</b>，不是两条链都作模板，也不是 mRNA 作模板。</p>
+      <p class="trap">② 翻译的模板是 <b>mRNA</b>，不是 DNA；密码子在 <b>mRNA</b> 上，反密码子在 <b>tRNA</b> 上，两者位置不能记反。</p>
+      <p class="trap">③ RNA 中没有 T，只有 U！转录配对是 <b>DNA的A配mRNA的U</b>(不是配T)，DNA的T配mRNA的A。</p>
+      <p class="trap">④ tRNA 一次只能<b>携带一个</b>氨基酸分子(一种tRNA对应一种氨基酸，但每次只搬一个)，不要理解成一次运多个。</p>
+      <p class="trap">⑤ 密码子共 <b>64</b> 个，其中 <b>3</b> 个(UAA/UAG/UGA)是终止密码子<b>不编码氨基酸</b>，其余 <b>61</b> 个编码氨基酸；别把64和61搞混。</p>
+      <p class="trap">⑥ 起始密码子 <b>AUG</b> 同时也编码<b>甲硫氨酸</b>，它既是「开始信号」也是一个正常的编码密码子，不是特殊到不编码氨基酸。</p>
+      <p class="trap">⑦ <b>简并性</b>是「一种氨基酸对应多个密码子」(多对一)，不是「一个密码子对应多种氨基酸」——一个密码子只能编码一种氨基酸，方向不能反。</p>
+      <p class="trap">⑧ 基因:mRNA:氨基酸=<b>6:3:1 只是上限</b>，考虑终止密码子(占3个mRNA碱基但不产氨基酸)和内含子(转录后被剪掉)后，实际基因往往比 6×氨基酸数<b>更长</b>。</p>
+      <p class="trap">⑨ 真核细胞转录(细胞核)与翻译(细胞质核糖体)<b>不同时不同地</b>；原核细胞无核膜，转录翻译<b>可以同时同地</b>进行，别把两者规则套反。</p>
+      <p class="trap">⑩ 多聚核糖体是<b>多个核糖体同时翻译同一条mRNA</b>，产出多条<b>相同</b>肽链，不是产出不同种类的蛋白质。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 中心法则的本质是「信息载体的转换」，不是物质本身流动:</b> DNA→RNA→蛋白质，每一步都是把同一份「顺序信息」翻刻到不同的化学介质上——核酸用碱基序列编码，蛋白质用氨基酸序列编码。理解这一点，你就知道为什么「密码子」必须是三联体：4种碱基单独编码只能表示4种氨基酸，两两组合16种仍不够20种氨基酸，三个一组的4³=64种才够用且有富余(简并性由此而来)。</p>
+      <p style="margin:8px 0"><b>② 简并性不是冗余，是「容错设计」:</b> 密码子的第三位常常怎么变都编码同一种氨基酸(摆动配对)，这让 DNA 复制或转录中第三位的随机突变大概率是「沉默突变」，不改变蛋白质功能。这解释了为什么进化上碱基替换的中性突变远多于有害突变。</p>
+      <p style="margin:8px 0"><b>③ 6:3:1 的本质是「读框(reading frame)」的单向性:</b> mRNA 从起始密码子开始，每3个一组、不重叠、不跳读地往下数，直到终止密码子。一旦发生插入或缺失(非3的倍数)，会引起「移码突变」，后面所有密码子全部错位读取——这是为什么插入/缺失突变往往比替换突变破坏性大得多。</p>
+      <p style="margin:8px 0"><b>④ 转录翻译是否同时进行，本质上是「有无核膜隔间」的必然结果:</b> 原核细胞没有核膜，mRNA一边合成一边就能被核糖体结合翻译，实现了转录-翻译偶联，这也是原核基因表达调控(如操纵子)能快速响应环境的结构基础；真核细胞有核膜分隔，还多了mRNA加工(戴帽、加尾、剪接去内含子)的步骤，这是基因表达调控更精细但也更慢的原因。</p>
+      <p style="margin:8px 0"><b>⑤ 多聚核糖体是「效率」与「同步性」的巧妙平衡:</b> 同一条mRNA上挂多个核糖体，既能在单位时间内产出更多蛋白质分子(效率)，又能保证这些分子的氨基酸序列完全一致(同步性)——因为大家读的是同一份「图纸」，只是进度不同。这是细胞在不增加DNA拷贝数的前提下、快速放大蛋白质产量的策略，常见于分泌蛋白高效合成的细胞(如胰腺腺泡细胞合成胰岛素原)。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:DNA复制与遗传信息传递、基因表达调控</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:中心法则总图 ===== */
+(function(){
+  const svg=document.getElementById('cdSvg');
+  const note=document.getElementById('cdNote');
+  const procs=[
+    {key:'rep',label:'复制',x1:80,y1:60,x2:80,y2:150,tmpl:'DNA 两条链',prod:'DNA(子代)',enz:'DNA 聚合酶'},
+    {key:'tr',label:'转录',x1:180,y1:105,x2:340,y2:105,tmpl:'DNA 的一条链(模板链)',prod:'mRNA',enz:'RNA 聚合酶'},
+    {key:'tl',label:'翻译',x1:420,y1:105,x2:580,y2:105,tmpl:'mRNA',prod:'蛋白质(多肽链)',enz:'核糖体(催化肽键形成)'},
+    {key:'rt',label:'逆转录',x1:340,y1:150,x2:180,y2:150,tmpl:'RNA',prod:'DNA',enz:'逆转录酶'},
+    {key:'rr',label:'RNA复制',x1:260,y1:210,x2:260,y2:210,tmpl:'RNA',prod:'RNA(子代)',enz:'RNA 复制酶'}
+  ];
+  function draw(){
+    clr(svg);
+    // boxes
+    box(80,60,'DNA');box(260,105,'mRNA');box(500,105,'蛋白质');box(260,210,'RNA(病毒)');
+    function box(cx,cy,txt){
+      el(svg,'rect',{x:cx-50,y:cy-24,width:100,height:48,fill:'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:cy+6,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=txt;
+    }
+    // arrows
+    arrowLine(80,84,80,140,RED,'复制','rep');
+    arrowLine(130,105,210,105,BLUE,'转录','tr');
+    arrowLine(310,105,450,105,GREEN,'翻译','tl');
+    arrowLine(210,150,130,150,VIO,'逆转录','rt');
+    curveArrow(260,186,'RNA复制','rr');
+    function arrowLine(x1,y1,x2,y2,col,lab,key){
+      const g=el(svg,'g',{style:'cursor:pointer'});
+      el(g,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,'stroke-width':5});
+      const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/len,uy=dy/len;
+      el(g,'polygon',{points:x2+','+y2+' '+(x2-ux*12-uy*6)+','+(y2-uy*12+ux*6)+' '+(x2-ux*12+uy*6)+','+(y2-uy*12-ux*6),fill:col});
+      el(g,'text',{x:(x1+x2)/2+(dy!==0?14:0),y:(y1+y2)/2+(dy===0?-10:5),'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+      el(g,'rect',{x:Math.min(x1,x2)-8,y:Math.min(y1,y2)-14,width:Math.abs(x2-x1)+16,height:Math.abs(y2-y1)+28,fill:'transparent'});
+      g.onclick=()=>show(key);
+      svg.appendChild(g);
+    }
+    function curveArrow(cx,cy,lab,key){
+      const g=el(svg,'g',{style:'cursor:pointer'});
+      el(g,'path',{d:'M '+(cx-40)+' '+(cy-14)+' Q '+cx+' '+(cy+20)+' '+(cx+40)+' '+(cy-14),fill:'none',stroke:ORANGE,'stroke-width':5});
+      el(g,'polygon',{points:(cx+40)+','+(cy-14)+' '+(cx+26)+','+(cy-18)+' '+(cx+30)+','+(cy-6),fill:ORANGE});
+      el(g,'text',{x:cx,y:cy+34,'font-size':13,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent=lab;
+      g.onclick=()=>show(key);
+      svg.appendChild(g);
+    }
+  }
+  function show(key){
+    const p=procs.find(function(o){return o.key===key;});
+    if(!p)return;
+    note.innerHTML='<b>'+p.label+'</b>　模板:'+p.tmpl+'　→　产物:'+p.prod+'　　催化酶:'+p.enz;
+  }
+  draw();
+})();
+
+/* ===== 互动2:转录动画 ===== */
+(function(){
+  const svg=document.getElementById('trSvg');
+  const oN=document.getElementById('trN'),oBase=document.getElementById('trBase'),oPair=document.getElementById('trPair'),oEnz=document.getElementById('trEnz');
+  const template=['T','A','C','G','G','A','T','C','C'];
+  function comp(b){if(b==='A')return 'U';if(b==='T')return 'A';if(b==='G')return 'C';if(b==='C')return 'G';return '?';}
+  let n=0,running=false;
+  function draw(){
+    clr(svg);
+    const X0=40,gap=68,y1=90,y2=170;
+    el(svg,'text',{x:X0,y:y1-30,'font-size':13,'font-weight':900,fill:INK}).textContent='DNA 模板链(3′ → 5′)';
+    el(svg,'text',{x:X0,y:y2+40,'font-size':13,'font-weight':900,fill:ORANGE}).textContent='新生 mRNA(5′ → 3′)';
+    for(let i=0;i<template.length;i++){
+      const cx=X0+i*gap+30;
+      el(svg,'rect',{x:cx-24,y:y1-22,width:48,height:44,fill: i<n?'#ddd':'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:y1+6,'font-size':17,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=template[i];
+      if(i<n){
+        el(svg,'line',{x1:cx,y1:y1+22,x2:cx,y2:y2-22,stroke:'#999','stroke-width':2,'stroke-dasharray':'3 3'});
+        el(svg,'rect',{x:cx-24,y:y2-22,width:48,height:44,fill:'rgba(232,106,23,0.25)',stroke:ORANGE,'stroke-width':3});
+        el(svg,'text',{x:cx,y:y2+6,'font-size':17,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent=comp(template[i]);
+      }
+    }
+    // RNA polymerase marker
+    if(n<template.length){
+      const cx=X0+n*gap+30;
+      el(svg,'circle',{cx:cx,cy:(y1+y2)/2,r:20,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+      el(svg,'text',{x:cx,y:(y1+y2)/2+5,'font-size':11,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='酶';
+    }
+    oN.textContent=n;
+    oBase.textContent= n<template.length ? template[n] : '(完成)';
+    oPair.textContent= n<template.length ? comp(template[n]) : '(完成)';
+    oEnz.textContent= n===0? '待启动' : (n<template.length? '移动中' : '转录完成');
+  }
+  function step(){
+    if(n<template.length){n++;draw();}
+    if(n>=template.length){running=false;}
+  }
+  function loop(){
+    if(!running)return;
+    step();
+    if(n<template.length){setTimeout(loop,500);}
+  }
+  document.getElementById('trGo').onclick=function(){running=true;loop();};
+  document.getElementById('trStep').onclick=function(){running=false;step();};
+  document.getElementById('trReset').onclick=function(){running=false;n=0;draw();};
+  draw();
+})();
+
+/* ===== 互动3:翻译动画 ===== */
+(function(){
+  const svg=document.getElementById('tlSvg');
+  const oCodon=document.getElementById('tlCodon'),oAnti=document.getElementById('tlAnti'),oAA=document.getElementById('tlAA'),oLen=document.getElementById('tlLen');
+  const codons=['AUG','GCU','UUU','CGA','UAA'];
+  const aaMap={AUG:'甲硫氨酸',GCU:'丙氨酸',UUU:'苯丙氨酸',CGA:'精氨酸',UAA:'(终止,无氨基酸)'};
+  function anticodon(c){
+    let r='';
+    for(let i=0;i<c.length;i++){
+      const b=c[i];
+      if(b==='A')r+='U';else if(b==='U')r+='A';else if(b==='G')r+='C';else if(b==='C')r+='G';
+    }
+    return r;
+  }
+  let idx=0,chain=0,running=false;
+  function draw(){
+    clr(svg);
+    const X0=40,gap=110,y=90;
+    el(svg,'text',{x:X0,y:y-30,'font-size':13,'font-weight':900,fill:INK}).textContent='mRNA(5′ → 3′)';
+    for(let i=0;i<codons.length;i++){
+      const cx=X0+i*gap+40;
+      const isStop=codons[i]==='UAA';
+      const passed=i<idx;
+      el(svg,'rect',{x:cx-38,y:y-22,width:76,height:44,fill: isStop? (passed?'#f7c6c0':'#fff') : (passed?'#ddd':'#fff'),stroke: isStop?RED:INK,'stroke-width':3});
+      el(svg,'text',{x:cx,y:y+6,'font-size':15,'font-weight':900,fill: isStop?RED:INK,'text-anchor':'middle'}).textContent=codons[i];
+      if(i===idx){
+        el(svg,'rect',{x:cx-46,y:y-52,width:92,height:26,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+        el(svg,'text',{x:cx,y:y-34,'font-size':11.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='核糖体在此';
+      }
+    }
+    // peptide chain drawn below
+    const py=190;
+    el(svg,'text',{x:X0,y:py-14,'font-size':13,'font-weight':900,fill:GREEN}).textContent='合成中的多肽链:';
+    let px=X0+30;
+    for(let i=0;i<chain;i++){
+      el(svg,'circle',{cx:px,cy:py,r:16,fill:'rgba(30,158,134,0.25)',stroke:GREEN,'stroke-width':3});
+      el(svg,'text',{x:px,y:py+4,'font-size':10,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=(i+1);
+      if(i>0)el(svg,'line',{x1:px-32,y1:py,x2:px-16,y2:py,stroke:GREEN,'stroke-width':3});
+      px+=32;
+    }
+    const cur=codons[idx];
+    oCodon.textContent= idx<codons.length? cur : '(完成)';
+    oAnti.textContent= idx<codons.length? anticodon(cur) : '(完成)';
+    oAA.textContent= idx<codons.length? aaMap[cur] : '(完成)';
+    oLen.textContent=chain;
+  }
+  function step(){
+    if(idx>=codons.length)return;
+    if(codons[idx]!=='UAA'){chain++;}
+    idx++;
+    draw();
+    if(idx>=codons.length){running=false;}
+  }
+  function loop(){
+    if(!running)return;
+    step();
+    if(idx<codons.length){setTimeout(loop,650);}
+  }
+  document.getElementById('tlGo').onclick=function(){running=true;loop();};
+  document.getElementById('tlStep').onclick=function(){running=false;step();};
+  document.getElementById('tlReset').onclick=function(){running=false;idx=0;chain=0;draw();};
+  draw();
+})();
+
+/* ===== 互动4:密码子表 ===== */
+(function(){
+  const svg=document.getElementById('ccSvg');
+  const note=document.getElementById('ccNote');
+  const table=[
+    {c:'UUU',a:'苯丙氨酸'},{c:'UUA',a:'亮氨酸'},{c:'UCU',a:'丝氨酸'},{c:'UAU',a:'酪氨酸'},
+    {c:'UAA',a:'(终止密码子,不编码)'},{c:'UAG',a:'(终止密码子,不编码)'},{c:'UGA',a:'(终止密码子,不编码)'},
+    {c:'UGG',a:'色氨酸'},{c:'CUU',a:'亮氨酸'},{c:'CCU',a:'脯氨酸'},{c:'CAU',a:'组氨酸'},{c:'CGU',a:'精氨酸'},
+    {c:'AUU',a:'异亮氨酸'},{c:'AUG',a:'甲硫氨酸(同时是起始密码子)'},{c:'ACU',a:'苏氨酸'},{c:'AAU',a:'天冬酰胺'},{c:'AGU',a:'丝氨酸'},
+    {c:'GUU',a:'缬氨酸'},{c:'GCU',a:'丙氨酸'},{c:'GAU',a:'天冬氨酸'},{c:'GGU',a:'甘氨酸'}
+  ];
+  function draw(){
+    clr(svg);
+    const cols=5,rows=4,cw=132,ch=60,X0=20,Y0=20;
+    table.forEach(function(item,i){
+      const r=Math.floor(i/cols),c=i%cols;
+      const x=X0+c*cw,y=Y0+r*ch;
+      const isStop=item.a.indexOf('终止')>=0;
+      const isStart=item.c==='AUG';
+      const g=el(svg,'g',{style:'cursor:pointer'});
+      el(g,'rect',{x:x,y:y,width:cw-10,height:ch-10,fill:isStop?'#f7c6c0':(isStart?'#fbe6a0':'#fff'),stroke:isStop?RED:(isStart?YEL:INK),'stroke-width':3});
+      el(g,'text',{x:x+(cw-10)/2,y:y+28,'font-size':15,'font-weight':900,fill:isStop?RED:INK,'text-anchor':'middle'}).textContent=item.c;
+      el(g,'text',{x:x+(cw-10)/2,y:y+44,'font-size':10.5,'font-weight':800,fill:'#555','text-anchor':'middle'}).textContent=isStop?'终止':(isStart?'起始+编码':'编码氨基酸');
+      g.onclick=function(){note.innerHTML='<b>'+item.c+'</b>　→　'+item.a;};
+      svg.appendChild(g);
+    });
+  }
+  draw();
+})();
+
+/* ===== 互动5:6:3:1 计算器 ===== */
+(function(){
+  const svg=document.getElementById('ratioSvg');
+  const As=document.getElementById('raA'),Ss=document.getElementById('raStop');
+  const o1=document.getElementById('raOut1'),o2=document.getElementById('raOut2'),o3=document.getElementById('raOut3'),o4=document.getElementById('raOut4');
+  function draw(){
+    const a=+As.value;
+    const stopExtra= Ss.checked? 3:0;
+    const mrna=a*3+stopExtra;
+    const genePairs=mrna;
+    const geneTotal=mrna*2;
+    o1.textContent=a;o2.textContent=mrna;o3.textContent=genePairs;o4.textContent=geneTotal;
+    clr(svg);
+    const baseY=150,maxH=110,X0=60;
+    const scale=Math.max(1, geneTotal/6);
+    const bars=[{lab:'氨基酸数',val:a,col:GREEN},{lab:'mRNA碱基数',val:mrna,col:ORANGE},{lab:'基因碱基对数',val:genePairs,col:BLUE},{lab:'基因碱基总数',val:geneTotal,col:VIO}];
+    bars.forEach(function(b,i){
+      const cx=X0+i*160;
+      const h=Math.max(6,(b.val/scale/6)*maxH);
+      el(svg,'rect',{x:cx,y:baseY-h,width:80,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:cx+40,y:baseY+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:cx+40,y:baseY-h-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.val;
+    });
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='基因(碱基对):mRNA(碱基):氨基酸 ≤ 6:3:1';
+  }
+  As.oninput=draw;Ss.onchange=draw;
+  draw();
+})();
+
+/* ===== 互动6:多聚核糖体 ===== */
+(function(){
+  const svg=document.getElementById('polySvg');
+  const Ns=document.getElementById('polyN');
+  const oCount=document.getElementById('polyCount'),oDone=document.getElementById('polyDone'),oEff=document.getElementById('polyEff');
+  let N=3,positions=[],done=0,running=false;
+  function sync(){N=+Ns.value;reset();}
+  Ns.oninput=sync;
+  function reset(){
+    positions=[];
+    for(let i=0;i<N;i++){positions.push(-i*70-20);}
+    done=0;running=false;
+    oCount.textContent=N;oDone.textContent=0;oEff.textContent='×'+N;
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    const X0=30,X1=650,y=110;
+    el(svg,'line',{x1:X0,y1:y,x2:X1,y2:y,stroke:INK,'stroke-width':5});
+    el(svg,'text',{x:X0,y:y-20,'font-size':13,'font-weight':900,fill:INK}).textContent='同一条 mRNA (5′ → 3′)';
+    positions.forEach(function(px,i){
+      if(px<X0||px>X1)return;
+      el(svg,'circle',{cx:px,cy:y,r:22,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+      el(svg,'text',{x:px,y:y+5,'font-size':11,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='核糖体';
+      // peptide chain growing below each ribosome, length proportional to progress
+      const progress=Math.max(0,(px-X0)/(X1-X0));
+      const chainLen=Math.floor(progress*8);
+      let py=y+50;
+      let cx2=px-chainLen*8;
+      for(let k=0;k<chainLen;k++){
+        el(svg,'circle',{cx:cx2,cy:py,r:6,fill:GREEN,stroke:INK,'stroke-width':1.5});
+        cx2+=16;
+      }
+    });
+    el(svg,'text',{x:X0,y:230,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='已完成(掉落释放)的肽链数: '+done;
+  }
+  function loop(){
+    if(!running)return;
+    let allDone=true;
+    positions=positions.map(function(px){
+      if(px<650){allDone=false;return px+6;}
+      return px;
+    });
+    positions.forEach(function(px,i){
+      if(px>=650 && positions[i]!==null){/* mark done once */}
+    });
+    // count newly finished
+    let finishedNow=0;
+    positions=positions.map(function(px){
+      if(px>=650){finishedNow++;}
+      return px;
+    });
+    if(finishedNow>done){done=finishedNow;oDone.textContent=done;}
+    draw();
+    if(allDone){running=false;return;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('polyGo').onclick=function(){sync();running=true;requestAnimationFrame(loop);};
+  document.getElementById('polyReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 转录的模板是什么？在哪进行？产物是什么？",a:"模板是 DNA 双链中的一条链(模板链)；主要在细胞核(真核生物)进行；产物是 mRNA。"},
+ {q:"2. 转录中碱基配对规则是什么？RNA里有T吗？",a:"DNA模板链的A配mRNA的U，T配A，G配C，C配G。RNA中没有T，只有U。"},
+ {q:"3. 翻译的模板是什么？在哪进行？tRNA的作用是什么？",a:"模板是mRNA；在核糖体(细胞质)进行；tRNA一端是反密码子(识别mRNA上的密码子)，另一端携带一种特定氨基酸，起搬运作用，一次搬一个氨基酸。"},
+ {q:"4. 密码子共有多少种？其中终止密码子有几个？起始密码子是什么？",a:"共64种(4的3次方)；其中3个(UAA、UAG、UGA)是终止密码子，不编码氨基酸；起始密码子是AUG，同时也编码甲硫氨酸。"},
+ {q:"5. 什么是密码子的简并性？它有什么意义？",a:"一种氨基酸可以对应多个密码子(多对一，不是一对多)。意义:某些碱基突变(尤其密码子第三位)不改变氨基酸种类，起到一定的保护/容错作用。"},
+ {q:"6. 基因(DNA碱基对数):mRNA(碱基数):氨基酸数的比例是多少？为什么说是上限？",a:"上限为6:3:1。因为1个氨基酸对应mRNA上3个碱基(1个密码子)，对应DNA上3个碱基对(6个碱基)。说是上限是因为终止密码子不编码氨基酸、真核基因常含内含子(转录后被剪掉)，实际往往达不到精确的6:3:1。"},
+ {q:"7. 一个mRNA能否被多个核糖体同时翻译？这样做有什么意义？",a:"能。多个核糖体可同时结合在同一条mRNA上各自独立翻译，形成多聚核糖体，能在短时间内合成多条氨基酸序列相同的多肽链，大大提高翻译效率。"},
+ {q:"8. 真核细胞和原核细胞中，转录和翻译能否同时进行？为什么？",a:"真核细胞有核膜，转录(核内)和翻译(细胞质)不同时不同地，须转录完成、mRNA运出核后才能翻译。原核细胞无核膜，转录和翻译在同一空间，可以边转录边翻译，同时进行。"},
+ {q:"9. 某密码子第三位突变后仍编码同一种氨基酸，蛋白质会改变吗？如果突变成了终止密码子呢？",a:"若仍编码同一种氨基酸(简并性)，蛋白质不变(沉默突变)。若突变成终止密码子，翻译会提前终止，肽链变短，蛋白质结构和功能可能严重受损。"},
+ {q:"10. 逆转录是什么过程？中心法则是否因此被推翻？",a:"逆转录是以RNA为模板合成DNA的过程(逆转录酶催化)，见于逆转录病毒(如HIV)。这只是对中心法则的补充，不是推翻——遗传信息仍不会从蛋白质流回核酸。"},
+ {q:"11. 某蛋白质含150个氨基酸，编码它的mRNA至少含多少个碱基（不计终止密码子）？对应基因至少含多少个碱基对？",a:"mRNA至少含150×3=450个碱基；对应基因(不考虑内含子)至少含450个碱基对，即900个碱基。"},
+ {q:"12. tRNA的反密码子与mRNA的密码子是什么关系？举例说明。",a:"两者通过碱基互补配对识别，方向相反。例如mRNA密码子为GCU，对应tRNA的反密码子为CGA(G-C,C-G,U-A互补配对)，该tRNA携带丙氨酸。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+</script>
+</body>
+</html>

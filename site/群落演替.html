@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>群落的演替 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>群落的演替</h1>
+    <p class="lead">「演替」讲的不是一个物种怎么变,而是<b>整个群落</b>随时间被另一个群落取代的过程。核心只有两条线:一是<b>起点</b>(有没有土壤和繁殖体)→ 分初生/次生;二是<b>方向</b>(是否一定走向森林)→ 受气候等条件限制,不一定。人类活动是这条时间线上的「加速器/改向器」。</p>
+
+    <div class="say">🗣️ <b>演替(人话版):</b> 一块地不会永远长一种植物。裸岩上先长地衣(分泌有机酸腐蚀岩石、积累有机质),再是苔藓、草本、灌木,最后(如果条件允许)是森林——这是<b>初生演替</b>,从零开始,很慢。而一块被烧毁的森林或撂荒的农田,<b>土壤和种子、根系都还在</b>,恢复起来就快得多——这是<b>次生演替</b>。退耕还林、还草、还湖,就是人类主动<b>顺着演替方向推一把</b>。</div>
+
+    <div class="keybox"><b>一句话定义:</b> 演替 = <b>随着时间的推移</b>,一个群落被<b>另一个</b>群落<b>代替</b>的过程。判断题眼:变化的主体是<b>群落</b>(不是个体、不是种群数量波动),而且是<b>质变式的取代</b>,不是简单的数量涨落。</div>
+
+    <h2>① 演替的概念与实质</h2>
+    <div class="card">
+      <div class="eq">演替 = 随时间推移，一个群落被另一个群落代替的过程</div>
+      <p style="margin:8px 0">演替的实质是群落<b>优势物种(优势种)</b>的更替:每个阶段都有当家物种,当环境和竞争关系变化,新的物种取代旧的成为优势种,群落的<b>物种组成、群落结构</b>随之整体改变。演替不是某个个体的变化,也不是种群数量的简单起伏,而是<b>群落水平</b>上的更替。</p>
+      <table>
+        <tr><th>易混淆</th><th>区别</th></tr>
+        <tr><td>演替 vs 种群数量波动</td><td>演替看<b>群落</b>整体、跨阶段的质变;种群数量波动是<b>单个种群</b>数量的涨落，群落类型不变</td></tr>
+        <tr><td>演替 vs 季节性变化</td><td>演替是<b>不可逆的、长期</b>的群落更替;季节性变化(如夏季茂盛冬季凋零)是<b>周期性、可逆</b>的现象</td></tr>
+      </table>
+      <p class="trap">⚠ 演替的主语是<b>群落</b>,不是「某种动物数量增多」。看到题目只说一个物种数量变化，不涉及优势种更替、群落结构改变，那不是演替。</p>
+    </div>
+
+    <h2 class="b">② 初生演替:从「一张白纸」开始</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>定义:</b> 在一个<b>从来没有过植被</b>,或者<b>原来存在过植被、但被彻底消灭</b>(包括土壤中的种子、繁殖体也不存在)的地方发生的演替。</p>
+      <div class="mono">经典实例:裸岩上的演替 → 裸岩阶段 → 地衣阶段 → 苔藓阶段 → 草本植物阶段 → 灌木阶段 → 森林阶段</div>
+      <p style="margin:8px 0"><b>为什么从地衣开始?</b> 地衣(真菌+藻类共生体)能分泌<b>有机酸</b>,腐蚀分解岩石表面,加上死亡残体积累,逐渐形成薄层土壤和有机质,为苔藓、草本创造条件。这是初生演替的起点密码。</p>
+      <p style="margin:6px 0"><b>其他实例:</b> 沙丘、火山岩、冰川泥(冰川消退后裸露的地面)上从头开始的演替。</p>
+      <p class="trap">⚠ 初生演替的关键判据不是「有没有生物」,而是<b>土壤条件和繁殖体(种子、孢子、根系)是否存在</b>。哪怕地表寸草不生，只要土壤里还有种子库，也不算初生演替的起点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪨 互动 1 — 初生演替阶段动画:裸岩 → 地衣 → 苔藓 → 草本 → 灌木 → 森林（可播放）</div>
+      <svg id="stageSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="stGo">▶ 播放演替</button><button id="stReset">↺ 重置到裸岩</button>
+        <label>阶段 <input id="stSlider" type="range" min="0" max="5" value="0" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前阶段</b><span id="stName">裸岩</span></div>
+        <div><b>物种丰富度</b><span id="stRich">很低</span></div>
+        <div><b>土壤厚度</b><span id="stSoil">几乎无</span></div>
+        <div><b>预计耗时</b><span id="stTime">—</span></div>
+      </div>
+      <p class="small">拖动滑块或点击播放，看裸岩如何一步步被地衣、苔藓、草本、灌木、森林取代。每一步都是<b>群落整体</b>的更替，不是某一种植物长大了。</p>
+    </div>
+
+    <h2 class="g">③ 次生演替:「留了底子」的重启</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>定义:</b> 在原有植被<b>虽已不存在,但原有土壤条件基本保留</b>,甚至还保留了<b>植物的种子或其他繁殖体</b>(根、地下茎等)的地方发生的演替。</p>
+      <div class="mono">经典实例:弃耕农田 → 一年生杂草 → 多年生杂草 → 灌木 → 乔木（如果气候允许）</div>
+      <p style="margin:8px 0"><b>其他实例:</b> 火灾后的草原、过量砍伐后的森林、洪水过后的地面——这些地方地表植被没了，但<b>土壤里的种子库、根系、微生物</b>都还在，恢复的「起跑线」比初生演替高得多。</p>
+      <p class="trap">⚠ 「原有植被不存在」≠「没有恢复条件」。次生演替的判断关键是<b>土壤和繁殖体还在不在</b>，不是看地表有没有绿色。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌾 互动 6 — 弃耕农田次生演替：一年生杂草 → 多年生杂草 → 灌木 → 乔木</div>
+      <svg id="farmSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="farmGo">▶ 播放弃耕后演替</button><button id="farmReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>当前阶段</b><span id="farmName">刚弃耕(裸地)</span></div>
+        <div><b>土壤/种子库</b><span id="farmSoil">完整保留</span></div>
+        <div><b>已耗时</b><span id="farmYear">0 年</span></div>
+        <div><b>类型</b><span id="farmType">次生演替</span></div>
+      </div>
+      <p class="small">弃耕农田<b>不是</b>从零开始——土壤肥沃、种子库丰富，所以杂草几个月内就能覆盖地表，几十年内可恢复到森林（气候允许时），远快于裸岩的初生演替。</p>
+    </div>
+
+    <h2 class="o">④ 初生 vs 次生：起点决定速度</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>初生演替</th><th>次生演替</th></tr>
+        <tr><td>起点</td><td>从来没有植被，或原有植被<b>彻底消灭</b>（连土壤、种子都没有）</td><td>原有植被不存在，但<b>土壤条件、繁殖体保留</b></td></tr>
+        <tr><td>经典实例</td><td>裸岩、沙丘、火山岩、冰川泥</td><td>弃耕农田、火灾后的草原、过量砍伐后的森林</td></tr>
+        <tr><td>速度</td><td>很<b>慢</b>（要先造土壤，往往需要成百上千年）</td><td>较<b>快</b>（土壤和种子库现成，几十年可见明显变化）</td></tr>
+        <tr><td>经历阶段</td><td>阶段更多、更完整（从地衣开始）</td><td>可跳过早期阶段，直接从草本/灌木起步</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一句话锁死:</b> <b>看起点有没有土壤和繁殖体</b>——没有，初生；有，次生。次生演替因为「不用从头造土」，所以<b>永远比初生快</b>。</p>
+      <p class="trap">⚠ 不能用「时间长短」反推类型！要看<b>起点条件</b>（有无土壤和繁殖体），时间长短只是起点条件不同带来的<b>结果</b>，不是判断依据本身。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⏱️ 互动 2 — 初生 vs 次生演替对比：同起跑线，看谁先到「森林」</div>
+      <svg id="cmpSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cmpGo">▶ 同时起跑</button><button id="cmpReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>初生演替进度</b><span id="cmpP1">0%</span></div>
+        <div><b>次生演替进度</b><span id="cmpP2">0%</span></div>
+        <div><b>初生所需时间</b><span id="cmpT1">数百~上千年</span></div>
+        <div><b>次生所需时间</b><span id="cmpT2">几十年</span></div>
+      </div>
+      <p class="small">两条跑道同时出发：上方（裸岩起点）要先经历地衣造土的漫长阶段；下方（弃耕农田起点）土壤现成，进度条明显更快到达「森林/顶极」。</p>
+    </div>
+
+    <h2 class="v">⑤ 演替的方向：不一定走向森林</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>一般趋势:</b> 演替过程中，群落通常向<b>物种多样化</b>、<b>群落结构复杂化</b>（分层增多、空间利用更充分）、<b>生态系统稳定性增强</b>的方向发展——这是「一般规律」，但<b>不是必然结局是森林</b>。</p>
+      <div class="mono">演替能走多远，最终受当地的气候等环境条件（水分、温度、土壤等）限制</div>
+      <p style="margin:8px 0"><b>顶极群落:</b> 在一定气候和土壤条件下，演替最终会达到一个<b>相对稳定的群落阶段</b>，此后群落类型基本不再更替，这就是该地区演替的<b>顶极群落</b>——它由当地的<b>气候（尤其是水分、温度）</b>等条件决定，不同地区顶极群落类型不同。</p>
+      <p style="margin:6px 0"><b>典型例子:</b> 湿润地区演替可以发展到森林；<b>干旱地区(如草原、荒漠区)由于水分不足，演替往往停留在草本阶段（草原），达不到森林</b>——草原就是该地区的顶极群落，不是演替「没走完」。</p>
+      <p class="trap">⚠ 「演替一定会发展到森林阶段」是最常见的错误说法！森林只是<b>水热条件充足地区</b>的顶极群落，干旱区、高寒区的顶极群落可能只是草原、荒漠或苔原。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌍 互动 5 — 演替方向受气候限制：不同水分条件下的顶极群落不同</div>
+      <svg id="climSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>年降水量（mm） <input id="climR" type="range" min="100" max="1600" value="800" step="50"></label>
+      </div>
+      <div class="live">
+        <div><b>水分条件</b><span id="climLv">中等</span></div>
+        <div><b>可能到达的顶极</b><span id="climEnd">森林</span></div>
+        <div><b>是否受限于气候</b><span id="climLim">否</span></div>
+        <div><b>结构复杂度</b><span id="climCx">高</span></div>
+      </div>
+      <p class="small">拖动降水量滑块：水分越少，演替能到达的最高阶段越低（荒漠→草原→森林），并<b>停在那个阶段</b>——这就是该气候条件下的顶极群落，不是演替失败或没走完。</p>
+    </div>
+
+    <h2 class="r">⑥ 物种数与群落复杂度随时间变化</h2>
+    <div class="card">
+      <p style="margin:6px 0">演替过程中，随着阶段推进，群落的<b>物种丰富度</b>（物种数目）通常<b>逐渐增加</b>，<b>垂直结构</b>（分层）和<b>水平结构</b>也随之复杂化：裸岩阶段几乎无分层，到森林阶段出现乔木层、灌木层、草本层、地被层的明显分层，对光照、空间的利用更充分。</p>
+      <p style="margin:8px 0"><b>但增长不是无限的:</b> 接近顶极群落时，物种数和结构复杂度趋于<b>相对稳定</b>（一定范围内的动态平衡），而不是一直无限增加。达到顶极后，群落结构和物种组成在没有外界大干扰时保持相对稳定。</p>
+      <p class="trap">⚠ 别把「物种数增加」理解成无限增加——到达顶极群落后趋于<b>相对稳定的平衡</b>，这也是「稳定性增强」的体现之一。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 物种数 / 群落结构复杂度随演替时间变化曲线</div>
+      <svg id="curveSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="curvemode on" data-c="0">初生演替（慢，起点低）</button>
+        <button class="curvemode" data-c="1">次生演替（快，起点高）</button>
+      </div>
+      <p class="small">横轴=演替时间，纵轴=物种丰富度/结构复杂度。两条曲线都是「先快速上升，接近顶极后趋于平稳」，但次生演替曲线<b>起点更高、上升更快</b>。</p>
+    </div>
+
+    <h2 class="b">⑦ 人类活动对演替的影响</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>核心结论:</b> 人类活动会<b>影响演替的速度和方向</b>，使演替<b>不完全按照自然演替的路径和速度</b>进行——既可能加速、也可能减速；既可能顺着自然方向、也可能使其<b>逆行或改变方向</b>。</p>
+      <table>
+        <tr><th>人类活动</th><th>对演替的影响</th></tr>
+        <tr><td>退耕还林、还草、还湖</td><td>顺应并<b>加速</b>演替，主动恢复群落结构和生态功能</td></tr>
+        <tr><td>过度砍伐、放牧、开垦</td><td><b>使群落逆向演替</b>或长期停滞在较低阶段，改变演替方向</td></tr>
+        <tr><td>封山育林、自然保护区</td><td>排除干扰，让演替<b>按自身规律加速</b>推进</td></tr>
+        <tr><td>农业耕作(持续翻耕)</td><td>持续阻止演替发生，使群落<b>长期停留在人为控制的阶段</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>退耕还林、还草、还湖</b>是人教版教材强调的重要国策实例：通过<b>停止人为干扰</b>（不再耕种、放牧、围湖造田），让次生演替按自然规律重新进行，是人类<b>主动利用演替规律</b>恢复生态的典型做法。</p>
+      <p class="trap">⚠ 人类活动对演替的影响是<b>双向</b>的——不能一概说「人类活动=破坏演替」。退耕还林还草还湖恰恰是<b>顺应</b>演替、加速演替向好的方向发展。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🏞️ 互动 4 — 人类活动如何改变演替的速度与方向</div>
+      <svg id="humanSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="humode on" data-h="0">自然演替（无干预）</button>
+        <button class="humode" data-h="1">退耕还林还草（加速恢复）</button>
+        <button class="humode" data-h="2">过度放牧/砍伐（逆向/停滞）</button>
+      </div>
+      <div class="verdict" id="humNote"></div>
+      <p class="small">三条曲线同一起点：自然演替按固有速度前进；退耕还林还草让曲线<b>更快</b>接近顶极；过度放牧砍伐让曲线<b>回落或停滞</b>，方向也可能被改变。</p>
+    </div>
+
+    <h2 class="g">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 初生 vs 次生演替判断</h3>
+      <p><b class="tag">触发信号:</b> 给出一个具体场景（裸岩、沙丘、弃耕农田、火灾后森林、冰川泥……），要求判断演替类型。</p>
+      <p><b class="tag">标准动作:</b> 只看一个点——起点<b>有没有土壤条件和繁殖体（种子/根系/孢子）</b>。没有→初生；有（哪怕地表植被没了）→次生。</p>
+      <p><b class="tag">示例(带解):</b> 某森林被山火烧毁，地表植被荡然无存，但地下根系、种子库未受损。这是初生还是次生演替？答：<b>次生演替</b>——虽然地上植被没了，但土壤和繁殖体（根系、种子）保留，符合次生演替定义。</p>
+      <p class="trap">陷阱:只看「地表有没有植物」就判断为初生，忽略了土壤和繁殖体这个真正的判据。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 演替速度比较</h3>
+      <p><b class="tag">触发信号:</b>「哪个演替更快/更慢」「需要的时间长短比较」。</p>
+      <p><b class="tag">标准动作:</b> 先判断类型（初生/次生），再套结论：<b>次生演替 &gt; 初生演替（速度）</b>，因为次生演替不需要从头形成土壤。</p>
+      <p><b class="tag">示例(带解):</b> 裸岩演替到森林 vs 弃耕农田演替到森林，哪个更快？答：<b>弃耕农田（次生）更快</b>，因为土壤和种子库现成，裸岩（初生）要先靠地衣、苔藓造土，耗时长得多。</p>
+      <p class="trap">陷阱:以为「都能到森林所以速度一样」；忽略起点条件对速度的决定性影响。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 演替方向是否一定到森林</h3>
+      <p><b class="tag">触发信号:</b> 给出某地区演替最终稳定在草原/荒漠/苔原等非森林阶段，问「为什么没有发展成森林」「是不是演替没有演替完」。</p>
+      <p><b class="tag">标准动作:</b> 判断该地区气候条件（尤其<b>水分</b>）是否支持森林生长。不支持→该阶段就是<b>顶极群落</b>，演替已完成，不是「中断」。</p>
+      <p><b class="tag">示例(带解):</b> 某干旱地区演替多年后稳定为草原，多年未变。这是演替失败吗？答：<b>不是</b>。由于该地区降水量不足，草原就是当地气候条件下的<b>顶极群落</b>，演替已达到相对稳定阶段，并非森林才算「演替完成」。</p>
+      <p class="trap">陷阱:认为「演替的终点必须是森林」；把「停留在某阶段」误判为演替被打断或失败。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 人类活动对演替的影响判断</h3>
+      <p><b class="tag">触发信号:</b> 给出一项人类活动（退耕还林、过度放牧、封山育林、开垦……），问对演替速度/方向的影响。</p>
+      <p><b class="tag">标准动作:</b> 先判断该活动是<b>减少干扰</b>（顺应演替，通常加速）还是<b>增加干扰</b>（打断/逆转演替，通常减速或改向）。</p>
+      <p><b class="tag">示例(带解):</b> 某地实施退耕还林还草，10 年后由农田变为灌草丛。这体现了什么？答：人类活动（退耕）<b>改变了演替的速度</b>（加速恢复），本质是<b>停止人为干扰</b>，让次生演替按自然规律加速推进。</p>
+      <p class="trap">陷阱:笼统认为「人类活动都会破坏演替、使其变慢」，忽略退耕还林还草还湖这类<b>促进</b>演替的正面例子。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 群落结构/物种丰富度变化描述</h3>
+      <p><b class="tag">触发信号:</b> 要求描述演替过程中群落物种数目、垂直结构、水平结构的变化趋势。</p>
+      <p><b class="tag">标准动作:</b> 总方向：物种数<b>增多</b>、分层（垂直结构）<b>更复杂</b>、对环境资源利用更<b>充分</b>、群落稳定性<b>增强</b>；接近顶极后趋于<b>相对稳定</b>。</p>
+      <p><b class="tag">示例(带解):</b> 裸岩演替到森林阶段，群落结构如何变化？答：从几乎无分层的裸岩阶段，逐渐出现草本层→灌木层→乔木层，形成明显的垂直分层，物种丰富度持续增加，到森林阶段趋于相对稳定的顶极状态。</p>
+      <p class="trap">陷阱:认为物种数会无限增加，忽略「接近顶极后趋于稳定」这一点。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 演替概念辨析（是不是演替）</h3>
+      <p><b class="tag">触发信号:</b> 给出一个变化现象（如某种群数量季节性波动、群落物种组成质变），要求判断是否属于「演替」。</p>
+      <p><b class="tag">标准动作:</b> 检查两点：① 变化主体是不是<b>群落</b>（不是单一种群数量）；② 是否为<b>不可逆的、优势种更替式</b>的长期变化（不是周期性季节波动）。两者都满足才是演替。</p>
+      <p><b class="tag">示例(带解):</b> 某草地夏季草木繁茂、冬季大量枯萎，年年如此。这是演替吗？答：<b>不是</b>。这是<b>季节性的周期变化</b>，群落类型（草原）本身没有被替代，不满足演替「不可逆的群落更替」这一实质。</p>
+      <p class="trap">陷阱:把周期性、可逆的季节变化或单一种群数量波动误判为演替。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 演替的主体是<b>群落</b>，不是个体、不是单一种群数量波动，也不是可逆的季节变化。</p>
+      <p class="trap">② 判断初生 vs 次生的<b>唯一标准</b>是起点有没有<b>土壤条件和繁殖体</b>，不是看时间长短，也不是单看地表有没有植物。</p>
+      <p class="trap">③ <b>次生演替一定比初生演替快</b>——因为不用从头形成土壤，这是结论不是巧合。</p>
+      <p class="trap">④ 演替<b>不一定发展到森林阶段</b>！最终能到达的阶段（顶极群落）由当地<b>气候（水分、温度）等条件</b>决定，干旱区可能停在草原或荒漠。</p>
+      <p class="trap">⑤ 停留在草原/荒漠阶段不代表演替「没完成」或「被打断」，那正是该地区的<b>顶极群落</b>，演替已经达到相对稳定状态。</p>
+      <p class="trap">⑥ 人类活动对演替的影响是<b>双向</b>的：可以加速（退耕还林还草还湖），也可以使其减速或逆向（过度放牧、砍伐、开垦）。</p>
+      <p class="trap">⑦ 地衣先于苔藓出现，是因为地衣能<b>分泌有机酸分解岩石</b>、积累有机质，为后续物种创造土壤条件，不是随机顺序。</p>
+      <p class="trap">⑧ 演替过程中群落<b>结构趋于复杂化、稳定性增强</b>，但接近顶极后物种数和结构会趋于<b>相对稳定</b>，不是无限增加。</p>
+      <p class="trap">⑨ 弃耕农田、火灾后森林都属于<b>次生演替</b>，不要因为「原有植被被毁」就误判为初生演替。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 判断初生/次生的本质是「资源起点」的差异，不是「时间」本身:</b> 次生演替快，根本原因是<b>土壤系统（矿物质、有机质、微生物、种子库）已经建成</b>，省去了初生演替中最耗时的「地衣造土」阶段。理解了这个机制，你可以推广到任何新场景（比如「熔岩流覆盖后的演替」「重金属污染地的恢复」）而不必死记案例。</p>
+      <p style="margin:8px 0"><b>② 顶极群落不是「终点」而是「动态平衡点」:</b> 到达顶极群落后，群落并非静止不变，而是物种组成、结构在<b>特定气候条件所能支持的范围内</b>保持相对稳定的动态平衡——一旦气候发生长期变化（如全球变暖导致某地降水模式改变），顶极群落本身也会随之调整，这就是「演替方向受环境条件决定」的深层含义。</p>
+      <p style="margin:8px 0"><b>③ 演替的方向性 ≠ 决定论式的必然，而是「概率占优的趋势」:</b> 教材说「一般朝物种多样化、结构复杂化方向发展」，这是在没有持续强干扰下的<b>统计规律</b>，不是铁律。剧烈的、持续的干扰（人类活动、自然灾害反复发生）完全可以让群落长期停留在低复杂度阶段，这正是题目考「人类活动改变方向」的理论基础。</p>
+      <p style="margin:8px 0"><b>④ 退耕还林还草还湖的生态学原理是「解除限制因子」:</b> 农田/牧场之所以不能自然演替，是因为人为耕作、放牧持续<b>清除新定居的物种</b>，人为把群落锁定在低阶段。退耕的本质是<b>移除这个人为限制因子</b>，让次生演替的自然驱动力（物种竞争、resource利用效率提升）重新发挥作用——理解这一点，就能推广解释「封山育林」「湿地恢复」等所有同类题目。</p>
+      <p style="margin:8px 0"><b>⑤ 演替是「群落尺度的自然选择」:</b> 每个演替阶段的物种组成，本质是在当前资源条件（光照、土壤、水分）下<b>最能有效利用资源、竞争力最强</b>的物种组合；条件变化（比如树冠遮蔽改变了林下光照）会淘汰旧优势种、引入新优势种。这解释了为什么演替有方向性（资源利用效率总体在提升），也解释了为什么会在顶极处停下（资源利用已接近该环境条件下的极限，新物种难以再取代现有优势种）。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 配套:种群与群落、生态系统攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:初生演替阶段动画 ===== */
+(function(){
+  const svg=document.getElementById('stageSvg');
+  const slider=document.getElementById('stSlider');
+  const oName=document.getElementById('stName'),oRich=document.getElementById('stRich'),oSoil=document.getElementById('stSoil'),oTime=document.getElementById('stTime');
+  const stages=[
+    {name:'裸岩阶段',rich:'几乎为零',soil:'无',time:'起点'},
+    {name:'地衣阶段',rich:'极低',soil:'开始形成(有机酸腐蚀岩石)',time:'数十~上百年'},
+    {name:'苔藓阶段',rich:'低',soil:'薄层土壤',time:'继续积累'},
+    {name:'草本植物阶段',rich:'中等',soil:'渐厚',time:'数百年量级'},
+    {name:'灌木阶段',rich:'较高',soil:'较厚，肥力提升',time:'数百年量级'},
+    {name:'森林阶段',rich:'高（多层次）',soil:'厚且稳定',time:'成百上千年'}
+  ];
+  let stage=0,running=false,raf=null;
+  function draw(){
+    clr(svg);
+    const baseY=210,W=700;
+    // sky
+    el(svg,'rect',{x:0,y:0,width:W,height:baseY,fill:'#eaf4fb'});
+    // ground
+    const soilH=[0,2,4,8,14,20][stage];
+    el(svg,'rect',{x:0,y:baseY,width:W,height:50,fill:'#8a5a2b'});
+    el(svg,'rect',{x:0,y:baseY-soilH,width:W,height:soilH,fill:'#5b3d1f'});
+    el(svg,'rect',{x:0,y:baseY-4,width:W,height:4,fill:INK});
+    // rock base always visible faintly
+    el(svg,'rect',{x:40,y:baseY-30,width:620,height:30,fill:'#9a9a9a',stroke:INK,'stroke-width':3});
+    // stage-specific drawing
+    if(stage>=1){ // lichen patches
+      for(let i=0;i<10;i++){
+        el(svg,'circle',{cx:70+i*62,cy:baseY-15,r:8,fill:'#c9d15a',stroke:INK,'stroke-width':2});
+      }
+    }
+    if(stage>=2){ // moss tufts
+      for(let i=0;i<8;i++){
+        el(svg,'ellipse',{cx:90+i*75,cy:baseY-soilH-4,rx:10,ry:6,fill:'#3f8f4f',stroke:INK,'stroke-width':2});
+      }
+    }
+    if(stage>=3){ // grasses
+      for(let i=0;i<14;i++){
+        const gx=50+i*45;
+        el(svg,'line',{x1:gx,y1:baseY-soilH,x2:gx-4,y2:baseY-soilH-26,stroke:'#2f9e44','stroke-width':3});
+        el(svg,'line',{x1:gx,y1:baseY-soilH,x2:gx+4,y2:baseY-soilH-24,stroke:'#2f9e44','stroke-width':3});
+      }
+    }
+    if(stage>=4){ // shrubs
+      for(let i=0;i<6;i++){
+        const sx=110+i*100;
+        el(svg,'circle',{cx:sx,cy:baseY-soilH-22,r:20,fill:'#2f7d3a',stroke:INK,'stroke-width':3});
+        el(svg,'rect',{x:sx-3,y:baseY-soilH-4,width:6,height:14,fill:'#6b4423'});
+      }
+    }
+    if(stage>=5){ // trees
+      for(let i=0;i<5;i++){
+        const tx=90+i*130;
+        el(svg,'rect',{x:tx-6,y:baseY-soilH-60,width:12,height:60,fill:'#6b4423',stroke:INK,'stroke-width':2});
+        el(svg,'circle',{cx:tx,cy:baseY-soilH-70,r:34,fill:'#1E9E86',stroke:INK,'stroke-width':3});
+      }
+    }
+    el(svg,'text',{x:20,y:26,'font-size':16,'font-weight':900,fill:INK}).textContent='阶段 '+(stage+1)+'/6：'+stages[stage].name;
+    el(svg,'text',{x:20,y:46,'font-size':12.5,'font-weight':700,fill:'#4a4128'}).textContent='土壤层厚度示意（越厚代表越接近森林顶极）';
+    oName.textContent=stages[stage].name;oRich.textContent=stages[stage].rich;oSoil.textContent=stages[stage].soil;oTime.textContent=stages[stage].time;
+    slider.value=stage;
+  }
+  slider.oninput=()=>{stage=+slider.value;draw();};
+  document.getElementById('stReset').onclick=()=>{running=false;stage=0;draw();};
+  document.getElementById('stGo').onclick=()=>{
+    if(running)return;running=true;stage=0;draw();
+    let t=0;
+    function step(){
+      if(!running)return;
+      t++;
+      if(t%40===0&&stage<5){stage++;draw();}
+      if(stage>=5){running=false;return;}
+      raf=requestAnimationFrame(step);
+    }
+    raf=requestAnimationFrame(step);
+  };
+  draw();
+})();
+
+/* ===== 互动6:弃耕农田次生演替 ===== */
+(function(){
+  const svg=document.getElementById('farmSvg');
+  const oName=document.getElementById('farmName'),oSoil=document.getElementById('farmSoil'),oYear=document.getElementById('farmYear'),oType=document.getElementById('farmType');
+  const stages=[
+    {name:'刚弃耕(裸地)',year:0},
+    {name:'一年生杂草阶段',year:1},
+    {name:'多年生杂草阶段',year:5},
+    {name:'灌木阶段',year:20},
+    {name:'乔木阶段(如气候允许)',year:60}
+  ];
+  let stage=0,running=false;
+  function draw(){
+    clr(svg);
+    const baseY=200,W=700;
+    el(svg,'rect',{x:0,y:0,width:W,height:baseY,fill:'#eaf4fb'});
+    el(svg,'rect',{x:0,y:baseY,width:W,height:50,fill:'#5b3d1f'});
+    el(svg,'rect',{x:0,y:baseY-4,width:W,height:4,fill:INK});
+    el(svg,'text',{x:20,y:24,'font-size':15,'font-weight':900,fill:INK}).textContent='弃耕农田（土壤肥沃、种子库丰富——次生演替起点高）';
+    if(stage>=1){ // annual weeds - short thin
+      for(let i=0;i<22;i++){
+        const gx=25+i*30;
+        el(svg,'line',{x1:gx,y1:baseY,x2:gx,y2:baseY-16,stroke:'#7fbf3f','stroke-width':2});
+      }
+    }
+    if(stage>=2){ // perennial weeds - taller denser
+      for(let i=0;i<18;i++){
+        const gx=30+i*38;
+        el(svg,'line',{x1:gx,y1:baseY,x2:gx-3,y2:baseY-34,stroke:'#4f9e3f','stroke-width':3});
+        el(svg,'line',{x1:gx,y1:baseY,x2:gx+3,y2:baseY-30,stroke:'#4f9e3f','stroke-width':3});
+      }
+    }
+    if(stage>=3){ // shrubs
+      for(let i=0;i<7;i++){
+        const sx=80+i*90;
+        el(svg,'circle',{cx:sx,cy:baseY-40,r:22,fill:'#2f7d3a',stroke:INK,'stroke-width':3});
+        el(svg,'rect',{x:sx-3,y:baseY-14,width:6,height:14,fill:'#6b4423'});
+      }
+    }
+    if(stage>=4){ // trees
+      for(let i=0;i<5;i++){
+        const tx=100+i*125;
+        el(svg,'rect',{x:tx-7,y:baseY-90,width:14,height:80,fill:'#6b4423',stroke:INK,'stroke-width':2});
+        el(svg,'circle',{cx:tx,cy:baseY-100,r:38,fill:'#1E9E86',stroke:INK,'stroke-width':3});
+      }
+    }
+    oName.textContent=stages[stage].name;
+    oSoil.textContent='完整保留(次生特征)';
+    oYear.textContent=stages[stage].year+' 年左右';
+    oType.textContent='次生演替';
+  }
+  document.getElementById('farmReset').onclick=()=>{running=false;stage=0;draw();};
+  document.getElementById('farmGo').onclick=()=>{
+    if(running)return;running=true;stage=0;draw();
+    let t=0;
+    function step(){
+      if(!running)return;
+      t++;
+      if(t%45===0&&stage<4){stage++;draw();}
+      if(stage>=4){running=false;return;}
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  };
+  draw();
+})();
+
+/* ===== 互动2:初生 vs 次生对比赛跑 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');
+  const oP1=document.getElementById('cmpP1'),oP2=document.getElementById('cmpP2');
+  let p1=0,p2=0,running=false;
+  function draw(){
+    clr(svg);
+    const X0=40,W=620;
+    el(svg,'text',{x:X0,y:30,'font-size':14,'font-weight':900,fill:BLUE}).textContent='初生演替（裸岩起点）';
+    el(svg,'rect',{x:X0,y:40,width:W,height:34,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:X0,y:40,width:W*p1,height:34,fill:BLUE});
+    el(svg,'text',{x:X0+8,y:64,'font-size':12,'font-weight':900,fill:'#fff'}).textContent=(p1*100).toFixed(0)+'%';
+    el(svg,'text',{x:X0,y:110,'font-size':14,'font-weight':900,fill:GREEN}).textContent='次生演替（弃耕农田起点）';
+    el(svg,'rect',{x:X0,y:120,width:W,height:34,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:X0,y:120,width:W*p2,height:34,fill:GREEN});
+    el(svg,'text',{x:X0+8,y:144,'font-size':12,'font-weight':900,fill:'#fff'}).textContent=(p2*100).toFixed(0)+'%';
+    // finish line labeled "森林/顶极"
+    el(svg,'line',{x1:X0+W,y1:35,x2:X0+W,y2:160,stroke:RED,'stroke-width':3,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+W-4,y:180,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='终点=森林/顶极群落';
+    el(svg,'text',{x:X0,y:210,'font-size':13,'font-weight':800,fill:INK}).textContent='同样跑到终点：初生要先经历地衣造土的漫长阶段，次生土壤现成，直接从草本/灌木起步。';
+    el(svg,'text',{x:X0,y:234,'font-size':13,'font-weight':900,fill:INK}).textContent='结论：起点条件（有无土壤和繁殖体）决定了速度差异，次生总是更快。';
+    oP1.textContent=(p1*100).toFixed(0)+'%';oP2.textContent=(p2*100).toFixed(0)+'%';
+  }
+  document.getElementById('cmpReset').onclick=()=>{running=false;p1=0;p2=0;draw();};
+  document.getElementById('cmpGo').onclick=()=>{
+    if(running)return;running=true;p1=0;p2=0;
+    function step(){
+      if(!running)return;
+      p1=Math.min(1,p1+0.0035); // slow
+      p2=Math.min(1,p2+0.011); // ~3x faster
+      draw();
+      if(p1>=1&&p2>=1){running=false;return;}
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  };
+  draw();
+})();
+
+/* ===== 互动5:气候限制演替方向 ===== */
+(function(){
+  const svg=document.getElementById('climSvg');
+  const Rs=document.getElementById('climR');
+  const oLv=document.getElementById('climLv'),oEnd=document.getElementById('climEnd'),oLim=document.getElementById('climLim'),oCx=document.getElementById('climCx');
+  function sync(){draw();}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const R=+Rs.value;
+    let level,endStage,limited,cx,col;
+    if(R<300){level='极干旱';endStage='荒漠(顶极)';limited='是,水分严重不足';cx='很低';col=BROWN;}
+    else if(R<600){level='干旱';endStage='草原(顶极)';limited='是,水分不足以支持森林';cx='中';col=YEL;}
+    else if(R<1000){level='半湿润';endStage='稀树草原/疏林(顶极)';limited='部分受限';cx='较高';col=ORANGE;}
+    else{level='湿润';endStage='森林(顶极)';limited='否,水分充足';cx='高';col=GREEN;}
+    oLv.textContent=level;oEnd.textContent=endStage;oLim.textContent=limited;oCx.textContent=cx;
+    // draw a "staircase" of possible endpoints, highlight reached one
+    const labels=['荒漠','草原','疏林','森林'];
+    const thresholds=[300,600,1000,1600];
+    let reachedIdx=0;
+    if(R>=1600)reachedIdx=3; else if(R>=1000)reachedIdx=2; else if(R>=600)reachedIdx=1; else reachedIdx=0;
+    const baseY=220,barW=140,gap=20,X0=40;
+    for(let i=0;i<4;i++){
+      const h=[40,80,130,180][i];
+      const x=X0+i*(barW+gap);
+      const on=i<=reachedIdx;
+      el(svg,'rect',{x:x,y:baseY-h,width:barW,height:h,fill:on?['#8a5a2b','#c9c15a','#7fbf3f','#1E9E86'][i]:'#ddd','stroke':INK,'stroke-width':3});
+      el(svg,'text',{x:x+barW/2,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=labels[i];
+      if(i===reachedIdx){
+        el(svg,'text',{x:x+barW/2,y:baseY-h-10,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='← 当前顶极';
+      }
+    }
+    el(svg,'text',{x:X0,y:30,'font-size':14,'font-weight':900,fill:INK}).textContent='年降水量 '+R+'mm → 该气候条件下能到达的顶极群落';
+    el(svg,'text',{x:X0,y:250,'font-size':12.5,'font-weight':700,fill:'#4a4128'}).textContent='水分越充足，演替能达到的顶极阶段越复杂；干旱地区演替会稳定停在较低阶段，这不是演替失败。';
+  }
+  draw();
+})();
+
+/* ===== 互动3:物种数/复杂度曲线 ===== */
+(function(){
+  const svg=document.getElementById('curveSvg');
+  let mode=0;
+  document.querySelectorAll('.curvemode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.curvemode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=600,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='丰富度/复杂度';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='演替时间 →';
+    // two possible curves: primary (slow start, low origin) vs secondary (fast start, higher origin)
+    let pts=[];
+    const n=60;
+    const startFrac = mode===0?0.03:0.28; // secondary starts higher (already has soil/seed bank)
+    const rate = mode===0?3.2:6.0; // secondary rises faster
+    for(let i=0;i<=n;i++){
+      const x=i/n;
+      const val=startFrac + (1-startFrac)*(1-Math.exp(-rate*x));
+      pts.push([X0+x*W, Y0+H-val*H]);
+    }
+    const d=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    el(svg,'path',{d:d,fill:'none',stroke:mode===0?BLUE:GREEN,'stroke-width':4});
+    // plateau marker
+    el(svg,'line',{x1:X0,y1:Y0+H-H*0.95,x2:X0+W,y2:Y0+H-H*0.95,stroke:'#999','stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+W-4,y:Y0+H-H*0.95-6,'font-size':11.5,'font-weight':800,fill:'#666','text-anchor':'end'}).textContent='接近顶极后趋于相对稳定';
+    el(svg,'text',{x:X0+10,y:Y0+H-startFrac*H-10,'font-size':11.5,'font-weight':800,fill:mode===0?BLUE:GREEN}).textContent='起点丰富度：'+(mode===0?'极低(裸岩)':'较高(土壤/种子库现成)');
+    el(svg,'text',{x:X0,y:16,'font-size':14,'font-weight':900,fill:INK}).textContent=mode===0?'初生演替：起点低、上升慢':'次生演替：起点较高、上升快';
+  }
+  draw();
+})();
+
+/* ===== 互动4:人类活动影响演替速度方向 ===== */
+(function(){
+  const svg=document.getElementById('humanSvg');const note=document.getElementById('humNote');
+  let h=0;
+  document.querySelectorAll('.humode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.humode').forEach(x=>x.classList.remove('on'));b.classList.add('on');h=+b.dataset.h;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=600,H=190;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='演替程度';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='时间 →';
+    const n=50;let pts=[];
+    for(let i=0;i<=n;i++){
+      const x=i/n;
+      let val;
+      if(h===0){ val=1-Math.exp(-2.2*x); } // natural baseline
+      else if(h===1){ val=1-Math.exp(-4.2*x); } // faster (退耕还林还草)
+      else { // 过度放牧/砍伐: rises then drops/stalls
+        if(x<0.4) val=(1-Math.exp(-2.2*x));
+        else val=(1-Math.exp(-2.2*0.4))*(1-0.5*(x-0.4)/0.6);
+      }
+      pts.push([X0+x*W, Y0+H-val*H]);
+    }
+    const col=h===0?INK:h===1?GREEN:RED;
+    const d=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':4});
+    el(svg,'text',{x:X0+10,y:Y0+16,'font-size':13,'font-weight':900,fill:col}).textContent=
+      h===0?'自然演替（无人为干预）':h===1?'退耕还林还草还湖：曲线更快上升（加速）':'过度放牧/砍伐：曲线上升后回落或停滞（逆向/改向）';
+    let msg;
+    if(h===0)msg='不受人类干预时，演替按自身规律和速度推进，最终趋于当地气候决定的顶极群落。';
+    else if(h===1)msg='退耕还林还草还湖：本质是<b>停止人为干扰</b>，次生演替重新启动并加速推进，明显快于自然对照。';
+    else msg='过度放牧、砍伐：持续人为干扰使演替<b>停滞甚至逆转</b>，群落可能长期回落到更低阶段，方向被人为改变。';
+    note.innerHTML=msg;
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 什么是演替？变化的主体是什么？",a:"演替是随着时间的推移，一个群落被另一个群落代替的过程。变化的主体是群落（优势种更替、结构改变），不是单个个体或某个种群数量的简单波动。"},
+ {q:"2. 初生演替和次生演替的判断标准是什么？",a:"看起点有没有土壤条件和繁殖体（种子、孢子、根系等）。从来没有过植被或原有植被和土壤被彻底消灭→初生演替；原有植被不存在但土壤和繁殖体保留→次生演替。"},
+ {q:"3. 裸岩上的演替要经历哪些阶段？为什么是地衣先出现？",a:"裸岩阶段→地衣阶段→苔藓阶段→草本植物阶段→灌木阶段→森林阶段。地衣先出现是因为它能分泌有机酸腐蚀分解岩石、积累有机质，为后续物种创造土壤条件。"},
+ {q:"4. 弃耕农田属于初生还是次生演替？为什么比裸岩演替快？",a:"次生演替。因为弃耕农田保留了原有的土壤条件和种子库，不需要像裸岩那样从头形成土壤，所以恢复速度快得多。"},
+ {q:"5. 演替是否一定会发展到森林阶段？由什么决定？",a:"不一定。演替最终能达到的阶段（顶极群落）由当地气候（尤其是水分、温度）等环境条件决定。干旱地区可能受水分限制停留在草原甚至荒漠阶段，达不到森林。"},
+ {q:"6. 什么是顶极群落？",a:"在一定气候和土壤条件下，演替最终达到的一个相对稳定的群落阶段，此后群落类型基本不再更替。不同气候条件下顶极群落类型不同（森林、草原、荒漠等）。"},
+ {q:"7. 人类活动对演替有什么影响？举例说明。",a:"人类活动可以改变演替的速度和方向。例如退耕还林、还草、还湖，通过停止人为干扰，顺应并加速演替进程；而过度放牧、砍伐、开垦则会使演替停滞甚至逆转，改变演替方向。"},
+ {q:"8. 某干旱地区的演替长期稳定在草原阶段，这说明演替失败了吗？",a:"不是。这说明草原就是该地区在当前气候（水分）条件下的顶极群落，演替已经达到相对稳定状态，并非森林才代表演替完成。"},
+ {q:"9. 演替过程中群落的物种丰富度和结构会怎样变化？",a:"一般随演替推进，物种丰富度增加，垂直结构（分层）和水平结构趋于复杂化，群落稳定性增强；但接近顶极群落后，这些指标趋于相对稳定，不会无限增加。"},
+ {q:"10. 某草地夏季茂盛、冬季枯萎，年年如此，这属于演替吗？",a:"不属于。这是周期性、可逆的季节变化，群落类型（草原）本身没有被另一个群落替代，不满足演替「不可逆的群落更替」这一实质特征。"},
+ {q:"11. 火灾后的森林恢复属于哪种演替？依据是什么？",a:"次生演替。虽然地表植被被烧毁，但土壤条件和地下繁殖体（种子库、根系）基本保留，符合次生演替的定义。"},
+ {q:"12. 为什么说次生演替一定比初生演替快？",a:"因为初生演替要从零开始，先靠地衣等生物逐步分解岩石、积累有机质形成土壤，耗时极长；次生演替的土壤和种子库现成，可以直接从草本/灌木阶段起步，省去了造土这个最慢的环节，所以恢复速度明显更快。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

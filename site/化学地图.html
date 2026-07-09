@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学 · 知识图谱 / 题型地图 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--pink:#C81E6E;--shadow:6px 6px 0 var(--ink);--accent:#1E9E86;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  .topnav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:12px 18px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:38px;height:38px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}.logomark svg{width:24px;height:24px}.brand b{font-size:21px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 16px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:800;border-left:3px solid var(--ink)}.links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:11px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .hd{max-width:1180px;margin:0 auto;padding:16px 18px 6px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:5px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:27px;font-weight:900;letter-spacing:-1px;margin:8px 0 4px}
+  .sub{font-size:14.5px;font-weight:600;max-width:820px;margin:0}
+  .prog{display:inline-block;margin-left:8px;background:var(--ink);color:#fff;font-weight:900;font-size:12px;padding:3px 10px;border:2px solid var(--ink)}
+  .toolbar{max-width:1180px;margin:10px auto 0;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toolbar input{border:3px solid var(--ink);padding:7px 11px;font-size:14px;font-weight:700;font-family:inherit;box-shadow:3px 3px 0 var(--ink);min-width:170px}
+  .tbtn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:3px 3px 0 var(--accent)}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12.5px;font-weight:800;margin-left:auto}
+  .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%}.sw.todo{background:#FBF8EF;border-style:dashed;border-color:#b3a880}
+  .stage{position:relative;max-width:1180px;margin:12px auto;padding:0 18px}
+  .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
+  svg#graph{display:block;width:100%;height:78vh;min-height:540px;touch-action:none;cursor:grab}
+  svg#graph.grabbing{cursor:grabbing}
+  .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
+  .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+  .zoombtns button{width:34px;height:34px;border:3px solid var(--ink);background:#fff;font-weight:900;font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .panel{position:absolute;top:12px;right:12px;width:310px;max-width:80%;background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;display:none;z-index:5}
+  .panel.show{display:block}
+  .panel .pcat{display:inline-block;font-size:11px;font-weight:900;letter-spacing:1px;padding:2px 8px;border:2px solid var(--ink);color:#fff;text-transform:uppercase}
+  .panel h3{font-size:19px;font-weight:900;margin:8px 0 6px}
+  .panel .row{font-size:13.5px;font-weight:600;margin:7px 0}.panel .row b{font-weight:900}
+  .panel .trig{border-left:8px solid var(--blue);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel .act{border-left:8px solid var(--green);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel a.go{display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+  .panel .soon{display:inline-block;margin-top:8px;background:#FBF8EF;color:#7a6f54;border:3px dashed #b3a880;padding:6px 12px;font-weight:800;font-size:12.5px}
+  .panel .x{position:absolute;top:8px;right:10px;font-weight:900;cursor:pointer;font-size:18px;border:none;background:none}
+  .nl{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3.5px;stroke-linejoin:round}
+  .foot{max-width:1180px;margin:0 auto;padding:8px 18px 60px;font-size:12.5px;font-weight:700;color:#6b5d3a}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="题型地图.html">题型地图</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="hd">
+    <a href="题型地图.html" style="display:inline-block;font-weight:800;font-size:13px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);margin-bottom:10px;text-decoration:none;color:var(--ink)">← 返回总地图</a>
+    <div class="kicker">化学 · 知识图谱</div>
+    <h1>化学 · 题型地图 <span class="prog" id="prog"></span></h1>
+    <p class="sub">活的知识网:<b>拖任意节点,整张网会被弹簧牵着一起动</b>。十大板块各成一团,实心★=已上线攻坚包(可点开),空心=待开发。点节点看「触发信号+标准动作」。滚轮缩放 · 拖背景平移。</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" placeholder="🔍 搜板块 / 题型…" autocomplete="off">
+    <button class="tbtn" id="resetBtn">复位 / 重排</button>
+    <div class="legend">
+      <span><i class="sw" style="background:#16120A"></i>学科</span>
+      <span><i class="sw" style="background:#1E9E86"></i>板块</span>
+      <span><i class="sw" style="background:#F3C00E"></i>★已上线</span>
+      <span><i class="sw todo"></i>待开发</span>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="canvaswrap">
+      <svg id="graph" viewBox="0 0 1600 1120"></svg>
+      <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
+      <div class="hint">拖节点扯动整张网 · 滚轮缩放 · 点节点看详情</div>
+      <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
+    </div>
+  </div>
+  <div class="foot">thebest2dan · 化学知识图谱(完整版) · ★=已上线;空心=待开发,按歼灭名单逐周补齐</div>
+
+<script>
+/* ====== GRAPH DATA (化学 · 完整) ====== */
+const ACCENT="#1E9E86";
+const AREAS=[
+  {id:"A",label:"化学计量"},{id:"B",label:"结构与周期"},{id:"C",label:"反应与能量"},
+  {id:"D",label:"速率与平衡"},{id:"E",label:"水溶液离子"},{id:"F",label:"电化学"},
+  {id:"G",label:"金属及化合物"},{id:"H",label:"非金属及化合物"},{id:"I",label:"有机化学"},{id:"J",label:"实验与工艺"}
+];
+const LEAVES=[
+  {id:"a96",label:"胶体与分散系",cluster:"A",pack:"胶体与分散系.html",trigger:"分散系分类/丁达尔/胶体性质/净水",action:"按分散质粒径分三类;胶体1-100nm;丁达尔鉴别胶体;胶体电泳/聚沉/净水原理"},
+  {id:"i96",label:"有机合成",cluster:"I",pack:"有机合成.html",trigger:"合成路线/官能团转化/逆推/信息题",action:"逆合成分析找目标官能团;卤代→醇→醛→酸的氧化链;酯化/加成/消去/取代衔接;原子经济"},
+  {id:"j96",label:"海水资源利用",cluster:"J",pack:"海水资源利用.html",trigger:"海水提镁/提溴/晒盐/淡化",action:"粗盐提纯除杂顺序;海水提溴富集氧化;海水提镁沉淀→盐酸→电解;蒸馏/反渗透淡化"},
+  {id:"d96",label:"化学反应原理综合",cluster:"D",pack:"化学反应原理综合.html",trigger:"盖斯定律/图像/平衡+电化学综合大题",action:"盖斯定律加合ΔH;K与转化率;结合速率图像;电极方程式;多问综合按信息逐步拆"},
+  {id:"f96",label:"电化学计算",cluster:"F",pack:"电化学计算.html",trigger:"电量/转移电子/串联电解/析出质量",action:"Q=It;n(e)=Q/F;串联各池转移电子相等;由电子守恒求析出质量或气体体积"},
+  {id:"i97",label:"芳香烃",cluster:"I",pack:"芳香烃.html",trigger:"苯/同系物/取代加成/苯环侧链",action:"苯不使溴水褪色;催化取代(硝化卤代);侧链氧化成苯甲酸;苯环与侧链相互影响"},
+  {id:"a93",label:"氧化还原反应",cluster:"A",pack:"氧化还原反应.html",trigger:"概念/配平/电子转移/强弱比较",action:"升失氧降得还;双线桥标电子;得失电子守恒配平;氧化剂氧化性>氧化产物"},
+  {id:"e94",label:"离子方程式书写与正误",cluster:"E",pack:"离子方程式.html",trigger:"离子方程式书写/正误判断",action:"写拆删查;强酸强碱可溶盐才拆;查电荷守恒;注意量的影响"},
+  {id:"e95",label:"离子共存",cluster:"E",pack:"离子共存.html",trigger:"离子能否大量共存",action:"四不共存:沉淀/气体/弱电解质/氧化还原;读隐含条件无色·酸碱·氧化性"},
+  {id:"e96",label:"电离常数与pH综合",cluster:"E",pack:"电离常数与pH.html",trigger:"Ka/Kw计算、强弱酸稀释、pH",action:"Ka只随温度;c(H+)≈√(Ka·c);弱酸稀释10倍pH变<1;Kh=Kw/Ka"},
+  {id:"g92",label:"铜及其化合物",cluster:"G",pack:"铜及其化合物.html",trigger:"铜及化合物性质/转化/计算",action:"铜不与稀硫酸盐酸;与硝酸看浓稀;胆矾受热失水;Cu+2Fe3+蚀刻"},
+  {id:"j93",label:"无机框图推断",cluster:"J",pack:"无机推断.html",trigger:"无机推断/框图/突破口",action:"找题眼(颜色·现象·特征反应)顺推;两性/Na2O2/Fe2+3+枢纽;逆推验证"},
+  {id:"a91",label:"差量法·守恒·过量",cluster:"A",pack:"化学计算方法.html",trigger:"差量/守恒/关系式/过量/混合物计算",action:"抓质量差列比例;电子·原子·电荷守恒;先判过量再按不足量算"},
+  {id:"b91",label:"晶胞与均摊法",cluster:"B",pack:"晶胞计算.html",trigger:"晶胞化学式/密度/配位数计算",action:"顶点1/8棱1/4面1/2体1;ρ=ZM/(NA·a³)注意pm→cm"},
+  {id:"c91",label:"反应热与热化学方程式",cluster:"C",pack:"反应热与热化学.html",trigger:"ΔH计算/热化学方程式/盖斯定律/燃烧热中和热",action:"ΔH=反应物键能−生成物键能;盖斯叠加;中和热57.3;催化剂不改ΔH"},
+  {id:"f91",label:"电极反应式书写",cluster:"F",pack:"电极反应式书写.html",trigger:"原电池/电解/燃料电池电极方程式",action:"三守恒配平;看介质酸碱;总反应=两电极相加"},
+  {id:"i91",label:"有机反应类型判断",cluster:"I",pack:"有机反应类型.html",trigger:"判取代/加成/消去/酯化/加聚缩聚",action:"消去看邻碳有H;水解vs消去看溶剂;酯化酸脱羟基醇脱氢18O示踪"},
+  {id:"i92",label:"烃的含氧衍生物",cluster:"I",pack:"烃的含氧衍生物.html",trigger:"醇酚醛羧酸酯性质与检验",action:"醛基银镜/砖红需碱性;酚遇FeCl3紫;羧酸与Na2CO3放CO2"},
+  {id:"j91",label:"无机化工流程题",cluster:"J",pack:"化工流程.html",trigger:"化工流程读图/操作目的/调pH除杂",action:"每步问目的;调pH不引杂;蒸发/冷却结晶看溶解度;循环利用"},
+  {id:"a1",label:"NA阿伏伽德罗常数",cluster:"A",pack:"阿伏伽德罗常数.html",trigger:"判断NA个数正误的选择题。",action:"万能三问:什么状态?反应完全吗?微粒结构/电子转移算对没?"},
+  {id:"a2",label:"浓度与配制",cluster:"A",pack:"物质的量浓度.html",trigger:"浓度换算、稀释混合、配制误差",action:"c=1000ρw/M;c₁V₁=c₂V₂;定容俯视浓度偏高"},
+  {id:"a3",label:"气体摩尔体积",cluster:"A",note:"标况22.4、阿伏伽德罗定律推论。"},
+  {id:"a4",label:"过量计算",cluster:"A",note:"过量判断、多步反应、差量法。"},
+  {id:"a5",label:"守恒法计算",cluster:"A",pack:"守恒法.html",trigger:"氧化还原电子守恒、原子/电荷守恒巧算",action:"只看始末某量不变;氧化剂得电子=还原剂失电子;抓两头列关系式"},
+  {id:"b1",label:"原子结构同位素",cluster:"B",note:"质子中子电子、同位素、相对原子质量。"},
+  {id:"b2",label:"核外电子排布",cluster:"B",note:"能层能级、排布式、最外层规律。"},
+  {id:"b3",label:"周期律递变",cluster:"B",pack:"元素周期律.html",trigger:"半径比较、金属非金属性强弱、酸碱性",action:"半径先看层数再看核电荷;同周期左→右非金属性增强;最高氧化物水化物酸性增强"},
+  {id:"b4",label:"位构性推断",cluster:"B",pack:"元素周期律.html",trigger:"短周期推断、位构性互推",action:"抓突破口:序数关系、化合价、特殊性质;位→构→性三者互推"},
+  {id:"b5",label:"化学键与晶体",cluster:"B",pack:"化学键与晶体.html",trigger:"判键型/晶体类型、比较熔沸点",action:"含离子键=离子化合物;原子晶体>离子>分子;NaOH含离子键+共价键"},
+  {id:"b6",label:"电子式结构式",cluster:"B",pack:"化学键与晶体.html",trigger:"电子式书写、键型判断",action:"离子化合物标电荷[]、共价分子共用电子对;Na₂O₂含非极性共价键"},
+  {id:"c1",label:"焓变热化学式",cluster:"C",note:"ΔH正负、热化学方程式书写规范。"},
+  {id:"c2",label:"盖斯定律",cluster:"C",pack:"盖斯定律.html",trigger:"求目标ΔH、键能计算、比较反应热",action:"目标=已知反应线性组合,ΔH同步加减倍乘;带符号比较"},
+  {id:"c3",label:"键能算反应热",cluster:"C",note:"ΔH=反应物键能和−生成物键能和。"},
+  {id:"c4",label:"反应热比较",cluster:"C",note:"状态、量、燃烧热中和热概念辨析。"},
+  {id:"d1",label:"速率计算与因素",cluster:"D",pack:"化学反应速率.html",trigger:"速率计算换算、影响因素、有效碰撞",action:"v=Δc/Δt;比较先换算成同一物质(比=系数比);催化剂降活化能"},
+  {id:"d2",label:"化学平衡移动",cluster:"D",pack:"化学平衡.html",trigger:"改变浓度/压强/温度问移动方向、转化率。",action:"勒夏特列定方向→看v正v逆;催化剂不移动。"},
+  {id:"d3",label:"平衡常数K转化率",cluster:"D",pack:"化学平衡.html",trigger:"求K、判断方向、算转化率α。",action:"三段式(ICE)列式;比较Q与K定方向。"},
+  {id:"d4",label:"化学平衡图像",cluster:"D",pack:"化学平衡.html",trigger:"浓度-时间、转化率-温度/压强、含拐点图。",action:"先拐先平定温度/压强高低;看终点定移动。"},
+  {id:"d5",label:"等效平衡",cluster:"D",pack:"化学平衡.html",trigger:"恒温恒容/恒压不同投料问是否等效。",action:"换算到同一边比对;恒压看比例恒容看量。"},
+  {id:"d6",label:"速率平衡综合",cluster:"D",pack:"化学平衡移动.html",trigger:"勒夏特列移动、K与Q、三段式转化率",action:"改一条件向减弱方向移;K只受温度;Q<K正向;恒容加惰气不移动"},
+  {id:"e1",label:"弱电解质电离",cluster:"E",pack:"弱电解质电离.html",trigger:"强弱判断、电离平衡移动、Ka、强弱酸对比",action:"导电看离子浓度非强弱;稀释促电离但c(H⁺)减小;Ka只受温度;多元弱酸分步"},
+  {id:"e2",label:"pH计算",cluster:"E",pack:"pH计算.html",trigger:"求pH、稀释后pH、强酸强碱混合。",action:"强酸强碱直接算;混合先判过量再算余下c;弱酸稀释变化<1。"},
+  {id:"e3",label:"盐类水解",cluster:"E",pack:"盐类水解.html",trigger:"判酸碱性、写水解方程、蒸干产物、双水解。",action:"谁弱谁水解谁强显谁性;越弱越水解;升温变稀促进。"},
+  {id:"e4",label:"离子浓度三守恒",cluster:"E",pack:"水溶液离子平衡.html",trigger:"比较离子浓度大小、判断守恒式正误。",action:"抓电离/水解主次→电荷/物料/质子守恒列式。"},
+  {id:"e5",label:"沉淀溶解Ksp",cluster:"E",pack:"沉淀溶解.html",trigger:"写Ksp表达式、Q与Ksp判断、沉淀转化",action:"Q>Ksp析出;向更难溶方向转化;Ksp↔溶解度换算"},
+  {id:"e6",label:"中和滴定曲线",cluster:"E",pack:"中和滴定曲线.html",trigger:"曲线关键点、粒子浓度比较、误差分析",action:"恰好反应点≠中性点;指示剂匹配突跃;误差看V标偏大偏小"},
+  {id:"f1",label:"原电池原理",cluster:"F",pack:"原电池与化学电源.html",trigger:"判正负极、电子离子流向、化学电源",action:"负极氧化正极还原;电子外电路负→正;燃料电池介质定产物"},
+  {id:"f2",label:"电解池与产物",cluster:"F",pack:"电解原理及应用.html",trigger:"阴阳极产物、放电顺序、电镀精炼",action:"阳极氧化按活性电极>S²⁻>I⁻>Br⁻>Cl⁻>OH⁻;阴极Ag⁺>Cu²⁺>H⁺"},
+  {id:"f3",label:"电极反应式书写",cluster:"F",pack:"电化学.html",trigger:"写陌生电池/电解电极反应式。",action:"判氧化还原极→四步法→按介质补H⁺/OH⁻/H₂O。"},
+  {id:"f4",label:"新型/燃料电池",cluster:"F",pack:"原电池与化学电源.html",trigger:"燃料电池电极式、二次电池充放电",action:"总反应−一极=另一极;碱性介质产物含CO₃²⁻/OH⁻;铅蓄放电两极皆PbSO₄"},
+  {id:"f5",label:"电化学计算",cluster:"F",pack:"电解原理及应用.html",trigger:"电子守恒、法拉第、产物量",action:"各电极转移电子数相等;串联电路电子数相同"},
+  {id:"f6",label:"金属腐蚀防护",cluster:"F",pack:"金属腐蚀与防护.html",trigger:"腐蚀类型、快慢比较、防护方法",action:"中性弱酸吸氧腐蚀最常见;牺牲阳极接更活泼金属;外加电流接负极"},
+  {id:"g1",label:"钠及化合物",cluster:"G",pack:"钠及其化合物.html",trigger:"钠与水、Na₂O₂电子转移、碳酸钠碳酸氢钠",action:"浮熔游响红;Na₂O₂歧化放O₂;NaHCO₃热不稳定、与酸更快;焰色黄"},
+  {id:"g2",label:"铝及两性",cluster:"G",pack:"铝及其化合物.html",trigger:"两性反应、滴加顺序图像、Al(OH)₃制备",action:"Al与酸碱都放H₂;Al(OH)₃制备用氨水不用NaOH;滴加顺序不同图像不同"},
+  {id:"g3",label:"铁三角",cluster:"G",pack:"铁三角.html",trigger:"Fe/Fe²⁺/Fe³⁺转化、检验、除杂、共存。",action:"氧化剂往上推还原剂往下拉;强弱顺序统一判断;KSCN验Fe³⁺。"},
+  {id:"g4",label:"镁铜及其他",cluster:"G",pack:"金属冶炼.html",trigger:"镁铜性质、金属通性",action:"镁在CO₂中燃烧生成C;铜与硝酸/浓硫酸;活动性定冶炼法"},
+  {id:"g5",label:"金属冶炼",cluster:"G",pack:"金属冶炼.html",trigger:"冶炼方法选择、还原剂",action:"很活泼电解、中等热还原、不活泼热分解;Al₂O₃电解不电解AlCl₃"},
+  {id:"h1",label:"氯及化合物",cluster:"H",pack:"氯及其化合物.html",trigger:"氯水成分、制备装置、Cl⁻检验、漂白",action:"漂白靠HClO;氯水三分子四离子;Cl⁻检验先硝酸酸化;制氯除杂饱和食盐水+浓硫酸"},
+  {id:"h2",label:"硫与硫酸",cluster:"H",pack:"硫及其化合物.html",trigger:"浓硫酸三性、SO₂漂白vs还原、SO₄²⁻检验",action:"浓硫酸吸水脱水强氧化;SO₂漂白可逆、使KMnO₄褪色是还原;SO₄²⁻先盐酸再BaCl₂"},
+  {id:"h3",label:"氮硝酸与氨",cluster:"H",pack:"氮及其化合物.html",trigger:"喷泉、NO/NO₂转化、硝酸与铜、NH₄⁺检验",action:"稀硝酸出NO浓出NO₂、与金属不放H₂;NH₄⁺检验加碱加热湿润红石蕊变蓝;铝铁常温钝化"},
+  {id:"h4",label:"碳硅与材料",cluster:"H",pack:"碳硅与材料.html",trigger:"CO₂多路径、SiO₂特性、硅酸盐工业",action:"CO₂通碱少过量产物不同;SiO₂与HF/热碱反应;H₂SiO₃需可溶硅酸盐+酸制"},
+  {id:"h5",label:"非金属推断",cluster:"H",note:"框图推断、气体制备与性质综合。"},
+  {id:"i1",label:"结构与命名",cluster:"I",note:"结构简式、官能团、系统命名、同系物。"},
+  {id:"i2",label:"烃烷烯炔苯",cluster:"I",pack:"有机化学基础.html",trigger:"反应类型判断、烃的性质",action:"烷烃取代、烯炔加成、苯不使KMnO₄褪色;加成减不饱和度"},
+  {id:"i3",label:"烃的衍生物",cluster:"I",pack:"有机化学基础.html",trigger:"官能团性质与检验、转化",action:"醇氧化需连羟基碳有氢;醛银镜/新制Cu(OH)₂;酯化酸脱OH醇脱H"},
+  {id:"i4",label:"同分异构书写",cluster:"I",pack:"同分异构体书写.html",trigger:"数同分异构、限定条件书写、一氯代物",action:"有序不重不漏;等效氢法数一氯代物;按条件筛官能团"},
+  {id:"i5",label:"有机推断",cluster:"I",pack:"有机推断.html",trigger:"分子式+现象推结构、转化框图、信息迁移。",action:"算不饱和度→认官能团→转化网络→数异构。"},
+  {id:"i6",label:"有机合成设计",cluster:"I",note:"逆合成分析、引入/转化官能团、保护基。"},
+  {id:"i7",label:"糖蛋白质油脂",cluster:"I",pack:"糖类油脂蛋白质.html",trigger:"糖类还原性、油脂水解、蛋白质盐析变性",action:"蔗糖无还原性;皂化=彻底水解;盐析可逆变性不可逆"},
+  {id:"j1",label:"仪器基本操作",cluster:"J",note:"仪器识别、加热、称量、气密性检查。"},
+  {id:"j2",label:"分离与提纯",cluster:"J",note:"过滤蒸馏萃取分液结晶、除杂原则。"},
+  {id:"j3",label:"检验与鉴别",cluster:"J",pack:"物质检验.html",trigger:"离子检验、离子共存、鉴别除杂",action:"SO₄²⁻先加盐酸再BaCl₂;共存看沉淀/气体/弱电解质/氧化还原/双水解"},
+  {id:"j4",label:"气体制备",cluster:"J",pack:"气体制备.html",trigger:"发生装置选择、干燥剂、收集、尾气",action:"三型装置;NH₃不能浓硫酸/CaCl₂干燥;先除杂后干燥;洗气长进短出;NO只排水"},
+  {id:"j5",label:"中和滴定误差",cluster:"J",pack:"化学实验.html",trigger:"定量实验问误差偏高/偏低/无影响。",action:"c待=c标V标/V待→看V标被读大还是读小。"},
+  {id:"j6",label:"工艺流程题",cluster:"J",pack:"化学实验.html",trigger:"流程题问某步目的、试剂作用、条件控制。",action:"认环节(预处理/除杂/分离/提纯/循环)逐问目的。"},
+  {id:"j7",label:"方案设计评价",cluster:"J",note:"对比实验、变量控制、方案优劣评价。"},
+  {id:"j8",label:"探究性实验",cluster:"J",note:"假设-验证、异常现象解释、数据处理。"}
+];
+/* ====== LIVE FORCE ENGINE (springs + repulsion + collision, draggable) ====== */
+(function(){
+ const svg=document.getElementById('graph');const NS="http://www.w3.org/2000/svg";
+ const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
+ const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
+ const W=1600,H=1120,cx=W/2,cy=H/2;
+ // build node list: root + areas + leaves
+ const nodes=[],idx={};
+ const root={id:"__root",label:"化学",cat:"root"};nodes.push(root);idx[root.id]=root;
+ const na=AREAS.length;
+ AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*430;a.y=cy+Math.sin(ang)*430;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
+ const byC={};
+ LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*90+(Math.random()*20-10);l.y=a.y+Math.sin(ang)*90+(Math.random()*20-10);l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
+ root.x=cx;root.y=cy;root.vx=0;root.vy=0;
+ // links
+ const L=[];AREAS.forEach(a=>L.push([root.id,a.id]));LEAVES.forEach(l=>L.push([l.cluster,l.id]));
+ [["d1","d2"],["e2","e3"],["e3","e4"],["f1","f3"],["f2","f3"],["i3","i5"],["i4","i5"],["a4","a5"],["c1","c2"],["d4","d3"],["j5","j6"]].forEach(x=>L.push(x));
+ const links=L.filter(l=>idx[l[0]]&&idx[l[1]]).map(l=>({s:idx[l[0]],t:idx[l[1]]}));
+ const R={root:34,area:25,live:17,todo:13};
+ function rad(n){return n.cat==="root"?R.root:n.cat==="area"?R.area:(n.pack?R.live:R.todo);}
+ // SVG els
+ const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width',(l.s.cat==="root"||l.t.cat==="root")?2.2:1.7);e.setAttribute('stroke-opacity',(l.s.cat==="root"||l.t.cat==="root")?.32:.42);linkG.appendChild(e);return e;});
+ let live=0,total=0;
+ nodes.forEach(n=>{
+   if(n.cat==="leaf"){total++;if(n.pack)live++;}
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const c=document.createElementNS(NS,'circle');c.setAttribute('r',rad(n));
+   if(n.cat==="root"){c.setAttribute('fill','#16120A');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else if(n.cat==="area"){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',3.5);}
+   else if(n.pack){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width',2.5);c.setAttribute('stroke-dasharray','5 4');}
+   g.appendChild(c);
+   if(n.pack){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');t.setAttribute('y',rad(n)+14);
+   t.setAttribute('font-size',n.cat==="root"?18:n.cat==="area"?15:12);t.setAttribute('fill',(n.cat==="leaf"&&!n.pack)?'#6b5d3a':'#16120A');t.textContent=n.label;g.appendChild(t);
+   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=n;moved=false;n._fix=true;alpha=Math.max(alpha,.7);try{g.setPointerCapture(ev.pointerId);}catch(e){}});
+ });
+ document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
+ // view
+ let view={k:0.6,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ function fit(){view.k=0.6;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
+ // simulation
+ let alpha=1;
+ function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+42;if(a.cat==="area"&&b.cat==="area")return base+200;return base+34;}
+ function tick(){
+   const N=nodes.length;
+   for(let i=0;i<N;i++){const a=nodes[i];if(a.cat==="root"){continue;}
+     a.vx+=(cx-a.x)*0.0011*alpha; a.vy+=(cy-a.y)*0.0011*alpha;
+     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.009*alpha;a.vy+=(ar.y-a.y)*0.009*alpha;}
+   }
+   // repulsion + collision (pairwise)
+   for(let i=0;i<N;i++){const a=nodes[i];for(let j=i+1;j<N;j++){const b=nodes[j];
+     let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random()-0.5;dy=Math.random()-0.5;}
+     const d=Math.sqrt(d2);const rep=7600*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
+     if(a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(b.cat!=="root"){b.vx-=fx;b.vy-=fy;}
+     const ms=sep(a,b);if(d<ms){const push=(ms-d)*0.5;const ox=dx/d*push,oy=dy/d*push;if(!a._fix&&a.cat!=="root"){a.x+=ox;a.y+=oy;}if(!b._fix&&b.cat!=="root"){b.x-=ox;b.y-=oy;}}
+   }}
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?250:124;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
+   nodes.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
+   if(alpha>0.04)alpha*=0.99;
+   render();
+ }
+ function render(){links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});}
+ function loop(){tick();requestAnimationFrame(loop);}loop();
+ // interaction
+ function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
+ let drag=null,moved=false,pan=null;
+ svg.addEventListener('pointermove',ev=>{
+   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;drag.vx=0;drag.vy=0;alpha=Math.max(alpha,.5);return;}
+   if(pan){view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();}
+ });
+ window.addEventListener('pointerup',()=>{if(drag){drag._fix=false;if(!moved)openPanel(drag);drag=null;}if(pan){pan=null;svg.classList.remove('grabbing');}});
+ svg.addEventListener('pointerdown',ev=>{if(drag)return;pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.13:0.88;const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zb(1.2);document.getElementById('zout').onclick=()=>zb(1/1.2);
+ function zb(f){const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{nodes.forEach(n=>{if(n.cat==="root")return;const a=n.cat==="area"?n:idx[n.cluster];n.vx=0;n.vy=0;});alpha=1;fit();};
+ const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
+ document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
+ function openPanel(d){
+   const isLive=!!d.pack,isTodo=d.cat==="leaf"&&!d.pack;
+   const catName=d.cat==="root"?'学科':d.cat==="area"?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
+   const col=d.cat==="area"?ACCENT:isLive?'#C8930E':d.cat==="root"?'#16120A':'#9a8f74';
+   let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+d.label+'</h3>';
+   if(d.cat==="area"){const kids=byC[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。拖一拖,或点周围节点看详情。</div>';}
+   if(d.cat==="root")h+='<div class="row">整张化学知识网。拖动任意节点会牵动相连的板块与题型。</div>';
+   if(d.note)h+='<div class="row">'+d.note+'</div>';
+   if(d.trigger)h+='<div class="trig"><b>触发信号:</b>'+d.trigger+'</div>';
+   if(d.action)h+='<div class="act"><b>标准动作:</b>'+d.action+'</div>';
+   if(isLive)h+='<a class="go" href="'+d.pack+'">打开攻坚包 →</a>';
+   if(isTodo)h+='<div class="soon">⛏ 待开发攻坚包 · 已列入计划,将按周逐个攻克</div>';
+   pbody.innerHTML=h;panel.classList.add('show');
+ }
+ const search=document.getElementById('search');
+ search.addEventListener('input',()=>{const q=search.value.trim();nodes.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.13);d._t.setAttribute('opacity',hit?1:0.13);if(q&&hit&&d.cat==="leaf"){d._c.setAttribute('stroke','#E0382A');}else if(d.cat==="leaf"){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
+})();
+</script>
+</body>
+</html>

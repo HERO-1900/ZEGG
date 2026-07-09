@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理 · 知识图谱 / 题型地图 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--pink:#C81E6E;--shadow:6px 6px 0 var(--ink);--accent:#1450C8;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  .topnav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:12px 18px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:38px;height:38px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}.logomark svg{width:24px;height:24px}.brand b{font-size:21px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 16px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:800;border-left:3px solid var(--ink)}.links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:11px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .hd{max-width:1180px;margin:0 auto;padding:16px 18px 6px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:5px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:27px;font-weight:900;letter-spacing:-1px;margin:8px 0 4px}
+  .sub{font-size:14.5px;font-weight:600;max-width:820px;margin:0}
+  .prog{display:inline-block;margin-left:8px;background:var(--ink);color:#fff;font-weight:900;font-size:12px;padding:3px 10px;border:2px solid var(--ink)}
+  .toolbar{max-width:1180px;margin:10px auto 0;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toolbar input{border:3px solid var(--ink);padding:7px 11px;font-size:14px;font-weight:700;font-family:inherit;box-shadow:3px 3px 0 var(--ink);min-width:170px}
+  .tbtn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:3px 3px 0 var(--accent)}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12.5px;font-weight:800;margin-left:auto}
+  .legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:15px;height:15px;border:2px solid var(--ink);border-radius:50%}.sw.todo{background:#FBF8EF;border-style:dashed;border-color:#b3a880}
+  .stage{position:relative;max-width:1180px;margin:12px auto;padding:0 18px}
+  .canvaswrap{position:relative;border:4px solid var(--ink);box-shadow:var(--shadow);background:#FBF8EF;overflow:hidden;border-radius:4px}
+  svg#graph{display:block;width:100%;height:78vh;min-height:540px;touch-action:none;cursor:grab}
+  svg#graph.grabbing{cursor:grabbing}
+  .hint{position:absolute;left:12px;bottom:10px;font-size:12px;font-weight:700;color:#7a6f54;background:rgba(251,248,239,.85);padding:3px 8px;border:2px solid var(--ink)}
+  .zoombtns{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+  .zoombtns button{width:34px;height:34px;border:3px solid var(--ink);background:#fff;font-weight:900;font-size:17px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .panel{position:absolute;top:12px;right:12px;width:310px;max-width:80%;background:#fff;border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 16px;display:none;z-index:5}
+  .panel.show{display:block}
+  .panel .pcat{display:inline-block;font-size:11px;font-weight:900;letter-spacing:1px;padding:2px 8px;border:2px solid var(--ink);color:#fff;text-transform:uppercase}
+  .panel h3{font-size:19px;font-weight:900;margin:8px 0 6px}
+  .panel .row{font-size:13.5px;font-weight:600;margin:7px 0}.panel .row b{font-weight:900}
+  .panel .trig{border-left:8px solid var(--blue);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel .act{border-left:8px solid var(--green);background:#F4EFE2;border:2px solid var(--ink);padding:6px 10px;margin:6px 0;font-size:13px}
+  .panel a.go{display:inline-block;margin-top:8px;background:var(--accent);color:#fff;border:3px solid var(--ink);padding:7px 13px;font-weight:900;font-size:13px;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+  .panel .soon{display:inline-block;margin-top:8px;background:#FBF8EF;color:#7a6f54;border:3px dashed #b3a880;padding:6px 12px;font-weight:800;font-size:12.5px}
+  .panel .x{position:absolute;top:8px;right:10px;font-weight:900;cursor:pointer;font-size:18px;border:none;background:none}
+  .nl{font-weight:800;pointer-events:none;paint-order:stroke;stroke:#FBF8EF;stroke-width:3.5px;stroke-linejoin:round}
+  .foot{max-width:1180px;margin:0 auto;padding:8px 18px 60px;font-size:12.5px;font-weight:700;color:#6b5d3a}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="题型地图.html">题型地图</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="hd">
+    <a href="题型地图.html" style="display:inline-block;font-weight:800;font-size:13px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);margin-bottom:10px;text-decoration:none;color:var(--ink)">← 返回总地图</a>
+    <div class="kicker">物理 · 知识图谱</div>
+    <h1>物理 · 题型地图 <span class="prog" id="prog"></span></h1>
+    <p class="sub">活的知识网:<b>拖任意节点,整张网会被弹簧牵着一起动</b>。从运动学到近代物理十三大板块各成一团,实心★=已上线攻坚包(可点开),空心=待开发。点节点看「触发信号+标准动作」。滚轮缩放 · 拖背景平移。</p>
+  </div>
+  <div class="toolbar">
+    <input id="search" placeholder="🔍 搜板块 / 题型…" autocomplete="off">
+    <button class="tbtn" id="resetBtn">复位 / 重排</button>
+    <div class="legend">
+      <span><i class="sw" style="background:#16120A"></i>学科</span>
+      <span><i class="sw" style="background:#1450C8"></i>板块</span>
+      <span><i class="sw" style="background:#F3C00E"></i>★已上线</span>
+      <span><i class="sw todo"></i>待开发</span>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="canvaswrap">
+      <svg id="graph" viewBox="0 0 1600 1120"></svg>
+      <div class="zoombtns"><button id="zin">＋</button><button id="zout">－</button></div>
+      <div class="hint">拖节点扯动整张网 · 滚轮缩放 · 点节点看详情</div>
+      <div class="panel" id="panel"><button class="x" id="pclose">×</button><div id="pbody"></div></div>
+    </div>
+  </div>
+  <div class="foot">thebest2dan · 物理知识图谱(完整版) · ★=已上线;空心=待开发,按歼灭名单逐周补齐</div>
+
+<script>
+/* ====== GRAPH DATA (物理 · 完整) ====== */
+const ACCENT="#1450C8";
+const AREAS=[
+  {id:"A",label:"运动学"},{id:"B",label:"牛顿定律"},{id:"C",label:"曲线运动与万有引力"},
+  {id:"D",label:"动量"},{id:"E",label:"功和能"},{id:"F",label:"静电场"},
+  {id:"G",label:"恒定电流"},{id:"H",label:"磁场"},{id:"I",label:"电磁感应"},
+  {id:"J",label:"交变电流"},{id:"K",label:"热学"},{id:"L",label:"光学与近代物理"},{id:"M",label:"物理实验"},{id:"N",label:"振动与波"}
+];
+const LEAVES=[
+  {id:"n96",label:"波的干涉衍射",cluster:"N",pack:"波的干涉衍射.html",trigger:"双缝干涉/衍射/相干条件/加强减弱",action:"相干源同频恒定相差;路程差=nλ加强,半波长奇数倍减弱;衍射需孔障与波长相当"},
+  {id:"j96",label:"远距离输电",cluster:"J",pack:"远距离输电.html",trigger:"升压降压/输电损耗/变压器/功率",action:"P损=I²R线;高压小电流减损耗;升压变压器U2/U1=n2/n1;理想变压器功率守恒"},
+  {id:"c96",label:"卫星变轨与双星",cluster:"C",pack:"卫星变轨与双星.html",trigger:"变轨/椭圆轨道/双星系统/能量",action:"变轨点加速升轨;高轨低速大周期;双星共圆心同周期万有引力提供向心;能量随轨道半径升"},
+  {id:"l96",label:"电磁振荡与电磁波",cluster:"L",pack:"电磁振荡与电磁波.html",trigger:"LC振荡/周期/电场磁场转化/电磁波谱",action:"LC回路电场磁场能相互转化;T=2π√(LC);电容最大电流零;麦克斯韦变化场互生;波谱排序"},
+  {id:"i96",label:"涡流与电磁阻尼",cluster:"I",pack:"涡流与电磁阻尼.html",trigger:"涡流/电磁阻尼/电磁驱动/趋肤",action:"变化磁通在导体内感应涡流;涡流生热(电磁炉);电磁阻尼阻碍相对运动;电磁驱动跟随"},
+  {id:"a96",label:"力学图像",cluster:"A",pack:"力学图像.html",trigger:"x-t/v-t/a-t图/图像斜率面积",action:"x-t斜率=速度;v-t斜率=加速度面积=位移;截距交点含义;图像转化读信息"},
+  {id:"g96",label:"电路动态分析",cluster:"G",pack:"电路动态分析.html",trigger:"滑变移动/开关通断/电表示数/含容",action:"串反并同;I=E/(R+r);U=E−Ir局部整体再局部;电容支路稳态无电流"},
+  {id:"g97",label:"传感器",cluster:"G",pack:"传感器.html",trigger:"光敏/热敏/压敏/电容式/霍尔/自动控制",action:"传感器把非电学量转电学量;光敏光强R小;热敏负温度系数;C=εS/d;分压取样读电压变化"},
+  {id:"n97",label:"受迫振动与共振",cluster:"N",pack:"受迫振动与共振.html",trigger:"受迫振动/共振/固有频率/共振曲线",action:"受迫振动频率=驱动频率;共振f驱=f固振幅最大;共振曲线峰在固有频率;阻尼越小峰越尖"},
+  {id:"l91",label:"光的干涉与衍射·实验",cluster:"L",pack:"光的干涉与衍射.html",trigger:"双缝干涉测波长/单缝衍射/干涉衍射判别/薄膜干涉",action:"Δy=Lλ/d,λ=dΔy/L;干涉等间距、衍射中央宽亮;增透膜λ/4相消;测量头多条取平均"},
+  {id:"m91",label:"油膜法测分子直径·实验",cluster:"M",pack:"油膜法测分子直径.html",trigger:"油酸分子实验/单分子膜/d=V/S",action:"单分子层厚度=分子直径d=V/S;必须溶液体积×浓度得纯油酸V;痱子粉显边界;数格子过半算一;数量级1e-10 m"},
+  {id:"e92",label:"功率与机车启动",cluster:"E",pack:"功率与机车启动.html",trigger:"额定功率/恒功率或恒加速度启动/最大速度",action:"P=Fv;恒功率启动a减小趋于vmax=P/f;恒加速阶段v1=P/F;恒功率段用动能定理"},
+  {id:"e93",label:"弹簧类问题",cluster:"E",pack:"弹簧问题.html",trigger:"胡克定律/弹性势能/剪断瞬间/连接体",action:"F=kx(x是形变量);弹簧力不能突变而绳可;Ep=½kx²;剪断瞬间弹簧力不变"},
+  {id:"b93",label:"共点力平衡",cluster:"B",pack:"共点力平衡.html",trigger:"静态/动态平衡/三力汇交/相似三角形",action:"ΣF=0正交分解;三力闭合三角形;动态平衡图解法;相似三角形对应边比"},
+  {id:"f92",label:"电势·电势能·等势面",cluster:"F",pack:"电势与电势能.html",trigger:"电势/电势能/电势差/等势面/做功",action:"沿电场线电势降;Ep=qφ负电荷反着来;W电=qU_AB=−ΔEp;等势面垂直电场线"},
+  {id:"k92",label:"分子动理论与内能",cluster:"K",pack:"分子动理论.html",trigger:"微观量估算/布朗运动/分子力/内能",action:"油膜法d=V/S;气体不能用Vmol/NA算分子体积;布朗运动是微粒;r0处分子力为0势能最小;温度标志平均动能"},
+  {id:"b91",label:"传送带模型",cluster:"B",pack:"传送带模型.html",trigger:"水平/倾斜传送带摩擦与共速",action:"比速度定摩擦方向;共速后比mgsinθ与最大静摩擦;相对位移求痕长与生热"},
+  {id:"b92",label:"滑块木板(板块)模型",cluster:"B",pack:"板块模型.html",trigger:"滑块在木板上相对滑动/临界",action:"隔离受力含上下两摩擦;恰不滑动求临界a;相对位移=板长;Q=fΔs相对"},
+  {id:"c91",label:"圆周运动临界",cluster:"C",pack:"圆周运动临界.html",trigger:"竖直圆最高点、圆锥摆、过桥临界",action:"绳vmin=√(gr)、杆可为0;过拱桥失重;转弯靠摩擦μmg≥mv²/r"},
+  {id:"f91",label:"电容器",cluster:"F",pack:"电容器.html",trigger:"平行板电容、连/断电池动态分析",action:"C=Q/U是属性;连电池U不变、断开Q不变;E=U/d"},
+  {id:"n91",label:"机械振动与波",cluster:"N",pack:"机械振动与波.html",trigger:"简谐运动、单摆、振动图vs波动图、波速",action:"F=-kx;T=2π√(L/g)与振幅无关;区分横轴t/x;v=λf;同侧法判方向"},
+  {id:"a1",label:"匀变速直线",cluster:"A",pack:"直线运动.html",trigger:"公式选择、纸带求a、推论",action:"v=v₀+at、x=v₀t+½at²、v²=v₀²+2ax;Δx=aT²逐差;v(t/2)=平均速度"},
+  {id:"a2",label:"xt与vt图像",cluster:"A",pack:"直线运动.html",trigger:"图像判读、斜率面积含义",action:"x-t斜率=速度;v-t斜率=加速度、面积=位移(含正负)"},
+  {id:"a3",label:"追及相遇",cluster:"A",pack:"直线运动.html",trigger:"追及相遇、距离极值",action:"速度相等时刻是最大/最小间距或恰好追上的临界"},
+  {id:"a4",label:"竖直上抛",cluster:"A",pack:"直线运动.html",trigger:"竖直上抛对称性",action:"全程a=g向下;上升下降对称、等时等速率"},
+  {id:"a5",label:"自由落体",cluster:"A",pack:"直线运动.html",trigger:"自由落体、初速为零比例",action:"v₀=0、a=g;1T2T3T速度比1:2:3、位移比1:4:9"},
+  {id:"b1",label:"受力分析",cluster:"B",pack:"受力分析.html",trigger:"判弹力摩擦有无方向、正交分解、平衡",action:"按重力→弹力→摩擦顺序、假设法;三力平衡矢量三角形;∑Fx=∑Fy=0"},
+  {id:"b2",label:"牛顿第二定律",cluster:"B",pack:"牛顿定律.html",trigger:"受力分析、求加速度或反推力、两类动力学问题。",action:"画受力图→正交分解→ΣF=ma;合力与a同向。"},
+  {id:"b3",label:"连接体问题",cluster:"B",pack:"牛顿定律.html",trigger:"多物体连接求加速度与内力、临界脱离。",action:"整体法求a=F/Σm;隔离法求绳张力/弹力;临界找f=μN或T=0。"},
+  {id:"b4",label:"超重与失重",cluster:"B",note:"加速度方向定超失重、视重台秤读数。"},
+  {id:"b5",label:"动力学临界",cluster:"B",pack:"受力分析.html",trigger:"临界:绳松弹力零、恰好滑动",action:"抓恰好/刚好临界条件;假设法判弹力有无;动态平衡看力增减"},
+  {id:"c1",label:"运动合成分解",cluster:"C",pack:"运动合成分解.html",trigger:"小船渡河、关联速度、分解方向",action:"最短时间船头正对;v船<v水不能垂直渡;关联速度沿绳分量相等"},
+  {id:"c2",label:"平抛运动",cluster:"C",pack:"平抛与圆周.html",trigger:"平抛/类平抛求时间位移速度偏角。",action:"水平匀速+竖直自由落体分解;t只由高度定 t=√(2h/g)。"},
+  {id:"c3",label:"圆周向心力",cluster:"C",pack:"平抛与圆周.html",trigger:"水平/竖直圆周、圆锥摆、最高点临界。",action:"向心力是合力;竖直圆周绳模型临界v=√(gr);分清绳与杆。"},
+  {id:"c4",label:"万有引力卫星",cluster:"C",pack:"万有引力.html",trigger:"求天体质量密度、比较卫星v/T/a、同步卫星、变轨、双星。",action:"黄金代换GM=gR²;GMm/r²=mv²/r=m(4π²/T²)r;高轨低速。"},
+  {id:"c5",label:"天体质量密度",cluster:"C",pack:"天体质量密度.html",trigger:"测中心天体质量与密度",action:"M=4π²r³/GT²;近地卫星ρ=3π/GT²只需周期;黄金代换GM=gR²"},
+  {id:"d1",label:"动量定理",cluster:"D",pack:"动量定理.html",trigger:"求冲量、缓冲、反弹Δp、动量动能",action:"Ft=Δp矢量式定正方向;缓冲延长时间减小力;反弹Δp=mv′−(−mv);F-t图面积=冲量"},
+  {id:"d2",label:"动量守恒",cluster:"D",pack:"动量守恒.html",trigger:"碰撞/爆炸/反冲、人船模型判断动量守恒。",action:"设正方向;p前=p后;合外力为0或内力≫外力才守恒。"},
+  {id:"d3",label:"弹性非弹性碰撞",cluster:"D",pack:"动量守恒.html",trigger:"弹性/完全非弹性碰撞求末速度、判合理性。",action:"弹性:动量+动能守恒;完全非弹性共速损失最大;碰后不能超越。"},
+  {id:"d4",label:"反冲与爆炸",cluster:"D",note:"动量守恒、内能转动能、人船模型。"},
+  {id:"e1",label:"功和功率",cluster:"E",pack:"功能关系.html",trigger:"功的正负、机车启动、功率",action:"W=Flcosθ判正负;P=Fv中v是瞬时速度;恒功率v_max=P/f"},
+  {id:"e2",label:"动能定理",cluster:"E",pack:"功能关系.html",trigger:"多过程求速度/位移、变力做功",action:"W合=½mv²−½mv₀²;不管过程细节,多过程首选"},
+  {id:"e3",label:"机械能守恒",cluster:"E",pack:"功能关系.html",trigger:"守恒条件判断、能量互换",action:"只有重力/弹力做功才守恒;动能↔势能总和不变"},
+  {id:"e4",label:"功能关系",cluster:"E",pack:"功能关系.html",trigger:"摩擦生热、某力功=某能变化",action:"Q=f·s相对(相对滑动路程,不是对地位移);某力做功=对应能量变化量度"},
+  {id:"e5",label:"多过程能量动量",cluster:"E",pack:"物理多过程.html",trigger:"碰撞/嵌入+后续运动、滑块木板、弹簧。",action:"分段→选锅(动量守恒/能量守恒/动能定理)→速度衔接;摩擦热=f·s相对。"},
+  {id:"f1",label:"库仑定律",cluster:"F",pack:"库仑定律.html",trigger:"库仑力计算合成、三电荷平衡",action:"F=kq₁q₂/r²同斥异吸;接触后电荷平分;三电荷近小远大"},
+  {id:"f2",label:"场强电场线",cluster:"F",pack:"静电场.html",trigger:"场强计算叠加、电场线判读",action:"E=F/q定义式、E=kQ/r²点电荷;场线疏密表强弱、切线为方向、不闭合"},
+  {id:"f3",label:"电势电势能",cluster:"F",pack:"静电场.html",trigger:"电势能做功正负、等势面、电势差",action:"Ep=qφ(正负电荷高低相反);W=qU与路径无关;等势面垂直电场线"},
+  {id:"f4",label:"带电粒子电场",cluster:"F",pack:"带电粒子电场.html",trigger:"加速求速度、偏转求侧移偏转角、打屏、示波管。",action:"加速qU=½mv²;偏转类平抛y=U偏L²/(4dU加);等效从板中央射出。"},
+  {id:"f5",label:"电容器",cluster:"F",pack:"静电场.html",trigger:"平行板动态分析、C与d/S",action:"C=Q/U定义、C=εS/4πkd;接电源U不变vs断电Q不变,先判谁不变"},
+  {id:"g1",label:"欧姆定律",cluster:"G",pack:"部分电路.html",trigger:"I=U/R、伏安特性、电阻定律",action:"欧姆定律不适用非线性元件;伏安曲线某点R=U/I;R=ρL/S"},
+  {id:"g2",label:"闭合电路欧姆定律",cluster:"G",pack:"闭合电路.html",trigger:"求E、r、路端电压、动态分析、功率效率、故障。",action:"E=I(R+r)=U外+U内;R↑→U外↑;R=r时输出功率最大E²/4r。"},
+  {id:"g3",label:"电功电功率",cluster:"G",pack:"部分电路.html",trigger:"电功电功率、纯/非纯电阻",action:"P=UI通用;纯电阻才能P=I²R=U²/R;非纯电阻UI>I²R差值为其他能"},
+  {id:"g4",label:"串并联电路",cluster:"G",pack:"部分电路.html",trigger:"串并联规律、分压分流、简化",action:"串联分压U∝R、并联分流I∝1/R;并联总阻小于任一支路;等电位去表简化"},
+  {id:"h1",label:"安培力",cluster:"H",pack:"安培力与洛伦兹力.html",trigger:"安培力大小方向、左手定则、线框",action:"F=BILsinθ;左手定则;B∥I时受力为零"},
+  {id:"h2",label:"洛伦兹力",cluster:"H",pack:"安培力与洛伦兹力.html",trigger:"洛伦兹力方向、不做功",action:"f=qvB左手定则四指指正电荷v;负电荷反向;不做功只改方向"},
+  {id:"h3",label:"带电粒子磁场",cluster:"H",pack:"带电粒子磁场.html",trigger:"磁场中圆周、半径周期、边界临界、速度选择器。",action:"r=mv/(qB);T=2πm/(qB)与v无关;圆心在垂直v方向;几何法找圆心。"},
+  {id:"h4",label:"复合场",cluster:"H",pack:"复合场.html",trigger:"速度选择器、重力电场平衡后圆周、三力平衡",action:"先重力再qE再qvB;v=E/B与电荷无关;洛伦兹力不做功"},
+  {id:"i1",label:"楞次定律方向",cluster:"I",pack:"电磁感应进阶.html",trigger:"感应电流方向、楞次定律",action:"来拒去留增反减同;右手定则判切割"},
+  {id:"i2",label:"法拉第定律",cluster:"I",pack:"电磁感应进阶.html",trigger:"ε=nΔΦ/Δt、BLv、感应电荷",action:"平均ε=nΔΦ/Δt瞬时BLv;感应电荷q=ΔΦ/R与时间无关"},
+  {id:"i3",label:"电磁感应综合",cluster:"I",pack:"电磁感应.html",trigger:"磁通变化、感应电流方向、EMF、导轨棒。",action:"楞次定律来拒去留→ε=NΔΦ/Δt或BLv→等效电路与能量。"},
+  {id:"i4",label:"自感与涡流",cluster:"I",pack:"电磁感应进阶.html",trigger:"自感通断电、涡流应用",action:"通电缓亮断电闪亮;涡流用于电磁炉/阻尼、危害发热"},
+  {id:"j1",label:"交流产生描述",cluster:"J",pack:"交变电流.html",trigger:"瞬时值表达式、峰值有效值、中性面、图像",action:"e=Emsin(ωt);有效值=峰值/√2;中性面Φ最大e=0"},
+  {id:"j2",label:"变压器",cluster:"J",pack:"变压器.html",trigger:"匝数电压电流计算、动态分析、远距离输电线损。",action:"U₁/U₂=n₁/n₂;原制约副;功率守恒;远距离升压减小I降线损。"},
+  {id:"j3",label:"远距离输电",cluster:"J",note:"高压输电降损、ΔP=I²R、两级变压。"},
+  {id:"k1",label:"分子动理论",cluster:"K",pack:"热学.html",trigger:"分子力与距离、估算、布朗运动",action:"r₀处合力零、r<r₀斥为主;油膜法d=V/S;布朗运动反映分子运动"},
+  {id:"k2",label:"气体实验定律",cluster:"K",pack:"气体定律.html",trigger:"等温/等容/等压变化、状态方程、图象、液柱封闭压强。",action:"温度用K;pV/T=定值;封闭气体压强靠受力平衡求。"},
+  {id:"k3",label:"热力学定律",cluster:"K",pack:"热学.html",trigger:"热一定律计算、方向性",action:"ΔU=W+Q(外界做功为正、吸热为正);热不能自发从低温传高温"},
+  {id:"k4",label:"温度与内能",cluster:"K",pack:"热学.html",trigger:"内能变化判断、概念辨析",action:"温度是分子平均动能标志;温度不变内能可能变(体积变势能变)"},
+  {id:"l1",label:"折射全反射",cluster:"L",pack:"光学.html",trigger:"折射率与光速、临界角、色散",action:"n=sinθ₁/sinθ₂=c/v;sinC=1/n;紫光偏折最大"},
+  {id:"l2",label:"光的波动性",cluster:"L",pack:"光学.html",trigger:"双缝干涉条纹间距、衍射、偏振",action:"Δy=Lλ/d;偏振是横波证据"},
+  {id:"l3",label:"光电效应",cluster:"L",pack:"光电效应.html",trigger:"判能否发生、求最大初动能/遏止电压、Ek-ν图象。",action:"Ek=hν−W₀;截止频率ν₀=W₀/h;频率定能否/多快,光强定多少。"},
+  {id:"l4",label:"原子能级",cluster:"L",pack:"原子核.html",trigger:"能级跃迁、谱线条数、光子能量",action:"hν=E高−E低;En=−13.6/n²;n能级最多辐射C(n,2)条谱线"},
+  {id:"l5",label:"原子核核反应",cluster:"L",pack:"原子核.html",trigger:"衰变类型、核反应配平、质量亏损求核能",action:"α衰变−4−2、β衰变电荷+1;配平守恒质量数与电荷数;ΔE=Δmc²"},
+  {id:"m1",label:"力学实验",cluster:"M",pack:"力学实验.html",trigger:"纸带求v/a、验证机械能守恒、探究a-F-m",action:"中间时刻法求v、逐差法求a;验证机械能守恒mgh略大于ΔEk;探究a-F先平衡摩擦且M≫m"},
+  {id:"m2",label:"电学实验",cluster:"M",pack:"物理电学实验.html",trigger:"内外接、分压限流、测电阻、测电动势内阻、读数。",action:"大内偏大小外偏小;U-I图纵截距=ε斜率绝对值=r;卡尺/螺旋测微器读数。"},
+  {id:"m3",label:"误差数据处理",cluster:"M",pack:"力学实验.html",trigger:"系统/偶然误差、图像法处理数据",action:"多次测量取平均减偶然误差;图像法取斜率截距;逐差法减小误差"},
+  {id:"m4",label:"游标螺旋读数",cluster:"M",note:"游标卡尺与螺旋测微器精度与读数规则。"}
+];
+/* ====== LIVE FORCE ENGINE (springs + repulsion + collision, draggable) ====== */
+(function(){
+ const svg=document.getElementById('graph');const NS="http://www.w3.org/2000/svg";
+ const scene=document.createElementNS(NS,'g');svg.appendChild(scene);
+ const linkG=document.createElementNS(NS,'g');scene.appendChild(linkG);
+ const nodeG=document.createElementNS(NS,'g');scene.appendChild(nodeG);
+ const W=1600,H=1120,cx=W/2,cy=H/2;
+ // build node list: root + areas + leaves
+ const nodes=[],idx={};
+ const root={id:"__root",label:"物理",cat:"root"};nodes.push(root);idx[root.id]=root;
+ const na=AREAS.length;
+ AREAS.forEach((a,i)=>{a.cat="area";const ang=-Math.PI/2+i/na*2*Math.PI;a.x=cx+Math.cos(ang)*430;a.y=cy+Math.sin(ang)*430;a.vx=0;a.vy=0;nodes.push(a);idx[a.id]=a;});
+ const byC={};
+ LEAVES.forEach(l=>{l.cat="leaf";const a=idx[l.cluster];const ang=Math.random()*6.283;l.x=a.x+Math.cos(ang)*90+(Math.random()*20-10);l.y=a.y+Math.sin(ang)*90+(Math.random()*20-10);l.vx=0;l.vy=0;nodes.push(l);idx[l.id]=l;(byC[l.cluster]=byC[l.cluster]||[]).push(l);});
+ root.x=cx;root.y=cy;root.vx=0;root.vy=0;
+ // links
+ const L=[];AREAS.forEach(a=>L.push([root.id,a.id]));LEAVES.forEach(l=>L.push([l.cluster,l.id]));
+ [["d1","d2"],["e2","e3"],["e3","e4"],["f3","f4"],["f2","f4"],["i2","i3"],["i1","i3"],["a4","a5"],["c1","c2"],["d3","d2"],["m1","m2"]].forEach(x=>L.push(x));
+ const links=L.filter(l=>idx[l[0]]&&idx[l[1]]).map(l=>({s:idx[l[0]],t:idx[l[1]]}));
+ const R={root:34,area:25,live:17,todo:13};
+ function rad(n){return n.cat==="root"?R.root:n.cat==="area"?R.area:(n.pack?R.live:R.todo);}
+ // SVG els
+ const lineEls=links.map(l=>{const e=document.createElementNS(NS,'line');e.setAttribute('stroke','#16120A');e.setAttribute('stroke-width',(l.s.cat==="root"||l.t.cat==="root")?2.2:1.7);e.setAttribute('stroke-opacity',(l.s.cat==="root"||l.t.cat==="root")?.32:.42);linkG.appendChild(e);return e;});
+ let live=0,total=0;
+ nodes.forEach(n=>{
+   if(n.cat==="leaf"){total++;if(n.pack)live++;}
+   const g=document.createElementNS(NS,'g');g.style.cursor='pointer';
+   const c=document.createElementNS(NS,'circle');c.setAttribute('r',rad(n));
+   if(n.cat==="root"){c.setAttribute('fill','#16120A');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else if(n.cat==="area"){c.setAttribute('fill',ACCENT);c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',3.5);}
+   else if(n.pack){c.setAttribute('fill','#F3C00E');c.setAttribute('stroke','#16120A');c.setAttribute('stroke-width',4);}
+   else{c.setAttribute('fill','#FBF8EF');c.setAttribute('stroke','#b3a880');c.setAttribute('stroke-width',2.5);c.setAttribute('stroke-dasharray','5 4');}
+   g.appendChild(c);
+   if(n.pack){const st=document.createElementNS(NS,'text');st.setAttribute('text-anchor','middle');st.setAttribute('y',5.5);st.setAttribute('font-size','16');st.setAttribute('font-weight','900');st.setAttribute('fill','#16120A');st.textContent='★';st.style.pointerEvents='none';g.appendChild(st);}
+   const t=document.createElementNS(NS,'text');t.setAttribute('class','nl');t.setAttribute('text-anchor','middle');t.setAttribute('y',rad(n)+14);
+   t.setAttribute('font-size',n.cat==="root"?18:n.cat==="area"?15:12);t.setAttribute('fill',(n.cat==="leaf"&&!n.pack)?'#6b5d3a':'#16120A');t.textContent=n.label;g.appendChild(t);
+   nodeG.appendChild(g);n._g=g;n._c=c;n._t=t;
+   g.addEventListener('pointerdown',ev=>{ev.stopPropagation();drag=n;moved=false;n._fix=true;alpha=Math.max(alpha,.7);try{g.setPointerCapture(ev.pointerId);}catch(e){}});
+ });
+ document.getElementById('prog').textContent='已上线 '+live+' / 规划 '+total;
+ // view
+ let view={k:0.6,tx:0,ty:0};function applyView(){scene.setAttribute('transform','translate('+view.tx+','+view.ty+') scale('+view.k+')');}
+ function fit(){view.k=0.6;view.tx=cx-cx*view.k;view.ty=cy-cy*view.k;applyView();}fit();
+ // simulation
+ let alpha=1;
+ function sep(a,b){const base=rad(a)+rad(b);if(a.cat==="leaf"&&b.cat==="leaf")return base+42;if(a.cat==="area"&&b.cat==="area")return base+200;return base+34;}
+ function tick(){
+   const N=nodes.length;
+   for(let i=0;i<N;i++){const a=nodes[i];if(a.cat==="root"){continue;}
+     a.vx+=(cx-a.x)*0.0011*alpha; a.vy+=(cy-a.y)*0.0011*alpha;
+     if(a.cat==="leaf"){const ar=idx[a.cluster];a.vx+=(ar.x-a.x)*0.009*alpha;a.vy+=(ar.y-a.y)*0.009*alpha;}
+   }
+   // repulsion + collision (pairwise)
+   for(let i=0;i<N;i++){const a=nodes[i];for(let j=i+1;j<N;j++){const b=nodes[j];
+     let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<0.01){d2=0.01;dx=Math.random()-0.5;dy=Math.random()-0.5;}
+     const d=Math.sqrt(d2);const rep=7600*alpha/d2;const fx=dx/d*rep,fy=dy/d*rep;
+     if(a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(b.cat!=="root"){b.vx-=fx;b.vy-=fy;}
+     const ms=sep(a,b);if(d<ms){const push=(ms-d)*0.5;const ox=dx/d*push,oy=dy/d*push;if(!a._fix&&a.cat!=="root"){a.x+=ox;a.y+=oy;}if(!b._fix&&b.cat!=="root"){b.x-=ox;b.y-=oy;}}
+   }}
+   links.forEach(l=>{const a=l.s,b=l.t;let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||0.01;const rest=(a.cat==="root"||b.cat==="root")?250:124;const f=(d-rest)*0.035*alpha;const fx=dx/d*f,fy=dy/d*f;if(!a._fix&&a.cat!=="root"){a.vx+=fx;a.vy+=fy;}if(!b._fix&&b.cat!=="root"){b.vx-=fx;b.vy-=fy;}});
+   nodes.forEach(a=>{if(a.cat==="root"||a._fix)return;a.vx*=0.86;a.vy*=0.86;a.x+=a.vx;a.y+=a.vy;});
+   if(alpha>0.04)alpha*=0.99;
+   render();
+ }
+ function render(){links.forEach((l,i)=>{const e=lineEls[i];e.setAttribute('x1',l.s.x);e.setAttribute('y1',l.s.y);e.setAttribute('x2',l.t.x);e.setAttribute('y2',l.t.y);});nodes.forEach(nd=>{nd._g.setAttribute('transform','translate('+nd.x+','+nd.y+')');});}
+ function loop(){tick();requestAnimationFrame(loop);}loop();
+ // interaction
+ function toWorld(clientX,clientY){const rect=svg.getBoundingClientRect();const sx=(clientX-rect.left)/rect.width*W;const sy=(clientY-rect.top)/rect.height*H;return {x:(sx-view.tx)/view.k,y:(sy-view.ty)/view.k};}
+ let drag=null,moved=false,pan=null;
+ svg.addEventListener('pointermove',ev=>{
+   if(drag){moved=true;const w=toWorld(ev.clientX,ev.clientY);drag.x=w.x;drag.y=w.y;drag.vx=0;drag.vy=0;alpha=Math.max(alpha,.5);return;}
+   if(pan){view.tx=pan.tx+(ev.clientX-pan.x);view.ty=pan.ty+(ev.clientY-pan.y);applyView();}
+ });
+ window.addEventListener('pointerup',()=>{if(drag){drag._fix=false;if(!moved)openPanel(drag);drag=null;}if(pan){pan=null;svg.classList.remove('grabbing');}});
+ svg.addEventListener('pointerdown',ev=>{if(drag)return;pan={x:ev.clientX,y:ev.clientY,tx:view.tx,ty:view.ty};svg.classList.add('grabbing');});
+ svg.addEventListener('wheel',ev=>{ev.preventDefault();const rect=svg.getBoundingClientRect();const mx=(ev.clientX-rect.left)/rect.width*W,my=(ev.clientY-rect.top)/rect.height*H;const f=ev.deltaY<0?1.13:0.88;const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=mx-(mx-view.tx)*(nk/view.k);view.ty=my-(my-view.ty)*(nk/view.k);view.k=nk;applyView();},{passive:false});
+ document.getElementById('zin').onclick=()=>zb(1.2);document.getElementById('zout').onclick=()=>zb(1/1.2);
+ function zb(f){const nk=Math.max(0.35,Math.min(3.5,view.k*f));view.tx=cx-(cx-view.tx)*(nk/view.k);view.ty=cy-(cy-view.ty)*(nk/view.k);view.k=nk;applyView();}
+ document.getElementById('resetBtn').onclick=()=>{nodes.forEach(n=>{if(n.cat==="root")return;const a=n.cat==="area"?n:idx[n.cluster];n.vx=0;n.vy=0;});alpha=1;fit();};
+ const panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
+ document.getElementById('pclose').onclick=()=>panel.classList.remove('show');
+ function openPanel(d){
+   const isLive=!!d.pack,isTodo=d.cat==="leaf"&&!d.pack;
+   const catName=d.cat==="root"?'学科':d.cat==="area"?'板块':isLive?'题型 ★ 已上线':'题型 · 待开发';
+   const col=d.cat==="area"?ACCENT:isLive?'#C8930E':d.cat==="root"?'#16120A':'#9a8f74';
+   let h='<span class="pcat" style="background:'+col+'">'+catName+'</span><h3>'+d.label+'</h3>';
+   if(d.cat==="area"){const kids=byC[d.id]||[];const done=kids.filter(x=>x.pack).length;h+='<div class="row">本板块共 '+kids.length+' 个题型,已上线 <b>'+done+'</b> 个。拖一拖,或点周围节点看详情。</div>';}
+   if(d.cat==="root")h+='<div class="row">整张物理知识网。拖动任意节点会牵动相连的板块与题型。</div>';
+   if(d.note)h+='<div class="row">'+d.note+'</div>';
+   if(d.trigger)h+='<div class="trig"><b>触发信号:</b>'+d.trigger+'</div>';
+   if(d.action)h+='<div class="act"><b>标准动作:</b>'+d.action+'</div>';
+   if(isLive)h+='<a class="go" href="'+d.pack+'">打开攻坚包 →</a>';
+   if(isTodo)h+='<div class="soon">⛏ 待开发攻坚包 · 已列入计划,将按周逐个攻克</div>';
+   pbody.innerHTML=h;panel.classList.add('show');
+ }
+ const search=document.getElementById('search');
+ search.addEventListener('input',()=>{const q=search.value.trim();nodes.forEach(d=>{const hit=q===''||d.label.indexOf(q)>=0;d._c.setAttribute('opacity',hit?1:0.13);d._t.setAttribute('opacity',hit?1:0.13);if(q&&hit&&d.cat==="leaf"){d._c.setAttribute('stroke','#E0382A');}else if(d.cat==="leaf"){d._c.setAttribute('stroke',d.pack?'#16120A':'#b3a880');}});});
+})();
+</script>
+</body>
+</html>

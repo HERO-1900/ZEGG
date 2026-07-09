@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电能的输送(远距离输电) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电能的输送(远距离输电)</h1>
+    <p class="lead">电从发电厂送到你家,中间要走几百公里的输电线——这段线本身也有电阻,会白白「吃掉」一部分电能。这一页讲清楚:<b>损耗从哪来</b>(P损=I线²R线)、<b>怎么减小损耗</b>(核心是升压降流)、以及一条完整输电线路上<b>每一段的电压电流功率怎么算</b>。这是变压器知识在实际工程中的直接应用。</p>
+
+    <div class="say">🗣️ <b>远距离输电(人话版):</b> 输电线不是理想导线,它有电阻 R线。电流 I线 一流过,就有 I线²R线 的功率变成热白白损耗掉。要送的功率 P输 一定时,<b>P=UI 告诉你 U 越大、I 就能越小</b>——而损耗只看 I 不看 U(P损=I²R线),所以<b>把电压升得高高的、把电流压得小小的</b>,就能用同样的线路损耗极少的电。这就是为什么电网都是「高压輸电、低压用电」:靠变压器两头「变身」。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>P损 = I线²·R线</b>(损耗只取决于线路电流和线路电阻,与用户电压、用户功率因数无关)。而 <b>P输 = U·I</b> 是输电线始端的电压和电流,P输一定时,<b>U 升高 n 倍 ⟹ I 减小到 1/n ⟹ P损 减小到 1/n²</b>(P损与输电电压的平方成反比)。</div>
+
+    <h2>① 损耗的源头:输电线也是电阻</h2>
+    <div class="card">
+      <div class="eq">P损 = I线² · R线</div>
+      <p style="margin:8px 0">输电导线(通常是铝线、钢芯铝绞线)本身有电阻 R线(由长度、横截面积、材料电阻率决定,ℓ 几十~几百公里,R线可达几十~上百欧姆)。电流 I线 流过它,按焦耳定律产生的热就是<b>纯损耗</b>——这部分电能没有送到用户手里,变成了线路发热,白白浪费。</p>
+      <table>
+        <tr><th>减小 R线 的办法</th><th>效果</th></tr>
+        <tr><td>用粗导线(增大横截面积 S)</td><td>R=ρℓ/S,S 增大 R 减小,但<b>成本、重量、造价急剧上升</b>,空间有限</td></tr>
+        <tr><td>用低电阻率材料</td><td>效果有限,导线材料基本固定为铝/铜合金</td></tr>
+        <tr><td><b>减小线路电流 I线</b>(核心手段)</td><td>P损=I²R线,I 减小是<b>平方效应</b>,收益最大——这才是真正的解</td></tr>
+      </table>
+      <p class="trap">⚠ 减小 R线(换粗线/换材料)只是辅助手段,效果有限还费钱;真正大幅降低损耗靠的是<b>压低线路电流</b>,不是压低电阻。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔌 互动 1 — 完整输电线路图:发电→升压→高压线→降压→用户,点各段看 U/I/P</div>
+      <svg id="lineSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="segbtn on" data-s="gen">① 发电机</button>
+        <button class="segbtn" data-s="up">② 升压变压器</button>
+        <button class="segbtn" data-s="line">③ 高压输电线</button>
+        <button class="segbtn" data-s="down">④ 降压变压器</button>
+        <button class="segbtn" data-s="user">⑤ 用户</button>
+      </div>
+      <div class="verdict" id="lineNote"></div>
+      <p class="small">发电机输出 220kV 以下的电压,经<b>升压</b>变压器升到几十~几百 kV 送上高压线,长途跋涉后经<b>降压</b>变压器逐级降到用户能用的 220V/380V。点上面按钮看每一段的电压、电流、功率如何变化。</p>
+    </div>
+
+    <h2 class="b">② 为什么升高电压能减小损耗:P损 = (P输/U)²·R线</h2>
+    <div class="card">
+      <div class="eq">P输 = U·I线　⟹　I线 = P输/U　⟹　P损 = I线²R线 = (P输/U)²·R线</div>
+      <p style="margin:8px 0">把 I线=P输/U 代入 P损=I²R线,得到<b>损耗与输电电压 U 的平方成反比</b>:P输 和 R线 不变时,<b>电压升高 n 倍,损耗降低到原来的 1/n²</b>。这就是为什么电网电压等级要做到 220kV、500kV 甚至更高——电压每提一个台阶,损耗断崖式下降。</p>
+      <table>
+        <tr><th>电压变化</th><th>电流变化(P输不变)</th><th>损耗变化</th></tr>
+        <tr><td>升高到 2 倍</td><td>降到 1/2</td><td>降到 1/4</td></tr>
+        <tr><td>升高到 5 倍</td><td>降到 1/5</td><td>降到 1/25</td></tr>
+        <tr><td>升高到 10 倍</td><td>降到 1/10</td><td>降到 1/100</td></tr>
+      </table>
+      <p class="trap">⚠ 这里的 U 是<b>输电线路两端(始端)的电压</b>,不是用户端电压——升压变压器升的是「送出去那一路」的电压,用户端最终还是被降压变压器降回安全的 220V/380V。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 2 — 升压降低损耗演示:拖输电电压 U,看 I线 与 P损 如何变化(P损∝1/U²)</div>
+      <svg id="upSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>输电电压 U (kV) <input id="upU" type="range" min="10" max="500" value="50" step="10"></label>
+        <label>输送功率 P输 (MW) <input id="upP" type="range" min="10" max="200" value="100" step="10"></label>
+        <label>线路电阻 R线 (Ω) <input id="upR" type="range" min="5" max="50" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>线路电流 I=P/U</b><span id="upI">0</span></div>
+        <div><b>损耗 P损=I²R</b><span id="upPL">0</span></div>
+        <div><b>损耗占比 P损/P输</b><span id="upPct">0</span></div>
+        <div><b>效率 η=1−P损/P输</b><span id="upEta">0</span></div>
+      </div>
+      <p class="small">曲线画出 P损 随 U 变化的规律(U 越大、损耗越小,且是<b>平方级</b>下降),竖线标出当前 U 的位置。拖 U 感受「升压」的真实威力。</p>
+    </div>
+
+    <h2 class="g">③ P损=I²R 计算器:损耗只认线路电流和线路电阻</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多同学一看到「功率损耗」就想用用户功率、用户电压去凑公式——<b>大错</b>。P损 是输电线自己「烧」掉的功率,公式里的 I 必须是<b>流过输电线的电流</b>(即始端电流,串联电路中处处相等),R 必须是<b>输电线本身的电阻</b>,和用户端的电压、电阻、功率因数都<b>没有直接关系</b>。</p>
+      <div class="mono">正确:P损 = I线² · R线　　错误:P损 = U用户²/R线　或　P损 = I用户²·R线</div>
+      <p style="margin:8px 0">因为整条输电线路(升压输出→高压线→降压输入)近似串联在一个回路里,这条回路上的电流处处相等,就是 I线;只要抓住这一个电流,P损、U损、甚至升压变压器要多"扛"多少功率,都能算出来。</p>
+      <p class="trap">⚠ 不要把「用户消耗的功率」和「线路损耗的功率」搞混:P输 = P损 + P用户(理想变压器不耗能,能量只在线路电阻上"漏"掉)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 3 — P损=I²R线 计算器</div>
+      <svg id="calcSvg" viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>线路电流 I线 (A) <input id="calI" type="range" min="10" max="300" value="100" step="10"></label>
+        <label>线路电阻 R线 (Ω) <input id="calR" type="range" min="1" max="40" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>P损=I²R (kW)</b><span id="calPL">0</span></div>
+        <div><b>U损=IR (V)</b><span id="calUL">0</span></div>
+        <div><b>I 翻倍后 P损</b><span id="calDouble">0</span></div>
+        <div><b>结论</b><span id="calNote">—</span></div>
+      </div>
+      <p class="small">重点感受:<b>I 翻倍,P损变 4 倍</b>(平方关系);而 U损=IR 只是<b>线性</b>翻倍。这也是为什么"减小电流"比"减小电阻"更有效的根本原因。</p>
+    </div>
+
+    <h2 class="o">④ 两种"损失"要分清:电压损失 U损 vs 功率损失 P损</h2>
+    <div class="card">
+      <div class="eq">电压损失:U损 = I线·R线　　功率损失:P损 = I线²·R线 = U损·I线</div>
+      <p style="margin:8px 0">这两个量描述的是<b>同一件事的不同侧面</b>,极易混淆:</p>
+      <table>
+        <tr><th></th><th>U损(电压损失)</th><th>P损(功率损失)</th></tr>
+        <tr><td>定义</td><td>输电线两端的电压差(线路上"压降"掉的电压)</td><td>输电线上消耗掉的功率(变成热)</td></tr>
+        <tr><td>公式</td><td>U损 = I·R</td><td>P损 = I²·R = U损·I</td></tr>
+        <tr><td>与用户电压关系</td><td>U用户 = U送出 − U损</td><td>P用户 = P输 − P损</td></tr>
+        <tr><td>单位</td><td>伏特 V</td><td>瓦特 W</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>串联在一起看:</b> 升压变压器副线圈送出电压 U送,电流沿线路流到降压变压器原线圈,路上因为电阻掉了 U损=IR线 的电压,所以到达降压变压器时电压只剩 U送−U损。同时,这段路上"烧掉"的功率是 P损=I²R线。</p>
+      <p class="trap">⚠ U损 和 P损 是两个不同量纲、不同意义的量,不能相互替代;题目问"电压降低了多少"用 U损=IR,问"损耗了多少功率"用 P损=I²R,千万别用错公式去回答错的问题。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 4 — 电压损失 U损=IR 与功率损失 P损=I²R 对比条形图</div>
+      <svg id="ulSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>线路电流 I (A) <input id="ulI" type="range" min="10" max="200" value="80" step="10"></label>
+        <label>线路电阻 R (Ω) <input id="ulR" type="range" min="1" max="30" value="15" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>U损=IR (V)</b><span id="ulUv">0</span></div>
+        <div><b>P损=I²R (W)</b><span id="ulPv">0</span></div>
+        <div><b>送出电压若为 U送</b><span id="ulUs">10000 V</span></div>
+        <div><b>用户端电压 U送−U损</b><span id="ulUuser">0</span></div>
+      </div>
+      <p class="small">左边蓝条是电压损失(线性随 I 变化),右边红条是功率损失(平方随 I 变化)——同样是"I 变大",两条的涨势完全不同。</p>
+    </div>
+
+    <h2 class="v">⑤ 理想变压器功率守恒:各段电流、电压怎么串起来</h2>
+    <div class="card">
+      <div class="eq">理想变压器:P入 = P出　(U₁I₁ = U₂I₂)，匝数比 n₁:n₂ = U₁:U₂ = I₂:I₁</div>
+      <p style="margin:8px 0">一条完整线路:发电机(输出 U0,电流 I0)→ <b>升压变压器</b>(原线圈 U0,I0;副线圈 U1,I1,U0I0=U1I1)→ 高压输电线(电流恒为 I1,即"线路电流 I线")→ <b>降压变压器</b>(原线圈 U2=U1−U损,电流 I1;副线圈 U3,I3,U2I1=U3I3)→ 用户。</p>
+      <h3>解题要点</h3>
+      <div class="mono">① 变压器不改变功率(理想变压器 P入=P出),只改变 U 和 I 的分配比例。</div>
+      <div class="mono">② 高压输电线上,电流从升压变压器副线圈流出、经损耗到降压变压器原线圈,数值不变(串联),这就是"线路电流 I线"。</div>
+      <div class="mono">③ 升压变压器副线圈电压 = 降压变压器原线圈电压 + U损(路上被电阻吃掉的那部分)。</div>
+      <p class="trap">⚠ 常见误区:以为变压器会"损耗"功率——理想变压器<b>不耗能</b>,真正的功率损失只发生在<b>输电线的电阻</b>上,不在变压器里(实际变压器有少量损耗,但中学阶段按理想变压器处理)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动 5 — 理想变压器功率守恒逐段计算(输入参数,自动推算每一段)</div>
+      <svg id="pwSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>发电机输出 U0 (V) <input id="pwU0" type="range" min="200" max="2000" value="1000" step="100"></label>
+        <label>升压比 n1(U1/U0) <input id="pwN1" type="range" min="5" max="100" value="50" step="5"></label>
+        <label>输送功率 P (kW) <input id="pwP" type="range" min="10" max="500" value="100" step="10"></label>
+        <label>线路电阻 R线 (Ω) <input id="pwR" type="range" min="1" max="30" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>升压后 U1 (V)</b><span id="pwU1">0</span></div>
+        <div><b>线路电流 I线 (A)</b><span id="pwI1">0</span></div>
+        <div><b>线路损耗 P损 (kW)</b><span id="pwPL">0</span></div>
+        <div><b>到达降压原边 U2 (V)</b><span id="pwU2">0</span></div>
+      </div>
+      <p class="small">由 P=U0·I0=U1·I1(升压变压器功率守恒)得 I1=P/U1;线路上 U损=I1·R线,P损=I1²·R线;到达降压变压器时电压为 U2=U1−U损,送到用户的功率为 P−P损。</p>
+    </div>
+
+    <h2 class="r">⑥ 高压 vs 低压输电:同样功率、同一条线,损耗差多少</h2>
+    <div class="card">
+      <p style="margin:6px 0">同一段输电线(R线 固定),送同样的功率 P输,只是电压等级不同——这是最能直观感受"为什么非要用高压"的对比。</p>
+      <table>
+        <tr><th>方案</th><th>输电电压</th><th>线路电流</th><th>功率损耗</th></tr>
+        <tr><td>低压输电</td><td>1kV</td><td>大(I=P/U 大)</td><td>极大,甚至超过 P 本身(不可行)</td></tr>
+        <tr><td>高压输电</td><td>100kV</td><td>小(I=P/U 小,是低压时的 1/100)</td><td>极小(是低压时的 1/10000)</td></tr>
+      </table>
+      <p style="margin:8px 0">这也是为什么远距离(几十~几百公里)、大功率输电必须用几十万伏的超高压线路——电压等级每上一个台阶,允许输送的功率或线路长度都能大幅提升,而损耗始终可控。</p>
+      <p class="trap">⚠ 电压也不是越高越好:超高压对绝缘、杆塔、安全防护要求急剧上升,工程上要在"降损耗"和"建设/维护成本"之间取平衡,这也是为什么电网分好几级电压(如 500kV 主干网、220kV/110kV 区域网、10kV 配电网、220V/380V 用户端)逐级降压。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 6 — 高压 vs 低压输电损耗对比(同一条线,同样功率,电压差 10 倍)</div>
+      <svg id="cmpSvg2" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>输送功率 P (kW) <input id="cpP" type="range" min="20" max="200" value="100" step="10"></label>
+        <label>线路电阻 R线 (Ω) <input id="cpR" type="range" min="2" max="20" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>低压 1kV：I / P损</b><span id="cpLow">0</span></div>
+        <div><b>高压 10kV：I / P损</b><span id="cpHigh">0</span></div>
+        <div><b>损耗比(低压/高压)</b><span id="cpRatio">0</span></div>
+        <div><b>结论</b><span id="cpNote">—</span></div>
+      </div>
+      <p class="small">电压相差 10 倍,损耗相差<b>100 倍</b>——这就是电力系统坚持"能高压就不低压"的量化理由。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 判断/解释"为什么用高压输电"</h3>
+      <p><b class="tag">触发信号:</b>「为什么远距离输电要用高压」「升高电压有什么好处」等文字说理题。</p>
+      <p><b class="tag">标准动作:</b>抓住三步逻辑:P输=UI(P一定,U↑则I↓)→ P损=I²R线(I↓则P损大幅↓,且是平方关系)→ 结论:升压能大幅减小线路损耗、提高输电效率。</p>
+      <p><b class="tag">示例(带解):</b>输送功率 100kW 不变,输电电压从 1kV 升到 10kV(升高10倍),线路电流降为原来的 1/10,线路电阻不变,P损=I²R线 降为原来的 1/100。</p>
+      <p class="trap">陷阱:只说"电压高电流小"却不说到"损耗与电压平方成反比";漏说 P损公式里的 R 是线路电阻不是用户电阻。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 求线路损耗功率 P损</h3>
+      <p><b class="tag">触发信号:</b>给出输送功率、输电电压(或线路电流)、线路电阻,求"损耗的功率""线路上消耗的电功率"。</p>
+      <p><b class="tag">标准动作:</b>先求线路电流 I线=P输/U(若未直接给出),再代入 P损=I线²·R线。切勿用用户端的 U 或 P 去凑。</p>
+      <p><b class="tag">示例(带解):</b>某输电线路输送功率 P=200kW,输电电压 U=20kV,线路电阻 R线=5Ω。I线=P/U=200000/20000=10A,P损=I²R=10²×5=500W=0.5kW。</p>
+      <p class="trap">陷阱:把用户端电压当成 U 代入求 I;把 P损 算成用户功率的一部分而不是单独的线路损耗。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 求电压损失 U损 及用户端电压</h3>
+      <p><b class="tag">触发信号:</b>「求线路上损失的电压」「用户获得的电压是多少」「降压变压器原线圈电压」。</p>
+      <p><b class="tag">标准动作:</b>U损=I线·R线;送出电压 U送 减去 U损 得到降压变压器原线圈电压 U2=U送−U损;再按降压变压器匝数比算用户端电压。</p>
+      <p><b class="tag">示例(带解):</b>升压后送出电压 U送=20000V,线路电流 10A,线路电阻 5Ω。U损=10×5=50V,到达降压变压器原线圈电压 U2=20000−50=19950V。</p>
+      <p class="trap">陷阱:把 U损 当成 P损 去乘方;以为用户端电压就是升压后的电压(忘了要经过降压变压器和线路压降)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 变压器功率守恒 + 输电线路综合计算</h3>
+      <p><b class="tag">触发信号:</b>给发电机电压、升压/降压变压器匝数比、线路电阻,求各段电流、电压、功率(常是大题压轴)。</p>
+      <p><b class="tag">标准动作:</b>①理想变压器 P入=P出、U₁I₁=U₂I₂求各级电压电流;②高压线上电流不变,即为"线路电流";③P损=I线²R线;④逐段列方程,注意升压变压器副边电压=降压变压器原边电压+U损。</p>
+      <p><b class="tag">示例(带解):</b>发电机输出 P=100kW,U0=1000V,升压变压器匝数比1:10,则 U1=10000V,I1=P/U1=10A(线路电流)。线路电阻2Ω,P损=10²×2=200W=0.2kW,送到用户的功率为100−0.2=99.8kW。</p>
+      <p class="trap">陷阱:多级变压器算错匝数比对应关系；把发电机侧电流误当线路电流；漏算功率守恒 P入=P出这一约束。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 比较不同输电方案的损耗/效率</h3>
+      <p><b class="tag">触发信号:</b>「若改用更高电压输电」「两种方案哪个损耗更小」「输电效率提高了百分之几」。</p>
+      <p><b class="tag">标准动作:</b>P输、R线不变时,P损∝1/U²，效率η=(P输−P损)/P输=1−P损/P输，直接算比值不必分别求具体数值。</p>
+      <p><b class="tag">示例(带解):</b>电压从 U 升到 2U,其余不变,新损耗为原来的 (U/2U)²=1/4；若原损耗率为8%，新损耗率为8%×1/4=2%，效率从92%提高到98%。</p>
+      <p class="trap">陷阱:把"电压升高2倍、损耗降低2倍"当成线性关系(其实是平方关系，降到1/4)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 电线加粗(减小R线)与升压两种方案对比</h3>
+      <p><b class="tag">触发信号:</b>「若不升压，只把导线换粗一半电阻能否达到同样的减损效果」类对比说理题。</p>
+      <p><b class="tag">标准动作:</b>减小R线是线性帮助P损(P损∝R)，而升压对P损是平方帮助(P损∝1/U²)；同样倍数下升压效果远大于减小电阻，且减小电阻受成本、重量限制，升压是首选。</p>
+      <p><b class="tag">示例(带解):</b>电阻减半，P损减半；电压增大到√2倍，P损同样减半——但电压再增大到2倍时P损降到1/4，远超电阻减半的效果，且不需要增加导线用铜/铝量。</p>
+      <p class="trap">陷阱:忽视两种方案对P损的影响次数不同(一次方 vs 二次方)，误判两者"效果差不多"。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① P损=I²R线里的 <b>I 必须是线路电流</b>(串联电路里处处相等的那个电流),不是用户端电流,更不能用用户端电压硬凑 U²/R。</p>
+      <p class="trap">② P损=I²R线里的 <b>R 必须是线路(导线)本身的电阻</b>,不是用户设备的电阻,也不是变压器的"电阻"。</p>
+      <p class="trap">③ "升高电压"指的是<b>升压变压器输出、即输电线始端的电压</b>,不是用户使用的电压——用户端电压最终会被降压变压器降回安全值(220V/380V)。</p>
+      <p class="trap">④ <b>U损=IR(线性)</b> 和 <b>P损=I²R(平方)</b> 是两个不同的量,别混用公式,也别以为电流翻倍两者涨得一样多。</p>
+      <p class="trap">⑤ P损 与输电电压 <b>平方成反比</b>(P损∝1/U²),不是简单反比;电压升 n 倍,损耗降到 1/n²,不是 1/n。</p>
+      <p class="trap">⑥ 理想变压器<b>功率不变、只变电压电流分配</b>,损耗不发生在变压器内部,而是发生在输电线的电阻上。</p>
+      <p class="trap">⑦ 减小电阻(换粗线)的效果是<b>线性</b>的,升压的效果是<b>平方</b>的,升压才是治本之策,减小电阻只是辅助。</p>
+      <p class="trap">⑧ 完整链条要记全:发电机→升压变压器→高压输电线→降压变压器→用户,漏掉任何一环,方程就列不完整。</p>
+      <p class="trap">⑨ 功率守恒关系:P输 = P损 + P用户(理想变压器不耗能,能量只在线路电阻上损耗)。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① "损耗只看电流"这句话的物理根源:</b> P损=I²R线 里根本没有用户电压、用户功率因数的位置,因为这个公式描述的是<b>输电线自己作为一个电阻元件消耗了多少功率</b>,和它"后面接的是什么负载"无关——只要流过它的电流是 I,它就一定要发热 I²R。抓住"P损只认线路自身的 I 和 R"这一点,能秒杀绝大多数设陷阱题。</p>
+      <p style="margin:8px 0"><b>② 平方反比不是巧合,是"串联+功率恒定"的必然结果:</b> P输=UI 是恒定的(要送的功率不能变),把 I=P输/U 代进 P损=I²R,U 自然以平方形式出现在分母。这提示你:任何"通过升高电压间接压低电流"的场景(不仅是输电,还有信号传输、直流远距离供电),都天然享有平方级的收益,这是电力系统愿意花巨资建设几十万伏超高压线路的根本原因。</p>
+      <p style="margin:8px 0"><b>③ U损 与 P损 的关系式 P损=U损·I,把两者串成一体:</b> 记住这一恒等式,遇到"已知U损求P损"或反过来,不用重新推导,直接乘/除线路电流即可,一步到位。</p>
+      <p style="margin:8px 0"><b>④ 多级降压是"损耗-安全"的工程折中:</b> 电网并非升压到底、降压到底一步完成,而是 500kV→220kV→110kV→10kV→220V 逐级降压,每一级变压器和线路都对应不同的损耗-成本平衡点——这也是为什么现实中你能看到多层不同"高压/中压/低压"电网架构。</p>
+      <p style="margin:8px 0"><b>⑤ 效率视角统一全题:</b> η=P用户/P输=1−P损/P输=1−IR线/U(把P损=I²R线代入并用I=P输/U化简，可得η=1−(I·R线)/U=1−U损/U送)。把"损耗率""效率""电压降百分比"这几个看似不同的问法,都归约到 U损/U送 这一个比值上,考场上能少推一步是一步。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:变压器原理攻坚包(讲变压器本身)、本页讲输电线路全局</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:完整输电线路图 ===== */
+(function(){
+  const svg=document.getElementById('lineSvg');
+  const note=document.getElementById('lineNote');
+  let seg='gen';
+  document.querySelectorAll('.segbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.segbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');seg=b.dataset.s;draw();
+  });
+  const data={
+    gen:{U:'6kV',I:'1000A',P:'6MW',desc:'发电机产生交流电,输出电压一般在几千伏(受绝缘、发电机结构限制,不能太高)。'},
+    up:{U:'6kV→220kV',I:'1000A→27.3A',P:'6MW(不变)',desc:'升压变压器把电压升高约37倍,电流相应降到约1/37。理想变压器功率不变:P=UI 恒定。'},
+    line:{U:'220kV(两端有压降)',I:'27.3A(线路电流,处处相等)',P:'6MW − P损',desc:'高压输电线跨越几十~几百公里,电流始终是这个较小的值,线路电阻上产生 P损=I²R线 的损耗,电压也有 U损=IR线 的压降。'},
+    down:{U:'220kV→220V/380V',I:'27.3A→约1000A(逐级)',P:'略小于6MW(扣除线路损耗)',desc:'降压变压器逐级把高压降到用户可用的安全电压,过程中理想变压器功率仍守恒(不再产生新损耗)。'},
+    user:{U:'220V/380V',I:'由用户设备决定',P:'P输−P损',desc:'用户拿到的是安全电压下的电能,实际到手的功率比发电机发出的功率少了线路损耗那部分。'}
+  };
+  function draw(){
+    clr(svg);
+    const X0=20,Y=150,W=660;
+    const stops=[{x:60,k:'gen',lab:'发电机'},{x:210,k:'up',lab:'升压变压器'},{x:400,k:'line',lab:'高压输电线'},{x:560,k:'down',lab:'降压变压器'},{x:660,k:'user',lab:'用户'}];
+    // main line
+    el(svg,'line',{x1:X0,y1:Y,x2:X0+W,y2:Y,stroke:INK,'stroke-width':4});
+    // segment highlight zones
+    const zones={gen:[X0,90],up:[90,300],line:[300,470],down:[470,610],user:[610,X0+W]};
+    const z=zones[seg];
+    el(svg,'rect',{x:z[0],y:Y-40,width:z[1]-z[0],height:80,fill:'rgba(224,56,42,0.18)',stroke:RED,'stroke-width':3});
+    // icons
+    function box(x,label,active,shape){
+      const col=active?RED:INK;
+      if(shape==='circle'){el(svg,'circle',{cx:x,cy:Y,r:26,fill:'#fff',stroke:col,'stroke-width':4});el(svg,'text',{x:x,y:Y+6,'font-size':16,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='G';}
+      else if(shape==='trap'){el(svg,'rect',{x:x-24,y:Y-24,width:48,height:48,fill:'#fff',stroke:col,'stroke-width':4});el(svg,'text',{x:x,y:Y+6,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent='T';}
+      else if(shape==='house'){el(svg,'polygon',{points:(x-24)+','+(Y+22)+' '+(x-24)+','+(Y-4)+' '+x+','+(Y-26)+' '+(x+24)+','+(Y-4)+' '+(x+24)+','+(Y+22),fill:'#fff',stroke:col,'stroke-width':4});}
+      el(svg,'text',{x:x,y:Y+52,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=label;
+    }
+    box(60,'发电机',seg==='gen','circle');
+    box(210,'升压变压器',seg==='up','trap');
+    // pylons for the high-voltage line
+    for(let px=300;px<=470;px+=42){
+      el(svg,'line',{x1:px,y1:Y-30,x2:px,y2:Y,stroke:seg==='line'?RED:INK,'stroke-width':3});
+      el(svg,'line',{x1:px-14,y1:Y-30,x2:px+14,y2:Y-30,stroke:seg==='line'?RED:INK,'stroke-width':3});
+    }
+    el(svg,'text',{x:385,y:Y+52,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='高压输电线';
+    box(560,'降压变压器',seg==='down','trap');
+    box(660,'用户',seg==='user','house');
+    // arrows between
+    [[86,184],[236,296],[474,534],[586,634]].forEach(function(pair){
+      el(svg,'polygon',{points:(pair[1]-8)+','+(Y-6)+' '+(pair[1]+2)+','+Y+' '+(pair[1]-8)+','+(Y+6),fill:INK});
+    });
+    // data card
+    const d=data[seg];
+    el(svg,'rect',{x:40,y:210,width:620,height:95,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:60,y:235,'font-size':14,'font-weight':900,fill:RED}).textContent='电压 U: '+d.U;
+    el(svg,'text',{x:60,y:258,'font-size':14,'font-weight':900,fill:BLUE}).textContent='电流 I: '+d.I;
+    el(svg,'text',{x:60,y:281,'font-size':14,'font-weight':900,fill:GREEN}).textContent='功率 P: '+d.P;
+    const words=d.desc;
+    wrapText(svg,words,340,232,300,13);
+    note.innerHTML='👉 当前:<b>'+d.desc+'</b>';
+  }
+  function wrapText(svg,text,x,y,maxW,fs){
+    const chunkLen=15;let cy=y;
+    for(let i=0;i<text.length;i+=chunkLen){
+      el(svg,'text',{x:x,y:cy,'font-size':fs,'font-weight':700,fill:INK}).textContent=text.slice(i,i+chunkLen);
+      cy+=17;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动2:升压降低损耗演示 ===== */
+(function(){
+  const svg=document.getElementById('upSvg');
+  const Us=document.getElementById('upU'),Ps=document.getElementById('upP'),Rs=document.getElementById('upR');
+  const oI=document.getElementById('upI'),oPL=document.getElementById('upPL'),oPct=document.getElementById('upPct'),oEta=document.getElementById('upEta');
+  function sync(){draw();}
+  Us.oninput=Ps.oninput=Rs.oninput=sync;
+  function draw(){
+    const Ukv=+Us.value, Pmw=+Ps.value, R=+Rs.value;
+    const U=Ukv*1000, P=Pmw*1e6;
+    const I=P/U;
+    const PL=I*I*R;
+    const pct=PL/P*100;
+    const eta=100-pct;
+    oI.textContent=I.toFixed(1)+' A';
+    oPL.textContent=(PL/1000).toFixed(2)+' kW';
+    oPct.textContent=pct.toFixed(2)+' %';
+    oEta.textContent=eta.toFixed(2)+' %';
+    clr(svg);
+    const X0=60,Y0=20,W=600,H=180;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-14,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='P损';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U(输电电压)';
+    // curve: P_loss(U') = (P/U')^2 * R over U' range 10..500 kV
+    const Umin=10000,Umax=500000;
+    // find max loss for scaling at Umin
+    const maxLoss=(P/Umin)*(P/Umin)*R;
+    let pathD='';
+    for(let k=0;k<=100;k++){
+      const uk=Umin+(Umax-Umin)*k/100;
+      const loss=(P/uk)*(P/uk)*R;
+      const px=X0+(uk-Umin)/(Umax-Umin)*W;
+      const py=Y0+H-Math.min(1,loss/maxLoss)*H*0.95;
+      pathD+=(k===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';
+    }
+    el(svg,'path',{d:pathD,fill:'none',stroke:BLUE,'stroke-width':3});
+    // current point marker
+    const curU=Math.min(Math.max(U,Umin),Umax);
+    const curLoss=(P/curU)*(P/curU)*R;
+    const cx=X0+(curU-Umin)/(Umax-Umin)*W;
+    const cy=Y0+H-Math.min(1,curLoss/maxLoss)*H*0.95;
+    el(svg,'line',{x1:cx,y1:Y0,x2:cx,y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:cx,cy:cy,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx,y:Y0+H+22,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=Ukv+'kV';
+    el(svg,'text',{x:X0+W/2,y:Y0-4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P损 = (P输/U)²·R线　随 U 增大按 1/U² 骤降';
+  }
+  sync();
+})();
+
+/* ===== 互动3:P损=I²R计算器 ===== */
+(function(){
+  const svg=document.getElementById('calcSvg');
+  const Is=document.getElementById('calI'),Rs=document.getElementById('calR');
+  const oPL=document.getElementById('calPL'),oUL=document.getElementById('calUL'),oDouble=document.getElementById('calDouble'),oNote=document.getElementById('calNote');
+  function sync(){draw();}
+  Is.oninput=Rs.oninput=sync;
+  function draw(){
+    const I=+Is.value,R=+Rs.value;
+    const PL=I*I*R;
+    const UL=I*R;
+    const PL2=(2*I)*(2*I)*R;
+    oPL.textContent=(PL/1000).toFixed(2);
+    oUL.textContent=UL.toFixed(1);
+    oDouble.textContent=(PL2/1000).toFixed(2)+' kW (×4)';
+    oNote.textContent='I×2 ⟹ P损×4';
+    clr(svg);
+    const baseY=120,maxH=90;
+    const maxP=300*300*40; // theoretical max for scaling
+    const h1=Math.max(6,(PL/maxP)*maxH*3);
+    el(svg,'rect',{x:120,y:baseY-Math.min(h1,maxH),width:80,height:Math.min(h1,maxH),fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:160,y:baseY+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P损='+(PL/1000).toFixed(1)+'kW';
+    const h2=Math.max(6,(PL2/maxP)*maxH*3);
+    el(svg,'rect',{x:280,y:baseY-Math.min(h2,maxH),width:80,height:Math.min(h2,maxH),fill:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:320,y:baseY+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='I×2→'+(PL2/1000).toFixed(1)+'kW';
+    el(svg,'line',{x1:100,y1:baseY,x2:520,y2:baseY,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:440,y:60,'font-size':13,'font-weight':900,fill:INK}).textContent='I='+I+'A, R='+R+'Ω';
+    el(svg,'text',{x:440,y:85,'font-size':12,'font-weight':800,fill:GREEN}).textContent='U损=IR='+UL.toFixed(0)+'V(线性)';
+  }
+  sync();
+})();
+
+/* ===== 互动4:U损 vs P损对比 ===== */
+(function(){
+  const svg=document.getElementById('ulSvg');
+  const Is=document.getElementById('ulI'),Rs=document.getElementById('ulR');
+  const oUv=document.getElementById('ulUv'),oPv=document.getElementById('ulPv'),oUuser=document.getElementById('ulUuser');
+  const Usend=10000;
+  function sync(){draw();}
+  Is.oninput=Rs.oninput=sync;
+  function draw(){
+    const I=+Is.value,R=+Rs.value;
+    const UL=I*R;
+    const PL=I*I*R;
+    oUv.textContent=UL.toFixed(1);
+    oPv.textContent=PL.toFixed(0);
+    oUuser.textContent=(Usend-UL).toFixed(1)+' V';
+    clr(svg);
+    const baseY=200,maxH=150;
+    // U_loss bar (max possible UL = 200*30=6000)
+    const maxUL=200*30;
+    const hU=Math.max(6,(UL/maxUL)*maxH);
+    el(svg,'rect',{x:150,y:baseY-hU,width:100,height:hU,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:200,y:baseY+22,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='U损=IR';
+    el(svg,'text',{x:200,y:baseY-hU-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=UL.toFixed(0)+'V';
+    // P_loss bar (max possible PL = 200*200*30)
+    const maxPL=200*200*30;
+    const hP=Math.max(6,(PL/maxPL)*maxH);
+    el(svg,'rect',{x:420,y:baseY-hP,width:100,height:hP,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:470,y:baseY+22,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='P损=I²R';
+    el(svg,'text',{x:470,y:baseY-hP-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=PL.toFixed(0)+'W';
+    el(svg,'line',{x1:100,y1:baseY,x2:600,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='I='+I+'A，R='+R+'Ω(送出电压设为 '+Usend+'V)';
+    el(svg,'text',{x:350,y:52,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='用户端电压 = 送出电压 − U损 = '+(Usend-UL).toFixed(0)+'V';
+  }
+  sync();
+})();
+
+/* ===== 互动5:理想变压器功率守恒逐段计算 ===== */
+(function(){
+  const svg=document.getElementById('pwSvg');
+  const U0s=document.getElementById('pwU0'),N1s=document.getElementById('pwN1'),Ps=document.getElementById('pwP'),Rs=document.getElementById('pwR');
+  const oU1=document.getElementById('pwU1'),oI1=document.getElementById('pwI1'),oPL=document.getElementById('pwPL'),oU2=document.getElementById('pwU2');
+  function sync(){draw();}
+  U0s.oninput=N1s.oninput=Ps.oninput=Rs.oninput=sync;
+  function draw(){
+    const U0=+U0s.value, n1=+N1s.value, Pkw=+Ps.value, R=+Rs.value;
+    const P=Pkw*1000;
+    const U1=U0*n1;
+    const I0=P/U0;
+    const I1=P/U1;
+    const UL=I1*R;
+    const PL=I1*I1*R;
+    const U2=U1-UL;
+    oU1.textContent=U1.toFixed(0);
+    oI1.textContent=I1.toFixed(2);
+    oPL.textContent=(PL/1000).toFixed(3);
+    oU2.textContent=U2.toFixed(0);
+    clr(svg);
+    const stages=[
+      {x:70,lab:'发电机',U:U0.toFixed(0)+'V',I:I0.toFixed(2)+'A'},
+      {x:230,lab:'升压后',U:U1.toFixed(0)+'V',I:I1.toFixed(2)+'A'},
+      {x:400,lab:'降压前(到达)',U:U2.toFixed(0)+'V',I:I1.toFixed(2)+'A'},
+      {x:570,lab:'送入用户前',U:'≈'+U2.toFixed(0)+'V',I:I1.toFixed(2)+'A'}
+    ];
+    const Y=110;
+    el(svg,'line',{x1:50,y1:Y,x2:620,y2:Y,stroke:INK,'stroke-width':3});
+    stages.forEach(function(s,idx){
+      el(svg,'circle',{cx:s.x,cy:Y,r:8,fill:idx===2?RED:BLUE,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:s.x,y:Y-16,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=s.lab;
+      el(svg,'text',{x:s.x,y:Y+28,'font-size':11.5,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='U='+s.U;
+      el(svg,'text',{x:s.x,y:Y+46,'font-size':11.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='I='+s.I;
+    });
+    el(svg,'text',{x:335,y:Y+80,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='线路上损耗 P损='+(PL/1000).toFixed(3)+'kW，损耗电压 U损='+UL.toFixed(1)+'V';
+    el(svg,'text',{x:335,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P=U0I0=U1I1（升压变压器功率守恒），线路电流恒为 I1';
+  }
+  sync();
+})();
+
+/* ===== 互动6:高压vs低压损耗对比 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg2');
+  const Ps=document.getElementById('cpP'),Rs=document.getElementById('cpR');
+  const oLow=document.getElementById('cpLow'),oHigh=document.getElementById('cpHigh'),oRatio=document.getElementById('cpRatio'),oNote=document.getElementById('cpNote');
+  function sync(){draw();}
+  Ps.oninput=Rs.oninput=sync;
+  function draw(){
+    const Pkw=+Ps.value, R=+Rs.value;
+    const P=Pkw*1000;
+    const Ulow=1000, Uhigh=10000;
+    const Ilow=P/Ulow, Ihigh=P/Uhigh;
+    const PLlow=Ilow*Ilow*R, PLhigh=Ihigh*Ihigh*R;
+    oLow.textContent=Ilow.toFixed(1)+'A / '+(PLlow/1000).toFixed(2)+'kW';
+    oHigh.textContent=Ihigh.toFixed(1)+'A / '+(PLhigh/1000).toFixed(3)+'kW';
+    const ratio=PLlow/PLhigh;
+    oRatio.textContent=ratio.toFixed(0)+' : 1';
+    oNote.textContent=(PLlow>P?'低压方案损耗超输送功率,不可行!':'高压损耗远小于低压');
+    clr(svg);
+    const baseY=210,maxH=170;
+    const maxPL=Math.max(PLlow,P);
+    const hLow=Math.min(maxH,(PLlow/maxPL)*maxH);
+    const hHigh=Math.max(2,Math.min(maxH,(PLhigh/maxPL)*maxH));
+    el(svg,'rect',{x:150,y:baseY-hLow,width:110,height:hLow,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:205,y:baseY+22,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='低压1kV';
+    el(svg,'text',{x:205,y:baseY-hLow-10,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P损='+(PLlow/1000).toFixed(1)+'kW';
+    el(svg,'rect',{x:420,y:baseY-hHigh,width:110,height:hHigh,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:475,y:baseY+22,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='高压10kV';
+    el(svg,'text',{x:475,y:baseY-hHigh-10,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P损='+(PLhigh/1000).toFixed(3)+'kW';
+    el(svg,'line',{x1:100,y1:baseY,x2:600,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:25,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='同一条线(R线='+R+'Ω)，输送功率 P='+Pkw+'kW，电压相差10倍';
+    el(svg,'text',{x:350,y:47,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='损耗之比 = (10倍)² = 100倍';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 输电线路损耗功率的公式是什么？公式里的 I 和 R 分别指什么？",a:"P损=I线²·R线。I线是流过输电线的电流(串联电路处处相等,即线路电流)，R线是输电导线本身的电阻，与用户端电压、电阻无关。"},
+ {q:"2. 为什么升高输电电压能减小线路损耗？写出推导过程。",a:"输送功率 P输=U·I线 一定，I线=P输/U；代入 P损=I线²R线 得 P损=(P输/U)²·R线，即损耗与输电电压的平方成反比。U升高，I降低，P损按平方关系大幅下降。"},
+ {q:"3. 电压升高到原来的3倍，其余不变，线路损耗变为原来的多少？",a:"变为原来的 1/9(平方反比：(1/3)²=1/9)。"},
+ {q:"4. 电压损失 U损 和功率损失 P损 的公式分别是什么？两者什么关系？",a:"U损=I线·R线(线性)，P损=I线²·R线(平方)。关系：P损=U损·I线。"},
+ {q:"5. 减小线路电阻(换粗导线)和升高电压，哪种方法对减小损耗更有效？为什么？",a:"升高电压更有效。减小电阻对损耗是线性帮助(P损∝R)，升高电压对损耗是平方帮助(P损∝1/U²)，且换粗导线受成本、重量限制。"},
+ {q:"6. 理想变压器在输电过程中会消耗/损耗功率吗？真正的损耗发生在哪里？",a:"理想变压器不消耗功率(P入=P出，只改变电压电流分配)。真正的功率损耗发生在输电线的电阻上。"},
+ {q:"7. 完整输电线路的五个环节依次是什么？",a:"发电机 → 升压变压器 → 高压输电线 → 降压变压器 → 用户。"},
+ {q:"8. 某线路输送功率100kW，输电电压10kV，线路电阻2Ω，求线路电流和功率损耗。",a:"I线=P/U=100000/10000=10A。P损=I²R=10²×2=200W=0.2kW。"},
+ {q:"9. 上题中，若送出电压为10000V，求用户获得的最高可能电压(不考虑降压变压器变比，只看线路压降)。",a:"U损=I·R=10×2=20V，到达降压变压器原边的电压=10000−20=9980V。"},
+ {q:"10. 为什么电网要设计成多级电压(如500kV、220kV、10kV、220V)逐级降压，而不是一次性从超高压直接降到220V？",a:"多级降压是损耗与建设/绝缘/安全成本之间的工程折中；超高压对绝缘和设备要求极高，逐级降压既能享受高压远距离低损耗的优势，又能分区域、分层次安全可靠地把电送到终端用户。"},
+ {q:"11. 效率 η=1−P损/P输，能否用 U损/U送 来表示？写出推导。",a:"能。P损=U损·I，P输=U送·I(近似，忽略线路始末端I的微小差异)，所以 P损/P输=U损/U送，故 η=1−U损/U送。"},
+ {q:"12. 输电电压相差10倍(1kV vs 10kV)，其余条件相同，功率损耗相差多少倍？",a:"相差100倍(损耗与电压平方成反比，10²=100)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

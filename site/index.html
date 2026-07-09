@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>thebest2dan · 个人学习基地</title>
+<style>
+  :root{
+    --paper:#EBE4D2; --card:#F4EFE2; --ink:#16120A;
+    --red:#E0382A; --blue:#1450C8; --yellow:#F3C00E; --green:#1E9E86; --violet:#7A3FF2; --orange:#E86A17;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);
+    font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+  /* ---------- NAV ---------- */
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);
+    border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;border-right:5px solid var(--ink)}
+  .logomark{width:46px;height:46px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:30px;height:30px}
+  .brand b{font-size:25px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}
+  .links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;
+    font-size:15px;font-weight:800;cursor:pointer;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  .links a.active{background:var(--ink);color:var(--paper)}
+  @media(max-width:640px){
+    .topnav{flex-direction:column;align-items:stretch}
+    .brand{border-right:0;border-bottom:4px solid var(--ink);justify-content:flex-start}
+    .brand b{font-size:22px}.logomark{width:40px;height:40px}.logomark svg{width:26px;height:26px}
+    .links{width:100%}
+    .links a{flex:1;justify-content:center;padding:12px 6px;font-size:14px}
+    .links a:first-child{border-left:0}
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:26px 20px 100px}
+  .page{display:none}.page.show{display:block;animation:fade .25s}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+  /* ---------- HEADERS ---------- */
+  h1{font-size:46px;font-weight:900;letter-spacing:-1.5px;margin:6px 0 10px;line-height:1.02}
+  @media(max-width:640px){h1{font-size:34px}}
+  h2{font-size:24px;font-weight:900;letter-spacing:-.5px;margin:40px 0 14px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:26px;height:26px;background:var(--red);flex:none;border:3px solid var(--ink)}
+  h2.b::before{background:var(--blue)} h2.y::before{background:var(--yellow)} h2.g::before{background:var(--green)}
+  .lead{font-size:16px;font-weight:600;max-width:680px}
+  .kicker{display:inline-block;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;
+    letter-spacing:2px;padding:6px 12px;text-transform:uppercase}
+  .back{display:inline-block;font-weight:800;font-size:14px;cursor:pointer;background:var(--yellow);
+    border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);margin-bottom:14px}
+  /* ---------- HOME MONDRIAN GRID ---------- */
+  .motto{margin:20px 0;background:var(--ink);color:var(--paper);border:5px solid var(--ink);
+    padding:22px 26px;font-size:19px;font-weight:800;line-height:1.5}
+  .motto em{color:var(--yellow);font-style:normal}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--ink);
+    border:6px solid var(--ink);grid-template-areas:
+      "title title title mark"
+      "packs packs packs plan"
+      "packs packs packs scores"
+      "map map target target";}
+  @media(max-width:720px){.grid{grid-template-columns:1fr 1fr;grid-template-areas:
+      "title title" "mark mark" "packs packs" "packs packs" "plan scores" "map target";}}
+  .cell{padding:22px;border:0;text-align:left;cursor:pointer;font:inherit;color:var(--ink);
+    min-height:120px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .12s}
+  .cell:hover{transform:scale(.985)}
+  .cell .ico{font-size:34px;line-height:1;margin-bottom:auto}
+  .cell .tag{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+  .cell h3{margin:6px 0 4px;font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .cell p{margin:0;font-size:13px;font-weight:600;line-height:1.45}
+  .c-title{grid-area:title;background:var(--card);cursor:default;justify-content:center}
+  .c-title:hover{transform:none}
+  .c-title .big{font-size:40px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+  .c-title .sub{font-size:13px;font-weight:700;margin-top:8px;max-width:520px}
+  .c-mark{grid-area:mark;background:var(--yellow);align-items:center;justify-content:center;text-align:center}
+  .c-mark .m{font-size:54px;font-weight:900;line-height:.9}
+  .c-mark .n{font-size:13px;font-weight:800;letter-spacing:1px;margin-top:6px}
+  .c-plan{grid-area:plan;background:var(--red);color:var(--paper)}
+  .c-scores{grid-area:scores;background:var(--blue);color:var(--paper)}
+  .c-packs{grid-area:packs;background:var(--yellow)}
+  .c-packs h3{font-size:40px} .c-packs .ico{font-size:56px} .c-packs p{font-size:15px;max-width:520px}
+  .c-packs .upd{margin-top:12px;font-size:12px;font-weight:800;letter-spacing:.3px;
+    background:var(--ink);color:var(--yellow);align-self:flex-start;padding:5px 11px;border:3px solid var(--ink)}
+  .c-map{grid-area:map;background:var(--card)}
+  .c-map h3{font-size:30px} .c-map .ico{font-size:46px} .c-map p{font-size:14px;max-width:560px}
+  .c-target{grid-area:target;background:var(--green);color:var(--paper)}
+  .c-map.soon, .c-target.soon{cursor:default}.c-map.soon:hover,.c-target.soon:hover{transform:none}
+  .statband{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--ink);
+    border:6px solid var(--ink);margin-top:6px}
+  .statband div{background:var(--card);padding:16px;text-align:center}
+  .statband b{display:block;font-size:34px;font-weight:900;line-height:1}
+  .statband .s1 b{color:var(--red)}.statband .s2 b{color:var(--blue)}.statband .s3 b{color:var(--green)}
+  .statband span{font-size:12px;font-weight:800;letter-spacing:.5px}
+  /* ---------- CONTENT CARDS ---------- */
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:20px 22px;margin:16px 0}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}
+  .keybox b{font-weight:900}
+  .iron{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+  .iron li{background:var(--card);border:4px solid var(--ink);border-left:16px solid var(--red);padding:14px 18px;font-weight:600}
+  .iron li b{font-weight:900;color:var(--red)}
+  .calc{border:4px solid var(--ink);box-shadow:var(--shadow);margin:14px 0;background:var(--card)}
+  .calc .row{display:flex;justify-content:space-between;padding:11px 18px;font-weight:700;border-bottom:3px solid var(--ink)}
+  .calc .row:last-child{border:0;background:var(--ink);color:var(--yellow);font-weight:900;font-size:18px}
+  .four{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--ink);border:5px solid var(--ink);margin:14px 0}
+  .pgrid{display:grid;gap:10px;margin:14px 0}
+  .pgrid .cell{border:4px solid var(--ink);box-shadow:5px 5px 0 var(--ink)}
+  /* ---- packs sidebar nav + search ---- */
+  .packsearch{width:100%;max-width:460px;padding:11px 14px;border:4px solid var(--ink);
+    box-shadow:4px 4px 0 var(--ink);font:inherit;font-size:15px;font-weight:700;background:var(--card);margin:18px 0 6px;display:block}
+  .packsearch:focus{outline:none;background:#fff}
+  .packwrap{display:grid;grid-template-columns:160px 1fr;gap:18px;align-items:start;margin-top:12px}
+  .packnav{position:sticky;top:80px;display:flex;flex-direction:column;gap:6px}
+  .pnav-item{display:flex;align-items:center;gap:8px;background:var(--card);border:3px solid var(--ink);
+    box-shadow:3px 3px 0 var(--ink);padding:9px 10px;font:inherit;font-weight:900;font-size:14px;
+    cursor:pointer;color:var(--ink);text-align:left;width:100%;transition:transform .1s}
+  .pnav-item:hover{background:var(--yellow);transform:translate(-1px,-1px)}
+  .pnav-item.active{background:var(--ink);color:var(--paper)}
+  .pnav-item .pchip{width:12px;height:12px;border:2px solid var(--ink);flex:none}
+  .pnav-item.active .pchip{border-color:var(--paper)}
+  .pnav-item .cnt{margin-left:auto;font-size:11px;font-weight:800;opacity:.6}
+  .pnav-item.active .cnt{color:var(--yellow);opacity:1}
+  .packmain{min-width:0}
+  .packmain h2:first-child{margin-top:4px}
+  .noresult{display:none;font-weight:800;padding:20px;border:3px dashed var(--ink);background:var(--card);margin-top:14px}
+  @media(max-width:720px){
+    .packwrap{grid-template-columns:1fr;gap:10px}
+    .packnav{position:sticky;top:0;z-index:12;flex-direction:row;flex-wrap:wrap;gap:5px;
+      background:var(--paper);padding:8px 0 9px;border-bottom:3px solid var(--ink)}
+    .pnav-item{width:auto;flex:0 0 auto;font-size:13px;padding:7px 9px;box-shadow:2px 2px 0 var(--ink)}
+    .pnav-item .cnt{margin-left:5px}
+  }
+  @media(max-width:560px){.four{grid-template-columns:1fr}}
+  .four div{background:var(--card);padding:16px 18px;font-size:14px;font-weight:600}
+  .four h4{margin:0 0 6px;font-size:16px;font-weight:900}
+  .four .f1{border-top:8px solid var(--red)}.four .f2{border-top:8px solid var(--blue)}
+  .four .f3{border-top:8px solid var(--yellow)}.four .f4{border-top:8px solid var(--green)}
+  em.hl{font-style:normal;font-weight:900;background:var(--yellow);padding:0 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .btn{background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:10px 18px;font-weight:900;
+    font-size:14px;cursor:pointer;box-shadow:3px 3px 0 var(--red)}
+  .btn.y{background:var(--yellow);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  .btn.ghost{background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+  /* ---------- SCORES ---------- */
+  .toggle{display:inline-flex;border:4px solid var(--ink);margin:8px 0;flex-wrap:wrap}
+  .toggle button{border:0;background:var(--card);color:var(--ink);padding:10px 16px;font-size:14px;font-weight:800;cursor:pointer;border-right:3px solid var(--ink)}
+  .toggle button:last-child{border-right:0}
+  .toggle button.on{background:var(--ink);color:var(--yellow)}
+  .chartbox{background:var(--card);border:5px solid var(--ink);box-shadow:var(--shadow);padding:14px;margin:12px 0}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px;padding:0 4px}
+  .legend span{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:800}
+  .legend i{width:20px;height:8px;border:2px solid var(--ink);display:inline-block}
+  .timeline{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .exam{background:var(--card);border:4px solid var(--ink);padding:10px 14px;cursor:pointer;font-size:14px;font-weight:800;box-shadow:3px 3px 0 var(--ink)}
+  .exam .d{font-size:11px;font-weight:700;opacity:.7}
+  .exam.on{background:var(--ink);color:var(--yellow)}.exam.on .d{color:var(--paper);opacity:.8}
+  .exam.todo{opacity:.5;cursor:default;box-shadow:none;border-style:dashed}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:var(--ink);border:5px solid var(--ink);margin:12px 0}
+  @media(max-width:560px){.stats{grid-template-columns:1fr 1fr}}
+  .stats div{background:var(--card);padding:14px;text-align:center}
+  .stats b{display:block;font-size:28px;font-weight:900;line-height:1}
+  .stats span{font-size:11px;font-weight:800}
+  .bars{background:var(--card);border:5px solid var(--ink);box-shadow:var(--shadow);padding:18px;margin:12px 0}
+  .bar{margin:14px 0}
+  .bar .top{display:flex;justify-content:space-between;font-size:15px;font-weight:800;margin-bottom:6px}
+  .bar .track{height:26px;background:var(--paper);border:3px solid var(--ink)}
+  .bar .fill{height:100%;border-right:3px solid var(--ink)}
+  .hole{font-size:11px;font-weight:900;color:#fff;background:var(--red);padding:1px 7px;margin-left:8px;border:2px solid var(--ink)}
+  .note{background:var(--blue);color:var(--paper);border:4px solid var(--ink);box-shadow:var(--shadow);padding:14px 20px;font-size:15px;font-weight:600;margin:14px 0}
+  .note b{font-weight:900;color:var(--yellow)}
+  .note.amber{background:var(--yellow);color:var(--ink)}.note.amber b{color:var(--red)}
+  /* ---------- ECHEM ---------- */
+  .rxn{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);
+    padding:11px 14px;margin:7px 0;font-size:14.5px;font-weight:600;overflow-x:auto;white-space:nowrap;box-shadow:3px 3px 0 var(--red)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 14px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--blue);color:var(--paper)}
+  .step{display:flex;gap:14px;margin:11px 0;opacity:.3;transition:.3s}.step.show{opacity:1}
+  .step .n{flex:none;width:30px;height:30px;background:var(--yellow);border:3px solid var(--ink);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .step b{font-weight:900}
+  .trap{color:var(--red);font-weight:800;font-size:14px;margin-top:6px}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  svg{width:100%;height:auto;display:block}
+  .foot{margin-top:54px;border-top:5px solid var(--ink);padding-top:18px;font-size:13px;font-weight:700;line-height:1.8}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="brand" data-go="home"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></div>
+    <div class="links">
+      <a data-go="home">首页</a>
+      <a data-go="plan">诊断与方案</a>
+      <a data-go="scores">成绩追踪</a>
+      <a data-go="packs">攻坚包</a>
+    </div>
+  </nav>
+  <div class="wrap">
+
+  <!-- ===== HOME ===== -->
+  <section class="page" id="home">
+    <div class="motto">差距不是"哪儿都差一点",是 <em>一份能列清单的硬仗</em>。把它一项项打掉,你会发现尖子生看到的不是题海,是 <em>一副有限的牌</em>。</div>
+    <div class="grid">
+      <div class="cell c-title">
+        <div class="kicker" style="align-self:flex-start;margin-bottom:14px">最好的二蛋 · 高二尖子生养成计划</div>
+        <div class="big">个人学习基地</div>
+        <div class="sub">不囤资料,不加作业。一套有主线的系统:先看清差距,再把你真正卡住的难题一道道讲透、收成你自己的"牌"。</div>
+      </div>
+      <div class="cell c-mark"><div><svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px"><g stroke="#16120A" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg><div class="n">ZEGG</div></div></div>
+      <button class="cell c-plan" data-go="plan"><div class="ico">🧭</div><div class="tag">核心载体</div><h3>诊断与方案</h3><p>这套计划的大脑:六科失分诊断、三条铁律、AI 的价值落脚点、周末循环。所有板块从这里长出来。</p></button>
+      <button class="cell c-scores" data-go="scores"><div class="ico">📈</div><div class="tag">追踪</div><h3>成绩追踪</h3><p>看一条曲线,不看一次排名。</p></button>
+      <button class="cell c-packs" data-go="packs"><div class="ico">🔧</div><div class="tag">攻坚 · 核心</div><h3>攻坚包</h3><p>把每个难点换一扇门讲透 + 多个可交互演示 + 收成一张能复用的"题型卡"。六科已上线 187 个,每个配 6–9 个互动动画。</p><div class="upd">最近更新:2026-07-09a · 187 包(化学53 物理51 数学31 生物48 英语2 语文2)· 📝各包子板块已配自编练习题(非真题),正设法替换为有出处的真实高考真题</div></button>
+      <a class="cell c-map" style="text-decoration:none;color:inherit" href="题型地图.html"><div class="ico">🗺️</div><div class="tag">● 已上线</div><h3>题型地图</h3><p>六科知识图谱总图:力导向网络,点学科钻进去,★直达攻坚包。已上线 187 / 规划 238。</p></a>
+      <div class="cell c-target soon"><div class="ico">🎯</div><div class="tag">每周更新</div><h3>本周靶子</h3><p>一周只打 1–2 个。筹备中。</p></div>
+    </div>
+    <div class="statband">
+      <div class="s1"><b>577</b><span>最近总分 / 750</span></div>
+      <div class="s2"><b>7</b><span>班级排名</span></div>
+      <div class="s3"><b>640</b><span>够得着的目标</span></div>
+    </div>
+    <div class="foot">thebest2dan.com · 周末读、暑假重度用 · 平时的引擎仍是随身卡<br>动机跟在进步后面 —— 每填掉一个洞,就喂大一点那股劲。</div>
+  </section>
+
+  <!-- ===== PLAN ===== -->
+  <section class="page" id="plan">
+    <span class="back" data-go="home">← 回首页</span>
+    <div class="kicker">核心载体</div>
+    <h1>诊断与方案</h1>
+    <p class="lead">做任何一份攻坚包之前,先把"差距到底是什么、该怎么打"想清楚。这是整套系统的主线。</p>
+
+    <h2>一、先校准起点</h2>
+    <div class="card"><em class="hl">他那份六科复盘,本身就是反驳"他没那么聪明"的证据。</em> 能把失分点拆到"楞次定律来拒去留套用不熟""双极值用比值换元""遗传题逆向推导能力不足"这种颗粒度,不是"勉强跟上"的中等生写得出来的。很多年级前几名都做不到这种自我诊断。起点要重定:他够得着的,比"570、考不上985"高得多。</div>
+
+    <h2 class="b">二、失分高度集中,是有限的硬仗</h2>
+    <p class="lead">六科复盘并排看,几乎一模一样的句式在每科重复——<em class="hl">"基础题稳,大题前一两问没问题,最后一问/压轴没时间、思路不清、完全不会"</em>。差距不是"哪儿都差一点",是一份能列清单的硬仗:</p>
+    <div class="calc">
+      <div class="row"><span>化学 64 → 85</span><span>+21</span></div>
+      <div class="row"><span>生物 66 → 85</span><span>+19</span></div>
+      <div class="row"><span>物理压轴</span><span>+10</span></div>
+      <div class="row"><span>数学压轴 + 排列组合</span><span>+13</span></div>
+      <div class="row"><span>合计(语数英还没动)</span><span>≈ 640</span></div>
+    </div>
+    <p class="lead"><b>对意志力一般的人,这反而是好消息:目标越具体、越有限,越不依赖意志力。</b></p>
+
+    <h2 class="y">三、真正卡住他的那个系数</h2>
+    <div class="card">"聪明 × 勤奋 × 效率"里,真正卡住他的系数没被列出来:<em class="hl">是"针对性/方法"</em>。两个聪明、勤奋、效率一样的孩子,可以仅因为练的东西有没有打在自己的洞上,差出 50 分。输入没问题、基础处理没问题,卡的是<b>处理"陌生的、一眼看不出思路的难题"那一层</b>。</div>
+
+    <h2>四、三条铁律(违反就否决)</h2>
+    <ul class="iron">
+      <li><b>① 不增加工作量。</b>六天在校被卷子作业错题塞满,回家只有一天。所有东西必须"寄生"在他已有的任务上,绝不另起赛道。</li>
+      <li><b>② 不把休息日榨成第七个学习日。</b>那一天是战略资源,被掏空的脑子学不进东西。</li>
+      <li><b>③ 动机跟在进步后面。</b>不押注他没有的意志力,靠看得见的小胜反过来喂大那股劲。做教练+后勤,不做考官。</li>
+    </ul>
+
+    <h2 class="b">五、AI 的价值落脚点</h2>
+    <div class="card">
+      <p style="margin:0 0 12px"><b>1 · 针对单个错误的个性化</b><br>盯着他这一道题、卡住的那一步,用他已会的语言讲透。"每个学生 × 每道题"这个颗粒度,老师没时间。</p>
+      <p style="margin:0 0 12px"><b>2 · 同一个概念的"第二扇门"</b><br>课上那套没让他懂,他就卡死了——他只有一个版本。一个概念可换五种讲法:打比方、画出来、从答案倒推、接到熟悉的东西上。</p>
+      <p style="margin:0"><b>3 · 题型地图(母题思维)</b><br>把看似无限的题塌缩成一副能一眼认出来的牌,每类题一个触发信号、一个标准动作。</p>
+    </div>
+    <div class="keybox"><b>一条边界:</b>真正提分的是他自己动手、卡住、再做的反复,AI 替不了。AI 的价值全在<b>讲解/诊断/框架/点拨</b>,不在"刷题量"。</div>
+
+    <h2 class="g">六、让训练更科学的四原则</h2>
+    <div class="four">
+      <div class="f1"><h4>混着练</h4>别一类刷到底。连做20道同型题,永远练不到"认题型"。</div>
+      <div class="f2"><h4>检索 &gt; 重看</h4>自己默/做一遍,远胜把讲解再读一遍。</div>
+      <div class="f3"><h4>间隔复习</h4>第 2、7、16 天各重做一遍,胜过临考扎堆。</div>
+      <div class="f4"><h4>审题显性化</h4>把隐性动作写成固定清单(电磁感应前先圈:匀速/变速?)。</div>
+    </div>
+    <div style="margin-top:24px"><button class="btn" data-go="scores">看成绩追踪 →</button> <button class="btn y" data-go="packs">进攻坚包 →</button></div>
+  </section>
+
+  <!-- ===== SCORES ===== -->
+  <section class="page" id="scores">
+    <span class="back" data-go="home">← 回首页</span>
+    <div class="kicker">追踪</div>
+    <h1>成绩追踪</h1>
+    <p class="lead">不是看一次排名,是看一条曲线。把整个学期每一批次考试摆在一起,趋势和真正的窟窿才看得清。</p>
+
+    <h2 class="b">学期趋势 · 各科得分率</h2>
+    <div class="toggle" id="trendToggle">
+      <button data-v="holes" class="on">理科 + 窟窿</button>
+      <button data-v="all">全部六科</button>
+      <button data-v="total">总分</button>
+    </div>
+    <div class="chartbox"><div id="trendChart"></div><div class="legend" id="trendLegend"></div></div>
+    <div class="note amber" id="trendInsight"></div>
+
+    <h2 class="y">各批次明细</h2>
+    <div class="timeline" id="timeline"></div>
+    <div id="detail"></div>
+  </section>
+
+  <!-- ===== PACKS ===== -->
+  <section class="page" id="packs">
+    <span class="back" data-go="home">← 回首页</span>
+    <div class="kicker">攻坚</div>
+    <h1>攻坚包</h1>
+    <p class="lead">每个包只攻一个难点:换一扇门讲透 + 多个可交互演示 + 收成一张能复用的"题型卡"。六科已上线 <b>187</b> 个攻坚包,每个包配 6–9 个互动动画/可视化(仿 3Blue1Brown 风格)。完整题型全景见<a href="题型地图.html" style="color:var(--blue);font-weight:900">题型地图</a>。<span style="display:block;margin-top:6px;font-size:12px;color:#9a8f74">最近更新:2026-07-09a · 187 包(化学53 物理51 数学31 生物48 英语2 语文2)· 📝各包子板块已配自编练习题(非真题),正设法替换为有出处的真实高考真题</span></p>
+    <div style="margin:18px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="background:var(--red);color:#fff;font-weight:900;font-size:13px;letter-spacing:2px;padding:5px 12px;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink)">⭐ 重点专题 · 最近更新</span>
+      <span style="font-size:12.5px;font-weight:700;color:#6b5d3a">深度旗舰 / 最新上线,建议优先攻克 —— 下方还有全部 187 包分科列表</span>
+    </div>
+    <a href="光的干涉与衍射.html" style="display:block;text-decoration:none;background:#16120A;color:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--green);padding:18px 22px;margin:0 0 8px">
+      <span style="display:inline-block;background:var(--green);color:#fff;font-weight:900;font-size:11px;letter-spacing:1.5px;padding:3px 10px;border:2px solid #fff">🔬 实验专题 · 07-06 最新</span>
+      <h3 style="color:#fff;margin:9px 0 4px;font-size:23px;font-weight:900">光的干涉与衍射 · 实验与做题</h3>
+      <p style="color:#fff;margin:0;font-size:13.5px;font-weight:600;line-height:1.5">双缝干涉测波长(装置/读数/数据处理)· Δy=Lλ/d · 干涉vs衍射判别 · 单缝衍射 · 增透膜λ/4 · 路程差判亮暗 —— <b style="background:var(--green);padding:0 4px">7 个可交互动画</b> + <b style="background:var(--green);padding:0 4px">做题思路 + 易错大全</b></p>
+    </a>
+    <a href="油膜法测分子直径.html" style="display:block;text-decoration:none;background:#16120A;color:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--orange);padding:18px 22px;margin:0 0 6px">
+      <span style="display:inline-block;background:var(--orange);color:#fff;font-weight:900;font-size:11px;letter-spacing:1.5px;padding:3px 10px;border:2px solid #fff">🔬 实验专题 · 07-06 最新</span>
+      <h3 style="color:#fff;margin:9px 0 4px;font-size:23px;font-weight:900">油膜法测分子直径 · 实验</h3>
+      <p style="color:#fff;margin:0;font-size:13.5px;font-weight:600;line-height:1.5">单分子膜 d=V/S · 为何稀释(必乘浓度)· 数滴取体积 · 痱子粉显边界 · 数格子测面积 · 单位换算 · 误差分析 —— <b style="background:var(--orange);padding:0 4px">8 个可交互动画</b> + <b style="background:var(--orange);padding:0 4px">每步讲透为什么</b></p>
+    </a>
+    <a href="圆锥曲线深研.html" style="display:block;text-decoration:none;background:#16120A;color:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--orange);padding:18px 22px;margin:0 0 6px">
+      <span style="display:inline-block;background:#E86A17;color:#fff;font-weight:900;font-size:11px;letter-spacing:1.5px;padding:3px 10px;border:2px solid #fff">🔭 深研 · 旗舰长页 · 新上线</span>
+      <h3 style="color:#fff;margin:9px 0 4px;font-size:23px;font-weight:900">圆锥曲线 · 深研(镇站之宝)</h3>
+      <p style="color:#fff;margin:0;font-size:13.5px;font-weight:600;line-height:1.5">一锥四曲线 · Dandelin 球 · 统一离心率 · 三线精讲 · 光学与生活(耳语廊/碎石机/卫星锅/GPS/行星轨道)· 直线联立与点差法 · 超越视角 —— <b style="background:#E86A17;padding:0 4px">12 个可交互动画</b> + <b style="background:#E86A17;padding:0 4px">易错大全逐条歼灭</b></p>
+    </a>
+    <a href="二次函数最值.html" style="display:block;text-decoration:none;background:#16120A;color:#fff;border:4px solid var(--ink);box-shadow:6px 6px 0 var(--blue);padding:18px 22px;margin:8px 0 6px">
+      <span style="display:inline-block;background:#1450C8;color:#fff;font-weight:900;font-size:11px;letter-spacing:1.5px;padding:3px 10px;border:2px solid #fff">📈 深研 · 按弟弟错点定制 · 新上线</span>
+      <h3 style="color:#fff;margin:9px 0 4px;font-size:23px;font-weight:900">二次函数最值 · 深研</h3>
+      <p style="color:#fff;margin:0;font-size:13.5px;font-weight:600;line-height:1.5">动轴定区间(星级交互)· 含参分类决策树 · 恒成立三条路 · 全体R vs 区间 · 端点检验器 —— <b style="background:#1450C8;padding:0 4px">7 个可交互动画</b> + <b style="background:#1450C8;padding:0 4px">易错大全逐条歼灭(6个坑)</b></p>
+    </a>
+    <input class="packsearch" id="packSearch" type="text" placeholder="🔍 搜攻坚包名 / 关键词…(如 电化学、光合、导数、免疫、二次函数)" autocomplete="off">
+    <div class="packwrap">
+      <nav class="packnav" id="packNav">
+        <button class="pnav-item" data-target="__top"><span class="pchip" style="background:var(--ink)"></span>全部<span class="cnt" id="cnt-all"></span></button>
+        <button class="pnav-item" data-target="pk-chem"><span class="pchip" style="background:#1E9E86"></span>化学<span class="cnt"></span></button>
+        <button class="pnav-item" data-target="pk-phys"><span class="pchip" style="background:#1450C8"></span>物理<span class="cnt"></span></button>
+        <button class="pnav-item" data-target="pk-bio"><span class="pchip" style="background:#7A3FF2"></span>生物<span class="cnt"></span></button>
+        <button class="pnav-item" data-target="pk-math"><span class="pchip" style="background:#E86A17"></span>数学<span class="cnt"></span></button>
+        <button class="pnav-item" data-target="pk-eng"><span class="pchip" style="background:#0E9AA7"></span>英语<span class="cnt"></span></button>
+        <button class="pnav-item" data-target="pk-chin"><span class="pchip" style="background:#E0382A"></span>语文<span class="cnt"></span></button>
+      </nav>
+      <div class="packmain" id="packMain">
+    <h2 class="g" id="pk-chem">化学</h2>
+    <div class="pgrid" style="grid-template-columns:1fr 1fr">
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="胶体与分散系.html"><div class="ico">🌫️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">胶体与分散系</h3><p style="color:#fff">丁达尔效应 · 三类分散系 · 胶体净水 · 电泳聚沉</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="有机合成.html"><div class="ico">⚗️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">有机合成</h3><p style="color:#fff">逆合成分析 · 官能团转化链 · 信息迁移 · 原子经济</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="海水资源利用.html"><div class="ico">🌊</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">海水资源利用</h3><p style="color:#fff">提镁提溴 · 晒盐淡化 · 除杂顺序 · 富集氧化</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="化学反应原理综合.html"><div class="ico">🔗</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">化学反应原理综合</h3><p style="color:#fff">盖斯定律 · 平衡+电化学 · 速率图像 · 多问拆解</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="电化学计算.html"><div class="ico">🔋</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">电化学计算</h3><p style="color:#fff">电子守恒 · 串联电解 · 析出质量 · Q=It</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="芳香烃.html"><div class="ico">🧴</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">芳香烃</h3><p style="color:#fff">苯的结构 · 取代加成 · 侧链氧化 · 环链相互影响</p></a>
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="氧化还原反应.html"><div class="ico">⚡</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">氧化还原反应</h3><p style="color:#fff">双线桥画法 · 化合价升降数轴 · 配平分步器 · 电子守恒天平 · 强弱排序</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="离子方程式.html"><div class="ico">💧</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">离子方程式书写与正误</h3><p style="color:#fff">写拆删查动画 · 拆分判断器 · 电荷守恒天平 · 过量少量对比 · 正误闯关</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="离子共存.html"><div class="ico">🧫</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">离子共存</h3><p style="color:#fff">共存判断器 · 四大不共存原因 · 隐含条件解码 · 颜色离子 · 双水解</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="电离常数与pH.html"><div class="ico">📉</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电离常数与pH综合</h3><p style="color:#fff">强弱酸稀释pH曲线 · Ka计算器 · 温度对Ka/Kw · 同pH同浓度对比</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="无机推断.html"><div class="ico">🔍</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">无机框图推断</h3><p style="color:#fff">交互推断框图 · 特征颜色速查 · 突破口决策树 · Fe²⁺↔Fe³⁺转化轮</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="铜及其化合物.html"><div class="ico">🟤</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">铜及其化合物</h3><p style="color:#fff">价态转化轮 · 与不同酸反应 · 胆矾失水 · Fe³⁺蚀刻 · 颜色速查</p></a>
+
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="化工流程.html"><div class="ico">🏭</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">无机化工流程</h3><p style="color:#fff">流程图点读 · 调pH除杂数轴 · 结晶方式决策 · 循环利用</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="反应热与热化学.html"><div class="ico">🔥</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">反应热·热化学方程式</h3><p style="color:#fff">能量进程图拖催化剂 · 键能计算器 · 盖斯拼图 · 燃烧热vs中和热</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="有机反应类型.html"><div class="ico">🔗</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">有机反应类型判断</h3><p style="color:#fff">官能团转化网络 · 酯化¹⁸O示踪 · 消去vs取代 · 加聚缩聚拆分</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="电极反应式书写.html"><div class="ico">⚡</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电极反应式书写</h3><p style="color:#fff">电子/离子流动 · 分步配平器 · 燃料电池酸碱切换 · 电子守恒</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="晶胞计算.html"><div class="ico">🧊</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">晶胞与均摊法</h3><p style="color:#fff">晶胞投影切换 · 均摊计数 · 密度计算器 · 配位数 · 最近距离</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="化学计算方法.html"><div class="ico">🧮</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">差量法·守恒·过量</h3><p style="color:#fff">差量质量条 · 电子守恒天平 · 过量判断滑块 · 混合物求解</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="烃的含氧衍生物.html"><div class="ico">⚗️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">醇酚醛羧酸酯</h3><p style="color:#fff">氧化还原梯子 · 银镜动画 · 酸性强弱对比 · 检验决策树</p></a>
+
+      <a class="cell" style="background:var(--green);color:#fff;min-height:124px;text-decoration:none" href="电化学.html"><div class="ico">🔋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电化学</h3><p style="color:#fff">原电池↔电解池动画 · 离子流动 · 放电顺序拖拽 · 电量计算器</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:124px;text-decoration:none" href="水溶液离子平衡.html"><div class="ico">💧</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">水溶液离子平衡</h3><p style="color:#fff">动画离子条形图 · 电离/水解跷跷板 · 大白话讲解</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:124px;text-decoration:none" href="化学平衡.html"><div class="ico">⚖️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">化学平衡图像 / 等效平衡</h3><p style="color:#fff">勒夏特列交互 · v-t图判读 · 等效平衡 · 题型卡</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:124px;text-decoration:none" href="化学实验.html"><div class="ico">🧪</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">实验规范 / 工艺流程</h3><p style="color:#fff">气体装置选择器 · 滴定动画 · 分离决策树 · 工艺流程图</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:124px;text-decoration:none;grid-column:1 / -1" href="有机推断.html"><div class="ico">⚗️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">有机推断</h3><p style="color:#fff">官能团转化网络图 · 不饱和度计算器 · 同分异构计数 · 特征反应判别 · 推断闯关</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="盐类水解.html"><div class="ico">🧂</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">盐类水解</h3><p style="color:#fff">水解平衡动画 · 谁弱谁水解判别 · 蒸干产物决策树 · 双水解</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="pH计算.html"><div class="ico">🧮</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">pH计算</h3><p style="color:#fff">pH↔c(H⁺)联动尺 · 强弱酸稀释趋近 · 混合计算器 · 中和突跃</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="铁三角.html"><div class="ico">🔺</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">铁三角 Fe²⁺Fe³⁺</h3><p style="color:#fff">转化图点边看试剂 · 检验交互 · Fe(OH)₂变色动画 · 离子共存</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="阿伏伽德罗常数.html"><div class="ico">🔢</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">阿伏伽德罗常数 NA</h3><p style="color:#fff">NA陷阱判别器 · 特殊结构键数图 · 微粒数计算器 · 电子转移</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="盖斯定律.html"><div class="ico">🔥</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">反应热与盖斯定律</h3><p style="color:#fff">能量进程图拖拽 · 盖斯拼接器 · 键能计算器 · 反应热比较</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="沉淀溶解.html"><div class="ico">🧊</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">沉淀溶解平衡 Ksp</h3><p style="color:#fff">溶解平衡动画 · Q与Ksp判别 · 沉淀转化 · Ksp↔溶解度</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="物质检验.html"><div class="ico">🔍</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">物质检验与离子共存</h3><p style="color:#fff">离子检验台 · 离子共存判别器 · 焰色反应 · 鉴别决策树</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="元素周期律.html"><div class="ico">📋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">元素周期律与推断</h3><p style="color:#fff">交互周期表 · 递变箭头 · 半径比较器 · 位构性推断闯关</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="化学反应速率.html"><div class="ico">⏱️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">化学反应速率</h3><p style="color:#fff">速率计算换算 · 影响因素滑块 · 有效碰撞动画 · 控制变量</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="守恒法.html"><div class="ico">⚖️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">守恒法速算</h3><p style="color:#fff">电子守恒天平 · 双线桥 · 原子守恒关系式 · 守恒选择器</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="化学键与晶体.html"><div class="ico">💎</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">化学键与晶体</h3><p style="color:#fff">离子键vs共价键动画 · 电子式检查器 · 四类晶体 · 熔沸点比较</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="中和滴定曲线.html"><div class="ico">📉</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">中和滴定曲线</h3><p style="color:#fff">滴定曲线模拟 · 关键点粒子分析 · 指示剂选择 · 误差分析</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="有机化学基础.html"><div class="ico">🌿</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">有机化学基础</h3><p style="color:#fff">官能团性质检验 · 加成vs取代 · 苯结构 · 酯化动画 · 反应类型判别</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="钠及其化合物.html"><div class="ico">💥</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">钠及其化合物</h3><p style="color:#fff">钠与水动画 · Na₂O₂电子转移 · 碳酸钠碳酸氢钠 · 焰色反应</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="氯及其化合物.html"><div class="ico">🧴</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">氯及其化合物</h3><p style="color:#fff">氯水成分平衡 · 制氯装置 · Cl⁻检验 · 漂白原理 · 次氯酸分解</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="硫及其化合物.html"><div class="ico">🌋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">硫及其化合物</h3><p style="color:#fff">浓硫酸三性 · SO₂漂白vs还原 · SO₄²⁻检验 · 价态转化 · 酸雨</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="氮及其化合物.html"><div class="ico">💨</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">氮及其化合物</h3><p style="color:#fff">喷泉实验 · NO/NO₂转化 · 硝酸与铜稀浓 · NH₄⁺检验 · 催化氧化</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="铝及其化合物.html"><div class="ico">🥫</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">铝及其化合物</h3><p style="color:#fff">铝酸碱都放H₂ · Al(OH)₃两性 · 滴加顺序图像 · 铝三角 · 明矾净水</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="碳硅与材料.html"><div class="ico">⛰️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">碳硅与无机材料</h3><p style="color:#fff">碳同素异形体 · CO₂多路径 · SiO₂特性 · 硅酸盐工业 · 碳硅对比</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="化学平衡移动.html"><div class="ico">🔀</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">化学平衡移动与K</h3><p style="color:#fff">勒夏特列+v-t图 · Q与K判方向 · 三段式转化率 · 温度对K · 惰气对比</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="弱电解质电离.html"><div class="ico">⚗️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">弱电解质电离</h3><p style="color:#fff">强弱电离对比 · 平衡移动 · Ka与强弱 · 强弱酸稀释 · 判弱实验</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="气体制备.html"><div class="ico">🫙</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">气体的制备与净化</h3><p style="color:#fff">发生装置选择 · 干燥剂匹配 · 收集方法 · 洗气方向 · 装置排序</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="原电池与化学电源.html"><div class="ico">🔋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">原电池与化学电源</h3><p style="color:#fff">工作原理动画 · 盐桥 · 燃料电池电极式 · 一次二次电池 · 电极判断</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="电解原理及应用.html"><div class="ico">⚙️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电解原理及应用</h3><p style="color:#fff">电解原理 · 放电顺序判别 · 氯碱工业 · 电镀精炼 · 电解计算</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="金属腐蚀与防护.html"><div class="ico">🔧</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">金属腐蚀与防护</h3><p style="color:#fff">吸氧vs析氢腐蚀 · 腐蚀快慢排序 · 牺牲阳极 · 外加电流 · 铁钉实验</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="同分异构体书写.html"><div class="ico">🔗</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">同分异构体书写</h3><p style="color:#fff">四类异构 · 等效氢数一氯代物 · 限定条件筛选 · 官能团异构 · 芳香族</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="糖类油脂蛋白质.html"><div class="ico">🍞</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">糖类油脂蛋白质</h3><p style="color:#fff">糖类还原性 · 淀粉水解检验 · 油脂皂化 · 盐析vs变性 · 检验决策</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="物质的量浓度.html"><div class="ico">🥼</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">物质的量浓度配制</h3><p style="color:#fff">配制六步动画 · 浓度换算 · 稀释混合 · 误差分析 · 俯仰视</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="金属冶炼.html"><div class="ico">⛏️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">金属的冶炼</h3><p style="color:#fff">活动性→冶炼法匹配 · 电解熔融 · 热还原 · 镁烧CO₂ · 铜转化</p></a>
+    </div>
+    <h2 class="b" id="pk-phys">物理</h2>
+    <div class="pgrid" style="grid-template-columns:1fr 1fr">
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="波的干涉衍射.html"><div class="ico">〰️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">波的干涉衍射</h3><p style="color:#fff">相干条件 · 加强减弱 · 双缝干涉 · 衍射现象</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="远距离输电.html"><div class="ico">🔌</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">远距离输电</h3><p style="color:#fff">升压降压 · 减小损耗 · 变压器 · 功率守恒</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="卫星变轨与双星.html"><div class="ico">🛰️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">卫星变轨与双星</h3><p style="color:#fff">变轨加减速 · 高轨低速 · 双星共心 · 能量分析</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="电磁振荡与电磁波.html"><div class="ico">📶</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">电磁振荡与电磁波</h3><p style="color:#fff">LC振荡 · 电磁场转化 · T=2π√LC · 电磁波谱</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="涡流与电磁阻尼.html"><div class="ico">🌀</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">涡流与电磁阻尼</h3><p style="color:#fff">涡流生热 · 电磁阻尼 · 电磁驱动 · 电磁炉</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="力学图像.html"><div class="ico">📈</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">力学图像</h3><p style="color:#fff">x-t/v-t/a-t · 斜率面积 · 截距交点 · 图像转化</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="电路动态分析.html"><div class="ico">💡</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">电路动态分析</h3><p style="color:#fff">串反并同 · U=E−Ir · 含容稳态 · 电表判断</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="传感器.html"><div class="ico">🎛️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">传感器</h3><p style="color:#fff">光敏热敏 · 电容式 · 霍尔元件 · 自动控制</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="受迫振动与共振.html"><div class="ico">📳</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">受迫振动与共振</h3><p style="color:#fff">固有频率 · 共振曲线 · f驱=f固 · 阻尼峰形</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="光的干涉与衍射.html"><div class="ico">🔬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光的干涉与衍射·实验与做题</h3><p style="color:#fff">双缝干涉测波长 · 测量头读数处理 · 干涉vs衍射判别 · 增透膜λ/4 · 路程差判亮暗</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="油膜法测分子直径.html"><div class="ico">🔬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">油膜法测分子直径·实验</h3><p style="color:#fff">单分子膜d=V/S · 为何稀释 · 数格子测面积 · 单位换算 · 误差分析</p></a>
+
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="功率与机车启动.html"><div class="ico">🚂</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">功率与机车启动</h3><p style="color:#fff">恒功率启动动画 · 恒加速度两阶段 · P=Fv反比 · v-t图对比 · vmax</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="弹簧问题.html"><div class="ico">🌀</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">弹簧类问题</h3><p style="color:#fff">胡克定律F=kx · 剪断瞬间弹簧vs绳 · 弹性势能曲线 · 振子 · 能量守恒</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="共点力平衡.html"><div class="ico">⚖️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">共点力平衡</h3><p style="color:#fff">力三角形闭合 · 动态平衡图解法 · 正交分解 · 相似三角形法</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="电势与电势能.html"><div class="ico">🔺</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电势·电势能·等势面</h3><p style="color:#fff">电场线+等势面 · 电荷移动做功 · U=Ed · 正负电荷Ep对比 · qU=ΔEk</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="分子动理论.html"><div class="ico">🌡️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">分子动理论与内能</h3><p style="color:#fff">布朗运动动画 · 分子力-距离曲线 · 分子势能 · 油膜法 · 微观量估算</p></a>
+
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="传送带模型.html"><div class="ico">🎢</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">传送带模型</h3><p style="color:#fff">带+物块动画 · v-t双线 · 倾斜情形切换 · 划痕与生热</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="板块模型.html"><div class="ico">🛹</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">滑块木板模型</h3><p style="color:#fff">相对滑动动画 · 上下表面摩擦 · 临界加速度 · 相对位移=板长</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="机械振动与波.html"><div class="ico">〰️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">机械振动与波</h3><p style="color:#fff">简谐+参考圆 · 单摆周期 · 振动图vs波动图 · 波形传播判方向</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="电容器.html"><div class="ico">🔋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电容器</h3><p style="color:#fff">平行板拖距/介质 · 连/断电池动态 · 充放电曲线 · 板间偏转</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="圆周运动临界.html"><div class="ico">🎡</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">圆周运动临界</h3><p style="color:#fff">竖直圆绳/杆切换 · 圆锥摆 · 拱桥失重 · vmin计算器</p></a>
+
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="电磁感应.html"><div class="ico">🧲</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电磁感应</h3><p style="color:#fff">磁铁运动动态模拟 · 楞次定律"来拒去留" · 说人话</p></a>
+      <a class="cell" style="background:var(--red);color:#fff;min-height:120px;text-decoration:none" href="物理多过程.html"><div class="ico">🔭</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">多过程拆解 / 能量动量</h3><p style="color:#fff">子弹打木块三阶段 · 三类碰撞模拟 · 滑块木板 · 选锅决策器</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none;grid-column:1 / -1" href="物理电学实验.html"><div class="ico">🔌</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电学实验</h3><p style="color:#fff">内/外接误差演示 · 分压限流交互 · U-I图测电动势 · 卡尺/螺旋测微器读数</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="平抛与圆周.html"><div class="ico">🎯</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">平抛与圆周</h3><p style="color:#fff">平抛分解动画 · 竖直圆周临界(绳vs杆) · 圆锥摆 · 传动</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="万有引力.html"><div class="ico">🛰️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">万有引力与卫星</h3><p style="color:#fff">卫星轨道模拟 · 三种宇宙速度 · 变轨 · 双星 · 开普勒</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="动量守恒.html"><div class="ico">🎱</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">动量守恒与碰撞</h3><p style="color:#fff">碰撞模拟器(三类) · 人船模型 · 爆炸反冲 · 合理性判别</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="带电粒子磁场.html"><div class="ico">🌀</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">带电粒子在磁场</h3><p style="color:#fff">磁场圆周动画 · 左手定则 · 边界射入 · 速度选择器 · 质谱仪</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="带电粒子电场.html"><div class="ico">⚡</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">带电粒子在电场</h3><p style="color:#fff">加速+偏转打屏动画 · 示波管扫描 · 侧移关系图</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="牛顿定律.html"><div class="ico">🧱</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">牛顿定律与连接体</h3><p style="color:#fff">受力分析器 · 整体vs隔离 · 超重失重电梯 · 临界脱离</p></a>
+      <a class="cell" style="background:#0E9AA7;color:#fff;min-height:120px;text-decoration:none" href="气体定律.html"><div class="ico">🎈</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">气体实验定律</h3><p style="color:#fff">活塞汽缸+分子+PV图 · 三定律联动 · 液柱封闭压强</p></a>
+      <a class="cell" style="background:#16120A;color:#fff;min-height:120px;text-decoration:none" href="光电效应.html"><div class="ico">💡</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光电效应</h3><p style="color:#fff">光子打电子模拟 · Ek-ν图求h与W₀ · 遏止电压 · 能量条</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="闭合电路.html"><div class="ico">🔦</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">闭合电路与动态分析</h3><p style="color:#fff">闭合电路模拟 · 动态分析器 · 输出功率峰值 · 故障判断</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="变压器.html"><div class="ico">🔁</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">变压器与远距离输电</h3><p style="color:#fff">变压器模拟 · 原制约副 · 远距离输电线损 · 多副线圈</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="复合场.html"><div class="ico">🧭</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">复合场中的运动</h3><p style="color:#fff">复合场粒子模拟 · 速度选择器 · 重力电场平衡圆周 · 能量分析</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="交变电流.html"><div class="ico">〰️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">交变电流</h3><p style="color:#fff">线圈转动生正弦动画 · 峰值有效值 · 四值读取 · 电感电容</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="光学.html"><div class="ico">🌈</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光的折射与干涉</h3><p style="color:#fff">折射动画 · 全反射临界角 · 棱镜色散 · 双缝干涉 · 偏振</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="功能关系.html"><div class="ico">🔨</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">功、能量与功能关系</h3><p style="color:#fff">功正负判别 · 机车启动 · 动能定理多过程 · 摩擦生热 Q=f·s相对</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="静电场.html"><div class="ico">⚡</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">静电场(场强·电势)</h3><p style="color:#fff">点电荷电场线 · 场强叠加 · 等势面 · 平行板动态分析</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="原子核.html"><div class="ico">☢️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">原子结构与原子核</h3><p style="color:#fff">能级跃迁谱线 · 谱线条数 · 三种衰变 · 半衰期 · 核反应配平</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="直线运动.html"><div class="ico">🏃</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">直线运动(运动学)</h3><p style="color:#fff">匀变速模拟 · v-t面积=位移 · 追及相遇 · 纸带求a · 图像识别</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="热学.html"><div class="ico">🌡️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">热学(分子动理论)</h3><p style="color:#fff">布朗运动 · 分子力曲线 · 热一定律计算 · 温度动能 · 油膜法</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="受力分析.html"><div class="ico">🔻</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">受力分析与平衡</h3><p style="color:#fff">受力分析器 · 摩擦方向判断 · 正交分解 · 三力矢量三角形 · 动态平衡</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="部分电路.html"><div class="ico">🎛️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">部分电路(欧姆定律)</h3><p style="color:#fff">串并联交互 · 分压分流 · 伏安特性曲线 · 电阻定律 · 电功率三式</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="动量定理.html"><div class="ico">🏓</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">动量定理与冲量</h3><p style="color:#fff">F-t图=冲量 · 缓冲原理 · 反弹Δp矢量 · 动量vs动能 · p与Ek</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="力学实验.html"><div class="ico">📏</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">力学实验专题</h3><p style="color:#fff">纸带求v/a逐差法 · 验证机械能守恒 · 探究a-F-m · 图像法 · 误差</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="运动合成分解.html"><div class="ico">⛵</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">运动的合成与分解</h3><p style="color:#fff">运动合成动画 · 小船渡河模拟 · 关联速度 · 平行四边形 · 最短位移临界</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="天体质量密度.html"><div class="ico">🪐</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">天体质量与密度</h3><p style="color:#fff">卫星绕天体 · 测质量 · 测密度(近地只需T) · 黄金代换 · 双星</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="库仑定律.html"><div class="ico">🧲</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">库仑定律与电荷</h3><p style="color:#fff">同斥异吸 · 电荷均分 · 矢量合成 · 三电荷平衡 · 悬球平衡</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="安培力与洛伦兹力.html"><div class="ico">✋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">安培力与洛伦兹力</h3><p style="color:#fff">左手定则交互 · 安培力大小 · 线框转动 · 洛伦兹力方向 · 平行电流</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="电磁感应进阶.html"><div class="ico">🔆</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">电磁感应进阶</h3><p style="color:#fff">法拉第定律 · 切割BLv · 感应电荷 · 自感通断电 · 涡流阻尼</p></a>
+    </div>
+    <h2 class="v" id="pk-bio">生物</h2>
+    <div class="pgrid" style="grid-template-columns:1fr 1fr">
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="群落演替.html"><div class="ico">🌱</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">群落演替</h3><p style="color:#fff">初生次生 · 演替方向 · 顶极群落 · 人类影响</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="生态工程.html"><div class="ico">♻️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">生态工程</h3><p style="color:#fff">五大原理 · 桑基鱼塘 · 物质循环 · 能量多级利用</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="基因频率计算.html"><div class="ico">🧮</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">基因频率计算</h3><p style="color:#fff">哈代温伯格 · 自交自由交配 · 伴X计数 · 进化实质</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="免疫失调与应用.html"><div class="ico">🛡️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">免疫失调与应用</h3><p style="color:#fff">过敏 · 自身免疫 · 免疫缺陷 · 疫苗抗体</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="水盐与体温调节.html"><div class="ico">🌡️</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">水盐与体温调节</h3><p style="color:#fff">抗利尿激素 · 渗透压 · 产热散热 · 下丘脑</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="胚胎工程.html"><div class="ico">🐣</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">胚胎工程</h3><p style="color:#fff">体外受精 · 早期胚胎培养 · 胚胎移植 · 分割克隆</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="生物多样性.html"><div class="ico">🦋</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">生物多样性</h3><p style="color:#fff">三层次 · 价值 · 就地保护 · 易地保护</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="转录翻译.html"><div class="ico">📜</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">转录翻译</h3><p style="color:#fff">转录配U · 翻译密码子 · 中心法则 · 碱基计算</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="信息传递与稳定性.html"><div class="ico">📡</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">信息传递与稳定性</h3><p style="color:#fff">三类信息 · 负反馈 · 抵抗力恢复力 · 自我调节</p></a>
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="生物膜系统.html"><div class="ico">🧬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">生物膜系统·分泌蛋白</h3><p style="color:#fff">分泌蛋白路径动画 · 膜面积变化 · 同位素追踪 · 流动镶嵌模型</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="血糖调节.html"><div class="ico">🩸</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">血糖平衡的调节</h3><p style="color:#fff">血糖反馈闭环动画 · 来源去路 · 胰岛素vs胰高血糖素 · 三多一少</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="基因突变.html"><div class="ico">🔀</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">基因突变与基因重组</h3><p style="color:#fff">碱基替换/移码演示 · 自由组合 · 交叉互换 · 三种变异判别器</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="物质提取与分离.html"><div class="ico">🧪</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">物质提取与分离</h3><p style="color:#fff">DNA-NaCl溶解度曲线 · 粗提取流程 · 二苯胺显蓝 · 纸层析色素带</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="细胞工程.html"><div class="ico">🌱</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">细胞工程</h3><p style="color:#fff">植物组培动画 · 激素比例定分化 · 单克隆抗体制备 · 全能性</p></a>
+
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="遗传系谱图.html"><div class="ico">🧬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">遗传系谱图分析</h3><p style="color:#fff">交互系谱推基因型 · 显隐判定树 · 常/伴性流程 · 概率树状图</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="基因工程.html"><div class="ico">✂️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">基因工程</h3><p style="color:#fff">限制酶切割动画 · 载体拖拽拼装 · PCR三步2ⁿ · 检测方法</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="微生物培养.html"><div class="ico">🦠</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">微生物培养与计数</h3><p style="color:#fff">平板划线动画 · 稀释涂布计数 · 选择/鉴别培养基 · 灭菌对比</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="能量流动计算.html"><div class="ico">🔺</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">能量流动计算</h3><p style="color:#fff">能量漏斗10-20% · 去向拆分 · 最多最少计算器 · 金字塔</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="光合呼吸曲线.html"><div class="ico">📈</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光合呼吸曲线</h3><p style="color:#fff">光合速率净/真 · 限制因素切换 · 昼夜积累 · 黑白瓶</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="物质循环.html"><div class="ico">♻️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">物质循环·碳循环</h3><p style="color:#fff">碳循环点读 · 物质vs能量对比 · 温室效应收支 · 生物富集</p></a>
+
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="遗传计算.html"><div class="ico">🧬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">遗传计算与逆向推导</h3><p style="color:#fff">交互棋盘格 · 9:3:3:1动态拼图 · 概率相乘 · 说人话</p></a>
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="光合呼吸.html"><div class="ico">🌱</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光合作用与呼吸作用</h3><p style="color:#fff">可拖动速率曲线 · 真/净光合换算 · 补偿点饱和点</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="减数分裂.html"><div class="ico">🔬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">减数分裂</h3><p style="color:#fff">分裂过程动画 · 数目变化曲线 · 配子种类数 · 异常配子</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="神经调节.html"><div class="ico">🧠</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">神经调节</h3><p style="color:#fff">反射弧交互 · 膜电位动画 · 突触传递 · 电流表偏转</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="变异与育种.html"><div class="ico">🌾</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">变异与育种</h3><p style="color:#fff">三种变异对比 · 碱基突变动画 · 育种决策器 · 单倍体流程</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="基因表达.html"><div class="ico">🧫</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">基因表达(复制转录翻译)</h3><p style="color:#fff">DNA复制/转录/翻译动画 · 碱基配对计算 · 中心法则 · 密码子表</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="内环境稳态.html"><div class="ico">💧</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">内环境与稳态</h3><p style="color:#fff">三液转化图 · 成分判别器 · pH缓冲演示 · 稳态负反馈曲线</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="体液调节.html"><div class="ico">🧪</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">体液调节(激素)</h3><p style="color:#fff">血糖调节动态模拟 · 分级+负反馈 · 体温水盐调节 · 拮抗条形</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="免疫调节.html"><div class="ico">🛡️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">免疫调节</h3><p style="color:#fff">三道防线 · 体液/细胞免疫流程动画 · 二次免疫曲线 · 失调分类</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="种群与群落.html"><div class="ico">🐾</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">种群与群落</h3><p style="color:#fff">J/S曲线看K值 · 标志重捕计算器 · 种间关系 · 群落演替动画</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="有丝分裂.html"><div class="ico">🔬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">有丝分裂与细胞周期</h3><p style="color:#fff">各期分步动画 · 数目变化三曲线 · 着丝点分裂 · 时期判别器</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="生态系统.html"><div class="ico">🌍</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">生态系统与能量流动</h3><p style="color:#fff">食物网交互 · 能量金字塔计算 · 碳循环动画 · 稳定性对比</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="细胞结构.html"><div class="ico">🔎</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">细胞结构与细胞器</h3><p style="color:#fff">细胞器交互图 · 分泌蛋白运输 · 原核真核 · 膜分类器</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="酶与ATP.html"><div class="ico">🧪</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">酶与 ATP</h3><p style="color:#fff">活化能能垒 · 温度pH曲线 · 锁钥专一性 · ATP↔ADP转化</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="DNA遗传物质.html"><div class="ico">🧬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">DNA是遗传物质</h3><p style="color:#fff">格里菲斯/艾弗里/噬菌体动画 · 放射性追踪 · 双螺旋 · 实验逻辑</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="现代生物进化.html"><div class="ico">🦒</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">现代生物进化</h3><p style="color:#fff">哈迪温伯格计算器 · 自然选择 · 抗药性演化 · 物种形成</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="植物激素.html"><div class="ico">🪴</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">植物激素调节</h3><p style="color:#fff">发现史步进 · 两重性曲线 · 向光性 · 顶端优势 · 激素匹配</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="物质跨膜运输.html"><div class="ico">🚪</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">物质跨膜运输</h3><p style="color:#fff">渗透装置 · 质壁分离 · 三种方式对比 · 速率曲线 · 流动镶嵌</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="细胞分子组成.html"><div class="ico">🧩</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">细胞的分子组成</h3><p style="color:#fff">脱水缩合肽键计算 · 氨基酸通式 · 检测显色 · 多糖对比 · 核酸拼装</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="细胞生命历程.html"><div class="ico">⏳</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">细胞生命历程</h3><p style="color:#fff">分化=基因选择性表达 · 全能性梯度 · 衰老特征 · 凋亡vs坏死 · 癌变机制</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="遗传定律.html"><div class="ico">🎰</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">遗传两大定律</h3><p style="color:#fff">棋盘格3:1 · 测交验证 · 9:3:3:1拼图 · 致死变式 · 概率相乘 · 配子种类</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="光合作用机理.html"><div class="ico">🍃</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光合作用机理</h3><p style="color:#fff">光反应暗反应循环 · 停光停CO₂突变 · 影响因素曲线 · 色素层析 · 限制因子</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="呼吸作用.html"><div class="ico">🫁</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">呼吸作用(有氧无氧)</h3><p style="color:#fff">有氧三阶段动画 · 有氧无氧对比 · O₂浓度曲线 · 产物检测 · 酵母菌探究</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="伴性遗传.html"><div class="ico">🧬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">伴性遗传与遗传病</h3><p style="color:#fff">交叉遗传动画 · 系谱判断器 · XY区段 · 患病比例 · 遗传病分类</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="生态环境.html"><div class="ico">🌳</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">生态稳定性与环保</h3><p style="color:#fff">抵抗力vs恢复力 · 负反馈调节 · 多样性三层次 · 价值分类 · 环境问题</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="实验探究.html"><div class="ico">📋</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">实验设计与探究</h3><p style="color:#fff">变量识别器 · 对照类型 · 设计检查 · 探究vs验证 · 假说演绎 · 试剂速查</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="生物实验探究.html"><div class="ico">🔬</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">显微观察与经典实验</h3><p style="color:#fff">显微镜偏哪移哪 · 污点排查 · 装片制作 · 试剂现象配对 · 材料选择</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="光合色素探究.html"><div class="ico">🍀</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">光合色素与探究</h3><p style="color:#fff">三试剂作用 · 纸层析四色素带 · 吸收光谱 · 影响因素 · 黑白瓶</p></a>
+    </div>
+    <h2 class="y" id="pk-math">数学</h2>
+    <div class="pgrid" style="grid-template-columns:1fr 1fr">
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="函数零点.html"><div class="ico">🎯</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">函数零点</h3><p style="color:#fff">零点存在定理 · 数形结合 · 根的分布 · 分离参数</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="线性规划.html"><div class="ico">📐</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">线性规划</h3><p style="color:#fff">可行域 · 目标最值 · 平移截距 · 整点问题</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="外接球与内切球.html"><div class="ico">🔮</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">外接球与内切球</h3><p style="color:#fff">找球心 · 补形法 · 方程法 · 等体积内切</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="三视图与表面积.html"><div class="ico">📦</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">三视图与表面积</h3><p style="color:#fff">长对正高平齐 · 还原直观图 · 组合体 · 斜二测</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="数学归纳法.html"><div class="ico">🀄</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">数学归纳法</h3><p style="color:#fff">多米诺两步 · k→k+1搭桥 · 整除不等式 · 先猜后证</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="条件概率.html"><div class="ico">🎲</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">🆕 最新</span><h3 style="color:#fff">条件概率</h3><p style="color:#fff">缩样本空间 · 全概率 · 贝叶斯 · 独立性</p></a>
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="函数性质.html"><div class="ico">📊</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">函数的性质</h3><p style="color:#fff">奇偶对称交互 · 单调性定义 · 周期图象 · 对称+奇偶→周期</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="指数对数函数.html"><div class="ico">📈</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">指数·对数·幂函数</h3><p style="color:#fff">指数图象拖底数 · 互为反函数对称 · 幂函数族 · 换底计算器</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="集合与逻辑.html"><div class="ico">🎯</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">集合与常用逻辑用语</h3><p style="color:#fff">Venn图交互 · 数轴含参运算 · 充要条件包含判断 · 命题否定 · 真值表</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="古典概型.html"><div class="ico">🎲</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">古典概型与几何概型</h3><p style="color:#fff">样本空间列举 · 有放回vs无放回 · 几何概型投点模拟 · 会面问题</p></a>
+
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="直线与圆.html"><div class="ico">📐</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">直线与圆</h3><p style="color:#fff">位置关系d vs r · 弦长几何 · 两切线作图 · 两圆位置</p></a>
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="恒成立问题.html"><div class="ico">🎯</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">恒成立与能成立</h3><p style="color:#fff">∀vs∃对比 · 分离参数交点 · 最值法 · 双变量四情形</p></a>
+
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="数学压轴.html"><div class="ico">📐</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">导数压轴 + 排列组合</h3><p style="color:#fff">三大法看图就懂 · 双极值比值换元 · 题型卡</p></a>
+      <a class="cell" style="background:var(--violet);color:#fff;min-height:120px;text-decoration:none" href="数学状态转移.html"><div class="ico">🎲</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">陌生题型 / 状态转移</h3><p style="color:#fff">马尔科夫链收敛动画 · 不动点蛛网图 · 新定义步进器 · 补集法</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="解三角形.html"><div class="ico">🔺</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">解三角形</h3><p style="color:#fff">拖顶点验证正余弦 · 外接圆 · SSA解个数 · 面积范围</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="数列求和.html"><div class="ico">➕</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">数列求和</h3><p style="color:#fff">方法选择器 · 错位相减对齐动画 · 裂项相消抵消 · 分组</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="圆锥曲线.html"><div class="ico">🥚</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">圆锥曲线综合</h3><p style="color:#fff">拖参数看曲线 · 相交判别式 · 点差法 · 定点验证 · 离心率</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="概率分布.html"><div class="ico">📊</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">分布列与期望</h3><p style="color:#fff">分布列构建器 · 期望重心杆 · 二项柱状图 · 正态3σ · 条件概率</p></a>
+      <a class="cell" style="background:#C81E6E;color:#fff;min-height:120px;text-decoration:none" href="空间向量.html"><div class="ico">🧊</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">空间向量与立体几何</h3><p style="color:#fff">可旋转3D长方体 · 法向量求解 · 二面角正负 · 点面距</p></a>
+      <a class="cell" style="background:#E0382A;color:#fff;min-height:120px;text-decoration:none" href="三角函数图像.html"><div class="ico">〰️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">三角函数图像与性质</h3><p style="color:#fff">单位圆→波形动画 · A/ω/φ/k四滑块 · 图象变换对照</p></a>
+      <a class="cell" style="background:#0E9AA7;color:#fff;min-height:120px;text-decoration:none" href="导数应用.html"><div class="ico">📈</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">导数与单调极值</h3><p style="color:#fff">f与f′联动图 · 切线滑动 · 极值判定 · 含参讨论</p></a>
+      <a class="cell" style="background:#16120A;color:#fff;min-height:120px;text-decoration:none" href="数列求通项.html"><div class="ico">🔗</div><span style="align-self:flex-start;background:#F3C00E;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">数列求通项</h3><p style="color:#fff">递推形态识别器 · 累加累乘动画 · 构造等比 · 不动点法</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="离心率.html"><div class="ico">⭕</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">圆锥曲线离心率</h3><p style="color:#fff">e与曲线形状联动 · 焦点三角形 · 渐近线与e · 齐次化步进</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="基本不等式.html"><div class="ico">➗</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">基本不等式</h3><p style="color:#fff">几何证明动画 · 和定积最大 · 1的代换 · 取等检查器</p></a>
+      <a class="cell" style="background:#16120A;color:#fff;min-height:120px;text-decoration:none;grid-column:1 / -1;box-shadow:5px 5px 0 var(--orange)" href="二次函数最值.html"><div class="ico">🏔️</div><span style="align-self:flex-start;background:#E86A17;color:#fff;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #fff">🔭 深研 · 按弟弟错点定制</span><h3 style="color:#fff">二次函数最值 · 深研</h3><p style="color:#fff">动轴定区间(星级交互) · 含参分类决策树 · 恒成立三条路 · 全体R vs 区间 · 端点检验器 · 7个可交互动画 · 易错大全逐条歼灭</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="平面向量.html"><div class="ico">➡️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">平面向量</h3><p style="color:#fff">向量加减 · 数量积几何意义 · 共线垂直判定 · 夹角计算 · 基底分解</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="复数.html"><div class="ico">🌐</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">复数</h3><p style="color:#fff">复平面拖点 · 加减向量意义 · 除法实数化 · i周期 · 轨迹圆 · 共轭</p></a>
+      <a class="cell" style="background:#1450C8;color:#fff;min-height:120px;text-decoration:none" href="立体几何线面.html"><div class="ico">📦</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">立体几何(线面关系)</h3><p style="color:#fff">可旋转正方体 · 异面角 · 线面平行/垂直判定 · 面面垂直 · 转化链</p></a>
+      <a class="cell" style="background:#E86A17;color:#fff;min-height:120px;text-decoration:none" href="三角恒等变换.html"><div class="ico">♾️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">三角恒等变换</h3><p style="color:#fff">单位圆看和差 · 公式速查 · 二倍角互化 · 辅助角合一 · 拆角求值 · 求角定范围</p></a>
+      <a class="cell" style="background:#1E9E86;color:#fff;min-height:120px;text-decoration:none" href="统计.html"><div class="ico">🗂️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">统计与统计案例</h3><p style="color:#fff">频率直方图 · 方差对比 · 线性回归 · 独立性检验χ² · 分层抽样</p></a>
+      <a class="cell" style="background:#7A3FF2;color:#fff;min-height:120px;text-decoration:none" href="排列组合与二项式.html"><div class="ico">🎴</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">排列组合与二项式</h3><p style="color:#fff">分类分步树 · 排列vs组合 · 捆绑插空 · 杨辉三角 · 通项 · 赋值法</p></a>
+    </div>
+    <h2 class="g" id="pk-eng">英语</h2>
+    <div class="pgrid" style="grid-template-columns:1fr 1fr">
+      <a class="cell" style="background:var(--green);color:#fff;min-height:120px;text-decoration:none" href="英语作文.html"><div class="ico">✍️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">小作文框架 + 句子升级</h3><p style="color:#fff">三段骨架 · 句子升级器 · 结尾库</p></a>
+      <a class="cell" style="background:var(--orange);color:#fff;min-height:120px;text-decoration:none" href="读后续写.html"><div class="ico">📝</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">读后续写</h3><p style="color:#fff">情绪曲线 · 动作慢镜头升级 · 五感生成器 · 高级词替换 · 伏笔配对</p></a>
+    </div>
+    <h2 class="b" id="pk-chin">语文</h2>
+    <div class="pgrid" style="grid-template-columns:1fr 1fr">
+      <a class="cell" style="background:var(--blue);color:#fff;min-height:120px;text-decoration:none" href="语文改病句.html"><div class="ico">📖</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">改病句</h3><p style="color:#fff">六大类型识别器 · 五步排查 · 陷阱词</p></a>
+      <a class="cell" style="background:var(--red);color:#fff;min-height:120px;text-decoration:none" href="语文作文.html"><div class="ico">🖋️</div><span style="align-self:flex-start;background:#fff;color:#16120A;font-weight:900;font-size:11px;letter-spacing:1px;padding:2px 9px;border:2px solid #16120A">● 已上线</span><h3 style="color:#fff">议论文 / 作文升格</h3><p style="color:#fff">结构骨架交互 · 开头模板器 · 结尾升级器 · 论证选择器 · 素材库</p></a>
+    </div>
+        <div class="noresult" id="packNoResult">没有匹配的攻坚包,换个关键词再试试。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ECHEM ===== -->
+  <section class="page" id="echem">
+    <span class="back" data-go="packs">← 回攻坚包</span>
+    <div class="kicker">攻坚包 · 化学</div>
+    <h1>电化学</h1>
+    <p class="lead">原电池和电解池看起来是两种东西,其实是同一件事。从"完全看不出方向"走到"陌生电池题也有固定走法"。</p>
+
+    <h2 class="g">① 统一本质:盯住氧化极</h2>
+    <div class="card">
+      <div class="toggle"><button id="bGalv" class="on">原电池(自己发电)</button><button id="bElec">电解池(外接电源)</button></div>
+      <svg viewBox="0 0 680 360" id="svg" style="margin-top:10px">
+        <line x1="170" y1="60" x2="510" y2="60" stroke="var(--ink)" stroke-width="4"/>
+        <line x1="170" y1="60" x2="170" y2="140" stroke="var(--ink)" stroke-width="4"/>
+        <line x1="510" y1="60" x2="510" y2="140" stroke="var(--ink)" stroke-width="4"/>
+        <g id="device"></g>
+        <path d="M120 140 L560 140 L545 320 L135 320 Z" fill="#d8e8ee" stroke="var(--ink)" stroke-width="3"/>
+        <text x="340" y="312" text-anchor="middle" fill="#4a7585" font-size="13" font-weight="700" id="elyte">电解质溶液</text>
+        <rect x="160" y="110" width="20" height="170" fill="#8a98a3" stroke="var(--ink)" stroke-width="3"/>
+        <rect x="500" y="110" width="20" height="170" fill="#8a98a3" stroke="var(--ink)" stroke-width="3"/>
+        <g id="electrons"></g><g id="ions"></g><g id="labelLeft"></g><g id="labelRight"></g>
+        <text x="340" y="46" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">电子流向 →</text>
+      </svg>
+      <div class="rxn" id="halfL"></div><div class="rxn" id="halfR"></div>
+    </div>
+    <div class="keybox"><b>总钥匙:</b>别管它叫正极还是阳极,<b>先问这极是氧化还是还原</b>。判断只有一句:电子从哪一极流出,哪一极就是氧化极。失电子那极,原电池叫"负极"、电解池叫"阳极"——名字不同,本质同一件事。</div>
+
+    <h2>② 写陌生电极反应式:四步算法</h2>
+    <p class="lead">用<b>碱性甲烷燃料电池负极</b>演示,点一下出一步。</p>
+    <div class="card">
+      <div class="step" id="s1"><div class="n">1</div><div><b>定方向</b> —— 负极=氧化极,CH₄ 失电子。</div></div>
+      <div class="step" id="s2"><div class="n">2</div><div><b>找主角+看环境</b> —— 碳 −4→+4 价。<span class="trap">碱性!产物是 CO₃²⁻ 不是 CO₂。环境决定产物。</span></div></div>
+      <div class="step" id="s3"><div class="n">3</div><div><b>三步配平</b> —— 主元素→OH⁻/H₂O配O和H→加e⁻配电荷:<div class="rxn">CH₄ + 10OH⁻ − 8e⁻ → CO₃²⁻ + 7H₂O</div></div></div>
+      <div class="step" id="s4"><div class="n">4</div><div><b>三守恒检查</b> —— C 1=1,H 14=14,O 10=10;电荷左−10+8e=右−2;碳升8价=8e⁻。✓</div></div>
+      <div style="margin-top:14px;display:flex;gap:10px"><button class="btn y" id="stepNext">出下一步 ▶</button><button class="btn ghost" id="stepReset">重来</button></div>
+    </div>
+
+    <h2 class="b">③ 电池实例库</h2>
+    <div class="card">
+      <div class="chips" id="cellChips"></div>
+      <div id="cellMeta" style="font-size:13px;font-weight:800;margin:4px 0"></div>
+      <div class="rxn" id="cellNeg"></div><div class="rxn" id="cellPos"></div><div class="rxn" id="cellTotal"></div>
+      <div class="trap" id="cellTrap"></div>
+    </div>
+
+    <h2 class="y">④ 环境决定产物</h2>
+    <div class="card"><div class="chips" id="envChips"></div><div class="rxn" id="envOut"></div></div>
+
+    <h2>⑤ 放电顺序</h2>
+    <div class="card">
+      <p style="margin-top:0;font-weight:800"><span style="color:var(--red)">阳极</span>(失电子)惰性电极时:</p>
+      <div class="rxn">活性电极本身 &gt; S²⁻ &gt; I⁻ &gt; Br⁻ &gt; Cl⁻ &gt; OH⁻ &gt; 含氧酸根 &gt; F⁻</div>
+      <p style="font-weight:800"><span style="color:var(--blue)">阴极</span>(得电子)金属越不活泼越先得:</p>
+      <div class="rxn">Ag⁺ &gt; Cu²⁺ &gt; H⁺(酸) &gt; Pb²⁺ &gt; Fe²⁺ &gt; Zn²⁺ &gt; H⁺(水) &gt; Al³⁺↑不放电</div>
+      <p class="trap">Al³⁺、Mg²⁺、Na⁺ 在水溶液里轮不到,水先放 H₂。</p>
+    </div>
+
+    <h2 class="g">⑥ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+  </section>
+
+  </div>
+
+<script>
+(function(){
+const pages=['home','plan','scores','packs','echem'];
+function go(id){if(!pages.includes(id))id='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.id===id));
+  document.querySelectorAll('.links a').forEach(a=>a.classList.toggle('active',a.dataset.go===id));
+  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);window.scrollTo(0,0);}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t){e.preventDefault();go(t.dataset.go);}});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+go(location.hash.slice(1)||'home');
+
+/* ===== SCORES ===== */
+const FULL={语文:150,数学:150,英语:150,物理:100,化学:100,生物:100};
+const SUBS=["语文","数学","英语","物理","化学","生物"];
+const SCOL={语文:"#E0382A",数学:"#1450C8",英语:"#1E9E86",物理:"#F3C00E",化学:"#E86A17",生物:"#7A3FF2"};
+const INK="#16120A";
+const exams=[
+  {name:"高二下 · 月考一",short:"月考一",scores:{语文:121,数学:127,英语:119.5,物理:83,化学:81,生物:67.5},total:599,rankClass:3,rankWide:4,rankWideLabel:"年级",mark:"火箭班(40人)单独卷,数学更难,排名口径与其他场次不同,趋势仅供参考。"},
+  {name:"高二下 · 期中考试",short:"期中",scores:{语文:96,数学:133,英语:129.5,物理:67,化学:76.5,生物:67},total:569,rankClass:6,rankWide:24,rankWideLabel:"校",mark:"化学/生物赋分后为90/87;此处用原始分统一口径。语文96明显失常。"},
+  {name:"高二下 · 月考三",short:"月考三",scores:{语文:121,数学:127,英语:120,物理:79,化学:64,生物:66},total:577,rankClass:7,rankWide:29,rankWideLabel:"校",mark:"化学跌到64,继续下滑;生物长期低位。"}
+];
+const placeholders=["高二上 · 期末(待录入)"];
+function rate(ex,k){return ex.scores[k]/FULL[k];}
+function color(r){return r<0.70?'#E0382A':r<0.82?'#F3C00E':'#1E9E86';}
+let trendView='holes';
+function drawTrend(){
+  const W=760,H=440,padL=58,padR=24,padT=30,padB=64;
+  const n=exams.length,x=i=>padL+(W-padL-padR)*(n<2?0.5:i/(n-1));
+  let series;
+  if(trendView==='total')series=[{k:'总分得分率',col:INK,vals:exams.map(e=>e.total/750)}];
+  else if(trendView==='all')series=SUBS.map(k=>({k,col:SCOL[k],vals:exams.map(e=>rate(e,k))}));
+  else series=["物理","化学","生物"].map(k=>({k,col:SCOL[k],vals:exams.map(e=>rate(e,k))}));
+  const lo=0.5,hi=1.0,y=v=>padT+(H-padT-padB)*(1-(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo));
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  s+=`<rect x="${padL}" y="${padT}" width="${W-padL-padR}" height="${H-padT-padB}" fill="none" stroke="${INK}" stroke-width="3"/>`;
+  [0.6,0.7,0.8,0.9].forEach(g=>{s+=`<line x1="${padL}" y1="${y(g)}" x2="${W-padR}" y2="${y(g)}" stroke="${INK}" stroke-width="1" stroke-dasharray="4 5" opacity=".4"/>`;});
+  [0.5,0.6,0.7,0.8,0.9,1.0].forEach(g=>{s+=`<text x="${padL-10}" y="${y(g)+5}" text-anchor="end" fill="${INK}" font-size="13" font-weight="800">${(g*100)|0}%</text>`;});
+  exams.forEach((e,i)=>{s+=`<text x="${x(i)}" y="${H-padB+26}" text-anchor="middle" fill="${INK}" font-size="14" font-weight="800">${e.short}</text>`;});
+  series.forEach(se=>{let d='';se.vals.forEach((v,i)=>{d+=(i?'L':'M')+x(i)+' '+y(v)+' ';});
+    s+=`<path d="${d}" fill="none" stroke="${se.col}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    se.vals.forEach((v,i)=>{s+=`<rect x="${x(i)-7}" y="${y(v)-7}" width="14" height="14" fill="${se.col}" stroke="${INK}" stroke-width="3"/>`;});});
+  // value labels with anti-overlap spreading
+  for(let i=0;i<n;i++){
+    let items=series.map(se=>({v:se.vals[i],col:se.col,py:y(se.vals[i])}));
+    items.sort((a,b)=>b.py-a.py);
+    let prev=1e9;
+    items.forEach(it=>{let ly=it.py-13;if(ly>prev-18)ly=prev-18;it.ly=ly;prev=ly;});
+    const dx=i===0?12:(i===n-1?-12:0), anc=i===0?'start':(i===n-1?'end':'middle');
+    items.forEach(it=>{s+=`<text x="${x(i)+dx}" y="${it.ly}" text-anchor="${anc}" fill="${it.col}" font-size="13" font-weight="900" stroke="#F4EFE2" stroke-width="4" paint-order="stroke" stroke-linejoin="round">${(it.v*100).toFixed(0)}</text>`;});
+  }
+  s+=`</svg>`;
+  document.getElementById('trendChart').innerHTML=s;
+  document.getElementById('trendLegend').innerHTML=series.map(se=>`<span><i style="background:${se.col}"></i>${se.k}</span>`).join('');
+}
+document.getElementById('trendInsight').innerHTML="📉 <b>看趋势,不看单次:</b>化学 81→76.5→<b>64</b> 一路下滑,是最该止血的科目(电化学攻坚包已上线);生物 67.5→67→66 长期低位,需要专门攻坚;数学稳在 85% 上下是定海神针;语文期中那次 96 分明显失常,值得查是偶发还是题型。<br><span style='font-weight:700;font-size:13px'>注:月考一为火箭班单独卷(数学更难),与后两次口径不同。</span>";
+document.querySelectorAll('#trendToggle button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#trendToggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');trendView=b.dataset.v;drawTrend();});
+function renderDetail(ex){
+  let s=`<div class="stats">
+    <div><b>${ex.total}</b><span>原始总分 / 750</span></div>
+    <div><b>${(ex.total/750*100).toFixed(1)}%</b><span>总得分率</span></div>
+    <div><b>${ex.rankClass}</b><span>班级排名</span></div>
+    <div><b>${ex.rankWide}</b><span>${ex.rankWideLabel}排名</span></div></div><div class="bars">`;
+  SUBS.forEach(k=>{const sc=ex.scores[k],full=FULL[k],r=sc/full;const hole=r<0.70?'<span class="hole">窟窿</span>':'';
+    s+=`<div class="bar"><div class="top"><span>${k}${hole}</span><span>${sc} / ${full} · ${(r*100).toFixed(0)}%</span></div><div class="track"><div class="fill" style="width:${r*100}%;background:${color(r)}"></div></div></div>`;});
+  s+=`</div><div class="note amber">${ex.mark}</div>`;
+  document.getElementById('detail').innerHTML=s;
+}
+function renderTimeline(idx){
+  let t='';exams.forEach((e,i)=>{t+=`<div class="exam${i===idx?' on':''}" data-i="${i}">${e.name}<div class="d">总分 ${e.total}</div></div>`;});
+  placeholders.forEach(p=>{t+=`<div class="exam todo">${p}</div>`;});
+  document.getElementById('timeline').innerHTML=t;
+  document.querySelectorAll('.exam[data-i]').forEach(el=>el.onclick=()=>{const i=+el.dataset.i;renderTimeline(i);renderDetail(exams[i]);});
+}
+drawTrend();renderTimeline(exams.length-1);renderDetail(exams[exams.length-1]);
+
+/* ===== ECHEM ===== */
+const modes={
+  galv:{device:`<circle cx="340" cy="60" r="22" fill="#F3C00E" stroke="${INK}" stroke-width="3"/><line x1="326" y1="48" x2="354" y2="72" stroke="${INK}" stroke-width="3"/><line x1="326" y1="72" x2="354" y2="48" stroke="${INK}" stroke-width="3"/><text x="340" y="100" text-anchor="middle" fill="${INK}" font-size="12" font-weight="700">用电器</text>`,
+    left:{n:"负极 · 氧化",c:"#E0382A"},right:{n:"正极 · 还原",c:"#1450C8"},
+    hL:'负极(氧化): Zn − 2e⁻ → Zn²⁺',hR:'正极(还原): Cu²⁺ + 2e⁻ → Cu',ely:"以铜锌原电池为例"},
+  elec:{device:`<rect x="310" y="42" width="60" height="36" fill="#F3C00E" stroke="${INK}" stroke-width="3"/><line x1="326" y1="50" x2="326" y2="70" stroke="${INK}" stroke-width="5"/><line x1="354" y1="54" x2="354" y2="66" stroke="${INK}" stroke-width="3"/><text x="324" y="36" text-anchor="middle" fill="#E0382A" font-size="13" font-weight="900">＋</text><text x="356" y="36" text-anchor="middle" fill="#1450C8" font-size="13" font-weight="900">－</text><text x="340" y="100" text-anchor="middle" fill="${INK}" font-size="12" font-weight="700">直流电源</text>`,
+    left:{n:"阳极 · 氧化",c:"#E0382A"},right:{n:"阴极 · 还原",c:"#1450C8"},
+    hL:'阳极(氧化): 2Cl⁻ − 2e⁻ → Cl₂↑',hR:'阴极(还原): 2H₂O + 2e⁻ → H₂↑ + 2OH⁻',ely:"以电解饱和食盐水为例"}
+};
+let mode='galv';
+function badge(x,info){return `<rect x="${x-58}" y="150" width="116" height="42" fill="${info.c}" stroke="${INK}" stroke-width="3"/><text x="${x}" y="177" text-anchor="middle" fill="#fff" font-size="15" font-weight="900">${info.n}</text>`;}
+function renderEchem(){const m=modes[mode];
+  document.getElementById('device').innerHTML=m.device;
+  document.getElementById('labelLeft').innerHTML=badge(170,m.left);
+  document.getElementById('labelRight').innerHTML=badge(510,m.right);
+  document.getElementById('halfL').textContent=m.hL;document.getElementById('halfR').textContent=m.hR;
+  document.getElementById('elyte').textContent=m.ely;
+  document.getElementById('bGalv').classList.toggle('on',mode==='galv');
+  document.getElementById('bElec').classList.toggle('on',mode==='elec');}
+const ePath=[[170,140],[170,60],[510,60],[510,140]];
+function pp(t){let segs=[],tot=0;for(let i=0;i<ePath.length-1;i++){const l=Math.hypot(ePath[i+1][0]-ePath[i][0],ePath[i+1][1]-ePath[i][1]);segs.push(l);tot+=l;}let d=t*tot;for(let i=0;i<segs.length;i++){if(d<=segs[i]){const r=d/segs[i];return[ePath[i][0]+(ePath[i+1][0]-ePath[i][0])*r,ePath[i][1]+(ePath[i+1][1]-ePath[i][1])*r];}d-=segs[i];}return ePath[3];}
+const els=Array.from({length:7},(_,i)=>({t:i/7}));
+const ions=[];for(let i=0;i<5;i++)ions.push({x:230+Math.random()*220,y:190+Math.random()*90,vx:0.5,t:'c'});
+for(let i=0;i<5;i++)ions.push({x:230+Math.random()*220,y:190+Math.random()*90,vx:-0.5,t:'a'});
+function frame(){const eo=document.getElementById('electrons');if(eo){let eg='';els.forEach(e=>{e.t+=0.0045;if(e.t>1)e.t-=1;const p=pp(e.t);eg+=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="7" fill="#E0382A" stroke="${INK}" stroke-width="2"/><text x="${p[0].toFixed(1)}" y="${(p[1]+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="9" font-weight="900">e</text>`;});eo.innerHTML=eg;
+  let ig='';ions.forEach(o=>{o.x+=o.vx;if(o.x>470)o.x=230;if(o.x<210)o.x=470;const c=o.t==='c'?'#E86A17':'#1450C8',sg=o.t==='c'?'+':'–';ig+=`<circle cx="${o.x.toFixed(1)}" cy="${o.y.toFixed(1)}" r="9" fill="${c}" stroke="${INK}" stroke-width="2"/><text x="${o.x.toFixed(1)}" y="${(o.y+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">${sg}</text>`;});document.getElementById('ions').innerHTML=ig;}
+  requestAnimationFrame(frame);}
+document.getElementById('bGalv').onclick=()=>{mode='galv';renderEchem();};
+document.getElementById('bElec').onclick=()=>{mode='elec';renderEchem();};
+let cur=0;const steps=['s1','s2','s3','s4'];
+document.getElementById('stepNext').onclick=()=>{if(cur<steps.length){document.getElementById(steps[cur]).classList.add('show');cur++;}};
+document.getElementById('stepReset').onclick=()=>{steps.forEach(s=>document.getElementById(s).classList.remove('show'));cur=0;};
+const cells=[
+  {k:'氢氧燃料电池(酸)',meta:'原电池 · 酸性',neg:'负极(氧化):2H₂ − 4e⁻ → 4H⁺',pos:'正极(还原):O₂ + 4H⁺ + 4e⁻ → 2H₂O',tot:'总:2H₂ + O₂ → 2H₂O',trap:'正极通 O₂,酸性用 H⁺。'},
+  {k:'氢氧燃料电池(碱)',meta:'原电池 · 碱性',neg:'负极(氧化):2H₂ + 4OH⁻ − 4e⁻ → 4H₂O',pos:'正极(还原):O₂ + 2H₂O + 4e⁻ → 4OH⁻',tot:'总:2H₂ + O₂ → 2H₂O',trap:'同电池碱性下两极都带 OH⁻/H₂O,写法不同。'},
+  {k:'甲烷燃料电池(碱)',meta:'原电池 · 碱性',neg:'负极(氧化):CH₄ + 10OH⁻ − 8e⁻ → CO₃²⁻ + 7H₂O',pos:'正极(还原):2O₂ + 4H₂O + 8e⁻ → 8OH⁻',tot:'总:CH₄ + 2O₂ + 2OH⁻ → CO₃²⁻ + 3H₂O',trap:'碳产物是 CO₃²⁻ 不是 CO₂。'},
+  {k:'甲醇燃料电池(酸)',meta:'原电池 · 酸性',neg:'负极(氧化):CH₃OH + H₂O − 6e⁻ → CO₂↑ + 6H⁺',pos:'正极(还原):O₂ + 4H⁺ + 4e⁻ → 2H₂O',tot:'总:2CH₃OH + 3O₂ → 2CO₂ + 4H₂O',trap:'酸性碳产物 CO₂;甲醇碳为 −2 价,失 6e⁻。'},
+  {k:'铅蓄电池(放电)',meta:'原电池 · 稀H₂SO₄',neg:'负极(氧化):Pb + SO₄²⁻ − 2e⁻ → PbSO₄',pos:'正极(还原):PbO₂ + 4H⁺ + SO₄²⁻ + 2e⁻ → PbSO₄ + 2H₂O',tot:'总:Pb + PbO₂ + 2H₂SO₄ → 2PbSO₄ + 2H₂O',trap:'两极都生成 PbSO₄;充电时整个倒过来。'},
+  {k:'电解饱和食盐水',meta:'电解池 · 惰性电极',neg:'阴极(还原):2H₂O + 2e⁻ → H₂↑ + 2OH⁻',pos:'阳极(氧化):2Cl⁻ − 2e⁻ → Cl₂↑',tot:'总:2Cl⁻ + 2H₂O —电解→ Cl₂↑ + H₂↑ + 2OH⁻',trap:'阴极是水放 H₂(Na⁺不放电),阴极区变碱。'},
+  {k:'电解精炼铜',meta:'电解池 · 粗铜作阳极',neg:'阴极(还原,纯铜):Cu²⁺ + 2e⁻ → Cu',pos:'阳极(氧化,粗铜):Cu − 2e⁻ → Cu²⁺',tot:'净效果:粗铜→纯铜',trap:'活性电极(粗铜)自身先溶解。'}
+];
+const chips=document.getElementById('cellChips');
+cells.forEach((c,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=c.k;b.onclick=()=>{[...chips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');showCell(i);};chips.appendChild(b);});
+function showCell(i){const c=cells[i];document.getElementById('cellMeta').textContent=c.meta;
+  document.getElementById('cellNeg').textContent=c.neg;document.getElementById('cellPos').textContent=c.pos;
+  document.getElementById('cellTotal').textContent=c.tot;document.getElementById('cellTrap').textContent='⚠ '+c.trap;}
+showCell(0);
+const envs=[{k:'碳·酸性',out:'产物 CO₂↑ · 用 H⁺、H₂O 配平'},{k:'碳·碱性',out:'产物 CO₃²⁻ · 用 OH⁻、H₂O(CO₂被OH⁻吸收)'},{k:'硫 S²⁻·酸性',out:'常到 SO₄²⁻ + H⁺;注意是否生成 SO₂'},{k:'氨 NH₃·碱性',out:'2NH₃ − 6e⁻ → N₂ + 6H⁺,碱性再结合 OH⁻'}];
+const envChips=document.getElementById('envChips');
+envs.forEach((e,i)=>{const b=document.createElement('div');b.className='chip'+(i===0?' on':'');b.textContent=e.k;b.onclick=()=>{[...envChips.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('envOut').textContent=e.out;};envChips.appendChild(b);});
+document.getElementById('envOut').textContent=envs[0].out;
+const qs=[{q:'1. 电解CuSO₄(惰性电极),阴极发生什么?',a:'阴极 Cu²⁺+2e⁻→Cu(Cu²⁺比H⁺先放电);阳极 2H₂O−4e⁻→O₂↑+4H⁺。'},{q:'2. 氢氧燃料电池碱性下正极反应式?',a:'O₂+2H₂O+4e⁻→4OH⁻(O₂得电子,还原)。'},{q:'3. 没见过的电池,问哪是负极——第一步做什么?',a:'先判氧化还原:电子流出那极=氧化=负极。别先纠结正负名字。'}];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML=`<b>${o.q}</b> <button class="btn ghost" style="padding:4px 12px;font-size:12px">看答案</button><div class="qa">${o.a}</div>`;d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+renderEchem();frame();
+})();
+</script>
+<script>
+/* ===== packs sidebar nav + live search ===== */
+(function(){
+  var main=document.getElementById('packMain');if(!main)return;
+  var nav=document.getElementById('packNav');
+  var search=document.getElementById('packSearch');
+  var noRes=document.getElementById('packNoResult');
+  var items=[].slice.call(nav.querySelectorAll('.pnav-item'));
+  var groups=[].slice.call(main.querySelectorAll('h2')).map(function(h){
+    var grid=h.nextElementSibling;
+    var cards=(grid&&grid.classList.contains('pgrid'))?[].slice.call(grid.querySelectorAll('.cell')):[];
+    return {h:h,grid:grid,cards:cards,id:h.id};
+  });
+  function itemFor(id){for(var i=0;i<items.length;i++){if(items[i].getAttribute('data-target')===id)return items[i];}return null;}
+  var total=0;
+  groups.forEach(function(g){total+=g.cards.length;var it=itemFor(g.id);if(it){var c=it.querySelector('.cnt');if(c)c.textContent=g.cards.length;}});
+  var allc=document.getElementById('cnt-all');if(allc)allc.textContent=total;
+  function scrollToEl(el){if(!el)return;var y=el.getBoundingClientRect().top+window.pageYOffset-84;window.scrollTo({top:y,behavior:'smooth'});}
+  items.forEach(function(it){
+    it.addEventListener('click',function(){
+      var t=it.getAttribute('data-target');
+      if(t==='__top'){if(search){search.value='';applyFilter();}scrollToEl(document.getElementById('packs'));return;}
+      if(search&&search.value.trim()!==''){search.value='';applyFilter();}
+      scrollToEl(document.getElementById(t));
+    });
+  });
+  function applyFilter(){
+    var q=(search?search.value:'').trim().toLowerCase();var any=false;
+    groups.forEach(function(g){
+      var vis=0;
+      g.cards.forEach(function(c){var hit=q===''||c.textContent.toLowerCase().indexOf(q)>=0;c.style.display=hit?'':'none';if(hit)vis++;});
+      var show=vis>0;g.h.style.display=show?'':'none';if(g.grid)g.grid.style.display=show?'':'none';if(show)any=true;
+      var it=itemFor(g.id);if(it){var c=it.querySelector('.cnt');if(c)c.textContent=vis;}
+    });
+    if(noRes)noRes.style.display=any?'none':'block';
+  }
+  if(search)search.addEventListener('input',applyFilter);
+  function onScroll(){
+    var packs=document.getElementById('packs');if(!packs||packs.offsetParent===null)return;
+    var cur=null;
+    groups.forEach(function(g){if(g.h.style.display!=='none'){if(g.h.getBoundingClientRect().top<=140)cur=g.id;}});
+    items.forEach(function(it){it.classList.toggle('active',it.getAttribute('data-target')===cur);});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+</body>
+</html>

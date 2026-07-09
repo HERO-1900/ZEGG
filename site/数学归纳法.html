@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学归纳法 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>数学归纳法</h1>
+    <p class="lead">要证明「对<b>所有</b>正整数 n 都成立」的命题,一个一个验证到天荒地老也验不完。数学归纳法给你一台「无限验证机」:只要<b>推倒第一张骨牌</b>,再保证<b>每张倒了都能带倒下一张</b>,整排无穷多张骨牌就必然全部倒下。恒等式、不等式、整除、数列通项猜想、递推证明,全靠这两步。</p>
+
+    <div class="say">🗣️ <b>数学归纳法(人话版):</b> 想象一排<b>无穷多张多米诺骨牌</b>。你要证「每一张都会倒」,不用一张张去推。只要做到两件事:① <b>亲手推倒第一张</b>(n=n₀ 时命题成立);② <b>保证任意一张倒了,它一定能撞倒紧挨着的下一张</b>(假设 n=k 成立,推出 n=k+1 也成立)。这两步都齐,第一张倒→第二张倒→第三张倒……<b>一路传下去,整排必倒</b>。缺了第一步没人起头;缺了第二步中间会断链。</div>
+
+    <div class="keybox"><b>一句话套路:</b> ① <b>奠基(验证起点):</b> 证 n=n₀(常是 1) 时命题成立。② <b>递推(归纳步):</b> <b>假设</b> n=k(k≥n₀) 时成立【归纳假设】,由此<b>推出</b> n=k+1 也成立。两步都完成 → 对一切 n≥n₀ 命题成立。<b>关键:第二步里那句「假设 n=k 成立」必须被真正用上</b>,否则就不是归纳法。</div>
+
+    <h2>① 第一数学归纳法:原理与骨牌</h2>
+    <div class="card">
+      <div class="eq">证起点 P(n₀) ✔　＋　证 P(k) ⟹ P(k+1) ✔　＝　∀ n≥n₀ 都成立</div>
+      <p style="margin:8px 0">设 P(n) 是一个关于正整数 n 的命题。若满足:</p>
+      <table>
+        <tr><th>步骤</th><th>做什么</th><th>骨牌类比</th></tr>
+        <tr><td><b>第一步 奠基</b></td><td>验证 P(n₀) 成立(n₀ 是起始值,常为 1,也可能是 2、5……)</td><td>亲手推倒第一张</td></tr>
+        <tr><td><b>第二步 递推</b></td><td>假设 P(k) 成立(k≥n₀),证明 P(k+1) 也成立</td><td>前一张倒 → 撞倒后一张</td></tr>
+      </table>
+      <p style="margin:8px 0">则 P(n) 对<b>一切</b> n≥n₀ 都成立。<b>两步缺一不可</b>:只有第一步,后面全靠猜;只有第二步,链条永远起不了头。</p>
+      <p class="trap">⚠ 第二步不是「再验证一个 n=k+1 的具体数」,而是<b>从 P(k) 这个假设出发,推出 P(k+1)</b>。归纳假设「P(k) 成立」是你手里唯一的桥墩,必须踩着它过河。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🁣 互动 1 — 多米诺骨牌:第一步推倒起点，第二步逐张传递，整排必倒</div>
+      <canvas id="domCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button id="domGo">▶ 推倒第一张</button><button id="domReset">↺ 重置</button>
+        <label>骨牌数 <input id="domN" type="range" min="4" max="12" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>已倒张数</b><span id="domFall">0</span></div>
+        <div><b>总张数</b><span id="domTot">8</span></div>
+        <div><b>第一步(奠基)</b><span id="domBase">待推</span></div>
+        <div><b>结论</b><span id="domConc">—</span></div>
+      </div>
+      <p class="small">推倒第一张=证 P(1)成立;每张倒了撞倒下一张=P(k)⟹P(k+1)。两步齐全,<b>无穷多张一路倒到底</b>。这就是归纳法为什么能「一次证明无穷个命题」。</p>
+    </div>
+
+    <h2 class="r">② 两个反例:缺哪一步都塌</h2>
+    <div class="card">
+      <p style="margin:6px 0">归纳法的两步<b>各司其职,谁都不能省</b>。少了任何一步,证明就是无效的:</p>
+      <table>
+        <tr><th>缺失</th><th>后果</th><th>骨牌表现</th></tr>
+        <tr><td><b>缺第一步(没验起点)</b></td><td>递推关系可能自洽,但没有起点,整个链子悬空。经典假命题「n=n+1」也能通过第二步(假设成立推下一个成立),正因缺奠基而露馅</td><td>没人推第一张,全排纹丝不动</td></tr>
+        <tr><td><b>缺第二步(递推断裂)</b></td><td>只验证了有限几个,无法保证「所有」。前几张倒了不代表后面会倒</td><td>第 5 张和第 6 张之间断开,后面全站着</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>为什么第一步不能省:</b> 只有递推「P(k)⟹P(k+1)」而没验起点,好比骨牌摆好了却没人推——链条自身没错,但永远启动不了。甚至一个<b>假命题</b>都可能满足递推,唯有奠基把它钉死在真起点上。</p>
+      <p class="trap">⚠ 高考批卷最爱抓「第一步漏写」和「第二步没真正用上归纳假设」。这两处丢分几乎是送分反被扣分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛓️ 互动 2 — 断链反例:关掉「第一步」或「第二步」，看整排怎么塌不下去</div>
+      <canvas id="brkCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button class="brkmode on" data-m="0">两步齐全(正确)</button>
+        <button class="brkmode" data-m="1">缺第一步</button>
+        <button class="brkmode" data-m="2">缺第二步(断链)</button>
+      </div>
+      <div class="verdict" id="brkNote"></div>
+      <p class="small">同一排骨牌,三种情形:两步齐全→全倒;缺奠基→没人起头,全站;缺递推→倒到断点就停。<b>只有两步都在,才能证明「全部」。</b></p>
+    </div>
+
+    <h2 class="b">③ 从 k 到 k+1:桥怎么搭</h2>
+    <div class="card">
+      <p style="margin:6px 0">归纳步的全部技巧,都在<b>「如何从 P(k) 变形出 P(k+1)」</b>。核心动作是:写出 n=k+1 的目标式,把它<b>朝 n=k 的样子靠拢</b>,好让归纳假设能替换进来。</p>
+      <div class="mono">目标:证 P(k+1)。手里有:归纳假设 P(k)。桥:把 k+1 的式子拆出「k 的部分」＋「新增的第 k+1 项」。</div>
+      <h3>三种最常用的「搭桥」手法</h3>
+      <table>
+        <tr><th>手法</th><th>用途</th></tr>
+        <tr><td><b>拆项/凑配</b></td><td>把 k+1 项的和 = (k 项的和) + (第 k+1 项)，前半用归纳假设替换</td></tr>
+        <tr><td><b>提公因式</b></td><td>整除型:把 f(k+1)−f(k) 或 f(k+1) 拆成「含 f(k) 的倍数」＋「明显能被除的部分」</td></tr>
+        <tr><td><b>放缩</b></td><td>不等式型:用归纳假设把一段替换后，再放大/缩小凑出目标不等式</td></tr>
+      </table>
+      <p class="trap">⚠ 搭桥失败的通病:写出 P(k+1) 却<b>没往 P(k) 靠</b>,归纳假设放在那儿没用上——那这一步就白写了,阅卷直接判无效。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">➕ 互动 3 — k→k+1：新增的第 k+1 项如何并入前 k 项(高亮拼接)</div>
+      <svg id="joinSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="joinPrev">◀ k 减1</button><button id="joinNext">k 加1 ▶</button>
+      </div>
+      <div class="live">
+        <div><b>当前 k</b><span id="joinK">3</span></div>
+        <div><b>前 k 项和(假设已知)</b><span id="joinSk">0</span></div>
+        <div><b>新增第 k+1 项</b><span id="joinNew">0</span></div>
+        <div><b>前 k+1 项和</b><span id="joinSk1">0</span></div>
+      </div>
+      <p class="small">以求和 1+2+…+n=n(n+1)/2 为例:<b>蓝块</b>=归纳假设给的前 k 项和,<b>红块</b>=新并入的第 k+1 项。两块拼起来,正好凑成 (k+1)(k+2)/2——这就是 P(k)⟹P(k+1)。</p>
+    </div>
+
+    <h2 class="g">④ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 证明恒等式(求和公式)型</h3>
+      <p><b class="tag">触发信号:</b>「求证 1+2+…+n=…」「证明对一切正整数 n，某个求和/连乘等式成立」。</p>
+      <p><b class="tag">标准动作:</b>① 验 n=1 两边相等;② 设 n=k 时等式成立;③ 目标式 S(k+1)=S(k)+第(k+1)项，把 S(k) 用归纳假设替换，再化简凑成 n=k+1 的右边。</p>
+      <p><b class="tag">示例(带完整解):</b> 求证 1+2+…+n = n(n+1)/2。<br>
+      <b>① 奠基:</b> n=1,左=1,右=1·2/2=1,成立。<br>
+      <b>② 假设:</b> n=k 时 1+2+…+k = k(k+1)/2 成立。<br>
+      <b>③ 递推(k→k+1):</b> 1+2+…+k+(k+1) = <u>k(k+1)/2</u> + (k+1)【用归纳假设替换前 k 项】= (k+1)[k/2 + 1] = (k+1)(k+2)/2 = (k+1)[(k+1)+1]/2。<br>
+      正好是 n=k+1 时的右边,故 P(k+1) 成立。由①②③,原式对一切 n≥1 成立。</p>
+      <p class="trap">陷阱:第三步不写「用归纳假设」就直接跳答案;化简时忘了提公因式 (k+1);漏验 n=1。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 证明整除型</h3>
+      <p><b class="tag">触发信号:</b>「求证 aⁿ−bⁿ 能被 c 整除」「证 f(n) 是某数的倍数」,含 aⁿ、n! 或指数式。</p>
+      <p><b class="tag">标准动作:</b>① 验起点整除;② 设 f(k) 能被 c 整除;③ 把 f(k+1) <b>拆成「f(k) 的倍数」＋「明显能被 c 整除的项」</b>,常用配凑 f(k+1)=A·f(k)+B·(能整除的量)。</p>
+      <p><b class="tag">示例(带完整解):</b> 求证 f(n)=5ⁿ−1 能被 4 整除。<br>
+      <b>① 奠基:</b> n=1,f(1)=5−1=4,被 4 整除,成立。<br>
+      <b>② 假设:</b> n=k 时 5ᵏ−1 能被 4 整除(设 5ᵏ−1=4m,m 为整数)。<br>
+      <b>③ 递推(k→k+1):</b> f(k+1)=5ᵏ⁺¹−1 = 5·5ᵏ−1 = 5·(5ᵏ−1)+5−1 = <u>5·(5ᵏ−1)</u> + 4。前一项 5·(5ᵏ−1)=5·4m 含因子 4;后一项 4 也含 4。故 f(k+1) 能被 4 整除。<br>
+      由①②③,f(n) 对一切 n≥1 都能被 4 整除。</p>
+      <p class="trap">陷阱:配凑时算错系数;拆完没说清「两部分都含因子 c」;把归纳假设 5ᵏ−1=4m 忘了代进去。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 证明不等式型</h3>
+      <p><b class="tag">触发信号:</b>「求证 2ⁿ>n²(n≥5)」「证某个含 n 的不等式对 n≥n₀ 成立」,起点常不是 1。</p>
+      <p><b class="tag">标准动作:</b>① 验<b>正确的起点</b> n₀(不等式常从某个较大的 n 才成立!);② 设 n=k 成立;③ 从 n=k+1 目标式出发,<b>用归纳假设替换后再放缩</b>,凑出要证的一边。</p>
+      <p><b class="tag">示例(带完整解):</b> 求证 2ⁿ > n² 对一切 n≥5 成立。<br>
+      <b>① 奠基:</b> n=5,2⁵=32>25=5²,成立(注意起点是 5 不是 1:n=2,3,4 都不成立)。<br>
+      <b>② 假设:</b> n=k(k≥5) 时 2ᵏ>k² 成立。<br>
+      <b>③ 递推(k→k+1):</b> 2ᵏ⁺¹=2·2ᵏ <u>> 2·k²</u>【用归纳假设放大】。只需再证 2k²≥(k+1)²,即 k²−2k−1≥0,当 k≥5 时 k²−2k−1=(k−1)²−2≥16−2>0 成立。故 2ᵏ⁺¹>2k²≥(k+1)²,即 P(k+1) 成立。<br>
+      由①②③,原不等式对一切 n≥5 成立。</p>
+      <p class="trap">陷阱:起点取错(从 n=1 开始验就翻车);放缩方向搞反(不等式要放大就不能缩小);中间那步 2k²≥(k+1)² 忘了单独证。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 先猜后证(数列通项猜想)型</h3>
+      <p><b class="tag">触发信号:</b>给递推关系(如 a₁=1,aₙ₊₁=aₙ/(1+aₙ)),问「求通项 aₙ」或「猜想并证明」。</p>
+      <p><b class="tag">标准动作:</b>① <b>算前几项</b> a₁、a₂、a₃、a₄ 找规律;② <b>猜出通项公式</b> aₙ=…;③ <b>用归纳法证明</b>猜想:验 n=1,设 n=k 成立,由<b>递推式</b>把 aₖ₊₁ 用 aₖ 表示,代入归纳假设算出 aₖ₊₁ 恰为公式在 k+1 的值。</p>
+      <p><b class="tag">示例(带完整解):</b> a₁=1,aₙ₊₁=aₙ/(1+aₙ),求 aₙ。<br>
+      <b>① 猜:</b> a₁=1,a₂=1/2,a₃=1/3,a₄=1/4 → 猜 aₙ=1/n。<br>
+      <b>② 奠基:</b> n=1,a₁=1=1/1,成立。<br>
+      <b>③ 假设:</b> n=k 时 aₖ=1/k。<br>
+      <b>④ 递推(k→k+1):</b> aₖ₊₁ = aₖ/(1+aₖ) = <u>(1/k)</u>/(1+1/k)【用归纳假设与递推式】= (1/k)/((k+1)/k) = 1/(k+1)。正是公式在 k+1 处的值,P(k+1) 成立。<br>
+      由归纳法,aₙ=1/n。</p>
+      <p class="trap">陷阱:光猜不证(猜想必须归纳法证明!);递推步没用「递推式」把 aₖ₊₁ 与 aₖ 挂钩;算前几项时算错导致猜错公式。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 几何 / 组合计数型</h3>
+      <p><b class="tag">触发信号:</b>「n 条直线两两相交最多把平面分成几部分」「n 个点连线段数」「n 边形对角线数」等，答案是关于 n 的公式。</p>
+      <p><b class="tag">标准动作:</b>① 验小情形(n=1 或 n=2);② 设 n=k 时块数/条数为公式值;③ <b>分析「加第 k+1 个元素时新增多少」</b>,把 f(k+1)=f(k)+新增量,用归纳假设代入化简。</p>
+      <p><b class="tag">示例(带完整解):</b> 求证平面内 n 条直线两两相交且无三线共点,把平面分成 f(n)=1+n(n+1)/2 部分。<br>
+      <b>① 奠基:</b> n=1,一条直线分平面为 2 部分,f(1)=1+1·2/2=2,成立。<br>
+      <b>② 假设:</b> n=k 时 f(k)=1+k(k+1)/2。<br>
+      <b>③ 递推(k→k+1):</b> 加第 k+1 条直线,它与前 k 条各交于 1 点,共 k 个交点,被分成 k+1 段,<b>每段把一块区域一分为二,故新增 k+1 块</b>。f(k+1)=f(k)+(k+1) = <u>1+k(k+1)/2</u>+(k+1) = 1+(k+1)(k/2+1) = 1+(k+1)(k+2)/2。<br>
+      正是公式在 k+1 处的值,P(k+1) 成立。故对一切 n≥1 成立。</p>
+      <p class="trap">陷阱:「新增量」数错(第 k+1 条被前 k 条分成 k+1 段,新增 k+1 块,别漏);奠基取错;化简时公因式没提干净。</p>
+    </div>
+
+    <h2 class="r">⑤ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>忘记验证起始项(缺第一步)</b>。奠基是骨牌的第一推,漏了整个证明作废。批卷第一眼就看有没有验 n=n₀。</p>
+      <p class="trap">② <b>递推时没真正用上归纳假设</b>。第二步若没把「P(k) 成立」代进去,就不是归纳法。归纳假设是唯一桥墩,必须踩上。</p>
+      <p class="trap">③ <b>第 k+1 项凑配失误(拆项/放缩出错)</b>。求和忘了「+第 k+1 项」、整除配凑系数算错、不等式放缩方向反了,都在这一步。</p>
+      <p class="trap">④ <b>起始 n₀ 取值错误</b>。不等式(如 2ⁿ>n²)往往不是从 n=1 才成立,起点要取<b>真正开始成立</b>的那个值(此例 n=5)。</p>
+      <p class="trap">⑤ <b>先猜后证只猜不证</b>。数列通项「观察前几项猜公式」只是第一步,必须用归纳法证明,否则不算完整。</p>
+      <p class="trap">⑥ <b>第二步写成「再验一个具体数」</b>。递推是「假设 k 成立 ⟹ 推出 k+1 成立」的逻辑推导,不是把 n=k+1 当具体数字再算一遍。</p>
+      <p class="trap">⑦ <b>结论没收口</b>。三步做完要写「由数学归纳法,命题对一切 n≥n₀ 成立」,少这句话逻辑不闭合。</p>
+      <p class="trap">⑧ <b>k 的取值范围写漏</b>。假设里 k≥n₀ 要交代,尤其起点不是 1 时,放缩才有 k≥5 之类的依据。</p>
+    </div>
+
+    <h2 class="v">⑥ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 加强命题法(要证的太弱反而证不动):</b> 有时直接对原命题归纳,第二步<b>推不下去</b>——因为归纳假设「太弱」,提供的信息不够搭桥。反直觉的解法是:<b>把结论证得更强一点</b>,让归纳假设也变强,反而推得动。例:证某数列有界不好证时,先证「aₙ 落在某个更精确的区间」,更强的假设让递推一步到位。心法:<b>假设越强,递推时手里的牌越多</b>。这是归纳法最深的一招。</p>
+      <p style="margin:8px 0"><b>② 第二数学归纳法(强归纳法)的思想:</b> 第一归纳法的递推是「由 P(k) 推 P(k+1)」——只用前一张。但有些命题(尤其递推涉及<b>前面好几项</b>,如斐波那契 aₙ=aₙ₋₁+aₙ₋₂)光靠 P(k) 不够。<b>第二归纳法</b>把假设加强为:<b>假设 P(n₀)、P(n₀+1)、…、P(k) 全都成立</b>,再证 P(k+1)。骨牌类比:不是「前一张倒撞倒下一张」,而是「前面<b>所有</b>张都倒了,才保证下一张倒」。它与第一归纳法等价,但对付「依赖多个前项」的递推更顺手。</p>
+      <p style="margin:8px 0"><b>③ 归纳的本质是「良序性」:</b> 归纳法为什么对?因为正整数集有<b>最小反例</b>——若命题不全对,必有一个最小的 n 使它失败,而奠基+递推恰好排除了这个最小反例的存在。理解这一层,你就明白归纳法不是「凑巧的技巧」,而是正整数结构的必然。</p>
+      <p style="margin:8px 0"><b>④ 「先猜后证」是归纳法的灵魂搭档:</b> 归纳法只能<b>验证</b>已知的公式,不能凭空<b>产生</b>公式。所以数列题的完整链条是「算几项 → 观察规律 → 大胆猜 → 归纳证」。猜是创造,证是把关,两者缺一不可——这也是命题人考查「探究能力」的着力点。</p>
+    </div>
+
+    <h2 class="b">⑦ 更多可视化</h2>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 求和公式:两边随 n 逐项累积对比(左边和 vs 右边公式)</div>
+      <svg id="sumSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="sumStep">▶ 加一项 (n+1)</button><button id="sumReset">↺ 重置</button>
+        <label>目标 n <input id="sumN" type="range" min="1" max="10" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 n</b><span id="sumCur">0</span></div>
+        <div><b>左边累加和</b><span id="sumL">0</span></div>
+        <div><b>右边公式 n(n+1)/2</b><span id="sumR">0</span></div>
+        <div><b>两边是否相等</b><span id="sumEq">—</span></div>
+      </div>
+      <p class="small">柱子=左边逐项累加 1+2+…+n,虚线=右边公式 n(n+1)/2。每加一项,柱顶总是<b>精确落在虚线上</b>——这正是归纳法要证的「每一步两边都相等」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 5 — 不等式放缩:2ⁿ 与 n² 在数轴上的赛跑(n≥5 后 2ⁿ 反超)</div>
+      <svg id="ineqSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>看到 n <input id="ineqN" type="range" min="1" max="9" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 n</b><span id="ineqCur">5</span></div>
+        <div><b>2ⁿ</b><span id="ineqPow">0</span></div>
+        <div><b>n²</b><span id="ineqSq">0</span></div>
+        <div><b>2ⁿ vs n²</b><span id="ineqCmp">—</span></div>
+      </div>
+      <p class="small">蓝线=2ⁿ(指数),红线=n²(平方)。n=1 蓝领先,n=2,3,4 红反超(<b>此段不成立</b>),<b>n=5 起蓝永久反超</b>——所以奠基点必须取 n=5,起点取错就翻车。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 6 — 整除型配凑:5ⁿ−1 拆成 5·(5ᵏ−1)+4，两块都含因子 4</div>
+      <svg id="divSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="divPrev">◀ k 减1</button><button id="divNext">k 加1 ▶</button>
+      </div>
+      <div class="live">
+        <div><b>当前 k</b><span id="divK">1</span></div>
+        <div><b>5ᵏ−1(假设=4m)</b><span id="divFk">4</span></div>
+        <div><b>5ᵏ⁺¹−1</b><span id="divFk1">24</span></div>
+        <div><b>÷4 是否整除</b><span id="divOk">是</span></div>
+      </div>
+      <p class="small">把 5ᵏ⁺¹−1 切成<b>蓝块 5·(5ᵏ−1)</b>(归纳假设保证含因子 4)＋<b>黄块 4</b>(显然含 4)。两块都是 4 的倍数,和当然被 4 整除。这就是整除型的「配凑搭桥」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 7 — 先猜后证:递推 a₁=1, aₙ₊₁=aₙ/(1+aₙ) 逐项算，看它逼近 1/n</div>
+      <svg id="seqSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="seqStep">▶ 算下一项</button><button id="seqReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>已算到 n</b><span id="seqN">1</span></div>
+        <div><b>递推算出 aₙ</b><span id="seqA">1</span></div>
+        <div><b>猜想 1/n</b><span id="seqG">1</span></div>
+        <div><b>是否吻合</b><span id="seqEq">是</span></div>
+      </div>
+      <p class="small">红点=用递推式一步步算出的 aₙ,虚线=猜想公式 1/n。每算一项,红点<b>正好落在 1/n 曲线上</b>——观察到这个规律就该猜 aₙ=1/n,再用归纳法证明它。</p>
+    </div>
+
+    <h2 class="v">⑧ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 数学归纳法:两步齐全，无穷必倒</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:多米诺骨牌 ===== */
+(function(){
+  const cv=document.getElementById('domCv');const ctx=cv.getContext('2d');
+  const Ns=document.getElementById('domN');
+  const oFall=document.getElementById('domFall'),oTot=document.getElementById('domTot'),oBase=document.getElementById('domBase'),oConc=document.getElementById('domConc');
+  let N=8,angles=[],running=false,frontIdx=-1,timer=0;
+  function sync(){N=+Ns.value;reset();}
+  Ns.oninput=sync;
+  function reset(){
+    angles=[];for(let i=0;i<N;i++)angles.push(0);
+    running=false;frontIdx=-1;timer=0;
+    oTot.textContent=N;oFall.textContent='0';oBase.textContent='待推';oConc.textContent='—';
+    draw();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const groundY=190;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,groundY);ctx.lineTo(cv.width,groundY);ctx.stroke();
+    const marginL=50,marginR=40;
+    const span=cv.width-marginL-marginR;
+    const gap=span/N;
+    const w=Math.min(20,gap*0.42),h=90;
+    let fallen=0;
+    for(let i=0;i<N;i++){
+      const cx=marginL+gap*i+gap/2;
+      const ang=angles[i];
+      if(ang>=1)fallen++;
+      ctx.save();
+      ctx.translate(cx,groundY);
+      ctx.rotate(-ang*Math.PI/2*0.95);
+      const col=i===0?RED:(ang>=1?GREEN:'#cbb98f');
+      ctx.fillStyle=col;ctx.strokeStyle=INK;ctx.lineWidth=3;
+      ctx.fillRect(-w/2,-h,w,h);ctx.strokeRect(-w/2,-h,w,h);
+      ctx.restore();
+      ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+      ctx.fillText(String(i+1),cx,groundY+16);
+    }
+    ctx.textAlign='left';
+    ctx.fillStyle=RED;ctx.font='bold 12px sans-serif';
+    ctx.fillText('① 第1张=起点 P(1)',marginL,24);
+    ctx.fillStyle=GREEN;
+    ctx.fillText('② 倒一张撞倒下一张 = P(k)⟹P(k+1)',marginL+180,24);
+    oFall.textContent=String(fallen);
+  }
+  function loop(){
+    if(!running)return;
+    timer++;
+    // advance the toppling front every few frames
+    if(frontIdx<0){frontIdx=0;oBase.textContent='已推✔';}
+    if(frontIdx<N){
+      angles[frontIdx]+=0.09;
+      if(angles[frontIdx]>=1){angles[frontIdx]=1;frontIdx++;}
+    }
+    draw();
+    if(frontIdx>=N){running=false;oConc.textContent='全倒✔';}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('domGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('domReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动2:断链反例 ===== */
+(function(){
+  const cv=document.getElementById('brkCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('brkNote');
+  const N=10;let mode=0,angles=[],running=false,frontIdx=-1;
+  const breakAt=5; // 断链位置(缺第二步)
+  document.querySelectorAll('.brkmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.brkmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    mode=+b.dataset.m;start();
+  });
+  function initAngles(){angles=[];for(let i=0;i<N;i++)angles.push(0);}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const groundY=190;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,groundY);ctx.lineTo(cv.width,groundY);ctx.stroke();
+    const marginL=50,marginR=40,span=cv.width-marginL-marginR,gap=span/N,w=18,h=88;
+    for(let i=0;i<N;i++){
+      const cx=marginL+gap*i+gap/2,ang=angles[i];
+      ctx.save();ctx.translate(cx,groundY);ctx.rotate(-ang*Math.PI/2*0.95);
+      let col=ang>=1?GREEN:'#cbb98f';
+      if(mode===1&&i===0)col='#cbb98f'; // 缺第一步:第一张不红不倒
+      else if(i===0)col=(ang>=1?GREEN:RED);
+      ctx.fillStyle=col;ctx.strokeStyle=INK;ctx.lineWidth=3;
+      ctx.fillRect(-w/2,-h,w,h);ctx.strokeRect(-w/2,-h,w,h);
+      ctx.restore();
+      ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(String(i+1),cx,groundY+16);
+      if(mode===2&&i===breakAt-1){ // 断链标记:第5、6张之间断开
+        ctx.strokeStyle=RED;ctx.lineWidth=3;
+        const bx=marginL+gap*i+gap/2+gap/2;
+        ctx.beginPath();ctx.moveTo(bx,groundY-100);ctx.lineTo(bx,groundY);ctx.stroke();
+        ctx.fillStyle=RED;ctx.font='bold 12px sans-serif';ctx.fillText('断',bx,groundY-105);
+      }
+    }
+    ctx.textAlign='left';
+  }
+  function loop(){
+    if(!running)return;
+    if(frontIdx<0)frontIdx=0;
+    if(frontIdx<N){
+      // 缺第一步:根本不启动
+      if(mode===1){running=false;draw();return;}
+      // 缺第二步:传到断点就停
+      if(mode===2&&frontIdx>=breakAt){running=false;draw();return;}
+      angles[frontIdx]+=0.09;
+      if(angles[frontIdx]>=1){angles[frontIdx]=1;frontIdx++;}
+    }
+    draw();
+    if(frontIdx>=N)running=false;
+    requestAnimationFrame(loop);
+  }
+  function start(){
+    initAngles();frontIdx=-1;running=true;
+    if(mode===0)note.innerHTML='✔ <b>两步齐全</b>:第一张被推倒(奠基),每张都能撞倒下一张(递推)→ <b>整排全倒,命题对一切 n 成立</b>。';
+    else if(mode===1)note.innerHTML='✘ <b>缺第一步</b>:递推链没错,但<b>没人推第一张</b> → 全排纹丝不动,证明启动不了。';
+    else note.innerHTML='✘ <b>缺第二步</b>:第一张推倒了,但第 5 到第 6 张之间<b>断链</b> → 只倒了前 5 张,后面全站,无法保证「所有」。';
+    note.style.borderColor=mode===0?GREEN:RED;
+    requestAnimationFrame(loop);
+  }
+  start();
+})();
+
+/* ===== 互动3:k→k+1 拼接 ===== */
+(function(){
+  const svg=document.getElementById('joinSvg');
+  const oK=document.getElementById('joinK'),oSk=document.getElementById('joinSk'),oNew=document.getElementById('joinNew'),oSk1=document.getElementById('joinSk1');
+  let k=3;
+  function sk(n){return n*(n+1)/2;}
+  function draw(){
+    clr(svg);
+    const Sk=sk(k),newTerm=k+1,Sk1=sk(k+1);
+    oK.textContent=k;oSk.textContent=Sk;oNew.textContent=newTerm;oSk1.textContent=Sk1;
+    const baseY=200,left=60,unit=Math.min(38,560/(Sk1));
+    // 蓝块:前 k 项和
+    const blueW=Sk*unit;
+    el(svg,'rect',{x:left,y:baseY-46,width:blueW,height:40,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:left+blueW/2,y:baseY-20,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='前 k 项和 = k(k+1)/2 = '+Sk;
+    // 红块:第 k+1 项
+    const redW=newTerm*unit;
+    el(svg,'rect',{x:left+blueW,y:baseY-46,width:redW,height:40,fill:'rgba(224,56,42,0.28)',stroke:RED,'stroke-width':3});
+    if(redW>40)el(svg,'text',{x:left+blueW+redW/2,y:baseY-20,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='+ (k+1) = '+newTerm;
+    // 合并结果条
+    el(svg,'rect',{x:left,y:baseY+18,width:Sk1*unit,height:40,fill:'rgba(30,158,134,0.20)',stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:left+Sk1*unit/2,y:baseY+44,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='= 前 k+1 项和 = (k+1)(k+2)/2 = '+Sk1;
+    // 标题与推导
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='k → k+1：把归纳假设(蓝) + 新增项(红) 拼成 P(k+1)';
+    el(svg,'text',{x:350,y:56,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='k = '+k+' 时： '+Sk+' + '+newTerm+' = '+Sk1+' ✔（正好等于公式在 k+1 的值）';
+    el(svg,'text',{x:left,y:baseY+92,'font-size':12,'font-weight':800,fill:INK}).textContent='蓝块由「归纳假设」给出，红块是新并入的第 k+1 项，拼起来正是 P(k+1)。';
+  }
+  document.getElementById('joinNext').onclick=()=>{if(k<7){k++;draw();}};
+  document.getElementById('joinPrev').onclick=()=>{if(k>1){k--;draw();}};
+  draw();
+})();
+
+/* ===== 互动4:求和公式两边累积 ===== */
+(function(){
+  const svg=document.getElementById('sumSvg');
+  const Ns=document.getElementById('sumN');
+  const oCur=document.getElementById('sumCur'),oL=document.getElementById('sumL'),oR=document.getElementById('sumR'),oEq=document.getElementById('sumEq');
+  let target=5,cur=0,running=false;
+  function sync(){target=+Ns.value;reset();}
+  Ns.oninput=sync;
+  function reset(){cur=0;running=false;draw();}
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=40,W=560,H=190;const baseY=Y0+H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    const maxSum=target*(target+1)/2;
+    const sy=H/Math.max(1,maxSum);
+    // 逐项柱状:第 i 项高度 i,叠加成累加和
+    const barW=Math.min(44,W/target*0.7);
+    let running_sum=0;
+    for(let i=1;i<=cur;i++){
+      running_sum+=i;
+      const x=X0+ (W/(target+1))*i - barW/2;
+      const hh=running_sum*sy;
+      el(svg,'rect',{x:x,y:baseY-hh,width:barW,height:hh,fill:'rgba(20,80,200,0.22)',stroke:BLUE,'stroke-width':2.5});
+      el(svg,'text',{x:x+barW/2,y:baseY-hh-5,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=String(running_sum);
+      el(svg,'text',{x:x+barW/2,y:baseY+16,'font-size':10.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='n='+i;
+    }
+    // 右边公式虚线(在每个 n 处的目标高度点连线)
+    let poly='';
+    for(let i=1;i<=target;i++){
+      const val=i*(i+1)/2;
+      const x=X0+(W/(target+1))*i;
+      const y=baseY-val*sy;
+      poly+=x+','+y+' ';
+    }
+    el(svg,'polyline',{points:poly.trim(),fill:'none',stroke:RED,'stroke-width':3,'stroke-dasharray':'7 5'});
+    // 标题
+    el(svg,'text',{x:X0+W/2,y:24,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='左边柱=1+2+…+n 累加　·　红虚线=右边公式 n(n+1)/2';
+    const L=cur*(cur+1)/2,R=cur*(cur+1)/2;
+    oCur.textContent=cur;oL.textContent=cur>0?L:0;oR.textContent=cur>0?R:0;oEq.textContent=cur>0?'相等✔':'—';
+  }
+  function stepOne(){if(cur<target){cur++;draw();}}
+  document.getElementById('sumStep').onclick=stepOne;
+  document.getElementById('sumReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动5:不等式 2^n vs n^2 ===== */
+(function(){
+  const svg=document.getElementById('ineqSvg');
+  const Ns=document.getElementById('ineqN');
+  const oCur=document.getElementById('ineqCur'),oPow=document.getElementById('ineqPow'),oSq=document.getElementById('ineqSq'),oCmp=document.getElementById('ineqCmp');
+  let upto=5;
+  function sync(){upto=+Ns.value;draw();}
+  Ns.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=55,Y0=30,W=580,H=210,baseY=Y0+H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    const Nmax=9;
+    // 值域取到 2^9=512
+    const maxV=Math.pow(2,upto>=6?upto:6);
+    const sy=H/maxV;
+    const sx=W/(Nmax);
+    function px(n){return X0+n*sx;}
+    function py(v){return baseY-v*sy;}
+    // 2^n 蓝
+    let pw='';for(let n=1;n<=upto;n++)pw+=px(n)+','+py(Math.pow(2,n))+' ';
+    el(svg,'polyline',{points:pw.trim(),fill:'none',stroke:BLUE,'stroke-width':4});
+    // n^2 红
+    let sq='';for(let n=1;n<=upto;n++)sq+=px(n)+','+py(n*n)+' ';
+    el(svg,'polyline',{points:sq.trim(),fill:'none',stroke:RED,'stroke-width':4});
+    // 点
+    for(let n=1;n<=upto;n++){
+      el(svg,'circle',{cx:px(n),cy:py(Math.pow(2,n)),r:4,fill:BLUE});
+      el(svg,'circle',{cx:px(n),cy:py(n*n),r:4,fill:RED});
+      el(svg,'text',{x:px(n),y:baseY+16,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='n='+n;
+    }
+    // 标记 n=5 起点线
+    if(upto>=5){el(svg,'line',{x1:px(5),y1:Y0,x2:px(5),y2:baseY,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+      el(svg,'text',{x:px(5),y:Y0-4,'font-size':11.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='奠基点 n=5';}
+    el(svg,'text',{x:X0+8,y:Y0+6,'font-size':13,'font-weight':900,fill:BLUE}).textContent='2ⁿ(蓝)';
+    el(svg,'text',{x:X0+80,y:Y0+6,'font-size':13,'font-weight':900,fill:RED}).textContent='n²(红)';
+    const pow=Math.pow(2,upto),sqr=upto*upto;
+    oCur.textContent=upto;oPow.textContent=pow;oSq.textContent=sqr;
+    oCmp.textContent=pow>sqr?'2ⁿ>n² ✔':(pow<sqr?'2ⁿ<n² ✘':'相等');
+  }
+  sync();
+})();
+
+/* ===== 互动6:整除型配凑 5^n-1 ===== */
+(function(){
+  const svg=document.getElementById('divSvg');
+  const oK=document.getElementById('divK'),oFk=document.getElementById('divFk'),oFk1=document.getElementById('divFk1'),oOk=document.getElementById('divOk');
+  let k=1;
+  function draw(){
+    clr(svg);
+    const fk=Math.pow(5,k)-1;       // 5^k -1
+    const fk1=Math.pow(5,k+1)-1;    // 5^(k+1)-1
+    const blue=5*fk;                 // 5*(5^k-1)
+    const yellow=4;
+    oK.textContent=k;oFk.textContent=fk;oFk1.textContent=fk1;oOk.textContent=(fk1%4===0)?'是':'否';
+    // 条形:总长 fk1 = blue + yellow
+    const left=60,baseY=150;
+    const total=fk1,unit=Math.min(0.9,560/total);
+    const bw=blue*unit,yw=yellow*unit;
+    el(svg,'rect',{x:left,y:baseY-46,width:bw,height:40,fill:'rgba(20,80,200,0.25)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:left+bw/2,y:baseY-18,'font-size':12.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='5·(5ᵏ−1)='+blue+'（含4✔）';
+    el(svg,'rect',{x:left+bw,y:baseY-46,width:Math.max(yw,8),height:40,fill:'rgba(243,192,14,0.5)',stroke:INK,'stroke-width':3});
+    // 标题
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='5ᵏ⁺¹−1 = 5·(5ᵏ−1) + 4　→ 两块都含因子 4';
+    el(svg,'text',{x:350,y:56,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='k='+k+'： '+fk1+' = '+blue+' + 4 = 4×'+(fk1/4)+' ✔ 被 4 整除';
+    el(svg,'text',{x:left,y:baseY+30,'font-size':12,'font-weight':800,fill:INK}).textContent='蓝块 5·(5ᵏ−1)：归纳假设保证含因子 4　·　黄块 4：显然含 4';
+    el(svg,'text',{x:left,y:baseY+52,'font-size':12,'font-weight':800,fill:GREEN}).textContent='两个 4 的倍数相加 → 和仍是 4 的倍数 → f(k+1) 被 4 整除';
+  }
+  document.getElementById('divNext').onclick=()=>{if(k<5){k++;draw();}};
+  document.getElementById('divPrev').onclick=()=>{if(k>1){k--;draw();}};
+  draw();
+})();
+
+/* ===== 互动7:先猜后证 数列递推 ===== */
+(function(){
+  const svg=document.getElementById('seqSvg');
+  const oN=document.getElementById('seqN'),oA=document.getElementById('seqA'),oG=document.getElementById('seqG'),oEq=document.getElementById('seqEq');
+  let n=1,a=1;const pts=[{n:1,a:1}];
+  function reset(){n=1;a=1;pts.length=0;pts.push({n:1,a:1});draw();}
+  function stepOne(){
+    if(n>=8)return;
+    a=a/(1+a);n++;pts.push({n:n,a:a});draw();
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=170,baseY=Y0+H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:baseY,x2:X0+W,y2:baseY,stroke:INK,'stroke-width':3});
+    const Nmax=8;const sx=W/(Nmax+1);
+    function px(i){return X0+i*sx;}
+    function py(v){return baseY-v*H;}   // v in [0,1]
+    // 猜想曲线 1/n 虚线
+    let g='';for(let i=1;i<=Nmax;i++)g+=px(i)+','+py(1/i)+' ';
+    el(svg,'polyline',{points:g.trim(),fill:'none',stroke:BLUE,'stroke-width':3,'stroke-dasharray':'7 5'});
+    // 递推点
+    pts.forEach(p=>{
+      el(svg,'circle',{cx:px(p.n),cy:py(p.a),r:5,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:px(p.n),y:py(p.a)-10,'font-size':10.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent=p.a.toFixed(3);
+      el(svg,'text',{x:px(p.n),y:baseY+16,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='n='+p.n;
+    });
+    el(svg,'text',{x:X0+W/2,y:22,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='红点=递推 aₙ₊₁=aₙ/(1+aₙ) 逐项算　·　蓝虚线=猜想 aₙ=1/n';
+    const guess=1/n;
+    oN.textContent=n;oA.textContent=a.toFixed(4);oG.textContent=guess.toFixed(4);
+    oEq.textContent=(Math.abs(a-guess)<1e-9)?'吻合✔':'—';
+  }
+  document.getElementById('seqStep').onclick=stepOne;
+  document.getElementById('seqReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 数学归纳法的两个步骤分别是什么？各对应骨牌的哪个动作？",a:"① 奠基(验证起点)：证 P(n₀) 成立——推倒第一张骨牌；② 递推(归纳步)：假设 P(k) 成立，推出 P(k+1) 成立——前一张倒撞倒下一张。两步齐全，无穷必倒。"},
+ {q:"2. 为什么第一步(验证起点)不能省？",a:"没有起点，整条递推链悬空、启动不了。甚至假命题都可能满足递推(如 n=n+1)，正是靠奠基把命题钉死在真起点上。"},
+ {q:"3. 为什么第二步(递推)不能省？只验证前几项行不行？",a:"不行。只验有限项无法保证「所有 n」。缺了递推，骨牌倒到某处就断链，后面全站着。"},
+ {q:"4. 第二步中的「归纳假设」指什么？它必须被怎样处理？",a:"归纳假设指「假设 n=k 时 P(k) 成立」。它是搭桥的唯一桥墩，在推 P(k+1) 时必须被真正代入用上；若没用上，就不是归纳法，判无效。"},
+ {q:"5. 证明 1+2+…+n=n(n+1)/2 的递推步(k→k+1)关键怎么写？",a:"1+2+…+k+(k+1) = k(k+1)/2 + (k+1)【用归纳假设替换前 k 项】= (k+1)(k/2+1) = (k+1)(k+2)/2，正是 n=k+1 的右边。"},
+ {q:"6. 证明 5ⁿ−1 能被 4 整除，递推步怎么配凑？",a:"5ᵏ⁺¹−1 = 5·5ᵏ−1 = 5·(5ᵏ−1)+4。前一项由归纳假设含因子 4，后一项 4 也含 4，两个 4 的倍数相加仍被 4 整除。"},
+ {q:"7. 证明 2ⁿ>n²，为什么奠基点取 n=5 而不是 n=1？",a:"因为 n=2,3,4 时 2ⁿ>n² 并不成立(如 n=3：8<9)。不等式常从某个较大的 n 才开始成立，起点必须取真正开始成立的值，此题为 n=5。"},
+ {q:"8. 2ⁿ>n² 的递推步如何用放缩？",a:"2ᵏ⁺¹=2·2ᵏ>2·k²【用归纳假设放大】，再证 2k²≥(k+1)²(即 k²−2k−1≥0，k≥5 成立)，于是 2ᵏ⁺¹>(k+1)²。"},
+ {q:"9. 数列「先猜后证」的完整流程是什么？只猜不证行不行？",a:"算前几项→观察规律→猜出通项→用归纳法证明。只猜不证不算完整证明；归纳法只能验证已知公式，不能凭空产生，猜与证缺一不可。"},
+ {q:"10. a₁=1, aₙ₊₁=aₙ/(1+aₙ)，猜想并证明 aₙ。",a:"算得 a₁=1,a₂=1/2,a₃=1/3 → 猜 aₙ=1/n。证：n=1 成立；设 aₖ=1/k，则 aₖ₊₁=aₖ/(1+aₖ)=(1/k)/((k+1)/k)=1/(k+1)【用递推式+归纳假设】，正是 k+1 的值。由归纳法 aₙ=1/n。"},
+ {q:"11. 什么是「加强命题法」？为什么有时要把结论证得更强？",a:"直接归纳时若第二步推不下去，往往是归纳假设太弱、信息不够。把结论证得更强，归纳假设也随之变强，手里的牌更多，反而推得动。假设越强越好用。"},
+ {q:"12. 第二数学归纳法(强归纳法)的思想是什么？何时用？",a:"把假设加强为「P(n₀)…P(k) 全部成立」再证 P(k+1)——不是只靠前一张，而是前面所有张都倒了才保证下一张倒。当递推依赖前面好几项(如斐波那契 aₙ=aₙ₋₁+aₙ₋₂)时用它更顺手。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
