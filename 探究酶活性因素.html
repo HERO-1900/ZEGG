@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探究影响酶活性的因素 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>探究影响酶活性的因素</h1>
+    <p class="lead">酶是活细胞产生的<b>生物催化剂</b>，脾气很大——温度、pH 稍微不对就"罢工"。这一页教你如何用<b>控制变量法</b>设计对照实验，去探究温度、pH 怎样影响酶活性，以及酶的<b>专一性</b>与<b>高效性</b>怎样验证。核心不是背结论，而是学会：<b>选对底物、控制单一变量、选对检测指标</b>。</p>
+
+    <div class="say">🗣️ <b>说人话总览：</b>酶是个"娇气的催化剂"——<b>温度、pH 稍不对就罢工</b>，太热甚至直接"烫死"再也救不回来。想搞清楚它们到底怎么影响酶，靠的就是<b>控制变量法</b>：一次只动一个因素（自变量），其他全都保持一样，再设个对照组来比。做实验最容易翻车的是<b>选错底物</b>（比如探究温度别用过氧化氢，它自己受热就分解了）和<b>选错检测指标</b>。记住三件事：<b>选对底物、只动一个变量、看得见的检测指标</b>，这类实验题就稳了。</div>
+
+    <div class="keybox"><b>一句话原则：</b> 探究实验 = <b>单一变量原则</b> + <b>对照原则</b> + <b>等量原则</b>。想探究谁的影响，谁就是<b>自变量</b>（温度或 pH）；其余一切（酶量、底物量、体积、pH 或温度）必须<b>严格相同且适宜</b>；结果用一个<b>可观测的因变量</b>（产物量 / 底物剩余量 / 反应时间）来体现。</div>
+
+    <h2>① 酶的三大特性：高效、专一、条件温和</h2>
+    <div class="card">
+      <table>
+        <tr><th>特性</th><th>含义</th><th>怎么验证 / 表现</th></tr>
+        <tr><td><b>高效性</b></td><td>催化效率远高于无机催化剂</td><td>与 Fe³⁺（无机催化剂）对比，同样催化 H₂O₂ 分解，过氧化氢酶快得多</td></tr>
+        <tr><td><b>专一性</b></td><td>一种酶只催化<b>一类</b>化学反应</td><td>淀粉酶只催化淀粉水解，不催化蔗糖；"钥匙与锁"</td></tr>
+        <tr><td><b>作用条件温和</b></td><td>需<b>最适温度、最适 pH</b></td><td>过高温 / 过酸过碱 → 酶变性失活</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>酶的化学本质</b>：绝大多数是<b>蛋白质</b>，少数是 RNA。因为是蛋白质，所以高温、强酸、强碱会破坏它的<b>空间结构</b>（变性），这就是它"娇气"的根本原因。</p>
+      <p class="trap">⚠ "高效性"是和<b>无机催化剂</b>比得出的结论，不是和"不加催化剂"比。要设三组：不加催化剂 / 加 Fe³⁺ / 加酶，才能既看出催化作用又看出高效。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔑 互动 1 — 酶的专一性（钥匙与锁）：一种酶只识别一类底物</div>
+      <svg id="lockSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="lockcase on" data-c="0">淀粉酶 + 淀粉</button>
+        <button class="lockcase" data-c="1">淀粉酶 + 蔗糖</button>
+        <button class="lockcase" data-c="2">蔗糖酶 + 蔗糖</button>
+      </div>
+      <div class="verdict" id="lockNote"></div>
+      <p class="small">酶像一把<b>锁</b>，底物像<b>钥匙</b>。只有形状匹配（淀粉酶↔淀粉、蔗糖酶↔蔗糖）才能"咔哒"催化；错配的钥匙插不进锁孔——这就是专一性。</p>
+    </div>
+
+    <h2 class="b">② 温度对酶活性的影响：钟形曲线，高温不可逆</h2>
+    <div class="card">
+      <p style="margin:6px 0">酶活性随温度先升后降，存在一个<b>最适温度</b>（人体酶约 37℃）。曲线呈<b>钟形（先增后减）</b>。</p>
+      <table>
+        <tr><th>温度区间</th><th>酶活性</th><th>能否恢复</th></tr>
+        <tr><td>低于最适（低温）</td><td>受<b>抑制</b>，活性低</td><td><b>能恢复</b>（结构未破坏，升温后活性回升）</td></tr>
+        <tr><td>等于最适</td><td>活性<b>最高</b></td><td>—</td></tr>
+        <tr><td>高于最适（高温）</td><td>迅速下降至<b>失活</b></td><td><b>不能恢复</b>（蛋白质变性，空间结构破坏）</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>核心区别：</b>低温只是"冻僵"了酶，暖回来还能干活；高温是把酶"烫熟"了（变性），永久报废。</p>
+      <p class="trap">⚠ 探究温度影响时，<b>不能用过氧化氢酶 + H₂O₂</b>！因为 H₂O₂ 受热本身就会分解，你分不清气泡是酶催化的还是加热催化的（温度成了"混杂变量"）。<b>应选淀粉酶 + 淀粉</b>，用碘液检测（此实验 pH 不显著改变淀粉）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌡️ 互动 2 — 温度-酶活性钟形曲线：拖动温度，看最适点与高温失活</div>
+      <svg id="tempSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>温度 (℃) <input id="tempT" type="range" min="0" max="80" value="37" step="1"></label>
+        <label>最适温度 <input id="tempOpt" type="range" min="30" max="60" value="37" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前温度</b><span id="tempCur">0</span></div>
+        <div><b>相对酶活性</b><span id="tempAct">0</span></div>
+        <div><b>状态</b><span id="tempState">0</span></div>
+        <div><b>可否恢复</b><span id="tempRev">0</span></div>
+      </div>
+      <p class="small">曲线是<b>钟形</b>：从低温上升到最适温度（顶点）再下降。左侧下降是"抑制"（可恢复），越过顶点后右侧下降是"变性失活"（不可恢复）。</p>
+    </div>
+
+    <h2 class="g">③ pH 对酶活性的影响：不同酶最适 pH 不同</h2>
+    <div class="card">
+      <p style="margin:6px 0">酶活性随 pH 也呈<b>钟形</b>，存在一个<b>最适 pH</b>。不同酶最适 pH 差别很大：</p>
+      <table>
+        <tr><th>酶</th><th>最适 pH（约）</th><th>环境</th></tr>
+        <tr><td><b>胃蛋白酶</b></td><td>≈ 2（强酸）</td><td>胃液</td></tr>
+        <tr><td><b>唾液淀粉酶</b></td><td>≈ 7（中性偏弱碱）</td><td>口腔</td></tr>
+        <tr><td><b>胰蛋白酶 / 肠液酶</b></td><td>≈ 8（弱碱）</td><td>小肠</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>过酸或过碱都会使酶变性失活，且不可逆</b>——和高温一样破坏空间结构。所以 pH 曲线两侧都会掉到 0。</p>
+      <p class="trap">⚠ 探究 pH 影响时，<b>不能用淀粉酶 + 淀粉、再用碘液检测</b>！因为强酸会使<b>淀粉自身水解</b>，还会干扰碘液显色，你无法判断淀粉减少是酶催化还是酸水解造成的。<b>应改用过氧化氢酶 + H₂O₂</b>（pH 不改变 H₂O₂ 稳定性），以<b>气泡产生量 / 速率</b>为指标。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚗️ 互动 3 — pH-酶活性曲线：三种酶各有最适 pH（胃蛋白酶偏酸）</div>
+      <svg id="phSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="phcase on" data-c="0">胃蛋白酶 (最适≈2)</button>
+        <button class="phcase" data-c="1">唾液淀粉酶 (≈7)</button>
+        <button class="phcase" data-c="2">胰蛋白酶 (≈8)</button>
+      </div>
+      <div class="verdict" id="phNote"></div>
+      <p class="small">三条钟形曲线<b>顶点位置不同</b>：胃蛋白酶顶点在强酸区（pH≈2），淀粉酶在中性，胰蛋白酶在弱碱区。这说明"最适 pH"是酶各自的属性，过酸过碱都会失活。</p>
+    </div>
+
+    <h2 class="o">④ 探究温度实验：底物选择是命门</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>标准方案（探究温度）：</b>自变量=温度，其余全部相同且适宜。</p>
+      <div class="mono">底物：淀粉溶液（等量）　酶：新鲜淀粉酶（等量）　检测：碘液（变蓝深浅 / 是否变蓝）</div>
+      <table>
+        <tr><th>试管</th><th>温度</th><th>其余条件</th></tr>
+        <tr><td>甲</td><td>0℃（冰水）</td><td rowspan="3">等量淀粉 + 等量淀粉酶，相同 pH、相同时间</td></tr>
+        <tr><td>乙</td><td>37℃（最适）</td></tr>
+        <tr><td>丙</td><td>60℃（高温）</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键顺序：</b>应<b>先分别将淀粉和酶达到设定温度，再混合</b>。若先混合再控温，未到设定温度前酶已经开始反应，结果不准。</p>
+      <p style="margin:8px 0"><b>预期结果：</b>乙（37℃）不变蓝或最浅（淀粉已被分解）；甲（低温）与丙（高温）都变蓝（淀粉未被分解），但甲的酶升温后可恢复，丙的酶已变性。</p>
+      <p class="trap">⚠ 为什么不用 H₂O₂？H₂O₂ 受热自身分解，加热本身就产生气泡，无法区分是酶催化还是热分解。温度成了同时影响"酶"和"底物稳定性"的混杂因素。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 4 — 控制变量法设计：只保留"单一变量"，其余必须等量对照</div>
+      <svg id="cvSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cvcase on" data-c="0">✔ 只变温度（合格）</button>
+        <button class="cvcase" data-c="1">✘ 温度+酶量都变（错误）</button>
+        <button class="cvcase" data-c="2">✘ 用 H₂O₂ 测温度（错误）</button>
+      </div>
+      <div class="verdict" id="cvNote"></div>
+      <p class="small">对照三支试管：绿色变量=允许改变的自变量，红色变量=本该相同却被改动的"额外变量"。<b>合格实验只有一个绿色差异，其余全灰（相同）</b>。多一个红色差异，结论就说不清。</p>
+    </div>
+
+    <h2 class="v">⑤ 探究高效性：酶 vs 无机催化剂</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>标准方案（探究高效性）：</b>自变量=催化剂种类，底物同为 H₂O₂。</p>
+      <table>
+        <tr><th>试管</th><th>加入</th><th>现象</th><th>作用</th></tr>
+        <tr><td>1</td><td>H₂O₂（不加催化剂）</td><td>几乎无气泡</td><td>空白对照</td></tr>
+        <tr><td>2</td><td>H₂O₂ + FeCl₃（Fe³⁺）</td><td>少量气泡</td><td>无机催化剂对照</td></tr>
+        <tr><td>3</td><td>H₂O₂ + 过氧化氢酶（肝脏研磨液）</td><td><b>大量气泡</b></td><td>实验组</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>结论：</b>3 号气泡远多于 2 号 → 酶的催化效率<b>远高于</b>无机催化剂（高效性）；2、3 号都多于 1 号 → 两者都有催化作用。<b>本质：酶降低活化能的幅度更大。</b></p>
+      <p class="trap">⚠ Fe³⁺ 的量和酶的量不必"物质的量相等"，教材是定性比较。但两管的 H₂O₂ 浓度、体积、温度、pH 必须相同——这才是单一变量（只有催化剂种类不同）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 5 — 高效性：酶把"活化能大山"削得更矮（反应更快）</div>
+      <svg id="eaSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="eacase on" data-c="0">不加催化剂</button>
+        <button class="eacase" data-c="1">加 Fe³⁺（无机）</button>
+        <button class="eacase" data-c="2">加酶（生物催化）</button>
+      </div>
+      <div class="verdict" id="eaNote"></div>
+      <p class="small">反应要越过一座"<b>活化能</b>"的山才能进行。催化剂不改变反应物和产物的能量（起点终点一样），只<b>降低山的高度</b>。酶把山削得<b>最矮</b>，所以反应最快——这就是高效性。</p>
+    </div>
+
+    <h2 class="r">⑥ 高温变性 vs 低温抑制：可逆性的判断</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是温度题的最大失分点。核心：<b>结构有没有被破坏</b>。</p>
+      <table>
+        <tr><th></th><th>低温</th><th>高温</th></tr>
+        <tr><td>酶活性</td><td>降低（受抑制）</td><td>降低直至为 0</td></tr>
+        <tr><td>空间结构</td><td><b>未破坏</b></td><td><b>被破坏（变性）</b></td></tr>
+        <tr><td>恢复到最适温度</td><td>活性<b>恢复</b></td><td>活性<b>不恢复</b></td></tr>
+        <tr><td>生活应用</td><td>低温保存（冰箱存菜、种子、疫苗、精子）</td><td>高温灭菌、加酶洗衣粉忌用开水</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>判断口诀：</b>低温=冻僵可救活，高温=烫熟没得救。pH 过酸过碱同高温，也是变性、不可逆。</p>
+      <p class="trap">⚠ 常见错句："0℃时酶已失活。" 错！0℃酶只是活性极低（被抑制），并没有失活/变性，升温后能恢复。"失活"专指变性（高温、强酸碱）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">❄️🔥 互动 6 — 低温抑制（可恢复） vs 高温变性（不可逆）对比动画</div>
+      <canvas id="revCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="revLow">❄ 低温处理后回暖</button><button id="revHigh">🔥 高温处理后回温</button><button id="revReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>左：低温组活性</b><span id="revA1">100%</span></div>
+        <div><b>右：高温组活性</b><span id="revA2">100%</span></div>
+        <div><b>左结构</b><span id="revS1">完好</span></div>
+        <div><b>右结构</b><span id="revS2">完好</span></div>
+      </div>
+      <p class="small">两组酶都先"离开最适温度"活性下降。回到 37℃：左边（低温）结构没坏，活性<b>爬回</b>100%；右边（高温）结构已散开（变性），活性<b>永远回不来</b>。</p>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 探究温度影响（变量与底物选择）</h3>
+      <p><b class="tag">触发信号:</b>「探究温度对酶活性的影响」，给你几支不同温度的试管，问方案是否合理、选什么底物/检测。</p>
+      <p><b class="tag">标准动作:</b>自变量=温度；用<b>淀粉酶+淀粉</b>+碘液（不用 H₂O₂）；先分别控温再混合；其余等量。因变量看碘液变蓝深浅。</p>
+      <p><b class="tag">示例(带解):</b>甲 0℃、乙 37℃、丙 60℃，等量淀粉+淀粉酶，滴碘液。结果：乙不变蓝（淀粉被分解），甲、丙变蓝。结论：37℃是最适温度附近，过低过高酶活性都低。</p>
+      <p class="trap">陷阱:用过氧化氢酶+H₂O₂（H₂O₂ 受热自分解，混杂变量）；先混合后控温。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 探究 pH 影响</h3>
+      <p><b class="tag">触发信号:</b>「探究 pH（酸碱度）对酶活性的影响」，几支不同 pH 的试管。</p>
+      <p><b class="tag">标准动作:</b>自变量=pH；用<b>过氧化氢酶+H₂O₂</b>，看气泡量/速率（不用淀粉+碘液，因酸使淀粉水解、干扰碘液）；温度相同且适宜。</p>
+      <p><b class="tag">示例(带解):</b>设 pH=2、7、11 三组，等量 H₂O₂+过氧化氢酶，比气泡。若某酶 pH=7 气泡最多、pH=2 与 11 几乎无泡，说明其最适 pH≈7，过酸过碱变性失活。</p>
+      <p class="trap">陷阱:用淀粉+碘液测 pH（酸水解淀粉、干扰显色）；把 pH 和温度同时改。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 酶专一性探究</h3>
+      <p><b class="tag">触发信号:</b>「验证酶的专一性」，出现两种底物或两种酶。</p>
+      <p><b class="tag">标准动作:</b>同一种酶对<b>两种不同底物</b>（如淀粉酶+淀粉 / 淀粉酶+蔗糖），或两种酶对同一底物。看只有匹配的一组发生反应。用斐林试剂检测还原糖。</p>
+      <p><b class="tag">示例(带解):</b>甲=淀粉酶+淀粉，乙=淀粉酶+蔗糖，各加斐林试剂水浴。甲出现砖红色（淀粉被水解出还原糖），乙不出现 → 淀粉酶只催化淀粉，不催化蔗糖 → 专一性。</p>
+      <p class="trap">陷阱:用碘液检测蔗糖组（蔗糖不与碘液显色，无法比较）；应统一用斐林试剂看还原糖。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 酶高效性（与 Fe³⁺ 等对比）</h3>
+      <p><b class="tag">触发信号:</b>「验证酶的高效性」「比较酶与 FeCl₃ 的催化」，底物常是 H₂O₂。</p>
+      <p><b class="tag">标准动作:</b>自变量=催化剂种类。三组：H₂O₂ / H₂O₂+Fe³⁺ / H₂O₂+过氧化氢酶，比气泡量或带火星木条复燃。酶组气泡最多。</p>
+      <p><b class="tag">示例(带解):</b>1 号无泡（对照），2 号少量泡（Fe³⁺），3 号大量泡（酶）。结论：3>2 说明酶效率远高于无机催化剂；2、3>1 说明二者都有催化作用。</p>
+      <p class="trap">陷阱:漏掉"不加催化剂"的空白对照；把"高效"和"是否有催化作用"混为一谈。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 控制变量与对照设计</h3>
+      <p><b class="tag">触发信号:</b>「指出实验设计缺陷」「改正下列步骤」「补全对照组」。</p>
+      <p><b class="tag">标准动作:</b>找出自变量→检查是否<b>单一变量</b>→其余是否<b>等量、适宜、相同</b>→是否有对照组。多一个未控制的变量就是缺陷。</p>
+      <p><b class="tag">示例(带解):</b>某方案甲管加 2mL 酶、乙管加 1mL 酶，温度也不同。缺陷：同时改了酶量和温度（两个变量），无法归因。改正：统一酶量，只让温度不同。</p>
+      <p class="trap">陷阱:自变量以外的量不等（酶量、底物量、体积、时间、pH、温度）；缺空白/对照组。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 变性可逆性判断</h3>
+      <p><b class="tag">触发信号:</b>「恢复到最适温度后活性能否恢复」「0℃时酶是否失活」「加酶洗衣粉能否用开水」。</p>
+      <p><b class="tag">标准动作:</b>看是<b>低温（抑制，可恢复）</b>还是<b>高温/强酸碱（变性，不可逆）</b>。问结构有没有被破坏。</p>
+      <p><b class="tag">示例(带解):</b>把某酶在 0℃与 100℃分别处理后再置于 37℃：0℃组活性恢复（未变性），100℃组不恢复（已变性）。故低温保存合理，高温灭活不可逆。</p>
+      <p class="trap">陷阱:说"0℃酶失活"（应为抑制）；说"高温后降温活性能恢复"（变性不可逆）。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 探究<b>温度</b>不能用过氧化氢酶+H₂O₂——H₂O₂ 受热自身分解，加热本身就冒泡，无法归因。应用<b>淀粉酶+淀粉</b>+碘液。</p>
+      <p class="trap">② 探究<b>pH</b>不能用淀粉酶+淀粉+碘液——强酸使淀粉水解、且干扰碘液显色。应用<b>过氧化氢酶+H₂O₂</b>看气泡。</p>
+      <p class="trap">③ <b>高温变性不可逆</b>，<b>低温抑制可恢复</b>。0℃酶只是"被抑制"不是"失活"。</p>
+      <p class="trap">④ 过酸、过碱与高温一样使酶<b>变性失活且不可逆</b>；pH 曲线两侧都掉到 0。</p>
+      <p class="trap">⑤ <b>单一变量</b>：想探究谁谁才是自变量，其余（酶量、底物量、体积、时间、温度或 pH）必须相同且适宜。</p>
+      <p class="trap">⑥ 探究温度应<b>先分别控温再混合</b>；探究高效性/专一性时底物、体积、温度、pH 都要相同。</p>
+      <p class="trap">⑦ "高效性"是与<b>无机催化剂</b>比，别忘"不加催化剂"的空白对照。</p>
+      <p class="trap">⑧ 专一性实验检测蔗糖组要用<b>斐林试剂</b>（看还原糖），不能用碘液（蔗糖不显色）。</p>
+      <p class="trap">⑨ 斐林试剂检测需<b>水浴加热</b>，本身要加热——所以不能同时用它做"温度"实验的检测指标。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 选底物 = 排除"混杂变量"：</b>探究温度时 H₂O₂ 之所以不能用，本质是它对自变量（温度）敏感——温度既影响酶又影响底物稳定性，两条通路混在一起。选底物的黄金准则是：<b>底物本身对当前自变量不敏感</b>。温度题选淀粉（受热稳定），pH 题选 H₂O₂（对 pH 稳定）。</p>
+      <p style="margin:8px 0"><b>② 检测指标要"避开自变量的干扰"：</b>pH 题不用碘液，是因为酸会同时水解淀粉、又影响显色；温度题不用斐林试剂，是因为它自带水浴加热会破坏"温度"这个自变量。选指标先问一句：<b>这个检测手段会不会反过来改变我的自变量？</b></p>
+      <p style="margin:8px 0"><b>③ 曲线为什么是钟形而不是单调：</b>低温端上升是"分子运动加快、酶促反应加速"；越过最适点后下降是"结构开始被破坏"。两种相反机制叠加 → 钟形。理解这一点，任何"温度/pH-活性"曲线你都能自己推导顶点与两侧走势。</p>
+      <p style="margin:8px 0"><b>④ "可逆"的判据只有一个——结构：</b>活性下降不等于失活。低温下结构完好只是"慢"，回暖即恢复；高温/强酸碱使肽链空间结构散开（变性），不可逆。把"活性"和"结构"两个层次分开想，可逆性题永不出错。</p>
+      <p style="margin:8px 0"><b>⑤ 高效性 = 降低活化能，不改变平衡：</b>催化剂（含酶）只降低活化能、加快正逆反应速率，<b>不改变反应物/产物的能量差，也不改变化学平衡</b>。酶比 Fe³⁺ 更"高效"，是因为它把活化能降得更低。这条把"能量-速率"关系讲透，就能秒杀高效性的所有变式。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 探究影响酶活性的因素（温度、pH、专一性、高效性、控制变量法）</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:酶的专一性(钥匙与锁) ===== */
+(function(){
+  const svg=document.getElementById('lockSvg');const note=document.getElementById('lockNote');
+  let c=0;
+  document.querySelectorAll('.lockcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.lockcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    let enzName,subName,match;
+    if(c===0){enzName='淀粉酶';subName='淀粉';match=true;}
+    else if(c===1){enzName='淀粉酶';subName='蔗糖';match=false;}
+    else{enzName='蔗糖酶';subName='蔗糖';match=true;}
+    // enzyme (lock) left
+    const ex=240,ey=150;
+    el(svg,'text',{x:350,y:34,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='酶（锁）+ 底物（钥匙）';
+    // enzyme body
+    el(svg,'rect',{x:ex-90,y:ey-70,width:120,height:140,rx:14,fill:'#cfe6df',stroke:INK,'stroke-width':4});
+    // notch shape on enzyme (a semicircle notch) - shape type A for 淀粉酶, B for 蔗糖酶
+    const shapeA=(enzName==='淀粉酶');
+    // draw active-site notch
+    if(shapeA){
+      el(svg,'path',{d:'M '+(ex+30)+' '+(ey-40)+' l 0 30 l -30 0 l 0 20 l 30 0 l 0 30',fill:'#fff',stroke:INK,'stroke-width':3});
+    }else{
+      el(svg,'path',{d:'M '+(ex+30)+' '+(ey-40)+' q -40 40 0 80',fill:'#fff',stroke:INK,'stroke-width':3});
+    }
+    el(svg,'text',{x:ex-30,y:ey+4,'font-size':15,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=enzName;
+    // substrate (key) right, its matching depends on subName
+    const subA=(subName==='淀粉');
+    const sx=match?ex+30:ex+120, sy=ey;
+    // key body
+    el(svg,'rect',{x:sx+40,y:sy-24,width:120,height:48,rx:8,fill:YEL,stroke:INK,'stroke-width':4});
+    // key tip shape
+    if(subA){
+      el(svg,'path',{d:'M '+(sx+40)+' '+(sy-20)+' l 0 12 l -30 0 l 0 16 l 30 0 l 0 12',fill:YEL,stroke:INK,'stroke-width':3});
+    }else{
+      el(svg,'path',{d:'M '+(sx+40)+' '+(sy-24)+' q -40 24 0 48',fill:YEL,stroke:INK,'stroke-width':3});
+    }
+    el(svg,'text',{x:sx+100,y:sy+5,'font-size':15,'font-weight':900,fill:'#b8860b','text-anchor':'middle'}).textContent=subName;
+    // verdict
+    if(match){
+      el(svg,'text',{x:350,y:265,'font-size':16,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='✔ 形状匹配 → 咔哒，可催化！';
+      note.innerHTML='✔ <b>'+enzName+' + '+subName+'</b>：形状匹配，酶能识别并催化 → 反应发生。';
+      note.style.borderColor=GREEN;
+    }else{
+      el(svg,'text',{x:350,y:265,'font-size':16,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='✘ 形状不合 → 插不进，不催化';
+      note.innerHTML='✘ <b>'+enzName+' + '+subName+'</b>：钥匙形状不合锁孔，酶不能催化 → 无反应。这正说明<b>专一性</b>：一种酶只催化一类底物。';
+      note.style.borderColor=RED;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动2:温度-酶活性钟形曲线 ===== */
+(function(){
+  const svg=document.getElementById('tempSvg');
+  const Ts=document.getElementById('tempT'),Os=document.getElementById('tempOpt');
+  const oCur=document.getElementById('tempCur'),oAct=document.getElementById('tempAct'),oState=document.getElementById('tempState'),oRev=document.getElementById('tempRev');
+  let T=37,OPT=37;
+  function sync(){T=+Ts.value;OPT=+Os.value;draw();}
+  Ts.oninput=Os.oninput=sync;
+  // activity model: bell-like, 0 below floor, rises to opt, falls to 0 at opt+18 (denature)
+  function act(temp){
+    if(temp<=0)return 0;
+    if(temp>=OPT+22)return 0;
+    if(temp<=OPT){
+      // rising branch: 0 at 0deg up to 1 at OPT
+      return Math.max(0,(temp/OPT));
+    }else{
+      // falling branch: 1 at OPT down to 0 at OPT+22 (denature, steeper)
+      return Math.max(0,1-(temp-OPT)/22);
+    }
+  }
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=580,H=230;const Tmax=80;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='酶活性';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='温度/℃';
+    // curve
+    let d='';
+    for(let temp=0;temp<=Tmax;temp++){
+      const x=X0+(temp/Tmax)*W;
+      const y=Y0+H-act(temp)*H;
+      d+=(temp===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':4});
+    // opt marker
+    const ox=X0+(OPT/Tmax)*W, oy=Y0+H-act(OPT)*H;
+    el(svg,'line',{x1:ox,y1:oy,x2:ox,y2:Y0+H,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:ox,y:oy-8,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='最适 '+OPT+'℃';
+    // current point
+    const cx=X0+(T/Tmax)*W, cy=Y0+H-act(T)*H;
+    el(svg,'line',{x1:cx,y1:Y0,x2:cx,y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'circle',{cx:cx,cy:cy,r:7,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy-12,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=T+'℃';
+    // x ticks
+    [0,20,40,60,80].forEach(t=>{
+      const x=X0+(t/Tmax)*W;
+      el(svg,'line',{x1:x,y1:Y0+H,x2:x,y2:Y0+H+6,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x,y:Y0+H+22,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;
+    });
+    // stats
+    const a=act(T);
+    oCur.textContent=T+'℃';
+    oAct.textContent=(a*100).toFixed(0)+'%';
+    let st,rev;
+    if(T<OPT-1){st='低温抑制';rev='可恢复';}
+    else if(T<=OPT+1){st='最适(最高)';rev='—';}
+    else if(a>0){st='高温下降';rev='已开始变性,不可逆';}
+    else{st='高温失活';rev='不可逆';}
+    oState.textContent=st;oRev.textContent=rev;
+  }
+  sync();
+})();
+
+/* ===== 互动3:pH-酶活性曲线 ===== */
+(function(){
+  const svg=document.getElementById('phSvg');const note=document.getElementById('phNote');
+  let c=0;
+  const data=[
+    {name:'胃蛋白酶',opt:2,col:RED,env:'胃液(强酸)'},
+    {name:'唾液淀粉酶',opt:7,col:BLUE,env:'口腔(中性)'},
+    {name:'胰蛋白酶',opt:8,col:GREEN,env:'小肠(弱碱)'}
+  ];
+  document.querySelectorAll('.phcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.phcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function bell(ph,opt){
+    const w=3.2; // half-width
+    const v=1-Math.abs(ph-opt)/w;
+    return Math.max(0,v);
+  }
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=580,H=230;const PHmax=14;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='酶活性';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='pH';
+    // draw all three faint, active one bold
+    data.forEach((D,i)=>{
+      let d='';
+      for(let ph=0;ph<=PHmax;ph+=0.2){
+        const x=X0+(ph/PHmax)*W;
+        const y=Y0+H-bell(ph,D.opt)*H;
+        d+=(ph===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+      }
+      const active=(i===c);
+      el(svg,'path',{d:d,fill:'none',stroke:D.col,'stroke-width':active?4.5:2,opacity:active?1:0.28});
+      if(active){
+        const ox=X0+(D.opt/PHmax)*W, oy=Y0;
+        el(svg,'line',{x1:ox,y1:oy,x2:ox,y2:Y0+H,stroke:D.col,'stroke-width':2,'stroke-dasharray':'5 4'});
+        el(svg,'circle',{cx:ox,cy:Y0+H-H,r:7,fill:D.col,stroke:INK,'stroke-width':3});
+        el(svg,'text',{x:ox,y:oy-2,'font-size':12,'font-weight':900,fill:D.col,'text-anchor':'middle'}).textContent='最适 pH≈'+D.opt;
+      }
+    });
+    [0,2,4,7,10,14].forEach(ph=>{
+      const x=X0+(ph/PHmax)*W;
+      el(svg,'line',{x1:x,y1:Y0+H,x2:x,y2:Y0+H+6,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x,y:Y0+H+22,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=ph;
+    });
+    const D=data[c];
+    note.innerHTML='当前：<b style="color:'+D.col+'">'+D.name+'</b>（'+D.env+'），最适 pH≈'+D.opt+'。过酸过碱都会使它<b>变性失活（不可逆）</b>，曲线两侧掉到 0。三条曲线顶点不同 → 各酶最适 pH 不同。';
+    note.style.borderColor=D.col;
+  }
+  draw();
+})();
+
+/* ===== 互动4:控制变量法设计 ===== */
+(function(){
+  const svg=document.getElementById('cvSvg');const note=document.getElementById('cvNote');
+  let c=0;
+  document.querySelectorAll('.cvcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cvcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  // rows: [factor, tubeA, tubeB, status]  status: 'var'=允许自变量(green), 'bad'=不该变(red), 'same'=相同(gray)
+  function cfg(){
+    if(c===0)return{
+      rows:[['温度','20℃','40℃','var'],['底物(淀粉)','2mL','2mL','same'],['酶量','1mL','1mL','same'],['pH','7','7','same'],['时间','5min','5min','same']],
+      msg:'✔ 合格：只有<b>温度</b>不同（唯一自变量），其余全部相同 → 结果只能归因于温度。'
+    };
+    if(c===1)return{
+      rows:[['温度','20℃','40℃','var'],['底物(淀粉)','2mL','2mL','same'],['酶量','1mL','2mL','bad'],['pH','7','7','same'],['时间','5min','5min','same']],
+      msg:'✘ 错误：温度和<b>酶量同时改变</b>（两个变量）→ 反应差异分不清是温度还是酶量造成的。'
+    };
+    return{
+      rows:[['温度','20℃','40℃','var'],['底物','H₂O₂','H₂O₂','bad'],['酶','过氧化氢酶','过氧化氢酶','same'],['pH','7','7','same'],['时间','5min','5min','same']],
+      msg:'✘ 错误：探究温度却用 <b>H₂O₂</b> 底物——H₂O₂ 受热自身分解，加热本身就冒泡，混杂变量，无法归因于酶。'
+    };
+  }
+  function draw(){
+    clr(svg);
+    const cf=cfg();
+    const X0=40,Y0=40,rowH=42,colF=180,colA=200,colB=200;
+    el(svg,'text',{x:X0,y:24,'font-size':13,'font-weight':900,fill:INK}).textContent='因素';
+    el(svg,'text',{x:X0+colF+colA/2,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='甲管';
+    el(svg,'text',{x:X0+colF+colA+colB/2,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='乙管';
+    cf.rows.forEach((r,i)=>{
+      const y=Y0+i*rowH;
+      let bg,txtcol,tag;
+      if(r[3]==='var'){bg='#d6f2ea';txtcol=GREEN;tag='✔ 自变量';}
+      else if(r[3]==='bad'){bg='#fbdcd9';txtcol=RED;tag='✘ 多余变量';}
+      else{bg='#efe9d8';txtcol=INK;tag='相同';}
+      el(svg,'rect',{x:X0-8,y:y-20,width:colF+colA+colB+16,height:rowH-6,fill:bg,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0,y:y+2,'font-size':12.5,'font-weight':900,fill:INK}).textContent=r[0];
+      el(svg,'text',{x:X0+colF+colA/2,y:y+2,'font-size':12.5,'font-weight':800,fill:txtcol,'text-anchor':'middle'}).textContent=r[1];
+      el(svg,'text',{x:X0+colF+colA+colB/2,y:y+2,'font-size':12.5,'font-weight':800,fill:txtcol,'text-anchor':'middle'}).textContent=r[2];
+      el(svg,'text',{x:X0+colF+colA+colB+4,y:y+2,'font-size':10.5,'font-weight':800,fill:txtcol}).textContent=tag;
+    });
+    note.innerHTML=cf.msg;
+    note.style.borderColor=c===0?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动5:高效性(活化能) ===== */
+(function(){
+  const svg=document.getElementById('eaSvg');const note=document.getElementById('eaNote');
+  let c=0;
+  const cases=[
+    {name:'不加催化剂',peak:0.92,col:INK,speed:'极慢',desc:'活化能最高，反应极慢（几乎不反应）。'},
+    {name:'加 Fe³⁺（无机）',peak:0.62,col:ORANGE,speed:'较快',desc:'降低了活化能，反应加快，但幅度有限。'},
+    {name:'加酶（生物催化）',peak:0.34,col:GREEN,speed:'很快',desc:'把活化能降到最低，反应最快——这就是高效性。'}
+  ];
+  document.querySelectorAll('.eacase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.eacase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=580,H=210;
+    // baseline reactant / product levels (fixed - catalyst doesn't change them)
+    const startLvl=0.55, endLvl=0.30;
+    const yOf=(lvl)=>Y0+H-lvl*H;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='能量';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='反应进程';
+    // draw all three faint, active bold
+    cases.forEach((D,i)=>{
+      const active=(i===c);
+      const sx=X0+40, px=X0+W*0.5, ex=X0+W-30;
+      const sy=yOf(startLvl), ey=yOf(endLvl), py=yOf(D.peak);
+      const d='M '+sx+' '+sy+' Q '+px+' '+(py-40)+' '+px+' '+py+' Q '+px+' '+(py-40)+' '+ex+' '+ey;
+      el(svg,'path',{d:d,fill:'none',stroke:D.col,'stroke-width':active?4.5:2,opacity:active?1:0.25});
+      if(active){
+        // activation energy bracket
+        el(svg,'line',{x1:px,y1:sy,x2:px,y2:py,stroke:D.col,'stroke-width':2,'stroke-dasharray':'4 3'});
+        el(svg,'text',{x:px+8,y:(sy+py)/2,'font-size':12,'font-weight':900,fill:D.col}).textContent='活化能';
+      }
+    });
+    // reactant & product markers
+    const sx=X0+40, ex=X0+W-30;
+    el(svg,'circle',{cx:sx,cy:yOf(startLvl),r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sx,y:yOf(startLvl)+24,'font-size':11.5,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='反应物';
+    el(svg,'circle',{cx:ex,cy:yOf(endLvl),r:6,fill:VIO,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:ex,y:yOf(endLvl)+24,'font-size':11.5,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='产物';
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='催化剂只降"山高"(活化能)，不改反应物/产物能量';
+    const D=cases[c];
+    note.innerHTML='<b style="color:'+D.col+'">'+D.name+'</b>：'+D.desc+'　反应速率：<b>'+D.speed+'</b>。';
+    note.style.borderColor=D.col;
+  }
+  draw();
+})();
+
+/* ===== 互动6:低温抑制 vs 高温变性 ===== */
+(function(){
+  const cv=document.getElementById('revCv');const ctx=cv.getContext('2d');
+  const oA1=document.getElementById('revA1'),oA2=document.getElementById('revA2'),oS1=document.getElementById('revS1'),oS2=document.getElementById('revS2');
+  // a1/a2 = activity 0..1 ; denatured flags
+  let a1=1,a2=1,denat1=false,denat2=false;
+  let phase='',running=false,t=0;
+  function reset(){a1=1;a2=1;denat1=false;denat2=false;phase='';running=false;t=0;stats();draw();}
+  function stats(){
+    oA1.textContent=Math.round(a1*100)+'%';
+    oA2.textContent=Math.round(a2*100)+'%';
+    oS1.textContent=denat1?'—':'完好';
+    oS2.textContent=denat2?'散开(变性)':'完好';
+  }
+  function drawEnzyme(cx,cy,activity,denatured,label,sub){
+    ctx.save();ctx.translate(cx,cy);
+    // color from activity: green(active)->gray(low)
+    const g=Math.round(158*activity+120*(1-activity));
+    if(denatured){
+      // draw scattered broken chain
+      ctx.strokeStyle='#b03a2e';ctx.lineWidth=4;ctx.beginPath();
+      ctx.moveTo(-50,10);ctx.lineTo(-20,-20);ctx.lineTo(0,15);ctx.lineTo(25,-18);ctx.lineTo(55,12);ctx.stroke();
+      ctx.fillStyle='#b03a2e';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+      ctx.fillText('肽链散开·变性',0,40);
+    }else{
+      // folded blob
+      ctx.fillStyle='rgb(60,'+g+',130)';ctx.strokeStyle=INK;ctx.lineWidth=3;
+      ctx.beginPath();ctx.ellipse(0,0,44,32,0,0,2*Math.PI);ctx.fill();ctx.stroke();
+      // active site notch
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(30,-6,10,0,2*Math.PI);ctx.fill();ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.fillStyle=INK;ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+    ctx.fillText('左：低温组',175,26);ctx.fillText('右：高温组',525,26);
+    // divider
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(350,10);ctx.lineTo(350,230);ctx.stroke();ctx.setLineDash([]);
+    // enzymes
+    drawEnzyme(175,110,a1,denat1);
+    drawEnzyme(525,110,a2,denat2);
+    // activity bars
+    bar(175,a1,GREEN);
+    bar(525,a2,denat2?RED:GREEN);
+    // phase label
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    let lab='';
+    if(phase==='low')lab='① 低温处理→活性下降（结构完好）　② 回暖→活性恢复！';
+    else if(phase==='high')lab='① 高温处理→活性骤降（结构被破坏）　② 回温→无法恢复';
+    ctx.fillText(lab,350,225);
+  }
+  function bar(cx,act,col){
+    const h=act*90;
+    ctx.fillStyle='#eee';ctx.fillRect(cx+60,110-45,18,90);
+    ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(cx+60,110-45,18,90);
+    ctx.fillStyle=col;ctx.fillRect(cx+60,110+45-h,18,h);
+    ctx.strokeRect(cx+60,110+45-h,18,h);
+    ctx.fillStyle=INK;ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+    ctx.fillText(Math.round(act*100)+'%',cx+69,110-52);
+  }
+  function loop(){
+    if(!running)return;
+    t+=1;
+    if(phase==='low'){
+      // t0-40: cool down a1 to 0.15 ; t40-80: warm back to 1
+      if(t<=40){a1=1-0.85*(t/40);}
+      else if(t<=90){a1=0.15+0.85*((t-40)/50);if(a1>1)a1=1;}
+      else{a1=1;running=false;}
+    }else if(phase==='high'){
+      if(t<=40){a2=1-1.0*(t/40);if(a2<0)a2=0;if(t>=30)denat2=true;}
+      else if(t<=90){a2=0;denat2=true;}
+      else{a2=0;denat2=true;running=false;}
+    }
+    stats();draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('revLow').onclick=()=>{reset();phase='low';running=true;t=0;requestAnimationFrame(loop);};
+  document.getElementById('revHigh').onclick=()=>{reset();phase='high';running=true;t=0;requestAnimationFrame(loop);};
+  document.getElementById('revReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 酶的三大特性是什么？化学本质是什么？",a:"高效性、专一性、作用条件温和（需最适温度和最适 pH）。化学本质：绝大多数是蛋白质，少数是 RNA。"},
+ {q:"2. 探究温度对酶活性的影响，为什么不能用过氧化氢酶+H₂O₂？应改用什么？",a:"因为 H₂O₂ 受热本身就会分解产生气泡，无法区分是酶催化还是热分解（温度成了混杂变量）。应改用淀粉酶+淀粉，用碘液检测。"},
+ {q:"3. 探究 pH 对酶活性的影响，为什么不用淀粉酶+淀粉+碘液？应改用什么？",a:"因为强酸会使淀粉自身水解，还干扰碘液显色，无法归因于酶。应改用过氧化氢酶+H₂O₂，以气泡产生量/速率为指标。"},
+ {q:"4. 低温和高温对酶活性的影响有何本质区别？可逆吗？",a:"低温只是抑制（结构未破坏），升温后活性可恢复；高温使蛋白质变性、空间结构被破坏，活性不可恢复。低温可逆，高温不可逆。"},
+ {q:"5. \"0℃时酶已失活\"这句话对吗？为什么？",a:"错。0℃时酶只是活性极低（被抑制），结构未破坏、并未失活，升温后能恢复。\"失活\"专指变性（高温或强酸强碱）。"},
+ {q:"6. 控制变量法的三条原则是什么？",a:"单一变量原则（只让自变量一个改变）、对照原则（设对照组）、等量原则（其余无关变量相同且适宜）。"},
+ {q:"7. 探究温度实验中，为什么要\"先分别控温再混合\"？",a:"若先混合再控温，在未达到设定温度前酶已开始催化反应，反应量不能准确反映该设定温度下的酶活性，结果不准。"},
+ {q:"8. 如何验证酶的高效性？需要设几组？",a:"用同一底物 H₂O₂，设三组：只加 H₂O₂（空白对照）、H₂O₂+Fe³⁺（无机催化剂）、H₂O₂+过氧化氢酶。酶组气泡最多→高效性；后两组都多于空白→都有催化作用。"},
+ {q:"9. 如何验证酶的专一性？检测蔗糖组能用碘液吗？",a:"用同一种酶对两种底物（如淀粉酶+淀粉 / 淀粉酶+蔗糖）。检测应统一用斐林试剂看还原糖，不能用碘液（蔗糖不与碘液显色，无法比较）。"},
+ {q:"10. 不同酶的最适 pH 相同吗？举例。",a:"不同。胃蛋白酶最适 pH≈2（强酸），唾液淀粉酶≈7（中性），胰蛋白酶≈8（弱碱）。过酸过碱都会使酶变性失活且不可逆。"},
+ {q:"11. 从活化能角度，酶的高效性本质是什么？催化剂会改变化学平衡吗？",a:"酶通过显著降低反应的活化能来加快反应；降幅比无机催化剂更大，所以更高效。催化剂只降活化能、加快正逆反应速率，不改变反应物/产物能量，也不改变化学平衡。"},
+ {q:"12. 加酶洗衣粉能用开水（近100℃）泡吗？低温保存疫苗/精子合理吗？",a:"不能用开水——高温使酶变性失活、不可逆，去污能力丧失，应用温水。低温保存合理——低温只抑制酶（及代谢），结构不破坏，需要时升温可恢复活性。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解三角形的实际应用 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>解三角形的实际应用</h1>
+    <p class="lead">测量题的本质:把「够不着、量不了」的高度、距离、角度,搬进一个<b>三角形</b>里,再用<b>正弦定理 / 余弦定理</b>算出来。仰角俯角、方位角、面积、最值,全都是「画图 → 标角 → 找三角形 → 选定理」这一套流程的变体。这一页把六大题型的画图套路和选锅逻辑一次讲透。</p>
+
+    <div class="say">🗣️ <b>实际测量题(人话版):</b> 山有多高?河有多宽?两船隔多远?这些你<b>没法直接拿尺子量</b>。办法是:找几个能站的点,量出你能量的边和角,把它们凑成一个三角形,然后<b>用正弦/余弦定理把未知的那条边或角算出来</b>。全部技术含量就三步:<b>画对示意图、标对角度、选对定理</b>。图画歪了、方位角标反了,后面全错;图画对了,剩下就是套公式。</div>
+
+    <div class="keybox"><b>两把万能钥匙:</b> <b>正弦定理 a/sinA = b/sinB = c/sinC = 2R</b>(已知「边角对角」或「两角一边」用它);<b>余弦定理 a² = b² + c² − 2bc·cosA</b>(已知「两边夹角」或「三边」用它)。<b>选锅口诀:</b> 缺角配对(有一组边对角) → 正弦;夹角/三边 → 余弦。</div>
+
+    <h2>① 两把定理:正弦 & 余弦</h2>
+    <div class="card">
+      <div class="eq">正弦定理:a/sinA = b/sinB = c/sinC = 2R</div>
+      <div class="eq">余弦定理:a² = b² + c² − 2bc·cosA</div>
+      <p style="margin:8px 0">三角形里,<b>大边对大角、大角对大边</b>。这两条定理把「边」和「角」互相翻译:知道一部分,就能求另一部分。R 是外接圆半径,2R 那一段在实际题里少用,主要用前面的比例。</p>
+      <table>
+        <tr><th>已知条件</th><th>选哪个定理</th><th>能求什么</th></tr>
+        <tr><td>两角 + 一边(AAS / ASA)</td><td><b>正弦定理</b></td><td>其余的边</td></tr>
+        <tr><td>两边 + 一组对角(SSA)</td><td><b>正弦定理</b></td><td>对角(注意<b>有解个数</b>)</td></tr>
+        <tr><td>两边 + 夹角(SAS)</td><td><b>余弦定理</b></td><td>第三边</td></tr>
+        <tr><td>三边(SSS)</td><td><b>余弦定理</b></td><td>任一角</td></tr>
+      </table>
+      <p class="trap">⚠ 有一组「边和它的对角」→ 优先正弦;出现「夹角」或给全三边 → 余弦。SSA 用正弦定理求角时,sin 可能对应两个角(锐角 / 钝角),要按「大边对大角」判断取舍。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 两定理选择器:拖动条件，看该用正弦还是余弦，实时解三角形</div>
+      <svg id="lawSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>边 b <input id="lawB" type="range" min="3" max="9" value="6" step="0.5"></label>
+        <label>边 c <input id="lawC" type="range" min="3" max="9" value="5" step="0.5"></label>
+        <label>夹角 A° <input id="lawA" type="range" min="20" max="130" value="60" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>用余弦求 a</b><span id="lawA2">0</span></div>
+        <div><b>再用正弦求 B</b><span id="lawB2">0</span></div>
+        <div><b>角 C = 180−A−B</b><span id="lawC2">0</span></div>
+        <div><b>面积 ½bc·sinA</b><span id="lawS">0</span></div>
+      </div>
+      <p class="small">给「两边 b、c + 夹角 A」(SAS):先用<b>余弦定理</b>求出对边 a,再用<b>正弦定理</b>求另一个角 B,最后角 C 靠内角和补齐。这是最常见的「先余弦后正弦」组合拳。</p>
+    </div>
+
+    <h2 class="b">② 术语:仰角 / 俯角 / 方位角 / 方向角</h2>
+    <div class="card">
+      <p style="margin:6px 0">测量题一半的分数丢在「角画错」。三个术语必须刻进脑子:</p>
+      <table>
+        <tr><th>术语</th><th>定义</th><th>关键</th></tr>
+        <tr><td><b>仰角</b></td><td>视线在<b>水平线上方</b>,与水平线的夹角(往上看)</td><td>从水平线量起,不是从竖直线</td></tr>
+        <tr><td><b>俯角</b></td><td>视线在<b>水平线下方</b>,与水平线的夹角(往下看)</td><td>同样从水平线量起</td></tr>
+        <tr><td><b>方位角</b></td><td>从<b>正北方向</b>起,<b>顺时针</b>转到目标方向的角(0°~360°)</td><td>北为起点,顺时针</td></tr>
+        <tr><td><b>方向角</b></td><td>「南偏东30°」「北偏西60°」这类表述</td><td>先说南北,再偏东西多少度</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>俯角 = 对面的仰角:</b> A 看 B 的俯角,等于 B 看 A 的仰角(内错角相等)。这一步是测高题里「把角搬到三角形里」的关键。</p>
+      <p class="trap">⚠ 仰角俯角<b>永远从水平线量</b>,不是从竖直墙面量!方位角<b>从正北顺时针</b>,别从正东、别逆时针。方向角「南偏东x°」= 从正南向东偏 x°,不要跟方位角混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 4 — 仰角/俯角/方位角定义图:拖动看角怎么量（含「俯角=对面仰角」）</div>
+      <svg id="angSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="angmode on" data-a="0">仰角</button>
+        <button class="angmode" data-a="1">俯角</button>
+        <button class="angmode" data-a="2">方位角</button>
+        <button class="angmode" data-a="3">方向角</button>
+        <label>角度 <input id="angDeg" type="range" min="10" max="80" value="35" step="5"></label>
+      </div>
+      <div class="verdict" id="angNote"></div>
+      <p class="small">仰角/俯角都从<b>水平虚线</b>量起(往上=仰,往下=俯);方位角从<b>正北</b>顺时针量;方向角先南北再偏东西。看清起始边和转向,角就不会画反。</p>
+    </div>
+
+    <h2 class="g">③ 测高与测距:可达 / 不可达</h2>
+    <div class="card">
+      <h3>测高:底部可达 vs 不可达</h3>
+      <p style="margin:6px 0"><b>底部可达</b>(能走到山脚/塔底):量出水平距离 d 和仰角 α,则高 h = d·tanα(直角三角形,一次搞定)。</p>
+      <p style="margin:6px 0"><b>底部不可达</b>(隔着河看山):走不到脚下,就<b>沿基线走两步</b>。在 A、B 两点测同一峰顶的仰角 α、β(AB = 基线 a)。先在斜三角形里用<b>正弦定理</b>求出一条斜边,再回直角三角形求高。</p>
+      <div class="mono">两次测量法:先在 △(含基线)里用正弦定理求斜距 → 再用「斜距×sin(仰角)」得高。</div>
+      <h3>测距:两点都不可达</h3>
+      <p style="margin:6px 0">要测河对岸 C、D 两点距离,而你只能在此岸 A、B 走动。测出 AB=a 和四个角(∠DAB、∠CAB、∠DBA、∠CBA),分别在 △ABC、△ABD 里用<b>正弦定理</b>求 AC、AD,最后在 △ACD 里用<b>余弦定理</b>求 CD。</p>
+      <p class="trap">⚠ 不可达题必须<b>造一条能测量的基线</b>(你能站的两点连线)。把已知角先归到含基线的三角形里,再一层层推。别想一步到位。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛰️ 互动 2 — 测山高(不可达):基线 AB + 两次仰角，正弦定理求斜距再求高</div>
+      <svg id="hillSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>基线 AB <input id="hillL" type="range" min="20" max="80" value="50" step="5"></label>
+        <label>近点仰角 β° <input id="hillB" type="range" min="30" max="60" value="45" step="5"></label>
+        <label>远点仰角 α° <input id="hillA" type="range" min="15" max="40" value="30" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>∠ADB=β−α</b><span id="hiADB">0</span></div>
+        <div><b>正弦求 BD</b><span id="hiBD">0</span></div>
+        <div><b>山高 h=BD·sinβ</b><span id="hiH">0</span></div>
+        <div><b>验证 h(远点)</b><span id="hiH2">0</span></div>
+      </div>
+      <p class="small">A(远)、B(近)在同一水平线上测峰顶 D 的仰角 α、β。△ABD 里 ∠ADB=β−α,用正弦定理 BD/sinα=AB/sin(β−α) 求斜距 BD,再由 h=BD·sinβ 得高。两点结果应一致。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌊 互动 3 — 测河宽(两点不可达):此岸基线 + 四个角，正余弦定理算对岸距离</div>
+      <svg id="riverSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>基线 AB <input id="rvAB" type="range" min="30" max="70" value="50" step="5"></label>
+        <label>∠CAB° <input id="rvCA" type="range" min="40" max="80" value="60" step="5"></label>
+        <label>∠CBA° <input id="rvCB" type="range" min="40" max="80" value="70" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>∠ACB</b><span id="rvC">0</span></div>
+        <div><b>正弦求 AC</b><span id="rvAC">0</span></div>
+        <div><b>正弦求 BC</b><span id="rvBC">0</span></div>
+        <div><b>河宽(C到AB)</b><span id="rvW">0</span></div>
+      </div>
+      <p class="small">对岸目标 C,此岸能站 A、B(基线 AB 可量)。测 ∠CAB、∠CBA,∠ACB=180−两角。正弦定理求 AC=AB·sin∠CBA/sin∠ACB,河宽 = AC·sin∠CAB(C 到基线的垂距)。</p>
+    </div>
+
+    <h2 class="o">④ 方位角航行 & 面积公式</h2>
+    <div class="card">
+      <h3>方位角 / 航行问题</h3>
+      <p style="margin:6px 0">船从 A 沿某方向航行到 B,再转向到 C。<b>把每段航程当三角形的边,把方位角转化成三角形内角</b>,再用正余弦定理求「A 到 C 的直线距离」或「返航方向」。</p>
+      <div class="mono">关键:方位角 → 三角形内角。常用「同旁内角、内错角」把北向线上的角搬进三角形。</div>
+      <h3>面积公式</h3>
+      <div class="eq">S = ½·ab·sinC = ½·bc·sinA = ½·ac·sinB</div>
+      <p style="margin:6px 0"><b>两边夹一角</b>就能算面积。已知三边可先余弦定理求角再代入,或用海伦公式。面积题常和「求边长 / 求角」串联出现。</p>
+      <p class="trap">⚠ 航行题里,方位角标在「过每个点的北向线」上,转进三角形前务必用平行线的角关系换算。面积公式里的角必须是<b>那两边的夹角</b>,别代错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚢 互动 5 — 方位角航行:两段航程 + 方位角，余弦定理求 A→C 直线距离</div>
+      <svg id="shipSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>AB 航程 <input id="spAB" type="range" min="20" max="60" value="40" step="5"></label>
+        <label>BC 航程 <input id="spBC" type="range" min="20" max="60" value="35" step="5"></label>
+        <label>∠ABC° <input id="spAng" type="range" min="40" max="140" value="120" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>AB</b><span id="spOAB">0</span></div>
+        <div><b>BC</b><span id="spOBC">0</span></div>
+        <div><b>余弦求 AC</b><span id="spAC">0</span></div>
+        <div><b>△ 面积 ½·AB·BC·sinB</b><span id="spS">0</span></div>
+      </div>
+      <p class="small">A→B→C 两段航程,拐点 B 处的实际转角对应 △ABC 的内角 ∠ABC。用余弦定理 AC²=AB²+BC²−2·AB·BC·cos∠ABC 直接求 A 到 C 直线距离;面积 = ½·AB·BC·sin∠ABC。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 6 — 面积公式 S=½ab·sinC:拖夹角看面积随 sinC 变化（90°最大）</div>
+      <svg id="areaSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>边 a <input id="arA" type="range" min="3" max="9" value="6" step="0.5"></label>
+        <label>边 b <input id="arB" type="range" min="3" max="9" value="5" step="0.5"></label>
+        <label>夹角 C° <input id="arC" type="range" min="10" max="170" value="60" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>sinC</b><span id="arSin">0</span></div>
+        <div><b>面积 S=½ab·sinC</b><span id="arS">0</span></div>
+        <div><b>底 a × 高 b·sinC</b><span id="arH">0</span></div>
+        <div><b>最大面积(C=90°)</b><span id="arMax">0</span></div>
+      </div>
+      <p class="small">面积 = ½·底·高 = ½·a·(b·sinC)。高就是「b·sinC」这条虚线。夹角 C=90° 时 sinC=1,面积最大;C 趋近 0° 或 180° 时三角形被压扁,面积趋近 0。</p>
+    </div>
+
+    <h2 class="v">⑤ 最值应用:sin 的极值 + 均值不等式</h2>
+    <div class="card">
+      <p style="margin:6px 0">最值题把测量和「求最大 / 最小」拼在一起。三条主线:</p>
+      <p style="margin:6px 0"><b>① 三角函数极值:</b> 面积 S=½ab·sinC,ab 固定时 C=90° 面积最大;某距离写成 a·sin(θ+φ) 的形式,则 θ+φ=90° 取最值。</p>
+      <p style="margin:6px 0"><b>② 均值不等式:</b> 由余弦定理 a²=b²+c²−2bc·cosA,当 A 固定、a 固定时,b²+c²−2bc·cosA=a² 定值,配 b+c 或 bc 用 b²+c²≥2bc 求周长 / 面积的最值。</p>
+      <p style="margin:6px 0"><b>③ 建立函数:</b> 设一个角或一条边为自变量 x,把目标(距离 / 面积 / 时间)写成 x 的函数,求导或用图像找极值。</p>
+      <p class="trap">⚠ 用均值不等式必须验证「取等条件」是否落在角的取值范围内!比如要 b=c,但若三角形约束不允许 b=c,最值就在端点取,不在 b=c 处。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 测量高度型</h3>
+      <p><b class="tag">触发信号:</b>「求塔高 / 山高 / 楼高」,给仰角(或俯角)和水平距离;底部可能可达或不可达。</p>
+      <p><b class="tag">标准动作:</b>底可达 → 直角三角形 h=d·tanα;底不可达 → 沿基线取两点测两仰角,先在斜三角形用正弦定理求斜距,再回直角三角形求高。</p>
+      <p><b class="tag">示例(带解):</b>在 A、B(AB=100m,同一水平线)测山顶仰角分别 30°、45°,B 更近。△ABD 中 ∠ADB=45°−30°=15°... 取 h 为山高,tan30°=h/(AB+x)、tan45°=h/x 联立:x=h,h/(100+h)=tan30°=√3/3 → h=50(√3+1)≈136.6m。</p>
+      <p class="trap">陷阱:仰角从水平线量画成从竖直量;两次测量漏掉「近点更陡(仰角大)」;∠ADB 忘了用 β−α。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 测量距离型(两点不可达)</h3>
+      <p><b class="tag">触发信号:</b>「求对岸两点 C、D 距离」「A、B 两地相距」,目标点走不到,只能在此岸测角。</p>
+      <p><b class="tag">标准动作:</b>造基线 AB → 在 △ABC、△ABD 分别用正弦定理求 AC、AD → 在 △ACD 用余弦定理求 CD。</p>
+      <p><b class="tag">示例(带解):</b>基线 AB=√3 km,测得 ∠BAC=75°、∠ABC=45°,则 ∠ACB=60°。正弦定理 BC=AB·sin75°/sin60°... 若求 AC:AC=AB·sin∠ABC/sin∠ACB=√3·sin45°/sin60°=√3·(√2/2)/(√3/2)=√2 km。</p>
+      <p class="trap">陷阱:基线没选在「你能站的两点」;角归错三角形;最后一步该用余弦定理却又套正弦。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 方位角航行型</h3>
+      <p><b class="tag">触发信号:</b>「船 / 飞机沿北偏东x°航行」「求返航方向 / 两船相距」,出现方位角或方向角。</p>
+      <p><b class="tag">标准动作:</b>画出各点北向线 → 用平行线角关系把方位角转成三角形内角 → 余弦定理求边、正弦定理求角(返航方向)。</p>
+      <p><b class="tag">示例(带解):</b>船从 A 沿北偏东60°行 20km 到 B,再沿南偏东60°行到 C。B 处两方向夹角:∠ABC=180°−60°−60°=60°。若 BC=20km,则 AC²=20²+20²−2·20·20·cos60°=400 → AC=20km,△ABC 为等边。</p>
+      <p class="trap">陷阱:方位角没转成内角直接当三角形角用;北偏东 / 南偏东搞混;返航方位角忘了再换算回北向。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 仰角俯角型(竖直面）</h3>
+      <p><b class="tag">触发信号:</b>「从楼顶俯视 / 从地面仰视」「气球上测两点俯角」,视线有上下之分。</p>
+      <p><b class="tag">标准动作:</b>用「俯角=对面仰角」把角搬进三角形 → 在竖直平面内画直角/斜三角形 → 正弦或余弦定理求解。</p>
+      <p><b class="tag">示例(带解):</b>气球高 h,俯视地面两点 M、N 俯角 60°、30°,M、N、正下方共线。则 h/tan60°、h/tan30° 是水平距离,MN=h/tan30°−h/tan60°=h(√3−√3/3)=(2√3/3)h。反解可由 MN 求 h。</p>
+      <p class="trap">陷阱:俯角当仰角画反;两点在正下方同侧还是异侧没判断;直角三角形里 tan 的对边邻边选错。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 面积应用型</h3>
+      <p><b class="tag">触发信号:</b>「求三角形面积」「求四边形 / 地块面积」,给两边一角、或三边、或边角混合。</p>
+      <p><b class="tag">标准动作:</b>两边夹角 → 直接 S=½ab·sinC;三边 → 先余弦求角或用海伦;四边形 → 拆成两个三角形分别算。</p>
+      <p><b class="tag">示例(带解):</b>△ABC 中 a=7,b=5,C=60°... 若给 b=5,c=8,A=60°:S=½·bc·sinA=½·5·8·sin60°=½·40·(√3/2)=10√3。要先确认 A 是 b、c 的夹角。</p>
+      <p class="trap">陷阱:面积公式里的角不是那两边的夹角;三边求面积漏了先求角;四边形没拆分直接套公式。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 最值应用型</h3>
+      <p><b class="tag">触发信号:</b>「面积最大」「周长最短」「距离何时最小」,给一个定值(定角/定边)求另一量极值。</p>
+      <p><b class="tag">标准动作:</b>面积极值 → sinC=1(C=90°);周长/边和极值 → 余弦定理配均值不等式 b²+c²≥2bc;或设自变量建函数求极值。</p>
+      <p><b class="tag">示例(带解):</b>△ABC 中 A=60°,a=2√3(定)。余弦定理 a²=b²+c²−bc=12。S=½bc·sinA=(√3/4)bc。由 12=b²+c²−bc≥2bc−bc=bc,得 bc≤12,故 S≤3√3,当 b=c=2√3 时取最大。</p>
+      <p class="trap">陷阱:均值不等式取等条件(b=c)没验证是否可行;把「b²+c²」当定值(其实是 a² 定,b²+c²−2bc·cosA 才定);面积函数没写对。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 仰角/俯角<b>从水平线量</b>,不是从竖直墙面!俯角=对面的仰角(内错角),搬角时别搬错。</p>
+      <p class="trap">② 方位角<b>从正北顺时针</b>量(0~360°);方向角「南偏东x°」先说南北再偏东西。两者别混,航行题一律先画北向线。</p>
+      <p class="trap">③ <b>选正弦还是余弦:</b> 有「边和它的对角」→ 正弦;有「夹角」或给三边 → 余弦。选错就算不出来。</p>
+      <p class="trap">④ SSA 用正弦定理求角,sin 值可能对应<b>两个角</b>(锐角/钝角),要用「大边对大角」「内角和<180°」筛掉不合理的解。</p>
+      <p class="trap">⑤ 多三角形题:先在「含已知基线」的三角形立足,一层层往目标推,别跳步。角要归对三角形。</p>
+      <p class="trap">⑥ 面积 S=½ab·sinC 里的 C 必须是 <b>a、b 两边的夹角</b>,代错角面积就错。</p>
+      <p class="trap">⑦ 不可达测量必须<b>造基线</b>(能实际站立/测量的两点连线),没有基线就无从下手。</p>
+      <p class="trap">⑧ 最值题用均值不等式,<b>取等条件</b>必须落在几何约束允许的范围内,否则最值在端点。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切测量题都是「造三角形 + 翻译」:</b> 现实里量不到的量,先想「它是哪个三角形的边或角」,再想「我能实测哪些边和角把它围出来」。画图的本质是<b>把语言里的方位、仰俯角翻译成三角形内部的确定量</b>。图对了,题就一半了。</p>
+      <p style="margin:8px 0"><b>② 「先余弦定边、再正弦定角」是通用组合拳:</b> SAS 类先余弦求出对边,SSA/AAS 类用正弦补角。养成「已知什么形状 → 直接调对应定理」的条件反射,不要每题现推。</p>
+      <p style="margin:8px 0"><b>③ 两次测量法背后是「消未知量」:</b> 底不可达测高,靠两个方程(两个仰角关系)消掉「水平距离」这个未知量,只留高 h。凡是「一个量测不到」,就<b>再测一次、多列一个方程</b>消掉它——这是不可达问题的统一思想。</p>
+      <p style="margin:8px 0"><b>④ 最值题分三派,先辨型:</b> 定角求面积→sinC 极值;定边求边和/周长→余弦定理+均值不等式;复杂几何→设角为 x 建三角函数模型。看到「定值+求极值」先归派,再套对应工具,别一上来就求导。</p>
+      <p style="margin:8px 0"><b>⑤ 方位角的角关系用「平行线」秒杀:</b> 各点的北向线互相平行,同旁内角、内错角关系一用,方位角瞬间变成三角形内角。把「北偏东60° + 南偏东60°」这类信息,直接读成拐点处三角形的内角,航行题就不再绕。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 配套:正弦定理与余弦定理基础篇 · 本页讲「实际应用」</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const D2R=Math.PI/180;
+
+/* ===== 互动1:两定理选择器(SAS 先余弦后正弦) ===== */
+(function(){
+  const svg=document.getElementById('lawSvg');
+  const Bs=document.getElementById('lawB'),Cs=document.getElementById('lawC'),As=document.getElementById('lawA');
+  const oA=document.getElementById('lawA2'),oB=document.getElementById('lawB2'),oC=document.getElementById('lawC2'),oS=document.getElementById('lawS');
+  let b=6,c=5,A=60;
+  function sync(){b=+Bs.value;c=+Cs.value;A=+As.value;draw();}
+  Bs.oninput=Cs.oninput=As.oninput=sync;
+  function draw(){
+    clr(svg);
+    const Ar=A*D2R;
+    const a=Math.sqrt(b*b+c*c-2*b*c*Math.cos(Ar));
+    const sinB=b*Math.sin(Ar)/a;
+    const B=Math.asin(Math.min(1,sinB))/D2R;
+    const C=180-A-B;
+    const S=0.5*b*c*Math.sin(Ar);
+    oA.textContent=a.toFixed(2);oB.textContent=B.toFixed(1)+'°';oC.textContent=C.toFixed(1)+'°';oS.textContent=S.toFixed(2);
+    // draw triangle: put A at left, side c along top-ish, side b downward
+    const sc=34, ox=180, oy=90;
+    // A vertex
+    const Ax=ox, Ay=oy;
+    // side c to point B_ (horizontal)
+    const Bx=Ax+c*sc, By=Ay;
+    // side b to point C_ at angle A below horizontal
+    const Cx=Ax+b*sc*Math.cos(Ar), Cy=Ay+b*sc*Math.sin(Ar);
+    el(svg,'polygon',{points:Ax+','+Ay+' '+Bx+','+By+' '+Cx+','+Cy,fill:'rgba(20,80,200,0.12)',stroke:INK,'stroke-width':3});
+    // labels vertices
+    el(svg,'text',{x:Ax-16,y:Ay-6,'font-size':14,'font-weight':900,fill:RED}).textContent='A';
+    el(svg,'text',{x:Bx+6,y:By-6,'font-size':14,'font-weight':900,fill:BLUE}).textContent='B';
+    el(svg,'text',{x:Cx+6,y:Cy+16,'font-size':14,'font-weight':900,fill:GREEN}).textContent='C';
+    // side labels
+    el(svg,'text',{x:(Ax+Bx)/2,y:Ay-8,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='c='+c;
+    el(svg,'text',{x:(Ax+Cx)/2-14,y:(Ay+Cy)/2+6,'font-size':13,'font-weight':800,fill:INK}).textContent='b='+b;
+    el(svg,'text',{x:(Bx+Cx)/2+6,y:(By+Cy)/2,'font-size':13,'font-weight':800,fill:RED}).textContent='a=?';
+    // angle A arc
+    el(svg,'path',{d:'M '+(Ax+26)+' '+Ay+' A 26 26 0 0 1 '+(Ax+26*Math.cos(Ar))+' '+(Ay+26*Math.sin(Ar)),fill:'none',stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:Ax+34,y:Ay+20,'font-size':12,'font-weight':800,fill:RED}).textContent='A='+A+'°';
+    // note text
+    el(svg,'text',{x:350,y:250,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='SAS：先用余弦定理求 a = √(b²+c²−2bc·cosA)';
+    el(svg,'text',{x:350,y:272,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='再用正弦定理 sinB = b·sinA/a 求角 B，C 由内角和补齐';
+  }
+  sync();
+})();
+
+/* ===== 互动4:仰角/俯角/方位角定义 ===== */
+(function(){
+  const svg=document.getElementById('angSvg');const note=document.getElementById('angNote');
+  let mode=0,deg=35;
+  document.querySelectorAll('.angmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.angmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.a;draw();
+  });
+  document.getElementById('angDeg').oninput=function(){deg=+this.value;draw();};
+  function draw(){
+    clr(svg);
+    const r=deg*D2R;
+    if(mode===0||mode===1){
+      // observer at O, horizontal dashed line, sight line up(仰) or down(俯)
+      const Ox=150,Oy=150;
+      // person
+      el(svg,'circle',{cx:Ox,cy:Oy-16,r:8,fill:INK});
+      el(svg,'line',{x1:Ox,y1:Oy-8,x2:Ox,y2:Oy+14,stroke:INK,'stroke-width':3});
+      // horizontal dashed
+      el(svg,'line',{x1:Ox,y1:Oy,x2:Ox+380,y2:Oy,stroke:INK,'stroke-width':2,'stroke-dasharray':'6 5'});
+      el(svg,'text',{x:Ox+300,y:Oy-8,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='水平线';
+      const sign=mode===0?-1:1; // 仰=up(neg y)
+      const L=340;
+      const Tx=Ox+L*Math.cos(r), Ty=Oy+sign*L*Math.sin(r);
+      el(svg,'line',{x1:Ox,y1:Oy,x2:Tx,y2:Ty,stroke:mode===0?RED:VIO,'stroke-width':4});
+      // arrow head
+      el(svg,'circle',{cx:Tx,cy:Ty,r:6,fill:mode===0?RED:VIO});
+      el(svg,'text',{x:Tx-4,y:Ty+(mode===0?-10:22),'font-size':13,'font-weight':900,fill:mode===0?RED:VIO}).textContent='目标';
+      // angle arc
+      el(svg,'path',{d:'M '+(Ox+50)+' '+Oy+' A 50 50 0 0 '+(mode===0?0:1)+' '+(Ox+50*Math.cos(r))+' '+(Oy+sign*50*Math.sin(r)),fill:'none',stroke:mode===0?RED:VIO,'stroke-width':3});
+      el(svg,'text',{x:Ox+62,y:Oy+sign*22,'font-size':13,'font-weight':900,fill:mode===0?RED:VIO}).textContent=deg+'°';
+      note.innerHTML=mode===0?'<b>仰角</b>：视线在水平线<b>上方</b>，往上看，从水平线量起 = '+deg+'°。':'<b>俯角</b>：视线在水平线<b>下方</b>，往下看，从水平线量起 = '+deg+'°。俯角=对面点看你的仰角。';
+      note.style.borderColor=mode===0?RED:VIO;
+    } else if(mode===2){
+      // compass: north up, clockwise
+      const Cx=350,Cy=150,R=100;
+      el(svg,'circle',{cx:Cx,cy:Cy,r:R,fill:'none',stroke:INK,'stroke-width':2});
+      // N E S W lines
+      el(svg,'line',{x1:Cx,y1:Cy,x2:Cx,y2:Cy-R,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:Cx,y1:Cy,x2:Cx,y2:Cy+R,stroke:INK,'stroke-width':1.5});
+      el(svg,'line',{x1:Cx,y1:Cy,x2:Cx+R,y2:Cy,stroke:INK,'stroke-width':1.5});
+      el(svg,'line',{x1:Cx,y1:Cy,x2:Cx-R,y2:Cy,stroke:INK,'stroke-width':1.5});
+      el(svg,'text',{x:Cx,y:Cy-R-8,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='北 N';
+      el(svg,'text',{x:Cx,y:Cy+R+18,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='南 S';
+      el(svg,'text',{x:Cx+R+14,y:Cy+4,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='东 E';
+      el(svg,'text',{x:Cx-R-14,y:Cy+4,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='西 W';
+      // target direction: from north clockwise by deg (use bigger range visually)
+      const th=deg; // treat as azimuth in degrees
+      const rad=th*D2R;
+      const Tx=Cx+R*Math.sin(rad), Ty=Cy-R*Math.cos(rad);
+      el(svg,'line',{x1:Cx,y1:Cy,x2:Tx,y2:Ty,stroke:BLUE,'stroke-width':4});
+      el(svg,'circle',{cx:Tx,cy:Ty,r:6,fill:BLUE});
+      // arc from north clockwise
+      el(svg,'path',{d:'M '+Cx+' '+(Cy-40)+' A 40 40 0 0 1 '+(Cx+40*Math.sin(rad))+' '+(Cy-40*Math.cos(rad)),fill:'none',stroke:GREEN,'stroke-width':3});
+      el(svg,'text',{x:Cx+18,y:Cy-52,'font-size':12,'font-weight':900,fill:GREEN}).textContent=deg+'°';
+      note.innerHTML='<b>方位角</b>：从<b>正北</b>方向起，<b>顺时针</b>转到目标方向 = '+deg+'°（范围 0°~360°）。';
+      note.style.borderColor=BLUE;
+    } else {
+      // 方向角 南偏东 deg
+      const Cx=350,Cy=150,R=100;
+      el(svg,'line',{x1:Cx,y1:Cy-R,x2:Cx,y2:Cy+R,stroke:INK,'stroke-width':2});
+      el(svg,'line',{x1:Cx-R,y1:Cy,x2:Cx+R,y2:Cy,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:Cx,y:Cy-R-8,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='北 N';
+      el(svg,'text',{x:Cx,y:Cy+R+18,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='南 S';
+      el(svg,'text',{x:Cx+R+14,y:Cy+4,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='东 E';
+      el(svg,'text',{x:Cx-R-14,y:Cy+4,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='西 W';
+      // from south (down) toward east by deg
+      const rad=deg*D2R;
+      const Tx=Cx+R*Math.sin(rad), Ty=Cy+R*Math.cos(rad);
+      el(svg,'line',{x1:Cx,y1:Cy,x2:Tx,y2:Ty,stroke:ORANGE,'stroke-width':4});
+      el(svg,'circle',{cx:Tx,cy:Ty,r:6,fill:ORANGE});
+      el(svg,'path',{d:'M '+Cx+' '+(Cy+45)+' A 45 45 0 0 0 '+(Cx+45*Math.sin(rad))+' '+(Cy+45*Math.cos(rad)),fill:'none',stroke:GREEN,'stroke-width':3});
+      el(svg,'text',{x:Cx+16,y:Cy+66,'font-size':12,'font-weight':900,fill:GREEN}).textContent=deg+'°';
+      note.innerHTML='<b>方向角</b>：先说南北基准，再偏东西 —— 例「南偏东'+deg+'°」= 从正南方向向东偏 '+deg+'°。';
+      note.style.borderColor=ORANGE;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动2:测山高(不可达,两次测量) ===== */
+(function(){
+  const svg=document.getElementById('hillSvg');
+  const Ls=document.getElementById('hillL'),Bs=document.getElementById('hillB'),As=document.getElementById('hillA');
+  const oADB=document.getElementById('hiADB'),oBD=document.getElementById('hiBD'),oH=document.getElementById('hiH'),oH2=document.getElementById('hiH2');
+  let L=50,beta=45,alpha=30;
+  function sync(){L=+Ls.value;beta=+Bs.value;alpha=+As.value;if(alpha>=beta){alpha=beta-5;As.value=alpha;}draw();}
+  Ls.oninput=Bs.oninput=As.oninput=sync;
+  function draw(){
+    clr(svg);
+    const ar=alpha*D2R, br=beta*D2R;
+    const ADB=beta-alpha; // 内角
+    // BD by sine rule in triangle ABD: BD/sin(alpha)=AB/sin(ADB)
+    const BD=L*Math.sin(ar)/Math.sin(ADB*D2R);
+    const h=BD*Math.sin(br);
+    const AD=L*Math.sin(Math.PI-br)/Math.sin(ADB*D2R); // for verify
+    const h2=AD*Math.sin(ar);
+    oADB.textContent=ADB+'°';oBD.textContent=BD.toFixed(1);oH.textContent=h.toFixed(1);oH2.textContent=h2.toFixed(1);
+    // geometry: ground line y=Oy, A left, B right, foot F further right, peak D above F
+    const sc=3.4, gy=250, Ax=90;
+    const Bx=Ax+L*sc;
+    // horizontal distance from B to foot: h/tan(beta)
+    const dB=h/Math.tan(br);
+    const Fx=Bx+dB*sc;
+    const Dx=Fx, Dy=gy-h*sc;
+    // ground
+    el(svg,'line',{x1:40,y1:gy,x2:660,y2:gy,stroke:INK,'stroke-width':3});
+    // mountain triangle
+    el(svg,'polygon',{points:Fx+','+gy+' '+Dx+','+Dy+' '+(Fx-40)+','+gy,fill:'rgba(30,158,134,0.18)',stroke:GREEN,'stroke-width':2});
+    // sight lines
+    el(svg,'line',{x1:Ax,y1:gy,x2:Dx,y2:Dy,stroke:RED,'stroke-width':2.5});
+    el(svg,'line',{x1:Bx,y1:gy,x2:Dx,y2:Dy,stroke:BLUE,'stroke-width':2.5});
+    // height
+    el(svg,'line',{x1:Fx,y1:gy,x2:Dx,y2:Dy,stroke:INK,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // points
+    el(svg,'circle',{cx:Ax,cy:gy,r:5,fill:RED});el(svg,'text',{x:Ax-6,y:gy+20,'font-size':13,'font-weight':900,fill:RED}).textContent='A';
+    el(svg,'circle',{cx:Bx,cy:gy,r:5,fill:BLUE});el(svg,'text',{x:Bx-6,y:gy+20,'font-size':13,'font-weight':900,fill:BLUE}).textContent='B';
+    el(svg,'circle',{cx:Dx,cy:Dy,r:6,fill:GREEN});el(svg,'text',{x:Dx+8,y:Dy,'font-size':13,'font-weight':900,fill:GREEN}).textContent='D 峰顶';
+    // labels
+    el(svg,'text',{x:(Ax+Bx)/2,y:gy+20,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='基线 AB='+L;
+    el(svg,'text',{x:Ax+40,y:gy-8,'font-size':11.5,'font-weight':800,fill:RED}).textContent='α='+alpha+'°';
+    el(svg,'text',{x:Bx+14,y:gy-8,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='β='+beta+'°';
+    el(svg,'text',{x:Dx+8,y:(gy+Dy)/2,'font-size':12,'font-weight':900,fill:INK}).textContent='h='+h.toFixed(1);
+    el(svg,'text',{x:350,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='△ABD 中 ∠ADB=β−α，正弦定理 BD/sinα = AB/sin(β−α)';
+  }
+  sync();
+})();
+
+/* ===== 互动3:测河宽(两点不可达) ===== */
+(function(){
+  const svg=document.getElementById('riverSvg');
+  const ABs=document.getElementById('rvAB'),CAs=document.getElementById('rvCA'),CBs=document.getElementById('rvCB');
+  const oC=document.getElementById('rvC'),oAC=document.getElementById('rvAC'),oBC=document.getElementById('rvBC'),oW=document.getElementById('rvW');
+  let AB=50,CA=60,CB=70;
+  function sync(){AB=+ABs.value;CA=+CAs.value;CB=+CBs.value;if(CA+CB>=170){CB=170-CA;CBs.value=CB;}draw();}
+  ABs.oninput=CAs.oninput=CBs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const angC=180-CA-CB;
+    const cr=angC*D2R;
+    const AC=AB*Math.sin(CB*D2R)/Math.sin(cr);
+    const BC=AB*Math.sin(CA*D2R)/Math.sin(cr);
+    const width=AC*Math.sin(CA*D2R);
+    oC.textContent=angC+'°';oAC.textContent=AC.toFixed(1);oBC.textContent=BC.toFixed(1);oW.textContent=width.toFixed(1);
+    // draw: A left bottom, B right bottom (this bank), C above (far bank)
+    const sc=4.2, gy=250, Ax=140;
+    const Bx=Ax+AB*sc;
+    // C position: from A at angle CA above AB
+    const car=CA*D2R;
+    const Cx=Ax+AC*sc*Math.cos(car), Cy=gy-AC*sc*Math.sin(car);
+    // water band
+    el(svg,'rect',{x:40,y:60,width:620,height:gy-100,fill:'rgba(20,80,200,0.10)',stroke:'none'});
+    // banks
+    el(svg,'line',{x1:40,y1:gy,x2:660,y2:gy,stroke:BROWN,'stroke-width':4});
+    el(svg,'line',{x1:40,y1:90,x2:660,y2:90,stroke:BROWN,'stroke-width':4});
+    el(svg,'text',{x:600,y:gy+18,'font-size':12,'font-weight':800,fill:BROWN}).textContent='此岸';
+    el(svg,'text',{x:600,y:82,'font-size':12,'font-weight':800,fill:BROWN}).textContent='对岸';
+    // triangle
+    el(svg,'polygon',{points:Ax+','+gy+' '+Bx+','+gy+' '+Cx+','+Cy,fill:'rgba(224,56,42,0.10)',stroke:INK,'stroke-width':3});
+    // width perpendicular
+    el(svg,'line',{x1:Cx,y1:Cy,x2:Cx,y2:gy,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:Cx+6,y:(Cy+gy)/2,'font-size':12,'font-weight':900,fill:GREEN}).textContent='河宽='+width.toFixed(1);
+    // pts
+    el(svg,'circle',{cx:Ax,cy:gy,r:5,fill:RED});el(svg,'text',{x:Ax-6,y:gy+18,'font-size':13,'font-weight':900,fill:RED}).textContent='A';
+    el(svg,'circle',{cx:Bx,cy:gy,r:5,fill:BLUE});el(svg,'text',{x:Bx+4,y:gy+18,'font-size':13,'font-weight':900,fill:BLUE}).textContent='B';
+    el(svg,'circle',{cx:Cx,cy:Cy,r:6,fill:GREEN});el(svg,'text',{x:Cx-4,y:Cy-8,'font-size':13,'font-weight':900,fill:GREEN}).textContent='C 目标';
+    el(svg,'text',{x:(Ax+Bx)/2,y:gy+18,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='基线 AB='+AB;
+    el(svg,'text',{x:Ax+30,y:gy-6,'font-size':11.5,'font-weight':800,fill:RED}).textContent='∠CAB='+CA+'°';
+    el(svg,'text',{x:Bx-70,y:gy-6,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='∠CBA='+CB+'°';
+    el(svg,'text',{x:350,y:40,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='∠ACB=180−'+CA+'−'+CB+'='+angC+'°，正弦定理 AC=AB·sin∠CBA/sin∠ACB';
+  }
+  sync();
+})();
+
+/* ===== 互动5:方位角航行(余弦定理) ===== */
+(function(){
+  const svg=document.getElementById('shipSvg');
+  const ABs=document.getElementById('spAB'),BCs=document.getElementById('spBC'),Angs=document.getElementById('spAng');
+  const oAB=document.getElementById('spOAB'),oBC=document.getElementById('spOBC'),oAC=document.getElementById('spAC'),oS=document.getElementById('spS');
+  let AB=40,BC=35,ang=120;
+  function sync(){AB=+ABs.value;BC=+BCs.value;ang=+Angs.value;draw();}
+  ABs.oninput=BCs.oninput=Angs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=ang*D2R;
+    const AC=Math.sqrt(AB*AB+BC*BC-2*AB*BC*Math.cos(r));
+    const S=0.5*AB*BC*Math.sin(r);
+    oAB.textContent=AB;oBC.textContent=BC;oAC.textContent=AC.toFixed(1);oS.textContent=S.toFixed(1);
+    // A bottom-left, B up-right, C from B turned by (180-ang)
+    const sc=3.2, Ax=140, Ay=260;
+    const dirAB=-40*D2R; // heading up-right
+    const Bx=Ax+AB*sc*Math.cos(dirAB), By=Ay+AB*sc*Math.sin(dirAB);
+    // interior angle ABC = ang; direction of BC relative to BA
+    const baAng=Math.atan2(Ay-By,Ax-Bx); // dir from B to A
+    const dirBC=baAng - r; // rotate by interior angle
+    const Cx=Bx+BC*sc*Math.cos(dirBC), Cy=By+BC*sc*Math.sin(dirBC);
+    // triangle
+    el(svg,'polygon',{points:Ax+','+Ay+' '+Bx+','+By+' '+Cx+','+Cy,fill:'rgba(232,106,23,0.12)',stroke:INK,'stroke-width':3});
+    // north lines at each point (dashed up)
+    [[Ax,Ay],[Bx,By]].forEach(p=>{el(svg,'line',{x1:p[0],y1:p[1],x2:p[0],y2:p[1]-46,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'4 4'});el(svg,'text',{x:p[0]-4,y:p[1]-50,'font-size':10.5,'font-weight':800,fill:'#6b5d3a'}).textContent='北';});
+    // segments as arrows
+    el(svg,'circle',{cx:Ax,cy:Ay,r:6,fill:RED});el(svg,'text',{x:Ax-16,y:Ay+6,'font-size':14,'font-weight':900,fill:RED}).textContent='A';
+    el(svg,'circle',{cx:Bx,cy:By,r:6,fill:BLUE});el(svg,'text',{x:Bx+8,y:By,'font-size':14,'font-weight':900,fill:BLUE}).textContent='B';
+    el(svg,'circle',{cx:Cx,cy:Cy,r:6,fill:GREEN});el(svg,'text',{x:Cx+8,y:Cy,'font-size':14,'font-weight':900,fill:GREEN}).textContent='C';
+    // AC dashed (求)
+    el(svg,'line',{x1:Ax,y1:Ay,x2:Cx,y2:Cy,stroke:RED,'stroke-width':2,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:(Ax+Bx)/2-6,y:(Ay+By)/2-6,'font-size':12,'font-weight':800,fill:BLUE}).textContent='AB='+AB;
+    el(svg,'text',{x:(Bx+Cx)/2+4,y:(By+Cy)/2,'font-size':12,'font-weight':800,fill:GREEN}).textContent='BC='+BC;
+    el(svg,'text',{x:(Ax+Cx)/2-30,y:(Ay+Cy)/2+14,'font-size':12.5,'font-weight':900,fill:RED}).textContent='AC='+AC.toFixed(1)+'?';
+    el(svg,'text',{x:Bx-6,y:By+18,'font-size':11.5,'font-weight':800,fill:INK}).textContent='∠ABC='+ang+'°';
+    el(svg,'text',{x:350,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='余弦定理：AC² = AB² + BC² − 2·AB·BC·cos∠ABC';
+  }
+  sync();
+})();
+
+/* ===== 互动6:面积公式 S=½ab·sinC ===== */
+(function(){
+  const svg=document.getElementById('areaSvg');
+  const As=document.getElementById('arA'),Bs=document.getElementById('arB'),Cs=document.getElementById('arC');
+  const oSin=document.getElementById('arSin'),oS=document.getElementById('arS'),oH=document.getElementById('arH'),oMax=document.getElementById('arMax');
+  let a=6,b=5,C=60;
+  function sync(){a=+As.value;b=+Bs.value;C=+Cs.value;draw();}
+  As.oninput=Bs.oninput=Cs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=C*D2R;
+    const sinC=Math.sin(r);
+    const S=0.5*a*b*sinC;
+    const h=b*sinC;
+    const maxS=0.5*a*b;
+    oSin.textContent=sinC.toFixed(3);oS.textContent=S.toFixed(2);oH.textContent=(a*h).toFixed(2)+'(2S)';oMax.textContent=maxS.toFixed(2);
+    // vertex C at left, side a horizontal to A, side b at angle C to B
+    const sc=42, Cx=150, Cy=230;
+    const Ax=Cx+a*sc, Ay=Cy;
+    const Bx=Cx+b*sc*Math.cos(r), By=Cy-b*sc*Math.sin(r);
+    // triangle
+    el(svg,'polygon',{points:Cx+','+Cy+' '+Ax+','+Ay+' '+Bx+','+By,fill:'rgba(243,192,14,0.22)',stroke:INK,'stroke-width':3});
+    // height from B to base CA (vertical since base horizontal)
+    const Hx=Bx, Hy=Cy;
+    el(svg,'line',{x1:Bx,y1:By,x2:Hx,y2:Hy,stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // right angle mark
+    if(Hx>Cx&&Hx<Ax){el(svg,'rect',{x:Hx-8,y:Hy-8,width:8,height:8,fill:'none',stroke:GREEN,'stroke-width':1.5});}
+    // labels
+    el(svg,'circle',{cx:Cx,cy:Cy,r:5,fill:RED});el(svg,'text',{x:Cx-16,y:Cy+16,'font-size':14,'font-weight':900,fill:RED}).textContent='C';
+    el(svg,'circle',{cx:Ax,cy:Ay,r:5,fill:BLUE});el(svg,'text',{x:Ax+6,y:Ay+16,'font-size':14,'font-weight':900,fill:BLUE}).textContent='A';
+    el(svg,'circle',{cx:Bx,cy:By,r:5,fill:GREEN});el(svg,'text',{x:Bx,y:By-8,'font-size':14,'font-weight':900,fill:GREEN}).textContent='B';
+    el(svg,'text',{x:(Cx+Ax)/2,y:Cy+18,'font-size':12.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='底 a='+a;
+    el(svg,'text',{x:(Cx+Bx)/2-16,y:(Cy+By)/2,'font-size':12.5,'font-weight':800,fill:INK}).textContent='b='+b;
+    el(svg,'text',{x:Bx+6,y:(By+Hy)/2,'font-size':12,'font-weight':900,fill:GREEN}).textContent='高=b·sinC='+h.toFixed(2);
+    el(svg,'text',{x:Cx+30,y:Cy-8,'font-size':12,'font-weight':800,fill:RED}).textContent='C='+C+'°';
+    el(svg,'text',{x:350,y:36,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='S = ½·a·b·sinC = ½·底·高 = '+S.toFixed(2);
+    el(svg,'text',{x:350,y:58,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='C=90° 时 sinC=1，面积最大 = '+maxS.toFixed(2);
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 正弦定理和余弦定理各写出来？分别在什么条件下用？",a:"正弦定理 a/sinA=b/sinB=c/sinC=2R，用于「两角一边(AAS/ASA)」或「两边一对角(SSA)」。余弦定理 a²=b²+c²−2bc·cosA，用于「两边夹角(SAS)」或「三边(SSS)」。口诀：有边角对角用正弦，有夹角或三边用余弦。"},
+ {q:"2. 仰角、俯角、方位角、方向角分别怎么定义？",a:"仰角：视线在水平线上方、与水平线夹角；俯角：视线在水平线下方、与水平线夹角（都从水平线量）。方位角：从正北顺时针转到目标方向(0~360°)。方向角：如「南偏东30°」，先南北再偏东西。"},
+ {q:"3. 测山高时底部不可达，怎么办？",a:"沿基线取两点 A、B，测同一峰顶的两个仰角 α、β。先在含基线的斜三角形里用正弦定理求出一条斜距，再回直角三角形用 h=斜距·sin(仰角) 求高。本质是「多测一次、多列一个方程」消掉测不到的水平距离。"},
+ {q:"4. 在 A、B(AB=100m)测山顶仰角 30°、45°(B更近)，山高多少？",a:"设山高 h，水平投影到 B 脚下 x：tan45°=h/x→x=h；tan30°=h/(100+x)=h/(100+h)=√3/3。解得 h=50(√3+1)≈136.6m。"},
+ {q:"5. 测河对岸 C、D 两点距离，两点都不可达，思路？",a:"在此岸造基线 AB，测各角，在 △ABC、△ABD 分别用正弦定理求 AC、AD，最后在 △ACD 用余弦定理求 CD=√(AC²+AD²−2·AC·AD·cos∠CAD)。"},
+ {q:"6. 基线 AB=√3，∠BAC=75°、∠ABC=45°，求 AC。",a:"∠ACB=180−75−45=60°。正弦定理 AC/sin∠ABC=AB/sin∠ACB，AC=√3·sin45°/sin60°=√3·(√2/2)/(√3/2)=√2 km。"},
+ {q:"7. 船从 A 沿北偏东60°行 20km 到 B，再沿南偏东60°行 20km 到 C，AC多长？",a:"B 处两方向：北偏东60°的反向是南偏西60°，与南偏东60°夹角=180−60−60=60°，即 ∠ABC=60°。余弦定理 AC²=20²+20²−2·20·20·cos60°=400，AC=20km（等边三角形）。"},
+ {q:"8. 气球高 h，俯视地面两点 M、N（同一侧共线）俯角 60°、30°，求 MN。",a:"俯角=对应仰角，水平距离分别 h/tan60°、h/tan30°。MN=h/tan30°−h/tan60°=h·√3−h·(√3/3)=(2√3/3)h。"},
+ {q:"9. 三角形面积公式 S=½ab·sinC 里的 C 是哪个角？何时面积最大？",a:"C 是 a、b 两条边的夹角（必须是这两边的夹角）。当 C=90° 时 sinC=1，面积最大 =½ab。C 趋近 0°或180°时面积趋近0。"},
+ {q:"10. △ABC 中 b=5，c=8，A=60°，求面积。",a:"A 是 b、c 的夹角，S=½·bc·sinA=½·5·8·sin60°=20·(√3/2)=10√3。"},
+ {q:"11. △ABC 中 A=60°，a=2√3，求面积最大值。",a:"余弦定理 a²=b²+c²−2bc·cosA=b²+c²−bc=12。由 b²+c²≥2bc 得 12=b²+c²−bc≥bc，即 bc≤12。S=½bc·sinA=(√3/4)bc≤(√3/4)·12=3√3，当 b=c=2√3 取到。"},
+ {q:"12. 用正弦定理由 SSA 求角，得到 sinB 后为什么还要判断？",a:"因为 0<B<180° 内 sinB 值可能对应锐角和钝角两个解。要用「大边对大角」「三角形内角和<180°」筛选：若已知角对的边更长则对角更大，据此取舍，避免多解或漏解。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

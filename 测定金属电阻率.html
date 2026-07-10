@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测定金属的电阻率 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>测定金属的电阻率</h1>
+    <p class="lead">这是电学实验的「三合一」压轴题:要算电阻率 ρ,你得同时测<b>电阻 R</b>(伏安法)、<b>横截面积 S</b>(螺旋测微器量直径)、<b>长度 L</b>(刻度尺),再代进 ρ=RS/L。难点全在「细节」:电路怎么接才准(内接外接、分压限流)、螺旋测微器怎么读、数据怎么处理、误差往哪偏。把这几关一关关过掉,这道题就是稳稳的送分题。</p>
+
+    <div class="say">🗣️ <b>测电阻率(人话版):</b> 电阻率 ρ 是「材料本身」的属性,公式 <b>ρ=RS/L</b>。要算它,得测<b>三样东西</b>:①金属丝的<b>电阻 R</b>——用伏安法,测出 U 和 I,R=U/I;②<b>横截面积 S</b>——用螺旋测微器量出直径 d,再 <b>S=πd²/4</b>(用直径的一半才是半径,别搞混);③<b>长度 L</b>——用刻度尺量接入电路那段的长度。核心就两件事:<b>把电路接对</b>(选内接/外接、选分压/限流),<b>把测量做准</b>(直径多测几次求平均)。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>ρ = R·S / L = R·πd² / (4L)</b>。其中 R 用伏安法测(R=U/I),S=πd²/4 由螺旋测微器测的直径 d 算,L 用刻度尺量。测出 R、d、L 三个量,代进去就是电阻率。<b>单位:ρ 是 Ω·m,d 和 L 都要换成 m。</b></div>
+
+    <h2>① 核心原理:ρ=RS/L 与三个待测量</h2>
+    <div class="card">
+      <div class="eq">ρ = R·S / L = R·πd² / (4L)　(单位 Ω·m)</div>
+      <p style="margin:8px 0">电阻率 ρ 只跟<b>材料</b>和温度有关,跟粗细长短无关。同一根金属丝,电阻 R=ρL/S(越长越细电阻越大),反过来测出 R、S、L 就能求 ρ。</p>
+      <table>
+        <tr><th>待测量</th><th>用什么测</th><th>怎么算</th></tr>
+        <tr><td><b>电阻 R</b></td><td>伏安法(电压表+电流表)</td><td>R = U / I</td></tr>
+        <tr><td><b>横截面积 S</b></td><td>螺旋测微器量直径 d</td><td>S = πd²/4(d 是直径!)</td></tr>
+        <tr><td><b>长度 L</b></td><td>刻度尺(毫米刻度)</td><td>直接读接入电路那段</td></tr>
+      </table>
+      <p class="trap">⚠ S=πd²/4,里面是<b>直径 d</b>不是半径!若写成 πd²(漏了 /4)或用半径当直径,面积就错 4 倍,ρ 直接错。d、L 都要换算成米(mm→m 除以1000)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — ρ=Rπd²/4L 各量关系:拖 R、d、L 看电阻率怎么变(条形对比)</div>
+      <svg id="rhoSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>电阻 R (Ω) <input id="rhoR" type="range" min="2" max="20" value="8" step="1"></label>
+        <label>直径 d (mm) <input id="rhoD" type="range" min="0.2" max="1.2" value="0.5" step="0.05"></label>
+        <label>长度 L (m) <input id="rhoL" type="range" min="0.5" max="2" value="1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>S=πd²/4 (mm²)</b><span id="rhoS">0</span></div>
+        <div><b>ρ=RS/L (Ω·m)</b><span id="rhoV">0</span></div>
+        <div><b>d 翻倍 → S</b><span id="rhoNote1">×4</span></div>
+        <div><b>用半径的错值</b><span id="rhoWrong">0</span></div>
+      </div>
+      <p class="small">ρ 与 R、S 成正比,与 L 成反比。<b>注意 S 随 d 的平方</b>——直径量准最关键。右下角故意算了「误用半径」的错值给你对比,警惕别掉进去。</p>
+    </div>
+
+    <h2 class="b">② 螺旋测微器:读金属丝直径</h2>
+    <div class="card">
+      <div class="eq">读数 = 固定刻度 + 可动刻度 × 0.01 mm + 估读</div>
+      <p style="margin:8px 0"><b>三步读数:</b> ①看<b>固定刻度</b>(主尺,精确到 0.5mm,注意有没有露出下半刻度线);②看<b>可动刻度</b>(旋钮上的圆周刻度,共 50 格,每格 0.01mm),对准中线的格数 ×0.01;③<b>估读</b>一位(读到 0.001mm)。三者相加就是直径。</p>
+      <div class="mono">例:固定刻度 3.5mm，可动刻度 20.0 格 → 3.5 + 20.0×0.01 = 3.700mm</div>
+      <p style="margin:8px 0"><b>为什么测直径要多次?</b> 金属丝可能不圆、不均匀。要在<b>不同位置、不同方向各测一次(至少3次)取平均</b>,减小偶然误差。</p>
+      <p class="trap">⚠ 别漏看固定刻度的<b>半毫米线</b>(0.5mm 那条),漏了直径少 0.5mm;可动刻度每格 0.01mm 不是 0.1;必须<b>估读</b>到千分位(最后一位是估计的)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔩 互动 2 — 螺旋测微器读数:转动旋钮,实时读出直径(固定+可动×0.01+估读)</div>
+      <svg id="micSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="micGo">▶ 慢慢旋进</button><button id="micReset">↺ 归零</button>
+        <label>转动 <input id="micTurn" type="range" min="0" max="500" value="185" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>固定刻度 (mm)</b><span id="micFix">0</span></div>
+        <div><b>可动刻度 (格)</b><span id="micRot">0</span></div>
+        <div><b>×0.01 部分 (mm)</b><span id="micThim">0</span></div>
+        <div><b>直径读数 (mm)</b><span id="micRead">0</span></div>
+      </div>
+      <p class="small">上排是固定刻度(主尺),下面圆筒是可动刻度(50格,每格0.01mm)。读数=固定刻度+可动刻度×0.01,最后一位是<b>估读</b>。拖动或点「旋进」观察读数怎么加起来。</p>
+    </div>
+
+    <h2 class="g">③ 伏安法测 R:内接 vs 外接的选择</h2>
+    <div class="card">
+      <p style="margin:6px 0">电压表、电流表各有内阻,接法不同会引入<b>系统误差</b>。两种接法:</p>
+      <table>
+        <tr><th>接法</th><th>电流表位置</th><th>误差来源</th><th>R测量值</th></tr>
+        <tr><td><b>安培计内接</b></td><td>电流表串在 Rx 里侧(与 Rx 串联)</td><td>电压表还量到了电流表的电压</td><td><b>偏大</b>(测=Rx+R安)</td></tr>
+        <tr><td><b>安培计外接</b></td><td>电流表在电压表外侧</td><td>电流表还量到了电压表的分流</td><td><b>偏小</b>(测<Rx)</td></tr>
+      </table>
+      <h3>怎么选?两个判据</h3>
+      <div class="mono">判据一(口诀):大电阻用内接,小电阻用外接。（"大内小外"）</div>
+      <div class="mono">判据二(精确):比较 Rx 与 √(R安·R伏)。Rx > √(R安R伏) → 内接;Rx < √(R安R伏) → 外接。</div>
+      <p style="margin:8px 0"><b>为什么?</b> 内接的误差来自电流表内阻 R安(要 R安 相对 Rx 小才准),外接的误差来自电压表分流(要 R伏 相对 Rx 大才准)。Rx 大→R安 的影响相对小→内接;Rx 小→R伏 的分流相对小→外接。</p>
+      <p class="trap">⚠ 记牢误差方向:<b>内接偏大、外接偏小</b>。"大内小外"是把柄——大电阻(相对电表而言)选内接,小电阻选外接。别背反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔌 互动 3 — 内接 vs 外接电路对比:切换接法,看 R测量值偏大还是偏小</div>
+      <svg id="ctSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ctmode on" data-m="0">安培计内接</button>
+        <button class="ctmode" data-m="1">安培计外接</button>
+      </div>
+      <div class="verdict" id="ctNote"></div>
+      <p class="small">左侧画电路:黄=电流表(A),蓝=电压表(V),红=待测 Rx。<b>内接</b>:电压表也量了电流表的电压 → R测偏大。<b>外接</b>:电流表也量了电压表的分流 → R测偏小。看红字标出的误差方向。</p>
+    </div>
+
+    <h2 class="o">④ 内接法偏大原理:多量了电流表的电压</h2>
+    <div class="card">
+      <p style="margin:6px 0">内接时,电压表并在「Rx + 电流表」两端,读到的电压 U=U_Rx + U_A(电流表也分了一点电压)。而电流表读的是真电流 I(它和 Rx 串联,电流是真的)。</p>
+      <div class="eq">R测 = U / I = (U_Rx + U_A)/I = Rx + R安 > Rx</div>
+      <p style="margin:8px 0">所以内接测出来的电阻 = 真电阻 + 电流表内阻,<b>永远偏大</b>。当 Rx 远大于 R安 时误差才小 → 所以内接适合<b>大电阻</b>。</p>
+      <p class="trap">⚠ 内接偏大的根源是「电流表的电压被算进去了」。别以为电流准就没误差——误差在电压端。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 内接法 R测量值偏大原理:R真固定,看 R安 占比如何让 R测偏大</div>
+      <svg id="innerSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>真电阻 Rx (Ω) <input id="inRx" type="range" min="5" max="200" value="100" step="5"></label>
+        <label>电流表内阻 R安 (Ω) <input id="inRa" type="range" min="0.5" max="20" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>R真 Rx (Ω)</b><span id="inTrue">0</span></div>
+        <div><b>R测=Rx+R安 (Ω)</b><span id="inMeas">0</span></div>
+        <div><b>偏大绝对值 (Ω)</b><span id="inAbs">0</span></div>
+        <div><b>相对误差 (%)</b><span id="inRel">0</span></div>
+      </div>
+      <p class="small">蓝条=真电阻 Rx,红色顶部一小段=被多算进去的电流表内阻 R安。<b>Rx 越大,红段占比越小,相对误差越小</b>——这就是「大电阻用内接」的道理。</p>
+    </div>
+
+    <h2 class="v">⑤ 滑动变阻器:分压 vs 限流</h2>
+    <div class="card">
+      <p style="margin:6px 0">变阻器有两种接法,决定了你能调出的电压/电流范围。</p>
+      <table>
+        <tr><th>接法</th><th>接线</th><th>电压可调范围</th><th>什么时候用</th></tr>
+        <tr><td><b>分压</b>(4线,并在电路上)</td><td>两固定端接电源,滑片+一端接被测</td><td><b>0 → 最大</b>(从零可调)</td><td>①要求从0调;②需精细调;③变阻器阻值比Rx小</td></tr>
+        <tr><td><b>限流</b>(2线,串联)</td><td>滑片+一固定端串入电路</td><td>不能到0(有最小值)</td><td>①省电;②调节范围要求不高;③变阻器阻值与Rx相当或更大</td></tr>
+      </table>
+      <h3>三种必须用分压的情形</h3>
+      <div class="mono">① 电压/电流要求"从0开始连续可调"　② 需要多组数据、精细调节　③ 变阻器最大阻值 << 被测电阻(限流调不动)</div>
+      <p style="margin:8px 0"><b>默认优先限流</b>(接线简单、省电);只有上面三种情形才上分压。</p>
+      <p class="trap">⚠ 分压是<b>4根线</b>(两端接电源、滑片取电压),限流是<b>2根线</b>(串一段进电路)。分压能从0调、限流不能到0。要"从零测起"或"电阻很小"时,必须分压。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 5 — 分压 vs 限流接法电路图:切换看接线差异与可调范围</div>
+      <svg id="rhSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rhmode on" data-m="0">分压接法</button>
+        <button class="rhmode" data-m="1">限流接法</button>
+        <label>滑片位置 <input id="rhSlide" type="range" min="0" max="100" value="50" step="1"></label>
+      </div>
+      <div class="verdict" id="rhNote"></div>
+      <p class="small">画出两种接法的电路。<b>分压</b>:变阻器两端接电源,滑片引出电压给 Rx → 电压可从 0 调到最大。<b>限流</b>:变阻器串在电路里 → 只能限制电流,调不到 0。拖滑片看输出电压(U/U最大)。</p>
+    </div>
+
+    <h2 class="b">⑥ 数据处理:U-I 图象斜率 = R</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>为什么用图象?</b> 多测几组 (U, I) 描点连线,用图象的<b>斜率</b>求 R,能<b>减小偶然误差</b>(一条直线"平均"了所有点),比单点 U/I 更可靠。</p>
+      <div class="eq">直线斜率 k = ΔU/ΔI = R　(过原点的直线)</div>
+      <p style="margin:8px 0"><b>怎么做:</b> 横轴 I、纵轴 U(或反过来,注意斜率含义),描点后画一条尽量穿过多数点的<b>直线</b>(不是折线连点!),取直线上<b>相距较远</b>的两点算斜率。理论上过原点。</p>
+      <p class="trap">⚠ 图象要画<b>直线</b>拟合,不是"点点相连的折线";算斜率取直线上两点(不是数据点!),且两点尽量远以减小误差;看清横纵轴谁是 U 谁是 I,斜率含义不同。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 6 — U-I 图象斜率=R:拖动数据点,拟合直线的斜率就是电阻</div>
+      <svg id="uiSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="uiReset">↺ 重置数据点</button>
+        <label>真电阻 R <input id="uiR" type="range" min="2" max="12" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>拟合斜率 k=ΔU/ΔI</b><span id="uiK">0</span></div>
+        <div><b>即电阻 R (Ω)</b><span id="uiRv">0</span></div>
+        <div><b>数据点数</b><span id="uiN">0</span></div>
+        <div><b>与真值偏差</b><span id="uiErr">0</span></div>
+      </div>
+      <p class="small">彩色点是实验数据(带随机误差),黑色直线是最小二乘拟合。<b>直线斜率 = 电阻 R</b>。拖动任意点看斜率怎么变——一条直线"平均"了所有点的误差,比单点 U/I 更准。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 螺旋测微器读直径</h3>
+      <p><b class="tag">触发信号:</b>给一张螺旋测微器示意图,问金属丝直径读数;或给固定刻度、可动刻度格数让你算 d。</p>
+      <p><b class="tag">标准动作:</b>读数=固定刻度+可动刻度格数×0.01mm+估读。注意固定刻度的半毫米线;最后估读一位到 0.001mm。</p>
+      <p><b class="tag">示例(带解):</b>固定刻度露出 3.5mm(含半毫米线),可动刻度对齐中线为 20.0 格。d=3.5+20.0×0.01=3.700mm=3.700×10⁻³m。多次测量取平均减小偶然误差。</p>
+      <p class="trap">陷阱:漏看半毫米线(少0.5mm);把可动刻度每格当0.1mm;不估读;直径当半径。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 伏安法电路选择(内接/外接)</h3>
+      <p><b class="tag">触发信号:</b>给出 Rx 大致范围、电流表内阻 R安、电压表内阻 R伏,问电流表内接还是外接。</p>
+      <p><b class="tag">标准动作:</b>比较 Rx 与 √(R安·R伏):Rx 大 → 内接(误差偏大但相对小);Rx 小 → 外接。口诀"大内小外"。</p>
+      <p><b class="tag">示例(带解):</b>R安=1Ω,R伏=3000Ω,√(R安R伏)=√3000≈55Ω。若 Rx≈100Ω>55Ω → 用内接(R测=Rx+R安=101Ω,偏大1%);若 Rx≈10Ω<55Ω → 用外接。</p>
+      <p class="trap">陷阱:内接外接误差方向记反(内接偏大、外接偏小);忘了比较判据直接猜。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 变阻器分压/限流选择</h3>
+      <p><b class="tag">触发信号:</b>问变阻器该用分压还是限流接法;或要求"电压从0调起""多组数据"。</p>
+      <p><b class="tag">标准动作:</b>默认限流(简单省电);出现"从0可调""需精细多组""变阻器阻值远小于Rx"三者之一 → 分压。</p>
+      <p><b class="tag">示例(带解):</b>要测出金属丝的 U-I 曲线且需从 U=0 开始取多组数据 → 必须<b>分压</b>(限流做不到从0调起)。画图:变阻器两固定端接电源,滑片与一端引出接被测部分。</p>
+      <p class="trap">陷阱:分压/限流接线画错(分压4线、限流2线);该分压时用了限流导致调不到0。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — U-I 图象求 R</h3>
+      <p><b class="tag">触发信号:</b>给一组 (U,I) 数据或一张 U-I 图,让你求电阻 R。</p>
+      <p><b class="tag">标准动作:</b>描点画拟合直线(不连折线),取直线上相距远的两点算斜率 k=ΔU/ΔI=R(纵U横I时)。</p>
+      <p><b class="tag">示例(带解):</b>纵轴U、横轴I的图上,直线过 (0.1A,0.6V) 和 (0.5A,3.0V)。R=k=(3.0−0.6)/(0.5−0.1)=2.4/0.4=6Ω。</p>
+      <p class="trap">陷阱:用数据点而非直线上的点算斜率;两点取太近;搞反横纵轴导致算成 1/R。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 由 R、d、L 算 ρ</h3>
+      <p><b class="tag">触发信号:</b>给了电阻 R、直径 d、长度 L,求电阻率 ρ。</p>
+      <p><b class="tag">标准动作:</b>S=πd²/4(d用米),ρ=RS/L=Rπd²/(4L)。单位全换 SI,ρ 得 Ω·m。</p>
+      <p><b class="tag">示例(带解):</b>R=6Ω,d=0.500mm=5.00×10⁻⁴m,L=1.00m。S=π(5.00×10⁻⁴)²/4=π×2.5×10⁻⁷/4≈1.96×10⁻⁷m²。ρ=RS/L=6×1.96×10⁻⁷/1.00≈1.18×10⁻⁶ Ω·m。</p>
+      <p class="trap">陷阱:S用半径或漏/4(错4倍);d、L没换成米;单位写错。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 误差分析</h3>
+      <p><b class="tag">触发信号:</b>问"测得的 R(或 ρ)偏大还是偏小""某接法引入什么系统误差"。</p>
+      <p><b class="tag">标准动作:</b>内接→R测偏大→ρ偏大;外接→R测偏小→ρ偏小。再看直径/长度测量的偶然误差(多次取平均)。</p>
+      <p><b class="tag">示例(带解):</b>小电阻误用内接:R测=Rx+R安,偏大明显 → 算出的 ρ=RS/L 也偏大。改用外接虽偏小但因 Rx 小、R伏 大,误差小得多,更合适。</p>
+      <p class="trap">陷阱:分不清系统误差(接法)与偶然误差(读数);记反内接外接的偏向;忘了误差传到 ρ。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>S=πd²/4</b> 里是<b>直径 d</b>!写成 πd²(漏/4)或用半径当直径,面积错 4 倍,ρ 跟着错。</p>
+      <p class="trap">② <b>内接偏大、外接偏小</b>——牢记方向。口诀"大内小外":大电阻内接,小电阻外接。</p>
+      <p class="trap">③ 电路选择要<b>算判据</b>:比较 Rx 与 √(R安R伏),别凭感觉猜内接外接。</p>
+      <p class="trap">④ <b>分压4线、限流2线</b>。要"从0调起""电阻很小""多组精细"→ 分压;否则默认限流。</p>
+      <p class="trap">⑤ 直径要<b>多次测量取平均</b>(不同位置、不同方向),金属丝不圆不均匀。</p>
+      <p class="trap">⑥ 螺旋测微器:别漏<b>半毫米线</b>;可动刻度每格 0.01mm;必须<b>估读</b>到千分位。</p>
+      <p class="trap">⑦ U-I 图求 R 用<b>拟合直线</b>算斜率,不是连折线;取直线上相距远的两点。</p>
+      <p class="trap">⑧ 单位!d、L 都换成<b>米</b>再代入,ρ 的单位是 Ω·m。</p>
+      <p class="trap">⑨ 系统误差(接法,方向确定)≠ 偶然误差(读数,可正可负、靠多次平均)。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 内接/外接的本质是"把谁的内阻算错了":</b> 内接—电压表连电流表的电压也量了,R测=Rx+R安(偏大);外接—电流表连电压表的分流也量了,R测=Rx·R伏/(Rx+R伏)<Rx(偏小)。判据 Rx=√(R安R伏) 正是两种误差相等的临界点,比 Rx 大就内接、小就外接,让相对误差最小。会推这一步,任何数据都能秒判。</p>
+      <p style="margin:8px 0"><b>② 分压/限流的选择是"范围 vs 简洁"的权衡:</b> 分压能覆盖 0→U最大 的全范围且调节细腻,代价是费电、接线多;限流简单省电但下限调不到 0。凡是要"从零测起"或"变阻器阻值远小于被测"(限流几乎调不动)就必须分压。想清楚"我需要多大的调节范围",接法自然定。</p>
+      <p style="margin:8px 0"><b>③ 图象法为什么更准:</b> 单点 R=U/I 把一个点的偶然误差全背上;而 U-I 直线拟合相当于对多组数据"取平均",随机误差互相抵消,斜率更接近真值。且直线是否过原点、是否弯曲,还能暴露接触电阻、发热变阻等隐藏问题——图象是"数据的体检报告"。</p>
+      <p style="margin:8px 0"><b>④ 误差如何传到 ρ:</b> ρ=Rπd²/4L,对相对误差 δρ/ρ = δR/R + 2·δd/d + δL/L。注意直径 d 是<b>平方</b>,它的相对误差被<b>放大2倍</b>——所以直径的测量最关键,要用最精密的螺旋测微器且多次平均。这解释了为什么"量直径"是全题的精度命门。</p>
+      <p style="margin:8px 0"><b>⑤ 系统误差可修正,偶然误差只能减小:</b> 内接偏大是<b>确定方向</b>的系统误差,知道 R安 就能修正回 Rx=R测−R安;而读数的偶然误差方向不定,只能靠多次测量取平均去压。区分这两类误差,是电学实验分析的分水岭。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 电学实验:测定金属的电阻率 ρ=RS/L</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+var NS="http://www.w3.org/2000/svg";
+function el(p,t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+var ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:rho 各量关系 ===== */
+(function(){
+  var svg=document.getElementById('rhoSvg');
+  var Rs=document.getElementById('rhoR'),Ds=document.getElementById('rhoD'),Ls=document.getElementById('rhoL');
+  var oS=document.getElementById('rhoS'),oV=document.getElementById('rhoV'),oW=document.getElementById('rhoWrong');
+  function draw(){
+    clr(svg);
+    var R=+Rs.value,d=+Ds.value,L=+Ls.value;
+    var S=Math.PI*d*d/4; // mm^2
+    var dm=d/1000, Lm=L, Sm=Math.PI*dm*dm/4;
+    var rho=R*Sm/Lm; // ohm*m
+    var wrongS=Math.PI*d*d; // used radius=d wrongly -> 4x
+    var wrongRho=R*(Math.PI*dm*dm)/Lm;
+    oS.textContent=S.toFixed(3);
+    oV.textContent=rho.toExponential(2);
+    oW.textContent=wrongRho.toExponential(2);
+    // three bars: R, S, L scaled
+    var baseY=200,maxH=140,bw=70;
+    function bar(x,frac,col,lab,val){
+      var h=Math.max(6,frac*maxH);
+      el(svg,'rect',{x:x,y:baseY-h,width:bw,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+      el(svg,'text',{x:x+bw/2,y:baseY-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=val;
+    }
+    bar(90,R/20,BLUE,'R',R+'Ω');
+    bar(250,S/(Math.PI*1.2*1.2/4),GREEN,'S=πd²/4',S.toFixed(2)+'mm²');
+    bar(410,L/2,ORANGE,'L',L+'m');
+    el(svg,'line',{x1:60,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='ρ = R·S / L = R·πd² / (4L)';
+    el(svg,'text',{x:350,y:48,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='ρ='+rho.toExponential(2)+' Ω·m　（S 随 d 的平方，直径量准最关键）';
+    // rho bar (violet) far right
+    var rhoBarFrac=Math.min(1,rho/2e-6);
+    bar(540,rhoBarFrac,VIO,'ρ',rho.toExponential(1));
+  }
+  Rs.oninput=Ds.oninput=Ls.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:螺旋测微器读数 ===== */
+(function(){
+  var svg=document.getElementById('micSvg');
+  var Ts=document.getElementById('micTurn');
+  var oF=document.getElementById('micFix'),oR=document.getElementById('micRot'),oTh=document.getElementById('micThim'),oRd=document.getElementById('micRead');
+  var running=false;
+  function draw(){
+    clr(svg);
+    var turn=+Ts.value; // 0..500 => 0..5.00 mm total travel (0.01mm per unit)
+    var total=turn*0.01; // mm
+    var fixHalf=Math.floor(total/0.5)*0.5; // fixed scale reads to 0.5mm
+    var rotUnits=(total-fixHalf)/0.01; // 0..49.9 on thimble
+    var estimate=(total*1000)%10/1000; // just for display flourish
+    oF.textContent=fixHalf.toFixed(1);
+    oR.textContent=rotUnits.toFixed(1);
+    oTh.textContent=(rotUnits*0.01).toFixed(3);
+    oRd.textContent=total.toFixed(3);
+    // draw sleeve (fixed scale) horizontal
+    var sx=60,sy=90,sw=380,sh=44;
+    el(svg,'rect',{x:sx,y:sy,width:sw,height:sh,fill:'#d9d2be',stroke:INK,'stroke-width':3});
+    // main scale line
+    el(svg,'line',{x1:sx+10,y1:sy+sh/2,x2:sx+sw-10,y2:sy+sh/2,stroke:INK,'stroke-width':2});
+    for(var mm=0;mm<=5;mm++){
+      var xx=sx+10+(mm/5)*(sw-20);
+      el(svg,'line',{x1:xx,y1:sy+sh/2,x2:xx,y2:sy+8,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:xx,y:sy+6,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=mm;
+      // half mark below
+      if(mm<5){var xh=sx+10+((mm+0.5)/5)*(sw-20);el(svg,'line',{x1:xh,y1:sy+sh/2,x2:xh,y2:sy+sh-8,stroke:RED,'stroke-width':2});}
+    }
+    // thimble (rotating drum) at right, moves with total
+    var edgeX=sx+10+(total/5)*(sw-20);
+    el(svg,'rect',{x:edgeX,y:sy-8,width:170,height:sh+16,fill:'#c9a24b',stroke:INK,'stroke-width':3});
+    // thimble circular scale marks (vertical column at drum edge)
+    var col=edgeX+14;
+    var center=(rotUnits%50);
+    for(var g=-3;g<=3;g++){
+      var val=Math.round(center)+g;
+      var yy=sy+sh/2 - g*13;
+      if(yy<sy-2||yy>sy+sh+2)continue;
+      var vv=((val%50)+50)%50;
+      el(svg,'line',{x1:col,y1:yy,x2:col+14,y2:yy,stroke:INK,'stroke-width':g===0?3:2});
+      el(svg,'text',{x:col+20,y:yy+4,'font-size':10,'font-weight':g===0?900:700,fill:g===0?RED:INK}).textContent=vv;
+    }
+    // reference center line (reading line)
+    el(svg,'line',{x1:edgeX-6,y1:sy+sh/2,x2:col,y2:sy+sh/2,stroke:RED,'stroke-width':2});
+    // labels
+    el(svg,'text',{x:sx,y:sy-16,'font-size':12.5,'font-weight':900,fill:INK}).textContent='固定刻度（主尺，红线=半毫米线）';
+    el(svg,'text',{x:edgeX,y:sy+sh+30,'font-size':12,'font-weight':900,fill:BROWN,'text-anchor':'start'}).textContent='可动刻度（50格，每格0.01mm）';
+    // readout formula
+    el(svg,'text',{x:60,y:205,'font-size':15,'font-weight':900,fill:INK}).textContent='读数 = '+fixHalf.toFixed(1)+' + '+rotUnits.toFixed(1)+'×0.01 = '+total.toFixed(3)+' mm';
+    el(svg,'text',{x:60,y:232,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='（固定刻度 + 可动刻度×0.01，最后一位为估读）';
+  }
+  function loop(){
+    if(!running)return;
+    var v=+Ts.value;
+    if(v<500){Ts.value=v+2;draw();requestAnimationFrame(loop);}
+    else running=false;
+  }
+  Ts.oninput=draw;
+  document.getElementById('micGo').onclick=function(){running=true;requestAnimationFrame(loop);};
+  document.getElementById('micReset').onclick=function(){running=false;Ts.value=0;draw();};
+  draw();
+})();
+
+/* ===== 互动3:内接 vs 外接电路 ===== */
+(function(){
+  var svg=document.getElementById('ctSvg');var note=document.getElementById('ctNote');
+  var m=0;
+  var btns=document.querySelectorAll('.ctmode');
+  btns.forEach(function(b){b.onclick=function(){btns.forEach(function(x){x.classList.remove('on');});b.classList.add('on');m=+b.dataset.m;draw();};});
+  function box(x,y,w,h,col,lab){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:col,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x+w/2,y:y+h/2+5,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=lab;
+  }
+  function wire(x1,y1,x2,y2){el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:INK,'stroke-width':3});}
+  function draw(){
+    clr(svg);
+    // battery left
+    el(svg,'text',{x:60,y:150,'font-size':13,'font-weight':900,fill:INK}).textContent='电源';
+    wire(90,140,90,120);wire(90,120,150,120); // top wire out of battery
+    el(svg,'line',{x1:82,y1:130,x2:98,y2:130,stroke:INK,'stroke-width':4});
+    el(svg,'line',{x1:86,y1:140,x2:94,y2:140,stroke:INK,'stroke-width':2});
+    if(m===0){
+      // INNER: A in series with Rx, V across (A+Rx)
+      box(160,105,60,32,YEL,'A');       // ammeter
+      box(280,105,80,32,RED,'Rx');      // resistor
+      wire(220,121,280,121);
+      wire(360,121,470,121);wire(470,121,470,140); // to battery return
+      wire(470,140,90,140);
+      // voltmeter across A+Rx (from before A to after Rx)
+      box(230,185,60,32,BLUE,'V');
+      wire(160,121,160,201);wire(160,201,230,201);
+      wire(290,201,360,201);wire(360,201,360,121);
+      el(svg,'text',{x:350,y:36,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='安培计内接：电压表并在 (A + Rx) 两端';
+      el(svg,'text',{x:350,y:60,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='V 多量了电流表的电压 → R测 = Rx + R安 偏大';
+      note.innerHTML='👉 <b>内接</b>：电流表 A 串进 Rx，电压表 V 量的是「A+Rx」的总电压。所以 R测=U/I=Rx+R安，<b style="color:'+RED+'">比真值偏大</b>。适合<b>大电阻</b>（R安 相对小，误差小）。';
+      note.style.borderColor=RED;
+    } else {
+      // OUTER: V across Rx, A outside measuring (I_Rx + I_V)
+      box(160,105,60,32,YEL,'A');       // ammeter first
+      wire(220,121,300,121);
+      box(300,105,80,32,RED,'Rx');
+      wire(380,121,470,121);wire(470,121,470,140);wire(470,140,90,140);
+      // voltmeter across Rx only
+      box(310,185,60,32,BLUE,'V');
+      wire(300,121,300,201);wire(300,201,310,201);
+      wire(370,201,380,201);wire(380,201,380,121);
+      el(svg,'text',{x:350,y:36,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='安培计外接：电压表只并在 Rx 两端';
+      el(svg,'text',{x:350,y:60,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='A 多量了电压表的分流 → R测 偏小';
+      note.innerHTML='👉 <b>外接</b>：电压表 V 只量 Rx，但电流表 A 量的是「流过 Rx + 流过 V」的总电流。所以 R测=U/I 分母偏大，<b style="color:'+RED+'">比真值偏小</b>。适合<b>小电阻</b>（R伏 分流相对小）。';
+      note.style.borderColor=RED;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动4:内接法偏大原理 ===== */
+(function(){
+  var svg=document.getElementById('innerSvg');
+  var Rx=document.getElementById('inRx'),Ra=document.getElementById('inRa');
+  var oT=document.getElementById('inTrue'),oM=document.getElementById('inMeas'),oA=document.getElementById('inAbs'),oR=document.getElementById('inRel');
+  function draw(){
+    clr(svg);
+    var rx=+Rx.value,ra=+Ra.value;
+    var meas=rx+ra;
+    var abs=ra;
+    var rel=ra/rx*100;
+    oT.textContent=rx;oM.textContent=meas;oA.textContent=abs;oR.textContent=rel.toFixed(2);
+    // stacked bar: Rx (blue) + Ra (red) = measured
+    var baseY=200,x0=120,bw=120,maxH=150,scale=maxH/220;
+    var hx=rx*scale, ha=ra*scale;
+    // true bar (just Rx)
+    el(svg,'rect',{x:x0,y:baseY-hx,width:bw,height:hx,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x0+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='真值 Rx';
+    el(svg,'text',{x:x0+bw/2,y:baseY-hx+18,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=rx+'Ω';
+    // measured bar (Rx + Ra)
+    var x1=360;
+    el(svg,'rect',{x:x1,y:baseY-hx,width:bw,height:hx,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:x1,y:baseY-hx-ha,width:bw,height:ha,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x1+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='测量 Rx+R安';
+    el(svg,'text',{x:x1+bw/2,y:baseY-hx-ha-8,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='+R安='+ra+'Ω';
+    el(svg,'line',{x1:90,y1:baseY,x2:560,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:325,y:28,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='内接：R测 = Rx + R安 （红段=被多算的电流表内阻）';
+    el(svg,'text',{x:325,y:50,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='相对误差 = R安/Rx = '+rel.toFixed(2)+'%　→ Rx 越大误差越小（大电阻用内接）';
+  }
+  Rx.oninput=Ra.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:分压 vs 限流 ===== */
+(function(){
+  var svg=document.getElementById('rhSvg');var note=document.getElementById('rhNote');
+  var Sl=document.getElementById('rhSlide');
+  var m=0;
+  var btns=document.querySelectorAll('.rhmode');
+  btns.forEach(function(b){b.onclick=function(){btns.forEach(function(x){x.classList.remove('on');});b.classList.add('on');m=+b.dataset.m;draw();};});
+  function wire(x1,y1,x2,y2){el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:INK,'stroke-width':3});}
+  function box(x,y,w,h,col,lab){el(svg,'rect',{x:x,y:y,width:w,height:h,fill:col,stroke:INK,'stroke-width':3});el(svg,'text',{x:x+w/2,y:y+h/2+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=lab;}
+  function draw(){
+    clr(svg);
+    var s=+Sl.value/100;
+    // battery
+    el(svg,'text',{x:56,y:90,'font-size':12.5,'font-weight':900,fill:INK}).textContent='电源';
+    el(svg,'line',{x1:70,y1:100,x2:86,y2:100,stroke:INK,'stroke-width':4});
+    el(svg,'line',{x1:74,y1:112,x2:82,y2:112,stroke:INK,'stroke-width':2});
+    // rheostat body
+    var rx=200,ry=90,rw=280,rh=34;
+    el(svg,'rect',{x:rx,y:ry,width:rw,height:rh,fill:'#d9d2be',stroke:INK,'stroke-width':3});
+    // coils
+    for(var i=0;i<14;i++){var cx=rx+8+i*(rw-16)/13;el(svg,'line',{x1:cx,y1:ry+4,x2:cx,y2:ry+rh-4,stroke:INK,'stroke-width':2});}
+    // slider
+    var slx=rx+s*rw;
+    el(svg,'line',{x1:slx,y1:ry-24,x2:slx,y2:ry+2,stroke:RED,'stroke-width':4});
+    el(svg,'polygon',{points:(slx-8)+','+(ry-2)+' '+(slx+8)+','+(ry-2)+' '+slx+','+(ry+8),fill:RED});
+    // Rx (load)
+    box(560,150,70,32,RED,'Rx');
+    var uOut, desc, ncol;
+    if(m===0){
+      // 分压: both ends to battery, slider + one end to Rx
+      wire(78,100,rx,100); // battery + to left end
+      wire(rx+rw,100,rx+rw+40,100);wire(rx+rw+40,100,rx+rw+40,220);wire(rx+rw+40,220,78,220); // right end back to battery -
+      wire(78,220,78,112);
+      // output: slider to Rx top, and bottom end (left) to Rx bottom
+      wire(slx,ry-24,slx,60);wire(slx,60,595,60);wire(595,60,595,150); // slider -> Rx top
+      wire(rx,100,rx,250);wire(rx,250,595,250);wire(595,250,595,182); // left end -> Rx bottom
+      uOut=s; // 0..1
+      desc='分压：变阻器两端接电源，滑片引出电压给 Rx。滑片从左到右 → U 从 0 连续调到最大。';
+      ncol=VIO;
+      el(svg,'text',{x:340,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='分压接法（4根线）：U 可从 0 → 最大';
+    } else {
+      // 限流: slider + one end in series with Rx
+      wire(78,100,rx,100); // battery + to left end
+      // only left portion used: slider to Rx
+      wire(slx,ry-24,slx,60);wire(slx,60,595,60);wire(595,60,595,150); // slider -> Rx top
+      wire(595,182,595,250);wire(595,250,78,250);wire(78,250,78,112); // Rx bottom -> battery -
+      uOut=0.15+0.85*s; // min not zero
+      desc='限流：变阻器一段串在电路里（只用了滑片到左端）。只能限制电流，U 有最小值，调不到 0。';
+      ncol=ORANGE;
+      el(svg,'text',{x:340,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='限流接法（2根线）：U 有最小值，不能到 0';
+    }
+    // output gauge
+    el(svg,'text',{x:340,y:52,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='Rx 上电压 U / U最大 = '+(uOut*100).toFixed(0)+'%';
+    // bar for output
+    el(svg,'rect',{x:200,y:270,width:280,height:16,fill:'#eee',stroke:INK,'stroke-width':2});
+    el(svg,'rect',{x:200,y:270,width:280*uOut,height:16,fill:ncol,stroke:'none'});
+    note.innerHTML='👉 '+desc;
+    note.style.borderColor=ncol;
+  }
+  Sl.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:U-I 图象斜率=R ===== */
+(function(){
+  var svg=document.getElementById('uiSvg');
+  var Rs=document.getElementById('uiR');
+  var oK=document.getElementById('uiK'),oR=document.getElementById('uiRv'),oN=document.getElementById('uiN'),oE=document.getElementById('uiErr');
+  var X0=70,Y0=30,W=560,H=230; // plot area
+  var Imax=1.0, Umax=14; // axes ranges
+  var pts=[]; // {I,U}
+  function genPts(){
+    var R=+Rs.value;pts=[];
+    for(var k=1;k<=6;k++){
+      var I=k*0.15;
+      var noise=(Math.random()-0.5)*R*0.16;
+      var U=R*I+noise;
+      if(U<0)U=0.1;
+      pts.push({I:I,U:U});
+    }
+  }
+  function toX(I){return X0+(I/Imax)*W;}
+  function toY(U){return Y0+H-(U/Umax)*H;}
+  function fromX(x){return (x-X0)/W*Imax;}
+  function fromY(y){return (Y0+H-y)/H*Umax;}
+  function fit(){
+    // least squares through data, slope k (U = k I), force intercept ~ via simple regression
+    var n=pts.length,sx=0,sy=0,sxx=0,sxy=0;
+    for(var i=0;i<n;i++){sx+=pts[i].I;sy+=pts[i].U;sxx+=pts[i].I*pts[i].I;sxy+=pts[i].I*pts[i].U;}
+    var k=(n*sxy-sx*sy)/(n*sxx-sx*sx);
+    return k;
+  }
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+4,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='U/V';
+    el(svg,'text',{x:X0+W,y:Y0+H+24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='I/A';
+    // grid ticks
+    for(var gi=1;gi<=5;gi++){var xx=X0+gi/5*W;el(svg,'line',{x1:xx,y1:Y0+H,x2:xx,y2:Y0+H+6,stroke:INK,'stroke-width':2});el(svg,'text',{x:xx,y:Y0+H+22,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(gi/5*Imax).toFixed(1);}
+    for(var gj=1;gj<=7;gj++){var yy=toY(gj*2);el(svg,'line',{x1:X0-6,y1:yy,x2:X0,y2:yy,stroke:INK,'stroke-width':2});el(svg,'text',{x:X0-10,y:yy+4,'font-size':10,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent=(gj*2);}
+    // fit line
+    var k=fit();
+    var xEnd=Imax;var yEnd=k*xEnd;if(yEnd>Umax){yEnd=Umax;xEnd=Umax/k;}
+    el(svg,'line',{x1:toX(0),y1:toY(0),x2:toX(xEnd),y2:toY(yEnd),stroke:INK,'stroke-width':4});
+    // slope triangle
+    var ix1=0.3*Imax, ix2=0.7*Imax;
+    el(svg,'line',{x1:toX(ix1),y1:toY(k*ix1),x2:toX(ix2),y2:toY(k*ix1),stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'line',{x1:toX(ix2),y1:toY(k*ix1),x2:toX(ix2),y2:toY(k*ix2),stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:toX(ix2)+6,y:toY((k*ix1+k*ix2)/2),'font-size':11,'font-weight':900,fill:RED}).textContent='ΔU';
+    el(svg,'text',{x:toX((ix1+ix2)/2),y:toY(k*ix1)+16,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='ΔI';
+    // data points (draggable)
+    var cols=[BLUE,GREEN,ORANGE,VIO,RED,BROWN];
+    pts.forEach(function(p,idx){
+      var c=el(svg,'circle',{cx:toX(p.I),cy:toY(p.U),r:8,fill:cols[idx%cols.length],stroke:INK,'stroke-width':3,style:'cursor:grab'});
+      c.addEventListener('pointerdown',function(ev){
+        function move(e){
+          var rect=svg.getBoundingClientRect();
+          var scaleX=700/rect.width, scaleY=320/rect.height;
+          var mx=(e.clientX-rect.left)*scaleX, my=(e.clientY-rect.top)*scaleY;
+          var nI=Math.max(0.02,Math.min(Imax,fromX(mx)));
+          var nU=Math.max(0.2,Math.min(Umax,fromY(my)));
+          pts[idx].I=nI;pts[idx].U=nU;draw();
+        }
+        function up(){window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);}
+        window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);
+      });
+    });
+    el(svg,'text',{x:X0+W/2,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='U-I 图：直线斜率 k = ΔU/ΔI = R（拖动彩点看斜率变化）';
+    // stats
+    oK.textContent=k.toFixed(2);
+    oR.textContent=k.toFixed(2)+'Ω';
+    oN.textContent=pts.length;
+    oE.textContent=(k-(+Rs.value)).toFixed(2)+'Ω';
+  }
+  Rs.oninput=function(){genPts();draw();};
+  document.getElementById('uiReset').onclick=function(){genPts();draw();};
+  genPts();draw();
+})();
+
+/* ===== 自测 ===== */
+var qs=[
+ {q:"1. 电阻率公式是什么？要测哪三个量、各用什么仪器？",a:"ρ=RS/L=Rπd²/(4L)。三个待测量：电阻 R（伏安法，电压表+电流表，R=U/I）、横截面积 S（螺旋测微器量直径 d，S=πd²/4）、长度 L（刻度尺）。"},
+ {q:"2. S=πd²/4 里的 d 是什么？用半径会怎样？",a:"d 是直径！S=πd²/4=π(d/2)²。若误把 d 当半径（写成 πd²），面积会大 4 倍，ρ 也跟着错 4 倍。d、L 都要换算成米。"},
+ {q:"3. 螺旋测微器读数怎么算？举例。",a:"读数=固定刻度+可动刻度格数×0.01mm+估读。例：固定刻度3.5mm（含半毫米线），可动刻度20.0格 → 3.5+20.0×0.01=3.700mm。可动刻度50格每格0.01mm，最后一位估读。"},
+ {q:"4. 直径为什么要多次测量？怎么测？",a:"金属丝可能不圆、不均匀，多次测减小偶然误差。在不同位置、不同方向各测一次（至少3次）取平均值。"},
+ {q:"5. 伏安法内接和外接，R 测量值各偏大还是偏小？为什么？",a:"内接偏大：电压表并在(A+Rx)两端，多量了电流表电压，R测=Rx+R安。外接偏小：电流表量了流过电压表的分流，R测=U/I分母偏大。"},
+ {q:"6. 内接外接怎么选？口诀和精确判据？",a:"口诀「大内小外」：大电阻用内接，小电阻用外接。精确判据：比较 Rx 与 √(R安·R伏)，Rx>√(R安R伏)用内接，Rx<√(R安R伏)用外接。"},
+ {q:"7. R安=1Ω，R伏=2500Ω，Rx≈80Ω，该用内接还是外接？",a:"√(R安R伏)=√2500=50Ω。Rx=80>50 → 用内接（此时电流表内阻相对影响小，内接误差更小）。"},
+ {q:"8. 变阻器分压和限流各是几根线？可调范围有何不同？",a:"分压4根线（两固定端接电源、滑片引出电压），U可从0调到最大。限流2根线（串一段进电路），U有最小值、调不到0。"},
+ {q:"9. 什么情况必须用分压接法？",a:"三种之一：①电压/电流要求从0连续可调；②需多组数据、精细调节；③变阻器最大阻值远小于被测电阻（限流几乎调不动）。否则默认限流（简单省电）。"},
+ {q:"10. U-I 图象怎么求电阻 R？注意什么？",a:"描点画拟合直线（不是连折线），R=斜率=ΔU/ΔI（纵U横I时）。取直线上相距较远的两点算斜率，不用数据点；看清横纵轴。图象法减小偶然误差。"},
+ {q:"11. R=6Ω，d=0.500mm，L=1.00m，求 ρ。",a:"d=5.00×10⁻⁴m，S=πd²/4=π(5.00×10⁻⁴)²/4≈1.96×10⁻⁷m²。ρ=RS/L=6×1.96×10⁻⁷/1.00≈1.18×10⁻⁶ Ω·m。"},
+ {q:"12. 系统误差和偶然误差各来自哪？各怎么处理？",a:"系统误差来自接法（内接偏大、外接偏小），方向确定，可用已知内阻修正。偶然误差来自读数（直径、长度），方向不定，只能多次测量取平均减小。"}
+];
+var quiz=document.getElementById('quiz');
+qs.forEach(function(o){var d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+</script>
+</body>
+</html>

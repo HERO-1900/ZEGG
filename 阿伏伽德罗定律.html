@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿伏伽德罗定律及其推论 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>阿伏伽德罗定律及其推论</h1>
+    <p class="lead">这一页讲的<b>不是</b>阿伏伽德罗常数 N<sub>A</sub> 的 NA 计算，而是<b>阿伏伽德罗定律</b>：同温同压下，相同体积的任何气体含有相同数目的分子。由这一条能推出一大堆「比例关系」——体积比、密度比、压强比全都能一步换算，是气体计算题的利器。理解一句、推论四条、比例满盘活。</p>
+
+    <div class="say">🗣️ <b>阿伏伽德罗定律(人话版):</b> 在<b>同温同压</b>下，只要<b>体积一样</b>，无论是 H<sub>2</sub> 还是 CO<sub>2</sub>，装的<b>分子个数就一样多</b>（也就是物质的量 n 相同）。反过来，同温同压下体积之比 = 物质的量之比。气体不看「个头大小」，只数「有几个分子」。抓住这句，再套 pV=nRT，四个推论顺手就推出来，比例题瞬间秒杀。</div>
+
+    <div class="keybox"><b>一句话定律:</b> <b>同 T、同 p、同 V ⟹ 同分子数 n</b>（即同物质的量）。<b>本质:</b> 理想气体状态方程 <b>pV = nRT</b>。三个「同」再固定一个量，剩下两个量必成正比或反比——这就是全部推论的来源。<b>只对气体成立</b>，固体、液体一律不适用。</div>
+
+    <h2>① 阿伏伽德罗定律与状态方程</h2>
+    <div class="card">
+      <div class="eq">同 T 同 p 同 V ⟹ n 相同（分子数相同）</div>
+      <p style="margin:8px 0"><b>定律表述:</b> 在相同温度和相同压强下，相同体积的任何气体都含有相同数目的分子。用物质的量说，就是「同 T 同 p 同 V ⟹ 同 n」。</p>
+      <div class="eq">理想气体状态方程:pV = nRT</div>
+      <p style="margin:8px 0">这是定律的根。<b>p</b> 压强、<b>V</b> 体积、<b>n</b> 物质的量、<b>R</b> 气体常数、<b>T</b> 热力学温度。固定其中几个量，剩下量之间的比例关系就是「推论」。</p>
+      <table>
+        <tr><th>固定谁</th><th>剩下谁成什么比例</th></tr>
+        <tr><td>同 T、同 p</td><td>V ∝ n（体积比 = 物质的量比）</td></tr>
+        <tr><td>同 T、同 V</td><td>p ∝ n（压强比 = 物质的量比）</td></tr>
+        <tr><td>同 T、同 n</td><td>pV = 常数（p 与 V 反比）</td></tr>
+      </table>
+      <p class="trap">⚠ 定律<b>只适用于气体</b>！别拿它去比较固体、液体的体积或分子数。也别忘了必须<b>同温同压</b>才能直接比体积。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📦 互动 1 — 同温同压同体积，不同气体分子数相同（两盒不同气体，分子数一样多）</div>
+      <svg id="boxSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="boxGo">▶ 数分子</button><button id="boxReset">↺ 重置</button>
+        <label>每盒分子数 n <input id="boxN" type="range" min="4" max="16" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>左盒气体</b><span id="boxGa">H₂</span></div>
+        <div><b>右盒气体</b><span id="boxGb">CO₂</span></div>
+        <div><b>左盒分子数</b><span id="boxNa">0</span></div>
+        <div><b>右盒分子数</b><span id="boxNb">0</span></div>
+      </div>
+      <p class="small">两个<b>体积相同</b>的盒子，同温同压。左边小分子 H<sub>2</sub>、右边大分子 CO<sub>2</sub>，可分子数<b>完全相同</b>——定律不看分子大小，只数个数。改滑块看两盒始终同数。</p>
+    </div>
+
+    <h2 class="b">② 四大推论:比例关系</h2>
+    <div class="card">
+      <p style="margin:8px 0">全部由 pV=nRT 变形而来。记住「固定什么 → 什么成比例」，比死背四条公式管用。</p>
+      <div class="mono">推论一(同 T 同 p):V₁/V₂ = n₁/n₂　　体积比 = 物质的量比</div>
+      <div class="mono">推论二(同 T 同 V):p₁/p₂ = n₁/n₂　　压强比 = 物质的量比</div>
+      <div class="mono">推论三(同 T 同 p):ρ₁/ρ₂ = M₁/M₂　　密度比 = 摩尔质量比</div>
+      <div class="mono">推论四(同 T 同 p 同质量 m):V₁/V₂ = M₂/M₁　　体积比 = 摩尔质量的反比</div>
+      <p style="margin:8px 0"><b>推论三怎么来:</b> 由 ρ=pM/(RT)，同 T 同 p 时 ρ ∝ M，故 ρ<sub>1</sub>/ρ<sub>2</sub>=M<sub>1</sub>/M<sub>2</sub>。<b>推论四怎么来:</b> 同质量时 n=m/M，同 T 同 p 下 V ∝ n = m/M，质量相同则 V ∝ 1/M，故 V<sub>1</sub>/V<sub>2</sub>=M<sub>2</sub>/M<sub>1</sub>（谁摩尔质量大谁体积小）。</p>
+      <p class="trap">⚠ 推论一二三是「同 T 同 p」或「同 T 同 V」条件下的，别张冠李戴。推论四多了「同质量」这个前提，漏掉就错。密度比是<b>正比</b>于 M，体积比(同质量)是<b>反比</b>于 M，方向别搞反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚙️ 互动 2 — pV=nRT 关系演示：拖动一个量，看谁跟着变（比例关系可视化）</div>
+      <svg id="pvSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>物质的量 n (mol) <input id="pvN" type="range" min="1" max="5" value="2" step="1"></label>
+        <label>体积 V (L) <input id="pvV" type="range" min="10" max="50" value="20" step="5"></label>
+        <label>温度 T (K) <input id="pvT" type="range" min="200" max="500" value="300" step="50"></label>
+      </div>
+      <div class="live">
+        <div><b>n (mol)</b><span id="pvOn">0</span></div>
+        <div><b>V (L)</b><span id="pvOv">0</span></div>
+        <div><b>T (K)</b><span id="pvOt">0</span></div>
+        <div><b>p=nRT/V (kPa)</b><span id="pvOp">0</span></div>
+      </div>
+      <p class="small">四个量由 pV=nRT 锁死。这里算出压强 p。<b>n↑ 或 T↑ 则 p↑；V↑ 则 p↓。</b>体会「固定两个量，另两个成比例」——这就是推论的来源。</p>
+    </div>
+
+    <h2 class="g">③ 密度、平均摩尔质量、相对密度</h2>
+    <div class="card">
+      <h3>气体密度 ρ = pM/(RT)</h3>
+      <p style="margin:6px 0">由 ρ=m/V 与 pV=nRT、n=m/M 联立得。<b>同 T 同 p 时 ρ ∝ M</b>，这正是推论三。标况(0℃、101kPa)下 ρ=M/22.4（单位 g/L）。</p>
+      <h3>平均摩尔质量 M̄</h3>
+      <div class="eq">M̄ = 总质量 / 总物质的量 = m<sub>总</sub> / n<sub>总</sub></div>
+      <p style="margin:6px 0">混合气体当成「一种假想气体」，它的摩尔质量就是加权平均。也可写成 M̄=Σ(M<sub>i</sub>·x<sub>i</sub>)，x<sub>i</sub> 是各组分的<b>物质的量分数(体积分数)</b>。同 T 同 p 下体积分数 = 物质的量分数。</p>
+      <h3>相对密度 D = M₁/M₂</h3>
+      <p style="margin:6px 0">同 T 同 p 下，气体1对气体2的相对密度 D = ρ<sub>1</sub>/ρ<sub>2</sub> = M<sub>1</sub>/M<sub>2</sub>。所以 <b>M<sub>1</sub> = D·M<sub>2</sub></b>——已知对某已知气体的相对密度，反求未知气体摩尔质量。常见：对 H<sub>2</sub> 的相对密度 D ⟹ M=2D；对空气的相对密度 D ⟹ M=29D。</p>
+      <p class="trap">⚠ M̄ 是「总质量比总物质的量」，<b>不是</b>各摩尔质量的简单算术平均！体积分数才等于物质的量分数（同 T 同 p 时）。相对密度求 M 别忘了乘参照气体的 M（对 H<sub>2</sub> 乘 2，对空气乘 29）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 3 — 密度比 = 摩尔质量比（同 T 同 p，两气体密度柱对比 ρ∝M）</div>
+      <svg id="denSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="denpair on" data-a="2" data-b="32" data-la="H₂" data-lb="O₂">H₂ vs O₂</button>
+        <button class="denpair" data-a="4" data-b="44" data-la="He" data-lb="CO₂">He vs CO₂</button>
+        <button class="denpair" data-a="16" data-b="64" data-la="CH₄" data-lb="SO₂">CH₄ vs SO₂</button>
+      </div>
+      <div class="verdict" id="denNote"></div>
+      <p class="small">同 T 同 p 下，密度之比就等于摩尔质量之比 ρ<sub>1</sub>:ρ<sub>2</sub>=M<sub>1</sub>:M<sub>2</sub>。柱高代表密度，谁的 M 大谁就重（密度大）。</p>
+    </div>
+
+    <h2 class="o">④ 混合气体平均摩尔质量</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>核心:</b> 把混合气体当一种气体，M̄ = m<sub>总</sub>/n<sub>总</sub>。给了各组分的物质的量(或体积分数)和摩尔质量，就能加权算出 M̄。</p>
+      <div class="eq">M̄ = (n₁M₁ + n₂M₂ + …) / (n₁ + n₂ + …)</div>
+      <p style="margin:6px 0"><b>十字交叉法(两组分):</b> 若只两种气体，混合物 M̄ 一定<b>介于两个 M 之间</b>，靠哪个近说明哪个多。可用十字交叉快速求物质的量比。</p>
+      <p class="trap">⚠ 加权用的权是<b>物质的量分数(=体积分数，同 T 同 p)</b>，不是质量分数！M̄ 必落在最小 M 和最大 M 之间，算出来超出范围一定错了。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 4 — 平均摩尔质量：混合气体加权（拖体积比，看 M̄ 落在两端之间）</div>
+      <svg id="mixSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="mixpair on" data-a="28" data-b="44" data-la="N₂" data-lb="CO₂">N₂ + CO₂</button>
+        <button class="mixpair" data-a="2" data-b="32" data-la="H₂" data-lb="O₂">H₂ + O₂</button>
+        <button class="mixpair" data-a="16" data-b="44" data-la="CH₄" data-lb="CO₂">CH₄ + CO₂</button>
+        <label>气体1体积分数 % <input id="mixX" type="range" min="0" max="100" value="50" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>M₁</b><span id="mixM1">0</span></div>
+        <div><b>M₂</b><span id="mixM2">0</span></div>
+        <div><b>气体1占比</b><span id="mixP">0</span></div>
+        <div><b>M̄ 加权</b><span id="mixMbar">0</span></div>
+      </div>
+      <p class="small">滑块调气体1的体积分数(=物质的量分数)。M̄=x·M<sub>1</sub>+(1−x)·M<sub>2</sub>，指针始终<b>落在两端之间</b>，靠近谁说明谁多。</p>
+    </div>
+
+    <h2 class="v">⑤ 推论对照:同 T 同 p 还是同 T 同 V</h2>
+    <div class="card">
+      <p style="margin:6px 0">最容易错的就是<b>套错条件</b>。同 T 同 p 比的是<b>体积</b>；同 T 同 V 比的是<b>压强</b>。两者都等于物质的量之比，但用错场景就崩。</p>
+      <table>
+        <tr><th>条件</th><th>什么成比例</th><th>公式</th></tr>
+        <tr><td>同 T、同 p</td><td>体积 ∝ n</td><td>V₁/V₂ = n₁/n₂</td></tr>
+        <tr><td>同 T、同 V</td><td>压强 ∝ n</td><td>p₁/p₂ = n₁/n₂</td></tr>
+        <tr><td>同 T、同 p</td><td>密度 ∝ M</td><td>ρ₁/ρ₂ = M₁/M₂</td></tr>
+        <tr><td>同 T、同 p、同 m</td><td>体积 ∝ 1/M</td><td>V₁/V₂ = M₂/M₁</td></tr>
+      </table>
+      <p class="trap">⚠ 「同容器(同 V)加不同气体，压强之比 = 物质的量之比」——这是同 T 同 V 推论，别错用成体积比。判断题先问：<b>题里固定的是 p 还是 V？</b></p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📋 互动 5 — 推论对照表：切换「同 T 同 p」/「同 T 同 V」，看比例关系怎么换</div>
+      <svg id="cmpSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cmpcase on" data-c="0">同 T 同 p（比体积）</button>
+        <button class="cmpcase" data-c="1">同 T 同 V（比压强）</button>
+      </div>
+      <div class="verdict" id="cmpNote"></div>
+      <p class="small">两瓶气体，物质的量 n<sub>1</sub>:n<sub>2</sub>=1:2。同 T 同 p 时体积之比=1:2；同 T 同 V 时压强之比=1:2。切换看「变的那个量」怎么随 n 走。</p>
+    </div>
+
+    <h2 class="r">⑥ 相对密度求摩尔质量</h2>
+    <div class="card">
+      <p style="margin:6px 0">相对密度是求未知气体摩尔质量的常用手段。同 T 同 p 下：</p>
+      <div class="eq">D = ρ₁/ρ₂ = M₁/M₂　⟹　M₁ = D · M₂</div>
+      <table>
+        <tr><th>参照气体</th><th>其 M</th><th>求未知 M 公式</th></tr>
+        <tr><td>H<sub>2</sub></td><td>2</td><td>M = 2D</td></tr>
+        <tr><td>空气</td><td>29</td><td>M = 29D</td></tr>
+        <tr><td>O<sub>2</sub></td><td>32</td><td>M = 32D</td></tr>
+      </table>
+      <p style="margin:6px 0"><b>例:</b> 某气体对 H<sub>2</sub> 的相对密度为 22，则 M=2×22=44 g/mol，可能是 CO<sub>2</sub> 或 N<sub>2</sub>O。<b>例:</b> 某气体对空气相对密度 1.52，则 M=29×1.52≈44。</p>
+      <p class="trap">⚠ D 大于1 表示比参照气体重，小于1 表示更轻。别把「对 H<sub>2</sub> 的 D」直接当成 M——要乘 2。参照是空气就乘 29。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 6 — 相对密度求 M：选参照气体、调 D，反求未知气体摩尔质量</div>
+      <svg id="rdSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rdref on" data-m="2" data-l="H₂">对 H₂</button>
+        <button class="rdref" data-m="29" data-l="空气">对空气</button>
+        <button class="rdref" data-m="32" data-l="O₂">对 O₂</button>
+        <label>相对密度 D <input id="rdD" type="range" min="0.5" max="3" value="1.5" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>参照气体 M₂</b><span id="rdM2">0</span></div>
+        <div><b>相对密度 D</b><span id="rdD2">0</span></div>
+        <div><b>未知气体 M=D·M₂</b><span id="rdM">0</span></div>
+        <div><b>轻/重于参照</b><span id="rdCmp">—</span></div>
+      </div>
+      <p class="small">M<sub>未知</sub>=D×M<sub>参照</sub>。天平演示：未知气体在左，参照在右，D 就是两者摩尔质量之比。D&gt;1 未知更重（下沉）。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 同温同压体积比 = 物质的量比</h3>
+      <p><b class="tag">触发信号:</b>「同温同压下」「相同状况下」比较几种气体的体积，或已知体积求物质的量、分子数之比。</p>
+      <p><b class="tag">标准动作:</b>直接 V₁/V₂ = n₁/n₂ = N₁/N₂（分子数比）。反应中气体系数比 = 同 T 同 p 下体积比。</p>
+      <p><b class="tag">示例(带解):</b>同温同压下，等质量的 CH<sub>4</sub> 与 O<sub>2</sub> 体积之比？等质量 m：n(CH<sub>4</sub>)=m/16，n(O<sub>2</sub>)=m/32。V∝n（同 T 同 p），故 V(CH<sub>4</sub>):V(O<sub>2</sub>)=(m/16):(m/32)=2:1。</p>
+      <p class="trap">陷阱:忘了「同温同压」这个前提就写体积比;把「等质量」当「等物质的量」。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 密度比 = 摩尔质量比</h3>
+      <p><b class="tag">触发信号:</b>比较两气体密度、给密度求摩尔质量、「同状况下气体密度之比」。</p>
+      <p><b class="tag">标准动作:</b>同 T 同 p 下 ρ₁/ρ₂ = M₁/M₂。要具体密度用 ρ=pM/(RT) 或标况 ρ=M/22.4。</p>
+      <p><b class="tag">示例(带解):</b>同温同压下 CO<sub>2</sub> 与 H<sub>2</sub> 的密度之比？ρ(CO<sub>2</sub>):ρ(H<sub>2</sub>)=M(CO<sub>2</sub>):M(H<sub>2</sub>)=44:2=22:1。CO<sub>2</sub> 密度是 H<sub>2</sub> 的 22 倍。</p>
+      <p class="trap">陷阱:非同温同压也套 ρ∝M;把密度比算成体积比(方向反了)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 压强比型（同 T 同 V）</h3>
+      <p><b class="tag">触发信号:</b>「同一密闭容器」「体积不变」「相同容器分别充入」，问压强之比。</p>
+      <p><b class="tag">标准动作:</b>同 T 同 V 下 p₁/p₂ = n₁/n₂。已知质量则 n=m/M，代入即得压强比。</p>
+      <p><b class="tag">示例(带解):</b>两个相同容积的瓶，同温下分别充入 4g 的 H<sub>2</sub> 和 4g 的 He，压强之比？n(H<sub>2</sub>)=4/2=2mol，n(He)=4/4=1mol。同 T 同 V：p(H<sub>2</sub>):p(He)=n₁:n₂=2:1。</p>
+      <p class="trap">陷阱:同容器却错用体积比;忘记 n=m/M 换算就直接比质量。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 平均摩尔质量计算型</h3>
+      <p><b class="tag">触发信号:</b>混合气体，给各组分体积分数(或物质的量比)求 M̄，或给 M̄ 反求组成。</p>
+      <p><b class="tag">标准动作:</b>M̄ = m<sub>总</sub>/n<sub>总</sub> = Σ(x<sub>i</sub>M<sub>i</sub>)，x<sub>i</sub> 为体积分数。两组分可用十字交叉。</p>
+      <p><b class="tag">示例(带解):</b>标况下 N<sub>2</sub> 与 CO<sub>2</sub> 体积比 1:1 的混合气体，M̄=? M̄=0.5×28+0.5×44=36 g/mol。其密度 ρ=36/22.4≈1.61 g/L。</p>
+      <p class="trap">陷阱:用质量分数加权;算出的 M̄ 超出 [28,44] 范围没察觉。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 相对密度求摩尔质量型</h3>
+      <p><b class="tag">触发信号:</b>给出气体「对 H<sub>2</sub>（或空气）的相对密度」，求摩尔质量或推断气体。</p>
+      <p><b class="tag">标准动作:</b>M = D·M<sub>参照</sub>。对 H<sub>2</sub>：M=2D;对空气：M=29D。</p>
+      <p><b class="tag">示例(带解):</b>某气体对 H<sub>2</sub> 的相对密度为 14，M=2×14=28 g/mol，可能是 N<sub>2</sub> 或 CO 或 C<sub>2</sub>H<sub>4</sub>。若对空气相对密度约 0.97（28/29），同一结论。</p>
+      <p class="trap">陷阱:把对 H<sub>2</sub> 的 D 直接当 M（漏乘 2）;参照气体记错 M。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 气体计算综合型</h3>
+      <p><b class="tag">触发信号:</b>反应前后气体体积/压强变化、多推论联用，或结合标况 22.4L/mol 算 n、m、N。</p>
+      <p><b class="tag">标准动作:</b>先理条件（同 T 同 p 还是同 T 同 V）→ 选对应推论 → 需要绝对量时接标况 n=V/22.4。</p>
+      <p><b class="tag">示例(带解):</b>密闭容器中 2mol H<sub>2</sub> 与 1mol O<sub>2</sub> 完全反应生成水（液态），同温同容下反应前后压强之比？反应前 n=3mol，反应后气体全消耗（水为液态）n≈0 → 压强骤降。若产物为水蒸气则生成 2mol H<sub>2</sub>O(g)，同 T 同 V：p前:p后=3:2。</p>
+      <p class="trap">陷阱:产物水的状态（液态不计入气体）没判断;标况 22.4 只在 0℃、101kPa 才成立。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 定律<b>只对气体</b>成立!别拿去比固体、液体的体积或分子数。</p>
+      <p class="trap">② 推论要看条件:<b>同 T 同 p 比体积</b>(V∝n)，<b>同 T 同 V 比压强</b>(p∝n)。套错条件全盘皆错。</p>
+      <p class="trap">③ 推论四(V₁/V₂=M₂/M₁)前提是<b>同质量</b>!漏掉「等质量」就用错。密度比正比 M、同质量体积比反比 M，方向别反。</p>
+      <p class="trap">④ M̄ = 总质量/总物质的量，用<b>物质的量分数(=体积分数)</b>加权，<b>不是质量分数</b>，也不是算术平均。</p>
+      <p class="trap">⑤ 相对密度求 M 要<b>乘参照气体的 M</b>:对 H<sub>2</sub> 乘 2、对空气乘 29。别把 D 直接当 M。</p>
+      <p class="trap">⑥ <b>22.4 L/mol 只在标况</b>(0℃、101kPa)!非标况不能用，且必须是气体。</p>
+      <p class="trap">⑦ 「相同状况」「同温同压」是隐含前提，题目没说就不能随便用体积比。</p>
+      <p class="trap">⑧ 反应前后压强/体积比，要先判断<b>产物气体状态</b>(水是液态还是气态,系数变化)。</p>
+      <p class="trap">⑨ M̄ 一定<b>介于最小 M 与最大 M 之间</b>,算出来超范围立刻回头查。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切推论都是 pV=nRT 的「投影」:</b> 别背四条公式，背一个方程。固定 T、p，V∝n;固定 T、V，p∝n;把 n=m/M、ρ=m/V 代进去，密度、平均摩尔质量的公式自动掉出来。理解 pV=nRT 的人，考场上现推任何比例，永不套错条件。</p>
+      <p style="margin:8px 0"><b>② 「同 T 同 p 体积分数 = 物质的量分数」是隐藏钥匙:</b> 混合气体一切加权(M̄、平均组成)都用体积分数，因为同 T 同 p 下 V∝n。看到「体积分数」就当「物质的量分数」用，M̄=Σx<sub>i</sub>M<sub>i</sub> 一步到位。</p>
+      <p style="margin:8px 0"><b>③ 十字交叉法的本质是杠杆:</b> 两组分混合，M̄ 到两端 M 的「距离」之比 = 两组分物质的量的反比。M̄ 靠近谁，谁就多。这不是新公式，是 M̄=x·M<sub>1</sub>+(1−x)·M<sub>2</sub> 的几何形式，能秒解「求组成比」。</p>
+      <p style="margin:8px 0"><b>④ 密度比与体积比是「同一枚硬币」:</b> 同 T 同 p 同质量时，ρ∝M 而 V∝1/M——密度大的体积小。把「谁重谁体积小」当直觉，等质量气体比体积、比密度的题一眼看穿，不必列式。</p>
+      <p style="margin:8px 0"><b>⑤ 反应前后气体的「量」变化才是压强/体积变化的根:</b> 同 T 同 V 下 p∝n<sub>气</sub>。判断反应前后压强，只需数「气体分子总物质的量」变了多少——液态、固态产物不计入。把化学方程式的气体系数差读成压强/体积比，综合题就通了。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 注意:本页讲「气体定律推论」，区别于讲 N<sub>A</sub> 计算的「阿伏伽德罗常数」攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:同T同p同V 分子数相同 ===== */
+(function(){
+  const svg=document.getElementById('boxSvg');
+  const Ns=document.getElementById('boxN');
+  const oNa=document.getElementById('boxNa'),oNb=document.getElementById('boxNb');
+  let N=8,shown=0,running=false;
+  function draw(){
+    clr(svg);
+    const bw=260,bh=200,y0=40;
+    const ax=40,bx=400;
+    // two boxes
+    el(svg,'rect',{x:ax,y:y0,width:bw,height:bh,fill:'#fff',stroke:INK,'stroke-width':4});
+    el(svg,'rect',{x:bx,y:y0,width:bw,height:bh,fill:'#fff',stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:ax+bw/2,y:y0-12,'font-size':15,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='左盒 H2 (小分子)';
+    el(svg,'text',{x:bx+bw/2,y:y0-12,'font-size':15,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='右盒 CO2 (大分子)';
+    // molecules laid on a grid, count = shown
+    const cols=4;
+    function place(ox,r,col){
+      for(let i=0;i<shown;i++){
+        const cx=ox+30+(i%cols)*((bw-60)/(cols-1));
+        const cy=y0+35+Math.floor(i/cols)*((bh-70)/3);
+        el(svg,'circle',{cx:cx,cy:cy,r:r,fill:col,stroke:INK,'stroke-width':2});
+      }
+    }
+    place(ax,7,BLUE);
+    place(bx,15,RED);
+    el(svg,'text',{x:ax+bw/2,y:y0+bh+24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='分子数 = '+shown;
+    el(svg,'text',{x:bx+bw/2,y:y0+bh+24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='分子数 = '+shown;
+    el(svg,'text',{x:350,y:y0+bh+24,'font-size':16,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='=';
+    oNa.textContent=shown;oNb.textContent=shown;
+  }
+  function loop(){if(!running)return;if(shown<N){shown++;draw();setTimeout(loop,120);}else{running=false;}}
+  Ns.oninput=()=>{N=+Ns.value;shown=N;draw();};
+  document.getElementById('boxGo').onclick=()=>{N=+Ns.value;shown=0;running=true;loop();};
+  document.getElementById('boxReset').onclick=()=>{N=+Ns.value;shown=N;draw();};
+  N=+Ns.value;shown=N;draw();
+})();
+
+/* ===== 互动2:pV=nRT 关系 ===== */
+(function(){
+  const svg=document.getElementById('pvSvg');
+  const Ns=document.getElementById('pvN'),Vs=document.getElementById('pvV'),Ts=document.getElementById('pvT');
+  const oN=document.getElementById('pvOn'),oV=document.getElementById('pvOv'),oT=document.getElementById('pvOt'),oP=document.getElementById('pvOp');
+  const R=8.314; // kPa·L/(mol·K)
+  function draw(){
+    clr(svg);
+    const n=+Ns.value,V=+Vs.value,T=+Ts.value;
+    const p=n*R*T/V; // kPa
+    oN.textContent=n;oV.textContent=V;oT.textContent=T;oP.textContent=p.toFixed(1);
+    el(svg,'text',{x:350,y:28,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='p V = n R T';
+    // four bars: n, V, T, p (normalized)
+    const items=[['n',n,5,BLUE],['V',V,50,GREEN],['T',T,500,ORANGE],['p',p,60,RED]];
+    const baseY=210,maxH=140,bw=70,gap=90,x0=110;
+    items.forEach((it,i)=>{
+      const [lab,val,mx,col]=it;
+      const h=Math.max(6,(val/mx)*maxH);
+      const x=x0+i*gap;
+      el(svg,'rect',{x:x,y:baseY-h,width:bw,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+bw/2,y:baseY+18,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+      el(svg,'text',{x:x+bw/2,y:baseY-h-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(lab==='p'?val.toFixed(0):val);
+    });
+    el(svg,'line',{x1:90,y1:baseY,x2:640,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:50,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='固定两个量,另两个成比例 —— 推论就是这么来的';
+  }
+  Ns.oninput=Vs.oninput=Ts.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动3:密度比=摩尔质量比 ===== */
+(function(){
+  const svg=document.getElementById('denSvg');const note=document.getElementById('denNote');
+  let Ma=2,Mb=32,La='H2',Lb='O2';
+  document.querySelectorAll('.denpair').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.denpair').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    Ma=+b.dataset.a;Mb=+b.dataset.b;La=b.dataset.la;Lb=b.dataset.lb;draw();
+  });
+  function draw(){
+    clr(svg);
+    const baseY=190,maxH=140,mMax=64;
+    const ha=Math.max(8,(Ma/mMax)*maxH),hb=Math.max(8,(Mb/mMax)*maxH);
+    el(svg,'rect',{x:200,y:baseY-ha,width:90,height:ha,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:410,y:baseY-hb,width:90,height:hb,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:245,y:baseY+20,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent=La;
+    el(svg,'text',{x:455,y:baseY+20,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=Lb;
+    el(svg,'text',{x:245,y:baseY-ha-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M='+Ma;
+    el(svg,'text',{x:455,y:baseY-hb-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M='+Mb;
+    el(svg,'line',{x1:160,y1:baseY,x2:540,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='同 T 同 p:密度比 = 摩尔质量比';
+    function g(a,b){return b===0?a:g(b,a%b);}
+    const d=g(Ma,Mb);
+    note.innerHTML='👉 ρ('+La+'):ρ('+Lb+') = M:M = '+Ma+':'+Mb+' = <b>'+(Ma/d)+':'+(Mb/d)+'</b>。摩尔质量大的('+Lb+')密度大、更重。';
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 互动4:平均摩尔质量加权 ===== */
+(function(){
+  const svg=document.getElementById('mixSvg');
+  const Xs=document.getElementById('mixX');
+  const oM1=document.getElementById('mixM1'),oM2=document.getElementById('mixM2'),oP=document.getElementById('mixP'),oMb=document.getElementById('mixMbar');
+  let Ma=28,Mb=44,La='N2',Lb='CO2';
+  document.querySelectorAll('.mixpair').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.mixpair').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    Ma=+b.dataset.a;Mb=+b.dataset.b;La=b.dataset.la;Lb=b.dataset.lb;draw();
+  });
+  function draw(){
+    clr(svg);
+    const x=(+Xs.value)/100;
+    const Mbar=x*Ma+(1-x)*Mb;
+    oM1.textContent=Ma;oM2.textContent=Mb;oP.textContent=(x*100).toFixed(0)+'%';oMb.textContent=Mbar.toFixed(1);
+    // number line from min to max
+    const lo=Math.min(Ma,Mb),hi=Math.max(Ma,Mb);
+    const X0=90,X1=610,y=150;
+    el(svg,'line',{x1:X0,y1:y,x2:X1,y2:y,stroke:INK,'stroke-width':4});
+    // endpoints
+    function px(m){return X0+(m-lo)/(hi-lo)*(X1-X0);}
+    el(svg,'circle',{cx:X0,cy:y,r:8,fill:Ma<=Mb?BLUE:RED,stroke:INK,'stroke-width':3});
+    el(svg,'circle',{cx:X1,cy:y,r:8,fill:Ma<=Mb?RED:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0,y:y+34,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M='+lo;
+    el(svg,'text',{x:X1,y:y+34,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M='+hi;
+    // Mbar pointer
+    const mx=px(Mbar);
+    el(svg,'line',{x1:mx,y1:y-40,x2:mx,y2:y+12,stroke:GREEN,'stroke-width':4});
+    el(svg,'polygon',{points:mx+','+(y-40)+' '+(mx-8)+','+(y-54)+' '+(mx+8)+','+(y-54),fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:mx,y:y-62,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='M̄='+Mbar.toFixed(1);
+    el(svg,'text',{x:350,y:40,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M̄ = x·M('+La+') + (1−x)·M('+Lb+')';
+    el(svg,'text',{x:350,y:210,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent=La+' 占 '+(x*100).toFixed(0)+'% → M̄ 始终落在两端之间';
+  }
+  Xs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:推论对照 同T同p / 同T同V ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');const note=document.getElementById('cmpNote');
+  let c=0;
+  document.querySelectorAll('.cmpcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cmpcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    // two gas samples n1=1, n2=2
+    const n1=1,n2=2;
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='气体1 : 气体2 的物质的量 n₁:n₂ = 1:2';
+    // draw two containers
+    function container(x,w,h,fill,lab,sub){
+      el(svg,'rect',{x:x,y:200-h,width:w,height:h,fill:fill,stroke:INK,'stroke-width':4});
+      el(svg,'text',{x:x+w/2,y:222,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+      el(svg,'text',{x:x+w/2,y:200-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=sub;
+    }
+    let msg;
+    if(c===0){ // same T, same p -> volume differs, V1:V2 = 1:2
+      container(120,80,60,'rgba(20,80,200,0.25)','气体1','V=1');
+      container(360,80,120,'rgba(224,56,42,0.25)','气体2','V=2');
+      el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='盒子高度=体积;压强相同(标注在里面)';
+      msg='<b>同 T 同 p</b>:压强一样,可<b>体积不同</b> → V₁:V₂ = n₁:n₂ = <b>1:2</b>。（V ∝ n）';
+    } else { // same T, same V -> pressure differs
+      container(120,120,120,'rgba(20,80,200,0.15)','气体1','p=1');
+      container(360,120,120,'rgba(224,56,42,0.30)','气体2','p=2');
+      // pressure arrows density hint
+      el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='盒子一样大(同V);颜色深浅=压强大小';
+      msg='<b>同 T 同 V</b>:体积一样,可<b>压强不同</b> → p₁:p₂ = n₁:n₂ = <b>1:2</b>。（p ∝ n）';
+    }
+    note.innerHTML=msg;
+    note.style.borderColor=c===0?BLUE:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动6:相对密度求 M ===== */
+(function(){
+  const svg=document.getElementById('rdSvg');
+  const Ds=document.getElementById('rdD');
+  const oM2=document.getElementById('rdM2'),oD=document.getElementById('rdD2'),oM=document.getElementById('rdM'),oCmp=document.getElementById('rdCmp');
+  let M2=2,Lref='H2';
+  document.querySelectorAll('.rdref').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.rdref').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    M2=+b.dataset.m;Lref=b.dataset.l;draw();
+  });
+  function draw(){
+    clr(svg);
+    const D=+Ds.value;
+    const M=D*M2;
+    oM2.textContent=M2;oD.textContent=D.toFixed(1);oM.textContent=M.toFixed(1);
+    oCmp.textContent=D>1?'重于'+Lref:D<1?'轻于'+Lref:'与'+Lref+'相同';
+    // balance beam tilt by D
+    const cx=350,cy=90,arm=180;
+    const tilt=Math.max(-0.35,Math.min(0.35,(D-1)*0.3));
+    const lx=cx-arm*Math.cos(tilt),ly=cy-(-arm*Math.sin(tilt));
+    const rx=cx+arm*Math.cos(tilt),ry=cy-(arm*Math.sin(tilt));
+    // pivot
+    el(svg,'polygon',{points:cx+','+(cy)+' '+(cx-16)+','+(cy+50)+' '+(cx+16)+','+(cy+50),fill:INK});
+    // beam
+    el(svg,'line',{x1:lx,y1:ly,x2:rx,y2:ry,stroke:INK,'stroke-width':6});
+    // pans
+    function pan(x,yy,lab,col){
+      el(svg,'line',{x1:x,y1:yy,x2:x,y2:yy+28,stroke:INK,'stroke-width':3});
+      el(svg,'rect',{x:x-40,y:yy+28,width:80,height:26,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x,y:yy+46,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=lab;
+    }
+    pan(lx,ly,'未知',RED);
+    pan(rx,ry,Lref,BLUE);
+    el(svg,'text',{x:350,y:24,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='M(未知) = D × M('+Lref+') = '+D.toFixed(1)+' × '+M2+' = '+M.toFixed(1);
+    el(svg,'text',{x:350,y:200,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='D>1 未知气体更重(左盘下沉);D<1 更轻';
+  }
+  Ds.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 阿伏伽德罗定律的完整表述是什么？适用对象是谁？",a:"在相同温度和相同压强下，相同体积的任何气体都含有相同数目的分子（即物质的量 n 相同）。只适用于气体，不适用于固体、液体。"},
+ {q:"2. 阿伏伽德罗定律的本质（理论根据）是什么？",a:"理想气体状态方程 pV=nRT。固定其中几个量，剩下量之间的比例关系就是各条推论。"},
+ {q:"3. 同温同压下，两气体的体积之比等于什么之比？",a:"等于物质的量之比（也等于分子数之比）：V₁/V₂ = n₁/n₂ = N₁/N₂。因为同 T 同 p 时 V ∝ n。"},
+ {q:"4. 同温同体积（同一密闭容器）下，压强之比等于什么？",a:"等于物质的量之比：p₁/p₂ = n₁/n₂。因为同 T 同 V 时 p ∝ n。"},
+ {q:"5. 同温同压下，两气体的密度之比等于什么？为什么？",a:"等于摩尔质量之比：ρ₁/ρ₂ = M₁/M₂。因为 ρ=pM/(RT)，同 T 同 p 时 ρ ∝ M。"},
+ {q:"6. 同温同压、质量相同的两气体，体积之比等于什么？",a:"等于摩尔质量的反比：V₁/V₂ = M₂/M₁。因为同质量时 n=m/M，V ∝ n = m/M，质量相同则 V ∝ 1/M。"},
+ {q:"7. 混合气体的平均摩尔质量怎么算？用什么加权？",a:"M̄ = 总质量/总物质的量 = Σ(xᵢMᵢ)，xᵢ 是各组分的物质的量分数（同 T 同 p 时 = 体积分数）。不是质量分数，也不是算术平均。"},
+ {q:"8. 气体密度公式？标况下怎么由 M 求密度？",a:"ρ=pM/(RT)。标况(0℃、101kPa)下 ρ=M/22.4（g/L）。"},
+ {q:"9. 相对密度 D 的定义？如何用它求未知气体摩尔质量？",a:"同 T 同 p 下 D=ρ₁/ρ₂=M₁/M₂，故 M₁=D·M₂。对 H₂：M=2D；对空气：M=29D。"},
+ {q:"10. 某气体对 H₂ 的相对密度为 22，求其摩尔质量，可能是什么气体？",a:"M=2×22=44 g/mol。可能是 CO₂ 或 N₂O。"},
+ {q:"11. 同温下，两个相同容积的瓶分别充入 4g H₂ 和 4g He，压强之比？",a:"n(H₂)=4/2=2mol，n(He)=4/4=1mol。同 T 同 V：p(H₂):p(He)=n₁:n₂=2:1。"},
+ {q:"12. 标况下 N₂ 与 CO₂ 体积比 1:1 的混合气体，平均摩尔质量和密度各是多少？",a:"M̄=0.5×28+0.5×44=36 g/mol。密度 ρ=M̄/22.4=36/22.4≈1.61 g/L。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

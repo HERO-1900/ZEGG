@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>短文改错 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">英语 · 攻坚包</div>
+    <h1>短文改错</h1>
+    <p class="lead">一篇约 10 行的短文,每行藏着「加一个词、删一个词、或改一个词」的错。它不考你写作,只考你能不能<b>逐行扫出高频语法雷区</b>——时态、名词单复数、连词、非谓语、代词、介词。这一页把「十大高频考点」拆成一张扫雷地图,让你看到某种信号就知道该查什么。</p>
+
+    <div class="say">🗣️ <b>短文改错(人话版):</b> 每行<b>最多一个错</b>(有的行没错),全篇通常 10 处。考的不是偏难句,而是<b>你反复踩的那几个语法雷</b>。三种操作:①缺词——在缺的地方打一个 <b>∧</b> 号,把词写上去;②多词——把多余的词<b>划一条斜线</b>划掉;③错词——把错的词<b>划横线</b>,在上面写对的词。方法只有一个:<b>按「十大高频考点」逐行扫雷</b>,先通读一遍抓住全文的时态基调和人称,再一行一行独立检查。</div>
+
+    <div class="keybox"><b>三种标注符号:</b> <b>缺词</b> 在缺处加 <b>∧</b> 并在下方写要加的词　|　<b>多词</b> 把多余的词<b>划斜线</b>(\)删掉　|　<b>错词</b> 把错词<b>划横线</b>,在其上方写正确的词。铁律:<b>每行最多改一处,只加/删/改一个词</b>,不许大改句子;改的词要么是加,要么是删,要么是替换,不能整句重写。</div>
+
+    <h2>① 三种错误 · 三种操作</h2>
+    <div class="card">
+      <div class="eq">缺词 ∧ ｜ 多词 \ ｜ 错词 ＿→改</div>
+      <p style="margin:8px 0"><b>短文改错的全部动作只有三种</b>,先分清是「少了」「多了」还是「用错了」,再动手。判断哪一种,靠的是把每行放进「十大高频考点」里过一遍。</p>
+      <table>
+        <tr><th>操作</th><th>符号</th><th>典型场景</th></tr>
+        <tr><td><b>缺词(加词)</b></td><td>在缺处标 <b>∧</b>,下方写词</td><td>漏冠词 a/the、漏连词 and/but、漏 to、漏 be 动词</td></tr>
+        <tr><td><b>多词(删词)</b></td><td>把多余词<b>划斜线</b></td><td>多余的 the、多余的 and、多余的 to、多余的 be、加错的介词</td></tr>
+        <tr><td><b>错词(改词)</b></td><td><b>划横线</b>,上方写对</td><td>时态错、单复数错、代词错、词性错、连词逻辑错、介词搭配错</td></tr>
+      </table>
+      <p class="trap">⚠ 三种里<b>错词占大半</b>(约 6~7 处),缺词、多词各 1~2 处。别只盯着「明显缺词/多词」,大量的分藏在「看着通顺、其实用错」的错词里。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 1 — 三种符号操作演示:加词 ∧ / 删词 \ / 改词,看标注长什么样</div>
+      <svg id="opSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="opmode on" data-m="0">缺词 · 加 ∧</button>
+        <button class="opmode" data-m="1">多词 · 划 \</button>
+        <button class="opmode" data-m="2">错词 · 改</button>
+      </div>
+      <div class="verdict" id="opNote"></div>
+      <p class="small">点三个按钮看同一类错误的标准标注:缺词在缺口打 ∧ 补词、多词把多余的词划斜线、错词把错词划线在上面写对的。这就是卷面上要写的样子。</p>
+    </div>
+
+    <h2 class="b">② 核心原理 · 十大高频考点</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>短文改错不是随机埋雷,它反复考同十类语法。</b>把这十项背成「扫雷清单」,逐行对照,漏错率立刻掉下来。</p>
+      <table>
+        <tr><th>#</th><th>考点</th><th>常见错法</th></tr>
+        <tr><td>1</td><td><b>动词时态/语态</b></td><td>全文过去时里冒出一个现在时;该用被动却用主动</td></tr>
+        <tr><td>2</td><td><b>主谓一致</b></td><td>主语第三人称单数,动词漏 -s;主语复数,动词却单数</td></tr>
+        <tr><td>3</td><td><b>名词单复数</b></td><td>可数名词该复数用了单数;many/two 后面名词没加 -s</td></tr>
+        <tr><td>4</td><td><b>代词一致</b></td><td>he/she/it/they 指代混乱;his/her/their 前后不统一;宾格主格混用</td></tr>
+        <tr><td>5</td><td><b>形容词/副词</b></td><td>修饰动词该用副词却用形容词(good→well);比较级/最高级错</td></tr>
+        <tr><td>6</td><td><b>连词与逻辑</b></td><td>and/but/so/because 用反了逻辑;because 与 so 连用</td></tr>
+        <tr><td>7</td><td><b>冠词 a/an/the</b></td><td>该加 a/the 漏了;不该有 the 多了;a/an 用错</td></tr>
+        <tr><td>8</td><td><b>介词搭配</b></td><td>固定搭配介词用错(in→on);多余介词;缺介词</td></tr>
+        <tr><td>9</td><td><b>非谓语动词</b></td><td>一个句子出现两个谓语;该用 -ing/-ed/to do 却用了原形</td></tr>
+        <tr><td>10</td><td><b>多余/缺失的 and、the</b></td><td>并列多加一个 and;the 该有没有、不该有却有</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>两条通读铁律:</b> ①<b>先通读全文</b>——抓住整篇的时态基调(是记叙过去,还是说明现在?)和主人公人称,后面所有时态/代词错都拿它当标尺。②<b>每行独立检查</b>——每行最多一个错,查完一行就往下,别在一行里改两处。</p>
+      <p class="trap">⚠ 时态错是<b>头号考点</b>:全篇过去时里突然一个动词是现在时,几乎必错。先定基调,再逐行比对。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🗺️ 互动 2 — 十大考点扫雷清单:逐项点开看例子,先看错句再看改法</div>
+      <div id="checklist"></div>
+      <p class="small">十个高频考点各配一个「错句 → 怎么改」的迷你例子。点标题展开,先自己找错,再看答案。把这十项练成看一眼就能对号入座的条件反射。</p>
+    </div>
+
+    <h2 class="g">③ 通读定基调:时态与人称是标尺</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>为什么第一步永远是通读?</b> 因为大多数时态错、代词错,单看那一行看不出来——它「本身语法没错」,只是和全文的基调不合。</p>
+      <div class="mono">第1步:通读一遍,判断全文时态基调(过去 / 现在 / 将来)。</div>
+      <div class="mono">第2步:记住主人公是谁、第几人称(I / he / she / they)。</div>
+      <div class="mono">第3步:逐行检查,凡与基调冲突的时态、与主人公冲突的代词,重点怀疑。</div>
+      <p style="margin:8px 0"><b>例:</b> 全文在讲「昨天我去了……」(过去时)。某行冒出 <b>I go to the park</b> —— go 本身没错,但和过去基调冲突,应改为 <b>went</b>。这类错只有先定了基调才抓得住。</p>
+      <p class="trap">⚠ 不通读就逐行硬看,你会放过所有「本行语法正确、但与全文不符」的时态/人称错,而这恰恰是改错最爱埋的雷。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⏱️ 互动 4 — 时态一致性检查:给一个基调,点出与基调冲突的那个动词</div>
+      <svg id="tenseSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="tenseNew">↻ 换一句</button>
+      </div>
+      <div class="verdict" id="tenseNote">点句子里你认为「时态和基调冲突」的那个动词。</div>
+      <p class="small">上方标出全文基调(如「过去时」)。句子里有个动词时态与基调不合,点它。点对了显示改法,点错了提示再看。练的就是「用基调当标尺」的手感。</p>
+    </div>
+
+    <h2 class="o">④ 名词单复数与主谓一致:两个最密的雷</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>可数名词单复数</b>和<b>主谓一致</b>是分值最密的两块。判断名词该单该复,看它前面的限定词和句意。</p>
+      <table>
+        <tr><th>信号</th><th>名词该怎样</th></tr>
+        <tr><td>前面有 many / two / several / a lot of</td><td>后接名词必须<b>复数</b>(two book→books)</td></tr>
+        <tr><td>前面有 a / an / each / every / one</td><td>后接名词必须<b>单数</b>(a books→book)</td></tr>
+        <tr><td>泛指一类事物、复数主语</td><td>常用<b>复数</b>(I like apple→apples)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>主谓一致:</b> 主语是<b>第三人称单数</b>(he/she/it/单数名词)且一般现在时 → 动词加 <b>-s/-es</b>;主语是<b>复数</b> → 动词用原形。主语和谓语中间隔了定语时,别被就近的名词带偏。</p>
+      <p class="trap">⚠ 陷阱:主语 The students... 谓语却写 likes;或 He like... 漏了 -s。定基调若是现在时,主谓一致就是必查项。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 5 — 名词单复数判断器:根据前面的限定词,判断名词该单还是该复</div>
+      <svg id="nounSvg" viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="nounpick" data-p="s">该用 单数</button>
+        <button class="nounpick" data-p="p">该用 复数</button>
+        <button id="nounNew">↻ 换一题</button>
+      </div>
+      <div class="verdict" id="nounNote">看限定词(a / many / two / each...),判断后面名词该单还是复,选一个。</div>
+      <p class="small">给一个「限定词 + 名词」片段,判断该名词此处应该单数还是复数。选完显示对错与规则。练熟这一步,单复数错就基本不漏了。</p>
+    </div>
+
+    <h2 class="v">⑤ 一行改错实战:找错词 + 选操作</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>真正的改错是「一行一行」做的。</b> 每拿到一行,先问自己:这行有错吗?如果有,是<b>缺词、多词、还是错词</b>?再动手。</p>
+      <div class="mono">流程:通读定基调 → 逐行扫十大考点 → 判断加/删/改 → 标注。</div>
+      <p style="margin:8px 0">下面的互动就是模拟这个过程:给你一行英文,你点出<b>出问题的那个词</b>,再选是<b>加、删、还是改</b>。这正是考场上的动作。</p>
+      <p class="trap">⚠ 别「改过头」:一行最多一处。如果你在一行里想改两个地方,几乎可以肯定有一处是你自己看走眼了。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 一行改错互动:点出出错的词,再选「加词 / 删词 / 改词」</div>
+      <div id="lineWrap" style="background:#fff;border:3px solid #16120A;padding:16px;font-size:17px;font-weight:800;line-height:2.2"></div>
+      <div class="ctrl">
+        <button class="lineop" data-o="add">这里缺词(加)</button>
+        <button class="lineop" data-o="del">这词多余(删)</button>
+        <button class="lineop" data-o="chg">这词用错(改)</button>
+        <button id="lineNew">↻ 换一行</button>
+      </div>
+      <div class="verdict" id="lineNote">第一步:点句子里你觉得出错的那个词。第二步:选它属于加/删/改。</div>
+      <p class="small">先点出错词(被点的词会高亮),再选操作类型。两步都对才算过关。模拟真实改错的「定位 + 判类型」双动作。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 动词时态 / 语态错型</h3>
+      <p><b class="tag">触发信号:</b>全文基调是过去,某行动词却是现在(或反之);该被动的地方用了主动;have/has 后面不是过去分词。</p>
+      <p><b class="tag">标准动作:</b>先定全文时态基调,凡与基调冲突的动词,改成与基调一致的时态;主语是动作承受者就改被动 be+过去分词。</p>
+      <p><b class="tag">示例(带解):</b>错句 <b>Yesterday I get up early and goes to school.</b> 全文过去时→ get 改 <b>got</b>、goes 改 <b>went</b>(但每行最多一错,二者通常分在两行)。又如 <b>The window was break by him.</b> → break 改 <b>broken</b>(被动需过去分词)。</p>
+      <p class="trap">陷阱:只改明显的,漏掉「本行语法对、与基调不符」的那个;被动漏把动词变过去分词。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 名词单复数 / 主谓一致型</h3>
+      <p><b class="tag">触发信号:</b>many/two/several 后名词没加 -s;a/each 后名词是复数;第三人称单数主语动词漏 -s;复数主语动词却带 -s。</p>
+      <p><b class="tag">标准动作:</b>看限定词定名词单复数;看主语人称与数,定动词加不加 -s。中间有定语时,回到真正的主语判断。</p>
+      <p><b class="tag">示例(带解):</b>错句 <b>He have many friend in the city.</b> → have 改 <b>has</b>(第三人称单数),friend 改 <b>friends</b>(many 后接复数)——分属两行时各改一处。</p>
+      <p class="trap">陷阱:被就近名词带偏主谓一致;可数/不可数名词判断错(information、advice 不可数,不加 -s)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 连词与逻辑错型</h3>
+      <p><b class="tag">触发信号:</b>前后两句是转折却用 and;是因果却用 but;because 和 so 同句连用;并列多了或少了一个 and。</p>
+      <p><b class="tag">标准动作:</b>判断两句间的逻辑关系(并列/转折/因果/条件),换成对应连词;because 与 so 只能留一个。</p>
+      <p><b class="tag">示例(带解):</b>错句 <b>I was tired, and I kept working.</b> 逻辑是转折→ and 改 <b>but</b>。又如 <b>Because it rained, so we stayed home.</b> → 删掉 <b>so</b>(because 与 so 不能连用)。</p>
+      <p class="trap">陷阱:光看单句通顺,忽略上下句的逻辑;because/so、though/but 连用不删。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 代词一致型</h3>
+      <p><b class="tag">触发信号:</b>指代主人公时 he/she/it/they 用错;his/her/their 前后不统一;该主格却用宾格(him→he);缺物主代词。</p>
+      <p><b class="tag">标准动作:</b>找到代词指代的对象,统一人称、性别、单复数、格。主语位置用主格,宾语/介词后用宾格,名词前用物主代词。</p>
+      <p><b class="tag">示例(带解):</b>错句 <b>My sister is kind, and everyone likes him.</b> → him 改 <b>her</b>(指 sister)。又如 <b>Me and my friend went out.</b> → Me 改 <b>I</b>(主语用主格)。</p>
+      <p class="trap">陷阱:指代对象找错;主格宾格混用;its(它的)与 it's(它是)混淆。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 冠词 / 介词错型</h3>
+      <p><b class="tag">触发信号:</b>该加 a/an/the 漏了,或不该有 the 多了;a/an 按发音用错;固定搭配的介词用错、多了或缺了。</p>
+      <p><b class="tag">标准动作:</b>可数单数名词第一次出现常加 a/an(元音音素前用 an);特指用 the;固定搭配的介词逐个背(be good at、interested in、arrive at/in)。</p>
+      <p><b class="tag">示例(带解):</b>错句 <b>I saw a elephant in ∧ zoo.</b> → a 改 <b>an</b>(elephant 元音开头),zoo 前加 <b>the</b>(特指)。又如 <b>good at play basketball</b> 里 <b>listen the music</b> → 加 <b>to</b>(listen to)。</p>
+      <p class="trap">陷阱:a/an 只看首字母不看发音(an hour、a university);介词搭配靠背,别凭感觉。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 形容词副词 / 多词少词型</h3>
+      <p><b class="tag">触发信号:</b>修饰动词却用形容词(good→well、quick→quickly);比较级用错;句中出现两个谓语(缺非谓语);多余或缺失的 to/be/the。</p>
+      <p><b class="tag">标准动作:</b>修饰动词/形容词用副词,修饰名词用形容词;一句只能一个谓语,多出来的动词变 -ing/-ed/to do;多词划掉,缺词补上。</p>
+      <p><b class="tag">示例(带解):</b>错句 <b>She sings very good.</b> → good 改 <b>well</b>(修饰动词 sings 用副词)。又如 <b>I want ∧ learn English</b> → 加 <b>to</b>(want to do);<b>He can to swim.</b> → 删 <b>to</b>(情态动词后接原形)。</p>
+      <p class="trap">陷阱:形容词副词不分;情态动词/助动词后多加 to;一句两谓语没发现。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>改过多</b>!每行<b>最多一个</b>错,有的行根本没错。想在一行改两处,基本是你看走眼了。</p>
+      <p class="trap">② <b>只改明显的,漏掉隐蔽的</b>。缺词、多词一眼可见,但大半分在「看着通顺、其实用错」的错词里,尤其时态和代词。</p>
+      <p class="trap">③ <b>时态前后不一致</b>是头号雷。不先通读定基调,就抓不住「本行语法对、与全文不符」的时态错。</p>
+      <p class="trap">④ <b>可数名词单复数</b>:many/two 后必复数,a/each 后必单数;information、advice、news 不可数,不加 -s。</p>
+      <p class="trap">⑤ <b>主谓一致</b>被中间定语带偏;第三人称单数动词漏 -s。</p>
+      <p class="trap">⑥ <b>连词逻辑</b>只看单句通不通,忘了看上下句是并列/转折/因果;because 与 so 连用不删。</p>
+      <p class="trap">⑦ <b>非谓语</b>:一句只能一个谓语,多的动词要变 -ing/-ed/to do;情态动词/助动词后接原形,别多加 to。</p>
+      <p class="trap">⑧ <b>a/an</b> 看发音不看首字母(an hour、a useful);<b>the</b> 特指才加,泛指别乱加。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 把「十大考点」变成条件反射:</b> 看到 many/two → 立刻查后面名词是否复数;看到句子有第二个动词 → 立刻查是否该变非谓语;看到 and/but/so → 立刻回读上句确认逻辑。改错高手不是逐词硬看,而是<b>由信号触发检查</b>,一眼对号入座。</p>
+      <p style="margin:8px 0"><b>② 先扫「结构错」,再扫「细节错」:</b> 第一遍专找时态、非谓语、主谓一致这类「牵一发动全身」的结构雷(分值大、易漏);第二遍再抠冠词、介词、单复数这类细节。分两遍扫,比一遍从头抠到尾更不容易漏。</p>
+      <p style="margin:8px 0"><b>③ 用「基调」当统一标尺:</b> 通读定下时态基调和主人公人称后,把它当尺子量每一行。凡是与基调冲突的时态、与主人公冲突的代词,即使本行语法没毛病,也要高度怀疑——这类「隐性错」正是拉开分差的地方。</p>
+      <p style="margin:8px 0"><b>④ 记「搭配清单」而非「感觉」:</b> 介词搭配(be good at、be interested in、arrive at/in、listen to)、固定句型(want to do、make sb do、too...to)靠背不靠猜。把高频搭配背成清单,看到就能秒判对错,不再凭语感赌。</p>
+      <p style="margin:8px 0"><b>⑤ 承认「有的行没错」:</b> 全篇约 10 处错,但常有 1~2 行是干净的。心里预设「每行必有错」会逼自己乱改、丢分。检查完一行确认无误,就坦然放过,把精力留给真正的雷。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <p class="small" style="margin-bottom:10px">下面 3 篇 10 行短文改错。先自己逐行找错(每行最多一处),再点「看答案」核对逐行解析。</p>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 英语攻坚包 · 短文改错:逐行扫雷 · 十大高频考点</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+
+/* ===== 互动1:三种符号操作演示 ===== */
+(function(){
+  const svg=document.getElementById('opSvg');
+  const note=document.getElementById('opNote');
+  let m=0;
+  document.querySelectorAll('.opmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.opmode').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  const cases=[
+    {before:["I","want","learn","English","."],mark:"add",idx:2,ins:"to",word:"to",
+     title:"缺词 · 加词 ∧",
+     msg:"want 后面漏了 to(want to do)。在 want 和 learn 之间打一个 ∧,下方写 to。改法:I want ∧ learn → I want to learn。"},
+    {before:["He","can","to","swim","well","."],mark:"del",idx:2,word:"to",
+     title:"多词 · 删词 \\",
+     msg:"情态动词 can 后面直接接动词原形,多了一个 to。把 to 划一条斜线删掉。改法:He can to swim → He can swim。"},
+    {before:["She","sings","very","good","."],mark:"chg",idx:3,to:"well",word:"good",
+     title:"错词 · 改词",
+     msg:"good 是形容词,不能修饰动词 sings,应用副词 well。把 good 划横线,上方写 well。改法:sings very good → sings very well。"}
+  ];
+  function draw(){
+    clr(svg);
+    const c=cases[m];
+    const y=90;let x=50;const gap=14;
+    svg.setAttribute("viewBox","0 0 700 210");
+    el(svg,'text',{x:350,y:36,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=c.title;
+    // draw the sentence word by word
+    const positions=[];
+    c.before.forEach((w,i)=>{
+      const tw=w.length*11+16;
+      const t=el(svg,'text',{x:x,y:y+5,'font-size':18,'font-weight':800,fill:INK});
+      t.textContent=w;
+      positions.push({x:x,w:tw,word:w,i:i});
+      // strike-through for deleted word
+      if(c.mark==="del"&&i===c.idx){
+        el(svg,'line',{x1:x-3,y1:y+10,x2:x+w.length*10+4,y2:y-14,stroke:RED,'stroke-width':3});
+      }
+      // underline + replacement for changed word
+      if(c.mark==="chg"&&i===c.idx){
+        el(svg,'line',{x1:x-2,y1:y+9,x2:x+w.length*10+2,y2:y+9,stroke:RED,'stroke-width':3});
+        el(svg,'text',{x:x+w.length*5,y:y-16,'font-size':16,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=c.to;
+      }
+      x+=w.length*11+gap;
+    });
+    // caret + inserted word for missing word
+    if(c.mark==="add"){
+      const p=positions[c.idx];
+      const cx=p.x-gap/2-2;
+      el(svg,'text',{x:cx,y:y+8,'font-size':22,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent="∧";
+      el(svg,'text',{x:cx,y:y-16,'font-size':16,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=c.ins;
+    }
+    // legend
+    el(svg,'text',{x:50,y:160,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent="红色=你在卷面上做的标注   绿色=你要写上去的正确词";
+    note.innerHTML="👉 "+c.msg;
+    note.style.borderColor=m===0?RED:m===1?ORANGE:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动2:十大考点扫雷清单 ===== */
+(function(){
+  const wrap=document.getElementById('checklist');
+  const items=[
+    {t:"1. 动词时态/语态",bad:"Yesterday he go to the park.",good:"go 改 went(全文过去时基调)。"},
+    {t:"2. 主谓一致",bad:"She like reading books.",good:"like 改 likes(She 第三人称单数,现在时加 -s)。"},
+    {t:"3. 名词单复数",bad:"I have two brother.",good:"brother 改 brothers(two 后接复数)。"},
+    {t:"4. 代词一致",bad:"My mother is busy, so I help him.",good:"him 改 her(指 mother)。"},
+    {t:"5. 形容词/副词",bad:"He runs very quick.",good:"quick 改 quickly(修饰动词 runs 用副词)。"},
+    {t:"6. 连词与逻辑",bad:"I was ill, and I went to school.",good:"and 改 but(前后是转折关系)。"},
+    {t:"7. 冠词 a/an/the",bad:"She is honest girl.",good:"honest 前加 an(honest 元音音素开头,可数单数)。"},
+    {t:"8. 介词搭配",bad:"He is good in English.",good:"in 改 at(be good at 固定搭配)。"},
+    {t:"9. 非谓语动词",bad:"I saw him play in the yard yesterday and sang.",good:"一句两谓语,sang 改 singing 或加连词(此处并列需理清)。核心:一句一谓语,多出的变非谓语。"},
+    {t:"10. 多余/缺失的 and、the",bad:"We visited ∧ Great Wall last week.",good:"Great Wall 前加 the(专有名词特指,the Great Wall)。"}
+  ];
+  items.forEach(o=>{
+    const d=document.createElement('div');
+    d.style.cssText="border:3px solid #16120A;background:#fff;margin:8px 0;padding:0";
+    const head=document.createElement('button');
+    head.className="btn";
+    head.style.cssText="width:100%;text-align:left;background:#16120A;color:#fff;border:0;padding:10px 14px;font-size:14px;box-shadow:none;cursor:pointer";
+    head.textContent="▸ "+o.t;
+    const body=document.createElement('div');
+    body.style.cssText="display:none;padding:12px 14px;font-weight:700";
+    body.innerHTML='<div style="color:#E0382A;font-weight:800">错句:'+o.bad+'</div><div style="color:#1E9E86;font-weight:800;margin-top:6px">改法:'+o.good+'</div>';
+    head.onclick=()=>{
+      const open=body.style.display==="block";
+      body.style.display=open?"none":"block";
+      head.textContent=(open?"▸ ":"▾ ")+o.t;
+    };
+    d.appendChild(head);d.appendChild(body);
+    wrap.appendChild(d);
+  });
+})();
+
+/* ===== 互动3:一行改错互动 ===== */
+(function(){
+  const wrap=document.getElementById('lineWrap');
+  const note=document.getElementById('lineNote');
+  const lines=[
+    {words:["He","have","a","new","bike","."],errIdx:1,op:"chg",fix:"have 改 has(He 第三人称单数)。",type:"改词"},
+    {words:["I","want","learn","English","well","."],errIdx:2,op:"add",fix:"learn 前加 to(want to do)。",type:"加词"},
+    {words:["She","can","to","dance","very","well","."],errIdx:2,op:"del",fix:"删掉 to(can 后接原形)。",type:"删词"},
+    {words:["They","goes","to","school","by","bus","."],errIdx:1,op:"chg",fix:"goes 改 go(They 复数,动词用原形)。",type:"改词"},
+    {words:["I","have","many","good","friend","here","."],errIdx:4,op:"chg",fix:"friend 改 friends(many 后接复数)。",type:"改词"},
+    {words:["My","father","is","busy",",","so","I","help","him","yesterday","."],errIdx:7,op:"chg",fix:"help 改 helped(全文过去时基调)。",type:"改词"}
+  ];
+  let cur=0,picked=-1,step=0;
+  function render(){
+    const L=lines[cur];
+    wrap.innerHTML="";
+    L.words.forEach((w,i)=>{
+      const span=document.createElement('span');
+      span.textContent=w;
+      span.style.cssText="cursor:pointer;padding:2px 5px;margin:0 2px;border-radius:4px;display:inline-block";
+      if(i===picked)span.style.background=(i===L.errIdx)?"#F3C00E":"#E0382A",span.style.color=(i===L.errIdx)?"#16120A":"#fff";
+      span.onclick=()=>{
+        picked=i;step=(i===L.errIdx)?1:0;render();
+        if(i===L.errIdx){
+          note.innerHTML="✅ 找对了出错的词 <b>"+w+"</b>!现在选它属于「加/删/改」哪一类。正确类型:<b>"+L.type+"</b>。";
+          note.style.borderColor=GREEN;
+        }else{
+          note.innerHTML="❌ 这个词 <b>"+w+"</b> 没问题,再看看别处。提示:逐行套十大考点。";
+          note.style.borderColor=RED;
+        }
+      };
+      wrap.appendChild(span);
+    });
+  }
+  document.querySelectorAll('.lineop').forEach(b=>b.onclick=()=>{
+    const L=lines[cur];
+    if(step!==1){note.innerHTML="⚠ 先点出<b>出错的那个词</b>,再选加/删/改。";note.style.borderColor=ORANGE;return;}
+    const o=b.dataset.o;
+    if(o===L.op){
+      note.innerHTML="🎉 完全正确!操作对了。改法:"+L.fix;
+      note.style.borderColor=GREEN;step=2;
+    }else{
+      note.innerHTML="❌ 操作类型不对。这里应该是「"+L.type+"」。再想想:是少了词、多了词、还是用错了词?";
+      note.style.borderColor=RED;
+    }
+  });
+  document.getElementById('lineNew').onclick=()=>{
+    cur=(cur+1)%lines.length;picked=-1;step=0;
+    note.innerHTML="第一步:点句子里你觉得出错的那个词。第二步:选它属于加/删/改。";
+    note.style.borderColor=INK;render();
+  };
+  render();
+})();
+
+/* ===== 互动4:时态一致性检查 ===== */
+(function(){
+  const svg=document.getElementById('tenseSvg');
+  const note=document.getElementById('tenseNote');
+  const cases=[
+    {base:"过去时",words:["Yesterday","I","get","up","and","went","out","."],errIdx:2,fix:"get 改 got(全文过去时)。"},
+    {base:"过去时",words:["Last","week","we","visit","the","museum","."],errIdx:3,fix:"visit 改 visited(last week 是过去)。"},
+    {base:"现在时",words:["Every","day","she","walked","to","school","."],errIdx:3,fix:"walked 改 walks(every day 是现在习惯)。"},
+    {base:"过去时",words:["He","opened","the","box","and","finds","a","gift","."],errIdx:5,fix:"finds 改 found(与 opened 同为过去)。"}
+  ];
+  let cur=0;
+  function draw(){
+    clr(svg);
+    const c=cases[cur];
+    el(svg,'rect',{x:20,y:20,width:170,height:34,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:105,y:43,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent="基调:"+c.base;
+    el(svg,'text',{x:210,y:43,'font-size':13,'font-weight':800,fill:'#6b5d3a'}).textContent="← 点出与基调冲突的动词";
+    let x=50;const y=110;
+    c.words.forEach((w,i)=>{
+      const t=el(svg,'text',{x:x,y:y,'font-size':18,'font-weight':800,fill:INK,style:"cursor:pointer"});
+      t.textContent=w;
+      t.addEventListener('click',()=>{
+        if(i===c.errIdx){
+          note.innerHTML="✅ 对!<b>"+w+"</b> 与「"+c.base+"」基调冲突。"+c.fix;
+          note.style.borderColor=GREEN;
+          el(svg,'line',{x1:x-2,y1:y+7,x2:x+w.length*10+2,y2:y+7,stroke:RED,'stroke-width':3});
+        }else{
+          note.innerHTML="❌ <b>"+w+"</b> 没问题,再找那个时态不对的动词(和「"+c.base+"」比)。";
+          note.style.borderColor=RED;
+        }
+      });
+      x+=w.length*11+14;
+    });
+  }
+  document.getElementById('tenseNew').onclick=()=>{
+    cur=(cur+1)%cases.length;
+    note.innerHTML="点句子里你认为「时态和基调冲突」的那个动词。";
+    note.style.borderColor=INK;draw();
+  };
+  draw();
+})();
+
+/* ===== 互动5:名词单复数判断器 ===== */
+(function(){
+  const svg=document.getElementById('nounSvg');
+  const note=document.getElementById('nounNote');
+  const cases=[
+    {det:"many",noun:"book",answer:"p",rule:"many 后接可数名词复数 → books。"},
+    {det:"a",noun:"apples",answer:"s",rule:"a 后接可数名词单数 → apple。"},
+    {det:"two",noun:"boy",answer:"p",rule:"数词 two 后接复数 → boys。"},
+    {det:"each",noun:"students",answer:"s",rule:"each 后接单数 → student。"},
+    {det:"several",noun:"idea",answer:"p",rule:"several 后接复数 → ideas。"},
+    {det:"every",noun:"days",answer:"s",rule:"every 后接单数 → day。"}
+  ];
+  let cur=0,done=false;
+  function draw(){
+    clr(svg);
+    const c=cases[cur];
+    el(svg,'text',{x:350,y:50,'font-size':14,'font-weight':900,fill:'#6b5d3a','text-anchor':'middle'}).textContent="这个名词此处该用单数还是复数?";
+    el(svg,'text',{x:230,y:110,'font-size':26,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent=c.det;
+    el(svg,'text',{x:430,y:110,'font-size':26,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=c.noun;
+    el(svg,'text',{x:350,y:160,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent="限定词是「"+c.det+"」";
+  }
+  document.querySelectorAll('.nounpick').forEach(b=>b.onclick=()=>{
+    const c=cases[cur];
+    if(b.dataset.p===c.answer){
+      note.innerHTML="✅ 对!"+c.rule;
+      note.style.borderColor=GREEN;done=true;
+    }else{
+      note.innerHTML="❌ 不对。再看限定词「"+c.det+"」。提示:a/each/every/one 后单数;many/two/several 后复数。";
+      note.style.borderColor=RED;
+    }
+  });
+  document.getElementById('nounNew').onclick=()=>{
+    cur=(cur+1)%cases.length;done=false;
+    note.innerHTML="看限定词(a / many / two / each...),判断后面名词该单还是复,选一个。";
+    note.style.borderColor=INK;draw();
+  };
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"【第1篇】逐行找错(每行最多一处):<br>1) Last summer I go to Beijing with my parents.<br>2) We stayed there for a week and had great time.<br>3) The city was very beautiful, but I liked it very much.<br>4) One day we visited Great Wall in the morning.<br>5) There were so many people that we can hardly move.<br>6) My father took a lot of photo for us.<br>7) In the afternoon, we went to a park nearby.<br>8) The park was full of tree and flowers.<br>9) We felt tired but happily at the end of the day.<br>10) I will never forget this wonderful trip.",
+  a:"1) go 改 went(全文过去时基调)。2) great 前加 a(had a great time)。3) but 改 and(前后是并列,不是转折)。4) Great Wall 前加 the(the Great Wall)。5) can 改 could(过去时)。6) photo 改 photos(a lot of 后接复数)。7) 本行无错。8) tree 改 trees(and flowers 并列,可数复数)。9) happily 改 happy(and 连接 tired,并列形容词作表语)。10) 本行无错。"},
+ {q:"【第2篇】逐行找错(每行最多一处):<br>1) My name is Li Hua and I am a middle school student.<br>2) I have a good friend who name is Tom.<br>3) He comes from America but now he live in China.<br>4) He is interested in Chinese and learns it very hardly.<br>5) Every morning he read Chinese aloud for an hour.<br>6) Sometimes he asks me some question about grammar.<br>7) I am always glad to helping him with his study.<br>8) We often play basketball together after class.<br>9) He plays it very good and teaches me a lot.<br>10) I think he is one of the best friend I have.",
+  a:"1) 本行无错。2) who 改 whose(修饰 name,用物主关系代词)。3) live 改 lives(he 第三人称单数,现在时)。4) hardly 改 hard(此处指努力,用 hard;hardly=几乎不)。5) read 改 reads(第三人称单数现在时)。6) question 改 questions(some 后可数用复数)。7) helping 改 help(be glad to do,to 后接原形)。8) 本行无错。9) good 改 well(修饰动词 plays 用副词)。10) friend 改 friends(one of the + 最高级 + 名词复数)。"},
+ {q:"【第3篇】逐行找错(每行最多一处):<br>1) Yesterday our class had a cleaning day at school.<br>2) All the students came early and started to work.<br>3) Some of us cleaned the windows, other swept the floor.<br>4) I was asked to water the flower in the garden.<br>5) The work was hard, so we all enjoyed it.<br>6) We worked hardly for the whole morning.<br>7) At noon our teacher come to check our work.<br>8) She was very pleased and gave us a big smile.<br>9) Everyone felt tired but proudly of the clean rooms.<br>10) It was a meaningful day that I will remember it.",
+  a:"1) 本行无错。2) 本行无错。3) other 改 others(指其他人,作主语用 others)。4) flower 改 flowers(泛指花,可数复数)。5) so 改 but(工作辛苦「但」都很享受,是转折)。6) hardly 改 hard(努力用 hard;hardly=几乎不)。7) come 改 came(全文过去时)。8) 本行无错。9) proudly 改 proud(and 连接 tired,并列形容词作表语,be proud of)。10) 删掉句末的 it(that 已指代 day,remember 后不再加 it)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:16px 0;font-weight:700;border-top:2px dashed #16120A;padding-top:12px';d.innerHTML='<div style="font-size:14px;line-height:1.9">'+o.q+'</div><button class="btn" style="margin-top:8px">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

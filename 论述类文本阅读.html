@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>论述类文本阅读 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">语文 · 攻坚包</div>
+    <h1>论述类文本阅读</h1>
+    <p class="lead">现代文阅读 I 里的论述类 / 信息类文本(说理文),是很多人「读得懂却选不对」的重灾区。它其实不考你的文采，考的是一件事:<b>你能不能把选项和原文一句句比对，揪出出题人对原文的「偷偷篡改」</b>。答案全在原文里，赢的关键是「回原文定位 + 逐字比对 + 识别设错」。</p>
+
+    <div class="say">🗣️ <b>论述类文本阅读(人话版):</b> 这根本不是「读懂一篇高深文章」的比赛，而是一场<b>选项 vs 原文的比对游戏</b>。命题人把原文改动一两个字、加一个「必然」、调换一个对象、编一个原文没有的因果——你的任务就是拿着选项<b>回原文找到对应句</b>，一个字一个字地核对，看它有没有<b>偷偷篡改</b>。答案永远在文里，你要做的不是「想」，而是<b>找 + 对</b>。</div>
+
+    <div class="keybox"><b>一句话方法:</b> <b>读文抓骨架(论点 / 论据 / 论证思路 / 关键概念)→ 审选项拆成信息点 → 回原文定位比对 → 用「八大设错」当筛子过一遍</b>。选择题不是选「最好」，是选「唯一没被改错的那个」(或按题干选「错误的一项」)。凡是你凭印象觉得对的，都要回原文验一遍。</div>
+
+    <h2>① 读文:先抓骨架，别抠细节</h2>
+    <div class="card">
+      <div class="eq">论点 + 论据 + 论证思路 + 关键概念 = 文章骨架</div>
+      <p style="margin:8px 0">第一遍读，<b>不是逐字精读</b>，而是快速抓四样东西，为后面的「定位」建地图:</p>
+      <table>
+        <tr><th>要抓什么</th><th>怎么抓 / 标记</th></tr>
+        <tr><td><b>中心论点</b>(作者到底主张什么)</td><td>常在开头 / 结尾，或每段首句。标出来。</td></tr>
+        <tr><td><b>论据</b>(用什么支撑)</td><td>事例、数据、名言、引用——旁边标「例」「引」。</td></tr>
+        <tr><td><b>论证思路</b>(段与段怎么推进)</td><td>关注「首先 / 其次 / 然而 / 因此 / 反之」等关联词。</td></tr>
+        <tr><td><b>关键概念</b>(反复出现的术语)</td><td>圈出来，弄清它的<b>定义、范围、条件</b>——设错最爱在这偷换。</td></tr>
+      </table>
+      <p class="trap">⚠ 别一上来就精读每个字。第一遍是「测绘地图」，第二遍带着选项<b>回原文定点核对</b>。抠细节抠在没考的地方，纯浪费时间。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧩 互动 3 — 论证结构图:一篇说理文的「论点 → 论据 → 论证方法」骨架(点节点看讲解)</div>
+      <svg id="argSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="argNote">点上方任一节点，看它在论证结构里的作用。</div>
+      <p class="small">中心论点在顶端总领，下面挂着若干<b>分论点 / 论据</b>，每个论据靠一种<b>论证方法</b>(举例 / 引用 / 对比 / 比喻 / 因果)去支撑论点。读文时先画出这张图，选项一来就知道它在攻击哪根梁。</p>
+    </div>
+
+    <h2 class="b">② 八大设错类型:选项被改错的八种手法</h2>
+    <div class="card">
+      <p style="margin:6px 0">命题人把原文「加工」成错误选项，翻来覆去就这<b>八种手法</b>。把它们背成肌肉记忆，比对时逐一过筛:</p>
+      <table>
+        <tr><th>设错类型</th><th>识别信号</th></tr>
+        <tr><td><b>①偷换概念</b></td><td>选项的对象 / 概念和原文<b>不是同一个</b>，被换成近义但不等的说法。</td></tr>
+        <tr><td><b>②以偏概全</b></td><td>把原文的「部分 / 某些 / 一定条件下」说成「全部 / 所有 / 都」。</td></tr>
+        <tr><td><b>③混淆时态</b></td><td>「已然」当「未然」，或反之(已经→将要，可能→一定发生)。</td></tr>
+        <tr><td><b>④混淆是非</b></td><td>把原文肯定的说成否定、否定的说成肯定(漏 / 加「不」「没有」)。</td></tr>
+        <tr><td><b>⑤强加因果</b></td><td>原文没有因果，选项硬造「因为…所以」「导致」。</td></tr>
+        <tr><td><b>⑥无中生有</b></td><td>选项内容原文<b>根本找不到</b>，凭空添加。</td></tr>
+        <tr><td><b>⑦张冠李戴</b></td><td>把甲的观点 / 特征 / 做法安到乙身上，对象错位。</td></tr>
+        <tr><td><b>⑧混淆条件</b></td><td>「必要条件」当「充分条件」，「只有…才」当「只要…就」。</td></tr>
+      </table>
+      <p class="trap">⚠ 这八类是全部选择题的「设错母题」。比对时不要只凭「读着别扭」，要能说出<b>它属于哪一类、错在哪个字</b>——说不出来，就是没真找到。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🃏 互动 1 — 八大设错类型卡片库:点开每张卡，看「原文 vs 篡改」对照</div>
+      <div class="ctrl" id="cardTabs"></div>
+      <div class="verdict" id="cardBody"></div>
+      <p class="small">每张卡给一句<b>原文</b>和一个被这类手法改过的<b>错误选项</b>，绿字标出原文、红字标出被动的手脚。看多了，一眼就能认出「这是偷换 / 这是以偏概全」。</p>
+    </div>
+
+    <h2 class="g">③ 审选项:拆成信息点，逐点回原文</h2>
+    <div class="card">
+      <p style="margin:6px 0">一个选项往往是<b>好几个信息点拼起来的</b>。整句核对容易被「大体对」蒙混；正确做法是把选项<b>拆开</b>，每个点单独回原文找对应、逐字核:</p>
+      <div class="mono">第1步：把选项按「主语 / 谓语 / 修饰 / 因果 / 范围词」切成若干信息点。</div>
+      <div class="mono">第2步：每个信息点回原文找到对应句(定位)。</div>
+      <div class="mono">第3步：逐点比对——概念同不同？范围大没大？时态变没变？因果真不真？</div>
+      <div class="mono">第4步：只要有一个点被改错，整个选项就错。全部点都对，才算对。</div>
+      <p style="margin:8px 0"><b>要害在范围词和逻辑词:</b>「都 / 所有 / 一定 / 必然 / 只有 / 因为 / 已经」这些词，是设错的高发字眼，比对时<b>重点盯</b>。</p>
+      <p class="trap">⚠ 别整句「感觉对」就选。选项越长越危险——它把三句对的话里塞一句改错的，赌你只看前半句。拆点，逐一验。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 2 — 选项拆分比对器:把一个选项拆成信息点，逐点回原文核对(看哪一点崩了)</div>
+      <div class="card" style="box-shadow:none;margin:0 0 10px"><b>原文:</b> <span id="srcText"></span></div>
+      <div class="ctrl" id="optTabs"></div>
+      <div id="pointBox"></div>
+      <div class="verdict" id="optVerdict"></div>
+      <p class="small">切换 A / B / C / D 四个选项。每个选项被拆成 2~3 个信息点，逐点亮出「✔ 与原文一致」或「✘ 被篡改」，最后给出这个选项是对是错、错在哪一类。</p>
+    </div>
+
+    <h2 class="o">④ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 理解概念 / 词句含义题</h3>
+      <p><b class="tag">触发信号:</b>「下列关于『XX』的理解，正确 / 不正确的一项」，围绕一个<b>关键概念或加点词</b>发问。</p>
+      <p><b class="tag">标准动作:</b>回原文找到该概念的<b>定义句</b>，锁定它的内涵(是什么)、外延(范围)、条件。逐一比对选项对它的「转述」有没有偷换、扩大、混淆。</p>
+      <p><b class="tag">示例(带解):</b> 原文:「所谓『内卷』，是指一种<b>没有实际增量</b>的过度竞争，投入越来越多而整体收益并未提升。」选项 D:「内卷指的是投入越多、<b>收益也越多</b>的激烈竞争。」→ ✘<b>偷换概念</b>+<b>混淆是非</b>:原文说「收益并未提升」，选项改成「收益也越多」，把定义的核心特征改反了。</p>
+      <p class="trap">陷阱:选项用近义词悄悄替换概念的关键限定(把「没有增量」换成「有增量」)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 筛选整合信息题(选项比对)</h3>
+      <p><b class="tag">触发信号:</b>「下列说法，符合 / 不符合原文意思的一项」，四个选项分别对应文中不同段落的信息。</p>
+      <p><b class="tag">标准动作:</b>每个选项<b>回原文定位</b>到对应句，拆成信息点逐字核。重点查:范围词(都 / 部分)、时态(已然 / 未然)、是非(有没有加减「不」)、对象(张冠李戴)。</p>
+      <p><b class="tag">示例(带解):</b> 原文:「近年来，<b>部分</b>短视频平台<b>开始尝试</b>为老年用户优化界面。」选项 B:「<b>各大</b>短视频平台<b>已经全面</b>完成了适老化改造。」→ ✘<b>以偏概全</b>(部分→各大)+<b>混淆时态</b>(开始尝试→已经全面完成)，一个选项踩两坑。</p>
+      <p class="trap">陷阱:把「部分」改「全部」、「尝试 / 将要」改「已经 / 完成」，改动只在一两个字。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 分析论证题(论点 / 论据 / 论证方法)</h3>
+      <p><b class="tag">触发信号:</b>「关于原文<b>论证</b>的相关分析，正确 / 不正确的一项」，考的是文章<b>怎么说理</b>，不是说了什么。</p>
+      <p><b class="tag">标准动作:</b>厘清三件事——<b>论点</b>(主张)、<b>论据</b>(用什么证)、<b>论证方法</b>(举例 / 引用 / 对比 / 比喻 / 因果 / 类比)。核对选项对「论点是什么、某段用了什么方法、论证了哪个分论点」的说法是否准确。</p>
+      <p><b class="tag">示例(带解):</b> 原文第三段引用了《论语》的话来支撑「学与思须并重」。选项 C:「第三段<b>举孔子的生平事例</b>论证了学习方法。」→ ✘用错<b>论证方法</b>:原文是<b>引用论证</b>(引名言)，不是<b>举例论证</b>(举事例)；且论证的是「学思并重」不是「学习方法」，对象也偏了。</p>
+      <p class="trap">陷阱:把「引用论证」说成「举例论证」；把某方法论证的<b>分论点张冠李戴</b>到别的论点上。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 根据文意推断题</h3>
+      <p><b class="tag">触发信号:</b>「根据原文内容，下列<b>推断</b>正确 / 不正确的一项」，选项是原文<b>没直说</b>、需你顺着逻辑推的结论。</p>
+      <p><b class="tag">标准动作:</b>看推断是否<b>有原文依据</b>、逻辑是否成立。狠盯<b>绝对化词</b>(一定 / 必然 / 只要…就)和<b>强加因果</b>——原文给的是「可能 / 有助于」，选项推成「必然 / 一定能」，就是错。</p>
+      <p><b class="tag">示例(带解):</b> 原文:「阅读经典<b>有助于</b>培养思辨能力。」选项 A:「<b>只要</b>多读经典，<b>就一定</b>能成为思想深刻的人。」→ ✘<b>绝对化 / 混淆条件</b>:「有助于」是「部分作用」，被推成「只要…就一定」(把必要变充分、把可能变必然)，推过头了。</p>
+      <p class="trap">陷阱:推断题里凡见「一定、必然、只要就、无论都」，绝对化嫌疑极大，回原文查它给的是不是这么强的话。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 分析概括作者观点态度题</h3>
+      <p><b class="tag">触发信号:</b>「作者对 XX 的态度是」「下列符合作者观点的一项」，考你抓准<b>作者立场</b>(赞成 / 反对 / 辩证)。</p>
+      <p><b class="tag">标准动作:</b>抓文中的<b>态度词和评价句</b>(「值得肯定」「未免偏颇」「不可否认…但」)。区分<b>作者观点</b>与文中<b>转述的他人观点</b>——常把别人的观点当成作者的。</p>
+      <p><b class="tag">示例(带解):</b> 原文:「<b>有人认为</b>技术必然带来进步，<b>但作者以为</b>，技术是双刃剑，需辩证看待。」选项:「作者认为技术必然带来进步。」→ ✘<b>张冠李戴</b>:「技术必然进步」是「有人」的观点，作者的立场恰恰是「辩证看待」，把他人观点安到作者头上。</p>
+      <p class="trap">陷阱:把「有人认为 / 传统观点」当成作者观点(张冠李戴)；把作者的辩证态度简化成单方面肯定 / 否定。</p>
+    </div>
+
+    <h2 class="r">⑤ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>偷换概念:</b>选项把原文的关键概念换成近义但不等价的词。核对时问一句「这俩真是同一个东西吗」。</p>
+      <p class="trap">② <b>以偏概全:</b>「部分 / 某些 / 一定条件下」被改成「全部 / 所有 / 都 / 任何」。盯范围词。</p>
+      <p class="trap">③ <b>混淆时态(已然 / 未然):</b>「将要 / 打算 / 有望」改成「已经 / 完成」，或反之。盯时间词。</p>
+      <p class="trap">④ <b>推断题绝对化陷阱:</b>见「一定 / 必然 / 只要…就 / 无论都」高度警惕。原文给「可能 / 有助于 / 往往」，推成「必然 / 一定」就是错。</p>
+      <p class="trap">⑤ <b>张冠李戴:</b>把甲(或「有人认为」)的观点安到乙(或作者)身上；把此段方法说成彼段。核对「谁说的、支撑哪个论点」。</p>
+      <p class="trap">⑥ <b>强加因果:</b>原文只是并列或先后，选项硬造「因为…所以 / 导致 / 使得」。查原文有没有真的因果链。</p>
+      <p class="trap">⑦ <b>无中生有:</b>选项某个点回原文<b>根本找不到</b>。找不到对应句，多半就是它编的。</p>
+      <p class="trap">⑧ <b>混淆是非 / 混淆条件:</b>偷偷加减一个「不」把肯定变否定；把「必要条件(只有才)」说成「充分条件(只要就)」。</p>
+      <p class="trap">⑨ <b>整句蒙混:</b>长选项里三句对、一句错，赌你只看开头。<b>拆点逐验</b>，一点错则全错。</p>
+    </div>
+
+    <h2 class="v">⑥ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 设错类型速查——把八类背成条件反射:</b> 遇到选项，脑子里过一遍清单:换概念了吗(偷换)？范围放大了吗(以偏概全)？时间变了吗(时态)？加减「不」了吗(是非)？因果是编的吗(强加因果)？原文有吗(无中生有)？对象错了吗(张冠李戴)？必要说成充分了吗(混淆条件)？能说出错在第几类，才叫真会。</p>
+      <p style="margin:8px 0"><b>② 论证方法辨析——别只会说「举例论证」:</b> <b>举例</b>(摆事实、列现象)、<b>引用</b>(引名言 / 经典 / 数据)、<b>对比</b>(正反两面并置)、<b>比喻</b>(用形象说抽象)、<b>类比</b>(由此及彼推同理)、<b>因果</b>(由因推果或由果溯因)。看到「《论语》说」是引用不是举例；看到「反观…」是对比；看到「好比…」是比喻。方法认准，题型C 稳拿。</p>
+      <p style="margin:8px 0"><b>③ 「回原文」是唯一真理，「凭印象」是最大陷阱:</b> 论述文选择题的正确率，几乎等于「你回原文核对了几个选项」。凡是没定位、凭记忆觉得对的选项，都是命题人给你挖的坑。养成「手指点着原文对应句，逐字读」的动作，别让眼睛在选项里空转。</p>
+      <p style="margin:8px 0"><b>④ 区分「事实」与「观点」、「作者」与「他人」:</b> 高分选手对「谁在说话」极度敏感——原文里「有人认为 / 传统看法 / 通常以为」后面是<b>他人观点</b>(常是作者要反驳的靶子)，「作者以为 / 事实上 / 其实」后面才是<b>作者立场</b>。张冠李戴题和观点态度题全靠这份敏感。</p>
+      <p style="margin:8px 0"><b>⑤ 敏感词雷达——一眼扫出高危字:</b> 训练自己扫选项时自动高亮两组词。<b>绝对化组:</b>一定 / 必然 / 全部 / 都 / 只有 / 只要就 / 无论 / 任何。<b>时态组:</b>已经 / 曾经 / 将要 / 有望 / 尚未。见到就回原文查它「配不配这么说」，命中率极高。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚨 互动 4 — 「已然/未然·绝对/相对」敏感词高亮器:粘一段选项，自动标出高危字</div>
+      <textarea id="hlIn" style="width:100%;min-height:80px;border:3px solid var(--ink);background:#fff;padding:10px;font-size:14px;font-weight:600;font-family:inherit;box-sizing:border-box">只要坚持阅读经典，任何人都一定能在短期内彻底改变思维方式；事实上，这一结论已经被所有研究充分证实。</textarea>
+      <div class="ctrl">
+        <button id="hlGo">▶ 高亮敏感词</button><button id="hlDemo">↺ 换示例</button>
+      </div>
+      <div class="verdict" id="hlOut" style="min-height:40px"></div>
+      <div class="live">
+        <div><b>绝对化词(黄)</b><span id="hlAbs">0</span></div>
+        <div><b>时态词(蓝)</b><span id="hlTime">0</span></div>
+        <div><b>因果词(红)</b><span id="hlCause">0</span></div>
+        <div><b>高危总数</b><span id="hlAll">0</span></div>
+      </div>
+      <p class="small">黄底=<b>绝对化 / 范围词</b>(一定 / 都 / 只要就)，蓝底=<b>时态词</b>(已经 / 将要)，红底=<b>因果词</b>(因为 / 导致)。高危词越多的选项，越要回原文逐一核实它「配不配这么说」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 设错类型识别练习:给你一个错误选项，判断它属于八大设错的哪一种</div>
+      <div class="verdict" id="drillStem" style="min-height:56px"></div>
+      <div class="chips" id="drillChoices"></div>
+      <div class="verdict" id="drillFb" style="display:none"></div>
+      <div class="ctrl">
+        <button id="drillNext">下一题 ▶</button>
+        <label>得分 <span id="drillScore" style="font-weight:900">0 / 0</span></label>
+      </div>
+      <p class="small">每题给一句「原文」和一个「错误选项」，你判断命题人用的是哪种手法。选完立刻给对错和讲解。反复刷，把八大设错练成一眼认。</p>
+    </div>
+
+    <h2 class="b">⑦ 自测(先想,再点开)</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>【说理文段·甲】</b> 常有人担心，人工智能会取代人类的创造力。<b>但事实上</b>，目前的人工智能只能在已有数据的范围内组合与模仿，它并<b>不能</b>真正提出前所未有的问题。<b>部分</b>研究者<b>正在探索</b>让机器具备「提问能力」的路径，不过至今尚无定论。因此，与其焦虑被取代，不如思考人机如何协作。</p>
+    </div>
+    <div class="card" id="quizA"></div>
+    <div class="card">
+      <p style="margin:6px 0"><b>【说理文段·乙】</b> 传统观点认为，方言是落后的、终将被普通话淘汰的语言形式。<b>然而，笔者以为</b>，方言承载着一方水土的历史记忆与文化基因，其价值不容抹杀。作者进而引用费孝通《乡土中国》中的论述，指出乡土社会的人际网络正是依托方言维系的——<b>这是引用论证</b>。可见，保护方言与推广普通话并不矛盾，二者可以并行不悖。</p>
+    </div>
+    <div class="card" id="quizB"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 语文攻坚包 · 论述类 / 信息类文本阅读 · 核心打法:回原文 + 拆信息点 + 八大设错筛一遍</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+/* ===== 互动1:八大设错类型卡片库 ===== */
+(function(){
+  const tabs=document.getElementById('cardTabs'),body=document.getElementById('cardBody');
+  const cards=[
+    {name:"①偷换概念",src:"所谓『共情』，是指理解并分担他人的情绪感受。",bad:"共情就是无条件地同意他人的观点。",note:"把『理解并分担情绪』偷换成『同意观点』——概念被换成了另一个东西。"},
+    {name:"②以偏概全",src:"部分年轻人倾向于用短视频获取知识。",bad:"所有年轻人都只用短视频获取知识。",note:"『部分』被放大成『所有』，『倾向于』被绝对成『只用』——范围以偏概全。"},
+    {name:"③混淆时态",src:"该项技术有望在未来几年内投入应用。",bad:"该项技术已经投入应用。",note:"『有望在未来』(未然)被改成『已经』(已然)——时态被偷偷提前。"},
+    {name:"④混淆是非",src:"经典阅读并不会立刻提升写作水平。",bad:"经典阅读会立刻提升写作水平。",note:"原文有『不会』(否定)，选项删掉『不』变成肯定——是非被反转。"},
+    {name:"⑤强加因果",src:"这座城市历史悠久，同时也是重要的港口。",bad:"因为这座城市历史悠久，所以成为重要港口。",note:"原文只是并列陈述两个事实，选项硬造出『因为…所以』的因果链。"},
+    {name:"⑥无中生有",src:"该学者主要研究宋代的城市经济。",bad:"该学者认为宋代经济已超过同期欧洲。",note:"『超过同期欧洲』这个判断，原文根本没有，凭空添加。"},
+    {name:"⑦张冠李戴",src:"甲主张严格立法，乙则强调道德自律。",bad:"甲强调道德自律，乙主张严格立法。",note:"把甲、乙的主张对调，观点安错了人——对象错位。"},
+    {name:"⑧混淆条件",src:"只有持续投入，才可能取得突破。",bad:"只要持续投入，就一定能取得突破。",note:"『只有…才(必要条件)』被换成『只要…就(充分条件)』，还把『可能』改成『一定』。"}
+  ];
+  let cur=0;
+  cards.forEach((c,i)=>{
+    const b=document.createElement('button');b.textContent=c.name;b.dataset.i=i;
+    if(i===0)b.classList.add('on');
+    b.onclick=()=>{cur=i;[...tabs.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');render();};
+    tabs.appendChild(b);
+  });
+  function render(){
+    const c=cards[cur];
+    body.innerHTML='<div style="font-weight:900;margin-bottom:6px">'+c.name+'</div>'+
+      '<div style="margin:4px 0"><span style="color:'+GREEN+';font-weight:900">原文:</span> '+esc(c.src)+'</div>'+
+      '<div style="margin:4px 0"><span style="color:'+RED+';font-weight:900">错误选项:</span> '+esc(c.bad)+'</div>'+
+      '<div style="margin-top:8px;font-weight:800;color:'+INK+'">🔎 手脚在哪:'+esc(c.note)+'</div>';
+  }
+  render();
+})();
+
+/* ===== 互动2:选项拆分比对器 ===== */
+(function(){
+  const srcEl=document.getElementById('srcText'),tabs=document.getElementById('optTabs'),box=document.getElementById('pointBox'),ver=document.getElementById('optVerdict');
+  const source="部分传统手工艺，因为缺乏年轻传承人，正面临失传的风险；不过近年来一些短视频平台的推广，让它们重新获得了关注。";
+  srcEl.textContent=source;
+  const opts=[
+    {name:"A",correct:true,type:"",points:[
+      {t:"『部分传统手工艺』面临失传",ok:true,why:"与原文『部分传统手工艺…正面临失传的风险』一致，范围词『部分』没被改。"},
+      {t:"原因是『缺乏年轻传承人』",ok:true,why:"原文明确给出这一原因，因果成立。"},
+      {t:"短视频推广让它们『重新获得关注』",ok:true,why:"与原文末句完全对应，未被篡改。"}
+    ]},
+    {name:"B",correct:false,type:"以偏概全",points:[
+      {t:"『所有传统手工艺』都面临失传",ok:false,why:"原文是『部分』，选项改成『所有』——以偏概全。"},
+      {t:"原因是缺乏年轻传承人",ok:true,why:"这一点与原文一致。"}
+    ]},
+    {name:"C",correct:false,type:"混淆时态 / 已然未然",points:[
+      {t:"传统手工艺『已经全部失传』",ok:false,why:"原文是『正面临失传的风险』(尚未发生)，选项说成『已经全部失传』——把未然当已然、还以偏概全。"},
+      {t:"短视频平台进行了推广",ok:true,why:"这一点原文有。"}
+    ]},
+    {name:"D",correct:false,type:"强加因果 / 无中生有",points:[
+      {t:"因为短视频火爆，所以手工艺才濒临失传",ok:false,why:"原文说失传原因是『缺乏传承人』，短视频反而是『让它们重获关注』；选项把因果编反——强加因果+混淆是非。"}
+    ]}
+  ];
+  let cur=0;
+  opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.textContent="选项 "+o.name;b.dataset.i=i;
+    if(i===0)b.classList.add('on');
+    b.onclick=()=>{cur=i;[...tabs.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');render();};
+    tabs.appendChild(b);
+  });
+  function render(){
+    const o=opts[cur];box.innerHTML='';
+    o.points.forEach((p,k)=>{
+      const d=document.createElement('div');
+      d.style.cssText='border:3px solid '+INK+';background:#fff;padding:9px 12px;margin:7px 0;font-weight:700;font-size:13.5px';
+      const mark=p.ok?'<b style="color:'+GREEN+'">✔ 信息点'+(k+1)+' 与原文一致</b>':'<b style="color:'+RED+'">✘ 信息点'+(k+1)+' 被篡改</b>';
+      d.innerHTML=mark+'<div style="margin-top:3px">'+esc(p.t)+'</div><div style="margin-top:4px;color:#4a4128;font-weight:600;font-size:12.5px">'+esc(p.why)+'</div>';
+      box.appendChild(d);
+    });
+    if(o.correct){ver.innerHTML='✅ <b style="color:'+GREEN+'">选项 '+o.name+' 正确</b>:三个信息点全部与原文一致，未见篡改。';ver.style.borderColor=GREEN;}
+    else{ver.innerHTML='❌ <b style="color:'+RED+'">选项 '+o.name+' 错误</b>——设错类型:<b>'+o.type+'</b>。只要有一个信息点被改错，整个选项就废了。';ver.style.borderColor=RED;}
+  }
+  render();
+})();
+
+/* ===== 互动3:论证结构图 ===== */
+(function(){
+  const svg=document.getElementById('argSvg'),note=document.getElementById('argNote');
+  const nodes=[
+    {id:'thesis',x:350,y:45,w:300,h:48,col:RED,label:'中心论点',sub:'读书贵在思考',note:'【中心论点】作者的核心主张，全文都在为它服务。读文第一件事就是把它揪出来——通常在开头或结尾。'},
+    {id:'sub1',x:150,y:150,w:210,h:44,col:BLUE,label:'分论点/论据一',sub:'古人的读书之道',note:'【论据一 · 引用论证】引用《论语》『学而不思则罔』等名言，用经典权威支撑中心论点。识别信号:出现「X 说」「《X》云」。'},
+    {id:'sub2',x:550,y:150,w:210,h:44,col:GREEN,label:'分论点/论据二',sub:'死读书的反面例子',note:'【论据二 · 举例+对比论证】举「只背不想反而学不好」的反面事例，与会思考者对比，正反映衬中心论点。识别信号:摆事实、「反观…」。'},
+    {id:'meth1',x:150,y:245,w:210,h:44,col:VIO,label:'论证方法:引用',sub:'引名言→显权威',note:'【论证方法·引用】用名言 / 经典 / 数据说话，增强说服力与权威性。切勿把它误说成「举例论证」。'},
+    {id:'meth2',x:550,y:245,w:210,h:44,col:ORANGE,label:'论证方法:举例+对比',sub:'摆事实→两面比',note:'【论证方法·举例+对比】既摆出具体事例，又正反并置，让道理在对照中凸显。这是两种方法叠用。'}
+  ];
+  const links=[['thesis','sub1'],['thesis','sub2'],['sub1','meth1'],['sub2','meth2']];
+  const map={};nodes.forEach(n=>map[n.id]=n);
+  function draw(){
+    clr(svg);
+    links.forEach(([a,b])=>{const A=map[a],B=map[b];el(svg,'line',{x1:A.x,y1:A.y+A.h/2,x2:B.x,y2:B.y-B.h/2,stroke:INK,'stroke-width':3});});
+    nodes.forEach(n=>{
+      const g=el(svg,'g',{style:'cursor:pointer'});
+      el(g,'rect',{x:n.x-n.w/2,y:n.y-n.h/2,width:n.w,height:n.h,fill:n.col,stroke:INK,'stroke-width':3,rx:4});
+      el(g,'text',{x:n.x,y:n.y-3,'font-size':13.5,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=n.label;
+      el(g,'text',{x:n.x,y:n.y+15,'font-size':11.5,'font-weight':700,fill:'#fff','text-anchor':'middle'}).textContent=n.sub;
+      g.addEventListener('click',()=>{note.textContent=n.note;note.style.borderColor=n.col;});
+    });
+  }
+  draw();
+})();
+
+/* ===== 互动4:敏感词高亮器 ===== */
+(function(){
+  const inp=document.getElementById('hlIn'),out=document.getElementById('hlOut'),go=document.getElementById('hlGo'),demo=document.getElementById('hlDemo');
+  const oAbs=document.getElementById('hlAbs'),oTime=document.getElementById('hlTime'),oCause=document.getElementById('hlCause'),oAll=document.getElementById('hlAll');
+  const abs=["一定","必然","必定","全部","所有","任何","都","只有","只要","就一定","无论","彻底","完全","绝对","全面","总是","永远","唯一"];
+  const time=["已经","曾经","将要","有望","尚未","即将","从此","始终","目前","过去","未来"];
+  const cause=["因为","所以","因此","导致","使得","从而","以致","故","造成"];
+  const demos=[
+    "只要坚持阅读经典，任何人都一定能在短期内彻底改变思维方式；事实上，这一结论已经被所有研究充分证实。",
+    "由于城市历史悠久，因此必然成为重要港口；未来所有游客都将涌向这里。",
+    "该技术已经全面普及，只有采用它才一定能提升效率，从而彻底解决全部问题。"
+  ];
+  let di=0;
+  function wrap(text){
+    let abn=0,tin=0,cn=0;
+    let items=[];
+    abs.forEach(w=>items.push([w,'abs']));time.forEach(w=>items.push([w,'time']));cause.forEach(w=>items.push([w,'cause']));
+    items.sort((a,b)=>b[0].length-a[0].length);
+    let marks=new Array(text.length).fill(null);
+    items.forEach(([w,cls])=>{
+      let idx=0;
+      while((idx=text.indexOf(w,idx))!==-1){
+        let free=true;for(let k=0;k<w.length;k++){if(marks[idx+k]){free=false;break;}}
+        if(free){for(let k=0;k<w.length;k++)marks[idx+k]=cls;if(cls==='abs')abn++;else if(cls==='time')tin++;else cn++;}
+        idx+=w.length;
+      }
+    });
+    let html='',i=0;
+    while(i<text.length){
+      if(marks[i]){
+        const cls=marks[i];let j=i;while(j<text.length&&marks[j]===cls)j++;
+        const bg=cls==='abs'?YEL:cls==='time'?'#bcd4ff':'#ffb3ad';
+        html+='<span style="background:'+bg+';padding:0 2px;font-weight:900;border:2px solid '+INK+'">'+esc(text.slice(i,j))+'</span>';
+        i=j;
+      }else{html+=esc(text[i]);i++;}
+    }
+    oAbs.textContent=abn;oTime.textContent=tin;oCause.textContent=cn;oAll.textContent=abn+tin+cn;
+    return html;
+  }
+  go.onclick=()=>{out.innerHTML=wrap(inp.value);out.style.borderColor=INK;};
+  demo.onclick=()=>{di=(di+1)%demos.length;inp.value=demos[di];out.innerHTML=wrap(inp.value);};
+  out.innerHTML=wrap(inp.value);
+})();
+
+/* ===== 互动5:设错类型识别练习 ===== */
+(function(){
+  const stem=document.getElementById('drillStem'),choices=document.getElementById('drillChoices'),fb=document.getElementById('drillFb'),nextb=document.getElementById('drillNext'),scoreEl=document.getElementById('drillScore');
+  const types=["偷换概念","以偏概全","混淆时态","混淆是非","强加因果","无中生有","张冠李戴","混淆条件"];
+  const bank=[
+    {src:"部分学生认同线上学习。",bad:"所有学生都认同线上学习。",ans:1,why:"『部分』被扩大为『所有』——以偏概全。"},
+    {src:"该政策有望明年试行。",bad:"该政策已经全面推行。",ans:2,why:"『有望明年』(未然)改成『已经』(已然)——混淆时态。"},
+    {src:"专家指出，转基因食品并非都不安全。",bad:"专家指出，转基因食品都不安全。",ans:3,why:"删去『并非』，把否定判断反转——混淆是非。"},
+    {src:"甲提倡节俭，乙推崇创新。",bad:"甲推崇创新，乙提倡节俭。",ans:6,why:"甲乙观点对调，安错了人——张冠李戴。"},
+    {src:"这本书语言平实，内容也很详实。",bad:"因为语言平实，所以内容详实。",ans:4,why:"两个并列特点被硬造成因果关系——强加因果。"},
+    {src:"所谓『躺平』，指主动降低欲望的生活选择。",bad:"『躺平』就是彻底放弃工作与生活。",ans:0,why:"把『降低欲望』偷换成『彻底放弃』，概念变了——偷换概念。"},
+    {src:"作者主要论述了唐诗的意境。",bad:"作者认为唐诗成就远超宋词。",ans:5,why:"『远超宋词』的判断原文没有——无中生有。"},
+    {src:"只有勤于练习，才能写好文章。",bad:"只要勤于练习，就能写好文章。",ans:7,why:"『只有…才(必要条件)』换成『只要…就(充分条件)』——混淆条件。"}
+  ];
+  let order=[],qi=0,got=0,total=0,answered=false;
+  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function load(){
+    answered=false;fb.style.display='none';
+    const q=bank[order[qi]];
+    stem.innerHTML='<div style="margin-bottom:5px"><span style="color:'+GREEN+';font-weight:900">原文:</span> '+esc(q.src)+'</div><div><span style="color:'+RED+';font-weight:900">错误选项:</span> '+esc(q.bad)+'</div><div style="margin-top:6px;font-weight:900">👉 它属于哪种设错?</div>';
+    stem.style.borderColor=INK;
+    choices.innerHTML='';
+    types.forEach((t,i)=>{
+      const c=document.createElement('span');c.className='chip';c.textContent=t;
+      c.onclick=()=>pick(i,c,q);choices.appendChild(c);
+    });
+  }
+  function pick(i,c,q){
+    if(answered)return;answered=true;total++;
+    [...choices.children].forEach((ch,k)=>{if(k===q.ans)ch.classList.add('on');});
+    if(i===q.ans){got++;fb.innerHTML='✅ <b style="color:'+GREEN+'">对!</b> '+esc(q.why);fb.style.borderColor=GREEN;}
+    else{c.style.background=RED;c.style.color='#fff';fb.innerHTML='❌ <b style="color:'+RED+'">再想想</b>——正确答案是<b>'+types[q.ans]+'</b>。'+esc(q.why);fb.style.borderColor=RED;}
+    fb.style.display='block';scoreEl.textContent=got+' / '+total;
+  }
+  nextb.onclick=()=>{qi++;if(qi>=order.length){order=shuffle([...Array(bank.length).keys()]);qi=0;}load();};
+  order=shuffle([...Array(bank.length).keys()]);load();
+})();
+
+/* ===== 自测 甲 ===== */
+const qsA=[
+ {q:"1.【概念/是非】下列关于文段观点，正确的一项是:A.当前AI已能提出前所未有的问题　B.AI只能在已有数据范围内组合模仿，不能真正提出新问题　C.机器已具备提问能力　D.研究者已让AI学会提问",a:"选 B。A『已能提出新问题』与原文『并不能真正提出』相反(混淆是非);C『已具备』、D『已让…学会』都把『正在探索、尚无定论』(未然)说成已然(混淆时态)。B 与原文『只能在已有数据的范围内组合与模仿，它并不能真正提出』完全一致。"},
+ {q:"2.【时态/以偏概全】下列说法符合原文的一项是:A.所有研究者都已让机器具备提问能力　B.部分研究者正在探索让机器提问的路径，至今尚无定论　C.人机协作已经完全实现　D.AI必将彻底取代人类创造力",a:"选 B。A『所有…已让…具备』犯以偏概全(部分→所有)+混淆时态(正在探索→已);C『已经完全实现』无中生有+混淆时态;D『必将彻底取代』是绝对化，且与作者『不必焦虑被取代』的态度相反(张冠李戴他人担忧)。B 照抄原文『部分研究者正在探索…至今尚无定论』。"},
+ {q:"3.【推断/绝对化】根据文段，下列推断正确的一项是:A.只要发展AI，就一定会取代人类　B.因为AI不能提问，所以它毫无价值　C.面对AI，与其焦虑被取代，不如思考人机如何协作　D.AI永远不可能具备提问能力",a:"选 C。A『只要…就一定』绝对化;B『毫无价值』无中生有+强加因果(不能提问≠毫无价值);D『永远不可能』绝对化，原文只说『尚无定论』并未否死。C 正是原文结句的主张。"}
+];
+const qsB=[
+ {q:"4.【观点态度/张冠李戴】下列符合作者观点的一项是:A.方言落后，终将被普通话淘汰　B.方言承载文化基因，价值不容抹杀　C.保护方言与推广普通话相互矛盾　D.应当立即废除普通话",a:"选 B。A是『传统观点』而非作者观点(张冠李戴);C与原文『并不矛盾…并行不悖』相反(混淆是非);D『立即废除普通话』无中生有，过激。B 正是『笔者以为』后的作者立场。"},
+ {q:"5.【论证方法】关于文段论证的分析，正确的一项是:A.引用《乡土中国》属于举例论证　B.引用费孝通的论述属于引用论证，用来支撑『方言有价值』　C.文段主要用了比喻论证　D.作者用对比论证证明方言比普通话重要",a:"选 B。原文明确『引用费孝通《乡土中国》…这是引用论证』，A把引用误作举例;C『比喻论证』无中生有;D『对比论证』『方言比普通话重要』既用错方法，又曲解为褒方言贬普通话(与『并行不悖』相悖)。B 准确。"},
+ {q:"6.【筛选/混淆条件】下列说法符合原文的一项是:A.只有保护方言才能推广普通话　B.保护方言与推广普通话可以并行不悖　C.普通话的推广必然导致方言消亡　D.所有方言都必须被完整保存",a:"选 B。A把二者说成必要条件关系(混淆条件)，原文只说『不矛盾』;C『必然导致…消亡』强加因果+绝对化;D『所有…必须完整保存』以偏概全+绝对化，原文未作此要求。B 直接对应原文末句。"}
+];
+function buildQuiz(list,mount){
+  const box=document.getElementById(mount);
+  list.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+esc(o.q)+'</b> <button class="btn">看答案</button><div class="qa">'+esc(o.a)+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');box.appendChild(d);});
+}
+buildQuiz(qsA,'quizA');
+buildQuiz(qsB,'quizB');
+</script>
+</body>
+</html>

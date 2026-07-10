@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实用类文本阅读(非连续性文本) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">语文 · 攻坚包</div>
+    <h1>实用类文本阅读(非连续性文本)</h1>
+    <p class="lead">这一页讲的是高考语文里最「理科」的一块阅读:<b>几则材料 + 图表</b>拼在一起(非连续性文本)。它不考文学赏析,考的是<b>快速筛选信息、跨材料比对、读懂图表、分点概括</b>。文本来自新闻、通讯、传记、科普、访谈、调查报告。核心一句话:<b>求准、求全、有条理</b>——找对句子、答全要点、分点作答,分就到手。</p>
+
+    <div class="say">🗣️ <b>实用类文本(人话版):</b> 试卷上给你<b>材料一、材料二、材料三</b>,往往还配一张<b>图表</b>,它们围绕同一个话题(比如「乡村振兴」「人工智能」「传统文化传承」)从不同角度说事。考你的不是「写得美不美」,而是<b>「你能不能在一堆信息里快速定位、跨材料比对、看懂图表趋势、把要点分条说清楚」</b>。客观题跟论述类一样防「曲解/以偏概全/无中生有」的坑;主观题就一个铁律:<b>分点 + 关键词 + 结合材料</b>。别写文学腔的排比抒情——这里要的是<b>准确、全面、有条理</b>。</div>
+
+    <div class="keybox"><b>一句话方法:</b> <b>定位 → 比对 → 概括 → 分点</b>。看到题干先<b>圈出关键词</b>(时间、对象、角度),回到材料<b>定位对应句</b>,再把散落的信息<b>提炼成短语</b>,最后<b>分①②③点</b>写出来。图表题额外看三样:<b>趋势(升/降)、极值(最高/最低)、比较(谁大谁小)</b>。</div>
+
+    <h2>① 文本类型:先认出这是「哪一种」实用文</h2>
+    <div class="card">
+      <p style="margin:8px 0">实用类文本不是散文小说,它讲究<b>真实、准确、传递信息</b>。高考常见五类,先认出类型,才知道它想让你抓什么:</p>
+      <table>
+        <tr><th>类型</th><th>特点</th><th>阅读要抓什么</th></tr>
+        <tr><td><b>新闻/消息</b></td><td>时效性强,倒金字塔结构</td><td>标题、导语(第一句)、时间地点、核心事件</td></tr>
+        <tr><td><b>通讯</b></td><td>比新闻详细,有细节和评价</td><td>人物事迹、典型事例、作者态度</td></tr>
+        <tr><td><b>传记</b></td><td>写人物生平、成就、精神</td><td>关键经历、性格品质、评价语句</td></tr>
+        <tr><td><b>科普</b></td><td>解释科学概念/现象</td><td>核心概念、原理、说明顺序、数据</td></tr>
+        <tr><td><b>访谈/调查报告</b></td><td>问答体 / 数据+分析</td><td>受访者观点、问题指向、数据结论</td></tr>
+      </table>
+      <p class="trap">⚠ 别把实用类当文学类读。实用类<b>不问「表达了怎样的情感」</b>,问的是「概括了什么信息、图表说明了什么趋势、几则材料的异同」。答题语言要<b>朴实、精准、分点</b>,不要堆砌华丽词句。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🗂️ 互动 1 — 非连续性文本结构图:材料一/二/三 + 图表 → 共同话题(点开看每则材料的角度)</div>
+      <svg id="structSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="stmat on" data-i="0">材料一(新闻)</button>
+        <button class="stmat" data-i="1">材料二(图表)</button>
+        <button class="stmat" data-i="2">材料三(访谈)</button>
+        <button class="stmat" data-i="3">看共同话题</button>
+      </div>
+      <div class="verdict" id="structNote"></div>
+      <p class="small">非连续性文本 = 几则材料围绕<b>同一话题</b>,从<b>不同角度/文体</b>切入。点每块看它的角度。做题第一步:<b>先判断每则材料各说了什么,它们共同指向什么话题</b>。</p>
+    </div>
+
+    <h2 class="b">② 信息筛选与整合:定位关键句是命根</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>核心动作:题干关键词 → 回材料找对应句 → 提炼。</b> 实用类主观题的分,几乎都藏在材料的某几句话里。你的任务是<b>把它们找出来、翻译成要点</b>,而不是自己发挥。</p>
+      <h3>筛选三步</h3>
+      <div class="mono">第1步:审题干,圈关键词(问「原因」还是「措施」?问「特点」还是「意义」?限定哪则材料?)</div>
+      <div class="mono">第2步:回材料定位(找与关键词相关的句子,常在段首、段尾、转折词「但」「然而」「因此」后)</div>
+      <div class="mono">第3步:整合提炼(把找到的句子压缩成短语,同类合并,分点罗列)</div>
+      <p style="margin:8px 0"><b>定位信号词:</b> 「因此、所以、由此可见」后接结论;「首先、其次、此外、另外」提示并列要点;「但是、然而、相反」提示转折重点;数据、百分比、年份往往是命题点。</p>
+      <p class="trap">⚠ 「筛选」不是「照抄整段」。要<b>提炼关键词</b>,把长句压成短语。也不是「凭印象编」——每个要点都必须<b>在材料里有依据</b>,能指回原句。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 3 — 信息筛选定位器:选题干关键词,材料里的对应句自动高亮</div>
+      <div id="locWrap" style="border:3px solid var(--ink);background:#fff;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.9"></div>
+      <div class="ctrl">
+        <button class="lockey on" data-k="0">找「发展现状」</button>
+        <button class="lockey" data-k="1">找「存在问题」</button>
+        <button class="lockey" data-k="2">找「对策措施」</button>
+      </div>
+      <div class="verdict" id="locNote"></div>
+      <p class="small">同一段材料,题干问的<b>点不同</b>,该定位的句子就不同。点按钮,看关键词把哪些句子「点亮」。这就是<b>带着问题回材料找句子</b>的过程。</p>
+    </div>
+
+    <h2 class="g">③ 图表解读:读趋势 / 极值 / 比较</h2>
+    <div class="card">
+      <p style="margin:8px 0">图表(柱状图、折线图、饼图、表格)是非连续性文本的常客。读图不是把数字念一遍,而是<b>看出它在说什么规律</b>。抓三样:</p>
+      <table>
+        <tr><th>看什么</th><th>怎么读</th><th>答题措辞</th></tr>
+        <tr><td><b>趋势</b></td><td>整体是升、降、还是先升后降</td><td>「呈上升/下降趋势」「逐年增长」「先增后减」</td></tr>
+        <tr><td><b>极值</b></td><td>最高点、最低点在哪一年/哪一项</td><td>「X 年达到峰值」「Y 项最低」</td></tr>
+        <tr><td><b>比较</b></td><td>项与项、组与组谁多谁少、差多少</td><td>「A 明显高于 B」「城市是农村的两倍」</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>读图口诀:先看标题和坐标(横轴是什么、纵轴是什么、单位),再看整体趋势,再找极值,最后做比较。</b> 一定要<b>结合数据说话</b>——不能只说「增长了」,要说「从 X 增长到 Y」。</p>
+      <p class="trap">⚠ 别看错趋势(把下降看成上升);别漏单位(是「万人」还是「亿元」);别脱离数据空谈。概括图表时,<b>要点 + 数据支撑</b>缺一不可。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 2 — 图表解读演示:切换柱状/折线,看趋势(升降)、极值(最高最低)、比较(谁大谁小)</div>
+      <svg id="chartSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="chmode on" data-m="0">柱状图·看比较</button>
+        <button class="chmode" data-m="1">折线图·看趋势</button>
+        <button class="chmode" data-m="2">高亮极值</button>
+      </div>
+      <div class="verdict" id="chartNote"></div>
+      <p class="small">同一组数据(某市 2019–2023 年数字阅读人数,单位万人)。切换视图:<b>柱状</b>适合比大小,<b>折线</b>适合看趋势,再点<b>极值</b>找最高/最低点。答题时把这三点连成一句话。</p>
+    </div>
+
+    <h2 class="o">④ 跨材料比较:找异同是高频主观题</h2>
+    <div class="card">
+      <p style="margin:8px 0">非连续性文本天生要「比」。常见问法:「几则材料侧重点有何不同?」「材料一和材料三的观点有何异同?」<b>答题=先找共同点(同),再找差异点(异),分材料分点说。</b></p>
+      <h3>比较三问</h3>
+      <div class="mono">同:它们共同关注/围绕的话题、共识是什么?</div>
+      <div class="mono">异:各自的角度不同(如:一则谈成就、一则谈问题、一则谈对策)?文体不同?立场不同?</div>
+      <div class="mono">答:分点写「材料一……;材料二……;材料三……」,或「相同点是……;不同点是……」。</div>
+      <p style="margin:8px 0"><b>常见「异」的维度:</b> 角度(现象/原因/对策)、文体(新闻/评论/访谈)、对象(城市/农村)、态度(肯定/担忧)、详略(概述/深入)。</p>
+      <p class="trap">⚠ 比较题最忌<b>只答一则</b>或<b>只说「都很好」这类空话</b>。要<b>逐则对应、点出差异维度</b>。问「异同」就必须<b>既写同、又写异</b>,漏一半扣一半。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 4 — 主观概括题四步流程:审题 → 定位 → 分点 → 提炼(一步步走完一道真题)</div>
+      <svg id="flowSvg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="flowPrev">← 上一步</button><button id="flowNext">下一步 →</button><button id="flowReset">↺ 重来</button>
+      </div>
+      <div class="verdict" id="flowNote"></div>
+      <p class="small">以一道「概括乡村数字化带来的变化」为例,一步步演示答主观概括题的<b>四步法</b>。每步都告诉你<b>手上该做什么、心里在想什么</b>。走完就知道满分答案是怎么「攒」出来的。</p>
+    </div>
+
+    <h2 class="v">⑤ 概括归纳:分点作答、条理清晰</h2>
+    <div class="card">
+      <p style="margin:8px 0">主观题的最终产品是一份<b>分点答案</b>。阅卷是「踩点给分」——你答到一个得分点给一分,答不到不给。所以宁可<b>多分几点</b>,也别把要点糊成一大段。</p>
+      <h3>答题规范(答主观题的「格式」)</h3>
+      <div class="mono">① 分点:用 ①②③ 或 (1)(2)(3) 标清,一点一个意思。</div>
+      <div class="mono">② 关键词:每点先给概括性短语(如「政策扶持」「技术下乡」),再简要展开。</div>
+      <div class="mono">③ 结合材料:要点须有材料依据,可点「据材料二」,不能空谈。</div>
+      <p style="margin:8px 0"><b>要点从哪来?</b> 从材料的段落、图表数据、转折句里来。几则材料的要点要<b>合并同类项</b>(同一意思只算一点),再<b>补全遗漏</b>(不同材料的不同角度都要覆盖)。</p>
+      <p class="trap">⚠ 三大失分:<b>不分点</b>(一大段,阅卷找不到点)、<b>概括不全</b>(只抄一则材料,漏了其他材料的角度)、<b>照抄原句不提炼</b>(字数超了还没答到关键词)。</p>
+    </div>
+
+    <h2 class="b">⑥ 客观题:设错手法与论述类同源</h2>
+    <div class="card">
+      <p style="margin:8px 0">实用类客观题(选择题)的设错套路,跟论述类文本<b>一模一样</b>:选项对材料信息动手脚。识别它们,靠<b>「选项 vs 原文」逐字比对</b>。</p>
+      <table>
+        <tr><th>设错手法</th><th>怎么识别</th></tr>
+        <tr><td><b>曲解文意</b></td><td>选项改了原文的意思(偷换概念、张冠李戴)</td></tr>
+        <tr><td><b>以偏概全</b></td><td>把「部分/某些」说成「全部/所有」,「可能」说成「一定」</td></tr>
+        <tr><td><b>无中生有</b></td><td>选项内容原文根本没有,是编造/推不出的</td></tr>
+        <tr><td><b>因果混乱</b></td><td>强加因果,或把因果关系颠倒</td></tr>
+        <tr><td><b>混淆时态</b></td><td>把「将要/计划」说成「已经」,已然未然不分</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>比对铁律:</b> 每个选项都要<b>回原文定位</b>,把选项和原句放一起,盯住<b>范围词(所有/部分)、程度词(一定/可能)、逻辑词(因为/所以)、时间词(已经/将)</b>。这几类词最容易被做手脚。</p>
+      <p class="trap">⚠ 别凭「感觉对」就选。选项读着顺、听着有道理,恰恰是设错高手的伪装。<b>没在原文找到依据,一律存疑。</b></p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 客观题设错识别:读原句,给每个选项做诊断(对 / 曲解 / 以偏概全 / 无中生有)</div>
+      <div id="mcqWrap" style="border:3px solid var(--ink);background:#fff;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.85"></div>
+      <div class="verdict" id="mcqNote">点选项旁的按钮,判断它错在哪。</div>
+      <p class="small">先读<b>原文句</b>,再逐个判断四个选项。每个选项点「揭晓」看诊断。练的就是<b>「选项 vs 原文」逐字比对</b>的手感。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 客观信息比对题(选择题)</h3>
+      <p><b class="tag">触发信号:</b>「下列对材料相关内容的理解和分析,正确/不正确的一项是」。四个选项,逐条对材料。</p>
+      <p><b class="tag">标准动作:</b>每个选项回原文定位 → 逐字比对 → 盯范围词/程度词/因果/时态 → 找出被改动处。</p>
+      <p><b class="tag">示例(带解):</b>原文:「据调查,约六成受访青年经常使用数字阅读。」选项:「所有青年都经常使用数字阅读。」→ <b>错(以偏概全)</b>:把「约六成受访青年」偷换成「所有青年」,范围扩大。正确选项应保留「约六成/部分」的限定。</p>
+      <p class="trap">陷阱:被「读着顺」骗;不回原文;忽略「所有/一定/已经」等限定词的改动。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 图表数据解读题</h3>
+      <p><b class="tag">触发信号:</b>材料含柱状图/折线图/表格,问「图表反映了什么」「概括图表信息」。</p>
+      <p><b class="tag">标准动作:</b>看标题坐标单位 → 说整体趋势 → 指极值 → 做比较,每点<b>结合数据</b>,分点写。</p>
+      <p><b class="tag">参考答案示例:</b>某市数字阅读人数 2019–2023 年(单位万人):120、150、210、260、300。答:①总体呈<b>逐年上升</b>趋势,五年从 120 万增至 300 万,增长 1.5 倍;②<b>增速加快</b>,2020→2021 增幅最大(增 60 万);③2023 年达到<b>峰值 300 万</b>。(趋势+极值+数据支撑)</p>
+      <p class="trap">陷阱:只念数字不说规律;看错升降;漏单位;不给数据支撑。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 跨材料异同比较题</h3>
+      <p><b class="tag">触发信号:</b>「几则材料的侧重点/角度有何不同」「材料一与材料三观点异同」。</p>
+      <p><b class="tag">标准动作:</b>先找<b>同</b>(共同话题/共识),再找<b>异</b>(角度、文体、态度、对象),逐则对应分点。</p>
+      <p><b class="tag">参考答案示例:</b>问三则材料侧重点。答:相同点:三则都关注<b>乡村数字化</b>这一话题。不同点:①材料一(新闻)侧重<b>报道成效现象</b>(电商助农、直播带货);②材料二(图表)用<b>数据呈现增长趋势</b>;③材料三(访谈)侧重<b>分析问题与对策</b>(人才短缺、基础设施)。</p>
+      <p class="trap">陷阱:只答一则;只写「都很好」的空话;问「异同」却只写「异」漏了「同」。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 概括原因/措施/特点题(主观分点)</h3>
+      <p><b class="tag">触发信号:</b>「概括……的原因」「请归纳……的措施/特点」「结合材料谈……」。</p>
+      <p><b class="tag">标准动作:</b>审题定「问的是原因还是措施」→ 跨材料定位相关句 → 提炼短语 → 合并同类 → 分①②③点,每点带材料依据。</p>
+      <p><b class="tag">参考答案示例:</b>问「乡村数字化带来哪些变化」。答:①<b>拓宽销路</b>——农产品经电商、直播走向全国(材料一);②<b>提升收入</b>——农户增收明显(材料二数据);③<b>改变生活方式</b>——村民线上办事、学习(材料三);④<b>倒逼基础设施升级</b>——网络、物流下乡(材料三)。</p>
+      <p class="trap">陷阱:不分点;只抄一则材料导致概括不全;答成议论文而非要点。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 内容理解推断题</h3>
+      <p><b class="tag">触发信号:</b>「根据材料,下列推断正确/不正确的一项」「可以推出」。考在原文基础上的合理推断。</p>
+      <p><b class="tag">标准动作:</b>判断选项是否<b>由原文合理推出</b>——原文有依据且逻辑成立才对;绝对化、强加因果、无中生有则错。</p>
+      <p><b class="tag">示例(带解):</b>原文:「数字阅读人数逐年增长。」选项:「未来纸质书将彻底消失。」→ <b>错(推断过度/无中生有)</b>:数字阅读增长推不出纸质书「彻底消失」,属绝对化的过度推断。</p>
+      <p class="trap">陷阱:把「可能」推成「必然」;强加因果;脱离原文过度联想。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>主观题不分点</b>:糊成一大段,阅卷「踩点给分」找不到点。务必 ①②③ 分条。</p>
+      <p class="trap">② <b>概括不全</b>:只抄材料一,漏了材料二、三的角度。跨材料题必须<b>覆盖各则材料</b>。</p>
+      <p class="trap">③ <b>图表看错趋势</b>:把下降看成上升、漏单位、只念数字不说规律。要「趋势+极值+数据」。</p>
+      <p class="trap">④ <b>客观题不回原文</b>:凭感觉选。设错就藏在范围词/程度词/因果/时态里,必须逐字比对。</p>
+      <p class="trap">⑤ <b>照抄原句不提炼</b>:整段搬,字数爆了还没答到关键词。要压成概括性短语。</p>
+      <p class="trap">⑥ <b>比较题只写一半</b>:问「异同」只答「异」或只答「同」,直接丢一半分。</p>
+      <p class="trap">⑦ <b>把实用类当文学类</b>:堆华丽辞藻、写情感赏析。实用类要朴实、精准、分点。</p>
+      <p class="trap">⑧ <b>推断过度</b>:把「可能」推成「必然」,「增长」推成「彻底取代」,越界即错。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 主观概括题的四步法(审题→定位→分点→提炼),背下来当肌肉记忆:</b> 拿到题先<b>审</b>——问的是原因/措施/特点/意义?限定哪几则材料?圈准关键词。再<b>定位</b>——带着关键词回材料,找相关句(段首段尾、转折词后、数据处)。再<b>分点</b>——把找到的句子按「不同意思」拆成①②③。最后<b>提炼</b>——每点压成「概括短语+简要展开」。这套流程走顺了,任何主观题都不慌。</p>
+      <p style="margin:8px 0"><b>② 「合并同类 + 补全遗漏」是拿满分的关键:</b> 几则材料难免有重复,同一意思只算一个得分点(合并);但不同材料的不同角度都是新得分点,不能漏(补全)。拿到多则材料,脑子里要有张「要点清单」,逐则勾选,既不重复也不遗漏。</p>
+      <p style="margin:8px 0"><b>③ 图表题「趋势—极值—比较」三连,一句话都不能省:</b> 顶尖答案不是罗列数字,而是<b>用数据说规律</b>:先定性(总体上升/下降),再定量(从 X 到 Y,增长几倍),再指极值(某年峰值),再做比较(城乡差距)。每一句话背后都有数据撑腰,阅卷老师一眼就看到你「读懂了图」。</p>
+      <p style="margin:8px 0"><b>④ 客观题「选项 vs 原文」的六个雷区词:</b> 范围词(所有/部分/都/仅)、程度词(一定/可能/必然)、逻辑词(因为/所以/从而)、时间词(已经/将/正在)、指代词(此/这)、绝对词(彻底/完全/永远)。见到选项里出现这些词,立刻回原文核对——十有八九的坑就设在这里。</p>
+      <p style="margin:8px 0"><b>⑤ 实用类的底层逻辑是「信息的搬运与重组」,不是「情感的体会」:</b> 想清楚这一点,你的答题语言就会自动切换到「客观、准确、分点」模式。材料给了什么、图表说明什么、几则之间什么关系——你只是把信息<b>准确地搬运并重组</b>,不加个人抒情,不玩文学修辞。这就是实用类和文学类最本质的分野。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 语文攻坚包 · 实用类文本(非连续性文本):求准 · 求全 · 有条理</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#9a8f74";
+
+/* ===== 互动1:非连续性文本结构图 ===== */
+(function(){
+  const svg=document.getElementById('structSvg');const note=document.getElementById('structNote');
+  let sel=0;
+  const mats=[
+    {t:'材料一 · 新闻',col:BLUE,ang:'报道成效现象',desc:'新闻消息,倒金字塔结构。读:标题、导语、核心事件。侧重「乡村电商、直播带货」的成效报道。'},
+    {t:'材料二 · 图表',col:GREEN,ang:'数据呈现趋势',desc:'柱状/折线图,呈现农户收入逐年增长的数据。读:趋势、极值、比较。用数字说明「变化有多大」。'},
+    {t:'材料三 · 访谈',col:VIO,ang:'分析问题对策',desc:'问答体访谈。读:受访者观点、问题指向。侧重「人才短缺、基础设施」的问题与对策。'},
+    {t:'共同话题',col:RED,ang:'乡村数字化',desc:'三则材料从不同文体、不同角度,共同围绕「乡村数字化」这一话题。做题第一步就是判断这个共同话题。'}
+  ];
+  document.querySelectorAll('.stmat').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.stmat').forEach(x=>x.classList.remove('on'));b.classList.add('on');sel=+b.dataset.i;draw();
+  });
+  function box(x,y,w,h,col,title,on){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:on?col:'#fff',stroke:INK,'stroke-width':on?4:3});
+    el(svg,'text',{x:x+w/2,y:y+h/2+5,'font-size':15,'font-weight':900,fill:on?'#fff':INK,'text-anchor':'middle'}).textContent=title;
+  }
+  function draw(){
+    clr(svg);
+    // three material boxes on top
+    const bw=190,bh=64;
+    box(30,30,bw,bh,mats[0].col,'材料一 · 新闻',sel===0);
+    box(255,30,bw,bh,mats[1].col,'材料二 · 图表',sel===1);
+    box(480,30,bw,bh,mats[2].col,'材料三 · 访谈',sel===2);
+    // lines down to central topic
+    const cx=350,ty=230;
+    [[125,94],[350,94],[575,94]].forEach(p=>{
+      el(svg,'line',{x1:p[0],y1:p[1],x2:cx,y2:ty,stroke:INK,'stroke-width':3,'stroke-dasharray':'5 4'});
+    });
+    // central topic box
+    box(230,ty,240,60,mats[3].col,'共同话题:乡村数字化',sel===3);
+    // angle labels
+    el(svg,'text',{x:125,y:118,'font-size':11.5,'font-weight':800,fill:mats[0].col,'text-anchor':'middle'}).textContent='角度:'+mats[0].ang;
+    el(svg,'text',{x:350,y:118,'font-size':11.5,'font-weight':800,fill:mats[1].col,'text-anchor':'middle'}).textContent='角度:'+mats[1].ang;
+    el(svg,'text',{x:575,y:118,'font-size':11.5,'font-weight':800,fill:mats[2].col,'text-anchor':'middle'}).textContent='角度:'+mats[2].ang;
+    note.innerHTML='👉 <b>'+mats[sel].t+'</b>('+mats[sel].ang+'):'+mats[sel].desc;
+    note.style.borderColor=mats[sel].col;
+  }
+  draw();
+})();
+
+/* ===== 互动2:图表解读演示 ===== */
+(function(){
+  const svg=document.getElementById('chartSvg');const note=document.getElementById('chartNote');
+  let mode=0;
+  const years=['2019','2020','2021','2022','2023'];
+  const vals=[120,150,210,260,300];
+  const vmax=320;
+  document.querySelectorAll('.chmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.chmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    const X0=70,Y0=30,W=560,H=210;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-46,y:Y0+2,'font-size':11.5,'font-weight':800,fill:INK}).textContent='万人';
+    el(svg,'text',{x:X0+W/2,y:Y0-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='某市数字阅读人数(2019–2023,单位:万人)';
+    const n=vals.length,slot=W/n;
+    const maxI=vals.indexOf(Math.max(...vals)),minI=vals.indexOf(Math.min(...vals));
+    // y gridline for max
+    for(let g=0;g<=3;g++){
+      const gv=vmax*g/3, gy=Y0+H-(gv/vmax)*H;
+      el(svg,'line',{x1:X0-4,y1:gy,x2:X0,y2:gy,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0-8,y:gy+4,'font-size':10.5,'font-weight':700,fill:'#6b5d3a','text-anchor':'end'}).textContent=gv.toFixed(0);
+    }
+    if(mode===0||mode===2){
+      // bars
+      vals.forEach((v,i)=>{
+        const bh=(v/vmax)*H, bx=X0+slot*i+slot*0.25, bw=slot*0.5, by=Y0+H-bh;
+        let col=BLUE;
+        if(mode===2){col=(i===maxI)?RED:(i===minI)?GREY:BLUE;}
+        el(svg,'rect',{x:bx,y:by,width:bw,height:bh,fill:col,stroke:INK,'stroke-width':3});
+        el(svg,'text',{x:bx+bw/2,y:by-6,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=v;
+        el(svg,'text',{x:bx+bw/2,y:Y0+H+18,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=years[i];
+      });
+    } else {
+      // line
+      let pts='';
+      vals.forEach((v,i)=>{
+        const px=X0+slot*i+slot*0.5, py=Y0+H-(v/vmax)*H;
+        pts+=px+','+py+' ';
+        el(svg,'text',{x:px,y:Y0+H+18,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=years[i];
+      });
+      el(svg,'polyline',{points:pts.trim(),fill:'none',stroke:GREEN,'stroke-width':4});
+      vals.forEach((v,i)=>{
+        const px=X0+slot*i+slot*0.5, py=Y0+H-(v/vmax)*H;
+        el(svg,'circle',{cx:px,cy:py,r:5,fill:GREEN,stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:px,y:py-10,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=v;
+      });
+    }
+    if(mode===2){
+      const mx=X0+slot*maxI+slot*0.5;
+      el(svg,'text',{x:mx,y:Y0+H-(vals[maxI]/vmax)*H-24,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='★峰值';
+    }
+    let msg;
+    if(mode===0)msg='<b>柱状图 · 看比较:</b>2023 年(300万)明显高于 2019 年(120万),约为其 2.5 倍。柱状图适合直观比大小。';
+    else if(mode===1)msg='<b>折线图 · 看趋势:</b>五年<b>逐年上升</b>,且斜率变陡→增速加快。折线图适合看变化趋势。';
+    else msg='<b>高亮极值:</b>最高在 <b>2023 年(300万,峰值)</b>,最低在 2019 年(120万)。答题先指极值,再给数据。';
+    note.innerHTML='👉 '+msg+'　完整答案=趋势(逐年升)+极值(2023峰值300万)+比较(增长1.5倍)。';
+    note.style.borderColor=mode===0?BLUE:mode===1?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动3:信息筛选定位器 ===== */
+(function(){
+  const wrap=document.getElementById('locWrap');const note=document.getElementById('locNote');
+  let key=0;
+  // sentences with tag: 0=现状 1=问题 2=对策 -1=普通
+  const sents=[
+    {t:'近年来,我国乡村数字化建设快速推进。',tag:-1},
+    {t:'截至去年底,全国行政村通宽带比例已达99%,农村电商交易额突破2万亿元。',tag:0},
+    {t:'然而,乡村数字化仍面临不少困难。',tag:-1},
+    {t:'一是数字人才严重短缺,懂技术又懂农业的复合型人才匮乏;',tag:1},
+    {t:'二是部分偏远地区网络、物流基础设施仍然薄弱。',tag:1},
+    {t:'为此,专家建议:加大对乡村数字人才的培养和引进力度,',tag:2},
+    {t:'完善农村网络与冷链物流等基础设施,',tag:2},
+    {t:'并出台政策鼓励企业下乡、资金下乡。',tag:2}
+  ];
+  const keyInfo=[
+    {name:'发展现状',col:BLUE,ans:'定位到「通宽带99%、电商交易额2万亿」等成效数据句——这些就是「现状」的答案来源。'},
+    {name:'存在问题',col:RED,ans:'定位到「人才短缺」「基础设施薄弱」——由转折词「然而」引出,常是命题重点。'},
+    {name:'对策措施',col:GREEN,ans:'定位到「建议」后的并列句:培养人才、完善设施、政策鼓励——「一是/二是」「建议」是措施信号。'}
+  ];
+  document.querySelectorAll('.lockey').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.lockey').forEach(x=>x.classList.remove('on'));b.classList.add('on');key=+b.dataset.k;draw();
+  });
+  function draw(){
+    wrap.innerHTML='';
+    const ki=keyInfo[key];
+    sents.forEach(s=>{
+      const span=document.createElement('span');
+      span.textContent=s.t;
+      if(s.tag===key){
+        span.style.background=ki.col;span.style.color='#fff';span.style.fontWeight='900';span.style.padding='1px 3px';
+      }
+      wrap.appendChild(span);
+    });
+    note.innerHTML='🔍 找「<b>'+ki.name+'</b>」→ '+ki.ans;
+    note.style.borderColor=ki.col;
+  }
+  draw();
+})();
+
+/* ===== 互动4:主观概括题四步流程 ===== */
+(function(){
+  const svg=document.getElementById('flowSvg');const note=document.getElementById('flowNote');
+  let step=0;
+  const steps=[
+    {name:'① 审题',col:BLUE,do:'圈关键词:「概括」「乡村数字化」「带来的变化」。判定:问的是「变化/影响」,要跨全部材料。'},
+    {name:'② 定位',col:GREEN,do:'回三则材料找相关句:材料一(销路拓宽)、材料二(收入增长数据)、材料三(生活方式、设施升级)。'},
+    {name:'③ 分点',col:ORANGE,do:'按不同意思拆开:①销路 ②收入 ③生活方式 ④基础设施——一意一点,合并重复,补全遗漏。'},
+    {name:'④ 提炼',col:VIO,do:'每点写成「短语+展开」:①拓宽销路(电商直播销全国);②提升收入;③改变生活方式(线上办事学习);④倒逼设施升级。'}
+  ];
+  function draw(){
+    clr(svg);
+    const n=steps.length,bw=150,gap=14,x0=20,y=50,bh=60;
+    steps.forEach((s,i)=>{
+      const x=x0+i*(bw+gap);
+      const on=i<=step;
+      el(svg,'rect',{x:x,y:y,width:bw,height:bh,fill:on?s.col:'#fff',stroke:INK,'stroke-width':i===step?4:3});
+      el(svg,'text',{x:x+bw/2,y:y+bh/2+5,'font-size':15,'font-weight':900,fill:on?'#fff':INK,'text-anchor':'middle'}).textContent=s.name;
+      if(i<n-1){
+        const ax=x+bw+2,ay=y+bh/2;
+        el(svg,'line',{x1:ax,y1:ay,x2:ax+gap-4,y2:ay,stroke:INK,'stroke-width':3});
+        el(svg,'polygon',{points:(ax+gap-4)+','+(ay-5)+' '+(ax+gap+2)+','+ay+' '+(ax+gap-4)+','+(ay+5),fill:INK});
+      }
+    });
+    el(svg,'text',{x:350,y:28,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='真题:概括乡村数字化带来的变化(四步法)';
+    el(svg,'text',{x:350,y:150,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='第 '+(step+1)+' / 4 步';
+    note.innerHTML='<b>'+steps[step].name+':</b> '+steps[step].do;
+    note.style.borderColor=steps[step].col;
+  }
+  document.getElementById('flowNext').onclick=()=>{if(step<steps.length-1){step++;draw();}};
+  document.getElementById('flowPrev').onclick=()=>{if(step>0){step--;draw();}};
+  document.getElementById('flowReset').onclick=()=>{step=0;draw();};
+  draw();
+})();
+
+/* ===== 互动5:客观题设错识别 ===== */
+(function(){
+  const wrap=document.getElementById('mcqWrap');const note=document.getElementById('mcqNote');
+  const src='原文句:「据抽样调查,约六成受访青年经常使用数字阅读,其中一线城市青年占比更高。」';
+  const opts=[
+    {t:'A. 约六成受访青年经常使用数字阅读。',ok:true,tag:'√ 正确',col:GREEN,why:'忠实原文,范围词「约六成/受访」都保留,未做改动。'},
+    {t:'B. 所有青年都经常使用数字阅读。',ok:false,tag:'✗ 以偏概全',col:RED,why:'把「约六成受访青年」扩大为「所有青年」,范围被无限放大。'},
+    {t:'C. 数字阅读已完全取代纸质阅读。',ok:false,tag:'✗ 无中生有',col:RED,why:'原文只字未提「取代纸质」,属编造,推不出来。'},
+    {t:'D. 因为青年爱玩手机,所以都用数字阅读。',ok:false,tag:'✗ 因果混乱',col:RED,why:'「爱玩手机→都用数字阅读」是强加因果,原文无此因果关系。'}
+  ];
+  function build(){
+    wrap.innerHTML='';
+    const p=document.createElement('div');
+    p.style.cssText='background:'+YEL+';border:3px solid '+INK+';padding:8px 10px;margin-bottom:10px;font-weight:900';
+    p.textContent=src;
+    wrap.appendChild(p);
+    opts.forEach(o=>{
+      const row=document.createElement('div');
+      row.style.cssText='margin:8px 0;display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap';
+      const txt=document.createElement('span');txt.textContent=o.t;txt.style.flex='1 1 240px';
+      const btn=document.createElement('button');btn.className='btn';btn.textContent='揭晓';
+      const res=document.createElement('div');
+      res.style.cssText='width:100%;display:none;font-weight:800;margin-top:2px;color:'+o.col;
+      res.innerHTML='<b>'+o.tag+'</b> — '+o.why;
+      btn.onclick=()=>{res.style.display=res.style.display==='none'?'block':'none';};
+      row.appendChild(txt);row.appendChild(btn);row.appendChild(res);
+      wrap.appendChild(row);
+    });
+  }
+  build();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 实用类文本(非连续性文本)的考查重点是什么?跟文学类有何不同?",a:"考:快速筛选信息、跨材料比对、读懂图表、分点概括,求准求全。不同:文学类考情感/赏析,实用类要客观、准确、分点,不玩文学修辞。"},
+ {q:"2. 主观题答题的三条铁律是什么?",a:"①分点(①②③标清,踩点给分);②关键词(每点先给概括短语);③结合材料(要点有材料依据,不空谈)。"},
+ {q:"3. 读图表要抓哪三样?每样怎么用答题语言表达?",a:"趋势(呈上升/下降/先增后减)、极值(某年达峰值/某项最低)、比较(A明显高于B/是……的几倍)。且必须结合数据说话。"},
+ {q:"4. 跨材料「异同比较题」怎么答?最忌什么?",a:"先找同(共同话题/共识),再找异(角度、文体、态度、对象),逐则对应分点。最忌只答一则、只写「都很好」的空话、问异同却只写一半。"},
+ {q:"5. 主观概括题的四步法是什么?",a:"审题(圈关键词,判问的是原因/措施/特点)→定位(回材料找相关句)→分点(按不同意思拆①②③)→提炼(每点写成短语+展开)。"},
+ {q:"6. 客观题常见的设错手法有哪些?怎么识别?",a:"曲解文意、以偏概全、无中生有、因果混乱、混淆时态。识别:每个选项回原文逐字比对,盯范围词/程度词/逻辑词/时间词。"},
+ {q:"7. 主观题三大失分点是什么?",a:"①不分点(糊成一段,找不到点);②概括不全(只抄一则,漏其他材料角度);③照抄原句不提炼(字数超还没答到关键词)。"},
+ {q:"8. 图表数据:某市数字阅读人数2019–2023年为120、150、210、260、300万,请概括。",a:"①总体逐年上升,五年从120万增至300万,增长1.5倍;②增速加快,2020→2021增幅最大(增60万);③2023年达峰值300万。(趋势+极值+数据)"},
+ {q:"9. 原文「约六成受访青年经常使用数字阅读」,选项「所有青年都经常使用数字阅读」错在哪?",a:"以偏概全。把「约六成受访青年」扩大为「所有青年」,范围被无限放大。原文有「约六成/受访」的限定,选项抹掉了限定。"},
+ {q:"10. 原文「数字阅读人数逐年增长」,选项「未来纸质书将彻底消失」错在哪?",a:"推断过度/无中生有。由「数字阅读增长」推不出纸质书「彻底消失」,属绝对化的过度推断,原文无依据。"},
+ {q:"11. 做非连续性文本的第一步应该做什么?",a:"先通读各则材料,判断每则各说什么(角度/文体),它们共同围绕什么话题。搞清结构再做题,主观题才能跨材料答全。"},
+ {q:"12. 客观题选项里哪些词最容易被设错?见到要怎么办?",a:"范围词(所有/部分/都)、程度词(一定/可能)、逻辑词(因为/所以)、时间词(已经/将)、绝对词(彻底/完全)。见到立即回原文核对,没依据一律存疑。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

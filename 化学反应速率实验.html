@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探究化学反应速率的影响因素(实验) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">化学 · 攻坚包</div>
+    <h1>探究化学反应速率的影响因素(实验)</h1>
+    <p class="lead">影响反应速率的因素有一大堆——浓度、温度、催化剂、固体表面积、气体压强。想搞清楚<b>某一个因素</b>到底有没有用、怎么用,靠的是一把万能钥匙:<b>控制变量法</b>。只改这一个,其他统统锁死,谁快谁慢一眼看穿。这一页把「设计对照 + 控制变量 + 数据处理」一次讲透。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 探究「谁影响速率」这类实验,核心就一句话——<b>只改一个因素、其他条件都一样</b>,才能看出这个因素的影响。要比温度,就把浓度、体积、催化剂全固定,只让温度不同;要比浓度,就只让浓度不同。这叫<b>控制变量法</b>。整个实验的灵魂是「<b>设计对照 + 控制变量</b>」:多做几组只差一个条件的实验(对照组),对比谁反应快,答案自然浮出来。速率快慢怎么看?比谁先冒气泡、谁先变浑浊、谁颜色先变、单位时间放出多少气体。</div>
+
+    <div class="keybox"><b>一句话方法:</b> <b>控制变量法 = 只改「自变量」(你想研究的那个因素) + 锁死所有「无关变量」(其他所有条件) → 观察「因变量」(反应速率)。</b> 缺了「其他条件相同」,结论一律作废——因为你分不清到底是哪个因素在起作用。</div>
+
+    <h2>① 影响反应速率的因素:先认全了</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>内因</b>是反应物本身的性质(不同反应快慢天差地别);中学重点考的是<b>外因</b>——你能动手改的这几个条件:</p>
+      <table>
+        <tr><th>因素</th><th>怎么变</th><th>对速率的影响</th></tr>
+        <tr><td><b>浓度</b>(溶液/气体)</td><td>浓度增大</td><td>速率<b>加快</b>(单位体积内活化分子数增多)</td></tr>
+        <tr><td><b>温度</b></td><td>升高温度</td><td>速率<b>加快</b>(一般升 10℃,速率约增 2~4 倍)</td></tr>
+        <tr><td><b>催化剂</b></td><td>加入合适催化剂</td><td>速率<b>大幅加快</b>(降低活化能)</td></tr>
+        <tr><td><b>固体表面积</b></td><td>固体研成粉末</td><td>速率<b>加快</b>(接触面积增大)</td></tr>
+        <tr><td><b>压强</b>(仅对有气体的反应)</td><td>增大压强(缩小体积)</td><td>气体<b>浓度增大</b> → 速率加快</td></tr>
+      </table>
+      <p class="trap">⚠ 压强只对<b>有气体参加</b>的反应有影响;纯固体、纯液体反应,加压几乎没用。固体的「浓度」是常数,改它没意义,固体只看<b>表面积</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔬 互动 1 — 控制变量法演示:只解锁一个变量,其余全部锁死</div>
+      <svg id="cvSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <span style="font-weight:800;font-size:13px">选「自变量」(唯一允许变的):</span>
+        <button class="cvpick on" data-v="0">浓度</button>
+        <button class="cvpick" data-v="1">温度</button>
+        <button class="cvpick" data-v="2">催化剂</button>
+        <button class="cvpick" data-v="3">表面积</button>
+      </div>
+      <div class="verdict" id="cvNote"></div>
+      <p class="small">你点谁,谁就是<b>自变量</b>(A、B 两组这一项不同);其余全是<b>无关变量</b>,必须两组<b>完全相同</b>(锁头🔒)。因变量永远是「反应速率」。这就是控制变量法的全貌。</p>
+    </div>
+
+    <h2 class="b">② 控制变量法:自变量 / 因变量 / 无关变量</h2>
+    <div class="card">
+      <p style="margin:8px 0">一个规范的探究实验,把所有条件分成三类,这是拿分的语言:</p>
+      <table>
+        <tr><th>类别</th><th>是什么</th><th>怎么处理</th></tr>
+        <tr><td><b>自变量</b></td><td>你要研究的那个因素(如温度)</td><td><b>只有它</b>在各组间不同</td></tr>
+        <tr><td><b>因变量</b></td><td>反应速率(你要测量/观察的结果)</td><td>通过现象或数据体现</td></tr>
+        <tr><td><b>无关变量</b></td><td>其他所有可能影响速率的条件</td><td>各组必须<b>严格相同</b>(控制住)</td></tr>
+      </table>
+      <div class="mono">口诀:改一个(自变量)、看结果(因变量)、锁其余(无关变量)。</div>
+      <p style="margin:8px 0">举例:探究温度对速率的影响。<b>自变量</b>=温度;<b>因变量</b>=反应速率(比如出现浑浊的时间);<b>无关变量</b>=反应物浓度、体积、催化剂、固体颗粒大小……全部两组相同,只让水浴温度一组高一组低。</p>
+      <p class="trap">⚠ 无关变量没控制住(比如比温度时两组浓度还不一样),整个实验<b>作废</b>——你无法判断是温度还是浓度导致了差异。这是本专题最大的失分点。</p>
+    </div>
+
+    <h2 class="g">③ 速率快慢怎么比:选对「可观测量」</h2>
+    <div class="card">
+      <p style="margin:8px 0">速率是「看不见」的,得靠一个<b>能看见/能测量</b>的现象或数据来代表它。常用四类:</p>
+      <table>
+        <tr><th>比什么</th><th>适用反应</th><th>越快 = </th></tr>
+        <tr><td><b>产生气体的快慢</b></td><td>放气体的反应(如 Zn + 盐酸放 H<sub>2</sub>)</td><td>单位时间气泡多 / 收集等体积气体用时短</td></tr>
+        <tr><td><b>出现沉淀/浑浊的时间</b></td><td>生成沉淀的反应(如 Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + 酸析出 S)</td><td>变浑浊(看不见标记)所用<b>时间越短</b></td></tr>
+        <tr><td><b>颜色变化的时间</b></td><td>有颜色变化的反应(如 KMnO<sub>4</sub> 褪色)</td><td>褪色/变色所用<b>时间越短</b></td></tr>
+        <tr><td><b>压强变化</b></td><td>密闭容器内气体增多的反应</td><td>单位时间压强升得越快</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>定量测法:</b> 用量气管/注射器测「单位时间放出气体的体积 ΔV/Δt」,或用压强传感器测「单位时间压强变化 Δp/Δt」。图像上——曲线越陡,速率越快。</p>
+      <p class="trap">⚠ 比较速率时,<b>比较的量要选对且统一</b>:要么都比「收集等体积气体的时间」,要么都比「相同时间收集的气体体积」,不能一组比体积、另一组比时间。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 2 — 浓度 / 温度 / 催化剂对速率的影响:放气体积-时间曲线(越陡越快)</div>
+      <svg id="curveSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cvcase on" data-c="0">浓度影响</button>
+        <button class="cvcase" data-c="1">温度影响</button>
+        <button class="cvcase" data-c="2">催化剂影响</button>
+        <button class="cvcase" data-c="3">表面积影响</button>
+      </div>
+      <div class="verdict" id="curveNote"></div>
+      <p class="small">纵轴=放出气体体积,横轴=时间。<b>曲线越陡 → 速率越快</b>。注意:改浓度只改起点斜率,最终放气总量(终点高度)由反应物总量决定——同一因素下若反应物的量相同,<b>最终体积相同</b>,只是到达快慢不同。</p>
+    </div>
+
+    <h2 class="o">④ 三个经典实验:必须会画会写</h2>
+    <div class="card">
+      <h3>经典一 · Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + H<sub>2</sub>SO<sub>4</sub> → 硫沉淀(比浊法)</h3>
+      <div class="eq">Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + H<sub>2</sub>SO<sub>4</sub> = Na<sub>2</sub>SO<sub>4</sub> + S↓ + SO<sub>2</sub>↑ + H<sub>2</sub>O</div>
+      <p style="margin:6px 0">析出的单质 <b>S</b> 使溶液变浑浊。做法:锥形瓶下垫一张画有「<b>×</b>」的白纸,从上往下看,记录<b>×看不见所用的时间 t</b>。<b>t 越短 → 速率越快</b>。常用来探究浓度、温度的影响。</p>
+      <h3>经典二 · 锌粒 + 稀盐酸 → 放 H<sub>2</sub>(测气体)</h3>
+      <div class="eq">Zn + 2HCl = ZnCl<sub>2</sub> + H<sub>2</sub>↑</div>
+      <p style="margin:6px 0">用注射器/量气管收集 H<sub>2</sub>,测「单位时间放出的气体体积」。可探究:盐酸<b>浓度</b>、<b>温度</b>、锌的<b>形状</b>(锌粒 vs 锌粉,表面积)对速率的影响。</p>
+      <h3>经典三 · H<sub>2</sub>O<sub>2</sub> 分解 → 催化剂对比</h3>
+      <div class="eq">2H<sub>2</sub>O<sub>2</sub> <span style="font-size:14px">--MnO<sub>2</sub>--></span> 2H<sub>2</sub>O + O<sub>2</sub>↑</div>
+      <p style="margin:6px 0">同浓度 H<sub>2</sub>O<sub>2</sub> 分两份:一份不加催化剂(几乎不冒泡),一份加少量 MnO<sub>2</sub>(剧烈放 O<sub>2</sub>)。经典的<b>催化剂探究</b>。可用带火星木条检验 O<sub>2</sub>,或测放气速率。</p>
+      <p class="trap">⚠ 比浊法要<b>同一张纸、同一位置、同一视线</b>;测气体法两组要<b>同样的收集装置和量程</b>。观测条件本身也是无关变量。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧪 互动 3 — Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> 比浊法:浓度/温度越高,「×」越快消失(浑浊出现时间)</div>
+      <canvas id="turbCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button id="turbGo">▶ 同时开始反应</button><button id="turbReset">↺ 重置</button>
+        <label>温度 <input id="turbT" type="range" min="10" max="50" value="20" step="10"></label>
+        <label>浓度 <input id="turbC" type="range" min="1" max="3" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>A组(标准)出浑浊</b><span id="turbTA">0</span></div>
+        <div><b>B组(升条件)出浑浊</b><span id="turbTB">0</span></div>
+        <div><b>谁更快</b><span id="turbWho">—</span></div>
+        <div><b>速率之比 约</b><span id="turbR">—</span></div>
+      </div>
+      <p class="small">左瓶 A=标准条件,右瓶 B=你调高的条件(温度或浓度)。瓶底「×」被析出的 S 遮住看不见的<b>时刻</b>就是记录点。<b>B 先看不见 → B 更快</b>。t 越短速率越大(速率 ∝ 1/t)。</p>
+    </div>
+
+    <h2 class="v">⑤ 表格数据设计:实验组 vs 对照组</h2>
+    <div class="card">
+      <p style="margin:8px 0">规范的探究实验一定给一张<b>表格</b>,每一行是一组实验,列出所有条件。设计/补全表格的铁律:<b>相邻两组只能差一个变量</b>(自变量),其余各列<b>数值必须相同</b>。</p>
+      <p style="margin:8px 0">下面是「探究盐酸浓度对 Zn+盐酸 速率影响」的标准表格,注意除浓度外<b>全相同</b>:</p>
+      <table>
+        <tr><th>组</th><th>Zn(g)</th><th>盐酸浓度</th><th>盐酸体积(mL)</th><th>温度(℃)</th><th>测量:收集20mL H<sub>2</sub>用时</th></tr>
+        <tr><td>①</td><td>0.5(锌粒)</td><td><b>1 mol/L</b></td><td>20</td><td>25</td><td>t<sub>1</sub></td></tr>
+        <tr><td>②</td><td>0.5(锌粒)</td><td><b>2 mol/L</b></td><td>20</td><td>25</td><td>t<sub>2</sub></td></tr>
+        <tr><td>③</td><td>0.5(锌粒)</td><td><b>3 mol/L</b></td><td>20</td><td>25</td><td>t<sub>3</sub></td></tr>
+      </table>
+      <p style="margin:8px 0">只有「浓度」这一列在变(自变量),其余(锌量、体积、温度)<b>逐列相同</b>(无关变量已控制)。测量列是<b>因变量</b>(收集等体积气体的时间,t 越短越快)。这就是「对照实验」——各组互为对照。</p>
+      <p class="trap">⚠ 补全表格的空格时,填的数值要让「除研究变量外全部相同」。若某空要求「研究温度」,则那一列各组不同,其他列照抄第一行。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📋 互动 4 — 对照实验表格设计器:选自变量,自动锁定其余列,标注三类变量</div>
+      <div id="tableWrap" style="overflow-x:auto"></div>
+      <div class="ctrl">
+        <span style="font-weight:800;font-size:13px">研究谁(自变量):</span>
+        <button class="tbpick on" data-v="conc">浓度</button>
+        <button class="tbpick" data-v="temp">温度</button>
+        <button class="tbpick" data-v="surf">表面积</button>
+      </div>
+      <p class="small">选中的那一列=<b>自变量</b>(三组不同,红底);测量列=<b>因变量</b>(绿底);其余列=<b>无关变量</b>,自动锁成三组相同(黄底🔒)。任何时刻只有一列在变——这就是合格的对照实验。</p>
+    </div>
+
+    <h2 class="r">⑥ 由数据得结论:读表、读图、算速率</h2>
+    <div class="card">
+      <p style="margin:8px 0">拿到数据(表或图),下结论的套路:</p>
+      <div class="mono">① 先确认「只有一个变量在变」→ 结论才成立(否则先指出没控制变量)。</div>
+      <div class="mono">② 找出该变量与速率的对应关系(谁大谁快 / 谁的时间短)。</div>
+      <div class="mono">③ 用规范语句:「其他条件相同时,___越___,反应速率越___。」</div>
+      <p style="margin:8px 0"><b>算平均速率:</b> v = Δc/Δt(用某物质浓度变化 ÷ 时间),或用放气 v = ΔV/Δt。注意速率永远是<b>正值</b>,且不同物质表示的速率之比 = 化学计量数之比。</p>
+      <p style="margin:8px 0"><b>比浊/沉淀类:</b> 时间 t 越短速率越大,近似 v ∝ 1/t。用 1/t 作纵轴对温度/浓度作图,能看出趋势。</p>
+      <p class="trap">⚠ 下结论必须带前提「<b>其他条件相同时</b>」。直接说「浓度越大速率越快」而不提前提,或数据里其实有两个变量在变,都要扣分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 5 — 锌 + 盐酸产气速率对比:调浓度/温度/形状,看放气速率曲线与结论</div>
+      <canvas id="znCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button id="znGo">▶ 开始反应</button><button id="znReset">↺ 重置</button>
+        <label>盐酸浓度 <input id="znC" type="range" min="1" max="3" value="2" step="1"></label>
+        <label>温度 <input id="znT" type="range" min="20" max="60" value="30" step="10"></label>
+        <label>形状 <input id="znS" type="range" min="0" max="1" value="0" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>相对速率</b><span id="znV">—</span></div>
+        <div><b>形状</b><span id="znShape">锌粒</span></div>
+        <div><b>放气进度</b><span id="znProg">0%</span></div>
+        <div><b>结论(其他相同时)</b><span id="znConc" style="font-size:11px">—</span></div>
+      </div>
+      <p class="small">左侧锥形瓶冒气泡,右侧注射器活塞被 H<sub>2</sub> 顶出。浓度↑、温度↑、锌粒→锌粉(表面积↑)都会让活塞更快到顶。曲线越陡=速率越大。<b>反应物总量相同 → 最终放气体积相同,只是快慢不同。</b></p>
+    </div>
+
+    <h2 class="b">⑦ 催化剂的本质:降低活化能</h2>
+    <div class="card">
+      <p style="margin:8px 0">催化剂为什么能加速?因为它<b>降低了反应的活化能 E<sub>a</sub></b>——相当于给反应物翻过的「山」削低了。山矮了,能翻过去的<b>活化分子</b>比例大增,有效碰撞增多,速率飙升。</p>
+      <p style="margin:8px 0"><b>催化剂特点:</b>①同等程度加快正逆反应,只改变速率、<b>不改变平衡</b>;②反应前后自身<b>质量和化学性质不变</b>;③有<b>选择性</b>(一种催化剂通常只对特定反应有效)。</p>
+      <div class="mono">升温 = 让更多分子有能量翻山;催化剂 = 把山削矮。两条路都增加活化分子的比例。</div>
+      <p class="trap">⚠ 催化剂对比实验:两组除了「有无催化剂(或催化剂种类)」外<b>其他必须完全相同</b>(同浓度、同温、同体积)。加了催化剂又顺手升了温,就分不清是谁的功劳。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛰️ 互动 6 — 催化剂降低活化能:能量-反应进程图(山被削矮,ΔH 不变)</div>
+      <svg id="eaSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="eaCat">切换:加/不加催化剂</button>
+        <label>放能强度 <input id="eaH" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>无催化剂 E<sub>a</sub></b><span id="eaE0">—</span></div>
+        <div><b>有催化剂 E<sub>a</sub></b><span id="eaE1">—</span></div>
+        <div><b>ΔH(反应热)</b><span id="eaDH">—</span></div>
+        <div><b>ΔH 变了吗</b><span id="eaSame">不变</span></div>
+      </div>
+      <p class="small">灰虚线=无催化剂(高山),彩线=有催化剂(矮山)。催化剂<b>只削低活化能 E<sub>a</sub></b>,让反应更快;起点(反应物)和终点(生成物)高度不动,所以<b>反应热 ΔH 完全不变</b>。这是催化剂考点的图像核心。</p>
+    </div>
+
+    <h2 class="v">⑧ 微观解释:活化分子与有效碰撞</h2>
+    <div class="card">
+      <p style="margin:8px 0">为什么这些因素能改速率?统一用<b>「有效碰撞」</b>理论解释——反应速率 ∝ 单位时间内<b>有效碰撞</b>的次数,而有效碰撞要求碰撞的分子是<b>活化分子</b>且取向合适。</p>
+      <table>
+        <tr><th>因素</th><th>微观解释(为什么变快)</th></tr>
+        <tr><td>浓度↑</td><td>单位体积<b>分子总数增多</b> → 活化分子数增多 → 有效碰撞增多(活化分子<b>百分数不变</b>)</td></tr>
+        <tr><td>温度↑</td><td>分子<b>平均能量升高</b> → 活化分子<b>百分数增大</b> + 碰撞更频繁 → 有效碰撞剧增</td></tr>
+        <tr><td>催化剂</td><td><b>降低活化能</b> → 更多分子变成活化分子 → 活化分子百分数大增</td></tr>
+        <tr><td>表面积↑</td><td>固体接触面积增大 → 单位时间接触碰撞的机会增多</td></tr>
+        <tr><td>压强↑(气体)</td><td>体积变小 → 气体<b>浓度增大</b> → 同「浓度↑」</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>关键区分:</b>浓度和压强只改<b>活化分子的「数目」</b>(百分数不变);温度和催化剂能改<b>活化分子的「百分数」</b>。</p>
+      <p class="trap">⚠ 压强只对<b>含气体</b>的反应有效;对纯固/液反应无影响。恒容下充入<b>不参加反应</b>的惰性气体(如 Ar),各反应物浓度不变 → 速率<b>不变</b>。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 探究浓度影响型</h3>
+      <p><b class="tag">触发信号:</b>题目要研究「浓度对速率的影响」,给几组只有浓度不同的实验,或让你设计。</p>
+      <p><b class="tag">标准动作(控制变量):</b>只让<b>浓度</b>不同,固定温度、体积、催化剂、固体量与形状。为保证「只变浓度、不变体积」,常用<b>加水稀释</b>把总体积补齐相同。</p>
+      <p><b class="tag">示例(带解):</b>探究 Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> 浓度对速率影响:A 组 10mL Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + 0mL 水,B 组 5mL Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> + 5mL 水,再各加同量同浓度稀硫酸。总体积都是定值,只有 Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> 浓度不同。记出现浑浊时间,浓的先浑浊 → 浓度越大越快。</p>
+      <p class="trap">陷阱:改了浓度却没补水,导致总体积不同 → 其实变了两个量;或酸的量两组不同。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 探究温度影响型</h3>
+      <p><b class="tag">触发信号:</b>研究「温度对速率的影响」,涉及水浴、加热、不同温度。</p>
+      <p><b class="tag">标准动作(控制变量):</b>只让<b>温度</b>不同(用水浴设定不同温度),浓度、体积、催化剂、固体量全相同。混合前<b>先分别预热到设定温度</b>再混合。</p>
+      <p><b class="tag">示例(带解):</b>取两份等量等浓度 Na<sub>2</sub>S<sub>2</sub>O<sub>3</sub> 与稀硫酸,分别在 20℃ 与 40℃ 水浴中反应,记出现浑浊时间。40℃ 组时间短 → 结论:其他条件相同时,温度越高速率越快。</p>
+      <p class="trap">陷阱:忘了先预热就混合;或用酒精灯直接加热导致温度不均/难控。要用水浴且两组唯一差别是温度。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 探究催化剂影响型</h3>
+      <p><b class="tag">触发信号:</b>研究「催化剂/某物质是否起催化作用」「不同催化剂效果」,常见 H<sub>2</sub>O<sub>2</sub> 分解。</p>
+      <p><b class="tag">标准动作(控制变量):</b>两组除「有无催化剂 / 催化剂种类」外<b>完全相同</b>(同浓度、同体积、同温度)。对比放气快慢或带火星木条复燃情况。</p>
+      <p><b class="tag">示例(带解):</b>两支试管各取 5mL 5% H<sub>2</sub>O<sub>2</sub>,一支不加、一支加少量 MnO<sub>2</sub>。加 MnO<sub>2</sub> 的剧烈放 O<sub>2</sub>、带火星木条复燃;不加的几乎无变化 → MnO<sub>2</sub> 是催化剂,大幅加快分解。</p>
+      <p class="trap">陷阱:加催化剂时顺手多加/加热,导致其他条件也变;或没做「不加催化剂」的对照组,无法证明是催化剂的作用。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 控制变量的表格设计 / 补全型</h3>
+      <p><b class="tag">触发信号:</b>给一张有空格的实验表,让你填数值,或让你设计对照实验方案。</p>
+      <p><b class="tag">标准动作(控制变量):</b>确定自变量是哪一列(题目研究的因素),该列各组不同;其余各列<b>照抄成相同数值</b>;测量列写因变量。用加水补体积保证「只变浓度不变体积」。</p>
+      <p><b class="tag">示例(带解):</b>研究浓度,表中第②组盐酸体积空格 → 填与①③相同的数值(如都 20mL);温度空格 → 填与其他组相同(如都 25℃)。只留浓度一列不同。</p>
+      <p class="trap">陷阱:填空时让两个变量同时变;或漏掉「加水补齐体积」这一步。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 由数据得结论型</h3>
+      <p><b class="tag">触发信号:</b>给完整数据表/曲线图,问「得出什么结论」「哪组最快」「速率与该因素的关系」。</p>
+      <p><b class="tag">标准动作(控制变量):</b>先核对「是否只有一个变量在变」;再比时间(短=快)或比斜率(陡=快);结论加前提「其他条件相同时」。可算 v=ΔV/Δt 或 v∝1/t。</p>
+      <p><b class="tag">示例(带解):</b>三组只浓度不同,收集等体积 H<sub>2</sub> 用时 t<sub>1</sub>&gt;t<sub>2</sub>&gt;t<sub>3</sub>(浓度①&lt;②&lt;③)→ 时间越短越快 → 结论:其他条件相同时,盐酸浓度越大,反应速率越快。</p>
+      <p class="trap">陷阱:结论不带「其他条件相同时」;把「时间短」当成「速率小」搞反;数据里其实两个变量都变却下单因素结论。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 实验评价 / 改进型</h3>
+      <p><b class="tag">触发信号:</b>「该实验设计是否合理」「有何缺陷」「如何改进」「能否得出结论」。</p>
+      <p><b class="tag">标准动作(控制变量):</b>逐条检查<b>无关变量是否都控制住</b>(浓度、体积、温度、固体量与形状、观测条件是否统一);检查因变量测量是否合理、是否有对照组。找到没控制的变量就是缺陷。</p>
+      <p><b class="tag">示例(带解):</b>某方案比温度时,高温组还多加了催化剂 → 评价:同时改变了温度和催化剂两个变量,无法确定是哪个使速率变快,不符合控制变量法。改进:去掉催化剂,或两组都加等量催化剂。</p>
+      <p class="trap">陷阱:只夸方案不挑变量控制的毛病;改进方案又引入新的不同变量。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>没控制其他变量</b>:比温度时两组浓度也不同 → 结论作废。任何探究,自变量只能有一个。</p>
+      <p class="trap">② <b>变量控制不彻底</b>:浓度变了却没加水补体积,总体积不同,等于偷偷多变了一个量;或观测的纸张/视线/装置不统一。</p>
+      <p class="trap">③ <b>比较速率的「量」选错或不统一</b>:一组比「用时」、另一组比「体积」;或比浊类把「时间长」当成「速率大」(其实时间短才快,v∝1/t)。</p>
+      <p class="trap">④ <b>催化剂对比忘了其他相同</b>:加催化剂又升温/多加量,分不清谁的功劳;或没设「不加催化剂」的对照组。</p>
+      <p class="trap">⑤ 结论<b>不写前提</b>「其他条件相同时」,或把「表面积」写成改固体「浓度」(固体没有浓度概念)。</p>
+      <p class="trap">⑥ 恒容下充<b>惰性气体</b>(不参加反应),各反应物浓度没变 → 速率<b>不变</b>;别误判为加压加快。</p>
+      <p class="trap">⑦ 温度实验<b>没预热</b>就混合,或用明火直接加热难控温;应水浴且先各自预热到设定温度。</p>
+      <p class="trap">⑧ 把「最终放气总量」和「速率」混为一谈:反应物总量相同则<b>最终体积相同</b>,速率快只是<b>到达得快</b>(曲线更陡),不是放得更多。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 控制变量法的底层是「归因唯一」:</b> 只有当各组间只差一个条件时,速率差异才能<b>唯一归因</b>于这个条件。多一个变量,因果链就断了。做题时先问「有几个变量在变」,一眼看穿方案是否合格——这是评价题的万能切入点。</p>
+      <p style="margin:8px 0"><b>② 用「有效碰撞」统一所有因素:</b> 速率 ∝ 有效碰撞频率。浓度/压强改的是<b>碰撞频率</b>(分子多了),温度/催化剂改的是<b>每次碰撞成功的概率</b>(活化分子百分数)。记住「数目 vs 百分数」这条分界线,微观解释题就不会张冠李戴。</p>
+      <p style="margin:8px 0"><b>③ 比浊/沉淀类用 v ∝ 1/t 定量化:</b> 出现浑浊时间 t 反映速率倒数。以 1/t 为纵轴对温度作图,若近似指数上升,正呼应「升 10℃ 速率约翻 2~4 倍」。把「定性现象」转成「定量图像」,是高分实验题的分水岭。</p>
+      <p style="margin:8px 0"><b>④ 催化剂改速率不改平衡、不改 ΔH:</b> 它同等程度加快正逆反应,只缩短到平衡的时间;能量图上只削活化能,起点终点不动 → ΔH 不变。把「速率」和「限度/热效应」两套概念分清,是本专题与化学平衡衔接的关键。</p>
+      <p style="margin:8px 0"><b>⑤ 设计实验先列「变量三分表」:</b> 动笔前先写自变量(1个)、因变量(1个,可测量)、无关变量(全部,写出如何控制)。这张表逼你把「加水补体积」「预热」「统一装置」等控制细节想全,答题就不会漏点——这是把探究实验做成「填空」的降维技巧。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 化学攻坚包 · 核心武器:控制变量法(改一个·看结果·锁其余)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#8a8a8a";
+
+/* ===== 互动1:控制变量法演示 ===== */
+(function(){
+  const svg=document.getElementById('cvSvg');const note=document.getElementById('cvNote');
+  const names=["浓度","温度","催化剂","表面积"];
+  const all=["浓度","温度","催化剂","表面积","反应物体积"];
+  let pick=0;
+  document.querySelectorAll('.cvpick').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cvpick').forEach(x=>x.classList.remove('on'));b.classList.add('on');pick=+b.dataset.v;draw();
+  });
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='控制变量法：只解锁「'+names[pick]+'」，其余全部锁死🔒';
+    // two columns A / B
+    const colA=200,colB=500,y0=60,rowH=42;
+    el(svg,'text',{x:colA,y:48,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='A 组';
+    el(svg,'text',{x:colB,y:48,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='B 组';
+    el(svg,'text',{x:60,y:48,'font-size':13,'font-weight':900,fill:INK}).textContent='条件';
+    for(let i=0;i<all.length;i++){
+      const y=y0+i*rowH;
+      const isVar=(i===pick);
+      el(svg,'text',{x:60,y:y+6,'font-size':13,'font-weight':800,fill:INK}).textContent=all[i];
+      // A cell
+      cell(colA,y,isVar?'低':'相同',isVar?RED:YEL);
+      // B cell
+      cell(colB,y,isVar?'高':'相同',isVar?RED:YEL);
+      if(!isVar){
+        el(svg,'text',{x:350,y:y+6,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='🔒';
+      }else{
+        el(svg,'text',{x:350,y:y+6,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='←自变量→';
+      }
+    }
+    note.innerHTML='👉 自变量 = <b>'+names[pick]+'</b>（A、B 只有这一项不同）；无关变量 = 其余全部（两组🔒相同）；因变量 = <b>反应速率</b>。只有这样，速率的差异才能唯一归因于「'+names[pick]+'」。';
+  }
+  function cell(cx,y,txt,col){
+    el(svg,'rect',{x:cx-55,y:y-14,width:110,height:26,fill:col,stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:cx,y:y+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=txt;
+  }
+  draw();
+})();
+
+/* ===== 互动2:浓度/温度/催化剂/表面积 速率曲线 ===== */
+(function(){
+  const svg=document.getElementById('curveSvg');const note=document.getElementById('curveNote');
+  let c=0;
+  const cases=[
+    {t:"浓度影响",labs:["低浓度","中浓度","高浓度"],ks:[0.7,1.1,1.7],cols:[BLUE,GREEN,RED],
+     msg:"其他条件相同时，<b>浓度越大，起始越陡（速率越快）</b>。反应物总量相同 → 最终放气体积相同，只是到达快慢不同。"},
+    {t:"温度影响",labs:["20℃","30℃","40℃"],ks:[0.6,1.0,1.8],cols:[BLUE,GREEN,RED],
+     msg:"其他条件相同时，<b>温度越高速率越快</b>（升温约每 10℃ 增 2~4 倍）。曲线明显更陡。"},
+    {t:"催化剂影响",labs:["无催化剂","加催化剂"],ks:[0.35,2.0],cols:[GREY,RED],
+     msg:"加催化剂后曲线<b>陡得多</b>——降低活化能，速率大幅提升。无催化剂几乎不放气。"},
+    {t:"表面积影响",labs:["块状(小表面积)","粉末(大表面积)"],ks:[0.75,1.7],cols:[BLUE,RED],
+     msg:"固体研成粉末，接触面积增大 → <b>反应更快</b>（曲线更陡）。总量相同则最终体积相同。"}
+  ];
+  document.querySelectorAll('.cvcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cvcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);const X0=60,Y0=30,W=590,H=230,Vmax=100;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='V气';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='时间 t';
+    // final volume line (same total)
+    el(svg,'line',{x1:X0,y1:Y0+H-(Vmax/Vmax)*H+2,x2:X0+W,y2:Y0+H-(Vmax/Vmax)*H+2,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:X0+W-4,y:Y0+14,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'end'}).textContent='最终体积(相同)';
+    const cs=cases[c];
+    for(let s=0;s<cs.ks.length;s++){
+      const k=cs.ks[s];let d="";
+      for(let i=0;i<=100;i++){
+        const t=i/100;
+        const v=Vmax*(1-Math.exp(-k*t*4)); // saturating curve, same asymptote
+        const px=X0+t*W, py=Y0+H-(v/Vmax)*H;
+        d+=(i===0?"M":"L")+px.toFixed(1)+","+py.toFixed(1)+" ";
+      }
+      el(svg,'path',{d:d,fill:'none',stroke:cs.cols[s],'stroke-width':4});
+      // label at end
+      const endV=Vmax*(1-Math.exp(-k*4));
+      el(svg,'text',{x:X0+W+2,y:Y0+H-(endV/Vmax)*H+4,'font-size':11.5,'font-weight':900,fill:cs.cols[s],'text-anchor':'start'}).textContent='';
+      // legend
+      el(svg,'rect',{x:X0+14,y:Y0+H-24-s*22,width:14,height:14,fill:cs.cols[s],stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X0+34,y:Y0+H-12-s*22,'font-size':12,'font-weight':800,fill:INK}).textContent=cs.labs[s]+'（越陡越快）';
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=cs.t+'：曲线越陡 = 速率越快';
+    note.innerHTML='👉 '+cs.msg;
+    note.style.borderColor=cs.cols[cs.cols.length-1];
+  }
+  draw();
+})();
+
+/* ===== 互动3:Na2S2O3 比浊法 ===== */
+(function(){
+  const cv=document.getElementById('turbCv');const ctx=cv.getContext('2d');
+  const Ts=document.getElementById('turbT'),Cs=document.getElementById('turbC');
+  const oTA=document.getElementById('turbTA'),oTB=document.getElementById('turbTB'),oWho=document.getElementById('turbWho'),oR=document.getElementById('turbR');
+  let T=20,C=2,progA=0,progB=0,running=false;
+  // A = standard (20C, conc 2). B = user-set.
+  function rateStd(){return 1;}
+  function rateB(){ // relative rate at chosen T and C vs standard
+    const tf=Math.pow(2,(T-20)/10); // every 10C ~x2
+    const cf=C/2;
+    return tf*cf;
+  }
+  function sync(){T=+Ts.value;C=+Cs.value;reset();}
+  Ts.oninput=Cs.oninput=sync;
+  function reset(){
+    progA=0;progB=0;running=false;
+    const rB=rateB();
+    // "time to turbid" ~ inverse of rate; std reference time = 10 (arbitrary units->seconds shown)
+    const tA=10.0, tB=10.0/rB;
+    oTA.textContent=tA.toFixed(1)+'s';
+    oTB.textContent=tB.toFixed(1)+'s';
+    if(Math.abs(rB-1)<0.01){oWho.textContent='一样快';}
+    else oWho.textContent=(rB>1?'B 更快':'A 更快');
+    oR.textContent='v(B):v(A) ≈ '+rB.toFixed(2)+':1';
+    draw();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    beaker(120,'A 组（标准 20℃, 浓度2）',progA,BLUE);
+    beaker(430,'B 组（'+T+'℃, 浓度'+C+'）',progB,GREEN);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('从上往下看瓶底「×」，被析出的 S 遮住看不见时 = 记录点',120,220);
+  }
+  function beaker(cx,lab,prog,col){
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';ctx.textAlign='center';
+    ctx.fillText(lab,cx+70,22);
+    // beaker outline
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(cx,40);ctx.lineTo(cx+30,150);ctx.lineTo(cx+110,150);ctx.lineTo(cx+140,40);ctx.stroke();
+    // liquid (turbidity = whiteness). base color light + white overlay
+    const cloud=prog; // 0 clear -> 1 fully turbid
+    ctx.fillStyle='rgba(230,240,235,'+(0.15+0.8*cloud)+')';
+    ctx.beginPath();ctx.moveTo(cx+6,52);ctx.lineTo(cx+31,148);ctx.lineTo(cx+109,148);ctx.lineTo(cx+134,52);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(180,200,190,'+(0.7*cloud)+')';
+    ctx.fill();
+    // bottom "×" - visible only when not turbid
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,1-cloud*1.4);
+    ctx.strokeStyle=RED;ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(cx+60,120);ctx.lineTo(cx+80,140);ctx.moveTo(cx+80,120);ctx.lineTo(cx+60,140);ctx.stroke();
+    ctx.restore();
+    ctx.textAlign='left';
+  }
+  function loop(){
+    if(!running)return;
+    const rB=rateB();
+    progA+=0.010*rateStd();
+    progB+=0.010*rB;
+    if(progA>1)progA=1;if(progB>1)progB=1;
+    draw();
+    if(progA>=1&&progB>=1){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('turbGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('turbReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动4:对照实验表格设计器 ===== */
+(function(){
+  const wrap=document.getElementById('tableWrap');
+  let sel='conc';
+  const cols=[
+    {key:'zn',   name:'Zn (g)'},
+    {key:'conc', name:'盐酸浓度(mol/L)'},
+    {key:'vol',  name:'盐酸体积(mL)'},
+    {key:'temp', name:'温度(℃)'},
+    {key:'surf', name:'锌形状/表面积'}
+  ];
+  // fixed (locked) values
+  const fixed={zn:'0.5',conc:'2',vol:'20',temp:'25',surf:'锌粒'};
+  // variable series per selected variable
+  const series={
+    conc:['1','2','3'],
+    temp:['20','30','40'],
+    surf:['大块','锌粒','锌粉']
+  };
+  document.querySelectorAll('.tbpick').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.tbpick').forEach(x=>x.classList.remove('on'));b.classList.add('on');sel=b.dataset.v;render();
+  });
+  function render(){
+    let html='<table><tr><th>组</th>';
+    cols.forEach(cl=>{
+      const isVar=(cl.key===sel);
+      html+='<th style="background:'+(isVar?RED:INK)+'">'+cl.name+(isVar?' ★自变量':' 🔒')+'</th>';
+    });
+    html+='<th style="background:'+GREEN+'">测量:收集20mL H<sub>2</sub>用时 ★因变量</th></tr>';
+    for(let r=0;r<3;r++){
+      html+='<tr><td>'+(r+1)+'</td>';
+      cols.forEach(cl=>{
+        const isVar=(cl.key===sel);
+        let val;
+        if(isVar){val=series[sel][r];}else{val=fixed[cl.key];}
+        const bg=isVar?'rgba(224,56,42,0.18)':'rgba(243,192,14,0.30)';
+        html+='<td style="background:'+bg+';font-weight:900">'+val+'</td>';
+      });
+      html+='<td style="background:rgba(30,158,134,0.18);font-weight:900">t<sub>'+(r+1)+'</sub></td>';
+    }
+    html+='</table>';
+    html+='<p class="small" style="margin-top:8px">红列（★自变量）三组不同；黄列（🔒无关变量）三组锁成相同；绿列（★因变量）是测量结果。'+
+      '当前研究：<b>'+(sel==='conc'?'浓度':sel==='temp'?'温度':'表面积')+'</b>。</p>';
+    wrap.innerHTML=html;
+  }
+  render();
+})();
+
+/* ===== 互动5:锌+盐酸产气速率 ===== */
+(function(){
+  const cv=document.getElementById('znCv');const ctx=cv.getContext('2d');
+  const Cs=document.getElementById('znC'),Ts=document.getElementById('znT'),Ss=document.getElementById('znS');
+  const oV=document.getElementById('znV'),oShape=document.getElementById('znShape'),oProg=document.getElementById('znProg'),oConc=document.getElementById('znConc');
+  let C=2,T=30,S=0,prog=0,running=false,bubbles=[];
+  function rate(){
+    const cf=C/2;
+    const tf=Math.pow(2,(T-30)/10);
+    const sf=(S===1?1.8:1.0);
+    return cf*tf*sf;
+  }
+  function sync(){C=+Cs.value;T=+Ts.value;S=+Ss.value;reset();}
+  Cs.oninput=Ts.oninput=Ss.oninput=sync;
+  function reset(){
+    prog=0;running=false;bubbles=[];
+    const r=rate();
+    oV.textContent=r.toFixed(2)+'×';
+    oShape.textContent=(S===1?'锌粉':'锌粒');
+    oProg.textContent='0%';
+    oConc.textContent='浓度↑/温度↑/表面积↑ → 越快';
+    draw();
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // flask left
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(120,60);ctx.lineTo(120,110);ctx.lineTo(80,190);ctx.lineTo(200,190);ctx.lineTo(160,110);ctx.lineTo(160,60);ctx.stroke();
+    // liquid
+    ctx.fillStyle='rgba(200,220,235,0.75)';
+    ctx.beginPath();ctx.moveTo(96,140);ctx.lineTo(82,188);ctx.lineTo(198,188);ctx.lineTo(184,140);ctx.closePath();ctx.fill();
+    // zinc
+    ctx.fillStyle='#9a9a9a';ctx.strokeStyle=INK;ctx.lineWidth=2;
+    if(S===0){ctx.fillRect(126,168,12,12);ctx.strokeRect(126,168,12,12);ctx.fillRect(144,170,10,10);ctx.strokeRect(144,170,10,10);}
+    else{for(let i=0;i<14;i++){const x=118+ (i%7)*11, y=172+Math.floor(i/7)*8;ctx.fillRect(x,y,5,5);}}
+    // bubbles
+    ctx.fillStyle='rgba(255,255,255,0.9)';ctx.strokeStyle='#8ab';
+    bubbles.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,2*Math.PI);ctx.fill();ctx.stroke();});
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('Zn + 2HCl → ZnCl₂ + H₂↑',80,54);
+    // syringe right (gas collection)
+    const barX=340,barY=70,barW=300,barH=40;
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(barX,barY,barW,barH);
+    ctx.fillStyle='rgba(243,192,14,0.5)';ctx.fillRect(barX,barY,barW*prog,barH);
+    // plunger
+    ctx.fillStyle=INK;ctx.fillRect(barX+barW*prog-4,barY-8,8,barH+16);
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText('注射器：H₂ 顶出活塞（越快到顶=速率越大）',barX,barY-16);
+    // scale
+    ctx.fillText('0',barX-4,barY+barH+16);ctx.fillText('满(最终体积相同)',barX+barW-90,barY+barH+16);
+    // rate curve mini
+    ctx.fillStyle='#6b5d3a';ctx.font='bold 11px sans-serif';
+    ctx.fillText('相对速率 = '+rate().toFixed(2)+'×（基准:浓度2/30℃/锌粒=1）',barX,barY+80);
+  }
+  function loop(){
+    if(!running)return;
+    const r=rate();
+    prog+=0.004*r;
+    if(prog>1)prog=1;
+    // spawn bubbles proportional to rate
+    if(Math.random()<0.15*r){bubbles.push({x:110+Math.random()*70,y:186,r:2+Math.random()*3,vy:1+Math.random()});}
+    bubbles.forEach(b=>{b.y-=b.vy;});
+    bubbles=bubbles.filter(b=>b.y>130);
+    oProg.textContent=Math.round(prog*100)+'%';
+    draw();
+    if(prog>=1){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('znGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('znReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动6:催化剂降低活化能 ===== */
+(function(){
+  const svg=document.getElementById('eaSvg');
+  const Hs=document.getElementById('eaH');
+  const oE0=document.getElementById('eaE0'),oE1=document.getElementById('eaE1'),oDH=document.getElementById('eaDH'),oSame=document.getElementById('eaSame');
+  let cat=true,Hlvl=2;
+  document.getElementById('eaCat').onclick=()=>{cat=!cat;draw();};
+  Hs.oninput=()=>{Hlvl=+Hs.value;draw();};
+  function draw(){
+    clr(svg);const X0=70,Y0=30,W=560,H=230;
+    // baseline axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='能量';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='反应进程';
+    const yBase=Y0+H;
+    const yReact=yBase-70;              // reactant level
+    const yProd=yBase-70-Hlvl*22;      // product lower (exothermic): drop by Hlvl
+    const peak0=Y0+20;                 // no-catalyst peak (high)
+    const peak1=Y0+80;                 // catalyst peak (lower)
+    const xR=X0+40, xP=X0+W-40, xT=(xR+xP)/2;
+    // no-catalyst curve (grey dashed, always shown as reference)
+    curve(xR,yReact,xT,peak0,xP,yProd,GREY,'6 5',3);
+    // catalyst curve (colored) only if cat
+    if(cat){curve(xR,yReact,xT,peak1,xP,yProd,RED,'',4);}
+    // reactant / product platforms
+    el(svg,'line',{x1:X0,y1:yReact,x2:xR,y2:yReact,stroke:INK,'stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:xP,y1:yProd,x2:X0+W,y2:yProd,stroke:INK,'stroke-width':2,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:xR,y:yReact-8,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='反应物';
+    el(svg,'text',{x:xP,y:yProd-8,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='生成物';
+    // Ea markers
+    el(svg,'text',{x:xT,y:peak0-8,'font-size':11.5,'font-weight':900,fill:GREY,'text-anchor':'middle'}).textContent='无催化剂 Ea(高)';
+    if(cat)el(svg,'text',{x:xT+90,y:peak1-6,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='有催化剂 Ea(低)';
+    // ΔH arrow
+    el(svg,'line',{x1:xP+30,y1:yReact,x2:xP+30,y2:yProd,stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:xP+36,y:(yReact+yProd)/2+4,'font-size':12,'font-weight':900,fill:BLUE}).textContent='ΔH';
+    el(svg,'line',{x1:xP+24,y1:yReact,x2:xP+36,y2:yReact,stroke:BLUE,'stroke-width':2});
+    el(svg,'line',{x1:xP+24,y1:yProd,x2:xP+36,y2:yProd,stroke:BLUE,'stroke-width':2});
+    // readouts (relative arbitrary units)
+    const ea0=Math.round((yReact-peak0)*-1/2);
+    const ea1=Math.round((yReact-peak1)*-1/2);
+    const dh=Math.round((yProd-yReact)/2);
+    oE0.textContent=ea0+' (高)';
+    oE1.textContent=cat?(ea1+' (低)'):'(未加)';
+    oDH.textContent=dh+' (放热)';
+    oSame.textContent='不变';
+    el(svg,'text',{x:X0+W/2,y:Y0-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(cat?'已加催化剂：山被削矮，速率变快':'未加催化剂：Ea 高，反应慢')+'，但 ΔH 不变';
+  }
+  function curve(x1,y1,x2,y2,x3,y3,col,dash,w){
+    const d="M"+x1+","+y1+" Q"+((x1+x2)/2)+","+(y2-40)+" "+x2+","+y2+" Q"+((x2+x3)/2)+","+(y2-40)+" "+x3+","+y3;
+    const a={d:d,fill:'none',stroke:col,'stroke-width':w};if(dash)a['stroke-dasharray']=dash;
+    el(svg,'path',a);
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 探究「某因素对反应速率的影响」时，核心的实验方法是什么？一句话说清它。",a:"控制变量法：只改变要研究的那个因素（自变量），其他所有条件（无关变量）都保持相同，观察反应速率（因变量）的变化。这样速率差异才能唯一归因于这个因素。"},
+ {q:"2. 影响反应速率的外界因素有哪些？压强对什么反应才有效？",a:"浓度、温度、催化剂、固体表面积（接触面积），以及压强。压强只对有气体参加的反应有效（改变气体浓度）；对纯固/液反应几乎无影响。"},
+ {q:"3. 什么是自变量、因变量、无关变量？各怎么处理？",a:"自变量=要研究的因素（只有它在各组间不同）；因变量=反应速率（要测量/观察的结果）；无关变量=其他所有条件（各组必须严格相同、控制住）。"},
+ {q:"4. 比较反应速率快慢常用哪几种可观测量？",a:"①产生气体的快慢（等体积用时/单位时间气泡量）；②出现沉淀或浑浊的时间；③颜色变化的时间；④密闭容器压强变化。定量可测 ΔV/Δt 或 Δp/Δt。"},
+ {q:"5. Na₂S₂O₃ 与稀硫酸反应的比浊法怎么操作？怎样判断谁快？",a:"Na₂S₂O₃+H₂SO₄=Na₂SO₄+S↓+SO₂↑+H₂O，析出的 S 使溶液变浑浊。瓶底垫画「×」的白纸，记「×」看不见所用时间 t。t 越短速率越快（v∝1/t）。"},
+ {q:"6. 探究温度对速率影响时，两组必须相同的条件有哪些？操作上要注意什么？",a:"除温度外全部相同：反应物浓度、体积、催化剂、固体量与形状、观测条件。操作上要用水浴控温，且混合前先各自预热到设定温度再混合。"},
+ {q:"7. H₂O₂ 分解探究催化剂时，为什么必须设「不加催化剂」的对照组？",a:"要证明是催化剂的作用，就得有一个除「有无催化剂」外其他完全相同的对照组。不加 MnO₂ 几乎不放气，加了剧烈放 O₂（带火星木条复燃），对比才能得出结论。"},
+ {q:"8. 探究浓度影响时，为什么常要「加水补齐体积」？",a:"因为若只加不同量的浓溶液而不补水，总体积会不同，等于同时改变了浓度和体积两个变量。加水把总体积补成相同，才能保证只有浓度这一个变量在变。"},
+ {q:"9. 表格补全题：研究浓度时，第②组的温度、体积空格该填什么？",a:"填与①③组完全相同的数值（如温度都 25℃、盐酸体积都 20mL）。只让浓度一列不同，其余各列逐列相同——这才是合格的对照实验。"},
+ {q:"10. 三组只浓度不同，收集等体积 H₂ 用时 t₁>t₂>t₃，浓度①<②<③。结论怎么写？",a:"时间越短速率越快，故 v₃>v₂>v₁。结论：其他条件相同时，盐酸浓度越大，反应速率越快。（务必带前提「其他条件相同时」。）"},
+ {q:"11. 催化剂为什么能加快反应？它改变反应热 ΔH 吗？",a:"催化剂降低反应的活化能，使更多分子成为活化分子、有效碰撞增多，故加快速率。它只削低活化能，不改变反应物/生成物的能量，所以 ΔH 不变（也不改变化学平衡）。"},
+ {q:"12. 某方案比温度时，高温组还多加了催化剂，评价并改进。",a:"评价：同时改变了温度和催化剂两个变量，违反控制变量法，无法判断是哪个使速率变快。改进：去掉催化剂，或让两组都加等量催化剂，保证唯一变量是温度。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

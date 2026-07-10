@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>变压器的动态分析 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>变压器的动态分析</h1>
+    <p class="lead">变压器动态题不是死记结论,而是抓住一条<b>因果链</b>:输入电压 U₁ 是源头 → 由匝数比定 U₂ → 由负载定 I₂ → 由功率守恒定 I₁。谁变、谁不变,只要顺着这条链走一遍,各物理量的变化就一目了然。匝数变、负载变、滑片移、多副线圈,全是同一条链的不同入口。</p>
+
+    <div class="say">🗣️ <b>动态分析(人话版):</b> 变压器里的物理量不是平起平坐的,它们有<b>因果先后</b>。别一上来就乱套公式,先问一句「<b>谁决定谁</b>」:电源电压 U₁ 是老大(通常不变)→ 它和匝数比 n₁:n₂ 一起决定副线圈电压 U₂(<b>只看匝数比,不看负载!</b>)→ U₂ 和负载 R 决定副线圈电流 I₂ → 再由功率守恒倒推原线圈电流 I₁ → 功率随着输出走。<b>顺着链走,变化自己会跳出来。</b></div>
+
+    <div class="keybox"><b>三条铁律:</b> ① 电压比 <b>U₁/U₂ = n₁/n₂</b>(匝数比说了算);② 功率守恒 <b>P入 = P出</b>(理想变压器不耗能);③ 单个副线圈时 <b>I₁/I₂ = n₂/n₁</b>(由功率守恒推出,注意方向是从 I₂ 反推 I₁)。因果顺序永远是:<b>U₁ → U₂ → I₂ → I₁ → P</b>,原线圈电流 I₁ 是「结果」,不是「原因」。</div>
+
+    <h2>① 理想变压器的三大关系</h2>
+    <div class="card">
+      <div class="eq">电压比:U₁/U₂ = n₁/n₂　(原副线圈电压之比 = 匝数之比)</div>
+      <div class="eq">功率守恒:P₁ = P₂　即　U₁·I₁ = U₂·I₂</div>
+      <div class="eq">电流比:I₁/I₂ = n₂/n₁　(仅单个副线圈,由功率守恒推得)</div>
+      <p style="margin:8px 0"><b>理想变压器</b>的三个假设:无漏磁(所有磁通都穿过两个线圈)、线圈无电阻(不发热)、无铁芯损耗。因此<b>输入功率全部传给输出</b>,这就是 P₁=P₂ 的来源。</p>
+      <table>
+        <tr><th>关系</th><th>公式</th><th>成立条件</th></tr>
+        <tr><td><b>电压比</b></td><td>U₁/U₂ = n₁/n₂</td><td>总成立(匝数比决定)</td></tr>
+        <tr><td><b>功率守恒</b></td><td>P₁ = P₂ = U₂I₂</td><td>理想变压器总成立</td></tr>
+        <tr><td><b>电流比</b></td><td>I₁/I₂ = n₂/n₁</td><td><b>仅单个副线圈</b></td></tr>
+      </table>
+      <p class="trap">⚠ 电流比 I₁/I₂=n₂/n₁ <b>只对单个副线圈成立</b>!有多个副线圈时,原线圈电流要用功率守恒 U₁I₁ = U₂I₂ + U₃I₃ + … 来算,不能直接套匝数比。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 1 — 因果链流程图:U₁ → U₂ → I₂ → I₁ → P,看「谁决定谁」逐级点亮</div>
+      <svg id="chainSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="chainGo">▶ 逐级点亮因果链</button><button id="chainReset">↺ 重置</button>
+      </div>
+      <p class="small">五个方框依次点亮:U₁(源头,通常不变)→ U₂(由匝数比定)→ I₂(由负载定)→ I₁(由功率守恒反推)→ P(随输出走)。箭头方向就是因果方向,<b>永远不能倒着推</b>。</p>
+    </div>
+
+    <h2 class="b">② 制约顺序:谁不变,谁才是原因</h2>
+    <div class="card">
+      <p style="margin:6px 0">动态题的核心是分清「原因量」和「结果量」。在 <b>U₁ 一定</b>(电源接固定电压)的前提下:</p>
+      <div class="mono">① U₂ = U₁·(n₂/n₁)：只由匝数比决定，与负载 R 无关！(负载再怎么变，U₂ 纹丝不动)</div>
+      <div class="mono">② I₂ = U₂/R：由副线圈电压和负载共同决定(负载变，I₂ 跟着变)。</div>
+      <div class="mono">③ I₁ = I₂·(n₂/n₁)：由 I₂ 和匝数比反推(I₁ 是结果，不是原因)。</div>
+      <div class="mono">④ P出 = U₂·I₂ = U₂²/R，P入 = P出：功率随输出电流/负载而变。</div>
+      <p style="margin:8px 0"><b>关键领悟:</b> U₁ 一定时,U₂ <b>只锁在匝数比</b>上。很多同学以为「负载变大电流变小,所以电压也变」——错!U₂ 是由匝数比死死钉住的,负载变只改变 I₂、I₁、P,<b>动不了 U₂</b>。</p>
+      <p class="trap">⚠ 最常见错误:把「U₁ 一定」的题当成「I₁ 一定」来做。绝大多数题目 U₁ 是电源电压,恒定不变;I₁ 是被动的结果。搞反因果方向,满盘皆错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 2 — 匝数比滑块:改变 n₂/n₁，看 U₂ 怎么被匝数比锁定(U₁ 固定)</div>
+      <svg id="ratioSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>原线圈匝数 n₁ <input id="rN1" type="range" min="100" max="600" value="400" step="50"></label>
+        <label>副线圈匝数 n₂ <input id="rN2" type="range" min="100" max="600" value="200" step="50"></label>
+      </div>
+      <div class="live">
+        <div><b>输入 U₁ (固定)</b><span id="rU1">220</span></div>
+        <div><b>匝数比 n₁:n₂</b><span id="rRat">0</span></div>
+        <div><b>输出 U₂=U₁·n₂/n₁</b><span id="rU2">0</span></div>
+        <div><b>升压/降压?</b><span id="rType">0</span></div>
+      </div>
+      <p class="small">U₁ 固定为 220V。拖动匝数,只有 <b>U₂ 随匝数比变</b>;n₂&gt;n₁ 升压、n₂&lt;n₁ 降压。这一步<b>完全不涉及负载</b>——U₂ 只认匝数比。</p>
+    </div>
+
+    <h2 class="g">③ 动态分析四步法</h2>
+    <div class="card">
+      <div class="mono">第1步：判断谁不变。通常 U₁(电源电压)不变；有时匝数不变、有时负载不变。先锁定「原因量」。</div>
+      <div class="mono">第2步：看 U₂。U₁ 不变时，匝数比变则 U₂ 变(U₂=U₁·n₂/n₁)；匝数比不变则 U₂ 不变。</div>
+      <div class="mono">第3步：看 I₂。I₂=U₂/R。U₂ 或负载 R 任一变化，I₂ 就变。</div>
+      <div class="mono">第4步：连锁 I₁ 和 P。I₁ 由 I₂ 和匝数比反推；P出=U₂I₂，P入=P出 随之变。</div>
+      <p style="margin:8px 0"><b>口诀:</b> 先定不变量 → 匝数管电压 → 负载管电流 → 功率守恒收尾。每一步都问「这个量的『原因』变了没」,变了它才变。</p>
+      <h3>多副线圈的处理</h3>
+      <p style="margin:6px 0">每个副线圈的电压各自由自己的匝数比决定:U₂=U₁·n₂/n₁,U₃=U₁·n₃/n₁。每路电流各自由自己的负载决定 I₂=U₂/R₂、I₃=U₃/R₃。<b>原线圈电流用总功率守恒</b>:U₁I₁ = U₂I₂ + U₃I₃。</p>
+      <p class="trap">⚠ 多副线圈时,原线圈电流<b>绝不能</b>用某一路的匝数比单独算,必须把各路输出功率加起来除以 U₁。</p>
+    </div>
+
+    <h2 class="o">④ 负载变化的连锁反应(U₁、匝数都不变)</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是最高频的动态情形:电源 U₁ 不变、匝数比不变,<b>只有负载电阻 R 变化</b>。按因果链走:</p>
+      <table>
+        <tr><th>量</th><th>变化</th><th>原因</th></tr>
+        <tr><td><b>U₂</b>(副线圈电压)</td><td><b>不变</b></td><td>只由匝数比定，与 R 无关</td></tr>
+        <tr><td><b>I₂</b>(副线圈电流)</td><td>R↑ 则 I₂↓</td><td>I₂=U₂/R，U₂ 恒定</td></tr>
+        <tr><td><b>I₁</b>(原线圈电流)</td><td>R↑ 则 I₁↓</td><td>I₁=I₂·n₂/n₁，跟着 I₂ 走</td></tr>
+        <tr><td><b>P出、P入</b></td><td>R↑ 则 P↓</td><td>P=U₂I₂=U₂²/R</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一句话:</b> 负载电阻增大 → I₂、I₁、P 全部减小,唯独 <b>U₂ 岿然不动</b>。这就是「电压被匝数比锁定,电流被负载牵着走」的直观画面。</p>
+      <p class="trap">⚠ 别被「电流减小」误导去改 U₂。R 变只在「电流—功率」这一层引起连锁,碰不到「电压」这一层(因为电压的原因是匝数比,不是负载)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 3 — 负载 R 变化联动:U₂ 不变，I₂、I₁、P 随 R 联动(U₁、匝数固定)</div>
+      <svg id="loadSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>负载电阻 R (Ω) <input id="ldR" type="range" min="5" max="50" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>U₂ (锁定)</b><span id="ldU2">0</span></div>
+        <div><b>I₂=U₂/R</b><span id="ldI2">0</span></div>
+        <div><b>I₁=I₂·n₂/n₁</b><span id="ldI1">0</span></div>
+        <div><b>P=U₂I₂</b><span id="ldP">0</span></div>
+      </div>
+      <p class="small">四根柱子:蓝=U₂(<b>不随 R 变,永远同高</b>)、绿=I₂、橙=I₁、紫=P。拖动 R,只有电流和功率三根柱子动,电压柱纹丝不动。这就是因果链第三、四层的连锁。</p>
+    </div>
+
+    <h2 class="v">⑤ 滑片移动:把匝数或电阻的变化「翻译」出来</h2>
+    <div class="card">
+      <p style="margin:6px 0">滑动变阻器/抽头是动态题的常见「变量入口」,关键是先看清<b>滑片动了谁</b>:</p>
+      <table>
+        <tr><th>滑片接在哪</th><th>本质变化</th><th>连锁后果</th></tr>
+        <tr><td>接在<b>线圈抽头</b>(改匝数)</td><td>改变 n₁ 或 n₂ → 改变匝数比</td><td>U₂ 变 → I₂、I₁、P 全变</td></tr>
+        <tr><td>作为<b>负载电阻</b>串在副线圈</td><td>改变负载 R</td><td>U₂ 不变，I₂、I₁、P 变</td></tr>
+        <tr><td>与用电器<b>串联分压</b></td><td>改变分到用电器的电压</td><td>用电器上电压/电流变，U₂ 本身不变</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>解题第一动作:</b> 判断滑片移动到底改的是「匝数」还是「电阻」。改匝数就走「U₂ 变」那条链,改电阻就走「U₂ 不变、电流变」那条链。判错入口,整题方向就错。</p>
+      <p class="trap">⚠ 看清电路图!同样是「滑片右移」,接法不同结论相反:改 n₂ 会让 U₂ 变,改负载 R 则 U₂ 不变。先认接法,再谈变化。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 4 — 滑片移动:切换「改匝数」vs「改负载」，看链路入口不同、后果不同</div>
+      <svg id="slideSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="slmode on" data-m="0">滑片改匝数 n₂</button>
+        <button class="slmode" data-m="1">滑片改负载 R</button>
+      </div>
+      <div class="ctrl">
+        <label>滑片位置 <input id="slPos" type="range" min="0" max="100" value="50" step="1"></label>
+      </div>
+      <div class="verdict" id="slNote"></div>
+      <p class="small">同一根滑动条,两种接法。改匝数模式:U₂ 会动;改负载模式:U₂ 锁定、只有电流功率动。看清接法再判断变化,是滑片题不失分的唯一办法。</p>
+    </div>
+
+    <h2 class="b">⑥ 功率守恒:P入 = P出 的天平</h2>
+    <div class="card">
+      <div class="eq">P₁ = P₂　⟺　U₁·I₁ = U₂·I₂　(理想变压器不存能、不耗能)</div>
+      <p style="margin:8px 0">理想变压器像一架<b>天平</b>:左盘 P入=U₁I₁,右盘 P出=U₂I₂,永远相等。输出用得多(负载电流大),输入就自动供得多——这就是为什么 <b>I₁ 是被 I₂「拉动」的结果</b>。</p>
+      <p style="margin:8px 0"><b>因果理解:</b> 不是原线圈「主动」送多少功率,而是副线圈「要」多少,原线圈就「补」多少。负载增大功率需求→I₂ 增大→通过磁耦合 I₁ 自动增大,天平重新平衡。</p>
+      <p class="trap">⚠ 功率守恒是「理想」变压器的结论。真实变压器有铜损、铁损,P入&gt;P出,效率 η=P出/P入&lt;100%。高中默认理想,但要知道守恒的前提。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 功率天平 P₁=P₂:拖动输出功率，看输入功率自动跟平</div>
+      <svg id="powSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>输出功率 P出 (W) <input id="pwP" type="range" min="20" max="200" value="100" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>P出=U₂I₂</b><span id="pwOut">0</span></div>
+        <div><b>P入=U₁I₁</b><span id="pwIn">0</span></div>
+        <div><b>I₂=P出/U₂</b><span id="pwI2">0</span></div>
+        <div><b>I₁=P入/U₁</b><span id="pwI1">0</span></div>
+      </div>
+      <p class="small">天平两盘永远等高:P入=P出。拖大输出功率,输入功率立刻跟上,<b>I₁ 被 I₂ 拉动</b>。这就是「原线圈补足副线圈所需」的能量因果。</p>
+    </div>
+
+    <h2 class="g">⑦ 依赖关系图:一眼看清谁管谁</h2>
+    <div class="card">
+      <p style="margin:6px 0">把所有量的「决定关系」画成一张依赖图,动态分析就有了地图:</p>
+      <div class="mono">n₁, n₂ ─┐</div>
+      <div class="mono">U₁ ─────┼──▶ U₂ ──┬──▶ I₂ ──▶ I₁ ──▶ P入=P出</div>
+      <div class="mono">　　　　　　　　　　R ─┘</div>
+      <p style="margin:8px 0"><b>读图:</b> U₂ 的父节点是 {U₁, 匝数比};I₂ 的父节点是 {U₂, R};I₁ 的父节点是 {I₂, 匝数比};P 的父节点是 {U₂, I₂}。<b>改任何一个量,只影响它下游的节点,影响不到它上游。</b></p>
+      <p class="trap">⚠ 逆着箭头推(比如从 I₁ 去推 U₂)是最典型的因果倒置错误。永远顺着箭头:源头动 → 下游连锁。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🗺️ 互动 6 — 依赖关系图:点任一物理量，高亮它决定的下游 & 决定它的上游</div>
+      <svg id="depSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="depnode on" data-n="U1">U₁</button>
+        <button class="depnode" data-n="ratio">匝数比</button>
+        <button class="depnode" data-n="U2">U₂</button>
+        <button class="depnode" data-n="R">R</button>
+        <button class="depnode" data-n="I2">I₂</button>
+        <button class="depnode" data-n="I1">I₁</button>
+        <button class="depnode" data-n="P">P</button>
+      </div>
+      <div class="verdict" id="depNote"></div>
+      <p class="small">点一个节点:<b>红色</b>=它的下游(会被它影响),<b>蓝色</b>=它的上游(决定它的)。改一个量,只有它的红色下游会跟着变。这就是动态分析的全景地图。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 匝数变化型</h3>
+      <p><b class="tag">触发信号:</b>「原(副)线圈匝数增加/减少」「抽头改变匝数比」,U₁ 保持不变。</p>
+      <p><b class="tag">标准动作:</b>U₁ 不变 → U₂=U₁·n₂/n₁ 随匝数比变 → I₂=U₂/R 变 → I₁ 变 → P 变。整条链被 U₂ 带动。</p>
+      <p><b class="tag">示例(带解):</b>U₁=220V,n₁=440,n₂=220,负载 R=10Ω。原 U₂=220×220/440=110V,I₂=11A。若 n₂ 增到 440(匝数比变 1:1):U₂=220V,I₂=22A,P出=220×22=4840W(翻了 4 倍,因为 U₂ 翻倍、I₂=U₂/R 也翻倍)。</p>
+      <p class="trap">陷阱:改匝数时以为 U₂ 不变;或忘了 U₂ 一变,I₂、I₁、P 全都连锁变。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 负载电阻变化型</h3>
+      <p><b class="tag">触发信号:</b>「负载电阻增大/减小」「并联更多用电器」,U₁ 和匝数都不变。</p>
+      <p><b class="tag">标准动作:</b>U₂ <b>不变</b>(匝数比锁定)→ I₂=U₂/R 随 R 反向变 → I₁ 跟着 I₂ → P=U₂²/R 变。电压层不动,只动电流功率层。</p>
+      <p><b class="tag">示例(带解):</b>U₂=110V 固定,R 从 22Ω 减到 11Ω。I₂ 从 5A 增到 10A,I₁(设 n₁:n₂=2:1)从 2.5A 增到 5A,P出 从 550W 增到 1100W。<b>U₂ 全程 110V 不变</b>。</p>
+      <p class="trap">陷阱:看到电流变就去改 U₂;并联用电器时把总电阻算成变大(其实并联总阻变小,电流增大)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 副线圈滑片移动型</h3>
+      <p><b class="tag">触发信号:</b>副线圈接滑动变阻器,「滑片上/下移」,问各量变化。</p>
+      <p><b class="tag">标准动作:</b>先判滑片改的是<b>匝数还是电阻</b>。改电阻:U₂ 不变,I₂=U₂/R 按接入电阻变。改匝数:U₂ 变,全链连锁。</p>
+      <p><b class="tag">示例(带解):</b>副线圈 U₂=100V 固定,滑动变阻器作负载,滑片使接入电阻从 50Ω 减到 25Ω。I₂ 从 2A 增到 4A,I₁ 按匝数比同比例增,P出 从 200W 增到 400W,U₂ 不变。</p>
+      <p class="trap">陷阱:没看清滑片接法就下结论;把「改电阻」错当「改匝数」去改 U₂。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 原副线圈同时变型</h3>
+      <p><b class="tag">触发信号:</b>「匝数和负载同时改变」或「输入电压和匝数同时变」,多个原因量一起动。</p>
+      <p><b class="tag">标准动作:</b>严格按链顺序,一层层算。先定 U₂=U₁·n₂/n₁(把新 U₁、新匝数都代入),再 I₂=U₂/R(代入新 R),再 I₁、P。不要跳步。</p>
+      <p><b class="tag">示例(带解):</b>U₁ 从 220→110V,同时 n₂/n₁ 从 1/2→1(升)。U₂=110×1=110V(恰好和原来 220×1/2=110V 相同,U₂ 不变!)。再看负载若不变,则 I₂、I₁、P 也不变。多因素时务必算数值,别凭直觉。</p>
+      <p class="trap">陷阱:多个量同时变时凭感觉判断加减;正确做法是把新值全部代入公式逐层算。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 多副线圈型</h3>
+      <p><b class="tag">触发信号:</b>一个原线圈带两个及以上副线圈,各接不同负载,求原线圈电流或输入功率。</p>
+      <p><b class="tag">标准动作:</b>各副线圈电压各自 U₂=U₁·n₂/n₁、U₃=U₁·n₃/n₁;各路电流各自 I₂=U₂/R₂、I₃=U₃/R₃;<b>原线圈电流用总功率守恒</b> U₁I₁=U₂I₂+U₃I₃。</p>
+      <p><b class="tag">示例(带解):</b>U₁=220V。副1:U₂=110V,R₂=11Ω,I₂=10A,P₂=1100W;副2:U₃=44V,R₃=22Ω,I₃=2A,P₃=88W。总输出 1188W,I₁=1188/220=5.4A。<b>不能</b>用单一匝数比算 I₁。</p>
+      <p class="trap">陷阱:用某一路的匝数比直接求 I₁(只对单副线圈成立);漏加某一路的输出功率。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 含电表示数变化型</h3>
+      <p><b class="tag">触发信号:</b>电路里接了电压表(测 U₁ 或 U₂)、电流表(测 I₁ 或 I₂),问「示数如何变化」。</p>
+      <p><b class="tag">标准动作:</b>先弄清每个电表测的是<b>哪个量</b>,再用因果链判断那个量变没变。测 U₂ 的电压表:匝数变才动,负载变不动;测 I₁/I₂ 的电流表:负载或匝数变都可能动。</p>
+      <p><b class="tag">示例(带解):</b>副线圈并联负载,再并入一个用电器(总电阻减小)。测 U₂ 的电压表示数<b>不变</b>(U₂ 由匝数比定);测 I₂ 的电流表示数<b>增大</b>(I₂=U₂/R,R 变小);测 I₁ 的电流表也<b>增大</b>(随 I₂)。</p>
+      <p class="trap">陷阱:没分清电表测的是电压还是电流、原边还是副边就答;把「测 U₂ 的表」误判为随负载变。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>U₂ 只由匝数比决定,与负载无关!</b>U₁ 一定时,负载再怎么变,U₂ 也纹丝不动。这是全章头号考点。</p>
+      <p class="trap">② <b>电流的因果方向</b>:是 I₂(由负载定)去决定 I₁,不是 I₁ 决定 I₂。原线圈电流是被副线圈「拉动」的结果。</p>
+      <p class="trap">③ <b>功率守恒 P₁=P₂</b> 是理想变压器的前提结论;别忘了它,也别用在有损耗的真实变压器上。</p>
+      <p class="trap">④ <b>原线圈电流 I₁ 是「结果」不是「原因」</b>。绝大多数题 U₁ 恒定、I₁ 被动,搞反因果方向满盘皆错。</p>
+      <p class="trap">⑤ 电流比 I₁/I₂=n₂/n₁ <b>只对单个副线圈</b>成立;多副线圈必须用总功率守恒算 I₁。</p>
+      <p class="trap">⑥ 滑片移动先判<b>改匝数还是改电阻</b>:改匝数走「U₂ 变」链,改电阻走「U₂ 不变、电流变」链。</p>
+      <p class="trap">⑦ 依赖关系<b>只能顺着箭头</b>:U₁→U₂→I₂→I₁→P。逆推(从 I₁ 推 U₂)是典型因果倒置。</p>
+      <p class="trap">⑧ 多因素同时变时,<b>把新值全部代入逐层算</b>,别凭直觉加减(可能刚好抵消,U₂ 不变)。</p>
+      <p class="trap">⑨ 电表题先弄清<b>测哪个量、在原边还是副边</b>,再用因果链判断该量变不变。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 变压器是「电压变换器」,更是「因果链系统」:</b> 记住一句话——<b>电压由匝数比钉死,电流由负载牵着走,功率守恒收尾</b>。任何动态题都是这条链的某个环节被扰动,顺着链走一遍即可。不要把四个量当成平等的一团,它们有严格的上下游。</p>
+      <p style="margin:8px 0"><b>② 「谁决定谁」是解题的元方法:</b> 拿到题先画依赖箭头 U₁→U₂→I₂→I₁→P,标出题目「动了哪个源头」,再看这个源头的下游有哪些——只有下游才会变,上游一律不动。这个方法对任何多变量制约问题都通用。</p>
+      <p style="margin:8px 0"><b>③ 能量视角看 I₁ 的被动性:</b> 原线圈电流增大不是因为原边「主动加电流」,而是副边负载要更多功率 → 磁通耦合让 I₁ 自动补上以维持 P入=P出。理解这一点,就再也不会把 I₁ 当原因了。变压器本质是能量的实时平衡。</p>
+      <p style="margin:8px 0"><b>④ 多因素同时变要「代数硬算」,拒绝直觉:</b> 当 U₁ 和匝数同时变、或匝数和负载同时变,凭感觉判断加减极易翻车(常有刚好抵消、U₂ 不变的巧合题)。老老实实把新值代入 U₂=U₁·n₂/n₁ 等公式算数值,是尖子生的稳。</p>
+      <p style="margin:8px 0"><b>⑤ 多副线圈用「功率账本」统管:</b> 把每路输出功率列成一本账 U₁I₁ = ΣUₖIₖ,原线圈电流就是「总支出除以输入电压」。这套账本思维避免了「用哪路匝数比」的纠结,对复杂多路变压器一招通杀。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 核心口诀:电压由匝数比定，电流由负载定，功率守恒收尾</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+var NS="http://www.w3.org/2000/svg";
+function el(p,t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+var ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GRAY="#9a8f78";
+
+/* ===== 互动1:因果链流程图 U1->U2->I2->I1->P ===== */
+(function(){
+  var svg=document.getElementById('chainSvg');
+  var running=false,step=0,timer=null;
+  var nodes=[
+    {id:'U1',x:40,label:'U₁',sub:'源头 (通常不变)',col:BLUE},
+    {id:'U2',x:170,label:'U₂',sub:'由匝数比定',col:GREEN},
+    {id:'I2',x:300,label:'I₂',sub:'由负载定',col:ORANGE},
+    {id:'I1',x:430,label:'I₁',sub:'功率守恒反推',col:VIO},
+    {id:'P',x:560,label:'P',sub:'P入=P出',col:RED}
+  ];
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='因果链：顺箭头方向，上游决定下游';
+    var by=120,bw=100,bh=64;
+    for(var i=0;i<nodes.length;i++){
+      var nd=nodes[i];
+      var lit=(i<step);
+      // arrow into this node
+      if(i>0){
+        var ax=nd.x-30, axe=nd.x;
+        var arrLit=(i<=step-1)||(i<step);
+        var acol=(i<step)?INK:GRAY;
+        el(svg,'line',{x1:nodes[i-1].x+bw,y1:by+bh/2,x2:nd.x,y2:by+bh/2,stroke:acol,'stroke-width':(i<step?5:3)});
+        el(svg,'polygon',{points:(nd.x)+','+(by+bh/2)+' '+(nd.x-12)+','+(by+bh/2-7)+' '+(nd.x-12)+','+(by+bh/2+7),fill:acol});
+      }
+      el(svg,'rect',{x:nd.x,y:by,width:bw,height:bh,fill:lit?nd.col:'#fff',stroke:INK,'stroke-width':3,rx:6});
+      el(svg,'text',{x:nd.x+bw/2,y:by+30,'font-size':22,'font-weight':900,fill:lit?'#fff':INK,'text-anchor':'middle'}).textContent=nd.label;
+      el(svg,'text',{x:nd.x+bw/2,y:by+52,'font-size':10.5,'font-weight':800,fill:lit?'#fff':'#6b5d3a','text-anchor':'middle'}).textContent=nd.sub;
+    }
+    // formulas under
+    var fy=225;
+    var formulas=['','U₂=U₁·n₂/n₁','I₂=U₂/R','I₁=I₂·n₂/n₁','P=U₂I₂'];
+    for(var j=1;j<nodes.length;j++){
+      if(j<step){
+        el(svg,'text',{x:(nodes[j-1].x+nodes[j].x+bw)/2,y:fy,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=formulas[j];
+      }
+    }
+    el(svg,'text',{x:350,y:270,'font-size':12.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent=step>=5?'★ 全链点亮：改源头，下游连锁变，上游不动':'点“逐级点亮”，看每一级的因果';
+  }
+  function go(){
+    step=0;draw();
+    if(timer)clearInterval(timer);
+    timer=setInterval(function(){step++;draw();if(step>=5){clearInterval(timer);}},650);
+  }
+  document.getElementById('chainGo').onclick=go;
+  document.getElementById('chainReset').onclick=function(){if(timer)clearInterval(timer);step=0;draw();};
+  step=0;draw();
+})();
+
+/* ===== 互动2:匝数比滑块 -> U2 ===== */
+(function(){
+  var svg=document.getElementById('ratioSvg');
+  var N1=document.getElementById('rN1'),N2=document.getElementById('rN2');
+  var oU1=document.getElementById('rU1'),oRat=document.getElementById('rRat'),oU2=document.getElementById('rU2'),oType=document.getElementById('rType');
+  var U1=220;
+  function gcd(a,b){return b?gcd(b,a%b):a;}
+  function sync(){draw();}
+  N1.oninput=N2.oninput=sync;
+  function draw(){
+    clr(svg);
+    var n1=+N1.value,n2=+N2.value;
+    var U2=U1*n2/n1;
+    var g=gcd(n1,n2);
+    oU1.textContent=U1+'V';
+    oRat.textContent=(n1/g)+':'+(n2/g);
+    oU2.textContent=U2.toFixed(1)+'V';
+    oType.textContent=n2>n1?'升压':(n2<n1?'降压':'不变');
+    // draw transformer core
+    el(svg,'text',{x:350,y:24,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='U₁ 固定 220V，U₂ 只随匠数比变';
+    // core (two vertical bars)
+    el(svg,'rect',{x:320,y:60,width:60,height:170,fill:'#c8bfa4',stroke:INK,'stroke-width':3});
+    // primary coil bar
+    var pMax=600,cMaxH=150;
+    var ph=Math.max(10,(n1/pMax)*cMaxH);
+    var sh=Math.max(10,(n2/pMax)*cMaxH);
+    el(svg,'rect',{x:250,y:145-ph/2,width:26,height:ph,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:263,y:250,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='n₁='+n1;
+    el(svg,'text',{x:180,y:130,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='U₁=220V';
+    // secondary coil bar
+    el(svg,'rect',{x:424,y:145-sh/2,width:26,height:sh,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:437,y:250,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='n₂='+n2;
+    el(svg,'text',{x:540,y:130,'font-size':15,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='U₂='+U2.toFixed(0)+'V';
+    // lines
+    el(svg,'line',{x1:210,y1:145,x2:250,y2:145,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:450,y1:145,x2:490,y2:145,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:270,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='U₂ = U₁·n₂/n₁ = 220×'+n2+'/'+n1+' = '+U2.toFixed(1)+'V（与负载无关）';
+  }
+  draw();
+})();
+
+/* ===== 互动3:负载R变化联动 (U2锁定) ===== */
+(function(){
+  var svg=document.getElementById('loadSvg');
+  var R=document.getElementById('ldR');
+  var oU2=document.getElementById('ldU2'),oI2=document.getElementById('ldI2'),oI1=document.getElementById('ldI1'),oP=document.getElementById('ldP');
+  var U2=110,ratio=0.5; // n2/n1 = 0.5
+  R.oninput=draw;
+  function draw(){
+    clr(svg);
+    var r=+R.value;
+    var I2=U2/r;
+    var I1=I2*ratio;
+    var P=U2*I2;
+    oU2.textContent=U2+'V';
+    oI2.textContent=I2.toFixed(2)+'A';
+    oI1.textContent=I1.toFixed(2)+'A';
+    oP.textContent=P.toFixed(0)+'W';
+    el(svg,'text',{x:350,y:22,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='U₁、匠数不变：U₂锁定，I₂/I₁/P 随 R 联动';
+    var baseY=210,maxH=150;
+    var bars=[
+      {x:90,lab:'U₂',val:U2,max:110,col:BLUE,unit:'V',fixed:true},
+      {x:250,lab:'I₂',val:I2,max:22,col:GREEN,unit:'A',fixed:false},
+      {x:410,lab:'I₁',val:I1,max:11,col:ORANGE,unit:'A',fixed:false},
+      {x:560,lab:'P',val:P,max:2420,col:VIO,unit:'W',fixed:false}
+    ];
+    el(svg,'line',{x1:50,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    for(var i=0;i<bars.length;i++){
+      var b=bars[i];
+      var h=Math.max(6,Math.min(maxH,(b.val/b.max)*maxH));
+      el(svg,'rect',{x:b.x,y:baseY-h,width:60,height:h,fill:b.col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:b.x+30,y:baseY+20,'font-size':14,'font-weight':900,fill:b.col,'text-anchor':'middle'}).textContent=b.lab;
+      el(svg,'text',{x:b.x+30,y:baseY-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=b.val.toFixed(b.unit==='W'?0:2)+b.unit;
+      if(b.fixed){el(svg,'text',{x:b.x+30,y:baseY-h-24,'font-size':10.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='锁定';}
+    }
+    el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='R='+r+'Ω：R↑则 I₂、I₁、P 均↓，唯 U₂ 不动';
+  }
+  draw();
+})();
+
+/* ===== 互动4:滑片移动 改匝数 vs 改负载 ===== */
+(function(){
+  var svg=document.getElementById('slideSvg');
+  var note=document.getElementById('slNote');
+  var pos=document.getElementById('slPos');
+  var mode=0;
+  var U1=220;
+  document.querySelectorAll('.slmode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.slmode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');mode=+b.dataset.m;draw();
+    };
+  });
+  pos.oninput=draw;
+  function draw(){
+    clr(svg);
+    var p=+pos.value; // 0..100
+    var U2,I2,I1,P,R,ratio;
+    el(svg,'text',{x:350,y:22,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=mode===0?'滑片改匠数 n₂：U₂ 会变':'滑片改负载 R：U₂ 锁定，电流功率变';
+    // slider track
+    var trackX=80,trackW=420,trackY=90;
+    el(svg,'line',{x1:trackX,y1:trackY,x2:trackX+trackW,y2:trackY,stroke:INK,'stroke-width':6});
+    var knobX=trackX+trackW*(p/100);
+    el(svg,'rect',{x:knobX-8,y:trackY-16,width:16,height:32,fill:mode===0?GREEN:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:knobX,y:trackY-24,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='滑片';
+    if(mode===0){
+      // slider changes n2: n2 from 100..500, n1=400
+      var n1=400,n2=100+p/100*400;
+      ratio=n2/n1;
+      U2=U1*ratio;
+      R=20; I2=U2/R; I1=I2*ratio; P=U2*I2;
+      el(svg,'text',{x:trackX,y:130,'font-size':12,'font-weight':900,fill:GREEN}).textContent='n₂='+n2.toFixed(0)+' (n₁=400)';
+      note.innerHTML='👉 滑片改 <b>匠数 n₂</b>：U₂=U₁·n₂/n₁=<b>'+U2.toFixed(1)+'V</b>（随匠数变！）→ I₂='+I2.toFixed(2)+'A、I₁='+I1.toFixed(2)+'A、P='+P.toFixed(0)+'W 全链连锁变。';
+      note.style.borderColor=GREEN;
+    } else {
+      // slider changes load R: R from 5..45, ratio fixed 0.5
+      ratio=0.5;
+      U2=U1*ratio; // 110
+      R=5+p/100*40;
+      I2=U2/R; I1=I2*ratio; P=U2*I2;
+      el(svg,'text',{x:trackX,y:130,'font-size':12,'font-weight':900,fill:ORANGE}).textContent='R='+R.toFixed(1)+'Ω';
+      note.innerHTML='👉 滑片改 <b>负载 R</b>：U₂=<b>'+U2.toFixed(1)+'V 锁定不变</b> → I₂='+I2.toFixed(2)+'A、I₁='+I1.toFixed(2)+'A、P='+P.toFixed(0)+'W 只这三个随 R 变。';
+      note.style.borderColor=ORANGE;
+    }
+    // readout bars right side
+    var bx=540,by=200,bw=26;
+    var u2h=Math.min(140,(U2/220)*140);
+    el(svg,'rect',{x:bx,y:by-u2h,width:bw,height:u2h,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+bw/2,y:by+16,'font-size':11.5,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='U₂';
+    el(svg,'text',{x:bx+bw/2,y:by-u2h-6,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=U2.toFixed(0);
+    var i2h=Math.min(140,(I2/25)*140);
+    el(svg,'rect',{x:bx+60,y:by-i2h,width:bw,height:i2h,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+60+bw/2,y:by+16,'font-size':11.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='I₂';
+    el(svg,'text',{x:bx+60+bw/2,y:by-i2h-6,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=I2.toFixed(1);
+    el(svg,'line',{x1:bx-10,y1:by,x2:bx+100,y2:by,stroke:INK,'stroke-width':3});
+  }
+  draw();
+})();
+
+/* ===== 互动5:功率天平 P1=P2 ===== */
+(function(){
+  var svg=document.getElementById('powSvg');
+  var Ps=document.getElementById('pwP');
+  var oOut=document.getElementById('pwOut'),oIn=document.getElementById('pwIn'),oI2=document.getElementById('pwI2'),oI1=document.getElementById('pwI1');
+  var U1=220,U2=110;
+  Ps.oninput=draw;
+  function draw(){
+    clr(svg);
+    var Pout=+Ps.value;
+    var Pin=Pout; // ideal
+    var I2=Pout/U2;
+    var I1=Pin/U1;
+    oOut.textContent=Pout.toFixed(0)+'W';
+    oIn.textContent=Pin.toFixed(0)+'W';
+    oI2.textContent=I2.toFixed(2)+'A';
+    oI1.textContent=I1.toFixed(2)+'A';
+    el(svg,'text',{x:350,y:22,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='理想变压器：P入 = P出（天平永远平）';
+    // balance pivot
+    var pivotX=350,pivotY=190;
+    el(svg,'polygon',{points:pivotX+','+pivotY+' '+(pivotX-20)+','+(pivotY+40)+' '+(pivotX+20)+','+(pivotY+40),fill:INK});
+    // beam (level, since equal)
+    var beamY=100;
+    el(svg,'line',{x1:120,y1:beamY,x2:580,y2:beamY,stroke:INK,'stroke-width':6});
+    el(svg,'line',{x1:pivotX,y1:beamY,x2:pivotX,y2:pivotY,stroke:INK,'stroke-width':4});
+    // left pan (P in)
+    el(svg,'line',{x1:180,y1:beamY,x2:180,y2:beamY+30,stroke:INK,'stroke-width':3});
+    var lh=Math.max(10,(Pin/200)*80);
+    el(svg,'rect',{x:140,y:beamY+30,width:80,height:lh,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:180,y:beamY+30+lh+18,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='P入='+Pin.toFixed(0)+'W';
+    el(svg,'text',{x:180,y:beamY-12,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='U₁I₁='+U1+'×'+I1.toFixed(2);
+    // right pan (P out)
+    el(svg,'line',{x1:520,y1:beamY,x2:520,y2:beamY+30,stroke:INK,'stroke-width':3});
+    var rh=Math.max(10,(Pout/200)*80);
+    el(svg,'rect',{x:480,y:beamY+30,width:80,height:rh,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:520,y:beamY+30+rh+18,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='P出='+Pout.toFixed(0)+'W';
+    el(svg,'text',{x:520,y:beamY-12,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='U₂I₂='+U2+'×'+I2.toFixed(2);
+    el(svg,'text',{x:350,y:250,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='拖大输出 → I₂↑ → I₁ 被拉动自动↑，天平重新平衡';
+  }
+  draw();
+})();
+
+/* ===== 互动6:依赖关系图 ===== */
+(function(){
+  var svg=document.getElementById('depSvg');
+  var note=document.getElementById('depNote');
+  var sel='U1';
+  // node layout
+  var N={
+    U1:{x:70,y:150,lab:'U₁'},
+    ratio:{x:70,y:60,lab:'匠数比'},
+    U2:{x:250,y:110,lab:'U₂'},
+    R:{x:250,y:220,lab:'R'},
+    I2:{x:410,y:150,lab:'I₂'},
+    I1:{x:540,y:110,lab:'I₁'},
+    P:{x:620,y:220,lab:'P'}
+  };
+  // edges: parent -> child
+  var E=[['U1','U2'],['ratio','U2'],['U2','I2'],['R','I2'],['I2','I1'],['ratio','I1'],['U2','P'],['I2','P']];
+  var explain={
+    U1:'U₁ 是总源头：它决定 U₂（进而 I₂、I₁、P）。U₁ 没有上游，不被任何量决定。',
+    ratio:'匠数比与 U₁ 共同决定 U₂，又与 I₂ 共同决定 I₁。它也是源头（无上游）。',
+    U2:'U₂ 的上游：U₁ 和匠数比；下游：I₂ 和 P。负载 R 不是它的上游！',
+    R:'R 是源头（无上游），与 U₂ 共同决定 I₂。改 R 只影响电流、功率，碰不到 U₂。',
+    I2:'I₂ 的上游：U₂ 和 R；下游：I₁ 和 P。I₂ 是电流层的源头。',
+    I1:'I₁ 的上游：I₂ 和匠数比。I₁ 是“结果”，被 I₂ 拉动，不是原因！',
+    P:'P 的上游：U₂ 和 I₂（P=U₂I₂）。它是链的最下游，无下游。'
+  };
+  document.querySelectorAll('.depnode').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.depnode').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');sel=b.dataset.n;draw();
+    };
+  });
+  function downstream(id){ // all reachable children
+    var set={};var stack=[id];
+    while(stack.length){var c=stack.pop();for(var i=0;i<E.length;i++){if(E[i][0]===c&&!set[E[i][1]]){set[E[i][1]]=1;stack.push(E[i][1]);}}}
+    return set;
+  }
+  function upstream(id){
+    var set={};var stack=[id];
+    while(stack.length){var c=stack.pop();for(var i=0;i<E.length;i++){if(E[i][1]===c&&!set[E[i][0]]){set[E[i][0]]=1;stack.push(E[i][0]);}}}
+    return set;
+  }
+  function draw(){
+    clr(svg);
+    var down=downstream(sel),up=upstream(sel);
+    // edges
+    for(var i=0;i<E.length;i++){
+      var a=N[E[i][0]],b=N[E[i][1]];
+      var col=GRAY;
+      if((E[i][0]===sel||down[E[i][0]])&&down[E[i][1]])col=RED;
+      else if(E[i][1]===sel||up[E[i][1]]){if(up[E[i][0]]||E[i][0]===sel||true){} }
+      // color downstream edges red, upstream edges blue
+      var inDown=(E[i][0]===sel||down[E[i][0]])&&(down[E[i][1]]);
+      var inUp=(E[i][1]===sel||up[E[i][1]])&&(up[E[i][0]]);
+      if(inDown)col=RED;else if(inUp)col=BLUE;else col=GRAY;
+      el(svg,'line',{x1:a.x+26,y1:a.y,x2:b.x-26,y2:b.y,stroke:col,'stroke-width':(col===GRAY?2:4)});
+      // arrowhead
+      var ang=Math.atan2(b.y-a.y,(b.x-26)-(a.x+26));
+      var hx=b.x-26,hy=b.y;
+      el(svg,'polygon',{points:hx+','+hy+' '+(hx-11*Math.cos(ang-0.4))+','+(hy-11*Math.sin(ang-0.4))+' '+(hx-11*Math.cos(ang+0.4))+','+(hy-11*Math.sin(ang+0.4)),fill:col});
+    }
+    // nodes
+    for(var k in N){
+      var nd=N[k];
+      var fill='#fff',tcol=INK;
+      if(k===sel){fill=INK;tcol='#fff';}
+      else if(down[k]){fill=RED;tcol='#fff';}
+      else if(up[k]){fill=BLUE;tcol='#fff';}
+      el(svg,'circle',{cx:nd.x,cy:nd.y,r:26,fill:fill,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:nd.x,y:nd.y+5,'font-size':14,'font-weight':900,fill:tcol,'text-anchor':'middle'}).textContent=nd.lab;
+    }
+    // legend
+    el(svg,'circle',{cx:70,cy:285,r:8,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:85,y:290,'font-size':11.5,'font-weight':800,fill:INK}).textContent='下游(被它影响)';
+    el(svg,'circle',{cx:230,cy:285,r:8,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:245,y:290,'font-size':11.5,'font-weight':800,fill:INK}).textContent='上游(决定它)';
+    el(svg,'circle',{cx:380,cy:285,r:8,fill:INK,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:395,y:290,'font-size':11.5,'font-weight':800,fill:INK}).textContent='当前选中';
+    note.innerHTML='👉 '+(explain[sel]||'');
+    note.style.borderColor=INK;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+var qs=[
+ {q:"1. 理想变压器的三大关系是什么？各自的成立条件？",a:"电压比 U₁/U₂=n₁/n₂(匝数比决定,总成立);功率守恒 P₁=P₂=U₂I₂(理想变压器总成立);电流比 I₁/I₂=n₂/n₁(仅单个副线圈成立)。"},
+ {q:"2. U₁ 一定时,副线圈电压 U₂ 由什么决定？和负载有关吗？",a:"U₂=U₁·n₂/n₁,只由匝数比决定,与负载 R 完全无关。负载再怎么变,U₂ 纹丝不动。这是全章头号考点。"},
+ {q:"3. 变压器动态分析的因果链是怎样的？",a:"U₁(源头)→ U₂(由匝数比定)→ I₂(由负载定 I₂=U₂/R)→ I₁(由功率守恒/匝数比反推)→ P(P入=P出)。永远顺着这个方向,上游决定下游。"},
+ {q:"4. 原线圈电流 I₁ 是原因还是结果？为什么？",a:"是结果。U₁ 通常恒定,副线圈需要多少功率(由 I₂ 决定),原线圈就通过磁耦合自动补足多少,I₁ 被 I₂ 拉动。搞反因果方向满盘皆错。"},
+ {q:"5. U₁、匝数都不变,只有负载电阻 R 增大,U₂、I₂、I₁、P 各如何变化？",a:"U₂ 不变(匝数比锁定);I₂=U₂/R 减小;I₁ 随 I₂ 减小;P=U₂²/R 减小。电压层不动,只动电流功率层。"},
+ {q:"6. 电流比 I₁/I₂=n₂/n₁ 什么时候不能用？该怎么算 I₁？",a:"有多个副线圈时不能用。此时必须用总功率守恒:U₁I₁=U₂I₂+U₃I₃+…,I₁=总输出功率/U₁。"},
+ {q:"7. 滑片移动的题,解题第一步该做什么？",a:"先判断滑片改的是匝数还是电阻。改匝数走“U₂ 变”链(全链连锁);改负载电阻走“U₂ 不变、电流功率变”链。判错入口整题方向错。"},
+ {q:"8. U₁=220V,n₁=440,n₂=220,R=10Ω。求 U₂、I₂、I₁、P。",a:"U₂=220×220/440=110V;I₂=U₂/R=110/10=11A;I₁=I₂·n₂/n₁=11×0.5=5.5A;P=U₂I₂=110×11=1210W(=P入)。"},
+ {q:"9. 一原线圈带两副线圈:副1 U₂=110V/I₂=10A,副2 U₃=44V/I₃=2A,U₁=220V。求 I₁。",a:"总输出功率 P=U₂I₂+U₃I₃=1100+88=1188W。由 U₁I₁=P,I₁=1188/220=5.4A。不能用单一匝数比算。"},
+ {q:"10. 副线圈并联负载,再并入一个用电器。测 U₂ 的电压表、测 I₂ 的电流表示数各如何变？",a:"并入用电器→总电阻变小。测 U₂ 的电压表:不变(U₂ 由匝数比定)。测 I₂ 的电流表:增大(I₂=U₂/R,R 变小)。测 I₁ 的电流表也增大(随 I₂)。"},
+ {q:"11. 为什么说功率守恒体现了“原线圈补足副线圈所需”？",a:"理想变压器 P入=P出。不是原边主动送功率,而是副边负载“要”多少功率,原边就通过磁通耦合自动“补”多少,使天平 U₁I₁=U₂I₂ 重新平衡。所以 I₁ 被 I₂ 拉动。"},
+ {q:"12. U₁ 从 220V→110V,同时 n₂/n₁ 从 1/2→1,负载不变。U₂ 如何变？",a:"新 U₂=110×1=110V;原 U₂=220×1/2=110V——恰好相同,U₂ 不变!负载不变则 I₂、I₁、P 也不变。多因素变必须代入数值算,别凭直觉。"}
+];
+var quiz=document.getElementById('quiz');
+qs.forEach(function(o){var d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+</script>
+</body>
+</html>

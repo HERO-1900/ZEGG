@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>种群密度的调查方法 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">生物 · 攻坚包</div>
+    <h1>种群密度的调查方法</h1>
+    <p class="lead">一片草地上有多少株蒲公英?一片森林里有多少只田鼠?<b>数不清也没法一只只数</b>——只能<b>抽样估算</b>。不动的(植物、活动范围小的动物)用<b>样方法</b>,会动的(活动能力强的动物)用<b>标志重捕法</b>。核心思想只有一句:<b>用局部估计整体</b>。这一页把两种方法的原理、操作、计算和误差全部拆开讲透。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 你要数一大片地里有多少生物,一个个数会累死,也数不准。怎么办?<b>抽样估算</b>。像民意调查不问全国人,只问几千人一样。<b>不会跑的</b>(草、蒲公英、蚜虫、昆虫卵)——随机圈几个小方块数一数,取平均再推到整片地,这叫<b>样方法</b>。<b>会跑的</b>(田鼠、鱼、麻雀)——先抓一批做记号放回去,过几天再抓一批,看里面有多少带记号的,用<b>比例</b>反推总数,这叫<b>标志重捕法</b>。两种方法的灵魂都是同一个:<b>局部的密度 = 整体的密度</b>。</div>
+
+    <div class="keybox"><b>两个核心公式:</b> ① 样方法:<b>种群密度 = 各样方个体数的平均值 ÷ 样方面积</b>(先求平均,再算密度)。② 标志重捕法:<b>N = N₁ × n ÷ m</b>(N₁=首次标记数,n=第二次捕获总数,m=第二次中被标记数)。记法:「<b>标记的占总数的比例</b> = <b>重捕中标记的占重捕的比例</b>」,即 N₁/N = m/n,交叉相乘就得 N=N₁n/m。</div>
+
+    <h2>① 样方法:用小方块估算整片地</h2>
+    <div class="card">
+      <div class="eq">种群密度 = (∑各样方个体数 ÷ 样方数) ÷ 每个样方面积</div>
+      <p style="margin:8px 0"><b>适用对象:</b>植物,以及<b>活动范围小、活动能力弱</b>的动物(蚜虫、跳蝻、昆虫卵、蚯蚓等)。</p>
+      <h3>三个关键操作</h3>
+      <table>
+        <tr><th>环节</th><th>怎么做</th></tr>
+        <tr><td><b>随机取样</b>(灵魂!)</td><td>不能凭主观「哪里多选哪里」。常用<b>五点取样法</b>(方形/近方形地块,取中心+四角5个样方)和<b>等距取样法</b>(长条形地块,等间隔取样)。</td></tr>
+        <tr><td><b>计数规则</b></td><td>正好压在样方<b>边线上</b>的个体:<b>数上不数下、数左不数右</b>(即只数相邻两条边上的,通常取上、左两边;计入方框内的全部)。</td></tr>
+        <tr><td><b>求平均</b></td><td>把所有样方的个体数<b>相加求平均值</b>,再除以样方面积,得到种群密度(单位:株/m²等)。</td></tr>
+      </table>
+      <p class="trap">⚠ 样方法的命门是<b>随机</b>。样方大小、数量要合适,选取要客观(可闭眼撒点/坐标随机),不能挑密的也不能挑稀的。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📍 互动 1 — 五点取样法 vs 等距取样法:两种地块形状怎么布样方</div>
+      <svg id="smpSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="smpmode on" data-m="0">五点取样(方形地块)</button>
+        <button class="smpmode" data-m="1">等距取样(长条地块)</button>
+      </div>
+      <div class="verdict" id="smpNote"></div>
+      <p class="small">红色小方块=选中的样方。方形地块用<b>五点法</b>(中心+四角);狭长地块用<b>等距法</b>(沿长轴等间隔布点)。两种都是为了<b>随机、均匀</b>覆盖,避免主观偏差。</p>
+    </div>
+
+    <h2 class="b">② 样方计数规则:边线上的取舍</h2>
+    <div class="card">
+      <p style="margin:6px 0">数一个样方时,完全在框<b>内部</b>的个体当然要数。麻烦的是<b>正好压在边线上</b>的:如果四条边都数,相邻样方会<b>重复计数</b>;都不数又会<b>漏</b>。</p>
+      <div class="eq">口诀:数上不数下,数左不数右</div>
+      <p style="margin:8px 0">意思是:只数<b>上边和左边</b>两条相邻边线上的个体,<b>下边和右边</b>上的一律不数。这样每个个体在整块地里<b>不重不漏</b>地被数一次。(取「上、左」还是「下、右」不影响结果,只要全片地统一即可,课本约定<b>数上不数下、数左不数右</b>。)</p>
+      <p class="trap">⚠ 别把边线上的全数了(重复),也别全不数(遗漏)。统一「两条相邻边数、另两条不数」才对。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔲 互动 2 — 样方计数规则:边线上的点该数不该数(数上左、不数下右)</div>
+      <svg id="cntSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="cntShuffle">🎲 换一批分布</button>
+        <label>本样方计数 <input id="cntRange" type="range" min="0" max="1" value="1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>框内(必数)</b><span id="cntIn">0</span></div>
+        <div><b>上/左边线(数)</b><span id="cntKeep">0</span></div>
+        <div><b>下/右边线(不数)</b><span id="cntSkip">0</span></div>
+        <div><b>本样方计数</b><span id="cntTot">0</span></div>
+      </div>
+      <p class="small">绿点=计入本样方,红点=不计入。<b>框内</b>全数;<b>上边、左边</b>线上的数(绿);<b>下边、右边</b>线上的不数(红,留给相邻样方)。这样全片地不重不漏。</p>
+    </div>
+
+    <h2 class="g">③ 标志重捕法:用比例反推总数</h2>
+    <div class="card">
+      <div class="eq">N = N₁ × n ÷ m　(种群总数)</div>
+      <p style="margin:8px 0"><b>适用对象:</b><b>活动能力强、活动范围大</b>的动物(田鼠、鸟类、鱼类等)——这些没法用样方框住。</p>
+      <h3>原理:一个简单的比例</h3>
+      <div class="mono">第1次:捕获 N₁ 只,全部做标记后放回,让它们混入种群。</div>
+      <div class="mono">等待一段时间,让标记个体与未标记个体充分混匀。</div>
+      <div class="mono">第2次:再捕获 n 只,其中带标记的有 m 只。</div>
+      <p style="margin:8px 0"><b>核心假设:</b>「第二次捕获样本中标记的比例」 ≈ 「整个种群中标记的比例」。即:</p>
+      <div class="eq">m / n = N₁ / N　⟹　N = N₁ × n ÷ m</div>
+      <p style="margin:8px 0"><b>前提条件(缺一不可):</b>①标记不影响个体正常活动和存活;②标记物不脱落、不引人注目(不增大被捕食风险);③标记后个体充分混匀;④调查期间<b>无迁入迁出、无大量出生死亡</b>(种群总数稳定)。</p>
+      <p class="trap">⚠ 这些前提任何一条被破坏,估算值 N 都会偏离真实值。误差分析题就是专门考「哪个前提坏了,N 偏大还是偏小」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🐭 互动 3 — 标志重捕法原理:N = N₁·n/m 的比例关系(拖动看总数变化)</div>
+      <svg id="mrSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>首次标记 N₁ <input id="mrN1" type="range" min="10" max="60" value="40" step="5"></label>
+        <label>第二次捕获 n <input id="mrN" type="range" min="10" max="60" value="40" step="5"></label>
+        <label>其中带标记 m <input id="mrM" type="range" min="1" max="30" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>标记比例 m/n</b><span id="mrRatio">0</span></div>
+        <div><b>估算总数 N=N₁n/m</b><span id="mrN2">0</span></div>
+        <div><b>N₁/N 应等于 m/n</b><span id="mrChk">0</span></div>
+        <div><b>未标记≈</b><span id="mrUn">0</span></div>
+      </div>
+      <p class="small">黄点=带标记的个体,灰点=未标记。第二次捕的 n 只里,标记占比 m/n 应等于整个种群里标记占比 N₁/N。<b>m 越小,推出的 N 越大</b>(记住这个方向,误差分析靠它)。</p>
+    </div>
+
+    <h2 class="o">④ 标志重捕误差分析:m 变了,N 就变</h2>
+    <div class="card">
+      <p style="margin:6px 0">由 N = N₁·n/m,分母是 <b>m</b>(第二次捕到的标记数)。只要某个原因让 <b>m 偏小</b>,算出的 <b>N 就偏大</b>;让 <b>m 偏大</b>,N 就偏小。抓住这条,所有误差题秒判。</p>
+      <table>
+        <tr><th>发生了什么</th><th>m 如何变</th><th>N 估算值</th></tr>
+        <tr><td><b>标记物脱落</b>(记号掉了)</td><td>本该算标记却没认出 → m 偏小</td><td><b>偏大</b></td></tr>
+        <tr><td><b>标记个体更易被捕食/死亡</b></td><td>能被重捕的标记个体少了 → m 偏小</td><td><b>偏大</b></td></tr>
+        <tr><td><b>标记使个体更醒目、更易被抓</b></td><td>第二次更容易抓到标记的 → m 偏大</td><td><b>偏小</b></td></tr>
+        <tr><td><b>标记期间有个体迁入/新出生</b>(未标记)</td><td>种群变大,标记比例被稀释 → m 偏小</td><td><b>偏大</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>万能判据:</b>先问「这件事让 m 变大还是变小?」再由 N=N₁n/m 反比:<b>m↓ ⟹ N↑,m↑ ⟹ N↓</b>。</p>
+      <p class="trap">⚠ 最常考的是<b>标记脱落</b>和<b>标记增大死亡/被捕食</b>——两者都让 m 偏小,使 N <b>偏大</b>。别被绕晕,盯住 m 的方向。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📉 互动 4 — 标记脱落误差:m 偏小 → N 估算偏大(对比真实值)</div>
+      <svg id="errSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>标记脱落率 <input id="errDrop" type="range" min="0" max="80" value="40" step="10"></label>
+        <span class="vlabel" id="errCap"></span>
+      </div>
+      <div class="live">
+        <div><b>真实总数 N真</b><span id="errTrue">0</span></div>
+        <div><b>实测标记数 m'</b><span id="errM">0</span></div>
+        <div><b>估算 N=N₁n/m'</b><span id="errEst">0</span></div>
+        <div><b>误差(估−真)</b><span id="errBias">0</span></div>
+      </div>
+      <p class="small">固定真实种群。脱落率越高,第二次能认出的标记数 m' 越小 → 算出的 N 越<b>偏大</b>(蓝柱=真实,红柱=估算)。这直观解释了「标记脱落使估算值偏高」。</p>
+    </div>
+
+    <h2 class="v">⑤ 方法选择:会不会动是分水岭</h2>
+    <div class="card">
+      <table>
+        <tr><th>调查对象</th><th>该用哪种方法</th><th>为什么</th></tr>
+        <tr><td>草、蒲公英、树木</td><td><b>样方法</b></td><td>植物不动,可直接框样方计数</td></tr>
+        <tr><td>蚜虫、跳蝻、昆虫卵</td><td><b>样方法</b></td><td>活动范围极小,近似不动</td></tr>
+        <tr><td>蚯蚓、某些土壤小动物</td><td><b>样方法</b>(或取样器取样)</td><td>活动能力弱</td></tr>
+        <tr><td>田鼠、兔子</td><td><b>标志重捕法</b></td><td>活动能力强,框不住</td></tr>
+        <tr><td>鸟类、鱼类</td><td><b>标志重捕法</b></td><td>活动范围大</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一句话判断:</b>看对象<b>能不能被样方框住</b>——不动/几乎不动 → 样方法;满地/满天跑 → 标志重捕法。</p>
+      <p class="trap">⚠ 别给会飞会跑的动物用样方法(框不住、会跑掉),也别给不动的植物用标志重捕(没必要、也标不了)。对象与方法要匹配。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 5 — 方法选择:点一个对象,看它该用样方法还是标志重捕法</div>
+      <svg id="matchSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="mobj on" data-i="0">蒲公英</button>
+        <button class="mobj" data-i="1">蚜虫</button>
+        <button class="mobj" data-i="2">昆虫卵</button>
+        <button class="mobj" data-i="3">田鼠</button>
+        <button class="mobj" data-i="4">麻雀</button>
+        <button class="mobj" data-i="5">鲤鱼</button>
+      </div>
+      <div class="verdict" id="matchNote"></div>
+      <p class="small">左侧「样方法」区、右侧「标志重捕法」区。选一个对象,小圆点会跳到它应归属的一侧,并说明理由(不动 vs 会动)。</p>
+    </div>
+
+    <h2 class="r">⑥ 随机取样 vs 主观取样:偏差从哪来</h2>
+    <div class="card">
+      <p style="margin:6px 0">样方法能不能得到准确的密度,全看取样是否<b>随机</b>。如果你「哪里长得旺就往哪里放样方」,估算会系统性偏高;专挑稀疏处则偏低。<b>随机取样</b>才能让样本平均值逼近真实密度。</p>
+      <div class="eq">随机 → 样方平均 ≈ 真实密度　　主观 → 系统性偏大或偏小</div>
+      <p style="margin:8px 0">保证随机的办法:用坐标随机数、闭眼撒标记物、按预定间隔机械取样(等距法)等,<b>不受人为偏好影响</b>。</p>
+      <p class="trap">⚠ 「随机」不是「随便」。随便走两步放个框仍可能被密集区吸引;必须用客观机制(随机数/等距)去掉主观偏好。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 6 — 随机取样 vs 主观取样:同一片地,两种取法估出的密度差多少</div>
+      <svg id="biasSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="biasRandom">🎲 随机取样</button>
+        <button id="biasSubj">👁 主观取样(挑密处)</button>
+        <button id="biasReset">↺ 换一片地</button>
+      </div>
+      <div class="live">
+        <div><b>全地真实密度</b><span id="biasTrue">0</span></div>
+        <div><b>本次样方均值</b><span id="biasSample">0</span></div>
+        <div><b>估算偏差</b><span id="biasErr">0</span></div>
+        <div><b>取样方式</b><span id="biasMode">—</span></div>
+      </div>
+      <p class="small">背景点=真实分布(左密右疏)。随机取样→5个样方均匀撒开→均值接近真实;主观取样→都落在密集区→均值明显偏高。同一片地,取法不同,结论天差地别。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 样方法取样与计数</h3>
+      <p><b class="tag">触发信号:</b>给一张样方分布图/表,让你「数某样方个体数」,或问「该地块用五点法还是等距法」。</p>
+      <p><b class="tag">标准动作:</b>方形地块→五点取样;长条地块→等距取样。计数:框内全数,边线上「数上不数下、数左不数右」。</p>
+      <p><b class="tag">示例(带解):</b>某方框内有蒲公英7株,上边线2株、左边线1株、下边线2株、右边线1株。计数=框内7+上2+左1=<b>10株</b>(下、右边线的3株不数)。</p>
+      <p class="trap">陷阱:把边线上的全数了(重复计数);或长条地块误用五点法。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 样方法密度计算</h3>
+      <p><b class="tag">触发信号:</b>给出若干样方各自的个体数和样方面积,求种群密度。</p>
+      <p><b class="tag">标准动作:</b>先把各样方个体数<b>求平均</b>,再<b>除以样方面积</b>。密度=平均个体数/样方面积。</p>
+      <p><b class="tag">示例(带解):</b>5个 1m² 样方分别数得 8、10、9、12、11 株。平均=(8+10+9+12+11)/5=50/5=10 株。密度=10株÷1m²=<b>10 株/m²</b>。若样方为 4m²,则密度=10/4=2.5 株/m²。</p>
+      <p class="trap">陷阱:忘了先求平均;或忘了除以样方面积(把总数当密度);面积单位不统一。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 标志重捕法计算(N=N₁n/m)</h3>
+      <p><b class="tag">触发信号:</b>「第一次捕获并标记X只放回,第二次捕获Y只其中Z只有标记」,求种群数量。</p>
+      <p><b class="tag">标准动作:</b>套公式 N=N₁×n÷m。N₁=首次标记数,n=第二次捕获总数,m=第二次中标记数。</p>
+      <p><b class="tag">示例(带解):</b>首次捕田鼠40只标记放回(N₁=40),第二次捕50只(n=50),其中10只带标记(m=10)。N=40×50÷10=<b>200只</b>。验证:标记比例 40/200=0.2,重捕标记比例 10/50=0.2,一致。</p>
+      <p class="trap">陷阱:公式里 n 与 m 位置搞反(m 在分母);把 N₁ 当成总数;分不清哪个是「重捕总数」哪个是「重捕中标记数」。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 标志重捕误差分析</h3>
+      <p><b class="tag">触发信号:</b>「标记物脱落」「标记个体易被天敌捕食」「调查期间有迁入」等,问估算值偏大还是偏小。</p>
+      <p><b class="tag">标准动作:</b>先判断该因素让 <b>m 变大还是变小</b>,再由 N=N₁n/m 反比:m↓→N偏大,m↑→N偏小。</p>
+      <p><b class="tag">示例(带解):</b>标记物部分脱落 → 第二次能认出的标记数 m 偏小 → 由 N=N₁n/m,分母变小 → 估算 N <b>偏大</b>。若标记使田鼠更显眼易被抓 → m 偏大 → N 偏小。</p>
+      <p class="trap">陷阱:直接背结论记混;应统一走「m 方向 → N 反向」的判据。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 方法选择</h3>
+      <p><b class="tag">触发信号:</b>给一个调查对象(某植物/某动物),问「应采用什么方法调查其种群密度」。</p>
+      <p><b class="tag">标准动作:</b>看对象活动能力。不动/活动范围小(植物、蚜虫、卵)→样方法;活动能力强(田鼠、鸟、鱼)→标志重捕法。</p>
+      <p><b class="tag">示例(带解):</b>调查草原中<b>蒲公英</b>密度→样方法(植物不动);调查草原中<b>黄鼠</b>密度→标志重捕法(会跑,框不住)。调查<b>蚜虫</b>→样方法(活动范围小)。</p>
+      <p class="trap">陷阱:给会动的动物用样方法;或不看活动能力凭感觉选。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 调查方案评价</h3>
+      <p><b class="tag">触发信号:</b>给一个具体操作方案,让你指出「有何不妥」「如何改进」,常涉及随机性或前提条件。</p>
+      <p><b class="tag">标准动作:</b>逐条对照前提:样方法查<b>是否随机取样、计数规则、样方大小数量</b>;标志重捕查<b>四大前提</b>(标记无害、不脱落、充分混匀、无迁入迁出出生死亡)。</p>
+      <p><b class="tag">示例(带解):</b>「在长势最好处连取5个样方」→不妥,违反随机取样,应随机布点(密处偏高)。「标记后立即重捕」→不妥,未充分混匀,标记比例不能代表整体。</p>
+      <p class="trap">陷阱:只看计算不查前提;漏掉「随机」和「充分混匀」这两个高频考点。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 样方计数:边线上「<b>数上不数下、数左不数右</b>」,不重不漏。别全数(重复)也别全不数(遗漏)。</p>
+      <p class="trap">② 样方法必须<b>随机取样</b>!主观挑密处→偏大,挑稀处→偏小。「随机」不等于「随便」。</p>
+      <p class="trap">③ 密度计算:先<b>求平均</b>再<b>除以面积</b>。别把总数或平均个体数直接当密度。</p>
+      <p class="trap">④ 标志重捕公式 <b>N=N₁n/m</b>,m 在分母。<b>m 偏小→N 偏大</b>,m 偏大→N 偏小,这是误差分析的总开关。</p>
+      <p class="trap">⑤ <b>标记脱落</b>、<b>标记使个体易死/易被捕食</b>→都让 m 偏小→N <b>偏大</b>(高频陷阱)。</p>
+      <p class="trap">⑥ 标志重捕四前提:标记无害、不脱落、<b>充分混匀</b>、<b>无迁入迁出出生死亡</b>。少一条估算就失真。</p>
+      <p class="trap">⑦ 方法与对象要匹配:会跑的动物用样方法(错)、不动的植物用标志重捕(没必要)。看活动能力选。</p>
+      <p class="trap">⑧ 「标记后立即重捕」是错的——必须留时间让标记个体<b>充分混匀</b>再捕。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 两种方法本质都是「等比例假设」:</b> 样方法假设「局部密度=整体密度」,标志重捕假设「样本中标记比例=总体中标记比例」。理解了这一层,你就明白为什么它们都要求<b>随机/充分混匀</b>——只有随机,局部才能代表整体;只有混匀,样本才能代表总体。所有误差都来自这个假设被破坏。</p>
+      <p style="margin:8px 0"><b>② 标志重捕误差用「反比一句话」秒杀:</b> N=N₁n/m,N₁、n 由操作固定,变量只有 m。任何因素先转化为「m 偏大还是偏小」,再由 N∝1/m 立刻得结论。不用背四五条结论,只记 <b>m↓N↑、m↑N↓</b> 一句,任意新情境都能推。</p>
+      <p style="margin:8px 0"><b>③ 「随机」是可操作的,不是口号:</b> 尖子生答方案评价时会写出<b>具体的随机机制</b>——坐标随机数、等距机械取样、闭眼投掷——而不是空说「要随机」。把「怎样保证随机」讲清楚,才是满分答案。</p>
+      <p style="margin:8px 0"><b>④ 样方法的取样方式由<b>地块形状</b>决定:</b> 方形/近方形→五点取样;狭长/长条→等距取样。两者目标一致:让样方<b>均匀且随机</b>地覆盖全域。识别地块形状,是判断取样方法的第一步。</p>
+      <p style="margin:8px 0"><b>⑤ 前提条件即「稳态假设」:</b> 标志重捕要求调查期内种群<b>近似封闭且稳定</b>(无迁入迁出、出生死亡忽略)。这本质是把种群当成一个数量不变的「箱子」抽两次样。一旦种群在变化,两次抽样的「总体」就不是同一个,比例失效——这也是为什么调查周期不能太长。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 生物攻坚包 · 种群与群落 · 用局部估计整体</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GRAY="#9a9a9a";
+
+/* ===== 互动1:五点取样 vs 等距取样 ===== */
+(function(){
+  const svg=document.getElementById('smpSvg');const note=document.getElementById('smpNote');
+  let mode=0;
+  document.querySelectorAll('.smpmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.smpmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function scatter(x,y,w,h,seed){
+    let s=seed;
+    for(let i=0;i<70;i++){
+      s=(s*9301+49297)%233280;const rx=x+(s/233280)*w;
+      s=(s*9301+49297)%233280;const ry=y+(s/233280)*h;
+      el(svg,'circle',{cx:rx,cy:ry,r:2.4,fill:'#8fbf6a'});
+    }
+  }
+  function draw(){
+    clr(svg);
+    if(mode===0){
+      const x=180,y=30,W=340,H=240;
+      el(svg,'rect',{x:x,y:y,width:W,height:H,fill:'#f3f8ee',stroke:INK,'stroke-width':3});
+      scatter(x,y,W,H,7);
+      el(svg,'text',{x:x+W/2,y:y-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='方形地块 · 五点取样法';
+      const sz=42;
+      const spots=[[x+20,y+20],[x+W-20-sz,y+20],[x+20,y+H-20-sz],[x+W-20-sz,y+H-20-sz],[x+W/2-sz/2,y+H/2-sz/2]];
+      spots.forEach((p,i)=>{
+        el(svg,'rect',{x:p[0],y:p[1],width:sz,height:sz,fill:'rgba(224,56,42,0.18)',stroke:RED,'stroke-width':3});
+        el(svg,'text',{x:p[0]+sz/2,y:p[1]+sz/2+5,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=(i+1);
+      });
+      note.innerHTML='👉 <b>五点取样法</b>:适用于<b>方形或近方形</b>地块。在中央和四角共取 5 个样方,均匀覆盖全域,避免只测某一区。';
+      note.style.borderColor=RED;
+    }else{
+      const x=60,y=90,W=580,H=110;
+      el(svg,'rect',{x:x,y:y,width:W,height:H,fill:'#f3f8ee',stroke:INK,'stroke-width':3});
+      scatter(x,y,W,H,13);
+      el(svg,'text',{x:x+W/2,y:y-12,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='狭长地块 · 等距取样法';
+      const sz=44,n=5;const gap=(W-n*sz)/(n+1);
+      for(let i=0;i<n;i++){
+        const px=x+gap*(i+1)+sz*i, py=y+(H-sz)/2;
+        el(svg,'rect',{x:px,y:py,width:sz,height:sz,fill:'rgba(224,56,42,0.18)',stroke:RED,'stroke-width':3});
+        el(svg,'text',{x:px+sz/2,y:py+sz/2+5,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=(i+1);
+      }
+      note.innerHTML='👉 <b>等距取样法</b>:适用于<b>狭长/长条形</b>地块(如田埂、河岸)。沿长轴<b>等间隔</b>布置样方,保证均匀覆盖。';
+      note.style.borderColor=RED;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动2:样方计数规则 ===== */
+(function(){
+  const svg=document.getElementById('cntSvg');
+  const oIn=document.getElementById('cntIn'),oKeep=document.getElementById('cntKeep'),oSkip=document.getElementById('cntSkip'),oTot=document.getElementById('cntTot');
+  const range=document.getElementById('cntRange');
+  const X=210,Y=30,S=240;
+  let seed=42;
+  let pts=[];
+  function gen(){
+    pts=[];let s=seed;
+    function rnd(){s=(s*9301+49297)%233280;return s/233280;}
+    // interior points
+    for(let i=0;i<8;i++){pts.push({x:X+20+rnd()*(S-40),y:Y+20+rnd()*(S-40),edge:'in'});}
+    // top edge
+    for(let i=0;i<2;i++){pts.push({x:X+30+rnd()*(S-60),y:Y,edge:'top'});}
+    // left edge
+    for(let i=0;i<1;i++){pts.push({x:X,y:Y+30+rnd()*(S-60),edge:'left'});}
+    // bottom edge
+    for(let i=0;i<2;i++){pts.push({x:X+30+rnd()*(S-60),y:Y+S,edge:'bottom'});}
+    // right edge
+    for(let i=0;i<2;i++){pts.push({x:X+S,y:Y+30+rnd()*(S-60),edge:'right'});}
+  }
+  function draw(){
+    clr(svg);
+    const apply=(+range.value===1);
+    // frame
+    el(svg,'rect',{x:X,y:Y,width:S,height:S,fill:'#f3f8ee',stroke:INK,'stroke-width':3});
+    // highlight kept edges (top,left) green ; skipped edges (bottom,right) red
+    if(apply){
+      el(svg,'line',{x1:X,y1:Y,x2:X+S,y2:Y,stroke:GREEN,'stroke-width':5});
+      el(svg,'line',{x1:X,y1:Y,x2:X,y2:Y+S,stroke:GREEN,'stroke-width':5});
+      el(svg,'line',{x1:X,y1:Y+S,x2:X+S,y2:Y+S,stroke:RED,'stroke-width':5});
+      el(svg,'line',{x1:X+S,y1:Y,x2:X+S,y2:Y+S,stroke:RED,'stroke-width':5});
+    }
+    let cin=0,keep=0,skip=0;
+    pts.forEach(p=>{
+      let counted;
+      if(!apply){counted=true;}
+      else if(p.edge==='in'){counted=true;cin++;}
+      else if(p.edge==='top'||p.edge==='left'){counted=true;keep++;}
+      else{counted=false;skip++;}
+      const col=counted?GREEN:RED;
+      el(svg,'circle',{cx:p.x,cy:p.y,r:6,fill:col,stroke:INK,'stroke-width':2});
+    });
+    // legend
+    el(svg,'text',{x:X+S+16,y:Y+40,'font-size':13,'font-weight':900,fill:GREEN}).textContent='● 计入';
+    el(svg,'text',{x:X+S+16,y:Y+66,'font-size':13,'font-weight':900,fill:RED}).textContent='● 不计';
+    el(svg,'text',{x:X+S/2,y:Y-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=apply?'数上不数下、数左不数右':'(未应用规则:边线全数会重复)';
+    el(svg,'text',{x:X-14,y:Y-6,'font-size':11,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='上✓';
+    el(svg,'text',{x:X-14,y:Y+S/2,'font-size':11,'font-weight':800,fill:GREEN,'text-anchor':'end'}).textContent='左✓';
+    el(svg,'text',{x:X+S/2,y:Y+S+22,'font-size':11,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='下✗';
+    el(svg,'text',{x:X+S+16,y:Y+S/2,'font-size':11,'font-weight':800,fill:RED,'text-anchor':'start'}).textContent='右✗';
+    oIn.textContent=cin;oKeep.textContent=keep;oSkip.textContent=skip;
+    oTot.textContent=apply?(cin+keep):pts.length;
+  }
+  document.getElementById('cntShuffle').onclick=()=>{seed=Math.floor(Math.random()*90000)+10;gen();draw();};
+  range.oninput=draw;
+  gen();draw();
+})();
+
+/* ===== 互动3:标志重捕法原理 ===== */
+(function(){
+  const svg=document.getElementById('mrSvg');
+  const N1s=document.getElementById('mrN1'),Ns=document.getElementById('mrN'),Ms=document.getElementById('mrM');
+  const oRatio=document.getElementById('mrRatio'),oN2=document.getElementById('mrN2'),oChk=document.getElementById('mrChk'),oUn=document.getElementById('mrUn');
+  function draw(){
+    clr(svg);
+    let N1=+N1s.value,n=+Ns.value,m=+Ms.value;
+    if(m>n)m=n;
+    const N=Math.round(N1*n/m);
+    oRatio.textContent=(m/n).toFixed(3);
+    oN2.textContent=N;
+    oChk.textContent=(N1/N).toFixed(3);
+    oUn.textContent=Math.max(0,N-N1);
+    // title
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='N = N₁ × n ÷ m = '+N1+'×'+n+'÷'+m+' = '+N;
+    // draw the whole population as a grid of dots (cap for display)
+    const show=Math.min(N,120);
+    const markedShown=Math.min(N1,show);
+    const cols=15,cell=26,gx=60,gy=50;
+    for(let i=0;i<show;i++){
+      const cx=gx+(i%cols)*cell, cy=gy+Math.floor(i/cols)*cell;
+      const marked=i<markedShown;
+      el(svg,'circle',{cx:cx,cy:cy,r:8,fill:marked?YEL:GRAY,stroke:INK,'stroke-width':2});
+    }
+    const rows=Math.ceil(show/cols);
+    const by=gy+rows*cell+18;
+    el(svg,'text',{x:60,y:by,'font-size':12,'font-weight':800,fill:INK}).textContent='黄=标记('+N1+'只),灰=未标记';
+    el(svg,'text',{x:60,y:by+22,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='标记比例 m/n = '+(m/n).toFixed(3)+'  ≈  整体标记比例 N₁/N = '+(N1/N).toFixed(3);
+    if(show<N){el(svg,'text',{x:60,y:by+42,'font-size':11.5,'font-weight':800,fill:'#6b5d3a'}).textContent='(示意仅画出前 '+show+' 只,实际估算 '+N+' 只)';}
+  }
+  N1s.oninput=Ns.oninput=Ms.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:标记脱落误差 ===== */
+(function(){
+  const svg=document.getElementById('errSvg');
+  const drop=document.getElementById('errDrop');const cap=document.getElementById('errCap');
+  const oTrue=document.getElementById('errTrue'),oM=document.getElementById('errM'),oEst=document.getElementById('errEst'),oBias=document.getElementById('errBias');
+  const Ntrue=200,N1=40,n=50; // real: m should be N1*n/Ntrue = 10
+  function draw(){
+    clr(svg);
+    const d=+drop.value/100;
+    const mReal=N1*n/Ntrue; // 10
+    const mObs=Math.max(1,Math.round(mReal*(1-d))); // fewer marks recognized
+    const Nest=Math.round(N1*n/mObs);
+    oTrue.textContent=Ntrue;oM.textContent=mObs;oEst.textContent=Nest;
+    oBias.textContent=(Nest-Ntrue>=0?'+':'')+(Nest-Ntrue);
+    cap.textContent='脱落 '+(+drop.value)+'% → 实际认出标记 '+mObs+' 只(应为 '+mReal+' 只)';
+    // bars
+    const baseY=230,maxH=170,bw=90;
+    const scale=maxH/500;
+    const hTrue=Ntrue*scale, hEst=Math.min(maxH,Nest*scale);
+    el(svg,'line',{x1:40,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    // true bar
+    el(svg,'rect',{x:180,y:baseY-hTrue,width:bw,height:hTrue,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:180+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='真实 '+Ntrue;
+    el(svg,'text',{x:180+bw/2,y:baseY-hTrue-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=Ntrue;
+    // est bar
+    el(svg,'rect',{x:420,y:baseY-hEst,width:bw,height:hEst,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:420+bw/2,y:baseY+20,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='估算 '+Nest;
+    el(svg,'text',{x:420+bw/2,y:baseY-hEst-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=Nest;
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='标记脱落 → m 偏小 → N=N₁n/m 偏大';
+    if(Nest>Ntrue){el(svg,'text',{x:350,y:46,'font-size':12.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='估算比真实高 '+(Nest-Ntrue)+' 只';}
+  }
+  drop.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:方法选择 ===== */
+(function(){
+  const svg=document.getElementById('matchSvg');const note=document.getElementById('matchNote');
+  const objs=[
+    {name:'蒲公英',method:0,why:'植物,不会动,可直接框样方计数'},
+    {name:'蚜虫',method:0,why:'活动范围极小,近似不动'},
+    {name:'昆虫卵',method:0,why:'卵不动,直接计数即可'},
+    {name:'田鼠',method:1,why:'活动能力强、范围大,框不住'},
+    {name:'麻雀',method:1,why:'会飞,活动范围大'},
+    {name:'鲤鱼',method:1,why:'水中游动,无法用样方'}
+  ];
+  let idx=0;
+  document.querySelectorAll('.mobj').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.mobj').forEach(x=>x.classList.remove('on'));b.classList.add('on');idx=+b.dataset.i;draw();
+  });
+  function draw(){
+    clr(svg);
+    // two zones
+    el(svg,'rect',{x:40,y:40,width:280,height:160,fill:'rgba(30,158,134,0.12)',stroke:GREEN,'stroke-width':3});
+    el(svg,'rect',{x:380,y:40,width:280,height:160,fill:'rgba(232,106,23,0.12)',stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:180,y:66,'font-size':15,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='样方法';
+    el(svg,'text',{x:520,y:66,'font-size':15,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='标志重捕法';
+    el(svg,'text',{x:180,y:88,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='不动 / 活动范围小';
+    el(svg,'text',{x:520,y:88,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='活动能力强 / 范围大';
+    const o=objs[idx];
+    const cx=o.method===0?180:520, cy=150;
+    el(svg,'circle',{cx:cx,cy:cy,r:34,fill:o.method===0?GREEN:ORANGE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:cy+6,'font-size':15,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=o.name;
+    note.innerHTML='👉 <b>'+o.name+'</b> → 用<b>'+(o.method===0?'样方法':'标志重捕法')+'</b>。理由:'+o.why+'。';
+    note.style.borderColor=o.method===0?GREEN:ORANGE;
+  }
+  draw();
+})();
+
+/* ===== 互动6:随机取样 vs 主观取样 ===== */
+(function(){
+  const svg=document.getElementById('biasSvg');
+  const oTrue=document.getElementById('biasTrue'),oSamp=document.getElementById('biasSample'),oErr=document.getElementById('biasErr'),oMode=document.getElementById('biasMode');
+  const X=40,Y=30,W=620,H=230;
+  let seed=5;let field=[];let trueDensity=0;
+  function build(){
+    field=[];let s=seed;
+    function rnd(){s=(s*9301+49297)%233280;return s/233280;}
+    // left dense, right sparse: probability decreases with x
+    let count=0;
+    const gx=14,gy=10;
+    for(let i=0;i<gx;i++)for(let j=0;j<gy;j++){
+      const fx=i/(gx-1); // 0 left -> 1 right
+      const prob=0.9-0.75*fx; // left dense
+      // each cell may hold up to 3 dots
+      for(let k=0;k<3;k++){
+        if(rnd()<prob){
+          const px=X+20+i*((W-40)/(gx-1))+(rnd()-0.5)*24;
+          const py=Y+20+j*((H-40)/(gy-1))+(rnd()-0.5)*16;
+          field.push({x:px,y:py,cellx:i});count++;
+        }
+      }
+    }
+    trueDensity=count/(gx*gy)*3; // avg per (3-slot) cell scaled -> just use per-cell density
+    trueDensity=count/(gx*gy); // dots per cell
+    oTrue.textContent=trueDensity.toFixed(2);
+  }
+  function drawBase(){
+    clr(svg);
+    el(svg,'rect',{x:X,y:Y,width:W,height:H,fill:'#f3f8ee',stroke:INK,'stroke-width':3});
+    field.forEach(p=>el(svg,'circle',{cx:p.x,cy:p.y,r:2.6,fill:'#8fbf6a'}));
+    el(svg,'text',{x:X+90,y:Y-8,'font-size':11.5,'font-weight':800,fill:INK}).textContent='← 密集区';
+    el(svg,'text',{x:X+W-90,y:Y-8,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='稀疏区 →';
+  }
+  function sample(quads){
+    // quads: array of {x,y} top-left of a sq sized SZ; count dots inside; density = count/area(in cells)
+    const SZ=70;let totalDots=0;
+    quads.forEach(q=>{
+      let c=0;
+      field.forEach(p=>{if(p.x>=q.x&&p.x<q.x+SZ&&p.y>=q.y&&p.y<q.y+SZ)c++;});
+      totalDots+=c;
+      el(svg,'rect',{x:q.x,y:q.y,width:SZ,height:SZ,fill:'rgba(224,56,42,0.16)',stroke:RED,'stroke-width':3});
+      el(svg,'text',{x:q.x+SZ/2,y:q.y+SZ/2+5,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=c;
+    });
+    // sample density: dots per quad, then convert to per-cell equivalent
+    // quad area in "cells": SZ maps; approximate cell count under a quad
+    const cellW=(W-40)/13, cellH=(H-40)/9;
+    const cellsPerQuad=(SZ/cellW)*(SZ/cellH);
+    const meanPerQuad=totalDots/quads.length;
+    const sampleDensity=meanPerQuad/cellsPerQuad;
+    return sampleDensity;
+  }
+  function random(){
+    drawBase();let s=seed*7+13;
+    function rnd(){s=(s*9301+49297)%233280;return s/233280;}
+    const quads=[];
+    for(let i=0;i<5;i++){quads.push({x:X+10+rnd()*(W-90),y:Y+10+rnd()*(H-90)});}
+    const sd=sample(quads);
+    finish(sd,'随机');
+  }
+  function subjective(){
+    drawBase();
+    // all quads in dense (left) region
+    const quads=[
+      {x:X+15,y:Y+15},{x:X+90,y:Y+90},{x:X+40,y:Y+150},{x:X+120,y:Y+30},{x:X+70,y:Y+40}
+    ];
+    const sd=sample(quads);
+    finish(sd,'主观(挑密处)');
+  }
+  function finish(sd,label){
+    oSamp.textContent=sd.toFixed(2);
+    const err=sd-trueDensity;
+    oErr.textContent=(err>=0?'+':'')+err.toFixed(2);
+    oMode.textContent=label;
+    const good=Math.abs(err)<0.15;
+    el(svg,'text',{x:X+W/2,y:Y+H+24,'font-size':13,'font-weight':900,fill:good?GREEN:RED,'text-anchor':'middle'}).textContent=(label+' → 样方均值 '+sd.toFixed(2)+' vs 真实 '+trueDensity.toFixed(2)+(good?'(接近✓)':'(偏差大✗)'));
+  }
+  document.getElementById('biasRandom').onclick=random;
+  document.getElementById('biasSubj').onclick=subjective;
+  document.getElementById('biasReset').onclick=()=>{seed=Math.floor(Math.random()*90000)+10;build();drawBase();oSamp.textContent='0';oErr.textContent='0';oMode.textContent='—';};
+  build();drawBase();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 调查种群密度为什么用抽样估算,而不是逐个计数?",a:"个体数量大、分布广,逐个计数既不现实也不准确。抽样估算用局部样本推测整体,是可行且科学的方法(前提:取样随机/样本有代表性)。"},
+ {q:"2. 样方法适用于哪些对象?列举两类。",a:"适用于植物,以及活动能力弱、活动范围小的动物,如蚜虫、跳蝻、昆虫卵、蚯蚓等。"},
+ {q:"3. 样方法的两种取样方式?各适用什么形状地块?",a:"五点取样法——适用于方形/近方形地块(中心+四角5个样方);等距取样法——适用于狭长/长条形地块(沿长轴等间隔取样)。"},
+ {q:"4. 样方计数,正好压在边线上的个体怎么处理?",a:"数上不数下、数左不数右:只数上边和左边两条相邻边线上的个体,下边和右边线上的不数。这样全片地不重不漏。"},
+ {q:"5. 5个 1m² 样方分别数得 8、10、9、12、11 株,求种群密度。",a:"先求平均:(8+10+9+12+11)/5=50/5=10 株;密度=平均个体数÷样方面积=10÷1=10 株/m²。"},
+ {q:"6. 样方法为什么必须随机取样?主观取样会怎样?",a:"随机取样才能让样方平均值接近真实密度。主观挑密集处→估算偏大;挑稀疏处→偏小,产生系统性误差。「随机」不等于「随便」,需用随机数/等距等客观机制。"},
+ {q:"7. 标志重捕法适用于什么对象?写出计算公式。",a:"适用于活动能力强、范围大的动物(田鼠、鸟、鱼)。N=N₁×n÷m,其中N₁=首次标记数,n=第二次捕获总数,m=第二次中带标记数。"},
+ {q:"8. 首次标记40只放回,第二次捕50只其中10只带标记,求种群数量。",a:"N=N₁n/m=40×50÷10=200只。验证:标记比例 40/200=0.2 = 重捕标记比例 10/50=0.2,一致。"},
+ {q:"9. 标志重捕法有哪些前提条件?",a:"①标记不影响个体存活和正常活动;②标记物不脱落、不增大被捕食风险;③标记个体与未标记个体充分混匀后再重捕;④调查期间无迁入迁出、无大量出生死亡(种群数量稳定)。"},
+ {q:"10. 标记物部分脱落,估算值偏大还是偏小?为什么?",a:"偏大。脱落使第二次能认出的标记数 m 偏小,由 N=N₁n/m(m 在分母),m 偏小→N 偏大。"},
+ {q:"11. 若标记使田鼠更显眼、更容易被再次捕到,估算值如何变?",a:"偏小。第二次更容易抓到带标记的 → m 偏大 → 由 N=N₁n/m,m 偏大→N 偏小。"},
+ {q:"12. 判断:调查草原蒲公英、田鼠、蚜虫各用什么方法?",a:"蒲公英→样方法(植物不动);田鼠→标志重捕法(活动能力强,框不住);蚜虫→样方法(活动范围小,近似不动)。判据:看对象能否被样方框住。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

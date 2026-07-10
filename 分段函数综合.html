@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分段函数综合 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>分段函数综合</h1>
+    <p class="lead">分段函数是把<b>几个不同的函数</b>按自变量的区间「拼」在一起的一个整体函数。它不难,难在<b>心细</b>:每一步都要先问一句「x 落在哪一段」。求值、解不等式、画图象、单调性、最值、零点、含参——所有花样都绕不开这句话。这一页把六大题型一次讲透。</p>
+
+    <div class="say">🗣️ <b>分段函数(人话版):</b> 分段函数 = 在<b>不同区间</b>用<b>不同表达式</b>的「拼接函数」。它其实还是<b>一个</b>函数,只是它的「说明书」分了好几栏。核心一句话:<b>先判断自变量落在哪一段,再用那一段的式子。</b> 判断错段 = 全盘皆错。嵌套 f(f(x)) 就是从里到外分两次做这件事:先给里层的 x 定段求出值,再把这个值当新的自变量,重新定段再算一次。</div>
+
+    <div class="keybox"><b>一句话口诀:</b> <b>先定段,再代入;解出来,验范围;并起来,才是解。</b> 求值先看 x 属于哪个区间;解方程/不等式要在<b>每一段内</b>分别讨论、解完还要<b>回头验证解是否落在本段范围里</b>,最后把各段的解取<b>并集</b>。含参问题则常用「连续/单调」这类<b>衔接条件</b>反求参数。</div>
+
+    <h2>① 分段求值:先定段,再代入(嵌套从里到外)</h2>
+    <div class="card">
+      <div class="eq">f(x) = { g(x), x∈A;　h(x), x∈B;　… }</div>
+      <p style="margin:8px 0"><b>求 f(a):</b> 第一步永远是<b>判断 a 属于哪个区间</b>,第二步才把 a 代入<b>那一段</b>的表达式。绝不能随便挑一段代。</p>
+      <h3>嵌套求值 f(f(x)):从里到外</h3>
+      <div class="mono">第1步:里层 f(x)——先给 x 定段,算出里层的值 t=f(x)。</div>
+      <div class="mono">第2步:外层 f(t)——把 t 当成新自变量,重新判断 t 落在哪一段,再代入。</div>
+      <p style="margin:8px 0"><b>关键:</b> 里层算出的 t 和原来的 x 可能落在<b>不同的段</b>!必须对 t <b>重新定段</b>,不能沿用 x 的那一段。</p>
+      <table>
+        <tr><th>要算</th><th>怎么做</th></tr>
+        <tr><td><b>f(a)</b>(单次)</td><td>判断 a∈哪段 → 代入该段</td></tr>
+        <tr><td><b>f(f(a))</b>(嵌套)</td><td>先算 t=f(a)(定段代入)→ 再对 t 定段 → 算 f(t)</td></tr>
+        <tr><td><b>f(f(f(a)))</b></td><td>层层从里到外,每层都重新定段</td></tr>
+      </table>
+      <p class="trap">⚠ 陷阱:里层结果 t 直接沿用 x 的段来代入 → 段错值错。嵌套一定要对每一个中间值重新判断区间。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 1 — 分段求值:输入 x,高亮它落在哪一段并代入(先定段再代入)</div>
+      <svg id="evSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>自变量 x <input id="evX" type="range" min="-4" max="6" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>x 值</b><span id="evXv">0</span></div>
+        <div><b>落在哪一段</b><span id="evSeg">-</span></div>
+        <div><b>用的表达式</b><span id="evExpr">-</span></div>
+        <div><b>f(x) 结果</b><span id="evR">0</span></div>
+      </div>
+      <p class="small">示例函数:f(x)= x+2(x<0);x²(0≤x≤2);6−x(x>2)。拖动 x,系统<b>先判断它落在哪一段</b>(高亮那段的区间条与式子),再代入算出 f(x)。定段错了值就全错。</p>
+    </div>
+
+    <h2 class="b">② 嵌套 f(f(x)):从里到外,逐层定段</h2>
+    <div class="card">
+      <p style="margin:6px 0">嵌套求值最容易出错,因为要<b>连续两次「定段」</b>。以 f(x)= x+2(x<0);x²(0≤x≤2);6−x(x>2) 为例:</p>
+      <div class="mono">求 f(f(3)):里层 3>2 → f(3)=6−3=3。外层 3>2 → f(3)=6−3=3。答案 3。</div>
+      <div class="mono">求 f(f(−1)):里层 −1<0 → f(−1)=−1+2=1。外层 0≤1≤2 → f(1)=1²=1。答案 1。</div>
+      <p style="margin:8px 0"><b>看清楚了吗?</b> 里层 x=−1 用的是第一段(x+2),但里层结果 t=1 落到了<b>第二段</b>(x²)。两层用了<b>不同的段</b>——这就是嵌套的命门。</p>
+      <p class="trap">⚠ 把里层结果 t 继续套用 x 所在的段,是嵌套的头号错误。每进一层,都要对当前的数<b>重新问一遍「它在哪段」</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪆 互动 2 — 嵌套 f(f(x)) 从里到外求值动画(两次定段,可能落在不同段)</div>
+      <svg id="nsSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="nsStep">▶ 下一步</button><button id="nsReset">↺ 重置</button>
+        <label>输入 x <input id="nsX" type="range" min="-4" max="6" value="-1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>里层 x</b><span id="nsX0">0</span></div>
+        <div><b>里层用哪段</b><span id="nsSeg0">-</span></div>
+        <div><b>中间值 t=f(x)</b><span id="nsT">0</span></div>
+        <div><b>外层 f(t) 结果</b><span id="nsR">-</span></div>
+      </div>
+      <p class="small">点「下一步」看动画:① 先给里层 x 定段、算出中间值 t;② 把 t 送到外层,<b>重新定段</b>再算。注意 x 和 t 常常落在<b>不同的段</b>。</p>
+    </div>
+
+    <h2 class="g">③ 分段解方程 / 不等式:分段讨论 + 验范围 + 取并集</h2>
+    <div class="card">
+      <p style="margin:6px 0">解 f(x)=k 或 f(x)>k 时,把定义域按分段<b>拆开</b>,在<b>每一段内</b>各解一次,再合并结果。</p>
+      <h3>三步法(方程 / 不等式通用)</h3>
+      <div class="mono">第1步:对每一段,把该段的表达式代入,得到一个「普通」方程/不等式。</div>
+      <div class="mono">第2步:解出来,再<b>与本段的定义域求交集</b>(解必须落在这一段里才算数)。</div>
+      <div class="mono">第3步:把各段得到的解<b>取并集</b>,就是最终解集。</div>
+      <p style="margin:8px 0"><b>为什么要验范围?</b> 比如在「x<0」这一段解出 x=2,可 2 不小于 0,不在本段,这个解<b>作废</b>。每段解出来都要回头对照本段区间。</p>
+      <p class="trap">⚠ 陷阱:解完不验范围,把不属于本段的解也算进去;或漏掉某一段没讨论;最后忘了取并集。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 3 — 分段解不等式 f(x)>k 的分段讨论(每段各解,验范围,取并集)</div>
+      <svg id="ineqSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>阈值 k <input id="ineqK" type="range" min="-2" max="5" value="1" step="0.5"></label>
+      </div>
+      <div class="verdict" id="ineqNote"></div>
+      <p class="small">函数 f(x)= x+2(x<0);x²(0≤x≤2);6−x(x>2)。红色水平线是 y=k。<b>图象在红线上方</b>的那些 x 就是 f(x)>k 的解。绿色区间是最终解集(各段并集)。</p>
+    </div>
+
+    <h2 class="o">④ 分段函数图象:分段画,盯紧端点实心/空心</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>画法:</b> 每一段只在<b>它自己的区间内</b>画对应的曲线;段与段的交界处,<b>端点</b>要标清楚实心(●,取得到,含等号)还是空心(○,取不到,不含等号)。</p>
+      <table>
+        <tr><th>端点情形</th><th>画法</th></tr>
+        <tr><td>该段含此端点(≤ 或 ≥)</td><td><b>实心 ●</b>(这个点属于本段)</td></tr>
+        <tr><td>该段不含此端点(< 或 >)</td><td><b>空心 ○</b>(这个点不属于本段)</td></tr>
+        <tr><td>两段在交界处值相等</td><td>图象<b>连上</b>(连续);一实一空正好补齐</td></tr>
+        <tr><td>两段在交界处值不等</td><td>图象<b>断开</b>(有跳跃)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>读图能力:</b> 会看图就能秒判单调性、最值、零点个数、f(x)=k 根的个数——把 y=k 这条横线在图上一放,交点个数一目了然。</p>
+      <p class="trap">⚠ 陷阱:交界点实心空心画反或都不画;把某段画到区间外面去;两段同一个 x 处都画实心(同一点不能取两个值)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎨 互动 4 — 分段函数图象:不同段不同颜色,端点实心/空心自动标注</div>
+      <svg id="graphSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="gcase on" data-c="0">连续型(接得上)</button>
+        <button class="gcase" data-c="1">跳跃型(接不上)</button>
+      </div>
+      <div class="verdict" id="graphNote"></div>
+      <p class="small">蓝、橙、紫三色对应三段。交界处<b>实心 ●</b>=取得到、<b>空心 ○</b>=取不到。切到「跳跃型」可见交界处两段值不同,图象断开。</p>
+    </div>
+
+    <h2 class="v">⑤ 单调性:每段单调 + 衔接处比较</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>分段函数在整体上单调递增,需要两个条件都满足:</b></p>
+      <div class="mono">条件1:每一段<b>自身</b>都单调递增。</div>
+      <div class="mono">条件2:在衔接处,<b>左段的(右端)值 ≤ 右段的(左端)值</b>(不能出现「后一段起点比前一段终点还低」的跳水)。</div>
+      <p style="margin:8px 0"><b>为什么要衔接条件?</b> 就算每段各自都在涨,如果后一段的起点比前一段的终点低,整体在交界处就「掉了一下」,不再是递增。所以衔接处必须比较两段的值。</p>
+      <p style="margin:8px 0">以 f(x)= x+a (x≤1);x² (x>1) 为例,要整体递增:每段都增(√),再要衔接 x=1 处 (左)1+a ≤ (右)1²=1,即 <b>a≤0</b>。(严格递增取 ≤ 还是 <,看端点归属和定义,通常临界值都要仔细验。)</p>
+      <p class="trap">⚠ 陷阱:只检查每段单调,忘了衔接处比较大小;衔接条件的不等号方向搞反;分不清衔接点属于左段还是右段。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 5 — 整体单调需要的衔接条件(拖参数 a,看衔接处是否掉档)</div>
+      <svg id="monoSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>参数 a <input id="monoA" type="range" min="-4" max="4" value="-1" step="0.5"></label>
+      </div>
+      <div class="verdict" id="monoNote"></div>
+      <p class="small">f(x)= x+a (x≤1);x² (x>1)。每段自己都递增。关键看<b>衔接点 x=1</b>:左段值 1+a 与右段值 1 谁高。只有 <b>左段值 ≤ 右段值(即 a≤0)</b> 整体才递增,否则交界处掉档、断链。</p>
+    </div>
+
+    <h2 class="r">⑥ 最值 & 零点:各段分别算,再汇总</h2>
+    <div class="card">
+      <h3>最值:比较各段的最值</h3>
+      <p style="margin:6px 0">求整个分段函数的最大/最小值:<b>先算出每一段在其区间内的最值</b>(注意端点开闭是否取得到),再把各段最值<b>放在一起比较</b>,最大的即整体最大值,最小的即整体最小值。</p>
+      <h3>零点:各段分别求 f(x)=0</h3>
+      <p style="margin:6px 0">零点(即 f(x)=0 的根)也是分段处理:在<b>每一段内</b>令该段表达式 =0,解出后<b>验证是否在本段区间内</b>,在的才算真零点。零点个数 = 各段有效零点之和。</p>
+      <div class="mono">f(x)=k 根的个数 = 直线 y=k 与图象交点个数(读图秒判)。</div>
+      <p class="trap">⚠ 陷阱:某段解出的根不在本段范围内却算作零点;比较各段最值时忘了端点取不取得到(开区间可能无最值);漏掉某一段。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 6 — 零点在各段的分布 & f(x)=k 根的个数(横线扫描)</div>
+      <svg id="zeroSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>横线 y=k <input id="zeroK" type="range" min="-3" max="6" value="0" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>y=k 的 k</b><span id="zeroKv">0</span></div>
+        <div><b>交点(根)个数</b><span id="zeroN">0</span></div>
+        <div><b>是否零点(k=0)</b><span id="zeroZ">-</span></div>
+        <div><b>根所在段</b><span id="zeroSeg">-</span></div>
+      </div>
+      <p class="small">函数 f(x)= x+2(x<0);x²−1(0≤x≤2);5−x(x>2)。拖动横线 y=k,数它与图象的交点个数 = f(x)=k 的根数。k=0 时的交点就是<b>零点</b>,并标出各根落在哪一段。</p>
+    </div>
+
+    <h2 class="b">⑦ 含参分段函数:用连续 / 单调条件反求参数</h2>
+    <div class="card">
+      <p style="margin:6px 0">含参分段函数是压轴常客。参数往往由「<b>衔接处的条件</b>」定出:</p>
+      <table>
+        <tr><th>题目要求</th><th>转化成的衔接条件</th></tr>
+        <tr><td>函数<b>连续</b>(图象接得上)</td><td>衔接点处<b>左段值 = 右段值</b> → 解出参数</td></tr>
+        <tr><td>整体<b>单调递增</b></td><td>每段递增 <b>且</b> 衔接处 左段值 ≤ 右段值 → 参数范围</td></tr>
+        <tr><td>整体<b>单调递减</b></td><td>每段递减 <b>且</b> 衔接处 左段值 ≥ 右段值 → 参数范围</td></tr>
+        <tr><td>存在<b>最值</b> / <b>零点个数</b></td><td>结合图象,把参数当成「上下平移某段」讨论</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>套路:</b> 连续 → 用等号解出具体值;单调 → 每段单调条件 + 衔接不等式,取交集得范围。<b>不等号方向</b>由递增(左≤右)还是递减(左≥右)决定。</p>
+      <p class="trap">⚠ 陷阱:只写衔接条件忘了每段本身的单调/开口方向条件;把连续(=)和单调(≤)的符号混用;衔接点归属左段还是右段判错,导致端点取值出错。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 分段求值(含嵌套 f(f(x)))</h3>
+      <p><b class="tag">触发信号:</b>给出分段函数,要求 f(a)、f(f(a)) 或 f(f(f(a))) 的具体数值。</p>
+      <p><b class="tag">标准动作:</b>单次:判断 a 属于哪段 → 代入该段。嵌套:从里到外,每算出一个中间值都<b>重新定段</b>再往外代。</p>
+      <p><b class="tag">示例(带解):</b>f(x)= x+2(x<0);x²(0≤x≤2);6−x(x>2)。求 f(f(−1))。① 里层:−1<0,用第一段 f(−1)=−1+2=1。② 外层:t=1,0≤1≤2,用第二段 f(1)=1²=1。答案 <b>1</b>。(注意里层用第一段、外层用第二段,不同段!)</p>
+      <p class="trap">陷阱:定段判断错;嵌套时把中间值继续用原段代入。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 分段解方程 / 不等式</h3>
+      <p><b class="tag">触发信号:</b>解 f(x)=k、f(x)>k、f(x)≤k,或求满足某条件的 x 取值范围。</p>
+      <p><b class="tag">标准动作:</b>逐段代入 → 每段解出 → 与本段区间求交集(验范围)→ 各段结果取并集。</p>
+      <p><b class="tag">示例(带解):</b>上例中解 f(x)>1。第一段 x<0:x+2>1 ⟹ x>−1,交 x<0 得 −1<x<0。第二段 0≤x≤2:x²>1 ⟹ x>1 或 x<−1,交 [0,2] 得 1<x≤2。第三段 x>2:6−x>1 ⟹ x<5,交 x>2 得 2<x<5。并集:<b>(−1,0)∪(1,5)</b>。</p>
+      <p class="trap">陷阱:解完不验范围;漏段;忘取并集;不等号临界点开闭处理错。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 分段函数图象</h3>
+      <p><b class="tag">触发信号:</b>要求画图象,或给图选式子、由图读性质;判断连续/断开。</p>
+      <p><b class="tag">标准动作:</b>每段只在其区间画,交界端点标实心●(含等号)/空心○(不含);比较交界两段值判断接得上还是断开。</p>
+      <p><b class="tag">示例(带解):</b>f(x)= 2x(x≤1);x+1(x>1)。x=1 处:左段(含1)取 2×1=2 → ●;右段(不含1)趋近 1+1=2 → ○ 但值也是2,恰好补齐 → 图象<b>连续</b>接上。若右段是 x+3,则右端趋近 4≠2 → <b>断开跳跃</b>。</p>
+      <p class="trap">陷阱:端点实心空心画反;某段画出界;把断点当连续。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 整体单调性求参数范围</h3>
+      <p><b class="tag">触发信号:</b>「f(x) 在 R 上单调递增/递减」求参数 a 的取值范围。</p>
+      <p><b class="tag">标准动作:</b>递增:每段递增 + 衔接处 左段值≤右段值;递减:每段递减 + 衔接处 左段值≥右段值。取交集。</p>
+      <p><b class="tag">示例(带解):</b>f(x)= x+a(x≤1);x²(x>1),求在 R 上递增的 a。每段:一次函数斜率1>0(增√),二次在 x>1 递增(增√)。衔接 x=1:左值 1+a ≤ 右段趋近值 1,得 <b>a≤0</b>。</p>
+      <p class="trap">陷阱:忘衔接条件;不等号方向反;二次函数还要看在该区间是否真单调(对称轴位置)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 零点 / 方程根个数</h3>
+      <p><b class="tag">触发信号:</b>求零点个数,或 f(x)=k 有几个根,或方程根个数随参数变化。</p>
+      <p><b class="tag">标准动作:</b>各段令表达式=0(或=k)解根 → 验根在本段内 → 计数。或画图后用 y=k 横线扫,数交点。</p>
+      <p><b class="tag">示例(带解):</b>f(x)= x+2(x<0);x²−1(0≤x≤2);5−x(x>2) 的零点。第一段 x+2=0⟹x=−2<0(√)。第二段 x²−1=0⟹x=±1,取 x=1∈[0,2](√),x=−1 不在段(×)。第三段 5−x=0⟹x=5>2(√)。共 <b>3 个零点</b>:−2,1,5。</p>
+      <p class="trap">陷阱:根不在本段却算入;漏段;二次两根只取在段内的那个。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 含参最值</h3>
+      <p><b class="tag">触发信号:</b>含参数的分段函数求最值,或已知最值反求参数。</p>
+      <p><b class="tag">标准动作:</b>先算每段(含参)在其区间的最值(注意端点开闭),再比较各段最值定整体最值;反求时用整体最值等于给定值列方程。</p>
+      <p><b class="tag">示例(带解):</b>f(x)= −x²+a(x≤0);x−1(x>0),求 f 的最大值。第一段 −x²+a 在 x≤0 递增,x=0 取最大 a。第二段 x−1 在 x>0 无上界(趋向 +∞),故整体<b>无最大值</b>;若限定第二段为 x∈(0,2],则右段最大值 1,与 a 比较:max=max{a,1}。</p>
+      <p class="trap">陷阱:开区间端点取不到却当最值;只算一段忘比较;参数移动改变哪段占优。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>代入前先判断在哪段!</b> 这是分段函数的第一原则。段判错,后面全错。</p>
+      <p class="trap">② 嵌套 f(f(x)):里层结果要<b>重新定段</b>,不能沿用 x 的段——x 和中间值常在不同段。</p>
+      <p class="trap">③ 解出的解必须<b>满足所在段的范围</b>!在「x<0」段解出 x=2 是废解。每段解完回头验范围。</p>
+      <p class="trap">④ 各段的解最后要<b>取并集</b>;别只写其中一段,也别漏掉任何一段的讨论。</p>
+      <p class="trap">⑤ 整体单调<b>不只是每段单调</b>,还要衔接条件:递增要 左段值≤右段值,递减要 左段值≥右段值。</p>
+      <p class="trap">⑥ 端点值的<b>归属</b>:x=1 到底属于左段还是右段?看哪段带等号(≤/≥)。图象上体现为实心●/空心○。</p>
+      <p class="trap">⑦ 连续用<b>等号</b>(左值=右值),单调衔接用<b>不等号</b>(≤ 或 ≥),别混。</p>
+      <p class="trap">⑧ 开区间端点<b>取不到</b>,可能导致无最值;比较各段最值时务必看端点开闭。</p>
+      <p class="trap">⑨ 二次函数段要看<b>对称轴</b>是否落在该区间内,才能判断它在该段是否真的单调。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 「先定段」是唯一的元规则:</b> 求值、解不等式、求零点、画图,本质都是「对每一个 x 先归段,再按该段规则处理」。把这句话刻进脑子,任何分段题都只是它的具体化,连嵌套 f(f(x)) 也只是「归段」做两遍而已。</p>
+      <p style="margin:8px 0"><b>② 用图象统一六大问题:</b> 一张准确的分段图象,能同时秒答单调性(升降)、最值(最高/最低点)、零点(与 x 轴交点)、f(x)=k 根个数(与横线 y=k 交点)。会画图 = 把代数问题降维成「看交点」,压轴题的参数讨论也变成「上下平移某段看交点数怎么变」。</p>
+      <p style="margin:8px 0"><b>③ 衔接点是含参题的命门:</b> 几乎所有含参分段的条件(连续、单调、值域)都汇聚到交界点。连续 → 左值=右值(等号);单调 → 每段单调 + 衔接不等式(方向由增/减定)。抓住衔接点,参数范围往往一步列出。</p>
+      <p style="margin:8px 0"><b>④ 「验范围」是分段解题与普通解题的唯一区别:</b> 普通方程解完即得答案;分段方程解完必须问「这个解在本段里吗」。养成解完立刻回代区间的习惯,能杜绝一半以上的分段失分。取并集则是把各段合成整体答案的最后一步。</p>
+      <p style="margin:8px 0"><b>⑤ 二次段别只看开口,要看对称轴:</b> 分段里出现二次函数时,它在某段是否单调、取不取得到最值,取决于对称轴与该段区间的相对位置。对称轴在区间内 → 顶点是最值;在区间外 → 单调,最值在端点。这一步是分段函数与二次函数的交汇考点。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 核心口诀:先定段,再代入;解出来,验范围;并起来,才是解</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#9a8f70";
+
+/* ===== 示例分段函数(互动1、2、3共用) f(x)= x+2 (x<0); x^2 (0<=x<=2); 6-x (x>2) ===== */
+function fSeg(x){
+  if(x<0)return {seg:0,name:"x+2",val:x+2};
+  if(x<=2)return {seg:1,name:"x^2",val:x*x};
+  return {seg:2,name:"6-x",val:6-x};
+}
+const SEGCOL=[BLUE,ORANGE,VIO];
+
+/* 坐标映射工具:给定绘图区域和数学范围,返回 X()、Y() */
+function makeMap(X0,Y0,W,H,xmin,xmax,ymin,ymax){
+  return {
+    X:function(x){return X0+(x-xmin)/(xmax-xmin)*W;},
+    Y:function(y){return Y0+H-(y-ymin)/(ymax-ymin)*H;}
+  };
+}
+
+/* ===== 互动1:分段求值,高亮所在段 ===== */
+(function(){
+  const svg=document.getElementById('evSvg');
+  const Xs=document.getElementById('evX');
+  const oXv=document.getElementById('evXv'),oSeg=document.getElementById('evSeg'),oExpr=document.getElementById('evExpr'),oR=document.getElementById('evR');
+  const segNames=["x+2","x²","6−x"];
+  const segRange=["x<0","0≤x≤2","x>2"];
+  function draw(){
+    clr(svg);
+    const x=+Xs.value;
+    const r=fSeg(x);
+    oXv.textContent=x.toFixed(1);
+    oSeg.textContent="第"+(r.seg+1)+"段";
+    oExpr.textContent=segNames[r.seg];
+    oR.textContent=r.val.toFixed(2);
+    // three segment bars (number line style)
+    const X0=50,W=600,y0=40;
+    el(svg,'text',{x:20,y:24,'font-size':13.5,'font-weight':900,fill:INK}).textContent="先判断 x 落在哪一段，再代入那一段的式子";
+    // segment cards
+    const cardW=190,gap=15,cy=55,ch=70;
+    for(let i=0;i<3;i++){
+      const cx=X0+i*(cardW+gap);
+      const on=(i===r.seg);
+      el(svg,'rect',{x:cx,y:cy,width:cardW,height:ch,fill:on?SEGCOL[i]:'#fff',stroke:INK,'stroke-width':on?4:3,rx:6});
+      el(svg,'text',{x:cx+cardW/2,y:cy+28,'font-size':17,'font-weight':900,fill:on?'#fff':INK,'text-anchor':'middle'}).textContent="f(x)="+segNames[i];
+      el(svg,'text',{x:cx+cardW/2,y:cy+52,'font-size':13,'font-weight':800,fill:on?'#fff':'#6b5d3a','text-anchor':'middle'}).textContent="适用于 "+segRange[i];
+    }
+    // number line
+    const nlY=190,nm=makeMap(X0,nlY,W,0,-4,6,0,1);
+    el(svg,'line',{x1:X0,y1:nlY,x2:X0+W,y2:nlY,stroke:INK,'stroke-width':3});
+    [-4,-2,0,2,4,6].forEach(function(t){
+      const px=nm.X(t);
+      el(svg,'line',{x1:px,y1:nlY-5,x2:px,y2:nlY+5,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:px,y:nlY+20,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;
+    });
+    // marker for x
+    const px=nm.X(x);
+    el(svg,'line',{x1:px,y1:nlY-30,x2:px,y2:nlY,stroke:SEGCOL[r.seg],'stroke-width':4});
+    el(svg,'circle',{cx:px,cy:nlY,r:7,fill:SEGCOL[r.seg],stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px,y:nlY-38,'font-size':13,'font-weight':900,fill:SEGCOL[r.seg],'text-anchor':'middle'}).textContent="x="+x.toFixed(1);
+    // result line
+    el(svg,'text',{x:X0,y:250,'font-size':16,'font-weight':900,fill:INK}).textContent="代入第"+(r.seg+1)+"段： f("+x.toFixed(1)+") = "+segNames[r.seg]+" = "+r.val.toFixed(2);
+    el(svg,'text',{x:X0,y:278,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent="高亮的那张卡就是 x 所在的段——只能用它。";
+  }
+  Xs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:嵌套 f(f(x)) 从里到外 ===== */
+(function(){
+  const svg=document.getElementById('nsSvg');
+  const Xs=document.getElementById('nsX');
+  const oX0=document.getElementById('nsX0'),oSeg0=document.getElementById('nsSeg0'),oT=document.getElementById('nsT'),oR=document.getElementById('nsR');
+  const segNames=["x+2","x²","6−x"];
+  let step=0;
+  function reset(){step=0;draw();}
+  function draw(){
+    clr(svg);
+    const x=+Xs.value;
+    const inner=fSeg(x);
+    const t=inner.val;
+    const outer=fSeg(t);
+    oX0.textContent=x.toFixed(0);
+    oSeg0.textContent="第"+(inner.seg+1)+"段("+segNames[inner.seg]+")";
+    oT.textContent=(step>=1)?t.toFixed(2):"?";
+    oR.textContent=(step>=2)?outer.val.toFixed(2):"?";
+    el(svg,'text',{x:20,y:26,'font-size':14,'font-weight':900,fill:INK}).textContent="求 f(f("+x.toFixed(0)+"))：从里到外，每层重新定段";
+    // box 1: inner x
+    box(svg,40,60,150,60,SEGCOL[inner.seg],(step>=0),"里层 x = "+x.toFixed(0),"在第"+(inner.seg+1)+"段");
+    arrowR(svg,195,90,55,(step>=1));
+    // box 2: t = f(x)
+    box(svg,255,60,180,60,(step>=1)?SEGCOL[inner.seg]:GREY,(step>=1),"t=f("+x.toFixed(0)+")="+segNames[inner.seg],(step>=1)?("= "+t.toFixed(2)):"= ?");
+    // arrow down to re-seg
+    if(step>=2){
+      el(svg,'text',{x:345,y:150,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent="↓ 对 t 重新定段！";
+    }
+    // box 3: outer f(t)
+    box(svg,255,170,180,60,(step>=2)?SEGCOL[outer.seg]:GREY,(step>=2),"外层：t="+((step>=1)?t.toFixed(2):"?")+" 在第"+((step>=2)?(outer.seg+1):"?")+"段",(step>=2)?("f(t)="+segNames[outer.seg]+"="+outer.val.toFixed(2)):"= ?");
+    // final
+    if(step>=2){
+      el(svg,'text',{x:470,y:205,'font-size':16,'font-weight':900,fill:GREEN}).textContent="f(f("+x.toFixed(0)+"))="+outer.val.toFixed(2);
+      if(inner.seg!==outer.seg){
+        el(svg,'text',{x:40,y:250,'font-size':12.5,'font-weight':800,fill:RED}).textContent="⚠ 里层用第"+(inner.seg+1)+"段，外层用第"+(outer.seg+1)+"段——不同段！这就是嵌套的命门。";
+      }else{
+        el(svg,'text',{x:40,y:250,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent="本例两层恰好都在第"+(inner.seg+1)+"段（但不能默认如此，必须逐层验证）。";
+      }
+    }else{
+      el(svg,'text',{x:40,y:250,'font-size':12.5,'font-weight':800,fill:'#6b5d3a'}).textContent="点「下一步」：先算里层得 t，再对 t 重新定段算外层。";
+    }
+  }
+  function box(p,x,y,w,h,col,active,l1,l2){
+    el(p,'rect',{x:x,y:y,width:w,height:h,fill:active?col:'#fff',stroke:INK,'stroke-width':active?4:3,rx:6});
+    el(p,'text',{x:x+w/2,y:y+26,'font-size':13,'font-weight':900,fill:active?'#fff':INK,'text-anchor':'middle'}).textContent=l1;
+    el(p,'text',{x:x+w/2,y:y+48,'font-size':13,'font-weight':900,fill:active?'#fff':'#6b5d3a','text-anchor':'middle'}).textContent=l2;
+  }
+  function arrowR(p,x,y,len,on){
+    const col=on?INK:GREY;
+    el(p,'line',{x1:x,y1:y,x2:x+len,y2:y,stroke:col,'stroke-width':4});
+    el(p,'polygon',{points:(x+len)+','+(y-7)+' '+(x+len+11)+','+y+' '+(x+len)+','+(y+7),fill:col});
+  }
+  document.getElementById('nsStep').onclick=function(){step=Math.min(2,step+1);draw();};
+  document.getElementById('nsReset').onclick=reset;
+  Xs.oninput=reset;
+  reset();
+})();
+
+/* ===== 互动3:分段解不等式 f(x)>k ===== */
+(function(){
+  const svg=document.getElementById('ineqSvg');
+  const Ks=document.getElementById('ineqK');
+  const note=document.getElementById('ineqNote');
+  const X0=55,Y0=30,W=600,H=250,xmin=-4,xmax=6,ymin=-3,ymax=7;
+  const m=makeMap(X0,Y0,W,H,xmin,xmax,ymin,ymax);
+  function draw(){
+    clr(svg);
+    const k=+Ks.value;
+    // axes
+    drawAxes(svg,m,X0,Y0,W,H,xmin,xmax,ymin,ymax);
+    // plot f in three segments
+    plotSeg(svg,m,function(x){return x+2;},xmin,-0.001,SEGCOL[0]);
+    plotSeg(svg,m,function(x){return x*x;},0,2,SEGCOL[1]);
+    plotSeg(svg,m,function(x){return 6-x;},2.001,xmax,SEGCOL[2]);
+    // y=k line
+    el(svg,'line',{x1:X0,y1:m.Y(k),x2:X0+W,y2:m.Y(k),stroke:RED,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+W-6,y:m.Y(k)-6,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent="y=k="+k.toFixed(1);
+    // solve f(x)>k per segment, collect intervals
+    let sol=[];
+    // seg1 x<0: x+2>k -> x>k-2 ; intersect x<0
+    let a1=k-2; let lo=Math.max(a1,xmin), hi=0; if(lo<hi)sol.push([Math.max(lo,-4.0000001),hi,0,false,false]);
+    // seg2 0<=x<=2: x^2>k -> x>sqrt(k) or x<-sqrt(k); intersect [0,2]
+    if(k<0){sol.push([0,2,1,true,true]);}
+    else{const s=Math.sqrt(k); if(s<2)sol.push([Math.min(s,2),2,1,false,true]);}
+    // seg3 x>2: 6-x>k -> x<6-k ; intersect x>2
+    let b3=6-k; let lo3=2, hi3=Math.min(b3,xmax); if(hi3>lo3)sol.push([lo3,hi3,2,false,false]);
+    // draw solution intervals on x-axis (green)
+    const axY=m.Y(0);
+    sol.forEach(function(iv){
+      el(svg,'line',{x1:m.X(iv[0]),y1:axY+16,x2:m.X(iv[1]),y2:axY+16,stroke:GREEN,'stroke-width':7});
+    });
+    // build text
+    let parts=sol.map(function(iv){
+      const l=iv[0].toFixed(2).replace(/\.00$/,''); const r=iv[1].toFixed(2).replace(/\.00$/,'');
+      return (iv[3]?"[":"(")+l+","+r+(iv[4]?"]":")");
+    });
+    el(svg,'text',{x:X0,y:Y0+H+50,'font-size':12,'font-weight':800,fill:GREEN}).textContent="解集(绿线)："+(parts.length?parts.join(" ∪ "):"空集");
+    note.innerHTML="👉 解 f(x)>"+k.toFixed(1)+"：分三段各自解、验范围、取并集。图象在红线<b>上方</b>的 x 就是解。共 "+sol.length+" 段解："+(parts.length?parts.join(" ∪ "):"无解")+"。";
+  }
+  Ks.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:分段函数图象 端点实心空心 ===== */
+(function(){
+  const svg=document.getElementById('graphSvg');
+  const note=document.getElementById('graphNote');
+  let c=0;
+  const X0=55,Y0=30,W=600,H=270,xmin=-3,xmax=5,ymin=-2,ymax=6;
+  const m=makeMap(X0,Y0,W,H,xmin,xmax,ymin,ymax);
+  document.querySelectorAll('.gcase').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.gcase').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');c=+b.dataset.c;draw();
+  };});
+  function draw(){
+    clr(svg);
+    drawAxes(svg,m,X0,Y0,W,H,xmin,xmax,ymin,ymax);
+    // three segments: seg1 x<=0: x+3 ; seg2 0<x<=2: (case0) x+1 line easy ; seg3 x>2
+    // Case 0 continuous, Case 1 jump
+    // seg1: y = x+3 on (-3,0]
+    plotSeg(svg,m,function(x){return x+3;},xmin,0,SEGCOL[0]);
+    // seg2 middle
+    let f2,f3,lab;
+    if(c===0){ f2=function(x){return -0.5*x+3;}; f3=function(x){return 0.5*x+1;}; lab="连续型：交界处两段值相等，图象接得上"; }
+    else{ f2=function(x){return -0.5*x+3;}; f3=function(x){return 0.5*x+3;}; lab="跳跃型：交界 x=2 处两段值不等，图象断开"; }
+    plotSeg(svg,m,f2,0.0001,2,SEGCOL[1]);
+    plotSeg(svg,m,f3,2.0001,xmax,SEGCOL[2]);
+    // endpoints:
+    // at x=0: seg1 includes 0 (x<=0) -> filled; seg2 excludes 0 (0<x) -> open. seg1 val=3, seg2 approaches 3 ->补齐
+    endpoint(svg,m,0,0+3,SEGCOL[0],true);       // filled from seg1
+    endpoint(svg,m,0,f2(0),SEGCOL[1],false);    // open from seg2
+    // at x=2: seg2 includes 2 (x<=2) -> filled ; seg3 excludes 2 (x>2) -> open
+    endpoint(svg,m,2,f2(2),SEGCOL[1],true);     // filled
+    endpoint(svg,m,2,f3(2),SEGCOL[2],false);    // open
+    note.innerHTML="👉 "+lab+"。实心●=取得到（含等号），空心○=取不到。x=2 处：中段值="+f2(2).toFixed(1)+"（实心），右段趋近="+f3(2).toFixed(1)+"（空心），"+(Math.abs(f2(2)-f3(2))<1e-6?"<b>相等→连续</b>":"<b>不等→断开</b>")+"。";
+  }
+  draw();
+})();
+
+/* ===== 互动5:整体单调衔接条件 f(x)= x+a (x<=1); x^2 (x>1) ===== */
+(function(){
+  const svg=document.getElementById('monoSvg');
+  const As=document.getElementById('monoA');
+  const note=document.getElementById('monoNote');
+  const X0=55,Y0=30,W=600,H=270,xmin=-3,xmax=3,ymin=-4,ymax=8;
+  const m=makeMap(X0,Y0,W,H,xmin,xmax,ymin,ymax);
+  function draw(){
+    clr(svg);
+    const a=+As.value;
+    drawAxes(svg,m,X0,Y0,W,H,xmin,xmax,ymin,ymax);
+    // seg1: x+a on x<=1 ; seg2: x^2 on x>1
+    plotSeg(svg,m,function(x){return x+a;},xmin,1,SEGCOL[0]);
+    plotSeg(svg,m,function(x){return x*x;},1.0001,xmax,SEGCOL[2]);
+    const left=1+a, right=1; // seg1 value at x=1 (included), seg2 value approaching x=1
+    endpoint(svg,m,1,left,SEGCOL[0],true);  // filled (x<=1)
+    endpoint(svg,m,1,right,SEGCOL[2],false); // open (x>1)
+    // connector showing gap
+    el(svg,'line',{x1:m.X(1),y1:m.Y(left),x2:m.X(1),y2:m.Y(right),stroke:RED,'stroke-width':3,'stroke-dasharray':'4 3'});
+    const inc=(left<=right);
+    note.innerHTML="👉 衍接点 x=1：左段值 1+a="+left.toFixed(1)+"，右段趋近值=1。"+(inc?"<b>左≤右（a≤0）→ 整体递增 ✔</b>":"<b>左>右（a>0）→ 交界处掉档、不递增 ✘</b>")+"。每段自己都递增，但整体递增还需衍接条件。";
+    note.style.borderColor=inc?GREEN:RED;
+  }
+  As.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:零点分布 & f(x)=k 根个数 f(x)= x+2 (x<0); x^2-1 (0<=x<=2); 5-x (x>2) ===== */
+(function(){
+  const svg=document.getElementById('zeroSvg');
+  const Ks=document.getElementById('zeroK');
+  const oKv=document.getElementById('zeroKv'),oN=document.getElementById('zeroN'),oZ=document.getElementById('zeroZ'),oSeg=document.getElementById('zeroSeg');
+  const X0=55,Y0=30,W=600,H=270,xmin=-4,xmax=6,ymin=-4,ymax=6;
+  const m=makeMap(X0,Y0,W,H,xmin,xmax,ymin,ymax);
+  function froots(k){
+    // returns array of {x, seg}
+    let out=[];
+    // seg1 x<0: x+2=k -> x=k-2
+    let x1=k-2; if(x1<0)out.push({x:x1,seg:0});
+    // seg2 0<=x<=2: x^2-1=k -> x^2=k+1 -> x=+-sqrt(k+1)
+    if(k+1>=0){const s=Math.sqrt(k+1); if(s>=0&&s<=2)out.push({x:s,seg:1}); if(s>0&&(-s)>=0&&(-s)<=2)out.push({x:-s,seg:1});}
+    // seg3 x>2: 5-x=k -> x=5-k
+    let x3=5-k; if(x3>2)out.push({x:x3,seg:2});
+    return out;
+  }
+  function draw(){
+    clr(svg);
+    const k=+Ks.value;
+    drawAxes(svg,m,X0,Y0,W,H,xmin,xmax,ymin,ymax);
+    plotSeg(svg,m,function(x){return x+2;},xmin,-0.001,SEGCOL[0]);
+    plotSeg(svg,m,function(x){return x*x-1;},0,2,SEGCOL[1]);
+    plotSeg(svg,m,function(x){return 5-x;},2.001,xmax,SEGCOL[2]);
+    // y=k line
+    el(svg,'line',{x1:X0,y1:m.Y(k),x2:X0+W,y2:m.Y(k),stroke:RED,'stroke-width':3,'stroke-dasharray':'7 5'});
+    el(svg,'text',{x:X0+W-6,y:m.Y(k)-6,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent="y=k="+k.toFixed(1);
+    const roots=froots(k);
+    roots.forEach(function(r){
+      el(svg,'circle',{cx:m.X(r.x),cy:m.Y(k),r:7,fill:YEL,stroke:INK,'stroke-width':3});
+    });
+    oKv.textContent=k.toFixed(1);
+    oN.textContent=roots.length;
+    oZ.textContent=(Math.abs(k)<1e-9)?"是(零点)":"否";
+    oSeg.textContent=roots.length?roots.map(function(r){return "第"+(r.seg+1)+"段";}).join(","):"-";
+  }
+  Ks.oninput=draw;
+  draw();
+})();
+
+/* ===== 公共绘图函数 ===== */
+function drawAxes(svg,m,X0,Y0,W,H,xmin,xmax,ymin,ymax){
+  // grid + axes
+  const x0=m.X(0), y0=m.Y(0);
+  // border
+  el(svg,'rect',{x:X0,y:Y0,width:W,height:H,fill:'none',stroke:'#e0d8c0','stroke-width':1});
+  // x axis
+  el(svg,'line',{x1:X0,y1:y0,x2:X0+W,y2:y0,stroke:INK,'stroke-width':2.5});
+  // y axis
+  el(svg,'line',{x1:x0,y1:Y0,x2:x0,y2:Y0+H,stroke:INK,'stroke-width':2.5});
+  // x ticks
+  for(let t=Math.ceil(xmin);t<=xmax;t++){
+    if(t===0)continue;
+    const px=m.X(t);
+    el(svg,'line',{x1:px,y1:y0-4,x2:px,y2:y0+4,stroke:INK,'stroke-width':1.5});
+    el(svg,'text',{x:px,y:y0+16,'font-size':10,'font-weight':700,fill:'#6b5d3a','text-anchor':'middle'}).textContent=t;
+  }
+  // y ticks
+  for(let t=Math.ceil(ymin);t<=ymax;t++){
+    if(t===0)continue;
+    const py=m.Y(t);
+    el(svg,'line',{x1:x0-4,y1:py,x2:x0+4,y2:py,stroke:INK,'stroke-width':1.5});
+    el(svg,'text',{x:x0-8,y:py+4,'font-size':10,'font-weight':700,fill:'#6b5d3a','text-anchor':'end'}).textContent=t;
+  }
+  el(svg,'text',{x:X0+W-4,y:y0-8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent="x";
+  el(svg,'text',{x:x0+10,y:Y0+12,'font-size':12,'font-weight':900,fill:INK}).textContent="y";
+}
+function plotSeg(svg,m,f,a,b,col){
+  const N=60; let pts=[];
+  for(let i=0;i<=N;i++){
+    const x=a+(b-a)*i/N;
+    pts.push(m.X(x)+","+m.Y(f(x)));
+  }
+  el(svg,'polyline',{points:pts.join(" "),fill:'none',stroke:col,'stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round'});
+}
+function endpoint(svg,m,x,y,col,filled){
+  el(svg,'circle',{cx:m.X(x),cy:m.Y(y),r:6,fill:filled?col:'#fff',stroke:col,'stroke-width':3});
+}
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 分段函数求 f(a) 的第一步永远是什么？",a:"先判断 a 落在哪一个区间（哪一段），再把 a 代入那一段的表达式。绝不能随便挑一段代入。"},
+ {q:"2. 求嵌套 f(f(a)) 时，里层结果为什么要重新判断区间？",a:"因为里层算出的中间值 t=f(a) 和原来的 a 常常落在不同的段。外层必须对 t 重新定段再代入，不能沿用 a 所在的段。"},
+ {q:"3. 已知 f(x)= x+2 (x<0); x² (0≤x≤2); 6−x (x>2)，求 f(f(3))。",a:"里层：3>2，用第三段 f(3)=6−3=3。外层：t=3>2，仍用第三段 f(3)=6−3=3。答案 3。"},
+ {q:"4. 同上函数，求 f(f(−1))。注意两层是否同段。",a:"里层：−1<0，用第一段 f(−1)=−1+2=1。外层：t=1，0≤1≤2，用第二段 f(1)=1²=1。答案 1。里层用第一段、外层用第二段，不同段！"},
+ {q:"5. 分段解方程/不等式的三步是什么？",a:"① 每段代入该段表达式各解一次；② 解出后与本段定义域求交集（验范围）；③ 各段结果取并集，得最终解集。"},
+ {q:"6. 在 x<0 这一段解方程解得 x=2，这个解算不算？为什么？",a:"不算。x=2 不满足本段范围 x<0，是废解。分段解题解完必须回头验证解是否落在本段区间内。"},
+ {q:"7. 画分段函数图象时，交界端点实心●和空心○分别代表什么？",a:"实心●表示该点属于本段、取得到（含等号 ≤ 或 ≥）；空心○表示不属于本段、取不到（不含等号 < 或 >）。"},
+ {q:"8. 分段函数在 R 上整体单调递增，需要满足哪两个条件？",a:"① 每一段自身都递增；② 衔接处左段值 ≤ 右段值（不能出现后段起点比前段终点低的掉档）。只满足其一都不够。"},
+ {q:"9. f(x)= x+a (x≤1); x² (x>1) 在 R 上递增，求 a 的范围。",a:"每段都递增（一次斜率1>0，二次在 x>1 递增）。衔接 x=1：左值 1+a ≤ 右段趋近值 1，得 a≤0。"},
+ {q:"10. 求分段函数的整体最值，标准做法是什么？",a:"先算每一段在其区间内的最值（注意端点开闭是否取得到），再把各段最值放一起比较：最大的是整体最大值，最小的是整体最小值。开区间端点取不到可能导致无最值。"},
+ {q:"11. 求 f(x)= x+2 (x<0); x²−1 (0≤x≤2); 5−x (x>2) 的所有零点。",a:"第一段 x+2=0⇒x=−2<0（✔）。第二段 x²−1=0⇒x=±1，取 x=1∈[0,2]（✔），x=−1 不在段（✘）。第三段 5−x=0⇒x=5>2（✔）。共 3 个零点：−2, 1, 5。"},
+ {q:"12. 含参分段函数要求「连续」和要求「单调」，衔接条件的符号有何不同？",a:"连续用等号：衔接点左段值 = 右段值，解出参数具体值。单调用不等号：递增要左段值 ≤ 右段值，递减要左段值 ≥ 右段值，再结合每段单调条件取交集得参数范围。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+</script>
+</body>
+</html>

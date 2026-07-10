@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单摆测重力加速度 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>单摆测重力加速度</h1>
+    <p class="lead">这是一道「用实验反解物理量」的经典题：单摆的周期只跟<b>摆长 L</b> 和<b>重力加速度 g</b> 有关（T=2π√(L/g)）。既然 g 藏在周期公式里，那么<b>把 L 和 T 都测准，反解就能得到 g</b>。这一页讲清楚原理、操作、图象法处理数据、以及所有让 g 偏大偏小的误差来源。</p>
+
+    <div class="say">🗣️ <b>说人话总览：</b> 单摆测 g，靠的就是一条公式 <b>T=2π√(L/g)</b>。把它反过来解出 g，就是 <b>g=4π²L/T²</b>。所以你只要<b>把摆长 L 测准、把周期 T 测准</b>，g 就自动算出来了。更聪明的做法是<b>多测几组不同摆长</b>，作 <b>T²-L 图</b>，用<b>斜率</b>算 g——这样能把随机误差摊掉，比单次测量更准。全部难点都落在「L 怎么才算准」「T 怎么才算准」这两件事上。</div>
+
+    <div class="keybox"><b>一句话公式：</b> <b>T = 2π√(L/g)　⟹　g = 4π²L/T²</b>。摆长 <b>L = 摆线长 l + 小球半径 r</b>（别漏球半径！）。周期 T 用<b>累积法</b>测：测 n 次全振动的总时间 t，则 <b>T = t/n</b>。图象法：<b>T² = (4π²/g)·L</b>，作 T²-L 图，<b>斜率 k = 4π²/g　⟹　g = 4π²/k</b>。</div>
+
+    <h2>① 实验原理：反解 g</h2>
+    <div class="card">
+      <div class="eq">T = 2π√(L/g)　⟹　g = 4π²L / T²</div>
+      <p style="margin:8px 0">单摆做<b>简谐运动</b>（摆角很小时）的周期公式是 T=2π√(L/g)。这个公式里只有 L 和 g 两个量——摆的质量、振幅都<b>不影响</b>周期（这叫单摆的「等时性」）。把公式两边平方、把 g 解出来，就得到测 g 的核心工作公式：</p>
+      <div class="mono">T² = 4π²·L/g　⟹　g = 4π²·L / T²</div>
+      <p style="margin:8px 0">所以实验要做的只有两件事：<b>测出摆长 L</b>、<b>测出周期 T</b>，代入 g=4π²L/T² 就得到重力加速度。</p>
+      <table>
+        <tr><th>量</th><th>怎么得到</th><th>注意</th></tr>
+        <tr><td>摆长 L</td><td>L = 摆线长 l + 小球半径 r</td><td>球半径 r 用游标卡尺量，<b>不能漏</b></td></tr>
+        <tr><td>周期 T</td><td>测 n 次全振动总时间 t，T=t/n</td><td>从<b>平衡位置</b>开始计时</td></tr>
+        <tr><td>g</td><td>g = 4π²L/T²（或用图象法）</td><td>π 取 3.14，别忘平方</td></tr>
+      </table>
+      <p class="trap">⚠ π 要平方（π²≈9.86）；T 也要平方。漏了任何一个平方，g 直接差一大截。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🕰️ 互动 1 — 单摆摆动动画：拖动摆长 L，看周期 T 怎么变（T=2π√(L/g)）</div>
+      <svg id="penSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="penGo">▶ 开始摆动</button><button id="penStop">⏸ 暂停</button>
+        <label>摆长 L (m) <input id="penL" type="range" min="0.4" max="1.6" value="1.0" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>摆长 L (m)</b><span id="penLv">1.0</span></div>
+        <div><b>周期 T=2π√(L/g)</b><span id="penT">0</span></div>
+        <div><b>频率 f=1/T (Hz)</b><span id="penF">0</span></div>
+        <div><b>反解 g=4π²L/T²</b><span id="penG">0</span></div>
+      </div>
+      <p class="small">摆长越长，周期越长（摆得越慢）。注意：改变摆长不改变 g——反解出来的 g 始终≈9.8。这就是我们用它测 g 的底气。</p>
+    </div>
+
+    <h2 class="b">② 摆长 L：别漏了小球半径</h2>
+    <div class="card">
+      <div class="eq">L = 摆线长 l + 小球半径 r</div>
+      <p style="margin:8px 0">摆长是「悬点到<b>小球球心</b>」的距离，不是到球顶、也不是到球底。所以：<b>先量摆线长 l</b>（从悬点量到球的上端，用刻度尺），<b>再量小球直径 d</b>（用游标卡尺，半径 r=d/2），两者相加才是摆长 L。</p>
+      <div class="mono">L = l（悬点到球上端的线长） + r（小球半径 = 直径/2）</div>
+      <p style="margin:8px 0"><b>器材选择也影响 L 准不准：</b> 选<b>密度大、体积小</b>的金属球（如钢球），球小 → 半径 r 小、可看作质点、空气阻力小；线要选<b>细、不可伸长</b>的（伸长会让 L 变化）。</p>
+      <p class="trap">⚠ 头号失分点：摆长只写线长 l，<b>漏加球半径 r</b>！这样算出的 L 偏小 → g 偏小。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 摆长构成示意：L = 摆线长 l + 小球半径 r（拖动看构成）</div>
+      <svg id="lenSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>摆线长 l (cm) <input id="lenL" type="range" min="60" max="120" value="98" step="1"></label>
+        <label>小球直径 d (cm) <input id="lenD" type="range" min="1" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>摆线长 l (cm)</b><span id="lenLv">98</span></div>
+        <div><b>球半径 r=d/2 (cm)</b><span id="lenRv">1.0</span></div>
+        <div><b>正确摆长 L=l+r</b><span id="lenLc">99.0</span></div>
+        <div><b>漏加半径(错) L=l</b><span id="lenLw">98</span></div>
+      </div>
+      <p class="small">绿色线段=摆线长 l，红色小段=球半径 r，两段相加才是<b>正确摆长 L</b>。若只写 l（漏 r），摆长偏小，反解 g 就偏小。</p>
+    </div>
+
+    <h2 class="g">③ 周期 T：累积法 + 平衡位置计时</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>为什么不直接测 1 个周期？</b> 单个周期只有一两秒，秒表的启停反应误差（约 0.2s）占比太大。所以要用<b>累积法（多测几次）</b>：测 n 次全振动的<b>总时间 t</b>，再 T=t/n，把误差摊薄 n 倍。</p>
+      <div class="eq">T = t / n　（t 是 n 次全振动的总时间）</div>
+      <h3>两条铁律</h3>
+      <div class="mono">① 一次「全振动」= 摆球从某点出发、又回到该点且运动方向相同（来回一整趟）。</div>
+      <div class="mono">② 计时要从<b>平衡位置（最低点）</b>开始、并在此处计数——那里摆球速度最快，人眼判断「过没过」最准，误差最小。</div>
+      <p style="margin:8px 0"><b>常见坑：数振动次数错。</b> 从平衡位置喊「0」开始计时，之后每回到平衡位置且<b>同向</b>才算一次全振动；数 n 次全振动对应喊到「n」，别把半个来回也算进去。</p>
+      <p class="trap">⚠ 别从<b>最高点（端点）</b>开始计时——那里速度为零、球几乎不动，很难判断准确时刻，误差大。也别把 n 数错（多数或少数一次）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 5 — 周期测量：数 n 次全振动（从平衡位置计时，看计数怎么加）</div>
+      <canvas id="cntCv" width="700" height="230"></canvas>
+      <div class="ctrl">
+        <button id="cntGo">▶ 开始计时</button><button id="cntReset">↺ 重置</button>
+        <label>要测的全振动数 n <input id="cntN" type="range" min="10" max="50" value="30" step="10"></label>
+      </div>
+      <div class="live">
+        <div><b>已数全振动 (次)</b><span id="cntNow">0</span></div>
+        <div><b>目标 n (次)</b><span id="cntTgt">30</span></div>
+        <div><b>总时间 t (s)</b><span id="cntT">0</span></div>
+        <div><b>周期 T=t/n (s)</b><span id="cntP">0</span></div>
+      </div>
+      <p class="small">摆球经过<b>平衡位置且同向</b>时计数 +1（黄色闪一下）。测 n 次全振动的总时间 t，除以 n 就是周期。次数越多，T 越准。</p>
+    </div>
+
+    <h2 class="o">④ 图象法处理数据：作 T²-L 图求 g</h2>
+    <div class="card">
+      <p style="margin:6px 0">单次测量总有随机误差。更漂亮的做法：<b>换几个不同摆长</b>各测一组 (L, T)，作图求 g。把工作公式变形：</p>
+      <div class="eq">T² = (4π²/g)·L　（这是一条过原点的直线）</div>
+      <p style="margin:8px 0">这是 <b>T²（纵轴）对 L（横轴）</b>的正比关系，图线是<b>过原点的直线</b>，斜率 <b>k = 4π²/g</b>。所以：</p>
+      <div class="mono">斜率 k = ΔT² / ΔL = 4π²/g　⟹　g = 4π² / k</div>
+      <p style="margin:8px 0"><b>为什么用图象法更准？</b> ① 多组数据取「整体趋势」，随机误差被平均掉；② 画直线时能自然剔除偏离太远的坏点；③ 直线是否过原点还能检验系统误差（比如摆长漏加了球半径，直线会<b>不过原点</b>，在 L 轴上有截距）。</p>
+      <p class="trap">⚠ 斜率 k 要用图上<b>取远点、读两点坐标算 ΔT²/ΔL</b>，别用某一组原始数据当斜率。g=4π²/k，不是 g=k/4π²（别把公式倒过来）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — T²-L 图求 g：拖动数据点，读斜率 k，算 g=4π²/k</div>
+      <svg id="fitSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fitReset">↺ 复位数据点</button>
+        <span class="small">拖动任一蓝点上下移动，观察斜率 k 和反解 g 的变化</span>
+      </div>
+      <div class="live">
+        <div><b>拟合斜率 k=ΔT²/ΔL</b><span id="fitK">0</span></div>
+        <div><b>g = 4π²/k</b><span id="fitG">0</span></div>
+        <div><b>直线是否过原点</b><span id="fitO">是</span></div>
+        <div><b>数据点组数</b><span id="fitN">5</span></div>
+      </div>
+      <p class="small">横轴 L、纵轴 T²，五个数据点应落在一条<b>过原点的直线</b>上。斜率 k=4π²/g。把某点拖偏，看拟合斜率和 g 怎么被带偏——这就是坏点的危害。</p>
+    </div>
+
+    <h2 class="v">⑤ 误差分析：什么让 g 偏大 / 偏小</h2>
+    <div class="card">
+      <p style="margin:6px 0">由 <b>g = 4π²L/T²</b>：<b>L 偏大或 T 偏小 → g 偏大</b>；<b>L 偏小或 T 偏大 → g 偏小</b>。牢牢抓住这条正反比关系，任何误差题都能判断方向。</p>
+      <table>
+        <tr><th>错误操作</th><th>直接后果</th><th>g 偏大/偏小</th></tr>
+        <tr><td>摆长漏加球半径 r</td><td>L 测量值偏小</td><td><b>g 偏小</b></td></tr>
+        <tr><td>把摆线长量到球<b>底端</b></td><td>L 偏大（多算了一个直径）</td><td><b>g 偏大</b></td></tr>
+        <tr><td>少数了一次全振动（n 小了）</td><td>T=t/n 偏大</td><td><b>g 偏小</b></td></tr>
+        <tr><td>多数了一次全振动（n 大了）</td><td>T=t/n 偏小</td><td><b>g 偏大</b></td></tr>
+        <tr><td>摆角过大（&gt;5°）</td><td>不再是简谐，实际 T 偏大</td><td><b>g 偏小</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>判断口诀：</b> 写出 g=4π²L/T²，把出错的量（L 或 T）代成「偏大还是偏小」，L 在分子（同向）、T² 在分母（反向），一推就知道 g 往哪偏。</p>
+      <p class="trap">⚠ 「摆角过大」为什么让 g 偏小？摆角大时真实周期比理论 T=2π√(L/g) 略长，测得 T 偏大 → 代入后 g 偏小。所以要求<b>摆角 &lt; 5°</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 6 — 误差演示：漏加球半径 → L 偏小 → g 偏小（对比正确/错误）</div>
+      <svg id="errSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="errcase on" data-c="0">漏加球半径(L偏小)</button>
+        <button class="errcase" data-c="1">量到球底(L偏大)</button>
+        <button class="errcase" data-c="2">摆角过大(T偏大)</button>
+      </div>
+      <div class="verdict" id="errNote"></div>
+      <p class="small">左柱=正确测量的 g（≈9.8），右柱=错误操作后算出的 g。看哪种错误让 g 偏大、哪种偏小——本质都是 g=4π²L/T² 里 L、T 被带偏。</p>
+    </div>
+
+    <h2 class="r">⑥ 操作要点与器材</h2>
+    <div class="card">
+      <div class="chips" style="margin:8px 0">
+        <span class="chip">摆角 &lt; 5°</span><span class="chip">细线不可伸长</span><span class="chip">密度大体积小的球</span><span class="chip">悬点固定不晃</span><span class="chip">在竖直平面内摆动</span>
+      </div>
+      <table>
+        <tr><th>要点</th><th>为什么</th></tr>
+        <tr><td><b>摆角小于 5°</b></td><td>只有小角度才近似简谐，T=2π√(L/g) 才成立</td></tr>
+        <tr><td><b>细线、不可伸长</b></td><td>线会伸长则摆长 L 变化，且线要轻（可忽略质量）</td></tr>
+        <tr><td><b>密度大、体积小的球</b></td><td>球小可视为质点、空气阻力小；密度大摆动更稳、衰减慢</td></tr>
+        <tr><td><b>悬点牢固固定</b></td><td>悬点晃动会改变实际摆长、引入误差</td></tr>
+        <tr><td><b>只在竖直平面内摆</b></td><td>别摆成「圆锥摆」（转圈），那不是单摆</td></tr>
+      </table>
+      <p class="trap">⚠ 用游标卡尺量球直径、刻度尺量线长；启动时把球拉到偏角 &lt;5° 处<b>轻轻释放</b>，别给初速度、别让它转圈。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 2 — T=2π√(L/g) 各量关系：调 L 和 g，看周期怎么响应</div>
+      <svg id="relSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>摆长 L (m) <input id="relL" type="range" min="0.4" max="1.6" value="1.0" step="0.1"></label>
+        <label>重力 g (m/s²) <input id="relG" type="range" min="8" max="11" value="9.8" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>摆长 L (m)</b><span id="relLv">1.0</span></div>
+        <div><b>重力 g (m/s²)</b><span id="relGv">9.8</span></div>
+        <div><b>周期 T=2π√(L/g)</b><span id="relTv">0</span></div>
+        <div><b>T²=4π²L/g</b><span id="relT2v">0</span></div>
+      </div>
+      <p class="small">T 随 L 增大而增大（√关系）、随 g 增大而减小。地球上 g 固定，我们才能靠调 L、测 T 反解出这个固定的 g。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 原理与 g 的表达式</h3>
+      <p><b class="tag">触发信号:</b>「写出 g 的表达式」「用测得量表示 g」，给了 L、T 或 n、t 等符号。</p>
+      <p><b class="tag">标准动作:</b>从 T=2π√(L/g) 平方解出 g=4π²L/T²；若给的是 n 次全振动总时间 t，则 T=t/n，代入得 <b>g=4π²Ln²/t²</b>。摆长要写 L=l+r。</p>
+      <p><b class="tag">示例(带解):</b>摆线长 l、球半径 r，测得 n 次全振动用时 t。则 L=l+r，T=t/n，g=4π²L/T²=4π²(l+r)n²/t²。</p>
+      <p class="trap">陷阱:漏加球半径（L 应是 l+r）；忘了 T=t/n 要把 n 代进去；π 或 T 忘平方。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 摆长与周期的测量</h3>
+      <p><b class="tag">触发信号:</b>问「摆长怎么测」「用什么仪器」「周期怎样测更准」「n 取多少」。</p>
+      <p><b class="tag">标准动作:</b>摆长 = 刻度尺量线长 l + 游标卡尺量直径算 r，L=l+r；周期用累积法：从平衡位置计时，测 n 次全振动总时间 t，T=t/n。</p>
+      <p><b class="tag">示例(带解):</b>为什么不直接测 1 个周期？因单周期只 ~2s，秒表启停误差(~0.2s)占比大；测 30 次全振动共 ~60s，误差被摊薄到 1/30，T 更准。</p>
+      <p class="trap">陷阱:用刻度尺量直径（应用游标卡尺）；从最高点计时；只测一个周期。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 图象法(T²-L)求 g</h3>
+      <p><b class="tag">触发信号:</b>给多组 (L, T) 数据，要求「作图求 g」，或给一张 T²-L 图问斜率含义。</p>
+      <p><b class="tag">标准动作:</b>算出各组 T²，作 T²-L 图（应为过原点直线）；取图上相距较远两点读坐标，斜率 k=ΔT²/ΔL；由 k=4π²/g 得 <b>g=4π²/k</b>。</p>
+      <p><b class="tag">示例(带解):</b>图线过原点、取两点(0.4, 1.6)和(1.0, 4.0)，k=(4.0−1.6)/(1.0−0.4)=2.4/0.6=4.0 s²/m。g=4π²/k=4×9.86/4.0≈9.86 m/s²。</p>
+      <p class="trap">陷阱:g 写成 k/4π²（倒了）；用单组数据当斜率；忘了纵轴是 T² 不是 T。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 误差分析(偏大/偏小)</h3>
+      <p><b class="tag">触发信号:</b>「某操作会使 g 偏大还是偏小」，给一个错误操作（漏半径、多/少数振动、摆角大等）。</p>
+      <p><b class="tag">标准动作:</b>写出 g=4π²L/T²；判断该操作让 L 偏大还是偏小、T 偏大还是偏小；L 在分子（同向）、T 在分母且平方（反向），推出 g 的偏向。</p>
+      <p><b class="tag">示例(带解):</b>漏加球半径 → L 测量值偏小 → g=4π²L/T² 分子小 → <b>g 偏小</b>。少数一次全振动 → n 小 → T=t/n 偏大 → 分母大 → g 偏小。</p>
+      <p class="trap">陷阱:分不清 L、T 谁偏大偏小；忘了 T 在分母（跟 g 反向）；把 n 数错的方向想反。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 器材与操作评估</h3>
+      <p><b class="tag">触发信号:</b>「以下操作是否合理」「应选哪种球/线」「为什么摆角要小」等评估类。</p>
+      <p><b class="tag">标准动作:</b>对照要点逐条判断：摆角&lt;5°（保证简谐）、细线不可伸长（L 稳定）、密度大体积小的球（近似质点、阻力小）、竖直面内摆动（非圆锥摆）、平衡位置计时。</p>
+      <p><b class="tag">示例(带解):</b>「选大而轻的塑料泡沫球」不合理——泡沫球体积大不能视为质点、空气阻力大衰减快；应选小而重的金属球。</p>
+      <p class="trap">陷阱:只背结论不说理由；忽略「体积小=可视为质点」这层含义。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 由数据算 g</h3>
+      <p><b class="tag">触发信号:</b>直接给一组具体数值(l、d 或 r、n、t)，要求算出 g 的数值。</p>
+      <p><b class="tag">标准动作:</b>L=l+r（r=d/2）；T=t/n；代入 g=4π²L/T²，π 取 3.14（π²≈9.86），注意单位统一成米、秒。</p>
+      <p><b class="tag">示例(带解):</b>l=98.0cm、d=2.0cm→r=1.0cm，L=0.99m；50 次全振动 t=99.6s，T=99.6/50=1.992s。g=4π²L/T²=4×9.86×0.99/(1.992²)=39.06/3.968≈9.84 m/s²。</p>
+      <p class="trap">陷阱:cm 没换成 m；T=t/n 忘了除 n；漏球半径；π² 用错。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 摆长要<b>加球半径</b>！L=l+r（线长 + 半径），漏了 r 会让 L 偏小、g 偏小。这是本实验第一失分点。</p>
+      <p class="trap">② 周期计时从<b>平衡位置（最低点）</b>开始，别从最高点——最高点速度为零，判断不准。</p>
+      <p class="trap">③ 图象法作的是 <b>T²-L 图</b>（纵轴 T²，不是 T），斜率 k=4π²/g，g=4π²/k（别倒过来）。</p>
+      <p class="trap">④ <b>摆角 &lt; 5°</b>！角度大就不是简谐运动，真实周期偏大，g 会偏小。</p>
+      <p class="trap">⑤ <b>只测几次全振动误差大</b>！单个周期用累积法，测 n 次总时间 t，T=t/n，n 越大越准。</p>
+      <p class="trap">⑥ 全振动数错方向：<b>少数</b>一次 → T 偏大 → g 偏小；<b>多数</b>一次 → T 偏小 → g 偏大。</p>
+      <p class="trap">⑦ 量球直径用<b>游标卡尺</b>、量线长用刻度尺；别用刻度尺量直径。</p>
+      <p class="trap">⑧ 判断偏差方向永远回到 <b>g=4π²L/T²</b>：L 分子（同向）、T² 分母（反向）。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 图象法的本质是「线性化 + 求斜率」：</b> 直接量 (L, T) 是非线性的（T∝√L）。平方后 T²∝L 变成正比直线，斜率 k=4π²/g。把「反解一个物理量」变成「求一条直线的斜率」，这是物理实验处理数据的通用套路（很多实验都是先想办法把关系拉直）。</p>
+      <p style="margin:8px 0"><b>② 系统误差 vs 随机误差看图就懂：</b> 摆长漏加球半径是<b>系统误差</b>——每个 L 都少了同一个 r，作 T²-L 图会得到一条<b>平行下移、不过原点</b>的直线（在 L 轴有正截距）。而看错某次读数是<b>随机误差</b>，表现为个别点偏离直线。所以「直线是否过原点」是检验系统误差的利器。</p>
+      <p style="margin:8px 0"><b>③ 为什么周期跟质量、振幅无关？</b> 小角度下回复力 ≈ mg·(x/L)，恰好正比于位移 x，符合简谐条件；把 mg 里的 m 和加速度 a=F/m 里的 m 约掉，质量就消失了。振幅无关（等时性）也是简谐运动的特征。理解这一点，就明白单摆为何能当「标准时钟」。</p>
+      <p style="margin:8px 0"><b>④ 累积法为何能减小误差：</b> 秒表启停的绝对误差 Δt 是固定的（约 0.2s）。测 1 个周期，相对误差 = Δt/T；测 n 个，总时间 nT，相对误差 = Δt/(nT)，缩小到 1/n。这就是「多测取总时间再除 n」的数学根据——把固定的启停误差摊到更长的时间上。</p>
+      <p style="margin:8px 0"><b>⑤ 用 g=4π²L/T² 反查一切误差：</b> 遇到任何操作，别死记结论。写出公式，判断它让 L 偏大/偏小、T 偏大/偏小（注意 T 在分母且平方），一步推出 g 的偏向。这套「回到公式判方向」的方法，对所有「实验误差偏大偏小」题都通用。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 单摆测重力加速度实验（原理 · 操作 · 图象法 · 误差）</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+const G0=9.8;
+
+/* ===== 互动1:单摆摆动动画 ===== */
+(function(){
+  const svg=document.getElementById('penSvg');
+  const Ls=document.getElementById('penL');
+  const oLv=document.getElementById('penLv'),oT=document.getElementById('penT'),oF=document.getElementById('penF'),oG=document.getElementById('penG');
+  let L=1.0,t0=performance.now(),running=true;
+  const pivotX=350,pivotY=40,pxPerM=150,ballR=16;
+  function period(){return 2*Math.PI*Math.sqrt(L/G0);}
+  function sync(){L=+Ls.value;stats();}
+  Ls.oninput=sync;
+  function stats(){
+    const T=period();
+    oLv.textContent=L.toFixed(1);
+    oT.textContent=T.toFixed(2)+'s';
+    oF.textContent=(1/T).toFixed(2);
+    oG.textContent=(4*Math.PI*Math.PI*L/(T*T)).toFixed(2);
+  }
+  function draw(now){
+    clr(svg);
+    const T=period();
+    const amp=0.28; // rad
+    const phase=running? (now-t0)/1000 : 0;
+    const theta=amp*Math.cos(2*Math.PI*phase/T);
+    const len=L*pxPerM;
+    const bx=pivotX+len*Math.sin(theta);
+    const by=pivotY+len*Math.cos(theta);
+    // ceiling
+    el(svg,'rect',{x:pivotX-80,y:14,width:160,height:14,fill:'#7a7a7a',stroke:INK,'stroke-width':3});
+    // pivot
+    el(svg,'circle',{cx:pivotX,cy:pivotY,r:5,fill:INK});
+    // string
+    el(svg,'line',{x1:pivotX,y1:pivotY,x2:bx,y2:by,stroke:INK,'stroke-width':2.5});
+    // vertical dashed
+    el(svg,'line',{x1:pivotX,y1:pivotY,x2:pivotX,y2:pivotY+len+20,stroke:'#bbb','stroke-width':2,'stroke-dasharray':'5 5'});
+    // ball
+    el(svg,'circle',{cx:bx,cy:by,r:ballR,fill:RED,stroke:INK,'stroke-width':3});
+    // length label
+    el(svg,'text',{x:(pivotX+bx)/2+10,y:(pivotY+by)/2,'font-size':13,'font-weight':900,fill:BLUE}).textContent='L='+L.toFixed(1)+'m';
+    el(svg,'text',{x:350,y:305,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='T = 2π√(L/g) = '+T.toFixed(2)+' s　（摆长越长，摆得越慢）';
+    requestAnimationFrame(draw);
+  }
+  document.getElementById('penGo').onclick=()=>{if(!running){running=true;t0=performance.now();}};
+  document.getElementById('penStop').onclick=()=>{running=false;};
+  sync();requestAnimationFrame(draw);
+})();
+
+/* ===== 互动4:摆长构成示意 ===== */
+(function(){
+  const svg=document.getElementById('lenSvg');
+  const Ls=document.getElementById('lenL'),Ds=document.getElementById('lenD');
+  const oLv=document.getElementById('lenLv'),oRv=document.getElementById('lenRv'),oLc=document.getElementById('lenLc'),oLw=document.getElementById('lenLw');
+  let l=98,d=2;
+  function sync(){l=+Ls.value;d=+Ds.value;draw();}
+  Ls.oninput=Ds.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=d/2;
+    oLv.textContent=l.toFixed(0);
+    oRv.textContent=r.toFixed(1);
+    oLc.textContent=(l+r).toFixed(1);
+    oLw.textContent=l.toFixed(0);
+    const pivotX=150,pivotY=30;
+    const scale=1.9; // px per cm
+    const lineLen=l*scale;
+    const ballTop=pivotY+lineLen;
+    const rpx=r*scale*3; // exaggerate ball for visibility
+    const ballCy=ballTop+rpx;
+    // pivot / ceiling
+    el(svg,'rect',{x:pivotX-60,y:14,width:120,height:12,fill:'#7a7a7a',stroke:INK,'stroke-width':3});
+    el(svg,'circle',{cx:pivotX,cy:pivotY,r:5,fill:INK});
+    // string (green) = line length l
+    el(svg,'line',{x1:pivotX,y1:pivotY,x2:pivotX,y2:ballTop,stroke:GREEN,'stroke-width':4});
+    el(svg,'text',{x:pivotX+14,y:(pivotY+ballTop)/2,'font-size':13,'font-weight':900,fill:GREEN}).textContent='摆线长 l='+l.toFixed(0)+'cm';
+    // ball
+    el(svg,'circle',{cx:pivotX,cy:ballCy,r:rpx,fill:'#c9c9c9',stroke:INK,'stroke-width':3});
+    // radius (red) from top of ball to center
+    el(svg,'line',{x1:pivotX,y1:ballTop,x2:pivotX,y2:ballCy,stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:pivotX,cy:ballCy,r:3,fill:INK});
+    el(svg,'text',{x:pivotX+rpx+8,y:ballCy+4,'font-size':13,'font-weight':900,fill:RED}).textContent='球半径 r='+r.toFixed(1)+'cm';
+    // total L bracket on the right
+    const rx=460;
+    el(svg,'line',{x1:rx,y1:pivotY,x2:rx,y2:ballCy,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:rx-6,y1:pivotY,x2:rx,y2:pivotY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:rx-6,y1:ballCy,x2:rx,y2:ballCy,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:rx+10,y:(pivotY+ballCy)/2,'font-size':15,'font-weight':900,fill:INK}).textContent='正确摆长';
+    el(svg,'text',{x:rx+10,y:(pivotY+ballCy)/2+20,'font-size':15,'font-weight':900,fill:INK}).textContent='L=l+r='+(l+r).toFixed(1)+'cm';
+    el(svg,'text',{x:rx+10,y:(pivotY+ballCy)/2+44,'font-size':12,'font-weight':800,fill:RED}).textContent='(漏 r 则 L='+l.toFixed(0)+'，偏小→g偏小)';
+  }
+  sync();
+})();
+
+/* ===== 互动5:周期测量计数 ===== */
+(function(){
+  const cv=document.getElementById('cntCv');const ctx=cv.getContext('2d');
+  const Ns=document.getElementById('cntN');
+  const oNow=document.getElementById('cntNow'),oTgt=document.getElementById('cntTgt'),oT=document.getElementById('cntT'),oP=document.getElementById('cntP');
+  const L=1.0,T=2*Math.PI*Math.sqrt(L/G0);
+  let tgtN=30,count=0,elapsed=0,running=false,lastSin=0,flash=0,started=false;
+  const pivotX=350,pivotY=30,len=130,ballR=14;
+  const amp=0.30;
+  function sync(){tgtN=+Ns.value;reset();}
+  Ns.oninput=sync;
+  function reset(){count=0;elapsed=0;running=false;lastSin=0;flash=0;started=false;
+    oTgt.textContent=tgtN;stats();draw(0);}
+  function stats(){
+    oNow.textContent=count;
+    oT.textContent=elapsed.toFixed(2);
+    oP.textContent=count>0?(elapsed/count).toFixed(3):'0.000';
+  }
+  function draw(theta){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // ceiling
+    ctx.fillStyle='#7a7a7a';ctx.fillRect(pivotX-70,10,140,12);
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(pivotX-70,10,140,12);
+    // vertical (equilibrium) dashed line - flashes when counting
+    ctx.strokeStyle= flash>0? YEL:'#ccc';ctx.lineWidth= flash>0?5:2;
+    ctx.setLineDash([5,5]);
+    ctx.beginPath();ctx.moveTo(pivotX,pivotY);ctx.lineTo(pivotX,pivotY+len+30);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle= flash>0? '#b8860b':'#6b5d3a';ctx.font='bold 12px sans-serif';
+    ctx.fillText('平衡位置(最低点)计时',pivotX+8,pivotY+len+26);
+    // string + ball
+    const bx=pivotX+len*Math.sin(theta), by=pivotY+len*Math.cos(theta);
+    ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(pivotX,pivotY);ctx.lineTo(bx,by);ctx.stroke();
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(bx,by,ballR,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    // counter box
+    ctx.fillStyle=INK;ctx.font='bold 15px sans-serif';
+    ctx.fillText('已数全振动: '+count+' / '+tgtN,470,60);
+    ctx.font='bold 13px sans-serif';
+    ctx.fillText('总时间 t='+elapsed.toFixed(2)+'s',470,86);
+    ctx.fillText('T=t/n='+(count>0?(elapsed/count).toFixed(3):'—')+'s',470,108);
+    if(count>=tgtN){ctx.fillStyle=GREEN;ctx.font='bold 15px sans-serif';ctx.fillText('✓ 测量完成',470,134);}
+    if(flash>0)flash--;
+  }
+  let raf=0,prev=0;
+  function loop(now){
+    if(!running){return;}
+    if(!prev)prev=now;
+    const dt=(now-prev)/1000;prev=now;
+    if(count<tgtN){elapsed+=dt;}
+    const theta=amp*Math.sin(2*Math.PI*elapsed/T);
+    const s=Math.sin(2*Math.PI*elapsed/T);
+    // count a full oscillation each time it crosses equilibrium going the same (positive) direction
+    if(started && lastSin<0 && s>=0 && count<tgtN){count++;flash=8;stats();if(count>=tgtN){running=false;}}
+    if(!started && elapsed>0.05)started=true;
+    lastSin=s;
+    draw(theta);
+    stats();
+    if(running)requestAnimationFrame(loop);
+  }
+  document.getElementById('cntGo').onclick=()=>{if(count>=tgtN)reset();if(!running){running=true;prev=0;requestAnimationFrame(loop);}};
+  document.getElementById('cntReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动3:T²-L 图求 g（可拖点） ===== */
+(function(){
+  const svg=document.getElementById('fitSvg');
+  const oK=document.getElementById('fitK'),oG=document.getElementById('fitG'),oO=document.getElementById('fitO'),oN=document.getElementById('fitN');
+  const X0=70,Y0=30,W=560,H=280;
+  const Lmax=1.5,T2max=6.5; // axes ranges (L in m, T2 in s^2)
+  // ideal slope 4pi^2/9.8 ~= 4.03
+  const Ls=[0.3,0.6,0.9,1.2,1.5];
+  let T2=Ls.map(L=>4*Math.PI*Math.PI*L/G0);
+  const ideal=Ls.map(L=>4*Math.PI*Math.PI*L/G0);
+  let drag=-1;
+  function sx(L){return X0+(L/Lmax)*W;}
+  function sy(v){return Y0+H-(v/T2max)*H;}
+  function invY(py){return (Y0+H-py)/H*T2max;}
+  function slope(){
+    // least-squares slope through origin: k = Σ(L*T2)/Σ(L*L)
+    let a=0,b=0;
+    for(let i=0;i<Ls.length;i++){a+=Ls[i]*T2[i];b+=Ls[i]*Ls[i];}
+    return a/b;
+  }
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-12,y:Y0+2,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='T²(s²)';
+    el(svg,'text',{x:X0+W,y:Y0+H+24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='L(m)';
+    // grid ticks
+    for(let i=1;i<=5;i++){const L=i*0.3;el(svg,'line',{x1:sx(L),y1:Y0+H,x2:sx(L),y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:sx(L),y:Y0+H+20,'font-size':11,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=L.toFixed(1);}
+    for(let i=1;i<=6;i++){el(svg,'line',{x1:X0-5,y1:sy(i),x2:X0,y2:sy(i),stroke:INK,'stroke-width':2});el(svg,'text',{x:X0-10,y:sy(i)+4,'font-size':11,'font-weight':700,fill:INK,'text-anchor':'end'}).textContent=i;}
+    // fitted line through origin
+    const k=slope();
+    const xEnd=Lmax, yEnd=k*xEnd;
+    const yc=Math.min(yEnd,T2max);const xc=yc/k;
+    el(svg,'line',{x1:sx(0),y1:sy(0),x2:sx(xc),y2:sy(yc),stroke:RED,'stroke-width':3});
+    // data points
+    for(let i=0;i<Ls.length;i++){
+      el(svg,'circle',{cx:sx(Ls[i]),cy:sy(T2[i]),r:8,fill:BLUE,stroke:INK,'stroke-width':3,style:'cursor:ns-resize'});
+    }
+    // slope readout
+    const g=4*Math.PI*Math.PI/k;
+    // check pass-through-origin: compare fit to whether points roughly linear through origin
+    // detect if a point deviates a lot from ideal -> not clean
+    let dev=0;for(let i=0;i<Ls.length;i++){dev+=Math.abs(T2[i]-ideal[i]);}
+    oK.textContent=k.toFixed(2)+' s²/m';
+    oG.textContent=g.toFixed(2);
+    oO.textContent= dev<0.4? '是':'点有偏离';
+    oN.textContent=Ls.length;
+    el(svg,'text',{x:X0+W-10,y:Y0+30,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='斜率 k=4π²/g='+k.toFixed(2);
+    el(svg,'text',{x:X0+W-10,y:Y0+52,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='g=4π²/k='+g.toFixed(2)+' m/s²';
+  }
+  function ptFromEvt(e){
+    const r=svg.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+    return {x:cx/r.width*700, y:cy/r.height*360};
+  }
+  svg.addEventListener('mousedown',e=>{
+    const p=ptFromEvt(e);
+    for(let i=0;i<Ls.length;i++){if(Math.hypot(p.x-sx(Ls[i]),p.y-sy(T2[i]))<16){drag=i;break;}}
+  });
+  window.addEventListener('mousemove',e=>{
+    if(drag<0)return;
+    const p=ptFromEvt(e);
+    let v=invY(p.y);v=Math.max(0.1,Math.min(T2max,v));
+    T2[drag]=v;draw();
+  });
+  window.addEventListener('mouseup',()=>{drag=-1;});
+  svg.addEventListener('touchstart',e=>{
+    const p=ptFromEvt(e);
+    for(let i=0;i<Ls.length;i++){if(Math.hypot(p.x-sx(Ls[i]),p.y-sy(T2[i]))<20){drag=i;break;}}
+  },{passive:true});
+  svg.addEventListener('touchmove',e=>{
+    if(drag<0)return;e.preventDefault();
+    const p=ptFromEvt(e);let v=invY(p.y);v=Math.max(0.1,Math.min(T2max,v));T2[drag]=v;draw();
+  },{passive:false});
+  svg.addEventListener('touchend',()=>{drag=-1;});
+  document.getElementById('fitReset').onclick=()=>{T2=ideal.slice();draw();};
+  draw();
+})();
+
+/* ===== 互动6:误差演示 ===== */
+(function(){
+  const svg=document.getElementById('errSvg');const note=document.getElementById('errNote');
+  let c=0;
+  document.querySelectorAll('.errcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.errcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const gTrue=9.80;
+    let gErr,msg,dir;
+    // correct: L=1.00m, T from g=9.8
+    if(c===0){ // omit radius: L too small by 0.01m -> L=0.99
+      gErr=gTrue*0.99/1.00; // g ~ 9.70
+      msg='漏加球半径 → 摆长 L 偏小（少了 r）→ g=4π²L/T² 分子变小 → g 偏小。';
+      dir='偏小';
+    }else if(c===1){ // measured to bottom: L too large by diameter -> L=1.02
+      gErr=gTrue*1.02/1.00;
+      msg='摆线量到球底端 → 多算了一个直径，L 偏大 → 分子变大 → g 偏大。';
+      dir='偏大';
+    }else{ // large angle: T bigger by ~2% -> g smaller
+      gErr=gTrue/(1.02*1.02);
+      msg='摆角过大(>5°) → 实际周期比理论值偏大，测得 T 偏大 → T² 在分母 → g 偏小。';
+      dir='偏小';
+    }
+    const baseY=210,maxH=150,sc=maxH/11;
+    // correct bar
+    function bar(x,val,col,lab){
+      const h=val*sc;
+      el(svg,'rect',{x:x,y:baseY-h,width:90,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+45,y:baseY-h-8,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=val.toFixed(2);
+      el(svg,'text',{x:x+45,y:baseY+20,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+    }
+    // baseline
+    el(svg,'line',{x1:130,y1:baseY,x2:560,y2:baseY,stroke:INK,'stroke-width':3});
+    // reference line at 9.8
+    el(svg,'line',{x1:130,y1:baseY-gTrue*sc,x2:560,y2:baseY-gTrue*sc,stroke:'#999','stroke-width':2,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:565,y:baseY-gTrue*sc+4,'font-size':11,'font-weight':800,fill:'#777'}).textContent='真值9.8';
+    bar(200,gTrue,GREEN,'正确 g');
+    bar(380,gErr,dir==='偏大'?ORANGE:RED,'错误 g('+dir+')');
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='g = 4π²L / T²　（L 分子·同向，T² 分母·反向）';
+    note.innerHTML='👉 '+msg+'　结果：算出的 g <b>'+dir+'</b>（'+gErr.toFixed(2)+' vs 真值 9.80）。';
+    note.style.borderColor= dir==='偏大'?ORANGE:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动2:T=2π√(L/g) 各量关系 ===== */
+(function(){
+  const svg=document.getElementById('relSvg');
+  const Ls=document.getElementById('relL'),Gs=document.getElementById('relG');
+  const oLv=document.getElementById('relLv'),oGv=document.getElementById('relGv'),oTv=document.getElementById('relTv'),oT2v=document.getElementById('relT2v');
+  let L=1.0,g=9.8;
+  function sync(){L=+Ls.value;g=+Gs.value;draw();}
+  Ls.oninput=Gs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const T=2*Math.PI*Math.sqrt(L/g);
+    const T2=4*Math.PI*Math.PI*L/g;
+    oLv.textContent=L.toFixed(1);
+    oGv.textContent=g.toFixed(1);
+    oTv.textContent=T.toFixed(2)+'s';
+    oT2v.textContent=T2.toFixed(2);
+    el(svg,'text',{x:350,y:32,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='T = 2π√(L/g) = '+T.toFixed(3)+' s';
+    // three bars: L, g, T (scaled to own ranges)
+    const baseY=200,maxH=120;
+    function bar(x,val,vmin,vmax,col,lab,disp){
+      const h=Math.max(6,((val-vmin)/(vmax-vmin))*maxH);
+      el(svg,'rect',{x:x,y:baseY-h,width:80,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+40,y:baseY-h-8,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=disp;
+      el(svg,'text',{x:x+40,y:baseY+22,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+    }
+    el(svg,'line',{x1:80,y1:baseY,x2:620,y2:baseY,stroke:INK,'stroke-width':3});
+    bar(140,L,0.4,1.6,BLUE,'摆长 L',L.toFixed(1)+'m');
+    bar(320,g,8,11,GREEN,'重力 g',g.toFixed(1));
+    bar(500,T,0,3,RED,'周期 T',T.toFixed(2)+'s');
+    el(svg,'text',{x:350,y:238,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='L↑→T↑（√关系）；g↑→T↓。测出 T 就能反解 g=4π²L/T²';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 单摆测 g 的核心公式怎么来的？g 的表达式是什么？",a:"由周期公式 T=2π√(L/g)，两边平方得 T²=4π²L/g，解出 g=4π²L/T²。测准 L 和 T 即可反解 g。"},
+ {q:"2. 摆长 L 指什么？怎么测？",a:"L 是悬点到小球球心的距离：L=摆线长 l + 小球半径 r。刻度尺量线长 l，游标卡尺量球直径 d（r=d/2），相加得 L。漏加 r 是头号错误。"},
+ {q:"3. 周期 T 为什么不直接测一个，而要用累积法？",a:"单周期只 ~2s，秒表启停误差(~0.2s)占比大。测 n 次全振动总时间 t，T=t/n，相对误差缩小到 1/n，更准。"},
+ {q:"4. 计时应该从哪个位置开始？为什么？",a:"从平衡位置（最低点）开始并在此计数。那里摆球速度最快，人眼判断经过时刻最准，误差最小。不能从最高点（速度为零）计时。"},
+ {q:"5. 图象法作什么图？斜率是什么？怎么由斜率求 g？",a:"作 T²-L 图（纵轴 T²，横轴 L），应为过原点直线，斜率 k=4π²/g，所以 g=4π²/k。"},
+ {q:"6. 图象法为什么比单次计算更准？",a:"多组数据取整体趋势，随机误差被平均；能剔除偏离直线的坏点；由「是否过原点」还能检验系统误差（如漏加球半径会使直线不过原点）。"},
+ {q:"7. 摆长漏加球半径，算出的 g 偏大还是偏小？",a:"偏小。L 测量值偏小 → g=4π²L/T² 分子变小 → g 偏小。"},
+ {q:"8. 数全振动时少数了一次(n 偏小)，g 偏大还是偏小？多数一次呢？",a:"少数一次：n 小 → T=t/n 偏大 → 分母大 → g 偏小。多数一次：n 大 → T 偏小 → g 偏大。"},
+ {q:"9. 为什么要求摆角小于 5°？摆角过大会使 g 怎样？",a:"只有小角度单摆才近似简谐，T=2π√(L/g) 才成立。摆角过大时真实周期偏大，测得 T 偏大，代入后 g 偏小。"},
+ {q:"10. 该选什么样的球和线？为什么？",a:"选密度大、体积小的金属球（可视为质点、空气阻力小、摆动稳）；线要细、不可伸长（保证摆长不变、线质量可忽略）。"},
+ {q:"11. 摆线长 l=98.0cm、球直径 d=2.0cm，测 50 次全振动用时 99.6s，求 g。",a:"r=1.0cm，L=99.0cm=0.99m；T=99.6/50=1.992s。g=4π²L/T²=4×9.86×0.99/(1.992²)≈39.06/3.968≈9.84 m/s²。"},
+ {q:"12. T²-L 图上取两点(0.4,1.6)和(1.0,4.0)，求斜率和 g。",a:"k=ΔT²/ΔL=(4.0−1.6)/(1.0−0.4)=2.4/0.6=4.0 s²/m。g=4π²/k=4×9.86/4.0≈9.86 m/s²。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数列的实际应用与建模 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>数列的实际应用与建模</h1>
+    <p class="lead">分期付款、银行贷款、复利存款、增长率、资源开采、细胞分裂……这些看似五花八门的应用题，本质上只有<b>三种数列模型</b>：每期加固定量的<b>等差</b>、每期乘固定倍的<b>等比</b>、以及本期由上期决定的<b>递推</b>。这一页教你把「现实问题」翻译成数列，再用公式一步算穿。</p>
+
+    <div class="say">🗣️ <b>数列应用题(人话版):</b> 所有增长、还款、存款问题，第一步都是把它<b>翻译成一列数</b> a₁, a₂, a₃…。然后只问一句话:<b>从这一期到下一期，是「加」还是「乘」?</b> 每期<b>加</b>固定量(每年多产 500 吨)→ <b>等差</b>;每期<b>乘</b>固定倍(利息按 1+r 滚)→ <b>等比</b>;说不清是加还是乘、但能写出「本期=上期怎么变来」(还款:欠款×利息−月供)→ 写<b>递推 aₙ=f(aₙ₋₁)</b>。判对模型，题就赢了一半。</div>
+
+    <div class="keybox"><b>三把钥匙:</b> ① <b>等差</b> aₙ=a₁+(n−1)d，Sₙ=n·a₁+n(n−1)d/2；② <b>等比</b> aₙ=a₁·qⁿ⁻¹，Sₙ=a₁(qⁿ−1)/(q−1) (q≠1)；③ <b>递推</b> aₙ=p·aₙ₋₁+c (还款/存取常见)。看到「增长率 p%」就用等比公比 q=1+p%;看到「求几年后达到」就<b>取对数或列不等式解 n</b>。</div>
+
+    <h2>① 等差模型:每期增减固定量</h2>
+    <div class="card">
+      <div class="eq">aₙ = a₁ + (n−1)d　　Sₙ = n·a₁ + n(n−1)d/2</div>
+      <p style="margin:8px 0"><b>识别信号:</b> 每一期比上一期<b>多(或少)一个固定的量 d</b>——注意是「加」不是「乘」。产量每年增加 500 吨、堆放钢管每层少 1 根、等差还款每期还固定本金、直线折旧每年减固定额，都是等差。</p>
+      <table>
+        <tr><th>现实说法</th><th>数列翻译</th></tr>
+        <tr><td>首期(第1年)的量</td><td>首项 a₁</td></tr>
+        <tr><td>每期固定增/减的量</td><td>公差 d(增为正、减为负)</td></tr>
+        <tr><td>第 n 期的量</td><td>aₙ = a₁+(n−1)d</td></tr>
+        <tr><td>前 n 期总量(累计)</td><td>Sₙ = n(a₁+aₙ)/2</td></tr>
+      </table>
+      <p class="trap">⚠ 每期「加固定量」才是等差;若是「按固定百分比增长」那是<b>等比</b>，别混。第 n 期用 (n−1)d 不是 n·d——首项不加 d。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 等差 vs 等比增长曲线对比:线性(直线) vs 指数(爆炸)，同一起点谁跑得快</div>
+      <svg id="cmpSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>首项 a₁ <input id="cmpA" type="range" min="1" max="10" value="4" step="1"></label>
+        <label>公差 d <input id="cmpD" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>公比 q <input id="cmpQ" type="range" min="1.1" max="2" value="1.4" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>等差第10项</b><span id="cmpAA">0</span></div>
+        <div><b>等比第10项</b><span id="cmpGG">0</span></div>
+        <div><b>谁大</b><span id="cmpWin">-</span></div>
+        <div><b>倍数比</b><span id="cmpR">0</span></div>
+      </div>
+      <p class="small">蓝点=等差(每期<b>加</b> d，连成<b>直线</b>);红点=等比(每期<b>乘</b> q，连成<b>上翘曲线</b>)。开始等差可能领先，但等比迟早反超——这就是「复利滚雪球」和「直线增长」的本质区别。</p>
+    </div>
+
+    <h2 class="b">② 等比模型:每期按比例增长(复利/增长率/折旧)</h2>
+    <div class="card">
+      <div class="eq">aₙ = a₁·qⁿ⁻¹　　Sₙ = a₁(qⁿ−1)/(q−1)　(q≠1)</div>
+      <p style="margin:8px 0"><b>识别信号:</b> 每一期比上一期<b>乘一个固定倍数 q</b>——即「按百分比增长/衰减」。复利存款(每年×(1+r))、人口增长率、细胞每小时分裂一次(×2)、设备逐年折旧(×(1−p))、放射性衰减，全是等比。</p>
+      <h3>复利公式(核心中的核心)</h3>
+      <div class="eq">本利和 A = P·(1+r)ⁿ　(P=本金, r=每期利率, n=期数)</div>
+      <p style="margin:8px 0">这就是等比数列的通项:首项 P·(1+r)、公比 (1+r)。<b>增长率问题</b>同理:量按 p% 增长 n 期后 = 原量×(1+p%)ⁿ;衰减则用 (1−p%)ⁿ。</p>
+      <p class="trap">⚠ 复利 ×(1+r)ⁿ 与单利(每期只按本金算，本利和=P(1+nr))完全不同!复利利滚利是等比，单利是等差。别把折旧的 (1−p) 写成 (1+p)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">❄️ 互动 2 — 复利滚雪球:本金逐期 ×(1+r)，看利息如何越滚越大(利滚利)</div>
+      <svg id="ciSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>本金 P(万) <input id="ciP" type="range" min="1" max="10" value="5" step="1"></label>
+        <label>年利率 r% <input id="ciR" type="range" min="2" max="15" value="8" step="1"></label>
+        <label>年数 n <input id="ciN" type="range" min="1" max="12" value="8" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>复利本利和 A</b><span id="ciA">0</span></div>
+        <div><b>单利本利和</b><span id="ciS">0</span></div>
+        <div><b>复利总利息</b><span id="ciI">0</span></div>
+        <div><b>复利−单利差</b><span id="ciD">0</span></div>
+      </div>
+      <p class="small">每根柱=某年年末本利和。深色底=本金，亮色顶=累计利息。复利下利息本身也生利息，柱子越往后长得越快;虚线是单利(利息不生利息，直线增长)。差距就是「利滚利」的威力。</p>
+    </div>
+
+    <h2 class="g">③ 递推模型:本期由上期决定 aₙ=f(aₙ₋₁)</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多还款/存取问题<b>既加又乘</b>:欠款先按利息乘 (1+r)，再减去月供。这种「说不清纯等差还是纯等比」的情形，就写<b>递推关系</b>。</p>
+      <div class="eq">典型递推:aₙ = (1+r)·aₙ₋₁ − x　(欠款滚利后减月供 x)</div>
+      <p style="margin:8px 0"><b>建立递推三步:</b> ① 设 aₙ 为「第 n 期末的量」(欠款、存款余额、库存…);② 想清楚从第 n−1 期末到第 n 期末<b>发生了什么</b>(滚利?加投入?取出?);③ 把「上期量怎么变成本期量」写成等式 aₙ=f(aₙ₋₁)。</p>
+      <h3>等额本息(分期付款)的数列建模</h3>
+      <p style="margin:6px 0">贷款 A 元，月利率 r，每月还 x 元，第 n 月末欠款 aₙ 满足 aₙ=(1+r)aₙ₋₁−x。设余款还清(a_N=0)，可解出每月还款额:</p>
+      <div class="eq">x = A·r·(1+r)ᴺ / [(1+r)ᴺ − 1]</div>
+      <p class="trap">⚠ 递推里 (1+r) 乘的是「上一期的全部余额」(利滚利)，不是只乘本金。写等式时先滚利再减还款，顺序别反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动 5 — 递推逐期计算器:aₙ=(1+r)aₙ₋₁−x，一格一格看余额怎么变(直到还清)</div>
+      <svg id="recSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="recStep">▶ 下一期</button><button id="recAuto">⏩ 自动跑完</button><button id="recReset">↺ 重置</button>
+        <label>贷款 A(万) <input id="recA" type="range" min="5" max="30" value="12" step="1"></label>
+        <label>月供 x(千) <input id="recX" type="range" min="3" max="12" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前期 n</b><span id="recN">0</span></div>
+        <div><b>本期末欠款 aₙ</b><span id="recBal">0</span></div>
+        <div><b>本期利息</b><span id="recInt">0</span></div>
+        <div><b>本期还本金</b><span id="recPri">0</span></div>
+      </div>
+      <p class="small">柱高=每期末欠款余额。每期:先滚利 ×(1+r)(欠款略涨)，再减月供 x(欠款下降)。前期利息多、还本少;越到后期本金占比越大。柱子降到 0 就是还清那一期。</p>
+    </div>
+
+    <h2 class="o">④ 增长率与求期数 n</h2>
+    <div class="card">
+      <h3>增长率问题:(1+p%)ⁿ</h3>
+      <p style="margin:6px 0">「某量以年增长率 p% 增长，n 年后是原来的多少」→ 直接 <b>原量×(1+p%)ⁿ</b>。衰减(折旧、消耗)用 (1−p%)ⁿ。这是等比通项的应用。</p>
+      <h3>求「达到某值需要几期」→ 解 n</h3>
+      <p style="margin:6px 0">这类问题把 n 放在<b>指数</b>上，解 n 有两条路:</p>
+      <div class="mono">路一(取对数):由 a₁·qⁿ⁻¹ ≥ M，两边取 lg，n−1 ≥ lg(M/a₁)/lg q，得 n。</div>
+      <div class="mono">路二(列不等式逐项试):算到 aₙ 首次 ≥ M 的那个 n(项数少时更快)。</div>
+      <p style="margin:8px 0"><b>例:</b> 存款年利率 6%，本金翻倍需几年? 解 (1.06)ⁿ ≥ 2 → n ≥ lg2/lg1.06 ≈ 0.301/0.0253 ≈ 11.9 → <b>n=12 年</b>(向上取整，因为要「达到」)。</p>
+      <p class="trap">⚠ 求「至少几年」结果一般<b>向上取整</b>(不足一期也算一期);求「最多几年不超过」则向下取整。取对数时 lg q 为正(q&gt;1)不等号方向不变。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 4 — (1+p)ⁿ 达到目标:滑动增长率和目标值，看第几期首次达标(取对数验证)</div>
+      <svg id="tgtSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>增长率 p% <input id="tgtP" type="range" min="3" max="20" value="8" step="1"></label>
+        <label>目标倍数 <input id="tgtM" type="range" min="1.5" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>首次达标期 n</b><span id="tgtN">0</span></div>
+        <div><b>取对数估算</b><span id="tgtLg">0</span></div>
+        <div><b>第n期实际倍数</b><span id="tgtV">0</span></div>
+        <div><b>第n−1期倍数</b><span id="tgtV0">0</span></div>
+      </div>
+      <p class="small">曲线=(1+p)ⁿ 逐期爬升，红色水平线=目标倍数。第一个<b>穿过红线</b>的点就是达标期 n。旁边给出 n≈lg(目标)/lg(1+p) 的取对数估算，与实际逐项结果对照。</p>
+    </div>
+
+    <h2 class="v">⑤ 方案比较:哪种更划算</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多题给两种方案(两种付款方式、两种存法、两种奖金)让你选优。<b>套路:各自建模求总额，再作差比较</b>。</p>
+      <table>
+        <tr><th>方案A(常见)</th><th>方案B(常见)</th></tr>
+        <tr><td>每期固定增(等差)</td><td>每期按比例增(等比)</td></tr>
+        <tr><td>一次性付清 / 单利</td><td>分期付款 / 复利</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>标准动作:</b> ① 分别写出两方案第 n 期或总和 Sₙ;② 作差 f(n)=Sₐ−S_b;③ 讨论 f(n) 的符号(常需分 n 的范围)得出「n 小时选谁、n 大时选谁」。等差 vs 等比往往有<b>交叉点</b>:短期等差划算，长期等比反超。</p>
+      <p class="trap">⚠ 比较要用<b>同一口径</b>(都算总支出、或都算到同一时点的现值)。别拿「月供」和「总额」直接比。看清是「求最省钱」还是「求收益最大」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 6 — 两方案对比选优:等差累计 vs 等比累计，哪个总额更高及交叉点在哪</div>
+      <svg id="planSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>等差每期 +d <input id="planD" type="range" min="2" max="12" value="6" step="1"></label>
+        <label>等比公比 q <input id="planQ" type="range" min="1.1" max="1.8" value="1.3" step="0.1"></label>
+        <label>期数 n <input id="planN" type="range" min="3" max="15" value="10" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>等差累计 Sₐ</b><span id="planA">0</span></div>
+        <div><b>等比累计 S_b</b><span id="planB">0</span></div>
+        <div><b>谁更高</b><span id="planWin">-</span></div>
+        <div><b>交叉期</b><span id="planCross">-</span></div>
+      </div>
+      <p class="small">两条累计曲线:蓝=等差方案累计和(直线加速)，橙=等比方案累计和(指数加速)。找它们的<b>交叉点</b>——交叉前一个方案累计更高，交叉后另一个反超。选优就看你要比到第几期。</p>
+    </div>
+
+    <h2 class="r">⑥ 存取款综合(既存又滚利)</h2>
+    <div class="card">
+      <p style="margin:6px 0">「每年年初存 P 元，年利率 r，n 年后共取回多少」——每笔钱滚利年数不同，是<b>等比求和</b>问题。</p>
+      <div class="eq">年金终值:S = P(1+r)[(1+r)ⁿ−1]/r　(每年初存 P，n 年末取)</div>
+      <p style="margin:8px 0"><b>拆解:</b> 第1年初存的 P 滚 n 年 = P(1+r)ⁿ;第2年初存的滚 n−1 年 = P(1+r)ⁿ⁻¹;……第 n 年初存的滚 1 年 = P(1+r)。这 n 项恰好是<b>等比数列</b>(首项 P(1+r)、公比 (1+r))，用求和公式一算即得上式。</p>
+      <p class="trap">⚠ 关键是数清每笔钱<b>各滚了几年</b>(存得早滚得久)。年初存 vs 年末存差一个 (1+r);别把 n 笔钱都当成滚同样年数。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">💰 互动 3 — 分期还款每期构成:同一月供里「利息」逐月减、「本金」逐月增(等额本息)</div>
+      <svg id="amSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="amcase on" data-c="0">利率 5%</button>
+        <button class="amcase" data-c="1">利率 8%</button>
+        <button class="amcase" data-c="2">利率 12%</button>
+      </div>
+      <div class="verdict" id="amNote"></div>
+      <p class="small">每根柱=一期的固定月供(总高相同)。下段(蓝)=还的利息，上段(黄)=还的本金。等额本息下:早期利息多、还本少;越往后利息越少、还本越多。利率越高，蓝色(利息)占比越大。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 等差应用(均匀增减)型</h3>
+      <p><b class="tag">触发信号:</b>「每年增加/减少固定的量」「每层少几根」「逐年多产 N 吨」，量的变化是<b>加减</b>不是倍数。</p>
+      <p><b class="tag">标准动作:</b>设首项 a₁、公差 d，写 aₙ=a₁+(n−1)d;求累计用 Sₙ=n(a₁+aₙ)/2。</p>
+      <p><b class="tag">示例(带建模+求解):</b>某厂首年产量 1000 吨，以后每年多产 200 吨。第 8 年产量 a₈=1000+7×200=2400 吨。前 8 年总产量 S₈=8×(1000+2400)/2=13600 吨。</p>
+      <p class="trap">陷阱:第 n 项误用 n·d(应是 (n−1)d);把「按百分比增长」当等差。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 等比应用(复利/增长率)型</h3>
+      <p><b class="tag">触发信号:</b>「年利率」「增长率 p%」「每年是上年的几倍」「翻倍/减半」「折旧率」，变化是<b>乘倍数</b>。</p>
+      <p><b class="tag">标准动作:</b>公比 q=1+r(或 1+p%、1−p%)，本利和 A=P(1+r)ⁿ;通项 aₙ=a₁qⁿ⁻¹。</p>
+      <p><b class="tag">示例(带建模+求解):</b>存本金 2 万，年利率 5% 复利，3 年后本利和 A=2×(1.05)³=2×1.157625=2.31525 万元。若是单利:2×(1+3×0.05)=2.30 万，比复利略少。</p>
+      <p class="trap">陷阱:复利写成单利;n 用错(存 3 年就是指数 3);折旧用 (1+p) 而非 (1−p)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 分期付款/贷款型</h3>
+      <p><b class="tag">触发信号:</b>「贷款 A 元每月还 x」「等额本息」「分 N 期还清」，要求月供或总利息。</p>
+      <p><b class="tag">标准动作:</b>设第 n 月末欠款 aₙ=(1+r)aₙ₋₁−x;令 a_N=0 解出 x=A·r(1+r)ᴺ/[(1+r)ᴺ−1]。</p>
+      <p><b class="tag">示例(带建模+求解):</b>贷 10 万，月利率 1%，分 12 期还清。x=100000×0.01×1.01¹²/(1.01¹²−1)。1.01¹²≈1.1268，x≈1000×1.1268/0.1268≈8885 元/月。总还 ≈12×8885=106620 元，利息约 6620 元。</p>
+      <p class="trap">陷阱:滚利只乘本金(应乘全部余额);顺序反(应先滚利再减还款)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 递推关系建模型</h3>
+      <p><b class="tag">触发信号:</b>「本期与上期有关系」「既滚利又存取」「今年数量由去年数量决定」，纯等差纯等比都套不上。</p>
+      <p><b class="tag">标准动作:</b>设 aₙ 为第 n 期末的量，弄清一期内发生了什么，写 aₙ=p·aₙ₋₁+c;必要时用「构造 aₙ+k 成等比」转化求通项。</p>
+      <p><b class="tag">示例(带建模+求解):</b>水库第 n 年末蓄水 aₙ=1.2aₙ₋₁−300(万m³)，a₁=1000。第 2 年末 a₂=1.2×1000−300=900;第 3 年 a₃=1.2×900−300=780。设不动点 a=1.2a−300→a=1500，则 aₙ−1500=1.2(aₙ₋₁−1500)，{aₙ−1500} 等比，通项 aₙ=1500−500×1.2ⁿ⁻¹。</p>
+      <p class="trap">陷阱:递推方向写反;不动点法漏掉常数项;把 aₙ 和 aₙ₋₁ 混淆。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 求达到某值所需期数型</h3>
+      <p><b class="tag">触发信号:</b>「几年后超过/达到 M」「多少期后翻倍」「至少存几年」，未知量 n 在<b>指数上</b>。</p>
+      <p><b class="tag">标准动作:</b>列 a₁qⁿ⁻¹ ≥ M(或 (1+p)ⁿ≥M)，两边取对数解 n，结果按题意取整。</p>
+      <p><b class="tag">示例(带建模+求解):</b>某城人口年增 3%，何时超过原来 1.5 倍? 解 (1.03)ⁿ≥1.5 → n≥lg1.5/lg1.03=0.1761/0.0128≈13.7 → n=14 年(向上取整)。</p>
+      <p class="trap">陷阱:该向上取整却向下;取对数不等号方向弄反;把 qⁿ⁻¹ 当 qⁿ。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 方案比较(哪种划算)型</h3>
+      <p><b class="tag">触发信号:</b>给两种付款/存款/奖金方案，问「哪种更省/更赚」「n 为何值时选谁」。</p>
+      <p><b class="tag">标准动作:</b>各写总额 Sₐ、S_b(一个常等差、一个常等比)，作差 f(n)=Sₐ−S_b，讨论符号分段得结论。</p>
+      <p><b class="tag">示例(带建模+求解):</b>方案A首月 1000、每月加 500(等差);方案B首月 800、每月×1.2(等比)。做到第几月B总额反超A? 逐月累计求和作差:短期A多(起点高、稳增)，B因指数在约第 6~7 月后总额反超。列 Sₐ(n) 与 S_b(n) 比较即得临界 n。</p>
+      <p class="trap">陷阱:比较口径不一(月供 vs 总额);忘了要分 n 的范围讨论。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>等差 vs 等比</b>判断:每期「加固定量」=等差(d);每期「乘固定倍/按百分比」=等比(q=1+p%)。这是全章第一分水岭，判错全盘皆输。</p>
+      <p class="trap">② <b>期数 n 从 0 还是 1 开始</b>:通常首项是第 1 项，第 n 期用 aₙ=a₁+(n−1)d 或 a₁qⁿ⁻¹;而「n 年后」的复利 A=P(1+r)ⁿ 指数是 n(存了 n 期)。分清「第几项」和「第几年后」。</p>
+      <p class="trap">③ <b>复利 vs 单利</b>:复利 P(1+r)ⁿ(等比、利滚利);单利 P(1+nr)(等差、只按本金)。题目说「利滚利/按复利」才用指数。</p>
+      <p class="trap">④ <b>递推关系</b>建立:先滚利再减还款，顺序不能反;(1+r) 乘的是全部余额不是本金。</p>
+      <p class="trap">⑤ <b>折旧/衰减</b>用 (1−p%)ⁿ，别写成 (1+p%)ⁿ;增长才是加。</p>
+      <p class="trap">⑥ <b>求 n 取整</b>:「至少/超过」向上取整，「最多/不超过」向下取整。取对数时看清 q 与 1 的大小定不等号方向。</p>
+      <p class="trap">⑦ <b>累计存款</b>要数清每笔钱各滚几年(存早滚久)，别当成都滚同样年数。</p>
+      <p class="trap">⑧ 通项里 <b>qⁿ⁻¹ 不是 qⁿ</b>:首项 a₁ 对应 n=1 时 q⁰=1，别多乘一个 q。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切应用题先问「加还是乘」:</b> 从 aₙ₋₁ 到 aₙ 是 +d 还是 ×q，决定等差还是等比;若又加又乘(×q 再 −x)就是递推 aₙ=q·aₙ₋₁+c。这一句话把整章应用题分成三类，判型比套公式重要一百倍。</p>
+      <p style="margin:8px 0"><b>② 递推 aₙ=p·aₙ₋₁+c 的「不动点法」通吃:</b> 令 a=pa+c 解出不动点 a*=c/(1−p)，则 {aₙ−a*} 是公比 p 的等比数列，通项 aₙ=a*+(a₁−a*)pⁿ⁻¹。分期还款、水库蓄水、药物代谢……全套这一招，不必每题现推。</p>
+      <p style="margin:8px 0"><b>③ 复利与单利的差是「利息的利息」:</b> P(1+r)ⁿ 展开 = P(1+nr+C(n,2)r²+…)，比单利 P(1+nr) 多出的高阶项就是利滚利。理解这点，就明白为什么长期、高利率下复利远超单利——差距是指数级的。</p>
+      <p style="margin:8px 0"><b>④ 求期数=解指数不等式，取对数是唯一硬通货:</b> qⁿ≥M ⇒ n≥lg M/lg q(q&gt;1)。记住 lg2≈0.301、lg3≈0.477 这几个值，考场没计算器也能估。翻倍时间 ≈ lg2/lg(1+r)，利率越高越快(72 法则的严格版)。</p>
+      <p style="margin:8px 0"><b>⑤ 方案比较的本质是「直线 vs 曲线找交点」:</b> 等差累计是二次函数(抛物线)，等比累计是指数函数。指数终将碾压任何多项式——所以「短期等差划算、长期等比反超」几乎是定律，交叉点位置由起点和增速决定，作差讨论符号即得。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 数列的实际应用与建模(等差·等比·递推三模型)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:等差 vs 等比增长曲线对比 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');
+  const As=document.getElementById('cmpA'),Ds=document.getElementById('cmpD'),Qs=document.getElementById('cmpQ');
+  const oAA=document.getElementById('cmpAA'),oGG=document.getElementById('cmpGG'),oWin=document.getElementById('cmpWin'),oR=document.getElementById('cmpR');
+  let A=4,D=3,Q=1.4;
+  function sync(){A=+As.value;D=+Ds.value;Q=+Qs.value;draw();}
+  As.oninput=Ds.oninput=Qs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=55,Y0=25,W=600,H=250,N=10;
+    // compute series
+    const ar=[],ge=[];
+    for(let i=1;i<=N;i++){ar.push(A+(i-1)*D);ge.push(A*Math.pow(Q,i-1));}
+    const vmax=Math.max(ar[N-1],ge[N-1]);
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='aₙ';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='n';
+    const sx=W/(N-1), sy=H/vmax;
+    function px(i){return X0+i*sx;}
+    function py(v){return Y0+H-v*sy;}
+    // arithmetic polyline (line)
+    let ap='';for(let i=0;i<N;i++){ap+=(i?' ':'')+px(i)+','+py(ar[i]);}
+    el(svg,'polyline',{points:ap,fill:'none',stroke:BLUE,'stroke-width':3});
+    // geometric polyline (curve)
+    let gp='';for(let i=0;i<N;i++){gp+=(i?' ':'')+px(i)+','+py(ge[i]);}
+    el(svg,'polyline',{points:gp,fill:'none',stroke:RED,'stroke-width':3});
+    // points + x labels
+    for(let i=0;i<N;i++){
+      el(svg,'circle',{cx:px(i),cy:py(ar[i]),r:4,fill:BLUE,stroke:INK,'stroke-width':1.5});
+      el(svg,'circle',{cx:px(i),cy:py(ge[i]),r:4,fill:RED,stroke:INK,'stroke-width':1.5});
+      if(i%1===0)el(svg,'text',{x:px(i),y:Y0+H+18,'font-size':10.5,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=(i+1);
+    }
+    // legend
+    el(svg,'rect',{x:X0+16,y:Y0+6,width:14,height:14,fill:BLUE});
+    el(svg,'text',{x:X0+34,y:Y0+18,'font-size':12.5,'font-weight':800,fill:BLUE}).textContent='等差 aₙ=a₁+(n−1)d（直线）';
+    el(svg,'rect',{x:X0+16,y:Y0+26,width:14,height:14,fill:RED});
+    el(svg,'text',{x:X0+34,y:Y0+38,'font-size':12.5,'font-weight':800,fill:RED}).textContent='等比 aₙ=a₁·qⁿ⁻¹（指数曲线）';
+    // stats
+    oAA.textContent=ar[N-1].toFixed(1);
+    oGG.textContent=ge[N-1].toFixed(1);
+    oWin.textContent=ge[N-1]>ar[N-1]?'等比':ge[N-1]<ar[N-1]?'等差':'相等';
+    oR.textContent=(ge[N-1]/ar[N-1]).toFixed(2)+'×';
+  }
+  sync();
+})();
+
+/* ===== 互动2:复利滚雪球 ===== */
+(function(){
+  const svg=document.getElementById('ciSvg');
+  const Ps=document.getElementById('ciP'),Rs=document.getElementById('ciR'),Ns=document.getElementById('ciN');
+  const oA=document.getElementById('ciA'),oS=document.getElementById('ciS'),oI=document.getElementById('ciI'),oD=document.getElementById('ciD');
+  let P=5,R=8,N=8;
+  function sync(){P=+Ps.value;R=+Rs.value;N=+Ns.value;draw();}
+  Ps.oninput=Rs.oninput=Ns.oninput=sync;
+  function draw(){
+    clr(svg);
+    const r=R/100;
+    const X0=55,Y0=30,W=600,H=220;
+    // compound and simple year-end totals
+    const comp=[],simp=[];
+    for(let i=1;i<=N;i++){comp.push(P*Math.pow(1+r,i));simp.push(P*(1+i*r));}
+    const vmax=comp[N-1];
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='万元';
+    const sy=H/vmax;
+    const bw=W/N*0.62, gap=W/N;
+    for(let i=0;i<N;i++){
+      const cx=X0+gap*i+gap*0.19;
+      const h=comp[i]*sy;
+      const y=Y0+H-h;
+      // principal part
+      const ph=P*sy;
+      el(svg,'rect',{x:cx,y:Y0+H-ph,width:bw,height:ph,fill:'#c9a227',stroke:INK,'stroke-width':2});
+      // interest part
+      const ih=h-ph;
+      el(svg,'rect',{x:cx,y:y,width:bw,height:ih,fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:cx+bw/2,y:Y0+H+16,'font-size':10.5,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=(i+1);
+    }
+    // simple-interest dashed line
+    let sp='';for(let i=0;i<N;i++){const cx=X0+gap*i+gap*0.19+bw/2;sp+=(i?' ':'')+cx+','+(Y0+H-simp[i]*sy);}
+    el(svg,'polyline',{points:sp,fill:'none',stroke:BLUE,'stroke-width':3,'stroke-dasharray':'7 5'});
+    // legend
+    el(svg,'rect',{x:X0+8,y:Y0+2,width:13,height:13,fill:'#c9a227'});
+    el(svg,'text',{x:X0+25,y:Y0+13,'font-size':11.5,'font-weight':800,fill:INK}).textContent='本金';
+    el(svg,'rect',{x:X0+70,y:Y0+2,width:13,height:13,fill:YEL});
+    el(svg,'text',{x:X0+87,y:Y0+13,'font-size':11.5,'font-weight':800,fill:'#8a6d10'}).textContent='复利累计利息';
+    el(svg,'line',{x1:X0+205,y1:Y0+9,x2:X0+228,y2:Y0+9,stroke:BLUE,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:X0+233,y:Y0+13,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='单利本利和(虚线)';
+    // stats
+    const A=comp[N-1], Sm=simp[N-1];
+    oA.textContent=A.toFixed(2)+'万';
+    oS.textContent=Sm.toFixed(2)+'万';
+    oI.textContent=(A-P).toFixed(2)+'万';
+    oD.textContent=(A-Sm).toFixed(2)+'万';
+  }
+  sync();
+})();
+
+/* ===== 互动5:递推逐期计算器 ===== */
+(function(){
+  const svg=document.getElementById('recSvg');
+  const As=document.getElementById('recA'),Xs=document.getElementById('recX');
+  const oN=document.getElementById('recN'),oBal=document.getElementById('recBal'),oInt=document.getElementById('recInt'),oPri=document.getElementById('recPri');
+  const r=0.01; // monthly rate 1%
+  let A=12,X=6,bal=0,n=0,hist=[],lastInt=0,lastPri=0,timer=null;
+  function sync(){A=+As.value;X=+Xs.value;reset();}
+  As.oninput=Xs.oninput=sync;
+  function reset(){
+    stopAuto();
+    bal=A*10000; n=0; hist=[bal]; lastInt=0; lastPri=0;
+    stats();draw();
+  }
+  function stopAuto(){if(timer){clearInterval(timer);timer=null;}}
+  function step(){
+    if(bal<=0)return;
+    const interest=bal*r;
+    let pay=X*1000;
+    let pri=pay-interest;
+    if(pay>=bal+interest){pay=bal+interest;pri=bal;}
+    bal=bal+interest-pay;
+    if(bal<1)bal=0;
+    n++; lastInt=interest; lastPri=pri;
+    hist.push(bal);
+    stats();draw();
+    if(bal<=0)stopAuto();
+  }
+  function stats(){
+    oN.textContent=n;
+    oBal.textContent=(bal/10000).toFixed(2)+'万';
+    oInt.textContent=n>0?lastInt.toFixed(0)+'元':'-';
+    oPri.textContent=n>0?lastPri.toFixed(0)+'元':'-';
+  }
+  function draw(){
+    clr(svg);
+    const X0=50,Y0=30,W=610,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='欠款';
+    const vmax=A*10000;
+    const sy=H/vmax;
+    const cnt=Math.max(hist.length,1);
+    const gap=W/Math.max(cnt,12);
+    const bw=gap*0.62;
+    for(let i=0;i<hist.length;i++){
+      const cx=X0+gap*i+gap*0.19;
+      const h=hist[i]*sy;
+      const col=(i===hist.length-1&&hist[i]<=0)?GREEN:GREEN;
+      el(svg,'rect',{x:cx,y:Y0+H-h,width:bw,height:h,fill:i===hist.length-1?ORANGE:GREEN,stroke:INK,'stroke-width':2});
+      if(i%2===0)el(svg,'text',{x:cx+bw/2,y:Y0+H+16,'font-size':10,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=i;
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0-10,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='aₙ=(1+1%)aₙ₋₁ − 月供　(橙=当前期)';
+    if(bal<=0&&n>0){el(svg,'text',{x:X0+W/2,y:Y0+H/2,'font-size':18,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='✔ 第 '+n+' 期还清!';}
+  }
+  document.getElementById('recStep').onclick=()=>{stopAuto();step();};
+  document.getElementById('recAuto').onclick=()=>{stopAuto();timer=setInterval(step,320);};
+  document.getElementById('recReset').onclick=reset;
+  sync();
+})();
+
+/* ===== 互动4:(1+p)^n 达到目标 ===== */
+(function(){
+  const svg=document.getElementById('tgtSvg');
+  const Ps=document.getElementById('tgtP'),Ms=document.getElementById('tgtM');
+  const oN=document.getElementById('tgtN'),oLg=document.getElementById('tgtLg'),oV=document.getElementById('tgtV'),oV0=document.getElementById('tgtV0');
+  let P=8,M=2;
+  function sync(){P=+Ps.value;M=+Ms.value;draw();}
+  Ps.oninput=Ms.oninput=sync;
+  function draw(){
+    clr(svg);
+    const p=P/100;
+    // find first n with (1+p)^n >= M
+    let n=1;while(Math.pow(1+p,n)<M&&n<60)n++;
+    const Nmax=Math.max(n+2,8);
+    const X0=55,Y0=25,W=600,H=250;
+    const vmax=Math.max(M*1.15,Math.pow(1+p,Nmax));
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='倍数';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='n';
+    const sx=W/Nmax, sy=H/vmax;
+    function px(i){return X0+i*sx;}
+    function py(v){return Y0+H-v*sy;}
+    // target line
+    el(svg,'line',{x1:X0,y1:py(M),x2:X0+W,y2:py(M),stroke:RED,'stroke-width':3,'stroke-dasharray':'8 5'});
+    el(svg,'text',{x:X0+W-4,y:py(M)-6,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='目标='+M+'倍';
+    // curve
+    let cp='';for(let i=0;i<=Nmax;i++){cp+=(i?' ':'')+px(i)+','+py(Math.pow(1+p,i));}
+    el(svg,'polyline',{points:cp,fill:'none',stroke:BLUE,'stroke-width':3});
+    for(let i=0;i<=Nmax;i++){
+      const v=Math.pow(1+p,i);
+      const hit=(i===n);
+      el(svg,'circle',{cx:px(i),cy:py(v),r:hit?6:4,fill:hit?RED:BLUE,stroke:INK,'stroke-width':hit?2.5:1.5});
+      el(svg,'text',{x:px(i),y:Y0+H+18,'font-size':10,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=i;
+    }
+    // mark n
+    el(svg,'line',{x1:px(n),y1:py(Math.pow(1+p,n)),x2:px(n),y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:px(n),y:py(Math.pow(1+p,n))-12,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='n='+n;
+    el(svg,'text',{x:X0+90,y:Y0+16,'font-size':12.5,'font-weight':800,fill:BLUE}).textContent='y=(1+'+P+'%)ⁿ';
+    // stats
+    const lgEst=Math.log10(M)/Math.log10(1+p);
+    oN.textContent=n;
+    oLg.textContent=lgEst.toFixed(2)+'→'+Math.ceil(lgEst);
+    oV.textContent=Math.pow(1+p,n).toFixed(3);
+    oV0.textContent=Math.pow(1+p,n-1).toFixed(3);
+  }
+  sync();
+})();
+
+/* ===== 互动6:两方案对比选优 ===== */
+(function(){
+  const svg=document.getElementById('planSvg');
+  const Ds=document.getElementById('planD'),Qs=document.getElementById('planQ'),Ns=document.getElementById('planN');
+  const oA=document.getElementById('planA'),oB=document.getElementById('planB'),oWin=document.getElementById('planWin'),oCross=document.getElementById('planCross');
+  let D=6,Q=1.3,N=10;
+  const a1=10, b1=10; // both start at 10 per period
+  function sync(){D=+Ds.value;Q=+Qs.value;N=+Ns.value;draw();}
+  Ds.oninput=Qs.oninput=Ns.oninput=sync;
+  function draw(){
+    clr(svg);
+    // cumulative sums
+    const SA=[],SB=[];let ca=0,cb=0;
+    for(let i=1;i<=N;i++){
+      ca+=a1+(i-1)*D;           // arithmetic term累计
+      cb+=b1*Math.pow(Q,i-1);   // geometric term累计
+      SA.push(ca);SB.push(cb);
+    }
+    const vmax=Math.max(SA[N-1],SB[N-1]);
+    const X0=55,Y0=25,W=600,H=250;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='累计';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='n';
+    const sx=W/(N-1||1), sy=H/vmax;
+    function px(i){return X0+i*sx;}
+    function py(v){return Y0+H-v*sy;}
+    let ap='',bp='';
+    for(let i=0;i<N;i++){ap+=(i?' ':'')+px(i)+','+py(SA[i]);bp+=(i?' ':'')+px(i)+','+py(SB[i]);}
+    el(svg,'polyline',{points:ap,fill:'none',stroke:BLUE,'stroke-width':3});
+    el(svg,'polyline',{points:bp,fill:'none',stroke:ORANGE,'stroke-width':3});
+    let cross=-1;
+    for(let i=0;i<N;i++){
+      el(svg,'circle',{cx:px(i),cy:py(SA[i]),r:4,fill:BLUE,stroke:INK,'stroke-width':1.5});
+      el(svg,'circle',{cx:px(i),cy:py(SB[i]),r:4,fill:ORANGE,stroke:INK,'stroke-width':1.5});
+      el(svg,'text',{x:px(i),y:Y0+H+18,'font-size':10,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=(i+1);
+      if(i>0&&cross<0&&(SA[i-1]-SB[i-1])*(SA[i]-SB[i])<0)cross=i+1;
+    }
+    if(cross>0){el(svg,'line',{x1:px(cross-1),y1:Y0,x2:px(cross-1),y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+      el(svg,'text',{x:px(cross-1),y:Y0+12,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='交叉≈n='+cross;}
+    // legend
+    el(svg,'rect',{x:X0+16,y:Y0+2,width:13,height:13,fill:BLUE});
+    el(svg,'text',{x:X0+33,y:Y0+13,'font-size':12,'font-weight':800,fill:BLUE}).textContent='等差方案累计';
+    el(svg,'rect',{x:X0+150,y:Y0+2,width:13,height:13,fill:ORANGE});
+    el(svg,'text',{x:X0+167,y:Y0+13,'font-size':12,'font-weight':800,fill:ORANGE}).textContent='等比方案累计';
+    // stats
+    oA.textContent=SA[N-1].toFixed(1);
+    oB.textContent=SB[N-1].toFixed(1);
+    oWin.textContent=SB[N-1]>SA[N-1]?'等比':SB[N-1]<SA[N-1]?'等差':'相等';
+    oCross.textContent=cross>0?('第'+cross+'期'):'区间内无';
+  }
+  sync();
+})();
+
+/* ===== 互动3:分期还款每期构成(利息/本金) ===== */
+(function(){
+  const svg=document.getElementById('amSvg');const note=document.getElementById('amNote');
+  let c=0;
+  const rates=[0.05,0.08,0.12];
+  const A=100000, N=12; // 贷10万分12期(此处按年利率、12期演示构成)
+  document.querySelectorAll('.amcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.amcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const r=rates[c];
+    // equal payment x
+    const x=A*r*Math.pow(1+r,N)/(Math.pow(1+r,N)-1);
+    // per-period interest & principal
+    let bal=A;const ints=[],pris=[];
+    for(let i=0;i<N;i++){const interest=bal*r;const principal=x-interest;ints.push(interest);pris.push(principal);bal-=principal;}
+    const X0=50,Y0=30,W=610,H=210;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    const sy=H/x*0.92;
+    const gap=W/N, bw=gap*0.6;
+    for(let i=0;i<N;i++){
+      const cx=X0+gap*i+gap*0.2;
+      const ih=ints[i]*sy, ph=pris[i]*sy;
+      // interest (blue) bottom
+      el(svg,'rect',{x:cx,y:Y0+H-ih,width:bw,height:ih,fill:BLUE,stroke:INK,'stroke-width':2});
+      // principal (yellow) top
+      el(svg,'rect',{x:cx,y:Y0+H-ih-ph,width:bw,height:ph,fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:cx+bw/2,y:Y0+H+16,'font-size':10,'font-weight':700,fill:INK,'text-anchor':'middle'}).textContent=(i+1);
+    }
+    // legend
+    el(svg,'rect',{x:X0+16,y:Y0+2,width:13,height:13,fill:BLUE});
+    el(svg,'text',{x:X0+33,y:Y0+13,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='还利息';
+    el(svg,'rect',{x:X0+110,y:Y0+2,width:13,height:13,fill:YEL});
+    el(svg,'text',{x:X0+127,y:Y0+13,'font-size':11.5,'font-weight':800,fill:'#8a6d10'}).textContent='还本金';
+    el(svg,'text',{x:X0+W/2,y:Y0-10,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='等额本息：每期总还款固定 = '+x.toFixed(0)+'元';
+    const totalInt=ints.reduce((s,v)=>s+v,0);
+    note.innerHTML='👉 年利率 '+(r*100).toFixed(0)+'%，贷 10 万分 12 期：每期固定还 <b>'+x.toFixed(0)+'</b> 元，总利息 <b>'+totalInt.toFixed(0)+'</b> 元。早期几乎全在还利息（蓝高），越往后本金占比越大（黄升）。利率越高，蓝色（利息）越厚。';
+    note.style.borderColor=c===0?GREEN:c===1?ORANGE:RED;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 应用题第一步判型：怎么区分等差和等比模型？",a:"看从上一期到下一期是「加」还是「乘」。每期加固定量 d → 等差 aₙ=a₁+(n−1)d；每期乘固定倍/按百分比增长 q=1+p% → 等比 aₙ=a₁qⁿ⁻¹。"},
+ {q:"2. 复利本利和公式？和单利有何不同？",a:"复利 A=P(1+r)ⁿ（等比、利滚利，利息也生利息）；单利本利和 P(1+nr)（等差、只按本金算利息）。长期、高利率下复利远超单利。"},
+ {q:"3. 某厂首年产 1000 吨，以后每年多产 200 吨，第 8 年产量和前 8 年总产量？",a:"等差：a₁=1000，d=200。a₈=1000+7×200=2400 吨。S₈=8×(1000+2400)/2=13600 吨。"},
+ {q:"4. 存 2 万，年利率 5% 复利，3 年后本利和？",a:"等比：A=2×(1.05)³=2×1.157625≈2.3153 万元。（单利只有 2×1.15=2.30 万，复利多一点。）"},
+ {q:"5. 等额本息贷款的递推关系怎么写？月供公式？",a:"设第 n 月末欠款 aₙ=(1+r)aₙ₋₁−x。令还清 a_N=0，解得每月还款 x=A·r(1+r)ᴺ/[(1+r)ᴺ−1]。"},
+ {q:"6. 建立递推关系要注意什么顺序？",a:"先按利率滚利（乘 1+r，且乘的是全部余额），再减去当期还款/取出。顺序反了就错。写成 aₙ=(1+r)aₙ₋₁−x。"},
+ {q:"7. 存款年利率 6%，本金翻倍需几年？（lg2≈0.301, lg1.06≈0.0253）",a:"解 (1.06)ⁿ≥2。取对数 n≥lg2/lg1.06≈0.301/0.0253≈11.9，向上取整 n=12 年。"},
+ {q:"8. 某城人口年增 3%，何时超过原来 1.5 倍？（lg1.5≈0.176, lg1.03≈0.0128）",a:"解 (1.03)ⁿ≥1.5。n≥lg1.5/lg1.03≈0.176/0.0128≈13.7，向上取整 n=14 年。"},
+ {q:"9. 设备价 10 万，每年折旧 20%，3 年后残值？折旧该用 (1+p) 还是 (1−p)？",a:"折旧/衰减用 (1−p%)ⁿ。残值=10×(1−0.2)³=10×0.512=5.12 万元。切勿写成 (1+0.2)。"},
+ {q:"10. 水库 aₙ=1.2aₙ₋₁−300，a₁=1000，用不动点法求通项？",a:"令 a=1.2a−300 → a*=1500。则 aₙ−1500=1.2(aₙ₋₁−1500)，{aₙ−1500} 等比（首项 −500、公比 1.2），通项 aₙ=1500−500×1.2ⁿ⁻¹。"},
+ {q:"11. 每年年初存 P 元、年利率 r，n 年末共取回多少？（说思路）",a:"每笔钱滚的年数不同：第1年初的滚 n 年 P(1+r)ⁿ、…、第 n 年初的滚 1 年 P(1+r)。这 n 项是等比数列，求和 S=P(1+r)[(1+r)ⁿ−1]/r。关键是数清各滚几年。"},
+ {q:"12. 方案比较题的通用套路？为什么常说「短期等差、长期等比」？",a:"各写总额 Sₐ、S_b，作差 f(n)=Sₐ−S_b，讨论符号分段。等比是指数增长，终将碾压等差（多项式），所以短期等差可能更高、长期等比反超，存在交叉点。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

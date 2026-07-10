@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>七选五 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+  /* 七选五 专用 */
+  .passage{background:#fff;border:3px solid var(--ink);padding:14px 16px;font-size:14.5px;line-height:2.0;font-weight:600}
+  .blank{display:inline-block;min-width:60px;border-bottom:3px solid var(--red);color:var(--red);font-weight:900;padding:0 6px;text-align:center}
+  .opt{border:3px solid var(--ink);background:var(--card);padding:8px 12px;margin:6px 0;font-size:13.5px;font-weight:700;box-shadow:2px 2px 0 var(--ink)}
+  .opt b{background:var(--yellow);padding:0 5px;font-weight:900}
+  .sol{font-size:13.5px;font-weight:700;color:var(--green);margin-top:8px;border-left:6px solid var(--green);padding:4px 12px;background:#fff}
+  .hl-pron{background:#c9e2ff;border-radius:3px;padding:0 2px}
+  .hl-conj{background:#ffd6a0;border-radius:3px;padding:0 2px}
+  .hl-rep{background:#c8f0d8;border-radius:3px;padding:0 2px}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">英语 · 攻坚包</div>
+    <h1>七选五 · 阅读填句补全</h1>
+    <p class="lead">七选五不考你「读懂多少」,它考你「<b>句子和句子之间怎么接上</b>」。一段话被抠掉 5 句,给你 7 个选项(2 个是干扰项),让你把每句放回它该在的位置。答题的全部功夫,就在<b>空的前一句和后一句</b>——它们像路标一样,用代词、连词、重复词、标点告诉你「这里该填什么」。读不懂全文没关系,读懂空前空后就够了。</p>
+
+    <div class="say">🗣️ <b>七选五(人话版):</b> 每个空都夹在两句话中间。你要做的,是当一个「<b>接头侦探</b>」——看空前那句说了啥、空后那句接了啥,再从 7 个选项里找那句<b>既能承上、又能启下</b>的。重点盯四种「路标」:①<b>代词</b>(this/these/they/it 指的是谁?)②<b>连词</b>(however 要转折、also 要并列、for example 要举例)③<b>重复词/同义替换</b>(空前提到的词,选项里换个说法又出现)④<b>标点和分号</b>。锁定 5 个,剩下 2 个自动就是<b>多余干扰项</b>。</div>
+
+    <div class="keybox"><b>一句话打法:</b> <b>先定位空的位置(段首/段中/段末)→ 再抓空前空后的路标(代词·连词·复现词)→ 用逻辑关系配对 → 排除 2 个无关/矛盾的干扰项。</b> 永远「空前空后一起看」,只看一边必错。</div>
+
+    <h2>① 看空的位置:段首 / 段中 / 段末各有各的活</h2>
+    <div class="card">
+      <p style="margin:8px 0">空落在段落的哪个位置,决定了它要干的活。这是第一层定位。</p>
+      <table>
+        <tr><th>空的位置</th><th>它承担的功能</th><th>要找的选项特征</th></tr>
+        <tr><td><b>段首</b></td><td>主题句 / 引出话题</td><td>概括性强、总起、常含关键名词,后文围绕它展开</td></tr>
+        <tr><td><b>段中</b></td><td>承上启下 / 过渡</td><td>既接上文又引下文,常含代词或连词</td></tr>
+        <tr><td><b>段末</b></td><td>总结 / 结论 / 收束</td><td>含 so / therefore / in short,或呼应本段开头</td></tr>
+      </table>
+      <p class="trap">⚠ 段首空别填「太具体的细节句」(它领不起全段);段末空别填「引出新话题的句子」(话说一半就结束了)。</p>
+    </div>
+
+    <h2 class="b">② 抓复现线索:代词 this/these/they 在指谁?</h2>
+    <div class="card">
+      <p style="margin:8px 0">最强的路标就是<b>代词复现</b>。如果空<b>后面</b>那句以 this / these / they / it / such / that 开头,那么这个代词指代的名词,十有八九就藏在<b>你要填的那句话里</b>。反过来,如果选项里出现 this / they,它指的东西一定在空<b>前面</b>已经出现过。</p>
+      <div class="mono">空后出现 "These + 复数名词" → 你填的那句里必须有一个复数名词供它指代</div>
+      <div class="mono">选项以 "It / This" 开头 → 空前一句必须已经提到「它」指的那个东西</div>
+      <p class="trap">⚠ 单复数要对上!空后是 "These methods",你填的句子里得有复数(methods/ways/steps),不能是单数 "a method"。</p>
+    </div>
+
+    <h2 class="g">③ 抓逻辑关系词:连词就是明牌</h2>
+    <div class="card">
+      <p style="margin:8px 0">连接词直接告诉你上下句的逻辑关系,是最不容易看走眼的路标。</p>
+      <div class="chips" style="margin:8px 0">
+        <span class="chip">However / But(转折)</span><span class="chip">Also / Besides(并列递进)</span><span class="chip">For example(举例)</span><span class="chip">Therefore / So(因果)</span><span class="chip">Finally / In short(收尾)</span>
+      </div>
+      <p style="margin:8px 0">如果选项以 <b>However</b> 开头,那空<b>前</b>那句一定和它意思<b>相反</b>;如果选项以 <b>For example</b> 开头,那空<b>前</b>必是一个「概括的观点」,选项是它的例子。<b>顺着连词的逻辑往前找那句配对的话</b>,答案自己就跳出来了。</p>
+      <p class="trap">⚠ 别只看到连词就开心。转折词要求前后<b>确实相反</b>,举例词要求前面<b>确实有个观点</b>。逻辑对不上,连词就是陷阱。</p>
+    </div>
+
+    <h2 class="o">④ 抓词汇复现与同义替换</h2>
+    <div class="card">
+      <p style="margin:8px 0">出题人爱在选项里「换个词说同一件事」。空前提到 <b>children</b>,正确选项可能用 <b>kids / young learners / them</b>;空前说 <b>save money</b>,选项说 <b>cut costs</b>。找到这种「同义线索链」,就等于找到了配对。</p>
+      <p style="margin:8px 0"><b>但要警惕「假复现」:</b> 有的干扰项故意也塞进空前的原词,勾你上钩。真复现要连<b>逻辑</b>一起对上,不能光看字面词一样。</p>
+      <p class="trap">⚠ 排除法:7 选 5,必有 2 个多余项。它们通常是「话题看着沾边、但逻辑接不上」或「和上下文矛盾」的句子。填完 5 个,回头验证剩下 2 个确实塞不进任何空,才算稳。</p>
+    </div>
+
+    <h2 class="v">⑤ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 段首主题句型</h3>
+      <p><b class="tag">触发信号:</b>空在段落<b>开头</b>(段首第一句),后面几句都在具体展开、举例、解释某个话题。</p>
+      <p><b class="tag">标准动作:</b>选一个<b>概括性、总起</b>的句子,它要能「罩住」后面所有细节。看后文反复出现的关键名词,主题句里往往就有它。</p>
+      <p><b class="tag">示例(带解):</b></p>
+      <div class="passage">Reading before bed is a habit worth keeping. <span class="blank">1</span> A good book slows your breathing and takes your mind off the day. Studies show people who read at night fall asleep faster.</div>
+      <p style="margin:6px 0"><b>选项:</b></p>
+      <div class="opt"><b>A.</b> It helps your body and mind get ready for sleep.</div>
+      <div class="opt"><b>B.</b> Many students play games on their phones at night.</div>
+      <div class="opt"><b>C.</b> Loud music can wake up your neighbours.</div>
+      <div class="sol">✅ 选 A。空后两句(放慢呼吸、更快入睡)都在讲「读书助眠」,空必须是这一小段的<b>总起主题句</b>。A 正好概括「帮身心准备睡眠」,后文全是它的展开。B/C 话题跑偏(游戏、噪音),逻辑接不上,是干扰项。</div>
+      <p class="trap">陷阱:选了一个「具体细节句」当段首——它领不起后文;或被 B 里的 "night"、C 里的 "wake up" 等表面词干扰。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 段中过渡句型(承上启下)</h3>
+      <p><b class="tag">触发信号:</b>空夹在段落<b>中间</b>,前有内容、后也有内容,像一座桥。</p>
+      <p><b class="tag">标准动作:</b>选一句<b>既接住上文、又领出下文</b>的话。常含代词(this/they)回指上文,或含连词引出下文的新层次。</p>
+      <p><b class="tag">示例(带解):</b></p>
+      <div class="passage">Many people want to eat healthily but find it hard to start. <span class="blank">2</span> For example, you can begin by adding one vegetable to each meal. Small changes like this are easier to keep.</div>
+      <p style="margin:6px 0"><b>选项:</b></p>
+      <div class="opt"><b>A.</b> The good news is that you can start with tiny steps.</div>
+      <div class="opt"><b>B.</b> Fast food is sold everywhere in big cities.</div>
+      <div class="opt"><b>C.</b> Doctors need many years of training.</div>
+      <div class="sol">✅ 选 A。空前说「想吃得健康但难开始」,空后 "For example" 举了「每餐加一份菜」的<b>小例子</b>。所以空必须提出「可以从<b>小</b>步骤开始」这个观点,才配得上后面的例子。A 的 "tiny steps" 正好和空后 "Small changes"、"one vegetable" 同义复现。B/C 与减肥/健康饮食的逻辑无关。</div>
+      <p class="trap">陷阱:忽略空后的 "For example",没意识到空必须是「被举例的那个观点」;或被 B 里 "food" 表面词勾走。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 段末总结句型</h3>
+      <p><b class="tag">触发信号:</b>空在段落<b>末尾</b>(最后一句),前面已把话讲完。</p>
+      <p><b class="tag">标准动作:</b>选一句<b>总结、收束、下结论</b>的话。常含 so / therefore / in short / that is why,或<b>呼应本段开头</b>。</p>
+      <p><b class="tag">示例(带解):</b></p>
+      <div class="passage">At first, learning to swim felt scary. I swallowed water and my arms got tired. But my coach stayed calm and told me to breathe slowly. Week by week I improved. <span class="blank">3</span></div>
+      <p style="margin:6px 0"><b>选项:</b></p>
+      <div class="opt"><b>A.</b> So now I feel safe and happy in the water.</div>
+      <div class="opt"><b>B.</b> My brother prefers playing basketball instead.</div>
+      <div class="opt"><b>C.</b> Swimming pools must be cleaned every day.</div>
+      <div class="sol">✅ 选 A。段落是一条「从害怕到进步」的时间线,空在末尾要<b>收尾</b>。A 以 "So" 引出结论,呼应开头 "felt scary" 的情绪反转(现在 safe and happy),完美收束。B 引出新人物(brother)话没说完,C 换了话题(泳池卫生),都不能当结尾。</div>
+      <p class="trap">陷阱:段末填了「引出新话题的句子」,让段落戛然而止;没抓住 "So" 这类总结信号。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 代词复现定位型</h3>
+      <p><b class="tag">触发信号:</b>空<b>后面</b>那句以 <b>This / These / They / It / Such</b> 开头,或选项本身以代词开头。</p>
+      <p><b class="tag">标准动作:</b>顺着代词找它<b>指代的名词</b>。空后是 "These + 复数名词",你填的句子里就得有对应的复数名词;注意<b>单复数一致</b>。</p>
+      <p><b class="tag">示例(带解):</b></p>
+      <div class="passage">Some birds travel thousands of miles every autumn. <span class="blank">4</span> These journeys can take several weeks and cross many countries.</div>
+      <p style="margin:6px 0"><b>选项:</b></p>
+      <div class="opt"><b>A.</b> They fly south to find warmer places and more food.</div>
+      <div class="opt"><b>B.</b> A single feather is very light and soft.</div>
+      <div class="opt"><b>C.</b> The zoo opens at nine every morning.</div>
+      <div class="sol">✅ 选 A。空后 "These <b>journeys</b>"(复数「旅程」)需要前面有一个「旅程」的概念供它回指。A 讲鸟「飞去南方(fly south)」正是一段旅程,且 "They" 回指空前的 "Some birds"——前后双向代词全对上。B 讲单根羽毛(单数、无「旅程」),C 讲动物园,都无法被 "These journeys" 指代。</div>
+      <p class="trap">陷阱:代词单复数不匹配(空后 These 复数,却填了单数句 B);或只顾找 "birds" 表面词,忽略 "journeys" 这个真正要被指代的名词。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 连接词定位型</h3>
+      <p><b class="tag">触发信号:</b>选项以 <b>However / But / Also / Besides / For example / Therefore</b> 等连词开头,或空前空后有明显逻辑落差。</p>
+      <p><b class="tag">标准动作:</b>读出连词要求的逻辑关系,再往<b>空前</b>找那句能满足这个关系的话。However 要相反,Also 要同类递进,Therefore 要因果。</p>
+      <p><b class="tag">示例(带解):</b></p>
+      <div class="passage">Video games are often blamed for wasting students' time. <span class="blank">5</span> However, some games can train quick thinking and teamwork.</div>
+      <p style="margin:6px 0"><b>选项:</b></p>
+      <div class="opt"><b>A.</b> Parents worry that games keep children away from study.</div>
+      <div class="opt"><b>B.</b> The new library will open next month.</div>
+      <div class="opt"><b>C.</b> Everyone agrees games are completely useless.</div>
+      <div class="sol">✅ 选 A。空后以 "However" 转折,说游戏「也有好处(训练思维和合作)」。那么空必须是一句<b>负面/担忧</b>的话,才能被 However 转过去。A(家长担心游戏耽误学习)是负面,和空前 "blamed for wasting time" 同向,再被 However 反转,逻辑严丝合缝。C「完全无用」太绝对,和后文矛盾;B 换了话题(图书馆)。</div>
+      <p class="trap">陷阱:看到 However 却没往前找「相反的一句」;或被 C 的绝对化表述迷惑(七选五极少选「completely/never」这种一刀切的句子)。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔦 互动 1 — 空格前后线索高亮:点空格,前后句的代词/连词/复现词自动变色</div>
+      <div id="hlPassage" class="passage" style="margin-bottom:8px"></div>
+      <div class="ctrl">
+        <button id="hlB1">聚焦空 [1]</button><button id="hlB2">聚焦空 [2]</button><button id="hlReset">↺ 全部还原</button>
+      </div>
+      <div class="verdict" id="hlNote">点上面的按钮,看看每个空的「前一句 · 后一句」里藏着哪些路标。</div>
+      <p class="small"><span class="hl-pron">蓝=代词(this/they/it)</span>　<span class="hl-conj">橙=连词(however/also/for example)</span>　<span class="hl-rep">绿=复现词/同义词</span>。这些就是你锁定答案的钉子。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🧩 互动 2 — 选项拖入空格:把句子拖进空,看逻辑通不通顺</div>
+      <div id="dragPassage" class="passage" style="margin-bottom:8px"></div>
+      <div id="dragOpts"></div>
+      <div class="ctrl">
+        <button id="dragCheck">✓ 检查逻辑</button><button id="dragReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="dragNote">把下面的选项拖到段落里的空格上(手机可点选项再点空格)。填对了会变绿,填错会提示为什么接不上。</div>
+      <p class="small">正确答案:靠代词回指 + 连词逻辑锁定。拖错时,系统会告诉你「代词对不上」还是「逻辑矛盾」。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔗 互动 3 — 代词复现连线:空里的名词 ↔ 空后的 this/they</div>
+      <svg id="linkSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="linkcase on" data-c="0">These journeys</button>
+        <button class="linkcase" data-c="1">They (birds)</button>
+        <button class="linkcase" data-c="2">单复数不匹配 ✗</button>
+      </div>
+      <div class="verdict" id="linkNote"></div>
+      <p class="small">左边是你填的句子(含名词),右边是空后的代词。连线连得上、单复数一致 → 填对;连不上或数目不符 → 干扰项。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🏷️ 互动 4 — 信号词类型标注:点句首连词,判断它要求什么逻辑</div>
+      <div id="sigList"></div>
+      <div class="verdict" id="sigNote">点一个句子,看它开头的信号词要求「空前」是什么关系。</div>
+      <p class="small">连词是明牌:however=前后相反,also=同类递进,for example=前面有观点,therefore=前面是原因。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🗑️ 互动 5 — 干扰项排除演示:5 填空 + 7 选项,填对后剩下的就是多余项</div>
+      <div id="exPassage" class="passage" style="margin-bottom:8px"></div>
+      <div id="exOpts"></div>
+      <div class="ctrl">
+        <button id="exAuto">▶ 自动演示配对</button><button id="exReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="exNote">共 7 个选项,只有 5 个能进段落。点「自动演示」看每个空怎么锁定,最后<b>剩下 2 个</b>就是干扰项。</div>
+      <p class="small">干扰项特征:话题沾边但逻辑接不上,或与上下文矛盾。填完 5 个务必回头验证剩下 2 个塞不进任何空。</p>
+    </div>
+
+    <h2 class="r">⑥ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>只看空前不看空后</b>:答案往往由空后那句(尤其是代词、连词)决定。必须「前后一起看」,只看一边极易掉坑。</p>
+      <p class="trap">② <b>被相同词汇干扰(假复现)</b>:干扰项故意塞进空前出现过的原词勾你。真复现要连<b>逻辑</b>一起对上,光字面词一样没用。</p>
+      <p class="trap">③ <b>多余选项没排除</b>:填完 5 个不回头验证,导致某个空硬塞了干扰项。剩下的 2 项必须确认「塞不进任何空」。</p>
+      <p class="trap">④ <b>代词单复数不匹配</b>:空后 "These/They"(复数)却填了单数句;空后 "It/This"(单数)却填了复数句。数目对不上直接排除。</p>
+      <p class="trap">⑤ <b>无视连词的逻辑要求</b>:选项有 However 却没往前找「相反的一句」;有 For example 却前面没有可被举例的观点。</p>
+      <p class="trap">⑥ <b>段首填细节、段末引新题</b>:段首要总起(填了细节句领不起全段);段末要收尾(填了引出新话题的句子让段落断掉)。</p>
+      <p class="trap">⑦ <b>选了绝对化句子</b>:含 completely / never / everyone / all 的一刀切句,七选五里通常是干扰项(和后文常矛盾)。</p>
+    </div>
+
+    <h2 class="v">⑦ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 七选五本质是「衔接与连贯(cohesion)」考试:</b> 它不考单词量,考的是句子之间的「胶水」——指代(this/they)、连接(however/also)、复现(同义替换)。把每个空当成一道「两句之间缺了哪块胶水」的题,而不是「读懂这段讲啥」的题,速度和准确率都会翻倍。</p>
+      <p style="margin:8px 0"><b>② 建立「路标优先级」:</b> 代词 &gt; 连词 &gt; 复现词 &gt; 泛读语义。先扫空后有没有 this/these/they(最硬的定位);再看选项和空前有没有连词逻辑;再看同义复现;最后才靠整体意思兜底。按这个顺序找,不会在语义上打转。</p>
+      <p style="margin:8px 0"><b>③ 先解「最确定」的空,别按顺序做:</b> 哪个空的代词/连词线索最明显就先填哪个。每填一个,选项池就少一个,后面的空越来越好选。这就是「排除法」的威力——把 7 选 5 逐步逼成 3 选 1、2 选 1。</p>
+      <p style="margin:8px 0"><b>④ 干扰项的两张脸:</b> 一是「话题相关但逻辑错位」(词很像,但接不上前后逻辑);二是「过于绝对/片面」(completely useless 之类)。认出这两张脸,最后剩下的 2 个多余项一眼就能验证,反过来给你的 5 个答案上双保险。</p>
+      <p style="margin:8px 0"><b>⑤ 用「回读法」自检:</b> 5 个空全填完后,<b>把整段连起来读一遍</b>。如果读到某处「接不上气」或代词指代混乱,那个空就填错了。连贯的段落读起来是「顺」的——这是最后也是最可靠的一道验证。</p>
+    </div>
+
+    <h2 class="b">⑧ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 英语攻坚包 · 七选五:考「句子间的胶水」,不考「读懂多少」</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+
+/* ===== 互动1:空格前后线索高亮 ===== */
+(function(){
+  const box=document.getElementById('hlPassage');
+  const note=document.getElementById('hlNote');
+  // 段落片段,标注哪些词是路标
+  const html=
+    "Learning a new language takes patience. "+
+    '<span class="blank">1</span> '+
+    'For example, you can <span data-k="rep1">watch short videos</span> or <span data-k="rep1">read simple stories</span> every day. '+
+    "Doing a little often works better than studying for hours once a week. "+
+    '<span class="blank">2</span> '+
+    '<span data-k="pron2">These small habits</span> slowly build real skill over time.';
+  box.innerHTML=html;
+  function reset(){
+    box.querySelectorAll('span[data-k]').forEach(s=>{s.className="";});
+    box.querySelectorAll('.blank').forEach(b=>b.style.background="");
+    note.textContent="点上面的按钮,看看每个空的「前一句 · 后一句」里藏着哪些路标。";
+  }
+  document.getElementById('hlB1').onclick=()=>{
+    reset();
+    box.querySelectorAll('.blank')[0].style.background=YEL;
+    box.querySelectorAll('[data-k=rep1]').forEach(s=>s.className="hl-rep");
+    // 高亮 For example 这个连词:它在文本里,单独包一下
+    note.innerHTML='空 [1] 是<b>段中过渡/主题</b>句。空后出现 <span class="hl-conj">For example</span> → 空必须是一个「被举例的观点」;后面的 <span class="hl-rep">watch videos / read stories</span> 是它的具体例子。所以要填「有很多简单方法可以练习」这类总起句。';
+  };
+  document.getElementById('hlB2').onclick=()=>{
+    reset();
+    box.querySelectorAll('.blank')[1].style.background=YEL;
+    box.querySelectorAll('[data-k=pron2]').forEach(s=>s.className="hl-pron");
+    note.innerHTML='空 [2] 是<b>代词复现</b>型。空后 <span class="hl-pron">These small habits</span>(复数「小习惯」)必须指代空里提到的东西 → 你填的句子里要有「养成日常小习惯」这类<b>复数概念</b>的名词,单复数才对得上。';
+  };
+  document.getElementById('hlReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 互动2:选项拖入空格 ===== */
+(function(){
+  const pass=document.getElementById('dragPassage');
+  const optBox=document.getElementById('dragOpts');
+  const note=document.getElementById('dragNote');
+  // 一个空 + 三个选项,只有一个对
+  const opts=[
+    {id:"A",text:"However, staying up too late can harm your health.",ok:false,why:"逻辑矛盾:空前是「早睡好处」的正面语气,However 要转折,但这里前后其实同向且下文继续讲好处,接不上。"},
+    {id:"B",text:"It gives your brain time to rest and recover.",ok:true,why:"代词 It 回指空前的 sleep;内容承接「睡够觉的好处」,并引出下文「记忆更好」。承上启下,正确。"},
+    {id:"C",text:"My favourite colour is blue.",ok:false,why:"话题完全无关,典型干扰项。"}
+  ];
+  let filled=null;
+  function build(){
+    pass.innerHTML='Getting enough sleep is very important for students. <span id="dropSlot" class="blank" style="min-width:120px">拖到这里</span> With enough rest, you remember lessons better the next day.';
+    optBox.innerHTML="";
+    opts.forEach(o=>{
+      const d=document.createElement('div');
+      d.className="opt";d.setAttribute('draggable','true');d.dataset.id=o.id;
+      d.innerHTML='<b>'+o.id+'.</b> '+o.text;
+      d.addEventListener('dragstart',e=>{e.dataTransfer.setData('text',o.id);});
+      d.addEventListener('click',()=>{selected=o.id;highlightSel();});
+      optBox.appendChild(d);
+    });
+    const slot=document.getElementById('dropSlot');
+    slot.addEventListener('dragover',e=>e.preventDefault());
+    slot.addEventListener('drop',e=>{e.preventDefault();place(e.dataTransfer.getData('text'));});
+    slot.addEventListener('click',()=>{if(selected)place(selected);});
+    filled=null;selected=null;
+    note.innerHTML="把下面的选项拖到段落里的空格上(手机可点选项再点空格)。填对了会变绿,填错会提示为什么接不上。";
+  }
+  let selected=null;
+  function highlightSel(){optBox.querySelectorAll('.opt').forEach(x=>x.style.borderColor=x.dataset.id===selected?RED:INK);}
+  function place(id){
+    filled=id;
+    const o=opts.find(x=>x.id===id);
+    const slot=document.getElementById('dropSlot');
+    slot.textContent=id;
+    slot.style.background=YEL;
+    note.innerHTML='已放入 <b>'+id+'</b>。点「检查逻辑」看对不对。';
+  }
+  document.getElementById('dragCheck').onclick=()=>{
+    if(!filled){note.textContent="先拖一个选项进空格。";return;}
+    const o=opts.find(x=>x.id===filled);
+    const slot=document.getElementById('dropSlot');
+    slot.style.background=o.ok?"#c8f0d8":"#ffc9c4";
+    note.innerHTML=(o.ok?'✅ 正确! ':'❌ 不对。')+o.why;
+  };
+  document.getElementById('dragReset').onclick=build;
+  build();
+})();
+
+/* ===== 互动3:代词复现连线 ===== */
+(function(){
+  const svg=document.getElementById('linkSvg');
+  const note=document.getElementById('linkNote');
+  let c=0;
+  document.querySelectorAll('.linkcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.linkcase').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  const cases=[
+    {left:"...they fly south for the winter.",noun:"journeys(复数,来自 fly south)",right:"These journeys take weeks.",pron:"These journeys",ok:true,
+     msg:"空里「往南飞」= 一段段旅程(复数概念);空后 These journeys 正好回指。单复数一致 → 连得上 → 填对!"},
+    {left:"Some birds travel far each year.",noun:"birds(复数)",right:"They need lots of energy.",pron:"They",ok:true,
+     msg:"空里 birds(复数);空后 They 回指 birds。人/物都对,复数对复数 → 连得上 → 填对!"},
+    {left:"A single feather is very light.",noun:"feather(单数)",right:"These parts help birds fly.",pron:"These parts",ok:false,
+     msg:"空后 These parts 是复数,但空里只有单数 feather,数目对不上,也没有「parts」的概念 → 连不上 → 这是干扰项,排除!"}
+  ];
+  function draw(){
+    clr(svg);
+    const d=cases[c];
+    // 左框
+    el(svg,'rect',{x:30,y:60,width:290,height:70,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:40,y:50,'font-size':13,'font-weight':900,fill:INK}).textContent='你填的句子(含名词)';
+    wrapText(svg,d.left,40,84,270,13);
+    el(svg,'text',{x:40,y:150,'font-size':12,'font-weight':800,fill:BLUE}).textContent='→ 可被指代的名词: '+d.noun;
+    // 右框
+    el(svg,'rect',{x:400,y:60,width:270,height:70,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:410,y:50,'font-size':13,'font-weight':900,fill:INK}).textContent='空后一句(含代词)';
+    wrapText(svg,d.right,410,84,250,13);
+    el(svg,'text',{x:410,y:150,'font-size':12,'font-weight':800,fill:VIO}).textContent='→ 代词: '+d.pron;
+    // 连线
+    const col=d.ok?GREEN:RED;
+    el(svg,'line',{x1:320,y1:95,x2:400,y2:95,stroke:col,'stroke-width':5,'stroke-dasharray':d.ok?'0':'7 5'});
+    el(svg,'polygon',{points:'400,89 412,95 400,101',fill:col});
+    el(svg,'text',{x:360,y:82,'font-size':13,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=d.ok?'✓ 对得上':'✗ 对不上';
+    note.innerHTML=(d.ok?'✅ ':'❌ ')+d.msg;
+    note.style.borderColor=col;
+  }
+  function wrapText(p,txt,x,y,w,fs){
+    const words=txt.split(' ');let line="",yy=y;
+    words.forEach(word=>{
+      const test=line+word+" ";
+      if(test.length*fs*0.55>w){el(p,'text',{x:x,y:yy,'font-size':fs,'font-weight':700,fill:INK}).textContent=line;line=word+" ";yy+=18;}
+      else line=test;
+    });
+    el(p,'text',{x:x,y:yy,'font-size':fs,'font-weight':700,fill:INK}).textContent=line;
+  }
+  draw();
+})();
+
+/* ===== 互动4:信号词类型标注 ===== */
+(function(){
+  const list=document.getElementById('sigList');
+  const note=document.getElementById('sigNote');
+  const data=[
+    {s:"However, some games can train the brain.",w:"However",need:"空前必须是一句「相反/负面」的话(转折)",col:ORANGE},
+    {s:"Also, reading widens your vocabulary.",w:"Also",need:"空前必须是「同类的一个好处/观点」(并列递进)",col:GREEN},
+    {s:"For example, you can start with one page a day.",w:"For example",need:"空前必须是一个「概括的观点」,本句是它的例子(举例)",col:BLUE},
+    {s:"Therefore, we should sleep earlier.",w:"Therefore",need:"空前必须是「原因/前提」,本句是它的结论(因果)",col:VIO},
+    {s:"In short, small steps lead to big changes.",w:"In short",need:"这是段末「总结」信号,呼应/收束全段(常在段尾)",col:RED}
+  ];
+  data.forEach((d,i)=>{
+    const div=document.createElement('div');
+    div.className="opt";div.style.cursor="pointer";
+    div.innerHTML='<b>'+d.w+'</b> ... '+d.s.slice(d.w.length);
+    div.onclick=()=>{
+      list.querySelectorAll('.opt').forEach(x=>x.style.borderColor=INK);
+      div.style.borderColor=d.col;
+      note.innerHTML='信号词 <b>'+d.w+'</b> → '+d.need+'。';
+      note.style.borderColor=d.col;
+    };
+    list.appendChild(div);
+  });
+})();
+
+/* ===== 互动5:干扰项排除演示 ===== */
+(function(){
+  const pass=document.getElementById('exPassage');
+  const optBox=document.getElementById('exOpts');
+  const note=document.getElementById('exNote');
+  // 段落含 5 空
+  const paraParts=[
+    "Keeping a diary is a simple but powerful habit. ",
+    " First, it helps you remember the good moments of each day. ",
+    " Writing them down also lets you see how much you have grown. ",
+    " Besides memories, a diary is a safe place for your feelings. ",
+    " When you are angry or sad, putting words on paper can calm you down. ",
+    " So why not start tonight with just a few lines?"
+  ];
+  // 5 个空对应的正确选项 id,加 2 个干扰项
+  const opts=[
+    {id:"A",text:"It records what really happened, not just what you feel.",slot:0,why:"段首后的主题展开:It 回指 diary,总起「记录」功能。"},
+    {id:"B",text:"These memories become treasures when you are older.",slot:1,why:"These memories 回指前句 the good moments,复数对上。"},
+    {id:"C",text:"Looking back, you notice small changes in yourself.",slot:2,why:"承接「看到自己成长」,与 how much you have grown 同义复现。"},
+    {id:"D",text:"You can write anything without fear of being judged.",slot:3,why:"解释「安全空间」,承接 a safe place for your feelings。"},
+    {id:"E",text:"This little routine slowly makes you calmer and stronger.",slot:4,why:"段末总结:This routine 回指写日记的习惯,呼应全段。"},
+    {id:"F",text:"Smartphones are the most popular gift this year.",slot:-1,why:"❌ 干扰项:话题(手机礼物)与写日记无关,塞不进任何空。"},
+    {id:"G",text:"Everyone must exercise for two hours every day.",slot:-1,why:"❌ 干扰项:话题(运动)无关,且「everyone/must」绝对化,是典型多余项。"}
+  ];
+  let step=0;
+  function build(){
+    // 段落带 5 个空
+    let html="";
+    for(let i=0;i<5;i++){html+=paraParts[i]+'<span class="blank" id="exSlot'+i+'" style="min-width:100px">'+(i+1)+'</span>';}
+    html+=paraParts[5];
+    pass.innerHTML=html;
+    optBox.innerHTML="";
+    opts.forEach(o=>{
+      const d=document.createElement('div');d.className="opt";d.id="exOpt"+o.id;
+      d.innerHTML='<b>'+o.id+'.</b> '+o.text;
+      optBox.appendChild(d);
+    });
+    step=0;
+    note.innerHTML="共 7 个选项,只有 5 个能进段落。点「自动演示」看每个空怎么锁定,最后<b>剩下 2 个</b>就是干扰项。";
+  }
+  function fillOne(){
+    const winners=opts.filter(o=>o.slot>=0).sort((a,b)=>a.slot-b.slot);
+    if(step<winners.length){
+      const o=winners[step];
+      const slot=document.getElementById('exSlot'+o.slot);
+      slot.textContent=o.id;slot.style.background="#c8f0d8";slot.style.color=INK;
+      const od=document.getElementById('exOpt'+o.id);
+      od.style.background="#c8f0d8";od.style.opacity="0.55";
+      note.innerHTML='空 ['+(o.slot+1)+'] ← 选 <b>'+o.id+'</b>。'+o.why;
+      step++;
+    }else{
+      // 高亮剩下 2 个干扰项
+      opts.filter(o=>o.slot<0).forEach(o=>{
+        const od=document.getElementById('exOpt'+o.id);od.style.background="#ffc9c4";od.style.borderColor=RED;
+      });
+      note.innerHTML='✅ 5 个空全部锁定! 剩下 <b>F、G</b> 就是<b>多余干扰项</b>——话题无关或绝对化,塞不进任何空。这一步的回头验证不能省。';
+    }
+  }
+  document.getElementById('exAuto').onclick=fillOne;
+  document.getElementById('exReset').onclick=build;
+  build();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 七选五的答题核心是「读懂全文」还是「看句间衔接」? 主要盯哪四类路标?",a:"看句间衔接(cohesion),不是读懂全文。四类路标:①代词(this/these/they/it 指代谁)②连词(however/also/for example/therefore)③词汇复现与同义替换 ④标点/位置。永远空前空后一起看。"},
+ {q:"2. 空后一句以 \"These methods\" 开头,对你要填的句子有什么硬性要求?",a:"你填的句子里必须有一个「复数名词」(如 ways/steps/methods 之类概念)供 These 回指,且单复数要一致——不能填单数句。"},
+ {q:"3. 选项以 \"However\" 开头,该怎么找它的位置?",a:"顺着转折逻辑往空前找一句「意思相反」的话。However 要求空前后语义相反,前后对不上就是陷阱。"},
+ {q:"4. 段首空、段中空、段末空分别该填什么样的句子?",a:"段首→概括总起的主题句;段中→承上启下的过渡句(常含代词/连词);段末→总结收束句(常含 so/therefore/in short 或呼应开头)。"},
+ {q:"5. 什么叫「假复现」? 怎么避免被它坑?",a:"干扰项故意塞进空前出现过的原词来勾你。避免:真复现要连「逻辑」一起对上,光字面词相同不算,必须验证前后逻辑通顺。"},
+ {q:"6. 7 选 5,那 2 个多余干扰项通常长什么样?",a:"一是「话题沾边但逻辑接不上/矛盾」,二是「过于绝对(completely/never/everyone/all)」。填完 5 个要回头验证这 2 个塞不进任何空。"},
+ {q:"7. 做题该按题号顺序填,还是先填最有把握的?为什么?",a:"先填线索最明显(代词/连词最硬)的空。每填一个,选项池就少一个,把 7 选 5 逐步逼成 3 选 1、2 选 1,越往后越好选。"},
+ {q:"8. 【实战】看空后 \"For example, you can join a club.\" 这个空该填哪类句子?",a:"填一个「概括的观点」,让后面的 join a club 成为它的例子。例如「有很多方法可以交到新朋友」。空前/空必须是被举例的那个总观点。"},
+ {q:"9. 【实战】段落讲「先害怕→慢慢进步」,最后一空(段末)在时间线结尾,该选什么?",a:"选总结/收尾句,常以 So/Therefore 引出结论并呼应开头情绪的反转(如「所以现在我很享受它」)。别选引出新人物/新话题的句子,那会让段落断掉。"},
+ {q:"10. 5 个空全填完后,最后一步自检该做什么?",a:"用「回读法」:把整段连起来读一遍。若某处「接不上气」或代词指代混乱,那个空就填错了。连贯的段落读起来是顺的,这是最可靠的验证。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
