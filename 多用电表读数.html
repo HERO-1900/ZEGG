@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多用电表的使用与读数 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>多用电表的使用与读数</h1>
+    <p class="lead">多用电表(万用表)是一块表干三件事:测<b>直流电压</b>、测<b>直流电流</b>、测<b>电阻</b>。它靠一个<b>选择开关</b>换挡,同一根指针在同一条表盘上读出不同的量。读数的全部难点就藏在一句话里:<b>电压电流挡刻度均匀正着读,电阻挡刻度不均匀反着读、还要乘倍率</b>。这一页把每个挡的读法、欧姆调零、倍率选择、使用规则一次讲透。</p>
+
+    <div class="say">🗣️ <b>多用电表(人话版):</b> 一块表测电压、电流、电阻。表盘上有好几行刻度:<b>电阻挡那行刻度右边密、左边疏,右端是 0、左端是 ∞,读数从右往左「反着读」</b>;<b>电压挡电流挡那行刻度是均匀的,左端 0、右端满量程,正着读</b>。不管哪个挡,<b>读数 = 刻度上的示数 × 倍率(量程)</b>。电阻挡每换一次倍率,必须把红黑表笔短接、重新拧「欧姆调零」旋钮把指针调到 0Ω,不然读数全错。</div>
+
+    <div class="keybox"><b>一句话读数法:</b> <b>电阻挡:读数 = 表盘示数 × 倍率</b>(如指针指 20,倍率×100 → 2000Ω);<b>电压/电流挡:先看量程算「每格代表多少」,读数 = 格数 × 每格值</b>。核心口诀:<b>电阻挡右零左无穷、右密左疏、乘倍率;电压电流挡均匀刻度、看量程、正着读</b>。</div>
+
+    <h2>① 表盘认识:两套刻度,读法相反</h2>
+    <div class="card">
+      <p style="margin:8px 0">多用电表的表盘上叠着几行刻度,最上面一般是<b>电阻挡(Ω)刻度</b>,下面是<b>电压/电流的均匀刻度</b>。读数前第一件事:<b>看清选择开关拨到哪个挡,就用对应那行刻度</b>。</p>
+      <table>
+        <tr><th>刻度</th><th>方向</th><th>疏密</th><th>怎么读</th></tr>
+        <tr><td><b>电阻挡 Ω</b></td><td>右端 0,左端 ∞</td><td>右密左疏(不均匀)</td><td>从右往左「反着读」,再<b>乘倍率</b></td></tr>
+        <tr><td><b>直流电压 V</b></td><td>左端 0,右端满量程</td><td>均匀</td><td>正着读,按量程算每格值</td></tr>
+        <tr><td><b>直流电流 mA</b></td><td>左端 0,右端满量程</td><td>均匀</td><td>正着读,按量程算每格值</td></tr>
+      </table>
+      <p class="trap">⚠ 最常见错误:用电阻挡刻度去读电压值,或反过来。刻度是两套,选错行数全盘皆错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎛️ 互动 1 — 多用电表表盘:拖动指针,同时读出电阻(不均匀)与电压(均匀)两套刻度</div>
+      <svg id="dialSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>指针位置(拖动) <input id="dialA" type="range" min="0" max="100" value="55" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>指针偏转(占满偏)</b><span id="dialPct">0</span></div>
+        <div><b>上行:电阻读数 Ω</b><span id="dialR">0</span></div>
+        <div><b>下行:电压读数(量程3V)</b><span id="dialV">0</span></div>
+        <div><b>提示</b><span id="dialTip">-</span></div>
+      </div>
+      <p class="small">同一根指针,同一个位置,读出两个完全不同的数:上行电阻刻度<b>右零左无穷、右密左疏</b>(指针越往右,电阻越小、刻度越挤);下行电压刻度<b>左零右满、均匀</b>(等间距)。这就是两套刻度的直观对比。</p>
+    </div>
+
+    <h2 class="b">② 电阻挡:右零左无穷,读数×倍率</h2>
+    <div class="card">
+      <div class="eq">电阻读数 = 表盘示数 × 倍率</div>
+      <p style="margin:8px 0">电阻挡是多用电表最特殊的挡:</p>
+      <table>
+        <tr><th>特征</th><th>说明</th></tr>
+        <tr><td><b>刻度方向</b></td><td>右端 0Ω,左端 ∞(和电压电流<b>相反</b>)</td></tr>
+        <tr><td><b>刻度疏密</b></td><td>右密左疏,<b>不均匀</b>(非线性)</td></tr>
+        <tr><td><b>读数公式</b></td><td>读数 = 表盘示数 × 倍率(×1 / ×10 / ×100 / ×1k)</td></tr>
+        <tr><td><b>红笔(红表笔)</b></td><td>接表内<b>电源的负极</b>(电阻挡内部有干电池)</td></tr>
+        <tr><td><b>换挡</b></td><td>每换一次倍率,<b>必须重新欧姆调零</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> 选择开关拨到「×100」,指针指在电阻刻度的 20 处,则被测电阻 R = 20 × 100 = <b>2000Ω = 2kΩ</b>。若同一指针位置换到「×10」,读数就是 20 × 10 = 200Ω。</p>
+      <p class="trap">⚠ 电阻挡读数千万别忘了<b>乘倍率</b>!指针指 20 不是 20Ω,要看倍率。而且刻度是<b>反的</b>——右边小左边大,别当成均匀刻度去数格子。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✖️ 互动 2 — 电阻挡读数×倍率:同一指针位置,切换 ×1/×10/×100/×1k,读数跟着变</div>
+      <svg id="multSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="multm on" data-k="1">×1</button>
+        <button class="multm" data-k="10">×10</button>
+        <button class="multm" data-k="100">×100</button>
+        <button class="multm" data-k="1000">×1k</button>
+        <label>指针指向示数 <input id="multRead" type="range" min="2" max="150" value="20" step="1"></label>
+      </div>
+      <div class="verdict" id="multNote"></div>
+      <p class="small">指针指的「表盘示数」不变,只切换倍率:读数 = 示数 × 倍率,一挡差 10 倍。这就是为什么「指针没动,读数却跳一个数量级」——倍率是乘上去的。</p>
+    </div>
+
+    <h2 class="g">③ 欧姆调零:每换倍率都要重来</h2>
+    <div class="card">
+      <p style="margin:8px 0">电阻挡内部有一节<b>干电池</b>供电。电池会老化、内阻会变,所以每次用电阻挡前(以及<b>每换一次倍率后</b>)都要做一次「<b>欧姆调零</b>」:</p>
+      <div class="mono">第1步:把选择开关拨到要用的电阻倍率挡(如 ×100)。</div>
+      <div class="mono">第2步:将红、黑两表笔<b>直接短接</b>(相当于测 0Ω 的电阻)。</div>
+      <div class="mono">第3步:拧「<b>欧姆调零</b>」旋钮,让指针<b>刚好指到右端 0Ω</b>。</div>
+      <div class="mono">第4步:分开表笔,再去测电阻。换倍率后重复第1~3步。</div>
+      <h3>机械调零 vs 欧姆调零(别混!)</h3>
+      <table>
+        <tr><th></th><th>机械调零</th><th>欧姆调零</th></tr>
+        <tr><td>什么时候</td><td>使用<b>任何挡</b>前,通电测量之前</td><td>只有<b>电阻挡</b>,且每换倍率都要做</td></tr>
+        <tr><td>调什么</td><td>指针指到<b>左端 0</b>(电压电流零点)</td><td>短接表笔,指针指到<b>右端 0Ω</b></td></tr>
+        <tr><td>调哪里</td><td>表盘下方的<b>机械调零螺丝</b></td><td>面板上的<b>欧姆调零旋钮</b></td></tr>
+      </table>
+      <p class="trap">⚠ 换了倍率不重新欧姆调零 = 读数系统性偏差,这是电阻测量最大的失分点。机械调零调左端 0,欧姆调零调右端 0Ω,两个「0」在表盘两头,别调错方向。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 3 — 欧姆调零动画:短接红黑表笔,拧旋钮把指针调到右端 0Ω</div>
+      <svg id="zeroSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="zeroShort">① 短接表笔</button><button id="zeroReset">↺ 分开重置</button>
+        <label>调零旋钮 <input id="zeroKnob" type="range" min="0" max="100" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>表笔状态</b><span id="zeroState">分开</span></div>
+        <div><b>当前指针(Ω)</b><span id="zeroR">-</span></div>
+        <div><b>目标</b><span id="zeroGoal">0Ω</span></div>
+        <div><b>是否调好</b><span id="zeroOk">否</span></div>
+      </div>
+      <p class="small">短接表笔后,若指针没到右端 0Ω,就拧调零旋钮(拖滑块)直到指针<b>正好压在 0Ω 上</b>。调好才能开始测电阻。换倍率后这一步必须重做一遍。</p>
+    </div>
+
+    <h2 class="o">④ 直流电压挡 / 电流挡:均匀刻度,看量程算每格</h2>
+    <div class="card">
+      <div class="eq">每格代表值 = 量程 ÷ 满刻度格数　　读数 = 格数 × 每格值</div>
+      <p style="margin:8px 0">电压挡、电流挡的刻度是<b>均匀</b>的(等间距),读法完全一样,关键是<b>先看量程</b>算出「一格代表多少」:</p>
+      <table>
+        <tr><th>步骤</th><th>做法</th></tr>
+        <tr><td>① 看量程</td><td>看选择开关拨到的量程(如直流电压 3V、15V;电流 5mA、50mA)</td></tr>
+        <tr><td>② 算每格</td><td>每格值 = 量程 ÷ 满刻度总格数(常见满刻度分成若干大格小格)</td></tr>
+        <tr><td>③ 数格数</td><td>看指针指到第几格(含估读一位)</td></tr>
+        <tr><td>④ 相乘</td><td>读数 = 格数 × 每格值</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> 直流电压挡量程 15V,表盘满刻度 150 小格,则每格 = 15÷150 = 0.1V。指针指到 90 格,读数 = 90 × 0.1 = <b>9.0V</b>。若换到 3V 量程同一指针(90格),每格 = 3÷150 = 0.02V,读数 = 90 × 0.02 = 1.8V。</p>
+      <p class="trap">⚠ 换了量程,「每格代表值」就变了!同一指针位置,3V 量程和 15V 量程读出的电压差 5 倍。不看量程直接抄表盘数字是致命错误。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 4 — 电压挡不同量程:同一指针,每格代表值随量程而变</div>
+      <svg id="rangeSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="rangem on" data-r="3">量程 3V</button>
+        <button class="rangem" data-r="15">量程 15V</button>
+        <button class="rangem" data-r="50">量程 50V</button>
+        <label>指针指到第几格 <input id="rangeG" type="range" min="0" max="150" value="90" step="1"></label>
+      </div>
+      <div class="verdict" id="rangeNote"></div>
+      <p class="small">满刻度固定 150 格。切换量程,「每格代表多少 V」立刻改变:量程越大,每格越大。同一格数在不同量程下读出的电压完全不同——所以量程是读数的前提。</p>
+    </div>
+
+    <h2 class="v">⑤ 指针居中最准,使用规则要记牢</h2>
+    <div class="card">
+      <h3>为什么指针要在表盘中央附近</h3>
+      <p style="margin:6px 0">指针偏转<b>太小</b>(靠近左端)或<b>太大</b>(顶到右端),相对误差都大,读数不准。<b>让指针尽量落在表盘中央附近</b>,读数最精确。做不到就换挡:</p>
+      <table>
+        <tr><th>现象</th><th>处理</th></tr>
+        <tr><td>指针偏转<b>太小</b>(几乎不动)</td><td>电压电流:<b>换小量程</b>;电阻:<b>换大倍率</b></td></tr>
+        <tr><td>指针偏转<b>太大</b>(顶到满偏/超量程)</td><td>电压电流:<b>换大量程</b>;电阻:<b>换小倍率</b></td></tr>
+      </table>
+      <h3>使用规则(判断对错高频考点)</h3>
+      <div class="mono">测电阻前必须<b>断电</b>——绝不能给带电电路测电阻(会烧表)。</div>
+      <div class="mono">红表笔接「+」插孔,黑表笔接「−」插孔;但电阻挡内部,红笔连的是电池<b>负极</b>。</div>
+      <div class="mono">选合适倍率/量程,使指针<b>居中</b>;先估大量程试探,再逐步换小。</div>
+      <div class="mono">用完把选择开关拨到「OFF」或最大交流电压挡,长期不用取出电池(防漏液)。</div>
+      <p class="trap">⚠ 三大高频错误:① 带电测电阻;② 表笔短接测电阻(该是测电阻,不是短接);③ 手同时捏住两根表笔金属端,人体电阻并进去使读数偏小。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 指针居中最准:偏太小/太大误差大,居中读数最精确(附换挡建议)</div>
+      <svg id="centerSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>指针偏转 <input id="centerA" type="range" min="3" max="97" value="50" step="1"></label>
+      </div>
+      <div class="verdict" id="centerNote"></div>
+      <p class="small">绿区=中央,读数最准;两端红区=误差大。指针落在红区时给出「换量程/换倍率」的建议。把滑块拖到两端和中央,对比误差带的宽窄。</p>
+    </div>
+
+    <h2 class="b">⑥ 反向特征:电阻挡刻度右零左无穷</h2>
+    <div class="card">
+      <p style="margin:6px 0">电阻挡刻度的「反向」是所有读数错误的根源,单独拎出来看清楚:</p>
+      <table>
+        <tr><th>指针位置</th><th>意味着</th><th>为什么</th></tr>
+        <tr><td><b>最右端(满偏)</b></td><td>R = 0Ω</td><td>短接时电流最大,指针满偏(欧姆调零点)</td></tr>
+        <tr><td><b>中央附近</b></td><td>R = 中间阻值</td><td>约等于表内阻,读数最准</td></tr>
+        <tr><td><b>最左端(不偏)</b></td><td>R = ∞(断路)</td><td>电阻无穷大,电流为 0,指针不动</td></tr>
+      </table>
+      <p style="margin:8px 0">这跟电压电流挡「左零右满」<b>完全相反</b>:电阻挡是「电流越大→电阻越小→指针越往右」。而且因为 R 和电流不成正比(I=U/(R+r) 是反比关系),所以刻度<b>不均匀,右密左疏</b>。</p>
+      <p class="trap">⚠ 别把电阻刻度当电压刻度顺着数!右端不是最大值而是 0,左端不是 0 而是无穷大。看到 Ω 挡先在脑子里把刻度「翻个个儿」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 6 — 电阻挡反向特征:改变被测电阻,看指针在「右零左无穷」上怎么走</div>
+      <svg id="revSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>被测电阻 R(Ω) <input id="revR" type="range" min="0" max="200" value="15" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>被测电阻 R</b><span id="revRv">0</span></div>
+        <div><b>回路电流(相对)</b><span id="revI">0</span></div>
+        <div><b>指针位置</b><span id="revPos">-</span></div>
+        <div><b>刻度特征</b><span id="revTip">-</span></div>
+      </div>
+      <p class="small">R=0 → 电流最大 → 指针在<b>最右(0Ω)</b>;R 增大 → 电流减小 → 指针<b>往左走</b>;R→∞ → 电流 0 → 指针在<b>最左(∞)</b>。刻度右密左疏,正是因为电流对 R 是非线性的反比关系。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 电阻挡读数(×倍率)</h3>
+      <p><b class="tag">触发信号:</b>图上选择开关指向「×10」「×100」等电阻倍率挡,问被测电阻是多少。</p>
+      <p><b class="tag">标准动作:</b>读电阻刻度上的示数(反着读,右零左无穷),再 ×倍率。读数 = 示数 × 倍率。</p>
+      <p><b class="tag">示例(带解):</b>开关拨到「×100」,指针指在电阻刻度 22 处。R = 22 × 100 = 2200Ω = 2.2kΩ。若换「×10」同一指针,则 22×10=220Ω。</p>
+      <p class="trap">陷阱:忘乘倍率(把 22 当 22Ω);把电阻刻度当均匀刻度顺着数;把右端读成最大值。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 欧姆调零与换挡</h3>
+      <p><b class="tag">触发信号:</b>「换倍率后指针没到 0Ω」「测量前要做什么」「短接表笔指针不指 0」。</p>
+      <p><b class="tag">标准动作:</b>短接红黑表笔 → 拧欧姆调零旋钮使指针指右端 0Ω → 再测。每换一次倍率重做一遍。</p>
+      <p><b class="tag">示例(带解):</b>从 ×10 换到 ×100 后短接表笔,指针停在 0Ω 左侧一点。正确做法:拧欧姆调零旋钮把指针拨到 0Ω,再测量;不能直接读数。</p>
+      <p class="trap">陷阱:换倍率不重新调零;把欧姆调零(右端0Ω)和机械调零(左端0)搞混;用调零旋钮去调左端。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 直流电压挡读数</h3>
+      <p><b class="tag">触发信号:</b>开关指向直流电压量程(3V/15V/…),给一张指针图问电压。</p>
+      <p><b class="tag">标准动作:</b>每格值 = 量程 ÷ 满刻度格数 → 数格数(估读一位) → 读数 = 格数 × 每格值。</p>
+      <p><b class="tag">示例(带解):</b>量程 15V,满刻度 150 格,指针指 90 格。每格 15÷150=0.1V,读数 = 90×0.1 = 9.0V。</p>
+      <p class="trap">陷阱:不看量程直接抄表盘数字;换量程后忘了每格值也变;估读位数不对。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 直流电流挡读数</h3>
+      <p><b class="tag">触发信号:</b>开关指向直流电流量程(如 5mA/50mA),问电流读数。</p>
+      <p><b class="tag">标准动作:</b>和电压挡完全一样:每格值 = 量程 ÷ 满刻度格数,读数 = 格数 × 每格值。均匀刻度,正着读。</p>
+      <p><b class="tag">示例(带解):</b>量程 50mA,满刻度 50 大格,指针指 30 格。每格 50÷50=1mA,读数 = 30×1 = 30mA。若量程 5mA 同一指针,则每格 0.1mA,读数 3.0mA。</p>
+      <p class="trap">陷阱:量程单位看错(mA/μA);和电压刻度用混行;换量程忘了重算每格。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 量程 / 倍率选择</h3>
+      <p><b class="tag">触发信号:</b>「指针偏转太小/太大」「应换哪个量程或倍率」使读数更准。</p>
+      <p><b class="tag">标准动作:</b>让指针居中。电压电流:偏小换小量程、偏大换大量程;电阻:偏小(指针靠左)换大倍率、偏大(靠右)换小倍率。</p>
+      <p><b class="tag">示例(带解):</b>用电阻 ×1 挡测某电阻,指针几乎不动(靠近∞端,偏转太小)。说明电阻较大,应换<b>大倍率</b>(×100 或 ×1k),使指针移到中央,读数更准。</p>
+      <p class="trap">陷阱:电阻挡「偏小」是靠左(∞端)不是靠右;换挡方向记反;换了倍率忘欧姆调零。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 使用规则判断对错</h3>
+      <p><b class="tag">触发信号:</b>给几条操作,判断哪条正确/错误(选择或判断题)。</p>
+      <p><b class="tag">标准动作:</b>逐条对照规则:测电阻先断电;红笔接内部电池负极;每换倍率欧姆调零;指针居中选挡;手不碰表笔金属端;用完拨 OFF。</p>
+      <p><b class="tag">示例(带解):</b>判断「用电阻挡直接测电路中带电元件的阻值」→ 错(必须断电);「换倍率后重新欧姆调零再测」→ 对;「电阻挡红表笔接表内电池正极」→ 错(接负极)。</p>
+      <p class="trap">陷阱:带电测电阻;两手捏表笔金属端(人体电阻并入);红黑笔内部极性记反。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 电阻挡读数<b>必须乘倍率</b>!指针指 20、倍率 ×100 → 2000Ω,不是 20Ω。</p>
+      <p class="trap">② 电阻刻度<b>反向</b>:右端 0Ω、左端 ∞,右密左疏,别当均匀刻度顺着数。</p>
+      <p class="trap">③ <b>每换一次倍率都要重新欧姆调零</b>(短接表笔→拧旋钮到 0Ω),否则系统性偏差。</p>
+      <p class="trap">④ 电压/电流挡要<b>看量程算每格</b>:每格 = 量程÷格数,读数 = 格数×每格值,换量程每格值就变。</p>
+      <p class="trap">⑤ 机械调零(左端 0,任何挡通电前)≠ 欧姆调零(右端 0Ω,仅电阻挡、每换倍率)。两个「0」在两头。</p>
+      <p class="trap">⑥ 指针偏太小或太大都不准,<b>换挡使指针居中</b>。电阻挡偏小是靠左(∞端),换大倍率。</p>
+      <p class="trap">⑦ 测电阻<b>必须断电</b>,绝不能给带电电路/电源测阻值。</p>
+      <p class="trap">⑧ 电阻挡里<b>红表笔接表内电池负极</b>(黑笔接正极),这是二极管、电流方向类题的关键。</p>
+      <p class="trap">⑨ 读数时<b>手别碰表笔金属端</b>,否则人体电阻并入,电阻读数偏小。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 电阻刻度为什么右密左疏:</b> 电阻挡回路电流 I = E/(R + r内)(E 为内部电池电动势,r内 为表内总电阻)。指针偏转正比于 I,而 I 对 R 是<b>反比型非线性</b>关系。R 从 0 增大时,I 下降很快(右端刻度挤);R 很大时 I 变化缓慢(左端刻度疏)。理解这条公式,就理解了「右密左疏、右零左无穷」的本质。</p>
+      <p style="margin:8px 0"><b>② 中值电阻 = 表内阻:</b> 当被测 R = r内 时,I 恰为满偏电流的一半,指针指表盘中央。所以「换倍率让指针居中」本质是让被测电阻接近该挡的中值电阻,此时刻度最疏、相对误差最小。这解释了为什么居中最准。</p>
+      <p style="margin:8px 0"><b>③ 换倍率为什么要重新调零:</b> 不同倍率挡内部串/并联的分流电阻不同,r内 不同,满偏所需的调零条件也变。加上电池电压会缓慢下降,所以每换挡都得用「短接测 0Ω」的方式重新把满偏点校到 0Ω。这是硬件决定的,不是可选步骤。</p>
+      <p style="margin:8px 0"><b>④ 红笔接负极的用处:</b> 电阻挡内部电流从黑表笔(接电池正极)流出、经被测元件、回红表笔(接负极)。这一点在「用多用电表判断二极管正负极/是否导通」的题里是解题钥匙:黑笔接的一端是电流流出端,相当于电源正极。</p>
+      <p style="margin:8px 0"><b>⑤ 估读与有效数字:</b> 均匀刻度(电压电流)读数要<b>估读到最小分度的下一位</b>;电阻挡因刻度不均匀,一般<b>不估读</b>,读到最接近的刻度值再乘倍率即可。分清哪种刻度该估读,是尖子生和普通生读数得分的分水岭。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 电学实验系列:多用电表的使用与读数</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 表盘几何:指针以表盘中心为原点,从左(180°)到右(0°)扫过,angle参数 pct:0..1 (0=最左,1=最右) */
+function needleXY(cx,cy,R,pct){
+  const ang=Math.PI*(1-pct); // pct=0 -> PI (left), pct=1 -> 0 (right)
+  return [cx+R*Math.cos(ang), cy-R*Math.sin(ang)];
+}
+
+/* ===== 互动1:多用电表表盘(双刻度) ===== */
+(function(){
+  const svg=document.getElementById('dialSvg');
+  const As=document.getElementById('dialA');
+  const oPct=document.getElementById('dialPct'),oR=document.getElementById('dialR'),oV=document.getElementById('dialV'),oTip=document.getElementById('dialTip');
+  const cx=350,cy=250,Rout=210,Rin=150;
+  function ohmAt(pct){ // pct is needle fraction from left(0)=inf to right(1)=0
+    // R = r*(1-pct)/pct  (pct->1 gives 0, pct->0 gives inf); use r=15 mid
+    if(pct<=0.001)return Infinity;
+    return 15*(1-pct)/pct;
+  }
+  function draw(){
+    clr(svg);
+    const pct=(+As.value)/100;
+    // arc face
+    el(svg,'path',{d:arcPath(cx,cy,Rout,180,0),fill:'none',stroke:INK,'stroke-width':3});
+    el(svg,'path',{d:arcPath(cx,cy,Rin,180,0),fill:'none',stroke:INK,'stroke-width':2});
+    // TOP scale = resistance (right=0, left=inf), non-uniform. label at ohm values
+    el(svg,'text',{x:cx,y:60,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='上行:电阻 Ω(右0 左∞,右密左疏)';
+    const ohmMarks=[0,5,10,15,25,50,150,1000];
+    ohmMarks.forEach(function(o){
+      // pct for given ohm: o=15(1-pct)/pct -> pct=15/(15+o)
+      var p= o===1000? 0.014 : 15/(15+o);
+      var a=Math.PI*(1-p);
+      var x1=cx+(Rout)*Math.cos(a),y1=cy-(Rout)*Math.sin(a);
+      var x2=cx+(Rout-14)*Math.cos(a),y2=cy-(Rout-14)*Math.sin(a);
+      el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:BLUE,'stroke-width':2.5});
+      var xt=cx+(Rout-26)*Math.cos(a),yt=cy-(Rout-26)*Math.sin(a);
+      el(svg,'text',{x:xt,y:yt+4,'font-size':10.5,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent= o===1000?'∞':o;
+    });
+    // BOTTOM scale = voltage uniform (left=0, right=full=3V)
+    for(var g=0;g<=10;g++){
+      var p=g/10;
+      var a=Math.PI*(1-p);
+      var x1=cx+(Rin)*Math.cos(a),y1=cy-(Rin)*Math.sin(a);
+      var x2=cx+(Rin+14)*Math.cos(a),y2=cy-(Rin+14)*Math.sin(a);
+      el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:ORANGE,'stroke-width':2.5});
+      var xt=cx+(Rin+28)*Math.cos(a),yt=cy-(Rin+28)*Math.sin(a);
+      el(svg,'text',{x:xt,y:yt+4,'font-size':10.5,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent=(g*0.3).toFixed(1);
+    }
+    el(svg,'text',{x:cx,y:cy-4,'font-size':12,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='下行:电压 V(左0 右满,均匀)';
+    // needle
+    var np=needleXY(cx,cy,Rout-4,pct);
+    el(svg,'line',{x1:cx,y1:cy,x2:np[0],y2:np[1],stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:cx,cy:cy,r:8,fill:INK});
+    // readouts
+    var ohm=ohmAt(pct);
+    var volt=pct*3;
+    oPct.textContent=(pct*100).toFixed(0)+'%';
+    oR.textContent= ohm===Infinity?'∞':ohm.toFixed(1)+'Ω';
+    oV.textContent=volt.toFixed(2)+'V';
+    oTip.textContent= pct>0.35&&pct<0.75?'居中:读数最准':pct>=0.75?'偏右:R偏小':'偏左:R偏大';
+  }
+  function arcPath(cx,cy,R,a0,a1){
+    var r0=Math.PI*a0/180, r1=Math.PI*a1/180;
+    var x0=cx+R*Math.cos(r0),y0=cy-R*Math.sin(r0);
+    var x1=cx+R*Math.cos(r1),y1=cy-R*Math.sin(r1);
+    return 'M '+x0+' '+y0+' A '+R+' '+R+' 0 0 1 '+x1+' '+y1;
+  }
+  As.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:电阻挡读数×倍率 ===== */
+(function(){
+  const svg=document.getElementById('multSvg');const note=document.getElementById('multNote');
+  const Rs=document.getElementById('multRead');
+  let k=1;
+  document.querySelectorAll('.multm').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.multm').forEach(function(x){x.classList.remove('on');});b.classList.add('on');k=+b.dataset.k;draw();
+  };});
+  Rs.oninput=draw;
+  function draw(){
+    clr(svg);
+    var read=+Rs.value; // dial shown number
+    // draw a linear strip representing ohm dial numbers (schematic, right-dense conceptually but show pointer to a number)
+    var X0=60,Y=110,W=580;
+    el(svg,'line',{x1:X0,y1:Y,x2:X0+W,y2:Y,stroke:INK,'stroke-width':3});
+    // marks: show a few ohm-scale numbers reversed feel; here schematic 0..150
+    var marks=[150,50,25,15,10,5,2,0];
+    marks.forEach(function(m){
+      var frac=1-(m/150); // 0 at right
+      var x=X0+frac*W;
+      el(svg,'line',{x1:x,y1:Y-12,x2:x,y2:Y+12,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:x,y:Y+30,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=m;
+    });
+    el(svg,'text',{x:X0,y:Y-24,'font-size':11.5,'font-weight':800,fill:INK}).textContent='← 大(∞)';
+    el(svg,'text',{x:X0+W,y:Y-24,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='0(右) →';
+    // pointer at read
+    var fr=1-(read/150);var px=X0+fr*W;
+    el(svg,'line',{x1:px,y1:Y-30,x2:px,y2:Y+12,stroke:RED,'stroke-width':4});
+    el(svg,'polygon',{points:px+','+(Y-30)+' '+(px-6)+','+(Y-42)+' '+(px+6)+','+(Y-42),fill:RED});
+    el(svg,'text',{x:px,y:Y-48,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='示数 '+read;
+    // result box
+    var result=read*k;
+    el(svg,'text',{x:350,y:200,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='读数 = 示数 × 倍率';
+    el(svg,'rect',{x:200,y:220,width:300,height:52,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:253,'font-size':20,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent=read+' × '+(k>=1000?'1k':k)+' = '+fmtOhm(result);
+    note.innerHTML='👉 选择开关拨到 <b>×'+(k>=1000?'1k':k)+'</b>,指针示数 <b>'+read+'</b> → 被测电阻 R = '+read+' × '+k+' = <b>'+fmtOhm(result)+'</b>。示数没变,换倍率读数就差 10 倍。';
+    note.style.borderColor= k===1?INK:k===10?GREEN:k===100?BLUE:VIO;
+  }
+  function fmtOhm(v){ if(v>=1000)return (v/1000)+'kΩ'; return v+'Ω';}
+  draw();
+})();
+
+/* ===== 互动3:欧姆调零 ===== */
+(function(){
+  const svg=document.getElementById('zeroSvg');
+  const Ks=document.getElementById('zeroKnob');
+  const oState=document.getElementById('zeroState'),oR=document.getElementById('zeroR'),oOk=document.getElementById('zeroOk');
+  const cx=350,cy=250,R=200;
+  let shorted=false;
+  function draw(){
+    clr(svg);
+    // arc
+    el(svg,'path',{d:'M '+(cx-R)+' '+cy+' A '+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy,fill:'none',stroke:INK,'stroke-width':3});
+    // 0 ohm mark at right, inf at left
+    el(svg,'text',{x:cx+R-6,y:cy-8,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'end'}).textContent='0Ω';
+    el(svg,'text',{x:cx-R+6,y:cy-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'start'}).textContent='∞';
+    // needle: if not shorted, rest at far left (inf). if shorted, position depends on knob (target=right 0)
+    var pct;
+    if(!shorted){ pct=0.04; }
+    else { pct=(+Ks.value)/100; } // knob sets needle; 100 -> right (0 ohm)
+    var np=needleXY(cx,cy,R-6,pct);
+    el(svg,'line',{x1:cx,y1:cy,x2:np[0],y2:np[1],stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:cx,cy:cy,r:8,fill:INK});
+    // probes graphic
+    el(svg,'text',{x:120,y:cy+40,'font-size':12.5,'font-weight':800,fill:RED}).textContent='红表笔';
+    el(svg,'text',{x:520,y:cy+40,'font-size':12.5,'font-weight':800,fill:INK}).textContent='黑表笔';
+    if(shorted){
+      el(svg,'line',{x1:170,y1:cy+34,x2:500,y2:cy+34,stroke:GREEN,'stroke-width':5});
+      el(svg,'text',{x:350,y:cy+30,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='表笔已短接(测 0Ω)';
+    } else {
+      el(svg,'text',{x:350,y:cy+34,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='表笔分开(指针停在 ∞)';
+    }
+    var ok= shorted && pct>=0.96;
+    oState.textContent= shorted?'短接':'分开';
+    oR.textContent= shorted?(pct>=0.96?'0Ω':'未到0'):'∞';
+    oOk.textContent= ok?'是 ✓':'否';
+    if(shorted && !ok){
+      el(svg,'text',{x:350,y:70,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='拧调零旋钮 → 让指针到右端 0Ω';
+    } else if(ok){
+      el(svg,'text',{x:350,y:70,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='✓ 欧姆调零完成,可以测量了';
+    }
+  }
+  document.getElementById('zeroShort').onclick=function(){shorted=true;draw();};
+  document.getElementById('zeroReset').onclick=function(){shorted=false;Ks.value=30;draw();};
+  Ks.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:电压挡不同量程 ===== */
+(function(){
+  const svg=document.getElementById('rangeSvg');const note=document.getElementById('rangeNote');
+  const Gs=document.getElementById('rangeG');
+  let range=3;
+  document.querySelectorAll('.rangem').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.rangem').forEach(function(x){x.classList.remove('on');});b.classList.add('on');range=+b.dataset.r;draw();
+  };});
+  Gs.oninput=draw;
+  function draw(){
+    clr(svg);
+    var totalG=150;
+    var g=+Gs.value;
+    var perG=range/totalG;
+    var read=g*perG;
+    var X0=60,Y=120,W=580;
+    el(svg,'line',{x1:X0,y1:Y,x2:X0+W,y2:Y,stroke:INK,'stroke-width':3});
+    // uniform marks every 15 格 labelled with the current range's value
+    for(var i=0;i<=10;i++){
+      var frac=i/10;var x=X0+frac*W;
+      el(svg,'line',{x1:x,y1:Y-12,x2:x,y2:Y+12,stroke:ORANGE,'stroke-width':2.5});
+      el(svg,'text',{x:x,y:Y+30,'font-size':11,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent=(frac*range).toFixed( range<10?1:0 );
+    }
+    el(svg,'text',{x:X0,y:Y-22,'font-size':11.5,'font-weight':800,fill:INK}).textContent='0(左)';
+    el(svg,'text',{x:X0+W,y:Y-22,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='满量程 '+range+'V(右)';
+    // pointer
+    var fr=g/totalG;var px=X0+fr*W;
+    el(svg,'line',{x1:px,y1:Y-34,x2:px,y2:Y+12,stroke:RED,'stroke-width':4});
+    el(svg,'polygon',{points:px+','+(Y-34)+' '+(px-6)+','+(Y-46)+' '+(px+6)+','+(Y-46),fill:RED});
+    el(svg,'text',{x:px,y:Y-52,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=g+' 格';
+    // result
+    el(svg,'rect',{x:170,y:200,width:360,height:70,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:226,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='每格 = '+range+' ÷ '+totalG+' = '+perG.toFixed(3)+'V';
+    el(svg,'text',{x:350,y:254,'font-size':17,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='读数 = '+g+' × '+perG.toFixed(3)+' = '+read.toFixed(2)+'V';
+    note.innerHTML='👉 量程 <b>'+range+'V</b>,满刻度 150 格,每格 = '+perG.toFixed(3)+'V。指针在第 '+g+' 格 → 读数 <b>'+read.toFixed(2)+'V</b>。换量程时同一格数读出的电压完全不同。';
+    note.style.borderColor= range===3?GREEN:range===15?ORANGE:VIO;
+  }
+  draw();
+})();
+
+/* ===== 互动5:指针居中最准 ===== */
+(function(){
+  const svg=document.getElementById('centerSvg');const note=document.getElementById('centerNote');
+  const As=document.getElementById('centerA');
+  const cx=350,cy=240,R=200;
+  function draw(){
+    clr(svg);
+    var pct=(+As.value)/100;
+    // colored arc: red left, green mid, red right
+    el(svg,'path',{d:'M '+(cx-R)+' '+cy+' A '+R+' '+R+' 0 0 1 '+(cx-R*Math.cos(Math.PI*0.65))+' '+(cy-R*Math.sin(Math.PI*0.65)),fill:'none',stroke:RED,'stroke-width':10,opacity:0.35});
+    // simpler: draw three arc segments by angle
+    seg(0,0.33,RED); seg(0.33,0.7,GREEN); seg(0.7,1,RED);
+    el(svg,'path',{d:'M '+(cx-R)+' '+cy+' A '+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy,fill:'none',stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx-R+4,y:cy-8,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'start'}).textContent='偏小·误差大';
+    el(svg,'text',{x:cx,y:cy-R-6,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='中央·最准';
+    el(svg,'text',{x:cx+R-4,y:cy-8,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'end'}).textContent='偏大·误差大';
+    var np=needleXY(cx,cy,R-8,pct);
+    el(svg,'line',{x1:cx,y1:cy,x2:np[0],y2:np[1],stroke:INK,'stroke-width':4});
+    el(svg,'circle',{cx:cx,cy:cy,r:8,fill:INK});
+    var zone,msg,col;
+    if(pct<0.33){zone='偏小(靠左)';col=RED;msg='电压/电流:换<b>小量程</b>;电阻:换<b>大倍率</b>,把指针移向中央。';}
+    else if(pct>0.7){zone='偏大(靠右)';col=RED;msg='电压/电流:换<b>大量程</b>;电阻:换<b>小倍率</b>,把指针移向中央。';}
+    else {zone='居中';col=GREEN;msg='读数最精确,不用换挡。';}
+    note.innerHTML='指针在 <b style="color:'+col+'">'+zone+'</b> → '+msg;
+    note.style.borderColor=col;
+  }
+  function seg(p0,p1,col){
+    var a0=Math.PI*(1-p0),a1=Math.PI*(1-p1);
+    var x0=cx+R*Math.cos(a0),y0=cy-R*Math.sin(a0);
+    var x1=cx+R*Math.cos(a1),y1=cy-R*Math.sin(a1);
+    el(svg,'path',{d:'M '+x0+' '+y0+' A '+R+' '+R+' 0 0 1 '+x1+' '+y1,fill:'none',stroke:col,'stroke-width':9,opacity:0.45});
+  }
+  As.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:电阻挡反向特征 ===== */
+(function(){
+  const svg=document.getElementById('revSvg');
+  const Rs=document.getElementById('revR');
+  const oR=document.getElementById('revRv'),oI=document.getElementById('revI'),oPos=document.getElementById('revPos'),oTip=document.getElementById('revTip');
+  const cx=350,cy=250,R=200;
+  const rInt=15; // internal resistance ~ mid scale
+  function draw(){
+    clr(svg);
+    var Rr=+Rs.value;
+    // current I = E/(R+r); relative = r/(R+r) so at R=0 ->1(full right), R->inf ->0(left)
+    var rel=rInt/(Rr+rInt);
+    var pct=rel; // needle fraction: 1=right=0ohm
+    // arc
+    el(svg,'path',{d:'M '+(cx-R)+' '+cy+' A '+R+' '+R+' 0 0 1 '+(cx+R)+' '+cy,fill:'none',stroke:INK,'stroke-width':3});
+    // ohm marks non-uniform
+    [0,5,15,40,100].forEach(function(o){
+      var p=rInt/(o+rInt);var a=Math.PI*(1-p);
+      var x1=cx+R*Math.cos(a),y1=cy-R*Math.sin(a);
+      var x2=cx+(R-13)*Math.cos(a),y2=cy-(R-13)*Math.sin(a);
+      el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:BLUE,'stroke-width':2.5});
+      var xt=cx+(R-26)*Math.cos(a),yt=cy-(R-26)*Math.sin(a);
+      el(svg,'text',{x:xt,y:yt+4,'font-size':11,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent=o;
+    });
+    // inf mark far left
+    el(svg,'text',{x:cx-R+2,y:cy-8,'font-size':13,'font-weight':900,fill:INK}).textContent='∞';
+    el(svg,'text',{x:cx+R-2,y:cy-8,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'end'}).textContent='0Ω';
+    var np=needleXY(cx,cy,R-8,pct);
+    el(svg,'line',{x1:cx,y1:cy,x2:np[0],y2:np[1],stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:cx,cy:cy,r:8,fill:INK});
+    el(svg,'text',{x:cx,y:cy-R-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='R 越大 → 电流越小 → 指针越往左';
+    oR.textContent=Rr+'Ω';
+    oI.textContent=(rel*100).toFixed(0)+'%';
+    oPos.textContent= pct>0.75?'靠右(小R)':pct<0.3?'靠左(大R/∞)':'中央';
+    oTip.textContent= Rr===0?'满右=0Ω':Rr>=180?'趋左=∞':'右密左疏';
+  }
+  Rs.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 多用电表能测哪三个量?靠什么切换?",a:"能测直流电压、直流电流、电阻。靠选择开关切换挡位;同一指针在同一表盘的不同刻度上读数。"},
+ {q:"2. 电阻挡刻度有什么特征?怎么读数?",a:"右端 0Ω、左端 ∞,右密左疏(不均匀),从右往左反着读。读数 = 表盘示数 × 倍率。"},
+ {q:"3. 电阻挡开关拨到 ×100,指针指 20,被测电阻是多少?",a:"R = 20 × 100 = 2000Ω = 2kΩ。别忘了乘倍率。"},
+ {q:"4. 什么是欧姆调零?什么时候做?",a:"把红黑表笔短接(测 0Ω),拧欧姆调零旋钮使指针指右端 0Ω。使用电阻挡前、以及每换一次倍率后都要做。"},
+ {q:"5. 机械调零和欧姆调零有什么区别?",a:"机械调零:任何挡通电前,用机械螺丝把指针调到左端 0(电压电流零点)。欧姆调零:仅电阻挡,短接表笔把指针调到右端 0Ω,每换倍率都要重做。两个0在表盘两头。"},
+ {q:"6. 直流电压挡怎么读数?量程 15V、满刻度 150 格、指针指 90 格是多少?",a:"每格 = 量程÷格数 = 15÷150 = 0.1V,读数 = 格数×每格 = 90×0.1 = 9.0V。均匀刻度,正着读。"},
+ {q:"7. 直流电流挡量程 5mA、满刻度 50 格、指针指 30 格,读数是多少?",a:"每格 = 5÷50 = 0.1mA,读数 = 30×0.1 = 3.0mA。和电压挡读法完全一样。"},
+ {q:"8. 为什么读数时要让指针尽量落在表盘中央附近?",a:"指针偏太小或太大相对误差都大。居中时(电阻挡约为表内阻处)刻度最疏、相对误差最小,读数最准。"},
+ {q:"9. 用电阻挡指针几乎不动(靠近∞端),该怎么办?",a:"说明电阻较大、偏转太小,应换大倍率(如 ×100),使指针移向中央,换倍率后重新欧姆调零。"},
+ {q:"10. 测电阻时最重要的安全规则是什么?",a:"必须先断电!绝不能给带电电路或电源测电阻,否则会烧坏电表。"},
+ {q:"11. 电阻挡里红表笔接内部电池的哪一极?这有什么用?",a:"红表笔接表内电池的负极(黑笔接正极)。判断二极管正负极/导通方向时,黑表笔一端相当于电源正极,是解题钥匙。"},
+ {q:"12. 换了电压量程后,同一指针位置读数为什么变了?",a:"因为「每格代表值 = 量程÷格数」随量程改变。量程大每格大,同一格数读出的电压就不同。所以读数前必须先看量程。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(function(o){var d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=function(){d.querySelector('.qa').classList.toggle('show');};quiz.appendChild(d);});
+</script>
+</body>
+</html>

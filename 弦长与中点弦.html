@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆锥曲线的弦长与中点弦（点差法） · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>圆锥曲线的弦长与中点弦（点差法）</h1>
+    <p class="lead">直线切进圆锥曲线，割出一条<b>弦</b>。这一页只讲两件事:一是<b>求弦有多长</b>——联立+韦达+弦长公式,一路算到底;二是<b>已知中点求弦的斜率</b>——不联立,直接用<b>点差法</b>两式相减,一步拿到斜率与中点的关系。再往上,垂直平分线过定点、焦点弦长,全是这两把刀的延伸。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 遇到「求弦长」→ 老老实实<b>联立方程</b>,消元得一元二次,用<b>韦达定理</b>拿到 x₁+x₂、x₁x₂,再套<b>弦长公式</b> |AB|=√(1+k²)·√((x₁+x₂)²−4x₁x₂),距离就出来了。遇到「已知中点、求弦所在直线的斜率」→ 千万别联立!把 A、B 两点坐标<b>代入曲线方程再相减</b>(这就是点差法),中点坐标一代,<b>斜率 k 一步到位</b>。椭圆里有个漂亮的固定关系:<b>k_AB · k_OM = −b²/a²</b>(OM 是中心到中点的连线)。</div>
+
+    <div class="keybox"><b>两把刀,一句话记牢:</b> <b>弦长 → 联立 + 韦达 + 弦长公式 |AB|=√(1+k²)|x₁−x₂|</b>;<b>中点弦 → 点差法(A、B 代入相减) → k_AB·k_OM=−b²/a²</b>。前者算「多长」,后者算「多斜」。用哪把,看题目给的是「弦长/焦点弦」还是「中点」。</div>
+
+    <h2>① 弦长公式:两交点之间的距离</h2>
+    <div class="card">
+      <div class="eq">|AB| = √(1+k²)·|x₁−x₂| = √(1+k²)·√((x₁+x₂)²−4x₁x₂)</div>
+      <p style="margin:8px 0">直线 y=kx+m 交曲线于 A(x₁,y₁)、B(x₂,y₂)。两点距离本是 √((x₁−x₂)²+(y₁−y₂)²),因为 y=kx+m,所以 y₁−y₂=k(x₁−x₂),提出来就得 |AB|=√(1+k²)·|x₁−x₂|。而 |x₁−x₂| 用韦达定理化成 √((x₁+x₂)²−4x₁x₂),全程<b>不用真的解出 x₁、x₂</b>。</p>
+      <table>
+        <tr><th>情形</th><th>弦长公式怎么写</th></tr>
+        <tr><td><b>斜率 k 存在</b>(常用)</td><td>|AB|=√(1+k²)·√((x₁+x₂)²−4x₁x₂)　(消 y，对 x 用韦达)</td></tr>
+        <tr><td><b>斜率 k 不存在</b>(竖直弦)</td><td>直线 x=x₀，弦长 |AB|=|y₁−y₂|=√((y₁+y₂)²−4y₁y₂)</td></tr>
+        <tr><td><b>用 y 更方便时</b></td><td>|AB|=√(1+1/k²)·|y₁−y₂|=√(1+1/k²)·√((y₁+y₂)²−4y₁y₂)</td></tr>
+      </table>
+      <p class="trap">⚠ 弦长公式里那个 √(1+k²) 配的是 <b>|x₁−x₂|</b>;若你用韦达算的是关于 y 的和与积,前面要换成 √(1+1/k²) 配 <b>|y₁−y₂|</b>。别把 x 的差和 y 的系数配错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 椭圆上拖动一条弦:实时显示弦长 |AB| 与中点 M(拖圆点)</div>
+      <svg id="chSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>斜率 k <input id="chK" type="range" min="-2.5" max="2.5" value="0.6" step="0.1"></label>
+        <label>截距 m <input id="chM" type="range" min="-3" max="3" value="0" step="0.2"></label>
+      </div>
+      <div class="live">
+        <div><b>交点 x₁+x₂</b><span id="chSum">0</span></div>
+        <div><b>交点 x₁·x₂</b><span id="chPro">0</span></div>
+        <div><b>弦长 |AB|</b><span id="chLen">0</span></div>
+        <div><b>中点 M(x,y)</b><span id="chMid">0</span></div>
+      </div>
+      <p class="small">椭圆 x²/9+y²/4=1。拖两个滑块改变直线 y=kx+m。若直线与椭圆<b>相交</b>(Δ&gt;0),红弦画出,弦长与中点实时更新;若相离(Δ&lt;0),提示无交点。这就是「联立+韦达+弦长公式」的几何版。</p>
+    </div>
+
+    <h2 class="b">② 联立与韦达:弦长的计算引擎</h2>
+    <div class="card">
+      <div class="eq">直线 y=kx+m 代入曲线 → 一元二次 Ax²+Bx+C=0</div>
+      <p style="margin:8px 0"><b>标准流程:</b> 把 y=kx+m 代入 x²/a²+y²/b²=1(椭圆)或 y²=2px(抛物线),整理成关于 x 的一元二次 Ax²+Bx+C=0。由<b>韦达定理</b>:x₁+x₂=−B/A,x₁x₂=C/A。代进弦长公式即可,全程不解方程。</p>
+      <h3>解题三步</h3>
+      <div class="mono">第1步:直线代入曲线,消 y(或 x),整理成一元二次 Ax²+Bx+C=0。</div>
+      <div class="mono">第2步:算判别式 Δ=B²−4AC&gt;0(保证相交,是两交点的前提!),写出 x₁+x₂=−B/A、x₁x₂=C/A。</div>
+      <div class="mono">第3步:代入 |AB|=√(1+k²)·√((x₁+x₂)²−4x₁x₂),得弦长。</div>
+      <p style="margin:8px 0">注意 (x₁+x₂)²−4x₁x₂ 就是 (x₁−x₂)²,永远非负;它等于 Δ/A²,所以也可写成 |AB|=√(1+k²)·√Δ/|A|。</p>
+      <p class="trap">⚠ 联立后必须验 Δ&gt;0——没有两个交点就没有弦。竖直弦(k 不存在)不能套 y=kx+m,要单独处理 x=x₀。</p>
+    </div>
+
+    <h2 class="g">③ 点差法:已知中点,一步求斜率</h2>
+    <div class="card">
+      <div class="eq">A、B 两点代入曲线方程 → 两式相减 → 出斜率</div>
+      <p style="margin:8px 0"><b>核心思想:</b> A(x₁,y₁)、B(x₂,y₂) 都在曲线上,各自满足曲线方程。把两个方程<b>相减</b>,平方差公式一拆,就冒出 (x₁+x₂)、(y₁+y₂)(与中点有关)和 (y₁−y₂)/(x₁−x₂)(就是弦的斜率 k)。中点坐标一代,k 立刻解出——<b>全程不联立、不用韦达、不解方程</b>。</p>
+      <h3>椭圆点差法推导 x²/a²+y²/b²=1</h3>
+      <div class="mono">x₁²/a²+y₁²/b²=1，x₂²/a²+y₂²/b²=1，两式相减:</div>
+      <div class="mono">(x₁²−x₂²)/a² + (y₁²−y₂²)/b² = 0</div>
+      <div class="mono">(x₁+x₂)(x₁−x₂)/a² + (y₁+y₂)(y₁−y₂)/b² = 0</div>
+      <div class="mono">k = (y₁−y₂)/(x₁−x₂) = −(b²/a²)·(x₁+x₂)/(y₁+y₂) = −(b²/a²)·(x_M/y_M)</div>
+      <div class="eq">椭圆结论:k_AB · k_OM = −b²/a²　(k_OM=y_M/x_M)</div>
+      <p style="margin:8px 0"><b>同理:</b> 抛物线 y²=2px 点差法得 k=p/y_M(=2p/(y₁+y₂));双曲线 x²/a²−y²/b²=1 得 k_AB·k_OM=+b²/a²(符号变正)。都是「代入相减」这一招。</p>
+      <p class="trap">⚠ 点差法给出的斜率必须<b>回头验证 Δ&gt;0</b>(中点在曲线内部,直线才真能截出弦)。中点在椭圆外时,无解;这一步漏了要扣分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 点差法:拖动中点 M,自动算出弦所在直线斜率 k(k_AB·k_OM=−b²/a²)</div>
+      <svg id="pdSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>中点 x_M <input id="pdX" type="range" min="-2.6" max="2.6" value="1.2" step="0.05"></label>
+        <label>中点 y_M <input id="pdY" type="range" min="-1.7" max="1.7" value="0.7" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>k_OM=y_M/x_M</b><span id="pdKom">0</span></div>
+        <div><b>−b²/a²</b><span id="pdC">0</span></div>
+        <div><b>k_AB(点差法)</b><span id="pdK">0</span></div>
+        <div><b>M 在椭圆内?</b><span id="pdIn">0</span></div>
+      </div>
+      <p class="small">椭圆 x²/9+y²/4=1(a²=9,b²=4)。拖中点 M。只要 M 在椭圆<b>内部</b>,程序用 k_AB=−(b²/a²)·(x_M/y_M) 算出弦斜率并画出对应弦(M 正好是它的中点)。M 跑到椭圆外就没有这样的弦——正是「中点必须在曲线内」的直观。</p>
+    </div>
+
+    <h2 class="o">④ 弦长随斜率变化 & 中点弦的中点轨迹</h2>
+    <div class="card">
+      <h3>弦长随斜率如何变</h3>
+      <p style="margin:6px 0">过定点的一族直线,斜率 k 不同,截出的弦长也不同。对椭圆过中心的弦,<b>沿长轴方向的弦最长</b>(=2a,长轴),<b>沿短轴方向最短</b>(=2b)。理解「弦长是 k 的函数」,是很多最值题的入口。</p>
+      <h3>中点弦的中点轨迹</h3>
+      <p style="margin:6px 0"><b>已知斜率 k 固定,让弦平移,求中点的轨迹:</b> 对每条斜率为 k 的弦,中点 M 满足 k_AB·k_OM=−b²/a²,即 k·(y_M/x_M)=−b²/a²,整理得 <b>y_M = −(b²/(a²k))·x_M</b>——一条<b>过原点的直线</b>(截在椭圆内的一段)。这就是「平行弦中点共线」定理。</p>
+      <div class="eq">平行弦(斜率 k 固定)中点轨迹:y = −(b²/(a²k))·x　(过中心)</div>
+      <p class="trap">⚠ 中点轨迹只取椭圆<b>内部</b>那一段(弦要真存在)。别把整条直线都当轨迹。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 3 — 弦长随斜率 k 变化曲线(过椭圆中心的弦:k=0 最长 2a，k→∞ 趋 2b)</div>
+      <svg id="lkSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>当前斜率 k <input id="lkK" type="range" min="-4" max="4" value="0.5" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 k</b><span id="lkKv">0</span></div>
+        <div><b>此弦长 |AB|</b><span id="lkLen">0</span></div>
+        <div><b>最长(k=0)</b><span id="lkMax">0</span></div>
+        <div><b>最短(竖直)</b><span id="lkMin">0</span></div>
+      </div>
+      <p class="small">椭圆 x²/9+y²/4=1,过中心的弦。横轴=斜率 k,纵轴=弦长。曲线告诉你:<b>水平弦最长(2a=6)</b>,越竖直越短,趋近<b>短轴 2b=4</b>。红点是当前 k。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 4 — 平行弦中点轨迹:固定斜率 k，平移弦，中点连成一条过中心的直线</div>
+      <svg id="mtSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="mtGo">▶ 平移演示</button><button id="mtReset">↺ 重置</button>
+        <label>平行弦斜率 k <input id="mtK" type="range" min="-2" max="2" value="0.8" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>弦斜率 k</b><span id="mtKv">0</span></div>
+        <div><b>中点轨迹斜率</b><span id="mtKom">0</span></div>
+        <div><b>k·k_OM</b><span id="mtProd">0</span></div>
+        <div><b>−b²/a²</b><span id="mtC">0</span></div>
+      </div>
+      <p class="small">一族<b>斜率相同</b>的弦(灰色)平移扫过椭圆,每条弦的中点(蓝点)全部落在<b>一条过中心的直线</b>(绿线)上。验证 k·k_OM 恒等于 −b²/a²=−4/9。</p>
+    </div>
+
+    <h2 class="v">⑤ 垂直平分线过定点 & 焦点弦长</h2>
+    <div class="card">
+      <h3>垂直平分线过定点型</h3>
+      <p style="margin:6px 0"><b>套路:</b> 弦 AB 的<b>垂直平分线</b>过弦的中点 M,斜率为 −1/k_AB。若题目要证「垂直平分线过某定点」或求定点,先用<b>点差法</b>拿到 M 与 k_AB 的关系,写出垂直平分线方程 y−y_M=−(1/k)(x−x_M),再消参数找定点。</p>
+      <div class="mono">垂直平分线:y − y_M = −(1/k_AB)(x − x_M)，其中 M 是弦中点。</div>
+      <h3>焦点弦长型(焦半径/焦准)</h3>
+      <p style="margin:6px 0"><b>抛物线 y²=2px:</b> 过焦点的弦 AB,焦半径 r=x+p/2(到准线距离),所以<b>焦点弦长 |AB|=x₁+x₂+p</b>。这是抛物线焦点弦最快的公式,不用勾距离。</p>
+      <p style="margin:6px 0"><b>椭圆:</b> 焦半径 r=a±ex(e 为离心率),过焦点弦长 |AB|=r₁+r₂=2a−e(x₁+x₂)(左焦)。通径(垂直长轴的焦点弦)长 <b>2b²/a</b>,是椭圆最短的焦点弦。</p>
+      <div class="eq">抛物线焦点弦 |AB|=x₁+x₂+p　|　椭圆通径 2b²/a</div>
+      <p class="trap">⚠ 焦点弦优先用<b>焦半径/焦准公式</b>(x₁+x₂+p),别一上来就勾距离硬算。搞清是左焦还是右焦,焦半径符号别错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 5 — 抛物线焦点弦长:过焦点的弦，|AB|=x₁+x₂+p（焦半径=到准线距离）</div>
+      <svg id="fcSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>焦点弦斜率 k <input id="fcK" type="range" min="-3" max="3" value="1" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>x₁+x₂</b><span id="fcSum">0</span></div>
+        <div><b>|AB|=x₁+x₂+p</b><span id="fcLen">0</span></div>
+        <div><b>直接距离验证</b><span id="fcChk">0</span></div>
+        <div><b>通径(k→∞)</b><span id="fcLatus">0</span></div>
+      </div>
+      <p class="small">抛物线 y²=4x(2p=4,p=2,焦点 F(1,0),准线 x=−1)。虚线=A、B 到准线的水平段(焦半径=x+p/2)。弦长 |AB|=x₁+x₂+p 与「直接算距离」结果一致。k→竖直时得<b>通径 2p=4</b>(最短焦点弦)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 6 — 垂直平分线过定点:弦 AB 的中垂线，随弦平移始终过某定点</div>
+      <svg id="ppSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ppGo">▶ 平移弦</button><button id="ppReset">↺ 重置</button>
+        <label>弦斜率 k <input id="ppK" type="range" min="0.3" max="2" value="0.8" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>弦斜率 k</b><span id="ppKv">0</span></div>
+        <div><b>中垂线斜率 −1/k</b><span id="ppPerp">0</span></div>
+        <div><b>中垂线过定点 x</b><span id="ppFx">0</span></div>
+        <div><b>定点在 x 轴</b><span id="ppOn">0</span></div>
+      </div>
+      <p class="small">斜率固定的一族弦(灰),中点(蓝)在绿线上;每条弦的<b>中垂线</b>(紫)随弦平移,却<b>始终交 x 轴于同一定点</b>(红点)。这是「中垂线过定点」题的几何直觉:先点差法定中点线,中垂线交轴即得定点。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 弦长公式求弦长</h3>
+      <p><b class="tag">触发信号:</b>「直线交椭圆/抛物线于 A、B 两点，求 |AB|」，给了直线方程或斜率与定点。</p>
+      <p><b class="tag">标准动作:</b>直线代入曲线消元 → 一元二次 → 验 Δ&gt;0 → 韦达 x₁+x₂、x₁x₂ → |AB|=√(1+k²)·√((x₁+x₂)²−4x₁x₂)。</p>
+      <p><b class="tag">示例(带解):</b>直线 y=x+1 交椭圆 x²/2+y²=1。代入:x²/2+(x+1)²=1 → x²+2(x+1)²=2 → 3x²+4x=0 → x₁+x₂=−4/3，x₁x₂=0。|AB|=√(1+1²)·√((−4/3)²−0)=√2·(4/3)=<b>4√2/3</b>。</p>
+      <p class="trap">陷阱:忘验 Δ&gt;0;√(1+k²) 与 |x₁−x₂| 配错(用 y 时应换 √(1+1/k²));竖直弦不能套 y=kx+m。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 中点弦求直线斜率(点差法)</h3>
+      <p><b class="tag">触发信号:</b>「弦 AB 的中点是 M(x₀,y₀)，求弦所在直线方程/斜率」，给了明确中点坐标。</p>
+      <p><b class="tag">标准动作:</b>A、B 代入曲线方程相减(点差法) → k=−(b²/a²)·(x₀/y₀)(椭圆) → 写出直线 y−y₀=k(x−x₀) → 回验 Δ&gt;0。</p>
+      <p><b class="tag">示例(带解):</b>椭圆 x²/16+y²/4=1，弦中点 M(2,1)。点差法:k_AB=−(b²/a²)(x_M/y_M)=−(4/16)(2/1)=−1/4·2=<b>−1/2</b>。弦所在直线 y−1=−½(x−2)，即 x+2y−4=0。</p>
+      <p class="trap">陷阱:点差法后忘回验中点在椭圆内(Δ&gt;0);把 −b²/a² 的 a、b 记反;y_M=0 时斜率不存在要单独讨论。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 已知斜率求中点轨迹</h3>
+      <p><b class="tag">触发信号:</b>「斜率为 k 的一族平行弦，求它们中点的轨迹」，或「过某点作弦求中点轨迹」。</p>
+      <p><b class="tag">标准动作:</b>设中点 M(x,y)，用点差法 k=−(b²/a²)(x/y) → 代入已知 k → 整理出 x、y 关系(平行弦得过中心直线 y=−(b²/(a²k))x)，注意限定在椭圆内。</p>
+      <p><b class="tag">示例(带解):</b>椭圆 x²/4+y²=1，斜率 k=1 的平行弦中点轨迹。由 k_AB·k_OM=−b²/a²：1·(y/x)=−1/4 → <b>y=−x/4</b>(在椭圆内部一段)。</p>
+      <p class="trap">陷阱:漏掉「椭圆内部」的范围限制;把 k_OM 写成 x/y(应为 y/x);中心不在原点时先平移坐标。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 垂直平分线过定点</h3>
+      <p><b class="tag">触发信号:</b>「弦 AB 的垂直平分线过定点」「求 x 轴上定点使 |PA|=|PB|」，含「中垂线/等距」。</p>
+      <p><b class="tag">标准动作:</b>点差法得中点 M 与 k_AB → 中垂线 y−y_M=−(1/k)(x−x_M) → 令 y=0 求 x 截距，或消去参数证其为常数(定点)。</p>
+      <p><b class="tag">示例(带解):</b>抛物线 y²=4x 上斜率为 k 的弦 AB，中点 M(x₀,y₀) 满足 k=2/y₀(点差)。中垂线交 x 轴:x=x₀+y₀/k·... 化简后 x 截距与 k 无关，得固定定点(可证为(x₀+2,0)类常数)——说明中垂线过 x 轴定点。</p>
+      <p class="trap">陷阱:中垂线斜率是 −1/k 不是 k;定点常在对称轴(x 轴)上,先设定点在轴上简化;别忘 Δ&gt;0 保证弦存在。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 焦点弦长</h3>
+      <p><b class="tag">触发信号:</b>「过焦点的弦 AB，求 |AB|」「求最短焦点弦/通径」，弦明确过焦点。</p>
+      <p><b class="tag">标准动作:</b>抛物线优先 |AB|=x₁+x₂+p(焦半径=x+p/2);椭圆用 |AB|=2a−e(x₁+x₂)或直接韦达+弦长公式;最短焦点弦=通径 2b²/a(椭圆)、2p(抛物线)。</p>
+      <p><b class="tag">示例(带解):</b>抛物线 y²=4x(p=2)，过焦点 F(1,0) 斜率 1 的弦。y=x−1 代入 y²=4x：(x−1)²=4x → x²−6x+1=0 → x₁+x₂=6。|AB|=x₁+x₂+p=6+2=<b>8</b>。</p>
+      <p class="trap">陷阱:抛物线焦点弦别勾距离硬算,用 x₁+x₂+p;分清 2p 与 p;椭圆焦半径 a±ex 的符号看左右焦。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 点差法求出斜率后<b>必须回验 Δ&gt;0</b>(中点在曲线内部,弦才真存在)。中点在椭圆外则无解。</p>
+      <p class="trap">② <b>斜率不存在(竖直弦)</b>要单独讨论:直线 x=x₀,不能套 y=kx+m;点差法里 y_M=0 时 k 不存在。</p>
+      <p class="trap">③ <b>中点必须在曲线内部</b>。判定椭圆内:x₀²/a²+y₀²/b²&lt;1。这是点差法有解的前提。</p>
+      <p class="trap">④ 弦长公式配对别错:<b>√(1+k²) 配 |x₁−x₂|</b>;用 y 的韦达时应换 <b>√(1+1/k²) 配 |y₁−y₂|</b>。x 还是 y,看你消掉了谁。</p>
+      <p class="trap">⑤ 椭圆 k_AB·k_OM=<b>−</b>b²/a²,双曲线是<b>+</b>b²/a²,符号别抄反。</p>
+      <p class="trap">⑥ (x₁+x₂)²−4x₁x₂ 才是 (x₁−x₂)²,别写成 (x₁+x₂)²−2x₁x₂。</p>
+      <p class="trap">⑦ 焦点弦优先用<b>焦半径公式</b>(抛物线 x₁+x₂+p),别死勾两点距离。</p>
+      <p class="trap">⑧ 中点轨迹只取<b>曲线内部</b>那一段,不是整条直线。</p>
+      <p class="trap">⑨ 中心不在原点(如 (x−1)²/a²+…)时,点差法结论里的 x_M/y_M 要用<b>相对中心</b>的坐标,先平移。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 点差法的本质是「对差商取隐函数导数」:</b> 两式相减除以 (x₁−x₂),得到的正是曲线在中点附近的<b>平均斜率</b>≈切线斜率的隐微分。所以 k_AB·k_OM=−b²/a² 其实等价于「椭圆在 M 处的隐函数导数 y′=−(b²x)/(a²y)」。理解这一层,你会发现点差法、切线、极线三者同源。</p>
+      <p style="margin:8px 0"><b>② 「弦长选 x 还是选 y」的判据:</b> 直线越接近竖直(k 大),用 x 作韦达数值不稳,改用 x=my+t 的形式(以 y 为主元)联立,弦长写成 √(1+m²)·|y₁−y₂|。凡是<b>过 x 轴上定点、可能竖直</b>的弦,一律设 x=my+t,一次性覆盖竖直情形,免去分类讨论——这是竞赛与压轴题的标准手法。</p>
+      <p style="margin:8px 0"><b>③ 中点弦与「极点极线」互为表里:</b> 以 M 为中点的弦所在直线,就是把椭圆方程中 x²→x·x_M、y²→y·y_M「减半代换」得到的<b>中点弦方程</b>:x·x_M/a²+y·y_M/b²=x_M²/a²+y_M²/b²。记住这个「代半」公式,中点弦方程一步写出,不必点差。</p>
+      <p style="margin:8px 0"><b>④ 平行弦中点共线 = 仿射不变性:</b> 椭圆是圆的仿射像,圆里「平行弦中点在过心的直径上」经仿射变换仍成立→椭圆平行弦中点共线且过中心。用仿射眼光看,很多椭圆结论都能从圆「搬运」过来,秒懂 k_AB·k_OM 为定值的根源。</p>
+      <p style="margin:8px 0"><b>⑤ 焦点弦的统一武器是焦准定义:</b> 圆锥曲线上任一点到焦点距离=离心率×到准线距离(r=e·d)。抛物线 e=1 给出 |AB|=x₁+x₂+p;椭圆 e&lt;1 给出 r=a−ex。凡「焦点弦、焦半径、焦点三角形」题,回到 <b>r=e·d</b> 这条定义,比任何公式都稳。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 配套:圆锥曲线定义与离心率、直线与圆锥曲线位置关系</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#9a927e";
+
+/* ===== 互动1:椭圆弦长 x²/9+y²/4=1 ===== */
+(function(){
+  const svg=document.getElementById('chSvg');
+  const Ks=document.getElementById('chK'),Ms=document.getElementById('chM');
+  const oSum=document.getElementById('chSum'),oPro=document.getElementById('chPro'),oLen=document.getElementById('chLen'),oMid=document.getElementById('chMid');
+  const A2=9,B2=4; // a^2=9, b^2=4
+  // screen mapping: center (350,180), scale
+  const CX=350,CY=180,SX=95,SY=63;
+  function toScreen(x,y){return [CX+x*SX,CY-y*SY];}
+  let k=0.6,m=0;
+  function sync(){k=+Ks.value;m=+Ms.value;draw();}
+  Ks.oninput=Ms.oninput=sync;
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:20,y1:CY,x2:680,y2:CY,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'line',{x1:CX,y1:10,x2:CX,y2:350,stroke:'#c9c0a8','stroke-width':2});
+    // ellipse
+    el(svg,'ellipse',{cx:CX,cy:CY,rx:3*SX,ry:2*SY,fill:'rgba(20,80,200,0.06)',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:CX+3*SX+6,y:CY-6,'font-size':12,'font-weight':800,fill:BLUE}).textContent='x²/9+y²/4=1';
+    // solve intersection: x^2/9 + (kx+m)^2/4 = 1
+    // -> (4 + 9k^2) x^2 + 18 k m x + 9 m^2 - 36 = 0
+    const A=4+9*k*k, Bc=18*k*m, C=9*m*m-36;
+    const disc=Bc*Bc-4*A*C;
+    // draw line across
+    const xL=-3.6,xR=3.6;
+    const pL=toScreen(xL,k*xL+m),pR=toScreen(xR,k*xR+m);
+    el(svg,'line',{x1:pL[0],y1:pL[1],x2:pR[0],y2:pR[1],stroke:'#8a7f5f','stroke-width':2,'stroke-dasharray':'5 4'});
+    if(disc<=0){
+      oSum.textContent='—';oPro.textContent='—';oLen.textContent='无交点';oMid.textContent='—';
+      el(svg,'text',{x:CX,y:40,'font-size':15,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='Δ<0：直线与椭圆相离，无弦';
+      return;
+    }
+    const sum=-Bc/A, pro=C/A;
+    const x1=(-Bc+Math.sqrt(disc))/(2*A), x2=(-Bc-Math.sqrt(disc))/(2*A);
+    const y1=k*x1+m, y2=k*x2+m;
+    const len=Math.sqrt(1+k*k)*Math.sqrt(sum*sum-4*pro);
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    // chord
+    const s1=toScreen(x1,y1), s2=toScreen(x2,y2);
+    el(svg,'line',{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],stroke:RED,'stroke-width':5});
+    el(svg,'circle',{cx:s1[0],cy:s1[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:s2[0],cy:s2[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:s1[0]+8,y:s1[1]-8,'font-size':13,'font-weight':900,fill:RED}).textContent='A';
+    el(svg,'text',{x:s2[0]+8,y:s2[1]-8,'font-size':13,'font-weight':900,fill:RED}).textContent='B';
+    // midpoint
+    const sm=toScreen(mx,my);
+    el(svg,'circle',{cx:sm[0],cy:sm[1],r:6,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sm[0]+8,y:sm[1]+16,'font-size':12,'font-weight':900,fill:'#b8860b'}).textContent='M';
+    // OM line
+    el(svg,'line',{x1:CX,y1:CY,x2:sm[0],y2:sm[1],stroke:GREEN,'stroke-width':2,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:CX,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='|AB|=√(1+k²)·√((x₁+x₂)²−4x₁x₂)';
+    oSum.textContent=sum.toFixed(2);oPro.textContent=pro.toFixed(2);oLen.textContent=len.toFixed(3);
+    oMid.textContent='('+mx.toFixed(2)+','+my.toFixed(2)+')';
+  }
+  sync();
+})();
+
+/* ===== 互动2:点差法 拖中点求斜率 ===== */
+(function(){
+  const svg=document.getElementById('pdSvg');
+  const Xs=document.getElementById('pdX'),Ys=document.getElementById('pdY');
+  const oKom=document.getElementById('pdKom'),oC=document.getElementById('pdC'),oK=document.getElementById('pdK'),oIn=document.getElementById('pdIn');
+  const A2=9,B2=4;
+  const CX=350,CY=180,SX=95,SY=63;
+  function toScreen(x,y){return [CX+x*SX,CY-y*SY];}
+  let mx=1.2,my=0.7;
+  function sync(){mx=+Xs.value;my=+Ys.value;draw();}
+  Xs.oninput=Ys.oninput=sync;
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:20,y1:CY,x2:680,y2:CY,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'line',{x1:CX,y1:10,x2:CX,y2:350,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'ellipse',{cx:CX,cy:CY,rx:3*SX,ry:2*SY,fill:'rgba(30,158,134,0.06)',stroke:GREEN,'stroke-width':3});
+    const inside=(mx*mx/A2+my*my/B2)<1;
+    const kom=my/mx;
+    const cval=-B2/A2;
+    oKom.textContent=(Math.abs(mx)<1e-6?'∞':kom.toFixed(3));
+    oC.textContent=cval.toFixed(3);
+    oIn.textContent=inside?'是 ✓':'否 ✗';
+    // midpoint dot
+    const sm=toScreen(mx,my);
+    el(svg,'circle',{cx:sm[0],cy:sm[1],r:7,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sm[0]+9,y:sm[1]-9,'font-size':13,'font-weight':900,fill:'#b8860b'}).textContent='M';
+    el(svg,'line',{x1:CX,y1:CY,x2:sm[0],y2:sm[1],stroke:GREEN,'stroke-width':2,'stroke-dasharray':'4 3'});
+    if(!inside||Math.abs(my)<1e-6){
+      oK.textContent=Math.abs(my)<1e-6?'∞(竖直)':'M 在外，无弦';
+      el(svg,'text',{x:CX,y:335,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=inside?'y_M=0：此中点对应竖直弦':'M 在椭圆外：不存在以 M 为中点的弦';
+      el(svg,'text',{x:CX,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='k_AB·k_OM = −b²/a² = −4/9';
+      return;
+    }
+    // k_AB from 点差法
+    const k=-(B2/A2)*(mx/my);
+    oK.textContent=k.toFixed(3);
+    // draw chord with this slope through M, find endpoints on ellipse
+    // line y = k(x-mx)+my = kx + (my-k*mx); m0=my-k*mx
+    const m0=my-k*mx;
+    const A=4+9*k*k, Bc=18*k*m0, C=9*m0*m0-36;
+    const disc=Bc*Bc-4*A*C;
+    if(disc>0){
+      const x1=(-Bc+Math.sqrt(disc))/(2*A), x2=(-Bc-Math.sqrt(disc))/(2*A);
+      const y1=k*x1+m0,y2=k*x2+m0;
+      const s1=toScreen(x1,y1),s2=toScreen(x2,y2);
+      el(svg,'line',{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],stroke:RED,'stroke-width':5});
+      el(svg,'circle',{cx:s1[0],cy:s1[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'circle',{cx:s2[0],cy:s2[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:s1[0]+7,y:s1[1]-7,'font-size':12,'font-weight':900,fill:RED}).textContent='A';
+      el(svg,'text',{x:s2[0]+7,y:s2[1]-7,'font-size':12,'font-weight':900,fill:RED}).textContent='B';
+    }
+    el(svg,'text',{x:CX,y:30,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='k_AB = −(b²/a²)(x_M/y_M) = '+k.toFixed(3);
+    el(svg,'text',{x:CX,y:335,'font-size':12.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='k_AB·k_OM = '+(k*kom).toFixed(3)+' = −4/9 ✓';
+  }
+  sync();
+})();
+
+/* ===== 互动3:弦长随斜率(过中心弦) ===== */
+(function(){
+  const svg=document.getElementById('lkSvg');
+  const Ks=document.getElementById('lkK');
+  const oKv=document.getElementById('lkKv'),oLen=document.getElementById('lkLen'),oMax=document.getElementById('lkMax'),oMin=document.getElementById('lkMin');
+  const a=3,b=2; // a^2=9,b^2=4
+  // chord through center slope k: half-length^2 = 1/(1/((a^2)) *cos... ) — use param: point (x, kx) on ellipse
+  function chordLen(k){
+    // x^2/9 + (k x)^2/4 =1 -> x^2 (1/9 + k^2/4)=1 -> x^2 = 1/(1/9+k^2/4)
+    const x2=1/(1/9+k*k/4);
+    const x=Math.sqrt(x2), y=k*x;
+    return 2*Math.sqrt(x*x+y*y); // full chord = 2*half
+  }
+  let k=0.5;
+  function sync(){k=+Ks.value;draw();}
+  Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,H=210;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='|AB|';
+    el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='k';
+    const kMin=-4,kMax=4,lenMax=2*a; // 6
+    const sx=W/(kMax-kMin);
+    // curve
+    let d='';
+    for(let i=0;i<=160;i++){
+      const kk=kMin+(kMax-kMin)*i/160;
+      const L=chordLen(kk);
+      const px=X0+(kk-kMin)*sx;
+      const py=Y0+H-(L/ (2*a))*H*0.9;
+      d+=(i===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:ORANGE,'stroke-width':3.5});
+    // axis ticks: k=0
+    const x0=X0+(0-kMin)*sx;
+    el(svg,'line',{x1:x0,y1:Y0,x2:x0,y2:Y0+H,stroke:'#c9c0a8','stroke-width':1.5,'stroke-dasharray':'4 3'});
+    el(svg,'text',{x:x0,y:Y0+H+20,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='k=0';
+    // lines for 2a and 2b
+    const y2a=Y0+H-(2*a/(2*a))*H*0.9, y2b=Y0+H-(2*b/(2*a))*H*0.9;
+    el(svg,'line',{x1:X0,y1:y2a,x2:X0+W,y2:y2a,stroke:GREEN,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+W-4,y:y2a-4,'font-size':11.5,'font-weight':800,fill:GREEN,'text-anchor':'end'}).textContent='最长 2a=6';
+    el(svg,'line',{x1:X0,y1:y2b,x2:X0+W,y2:y2b,stroke:VIO,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+W-4,y:y2b-4,'font-size':11.5,'font-weight':800,fill:VIO,'text-anchor':'end'}).textContent='趋 2b=4';
+    // current point
+    const L=chordLen(k);
+    const cxp=X0+(k-kMin)*sx, cyp=Y0+H-(L/(2*a))*H*0.9;
+    el(svg,'circle',{cx:cxp,cy:cyp,r:7,fill:RED,stroke:INK,'stroke-width':2});
+    oKv.textContent=k.toFixed(2);oLen.textContent=L.toFixed(3);oMax.textContent=(2*a).toFixed(1);oMin.textContent=(2*b).toFixed(1);
+  }
+  sync();
+})();
+
+/* ===== 互动4:平行弦中点轨迹 ===== */
+(function(){
+  const svg=document.getElementById('mtSvg');
+  const Ks=document.getElementById('mtK');
+  const oKv=document.getElementById('mtKv'),oKom=document.getElementById('mtKom'),oProd=document.getElementById('mtProd'),oC=document.getElementById('mtC');
+  const A2=9,B2=4;
+  const CX=350,CY=180,SX=95,SY=63;
+  function toScreen(x,y){return [CX+x*SX,CY-y*SY];}
+  let k=0.8,anim=0,running=false;
+  function sync(){k=+Ks.value;anim=1;draw();}
+  Ks.oninput=sync;
+  function intersect(k,m0){
+    const A=4+9*k*k, Bc=18*k*m0, C=9*m0*m0-36;
+    const disc=Bc*Bc-4*A*C;
+    if(disc<=0)return null;
+    const x1=(-Bc+Math.sqrt(disc))/(2*A),x2=(-Bc-Math.sqrt(disc))/(2*A);
+    return {x1:x1,x2:x2,y1:k*x1+m0,y2:k*x2+m0,mx:(x1+x2)/2,my:(k*x1+m0+k*x2+m0)/2};
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:20,y1:CY,x2:680,y2:CY,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'line',{x1:CX,y1:10,x2:CX,y2:350,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'ellipse',{cx:CX,cy:CY,rx:3*SX,ry:2*SY,fill:'rgba(232,106,23,0.05)',stroke:ORANGE,'stroke-width':3});
+    // family of parallel chords, sweep intercept m0
+    const mrange=6; const N=9;
+    for(let i=0;i<=N;i++){
+      const m0=-mrange+2*mrange*i/N;
+      const r=intersect(k,m0);
+      if(!r)continue;
+      const s1=toScreen(r.x1,r.y1),s2=toScreen(r.x2,r.y2);
+      el(svg,'line',{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],stroke:GREY,'stroke-width':2});
+      const sm=toScreen(r.mx,r.my);
+      el(svg,'circle',{cx:sm[0],cy:sm[1],r:4.5,fill:BLUE,stroke:INK,'stroke-width':1.5});
+    }
+    // midpoint locus line: y = -(b^2/(a^2 k)) x  (through center)
+    const kom=-(B2/A2)/k;
+    // draw within ellipse: pick x from -3..3
+    const p1=toScreen(-3,kom*-3),p2=toScreen(3,kom*3);
+    el(svg,'line',{x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1],stroke:GREEN,'stroke-width':3.5});
+    el(svg,'text',{x:CX,y:28,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='平行弦(斜率 k)中点全在过中心的绿线上';
+    el(svg,'text',{x:CX,y:346,'font-size':12.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='k·k_OM = '+(k*kom).toFixed(3)+' = −b²/a² = −4/9';
+    oKv.textContent=k.toFixed(2);oKom.textContent=kom.toFixed(3);oProd.textContent=(k*kom).toFixed(3);oC.textContent=(-B2/A2).toFixed(3);
+  }
+  document.getElementById('mtGo').onclick=()=>{sync();};
+  document.getElementById('mtReset').onclick=()=>{sync();};
+  sync();
+})();
+
+/* ===== 互动5:抛物线焦点弦长 y²=4x ===== */
+(function(){
+  const svg=document.getElementById('fcSvg');
+  const Ks=document.getElementById('fcK');
+  const oSum=document.getElementById('fcSum'),oLen=document.getElementById('fcLen'),oChk=document.getElementById('fcChk'),oLatus=document.getElementById('fcLatus');
+  // y^2=4x -> 2p=4, p=2, focus (1,0), directrix x=-1
+  const p=2, focusX=1;
+  const OX=180,OY=170,SX=60,SY=60; // origin on screen
+  function toScreen(x,y){return [OX+x*SX,OY-y*SY];}
+  let k=1;
+  function sync(){k=+Ks.value;draw();}
+  Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    // axes
+    el(svg,'line',{x1:20,y1:OY,x2:680,y2:OY,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'line',{x1:OX,y1:10,x2:OX,y2:330,stroke:'#c9c0a8','stroke-width':2});
+    // parabola y^2=4x
+    let dU='',dD='';
+    for(let i=0;i<=120;i++){
+      const x=i/120*7.5; const y=Math.sqrt(4*x);
+      const su=toScreen(x,y), sd=toScreen(x,-y);
+      dU+=(i===0?'M':'L')+su[0].toFixed(1)+','+su[1].toFixed(1)+' ';
+      dD+=(i===0?'M':'L')+sd[0].toFixed(1)+','+sd[1].toFixed(1)+' ';
+    }
+    el(svg,'path',{d:dU,fill:'none',stroke:VIO,'stroke-width':3});
+    el(svg,'path',{d:dD,fill:'none',stroke:VIO,'stroke-width':3});
+    // directrix x=-1
+    const d1=toScreen(-1,3),d2=toScreen(-1,-3);
+    el(svg,'line',{x1:d1[0],y1:d1[1],x2:d2[0],y2:d2[1],stroke:GREY,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:d1[0]-4,y:d1[1]-4,'font-size':11.5,'font-weight':800,fill:GREY,'text-anchor':'end'}).textContent='准线 x=−1';
+    // focus
+    const sf=toScreen(focusX,0);
+    el(svg,'circle',{cx:sf[0],cy:sf[1],r:5,fill:INK});
+    el(svg,'text',{x:sf[0]+6,y:sf[1]+18,'font-size':12,'font-weight':900,fill:INK}).textContent='F(1,0)';
+    // chord through focus slope k: y = k(x-1). solve y^2=4x
+    // (k(x-1))^2=4x -> k^2 x^2 -(2k^2+4)x + k^2=0
+    let x1,x2,y1,y2;
+    if(Math.abs(k)>0.001){
+      const A=k*k, Bc=-(2*k*k+4), C=k*k;
+      const disc=Bc*Bc-4*A*C;
+      x1=(-Bc+Math.sqrt(disc))/(2*A);x2=(-Bc-Math.sqrt(disc))/(2*A);
+      y1=k*(x1-1);y2=k*(x2-1);
+    }else{
+      x1=x2=1;y1=2;y2=-2; // latus rectum
+    }
+    const sum=x1+x2;
+    const len=sum+p;
+    const dist=Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+    const s1=toScreen(x1,y1),s2=toScreen(x2,y2);
+    el(svg,'line',{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],stroke:RED,'stroke-width':4});
+    el(svg,'circle',{cx:s1[0],cy:s1[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:s2[0],cy:s2[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:s1[0]+7,y:s1[1]-6,'font-size':12,'font-weight':900,fill:RED}).textContent='A';
+    el(svg,'text',{x:s2[0]+7,y:s2[1]+16,'font-size':12,'font-weight':900,fill:RED}).textContent='B';
+    // focal radii to directrix (horizontal dashed)
+    const da=toScreen(-1,y1), db=toScreen(-1,y2);
+    el(svg,'line',{x1:s1[0],y1:s1[1],x2:da[0],y2:da[1],stroke:GREEN,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:s2[0],y1:s2[1],x2:db[0],y2:db[1],stroke:GREEN,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:OX+220,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='|AB| = x₁+x₂+p（焦半径=到准线距离）';
+    oSum.textContent=sum.toFixed(3);oLen.textContent=len.toFixed(3);oChk.textContent=dist.toFixed(3);oLatus.textContent=(2*p).toFixed(1);
+  }
+  sync();
+})();
+
+/* ===== 互动6:垂直平分线过定点 ===== */
+(function(){
+  const svg=document.getElementById('ppSvg');
+  const Ks=document.getElementById('ppK');
+  const oKv=document.getElementById('ppKv'),oPerp=document.getElementById('ppPerp'),oFx=document.getElementById('ppFx'),oOn=document.getElementById('ppOn');
+  const A2=9,B2=4;
+  const CX=350,CY=180,SX=95,SY=63;
+  function toScreen(x,y){return [CX+x*SX,CY-y*SY];}
+  let k=0.8;
+  function sync(){k=+Ks.value;draw();}
+  Ks.oninput=sync;
+  function intersect(k,m0){
+    const A=4+9*k*k, Bc=18*k*m0, C=9*m0*m0-36;
+    const disc=Bc*Bc-4*A*C;
+    if(disc<=0)return null;
+    const x1=(-Bc+Math.sqrt(disc))/(2*A),x2=(-Bc-Math.sqrt(disc))/(2*A);
+    return {x1:x1,x2:x2,y1:k*x1+m0,y2:k*x2+m0,mx:(x1+x2)/2,my:(k*x1+m0+k*x2+m0)/2};
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:20,y1:CY,x2:680,y2:CY,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'line',{x1:CX,y1:10,x2:CX,y2:350,stroke:'#c9c0a8','stroke-width':2});
+    el(svg,'ellipse',{cx:CX,cy:CY,rx:3*SX,ry:2*SY,fill:'rgba(122,63,242,0.05)',stroke:VIO,'stroke-width':3});
+    const perp=-1/k;
+    // midpoint locus line slope
+    const kom=-(B2/A2)/k;
+    const pl1=toScreen(-3,kom*-3),pl2=toScreen(3,kom*3);
+    el(svg,'line',{x1:pl1[0],y1:pl1[1],x2:pl2[0],y2:pl2[1],stroke:GREEN,'stroke-width':2.5});
+    // family of chords + perpendicular bisectors
+    const mrange=5,N=5;
+    let fxs=[];
+    for(let i=0;i<=N;i++){
+      const m0=-mrange+2*mrange*i/N;
+      const r=intersect(k,m0);
+      if(!r)continue;
+      const s1=toScreen(r.x1,r.y1),s2=toScreen(r.x2,r.y2);
+      el(svg,'line',{x1:s1[0],y1:s1[1],x2:s2[0],y2:s2[1],stroke:GREY,'stroke-width':1.8});
+      const sm=toScreen(r.mx,r.my);
+      el(svg,'circle',{cx:sm[0],cy:sm[1],r:4,fill:BLUE,stroke:INK,'stroke-width':1.2});
+      // perpendicular bisector: through (mx,my) slope perp. x-intercept where y=0:
+      // 0 - my = perp (x - mx) -> x = mx - my/perp
+      const fx=r.mx-r.my/perp;
+      fxs.push(fx);
+      // draw perp bisector segment
+      const px1=r.mx-1.6, py1=r.my+perp*(-1.6);
+      const px2=r.mx+1.6, py2=r.my+perp*(1.6);
+      const q1=toScreen(px1,py1),q2=toScreen(px2,py2);
+      el(svg,'line',{x1:q1[0],y1:q1[1],x2:q2[0],y2:q2[1],stroke:VIO,'stroke-width':1.6,'stroke-dasharray':'4 3'});
+    }
+    // the common x-intercept (定点) — for parallel chords, perp bisectors all cross x-axis at same point
+    const fxAvg=fxs.length?fxs.reduce((a,b)=>a+b,0)/fxs.length:0;
+    const sp=toScreen(fxAvg,0);
+    el(svg,'circle',{cx:sp[0],cy:sp[1],r:7,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sp[0]+8,y:sp[1]-8,'font-size':12,'font-weight':900,fill:RED}).textContent='定点';
+    el(svg,'text',{x:CX,y:28,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='中垂线(紫,斜率 −1/k)随弦平移，都过 x 轴同一定点';
+    // spread of fxs to check consistency
+    let mn=Math.min.apply(null,fxs), mx2=Math.max.apply(null,fxs);
+    const consistent=(mx2-mn)<0.15;
+    oKv.textContent=k.toFixed(2);oPerp.textContent=perp.toFixed(3);oFx.textContent=fxAvg.toFixed(3);
+    oOn.textContent=consistent?'是 ✓(共点)':'≈';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 弦长公式怎么写？为什么能不用真的解出 x₁、x₂？",a:"|AB|=√(1+k²)·|x₁−x₂|=√(1+k²)·√((x₁+x₂)²−4x₁x₂)。因为 y=kx+m 使 y₁−y₂=k(x₁−x₂)，且 |x₁−x₂| 可由韦达定理 x₁+x₂、x₁x₂ 表示，全程只需和与积，不必解出根。"},
+ {q:"2. 求弦长的标准三步是什么？哪一步最容易漏？",a:"① 直线代入曲线消元得一元二次；② 验 Δ>0 并写韦达 x₁+x₂=−B/A、x₁x₂=C/A；③ 代入弦长公式。最容易漏的是验 Δ>0（没有两交点就没有弦）。"},
+ {q:"3. 点差法的核心操作是什么？为什么能一步求斜率？",a:"把 A、B 两点坐标分别代入曲线方程，两式相减。用平方差公式拆开后，出现 (x₁+x₂)、(y₁+y₂)（含中点）与 (y₁−y₂)/(x₁−x₂)（弦斜率 k），代入中点坐标即可解出 k，不必联立解方程。"},
+ {q:"4. 椭圆 x²/a²+y²/b²=1 的中点弦，k_AB 与中点 M、与 k_OM 是什么关系？",a:"k_AB=−(b²/a²)·(x_M/y_M)；且 k_AB·k_OM=−b²/a²（k_OM=y_M/x_M）。双曲线对应结论符号变正：k_AB·k_OM=+b²/a²。"},
+ {q:"5. 用点差法求出斜率后，为什么必须回验 Δ>0？",a:"点差法只用了「A、B 在曲线上」，没保证以 M 为中点的弦真实存在。中点必须在曲线内部（椭圆内 x₀²/a²+y₀²/b²<1），否则 Δ≤0，直线与曲线不真正相交，无弦，答案作废。"},
+ {q:"6. 椭圆 x²/16+y²/4=1，弦中点 M(2,1)，求弦所在直线方程。",a:"点差法 k=−(b²/a²)(x_M/y_M)=−(4/16)(2/1)=−1/2。直线 y−1=−½(x−2)，即 x+2y−4=0。（M 在椭圆内，Δ>0，成立。）"},
+ {q:"7. 斜率固定为 k 的一族平行弦，它们的中点轨迹是什么？",a:"由 k_AB·k_OM=−b²/a²，k·(y/x)=−b²/a² → y=−(b²/(a²k))·x，是一条过中心的直线（只取椭圆内部一段）。这就是平行弦中点共线定理。"},
+ {q:"8. 抛物线 y²=2px 的焦点弦长最快怎么求？",a:"用焦半径=到准线距离 r=x+p/2，焦点弦长 |AB|=x₁+x₂+p。不必勾两点距离。最短焦点弦是通径 2p（垂直于对称轴）。"},
+ {q:"9. 抛物线 y²=4x，过焦点 F(1,0) 斜率 1 的弦，求 |AB|。",a:"p=2。y=x−1 代入 y²=4x：(x−1)²=4x → x²−6x+1=0 → x₁+x₂=6。|AB|=x₁+x₂+p=6+2=8。"},
+ {q:"10. 椭圆的通径长是多少？它有什么特殊地位？",a:"通径（过焦点且垂直长轴的弦）长 2b²/a，是椭圆所有焦点弦中最短的。抛物线的通径长 2p。"},
+ {q:"11. 弦长公式里 √(1+k²) 什么时候要换成 √(1+1/k²)？",a:"当你用 y 作主元（即消 x、对 y 用韦达，得 y₁+y₂、y₁y₂）时。此时 |AB|=√(1+1/k²)·|y₁−y₂|。斜率可能竖直的弦常设 x=my+t，弦长=√(1+m²)·|y₁−y₂|，一次覆盖竖直情形。"},
+ {q:"12. 「垂直平分线过定点」类题的解题主线是什么？",a:"先用点差法拿到弦中点 M 与斜率 k_AB 的关系；写出中垂线 y−y_M=−(1/k_AB)(x−x_M)；再令 y=0（或消参数）求 x 截距，证明其为与斜率无关的常数，即得定点（常在对称轴上）。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

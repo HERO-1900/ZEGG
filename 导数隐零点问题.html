@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导数中的隐零点问题（虚设零点） · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>导数中的隐零点问题（虚设零点）</h1>
+    <p class="lead">求 f(x) 最值要先解 f′(x)=0 找极值点。可有些方程<b>根本解不出精确值</b>——比如 x·e<sup>x</sup>=1、lnx+x=0。隐零点法（虚设零点）就是:<b>承认这个根存在,设它为 x₀,记住它满足的方程</b>,然后把这个方程当"等量代换工具",把 f(x₀) 里的超越项换掉,复杂最值瞬间化简。解不出?不解就是了。</p>
+
+    <div class="say">🗣️ <b>隐零点法(人话版):</b> 有些导函数零点"算不出精确值"(如 x·e<sup>x</sup>=1)。别硬解——<b>虚设</b>一个 x₀ 说"它就在这儿",把它满足的方程(如 e<sup>x₀</sup>=1/x₀)牢牢记住。这个方程是你的<b>换算器</b>:凡是 f(x₀) 里出现 e<sup>x₀</sup> 或 lnx₀,统统用方程换成"低级"的多项式,超越式降次,最值一算就出来。核心就一句话:<b>零点不解出来,但它满足的等式拿来当代换工具</b>。</div>
+
+    <div class="keybox"><b>三步口诀:</b> <b>①证在(零点存在定理+单调 ⇒ 唯一 x₀) → ②记式(写出 x₀ 满足的关系,如 e<sup>x₀</sup>=1/x₀ 或 lnx₀=−x₀) → ③代换(把 f(x₀) 中超越项整体替换,降次求最值)</b>。范围不够精确时再<b>缩小 x₀ 范围</b>放缩估计。永远不要去解那个精确根。</div>
+
+    <h2>① 为什么要虚设:零点算不出来的时候</h2>
+    <div class="card">
+      <div class="eq">f′(x)=0　⟹　x·e<sup>x</sup>=1　（解不出精确 x!）</div>
+      <p style="margin:8px 0">求 f(x) 最小值的常规套路:解 f′(x)=0 得极值点 x₀,代回 f(x₀)。可 <b>x·e<sup>x</sup>=1</b>、<b>lnx=−x</b>、<b>e<sup>x</sup>=x+2</b> 这类方程<b>没有初等解</b>(不能写成分数、根号、对数的组合)。这时候硬解是死路。</p>
+      <table>
+        <tr><th>导函数方程</th><th>能否精确求根</th><th>怎么办</th></tr>
+        <tr><td>x²−3x+2=0</td><td>能(x=1,2)</td><td>正常代入</td></tr>
+        <tr><td><b>x·e<sup>x</sup>=1</b></td><td><b>不能</b></td><td><b>虚设 x₀,记 e<sup>x₀</sup>=1/x₀</b></td></tr>
+        <tr><td><b>lnx+x=0</b></td><td><b>不能</b></td><td><b>虚设 x₀,记 lnx₀=−x₀</b></td></tr>
+      </table>
+      <p class="trap">⚠ 看到超越方程解不出,不是题目错了——这正是"隐零点"信号。别在解方程上耗时间,直接虚设。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 导函数 f′(x) 穿过零点 x₀:算不出精确值,但图象清清楚楚过零点一次</div>
+      <svg id="v1Svg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>参数 a <input id="v1a" type="range" min="0.4" max="2.4" value="1" step="0.05"></label>
+        <button id="v1Reset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>f′(x)=e^x − a/x</b><span id="v1f">—</span></div>
+        <div><b>零点 x₀ ≈</b><span id="v1x0">—</span></div>
+        <div><b>f′(x₀) 应为</b><span id="v1zero">0</span></div>
+        <div><b>x₀ 精确值</b><span id="v1exact">无初等解</span></div>
+      </div>
+      <p class="small">红曲线 f′(x)=e<sup>x</sup>−a/x 在 (0,∞) 上单调递增,穿过横轴<b>恰好一次</b>=零点 x₀。x₀ 的<b>精确值写不出来</b>,但它<b>存在且唯一</b>——虚设它就靠这条。改 a,零点位置变,但"过一次"的事实不变。</p>
+    </div>
+
+    <h2 class="b">② 核心原理:证存在唯一 → 记关系式 → 整体代换</h2>
+    <div class="card">
+      <h3>第1步:证零点存在且唯一</h3>
+      <p style="margin:6px 0"><b>存在:</b> 零点存在定理——找两点 a、b 使 f′(a)·f′(b)&lt;0(异号),则 (a,b) 内必有零点。<b>唯一:</b> 说明 f′(x) 在该区间<b>单调</b>(通常再对 f′ 求导,f″ 定号),单调函数至多一个零点 ⇒ 存在的那个就是唯一的 x₀。</p>
+      <div class="mono">存在(零点定理:f′(a)f′(b)<0) + 唯一(f′ 单调:f″ 定号) ⇒ 恰有一个 x₀</div>
+      <h3>第2步:写出 x₀ 满足的关系式</h3>
+      <p style="margin:6px 0">由 f′(x₀)=0 直接解出一个"整体等式"。这一步不是求 x₀,是求 <b>x₀ 各项之间的关系</b>:</p>
+      <div class="eq">e<sup>x₀</sup>=a/x₀　或　lnx₀=−x₀　或　x₀e<sup>x₀</sup>=1</div>
+      <h3>第3步:整体代换,超越项降次</h3>
+      <p style="margin:6px 0">把 f(x₀) 写出来,凡出现 e<sup>x₀</sup>、lnx₀ 的地方,用第2步的关系式<b>整体换成多项式</b>,超越式消失,f(x₀) 变成 x₀ 的<b>代数式</b>,好求范围/最值。</p>
+      <div class="mono">f(x₀)=e^{x₀}+... = (1/x₀)+...  ← 用 e^{x₀}=1/x₀ 把超越项换掉</div>
+      <h3>第4步(若需要):缩小 x₀ 范围,估计最值</h3>
+      <p style="margin:6px 0">代换后 f(x₀) 是 x₀ 的函数,想知道它的范围,就要 <b>缩小 x₀ 的区间</b>(把第1步的 (a,b) 收窄,比如 x₀∈(1/2,1)),再代进 f(x₀) 的单调式估计上下界。</p>
+      <p class="trap">⚠ 四步缺一不可。最常见丢分:跳过"证唯一"(单调性没说)、或代换时没用零点方程(白设 x₀)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 在 x₀ 处 f(x) 取最小值,用 e^{x₀}=1/x₀ 代换降次演示</div>
+      <svg id="v2Svg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="v2Step">▶ 下一步代换</button><button id="v2Reset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="v2Note"></div>
+      <p class="small">以 f(x)=e<sup>x</sup>−lnx 为例:f′(x₀)=0 ⇒ e<sup>x₀</sup>=1/x₀。原始 f(x₀)=e<sup>x₀</sup>−lnx₀ 含两个超越项;逐步用 e<sup>x₀</sup>=1/x₀ 和 lnx₀=−x₀ 代换,最后化成 <b>1/x₀+x₀</b> 这个纯代数式,一眼看出 ≥2。</p>
+    </div>
+
+    <h2 class="g">③ 零点存在定理:f′(a)·f′(b)&lt;0 锁定 x₀ 的区间</h2>
+    <div class="card">
+      <p style="margin:6px 0">虚设的第一关是<b>证存在</b>。零点存在定理:f′(x) 连续,若端点值<b>异号</b> f′(a)·f′(b)&lt;0,则 (a,b) 内至少一个零点。配合 f′ 单调,就是恰好一个 x₀。</p>
+      <div class="eq">f′(a)&lt;0, f′(b)&gt;0　⟹　∃ x₀∈(a,b), f′(x₀)=0</div>
+      <p style="margin:8px 0"><b>试探端点是技术活:</b> 想把 x₀ 卡在 (1/2,1),就代 f′(1/2) 和 f′(1),验证一负一正。选的端点越靠拢,x₀ 范围越精确(第4步放缩用得上)。</p>
+      <p class="trap">⚠ 只说"存在"不够,必须再说"f′ 单调 ⇒ 唯一",否则可能有多个零点,你代换的那个不一定是极值点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 3 — 零点存在定理:拖动端点 a、b,当 f′(a)f′(b)&lt;0 时锁定 x₀ 所在区间</div>
+      <svg id="v3Svg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>左端 a <input id="v3a" type="range" min="0.2" max="0.8" value="0.4" step="0.05"></label>
+        <label>右端 b <input id="v3b" type="range" min="0.9" max="1.8" value="1.2" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>f′(a)</b><span id="v3fa">0</span></div>
+        <div><b>f′(b)</b><span id="v3fb">0</span></div>
+        <div><b>f′(a)·f′(b)</b><span id="v3prod">0</span></div>
+        <div><b>x₀ 是否被锁定</b><span id="v3lock">—</span></div>
+      </div>
+      <p class="small">曲线是 f′(x)=e<sup>x</sup>−1/x。当 f′(a)&lt;0 且 f′(b)&gt;0(乘积&lt;0)时,区间 (a,b) 变绿,x₀ 被"夹"在里面。端点越靠拢,绿区越窄,对 x₀ 的估计越精确。乘积&gt;0 时无法保证,区间变红。</p>
+    </div>
+
+    <h2 class="o">④ 整体代换:把超越项换成多项式</h2>
+    <div class="card">
+      <p style="margin:6px 0">这是隐零点法的<b>核心技术</b>。设好 x₀、写好关系式后,代换的目标只有一个:<b>让 e<sup>x₀</sup>、lnx₀ 从 f(x₀) 里消失</b>,换成 x₀ 的多项式。</p>
+      <table>
+        <tr><th>零点关系式</th><th>遇到这个 → 换成</th></tr>
+        <tr><td>e<sup>x₀</sup>=1/x₀</td><td>e<sup>x₀</sup> → 1/x₀;　x₀=−lnx₀(两边取 ln)</td></tr>
+        <tr><td>lnx₀=−x₀</td><td>lnx₀ → −x₀</td></tr>
+        <tr><td>x₀·e<sup>x₀</sup>=1</td><td>e<sup>x₀</sup> → 1/x₀;　x₀+lnx₀=0</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> f(x₀)=e<sup>x₀</sup>+x₀. 由 e<sup>x₀</sup>=1/x₀ ⇒ f(x₀)=1/x₀+x₀. 超越项没了,右边 ≥2(基本不等式),最小值 2 到手,全程<b>没解出 x₀</b>。</p>
+      <p class="trap">⚠ 代换必须用<b>零点方程</b>,不能随便代数字。别看到 e<sup>x₀</sup> 就估个近似值——那样答案不精确,阅卷不给分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 4 — 整体代换前后表达式对比:超越式 ⇄ 代数式,一键切换看降次</div>
+      <svg id="v4Svg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="v4case on" data-c="0">e^{x₀}=1/x₀</button>
+        <button class="v4case" data-c="1">lnx₀=−x₀</button>
+        <button class="v4case" data-c="2">x₀e^{x₀}=1</button>
+      </div>
+      <div class="verdict" id="v4Note"></div>
+      <p class="small">左框=代换前(含 e<sup>x₀</sup>/lnx₀ 的超越式),右框=用零点方程代换后(纯 x₀ 的代数式)。中间箭头就是那把"换算器"。看清楚:代换<b>不改变值</b>,只把式子"翻译"成好求最值的形式。</p>
+    </div>
+
+    <h2 class="v">⑤ 范围放缩:x₀ 估不准最值怎么办</h2>
+    <div class="card">
+      <p style="margin:6px 0">代换后 f(x₀)=g(x₀) 是 x₀ 的函数。若题目要"最值的范围"或"证 f≥某常数",就要把 x₀ 卡进一个小区间,再代进 g 估计上下界。</p>
+      <div class="eq">x₀∈(m,n)　+　g(x₀) 单调　⟹　g(x₀)∈(g(m),g(n))</div>
+      <p style="margin:8px 0"><b>步骤:</b> ① 用零点存在定理把 x₀ 卡进 (m,n)(端点越近越好);② 判断 g(x₀) 在此区间的<b>单调性</b>;③ 代端点得到 g 的范围 ⇒ 最值范围。</p>
+      <p class="trap">⚠ 范围别取太粗!x₀∈(0,∞) 这种没意义。要卡到 (1/2,1) 这种小区间,估计才有用。也别忘了说 g 在该区间的单调性,否则端点值不是上下界。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 5 — x₀ 范围放缩估计最值:收窄 x₀ 区间,看最值估计带如何变紧</div>
+      <svg id="v5Svg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>区间宽度 <input id="v5w" type="range" min="0.05" max="0.9" value="0.5" step="0.05"></label>
+        <button id="v5Reset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>x₀ 区间左端 m</b><span id="v5m">0</span></div>
+        <div><b>x₀ 区间右端 n</b><span id="v5n">0</span></div>
+        <div><b>g(x₀)=1/x₀+x₀ 下界</b><span id="v5lo">0</span></div>
+        <div><b>g(x₀) 上界</b><span id="v5hi">0</span></div>
+      </div>
+      <p class="small">真实 x₀≈0.567(算不出精确值)。区间越窄,g(x₀)=1/x₀+x₀ 的估计带(黄条)越窄,越贴近真实最值。这就是"范围估计不能太粗"的直观:宽区间给的界很松,窄区间才有用。</p>
+    </div>
+
+    <h2 class="b">⑥ e^x 与 1/x 的交点就是隐零点</h2>
+    <div class="card">
+      <p style="margin:6px 0">很多隐零点方程能改写成"<b>两条熟悉曲线的交点</b>"。比如 e<sup>x</sup>=1/x(即 x·e<sup>x</sup>=1),就是曲线 y=e<sup>x</sup> 和 y=1/x 的交点横坐标,那个横坐标正是隐零点 x₀。</p>
+      <div class="eq">f′(x₀)=0 ⇔ e<sup>x₀</sup>=1/x₀ ⇔ 曲线 y=e<sup>x</sup> 与 y=1/x 相交于 x=x₀</div>
+      <p style="margin:8px 0">这个视角帮你:① 直观确认<b>零点存在唯一</b>(两曲线在 (0,∞) 只交一次);② 目测 x₀ 大概位置(便于选端点);③ 记牢关系式 e<sup>x₀</sup>=1/x₀。</p>
+      <p class="trap">⚠ 交点视角只是辅助判断,不能替代严格证明。卷面仍要写零点存在定理+单调性,不能只画图说"看图知道"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✖️ 互动 6 — e^x 与 1/x 的交点即隐零点:两曲线相交处横坐标=x₀</div>
+      <canvas id="v6Cv" width="700" height="320"></canvas>
+      <div class="ctrl">
+        <label>系数 k (y=k/x) <input id="v6k" type="range" min="0.4" max="2.2" value="1" step="0.05"></label>
+        <button id="v6Reset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>方程 e^x = k/x</b><span id="v6eq">—</span></div>
+        <div><b>交点 x₀ ≈</b><span id="v6x0">—</span></div>
+        <div><b>该处 e^{x₀}</b><span id="v6y">—</span></div>
+        <div><b>验证 e^{x₀}·x₀</b><span id="v6chk">—</span></div>
+      </div>
+      <p class="small">蓝线 y=e<sup>x</sup>,绿线 y=k/x。它们在 (0,∞) 上<b>恰好交一次</b>,交点横坐标(红竖线)就是隐零点 x₀,满足 e<sup>x₀</sup>=k/x₀。改 k,交点移动,但"只交一次 ⇒ 唯一零点"永远成立。验证列显示 e<sup>x₀</sup>·x₀≈k。</p>
+    </div>
+
+    <h2 class="v">⑦ 混合型:含 lnx 与 e^x 一起出现</h2>
+    <div class="card">
+      <p style="margin:6px 0">最狠的题把 e<sup>x</sup> 和 lnx <b>混在一起</b>,如 f(x)=e<sup>x</sup>−lnx。求导 f′(x)=e<sup>x</sup>−1/x,零点满足 <b>e<sup>x₀</sup>=1/x₀</b>。混合型的杀招是<b>双向代换</b>:</p>
+      <div class="mono">对 e^{x₀}=1/x₀ 两边取 ln:x₀ = ln(1/x₀) = −lnx₀ ⇒ lnx₀ = −x₀</div>
+      <p style="margin:8px 0">于是 f(x₀)=e<sup>x₀</sup>−lnx₀ = <b>1/x₀ − (−x₀) = 1/x₀ + x₀ ≥ 2</b>。一个关系式 e<sup>x₀</sup>=1/x₀ 同时给了 e<sup>x₀</sup> 和 lnx₀ 两个替换,两个超越项全消。</p>
+      <p class="trap">⚠ 混合型别只代一个超越项。e<sup>x₀</sup>=1/x₀ 取对数后还能得 lnx₀=−x₀,两个都要用上,f(x₀) 才彻底代数化。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 证明 f(x)≥a(隐零点代入求最小值)</h3>
+      <p><b class="tag">触发信号:</b>"证明 f(x)≥a(a 为常数)",而 f′(x)=0 是超越方程,解不出精确根。</p>
+      <p><b class="tag">标准动作:</b>虚设 x₀ 使 f′(x₀)=0(证存在唯一)→ 写 x₀ 关系式 → f(x₀)=最小值,代换降次 → 证 f(x₀)≥a。</p>
+      <p><b class="tag">示例(带解):</b>证 f(x)=e<sup>x</sup>−lnx≥2. f′(x)=e<sup>x</sup>−1/x 在 (0,∞) 单调递增(f″=e<sup>x</sup>+1/x²>0),f′(1/2)&lt;0、f′(1)>0 ⇒ 唯一 x₀∈(1/2,1),f 在 x₀ 取最小。由 e<sup>x₀</sup>=1/x₀ 及 lnx₀=−x₀:f(x₀)=e<sup>x₀</sup>−lnx₀=1/x₀+x₀≥2(基本不等式,x₀>0)。故 f(x)≥2。</p>
+      <p class="trap">陷阱:没证唯一;没用零点方程代换;基本不等式取等条件不检验。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 求参数范围(含隐零点)</h3>
+      <p><b class="tag">触发信号:</b>"若 f(x)≥0 对一切 x 恒成立,求 a 的范围",极值点是隐零点。</p>
+      <p><b class="tag">标准动作:</b>分离/不分离参数 → 最值在隐零点 x₀ 取到 → 用 x₀ 关系式把含 a 的最值化简 → 解 a 的不等式。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=e<sup>x</sup>−ax≥0(x>0)求 a 上界。若 a>0,f′=e<sup>x</sup>−a,零点 x₀ 满足 e<sup>x₀</sup>=a,即 x₀=lna,能解——但若换成 f′=e<sup>x</sup>−a/x 则 x₀ 隐藏,由 e<sup>x₀</sup>=a/x₀ 代入 f(x₀)=e<sup>x₀</sup>−a·lnx₀ 化简后得 a 的约束。关键:把 e<sup>x₀</sup>、lnx₀ 用关系式换掉再解 a。</p>
+      <p class="trap">陷阱:忘了先讨论使零点存在的参数范围;化简时漏代换,a 消不掉。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 隐零点满足方程的整体代换型</h3>
+      <p><b class="tag">触发信号:</b>题目直接给"设 x₀ 是 f′(x)=0 的根",要你求 f(x₀) 或证某等式。</p>
+      <p><b class="tag">标准动作:</b>写出 f′(x₀)=0 的关系式 → 把 f(x₀) 中每个超越项按关系式整体替换 → 得纯代数式。</p>
+      <p><b class="tag">示例(带解):</b>设 x₀ 满足 x₀e<sup>x₀</sup>=1,求 e<sup>x₀</sup>+lnx₀. 由 x₀e<sup>x₀</sup>=1 得 e<sup>x₀</sup>=1/x₀,取 ln:x₀+lnx₀=0 ⇒ lnx₀=−x₀. 故原式=1/x₀+(−x₀)=1/x₀−x₀,再由需要卡 x₀ 范围估值。</p>
+      <p class="trap">陷阱:只用了一个方向的代换;把 x₀e<sup>x₀</sup>=1 写错成 e<sup>x₀</sup>=x₀。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 估计隐零点范围放缩型</h3>
+      <p><b class="tag">触发信号:</b>要求"证 f 最小值∈(某区间)"或"证 f>某具体小数",代换后还剩 x₀。</p>
+      <p><b class="tag">标准动作:</b>用零点存在定理把 x₀ 卡进小区间 (m,n) → 判断 g(x₀) 单调性 → 代端点得 g 范围。</p>
+      <p><b class="tag">示例(带解):</b>接题型A,x₀∈(1/2,1),g(x₀)=1/x₀+x₀. g′=−1/x₀²+1&lt;0 在 (1/2,1) 递减,故 g∈(g(1),g(1/2))=(2, 5/2)。若要更紧,把 x₀ 卡进 (1/2,2/3) 再估。</p>
+      <p class="trap">陷阱:区间取太宽估计无效;忘判 g 单调性直接代端点;端点开闭搞错。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 含 lnx 与 e^x 混合型</h3>
+      <p><b class="tag">触发信号:</b>f(x) 里 e<sup>x</sup> 和 lnx 同时出现,零点方程一取对数就把两者串起来。</p>
+      <p><b class="tag">标准动作:</b>由 e<sup>x₀</sup>=(某式) 两边取 ln,得到 lnx₀ 的关系 → e<sup>x₀</sup> 和 lnx₀ 双向代换 → 两个超越项全消。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=e<sup>x</sup>−lnx−2,证 f>0. 隐零点 e<sup>x₀</sup>=1/x₀,取 ln 得 lnx₀=−x₀. f(x₀)=1/x₀−(−x₀)−2=1/x₀+x₀−2≥2−2=0,x₀=1 时取等但 x₀≠1(x₀∈(1/2,1)),故 f(x₀)>0,即 f(x)>0。</p>
+      <p class="trap">陷阱:只代 e<sup>x₀</sup> 忘代 lnx₀;取等条件没排除导致误判"最小为0"。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 必须<b>先证零点存在唯一</b>!零点存在定理(端点异号)给存在,f′ 单调(f″ 定号)给唯一。跳过唯一,代换的 x₀ 可能不是极值点。</p>
+      <p class="trap">② 代换<b>要用零点方程</b>。设了 x₀ 却不用 f′(x₀)=0 的关系式,等于白设。凡 e<sup>x₀</sup>、lnx₀ 都要换成 x₀ 的代数式。</p>
+      <p class="trap">③ 范围估计<b>不能太粗</b>。x₀∈(0,∞) 毫无用处,要卡到 (1/2,1) 这种小区间,并说明 g(x₀) 在此单调,端点值才是上下界。</p>
+      <p class="trap">④ <b>别去解精确零点</b>。x·e<sup>x</sup>=1 没有初等解,硬解浪费时间且不可能成功。隐零点法的精髓就是"不解也能算"。</p>
+      <p class="trap">⑤ 混合型要<b>双向代换</b>:e<sup>x₀</sup>=1/x₀ 取对数还给你 lnx₀=−x₀,两个都用,f(x₀) 才彻底代数化。</p>
+      <p class="trap">⑥ 基本不等式/最值的<b>取等条件</b>要检验。1/x₀+x₀≥2 取等要 x₀=1,若 x₀≠1 则严格大于,证严格不等式时这一步是关键。</p>
+      <p class="trap">⑦ 求参数范围时,先讨论<b>使零点存在的参数条件</b>,否则 x₀ 不存在,后面代换失去前提。</p>
+      <p class="trap">⑧ 单调性判断别偷懒。证 f′ 单调常要对 f′ 再求导看 f″ 符号,不能"看图说单调"。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 隐零点的本质是"用约束换未知":</b> x₀ 有一个自由度,但零点方程 f′(x₀)=0 给了它一条约束。你不知道 x₀ 是几,但你知道它"必须满足"这条等式——把等式当"守恒律",在 f(x₀) 里到处套用,未知就被约束"吃掉"了。这和物理里用守恒关系消变量是同一思想。</p>
+      <p style="margin:8px 0"><b>② 取对数是打通 e^x 与 lnx 的桥:</b> e<sup>x₀</sup>=1/x₀ 两边取 ln 立刻得 lnx₀=−x₀。凡混合型,先写指数形式的零点关系,再取对数得对数形式,两个超越项就用同一条约束的两种形态一次性消掉。会不会取这一步 ln,是普通生和尖子生的分水岭。</p>
+      <p style="margin:8px 0"><b>③ 代换后优先想基本不等式:</b> 隐零点题代换后常出现 1/x₀+x₀、x₀+e<sup>x₀</sup> 这类结构,十有八九用<b>基本不等式</b>或<b>构造新函数求导</b>收尾。看到"倒数和自身相加"直接上均值不等式,看到更复杂的就令 h(x₀)=g(x₀)−a 再求导证 ≥0。</p>
+      <p style="margin:8px 0"><b>④ 端点选择是精度的艺术:</b> 放缩题里 x₀ 卡在哪个区间,决定你能不能证到题目要的界。选端点时代入试算,让区间尽量窄且端点值"漂亮"(如 1/2、1、ln2)。端点选得巧,一步到位;选得笨,估计不够紧要反复收窄。</p>
+      <p style="margin:8px 0"><b>⑤ 隐零点 = 极值点,不必知道它在哪:</b> 高观点看,f 的最值就"在" x₀ 处,x₀ 的具体数值对最终答案<b>不重要</b>——重要的是它满足的方程。这解释了为什么解不出 x₀ 却能求出精确最值:最值是 x₀ 的<b>对称/代数组合</b>(如 1/x₀+x₀),恰好被零点方程约束成常数或可估的量。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 主题:导数中的隐零点问题(虚设零点) · 配套:导数与单调性、极值最值攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+
+/* 二分法求 f'(x)=e^x - a/x 在(0,inf)的零点(仅用于画图/显示，非解析解) */
+function findRoot(a){
+  let lo=1e-4,hi=6;
+  const f=x=>Math.exp(x)-a/x;
+  for(let i=0;i<80;i++){const mid=(lo+hi)/2;if(f(mid)>0)hi=mid;else lo=mid;}
+  return (lo+hi)/2;
+}
+
+/* ===== 互动1:f'(x) 穿过零点 x0 ===== */
+(function(){
+  const svg=document.getElementById('v1Svg');
+  const As=document.getElementById('v1a');
+  const of=document.getElementById('v1f'),ox0=document.getElementById('v1x0');
+  let a=1;
+  function sync(){a=+As.value;draw();}
+  As.oninput=sync;
+  document.getElementById('v1Reset').onclick=()=>{As.value=1;sync();};
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=280;
+    const xmin=0.05,xmax=2.6,ymin=-8,ymax=8;
+    const sx=X=>X0+((X-xmin)/(xmax-xmin))*W;
+    const sy=Y=>Y0+(1-(Y-ymin)/(ymax-ymin))*H;
+    // axes
+    el(svg,'line',{x1:X0,y1:sy(0),x2:X0+W,y2:sy(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:sx(xmin),y1:Y0,x2:sx(xmin),y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+W-4,y:sy(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:sx(xmin)+6,y:Y0+12,'font-size':13,'font-weight':900,fill:INK}).textContent="f'(x)";
+    // curve f'(x)=e^x - a/x
+    let d="";let first=true;
+    for(let X=xmin;X<=xmax;X+=0.01){
+      const Y=Math.exp(X)-a/X;
+      const yc=Math.max(ymin,Math.min(ymax,Y));
+      d+=(first?"M":"L")+sx(X).toFixed(1)+","+sy(yc).toFixed(1);first=false;
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // root
+    const x0=findRoot(a);
+    if(x0>xmin&&x0<xmax){
+      el(svg,'line',{x1:sx(x0),y1:Y0,x2:sx(x0),y2:Y0+H,stroke:VIO,'stroke-width':2,'stroke-dasharray':'5 4'});
+      el(svg,'circle',{cx:sx(x0),cy:sy(0),r:6,fill:VIO,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:sx(x0),y:sy(0)+22,'font-size':13,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='x₀';
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0+16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent="f'(x)=e^x − a/x 在 (0,∞) 单调递增，穿过横轴恰一次";
+    of.textContent="e^x − "+a.toFixed(2)+"/x";
+    ox0.textContent=x0.toFixed(3);
+  }
+  sync();
+})();
+
+/* ===== 互动2:x0处取最小值 + 代换降次 ===== */
+(function(){
+  const svg=document.getElementById('v2Svg');const note=document.getElementById('v2Note');
+  let step=0;const maxStep=3;
+  const x0=findRoot(1); // e^{x0}=1/x0
+  document.getElementById('v2Step').onclick=()=>{step=Math.min(maxStep,step+1);draw();};
+  document.getElementById('v2Reset').onclick=()=>{step=0;draw();};
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=210;
+    const xmin=0.15,xmax=1.9,ymin=0,ymax=8;
+    const sx=X=>X0+((X-xmin)/(xmax-xmin))*W;
+    const sy=Y=>Y0+(1-(Y-ymin)/(ymax-ymin))*H;
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+W-4,y:Y0+H-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // f(x)=e^x - ln x
+    let d="";let first=true;
+    for(let X=xmin;X<=xmax;X+=0.01){
+      const Y=Math.exp(X)-Math.log(X);
+      const yc=Math.max(ymin,Math.min(ymax,Y));
+      d+=(first?"M":"L")+sx(X).toFixed(1)+","+sy(yc).toFixed(1);first=false;
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    // min point at x0
+    const fmin=Math.exp(x0)-Math.log(x0);
+    el(svg,'line',{x1:sx(x0),y1:sy(fmin),x2:sx(x0),y2:Y0+H,stroke:VIO,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:sx(x0),cy:sy(fmin),r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sx(x0),y:Y0+H+16,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='x₀';
+    el(svg,'text',{x:sx(x0)+10,y:sy(fmin)-6,'font-size':12,'font-weight':900,fill:RED}).textContent='最小值 f(x₀)';
+    el(svg,'text',{x:X0+W/2,y:Y0+14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='f(x)=e^x − ln x，最小值在隐零点 x₀ 处';
+    const msgs=[
+      '第0步 原式：f(x₀)=e^{x₀} − ln x₀（含两个超越项，未化简）',
+      '第1步 零点关系：f′(x₀)=0 ⇒ e^{x₀} − 1/x₀ = 0 ⇒ e^{x₀}=1/x₀',
+      '第2步 取对数：由 e^{x₀}=1/x₀ 两边取 ln ⇒ x₀ = −ln x₀ ⇒ ln x₀ = −x₀',
+      '第3步 代换：f(x₀)=e^{x₀}−ln x₀ = (1/x₀) − (−x₀) = 1/x₀ + x₀ ≥ 2　★超越项全消！'
+    ];
+    note.innerHTML='👉 '+msgs[step];
+    note.style.borderColor=step===maxStep?GREEN:INK;
+  }
+  draw();
+})();
+
+/* ===== 互动3:零点存在定理锁区间 ===== */
+(function(){
+  const svg=document.getElementById('v3Svg');
+  const As=document.getElementById('v3a'),Bs=document.getElementById('v3b');
+  const ofa=document.getElementById('v3fa'),ofb=document.getElementById('v3fb'),oprod=document.getElementById('v3prod'),olock=document.getElementById('v3lock');
+  let a=0.4,b=1.2;
+  const fp=x=>Math.exp(x)-1/x;
+  function sync(){a=+As.value;b=+Bs.value;draw();}
+  As.oninput=Bs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=250;
+    const xmin=0.1,xmax=2.0,ymin=-6,ymax=6;
+    const sx=X=>X0+((X-xmin)/(xmax-xmin))*W;
+    const sy=Y=>Y0+(1-(Y-ymin)/(ymax-ymin))*H;
+    const fa=fp(a),fb=fp(b),prod=fa*fb;
+    const ok=(fa<0&&fb>0);
+    // shaded interval
+    el(svg,'rect',{x:sx(a),y:Y0,width:sx(b)-sx(a),height:H,fill:ok?'rgba(30,158,134,0.18)':'rgba(224,56,42,0.14)',stroke:'none'});
+    // axes
+    el(svg,'line',{x1:X0,y1:sy(0),x2:X0+W,y2:sy(0),stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+W-4,y:sy(0)-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // curve
+    let d="";let first=true;
+    for(let X=xmin;X<=xmax;X+=0.01){
+      const Y=fp(X);const yc=Math.max(ymin,Math.min(ymax,Y));
+      d+=(first?"M":"L")+sx(X).toFixed(1)+","+sy(yc).toFixed(1);first=false;
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // endpoint dots
+    el(svg,'circle',{cx:sx(a),cy:sy(Math.max(ymin,Math.min(ymax,fa))),r:5,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'circle',{cx:sx(b),cy:sy(Math.max(ymin,Math.min(ymax,fb))),r:5,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sx(a),y:Y0+H+16,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='a';
+    el(svg,'text',{x:sx(b),y:Y0+H+16,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='b';
+    if(ok){
+      const x0=findRoot(1);
+      el(svg,'circle',{cx:sx(x0),cy:sy(0),r:6,fill:VIO,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:sx(x0),y:sy(0)-10,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='x₀';
+    }
+    el(svg,'text',{x:X0+W/2,y:Y0+14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent="f′(x)=e^x − 1/x　（f′(a)·f′(b)<0 ⇒ 锁定 x₀）";
+    ofa.textContent=fa.toFixed(2);ofb.textContent=fb.toFixed(2);oprod.textContent=prod.toFixed(2);
+    olock.textContent=ok?'已锁定 ✓':'未锁定';
+  }
+  sync();
+})();
+
+/* ===== 互动4:代换前后表达式对比 ===== */
+(function(){
+  const svg=document.getElementById('v4Svg');const note=document.getElementById('v4Note');
+  let c=0;
+  const data=[
+    {rel:'e^{x₀}=1/x₀',before:'f(x₀)=e^{x₀} + x₀',after:'= 1/x₀ + x₀  ≥ 2',col:RED,
+     msg:'用 e^{x₀}=1/x₀ 把 e^{x₀} 换成 1/x₀，超越项变代数式，基本不等式得最小值 2。'},
+    {rel:'ln x₀=−x₀',before:'f(x₀)=x₀ − ln x₀',after:'= x₀ − (−x₀) = 2x₀',col:GREEN,
+     msg:'用 ln x₀=−x₀ 把 ln x₀ 换成 −x₀，对数项消失，剩纯代数式 2x₀。'},
+    {rel:'x₀e^{x₀}=1',before:'f(x₀)=e^{x₀} − ln x₀',after:'= 1/x₀ + x₀ ≥ 2',col:VIO,
+     msg:'由 x₀e^{x₀}=1 得 e^{x₀}=1/x₀，取 ln 得 ln x₀=−x₀，两个超越项一起消。'}
+  ];
+  document.querySelectorAll('.v4case').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.v4case').forEach(x=>x.classList.remove('on'));btn.classList.add('on');c=+btn.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const dt=data[c];
+    // left box: before
+    el(svg,'rect',{x:40,y:60,width:250,height:130,fill:'rgba(224,56,42,0.10)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:165,y:90,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='代换前（含超越项）';
+    el(svg,'text',{x:165,y:135,'font-size':16,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=dt.before;
+    // arrow
+    el(svg,'line',{x1:300,y1:125,x2:400,y2:125,stroke:dt.col,'stroke-width':5});
+    el(svg,'polygon',{points:'400,115 420,125 400,135',fill:dt.col});
+    el(svg,'text',{x:350,y:110,'font-size':12.5,'font-weight':900,fill:dt.col,'text-anchor':'middle'}).textContent=dt.rel;
+    el(svg,'text',{x:350,y:150,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='换算器';
+    // right box: after
+    el(svg,'rect',{x:430,y:60,width:250,height:130,fill:'rgba(30,158,134,0.12)',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:555,y:90,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='代换后（纯代数式）';
+    el(svg,'text',{x:555,y:135,'font-size':16,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=dt.after;
+    el(svg,'text',{x:360,y:32,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='整体代换：超越式 → 代数式（值不变，只是翻译）';
+    note.innerHTML='👉 '+dt.msg;
+    note.style.borderColor=dt.col;
+  }
+  draw();
+})();
+
+/* ===== 互动5:范围放缩估计最值 ===== */
+(function(){
+  const svg=document.getElementById('v5Svg');
+  const Ws=document.getElementById('v5w');
+  const om=document.getElementById('v5m'),on=document.getElementById('v5n'),olo=document.getElementById('v5lo'),ohi=document.getElementById('v5hi');
+  const x0=0.5671; // real root of e^x=1/x (Omega), 展示用
+  let w=0.5;
+  const g=x=>1/x+x; // g(x0)=1/x0+x0, decreasing on (0,1)
+  function sync(){w=+Ws.value;draw();}
+  Ws.oninput=sync;
+  document.getElementById('v5Reset').onclick=()=>{Ws.value=0.5;sync();};
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=580,H=210;
+    const xmin=0.1,xmax=1.2,ymin=1.8,ymax=5;
+    const sx=X=>X0+((X-xmin)/(xmax-xmin))*W;
+    const sy=Y=>Y0+(1-(Y-ymin)/(ymax-ymin))*H;
+    // interval around x0
+    let m=Math.max(xmin+0.02,x0-w/2), n=Math.min(xmax-0.02,x0+w/2);
+    // g decreasing => lo at n, hi at m
+    const lo=g(n),hi=g(m);
+    // shaded x interval
+    el(svg,'rect',{x:sx(m),y:Y0,width:sx(n)-sx(m),height:H,fill:'rgba(122,63,242,0.12)',stroke:'none'});
+    // shaded g band (horizontal)
+    el(svg,'rect',{x:X0,y:sy(Math.min(hi,ymax)),width:W,height:Math.abs(sy(Math.max(lo,ymin))-sy(Math.min(hi,ymax))),fill:'rgba(243,192,14,0.30)',stroke:'none'});
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:X0+W-4,y:Y0+H-6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x₀';
+    // g curve
+    let d="";let first=true;
+    for(let X=xmin;X<=xmax;X+=0.005){
+      const Y=g(X);const yc=Math.max(ymin,Math.min(ymax,Y));
+      d+=(first?"M":"L")+sx(X).toFixed(1)+","+sy(yc).toFixed(1);first=false;
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    // true x0 marker
+    el(svg,'line',{x1:sx(x0),y1:Y0,x2:sx(x0),y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:sx(x0),cy:sy(g(x0)),r:5,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:sx(x0),y:Y0+H+16,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='真x₀≈0.57';
+    el(svg,'text',{x:X0+W/2,y:Y0+14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='g(x₀)=1/x₀+x₀（黄带=最值估计范围，越窄越准）';
+    om.textContent=m.toFixed(2);on.textContent=n.toFixed(2);olo.textContent=lo.toFixed(3);ohi.textContent=hi.toFixed(3);
+  }
+  sync();
+})();
+
+/* ===== 互动6:e^x 与 k/x 交点即隐零点 ===== */
+(function(){
+  const cv=document.getElementById('v6Cv');const ctx=cv.getContext('2d');
+  const Ks=document.getElementById('v6k');
+  const oeq=document.getElementById('v6eq'),ox0=document.getElementById('v6x0'),oy=document.getElementById('v6y'),ochk=document.getElementById('v6chk');
+  let k=1;
+  function rootK(k){ // solve e^x = k/x  => x e^x = k
+    let lo=1e-4,hi=6;const f=x=>x*Math.exp(x)-k;
+    for(let i=0;i<80;i++){const mid=(lo+hi)/2;if(f(mid)>0)hi=mid;else lo=mid;}
+    return (lo+hi)/2;
+  }
+  function sync(){k=+Ks.value;draw();}
+  Ks.oninput=sync;
+  document.getElementById('v6Reset').onclick=()=>{Ks.value=1;sync();};
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const X0=60,Y0=20,W=580,H=270;
+    const xmin=0.12,xmax=2.2,ymin=0,ymax=8;
+    const sx=X=>X0+((X-xmin)/(xmax-xmin))*W;
+    const sy=Y=>Y0+(1-(Y-ymin)/(ymax-ymin))*H;
+    // axes
+    ctx.strokeStyle=INK;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(X0,Y0+H);ctx.lineTo(X0+W,Y0+H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(X0,Y0);ctx.lineTo(X0,Y0+H);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('x',X0+W-12,Y0+H-8);ctx.fillText('y',X0+8,Y0+14);
+    // curve y=e^x (blue)
+    ctx.strokeStyle=BLUE;ctx.lineWidth=3.5;ctx.beginPath();let started=false;
+    for(let X=xmin;X<=xmax;X+=0.01){const Y=Math.exp(X);if(Y>ymax){if(started){break;}continue;}const px=sx(X),py=sy(Y);if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);}
+    ctx.stroke();
+    // curve y=k/x (green)
+    ctx.strokeStyle=GREEN;ctx.lineWidth=3.5;ctx.beginPath();started=false;
+    for(let X=xmin;X<=xmax;X+=0.005){const Y=k/X;if(Y>ymax||Y<ymin){started=false;continue;}const px=sx(X),py=sy(Y);if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);}
+    ctx.stroke();
+    // intersection
+    const x0=rootK(k);const y0=Math.exp(x0);
+    if(x0>xmin&&x0<xmax&&y0<=ymax){
+      ctx.strokeStyle=RED;ctx.lineWidth=2;ctx.setLineDash([5,4]);
+      ctx.beginPath();ctx.moveTo(sx(x0),Y0);ctx.lineTo(sx(x0),Y0+H);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=RED;ctx.beginPath();ctx.arc(sx(x0),sy(y0),6,0,2*Math.PI);ctx.fill();
+      ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=RED;ctx.font='bold 13px sans-serif';ctx.fillText('x₀',sx(x0)-6,Y0+H+16);
+    }
+    // legend
+    ctx.fillStyle=BLUE;ctx.font='bold 13px sans-serif';ctx.fillText('y=e^x',X0+W-90,Y0+30);
+    ctx.fillStyle=GREEN;ctx.fillText('y=k/x',X0+W-90,Y0+50);
+    ctx.fillStyle=INK;ctx.fillText('交点横坐标 = 隐零点 x₀，满足 e^{x₀}=k/x₀',X0+70,Y0+14);
+    oeq.textContent='e^x = '+k.toFixed(2)+'/x';
+    ox0.textContent=x0.toFixed(3);
+    oy.textContent=y0.toFixed(3);
+    ochk.textContent=(y0*x0).toFixed(3)+' ≈ '+k.toFixed(2);
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 什么情况下要用隐零点法（虚设零点）？",a:"当求 f(x) 最值需要解 f′(x)=0，但该方程是超越方程、没有初等解（如 x·e^x=1、lnx+x=0）时。承认零点存在、虚设为 x₀，不解它，而用它满足的方程做整体代换。"},
+ {q:"2. 隐零点法的四个步骤是什么？",a:"①证零点存在且唯一（零点存在定理给存在，f′单调给唯一）；②写出 x₀ 满足的关系式（如 e^{x₀}=1/x₀）；③把 f(x₀) 中超越项整体代换成 x₀ 的代数式；④（若需要）缩小 x₀ 范围，估计最值。"},
+ {q:"3. 怎么证明隐零点存在且唯一？",a:"存在：零点存在定理——取两点 a、b 使 f′(a)·f′(b)<0（异号），(a,b) 内必有零点。唯一：说明 f′(x) 单调（常对 f′ 再求导看 f″ 定号），单调函数至多一个零点。两者合起来即恰有一个 x₀。"},
+ {q:"4. 为什么不能直接去解精确的隐零点？",a:"因为像 x·e^x=1、lnx=−x 这类超越方程没有初等解（写不成分数、根号、对数的有限组合），硬解不可能成功。隐零点法的精髓正是‘不解也能算出精确最值’。"},
+ {q:"5. 设 f(x)=e^x−lnx，证明它的最小值 f(x₀) 化简后等于什么？",a:"f′(x)=e^x−1/x，隐零点 e^{x₀}=1/x₀。两边取 ln 得 lnx₀=−x₀。故 f(x₀)=e^{x₀}−lnx₀=1/x₀−(−x₀)=1/x₀+x₀≥2。两个超越项都被消掉。"},
+ {q:"6. 混合型（e^x 与 lnx 同现）的关键技巧是什么？",a:"双向代换：由 e^{x₀}=1/x₀ 两边取 ln 得到 lnx₀=−x₀，e^{x₀} 和 lnx₀ 用同一条约束的两种形态一次性都换掉，f(x₀) 才彻底代数化。只代一个超越项是不够的。"},
+ {q:"7. 代换后 f(x₀)=1/x₀+x₀ 想估计范围，该怎么做？",a:"先用零点存在定理把 x₀ 卡进小区间（如 x₀∈(1/2,1)），再判断 g(x₀)=1/x₀+x₀ 在该区间的单调性（g′=−1/x₀²+1<0，递减），代端点得 g∈(g(1),g(1/2))=(2,5/2)。区间越窄估计越紧。"},
+ {q:"8. 范围估计有哪些常见坑？",a:"①区间取太粗（如 x₀∈(0,∞)）毫无用处，要卡到小区间；②忘判 g(x₀) 的单调性，直接代端点，端点值就不是上下界；③端点开闭搞错。"},
+ {q:"9. e^{x₀}=1/x₀ 从几何看是什么？这对判断零点有何帮助？",a:"是曲线 y=e^x 与 y=1/x 的交点横坐标。两曲线在 (0,∞) 恰好相交一次，直观确认零点存在且唯一，还能目测 x₀ 大概位置便于选端点。但卷面仍要写严格的零点定理+单调性，不能只画图。"},
+ {q:"10. 设 x₀ 满足 x₀e^{x₀}=1，求 e^{x₀}+lnx₀。",a:"由 x₀e^{x₀}=1 得 e^{x₀}=1/x₀；取 ln：x₀+lnx₀=0 ⇒ lnx₀=−x₀。故 e^{x₀}+lnx₀=1/x₀+(−x₀)=1/x₀−x₀（如需数值再卡 x₀ 范围估计）。"},
+ {q:"11. 证明 f(x)=e^x−lnx−2>0（x>0）。",a:"f′=e^x−1/x 单调递增，f′(1/2)<0、f′(1)>0 ⇒ 唯一 x₀∈(1/2,1) 处取最小。e^{x₀}=1/x₀，lnx₀=−x₀。f(x₀)=1/x₀−(−x₀)−2=1/x₀+x₀−2≥2−2=0，取等需 x₀=1，但 x₀∈(1/2,1) 故 x₀≠1，严格 f(x₀)>0，即 f(x)>0。"},
+ {q:"12.（压轴带解）已知 f(x)=e^x−ax（a>0，x>0），且 f(x)≥ax·lnx 恒成立，用隐零点思想说明求 a 的思路。",a:"整理为 e^x≥ax(1+lnx)。构造 g(x)=e^x−ax(1+lnx)，g′(x)=e^x−a(2+lnx)。令 g′(x₀)=0 得 e^{x₀}=a(2+lnx₀)，此 x₀ 为隐零点（超越方程无初等解）。g 在 x₀ 取最小，代入 g(x₀)=e^{x₀}−ax₀(1+lnx₀)，用关系式 e^{x₀}=a(2+lnx₀) 把 e^{x₀} 整体换掉，得只含 a、x₀ 的式子，令其≥0 并结合 x₀ 关系式消 x₀，即得 a 的范围。核心仍是：虚设 x₀→写关系式→整体代换→解 a。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

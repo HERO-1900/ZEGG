@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>正态分布 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>正态分布</h1>
+    <p class="lead">身高、成绩、测量误差、零件尺寸——大自然里一大堆连续量,画成直方图都长成同一副样子:<b>中间高、两边低、左右对称的钟形</b>。这就是<b>正态分布</b>。这一页把它拆成三件事:曲线长什么样(μ、σ 说了算)、<b>3σ 原则</b>那三个数、以及靠<b>对称性</b>把任何区间概率算出来。</p>
+
+    <div class="say">🗣️ <b>正态分布(人话版):</b> 它就是大自然最爱的<b>钟形曲线</b>。<b>μ 决定中心站在哪</b>(曲线的对称轴 x=μ,也是最高点);<b>σ 决定胖瘦</b>——σ 越大,数据越分散,曲线越<b>矮胖</b>;σ 越小,数据越集中,曲线越<b>高瘦</b>。曲线永远<b>关于 x=μ 对称</b>,而且它和横轴围成的<b>总面积恒等于 1</b>(概率总和)。会算概率,靠的就是「对称」+「3σ 那三个数」。</div>
+
+    <div class="keybox"><b>三个必背数(3σ 原则):</b> P(μ−σ&lt;X&lt;μ+σ)≈<b>0.6827</b>、P(μ−2σ&lt;X&lt;μ+2σ)≈<b>0.9545</b>、P(μ−3σ&lt;X&lt;μ+3σ)≈<b>0.9973</b>。再配一条<b>对称性 P(X&lt;μ)=P(X&gt;μ)=0.5</b>,几乎所有正态概率题都能拆出来。记法:<b>68 – 95 – 99.7</b>。</div>
+
+    <h2>① 正态曲线的四大特征</h2>
+    <div class="card">
+      <div class="eq">f(x)=1/(√(2π)·σ)·e^[−(x−μ)²/(2σ²)]　(x∈R)</div>
+      <p style="margin:8px 0">这条曲线记作 <b>X~N(μ,σ²)</b>。式子不用背,<b>四大特征必须刻进脑子</b>:</p>
+      <table>
+        <tr><th>特征</th><th>说明</th></tr>
+        <tr><td><b>关于 x=μ 对称</b></td><td>对称轴是 <b>x=μ</b>(不是 y 轴,不是 x=0)。左右两半镜像。</td></tr>
+        <tr><td><b>在 x=μ 处最高</b></td><td>μ 处取到峰值(最大概率密度),两边单调下降。</td></tr>
+        <tr><td><b>σ 越大越「矮胖」</b></td><td>σ 大→数据分散→曲线矮而宽;σ 小→数据集中→曲线高而窄。</td></tr>
+        <tr><td><b>总面积 = 1</b></td><td>曲线与 x 轴之间面积恒为 1(即概率总和为 1);曲线在 x 轴上方,以 x 轴为渐近线。</td></tr>
+      </table>
+      <p class="trap">⚠ 对称轴是 <b>x=μ</b>,不要下意识写成 x=0 或 y 轴——只有标准正态 N(0,1) 才关于 y 轴对称。μ 平移曲线(左右挪),σ 只改胖瘦(不挪中心)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔔 互动 1 — μ、σ 滑块实时改变钟形曲线:μ 移动中心，σ 改变胖瘦</div>
+      <svg id="curveSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>μ (中心) <input id="cvMu" type="range" min="-4" max="4" value="0" step="0.5"></label>
+        <label>σ (胖瘦) <input id="cvSig" type="range" min="0.5" max="3" value="1" step="0.1"></label>
+        <button id="cvReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>对称轴 x=μ</b><span id="cvOut1">0</span></div>
+        <div><b>标准差 σ</b><span id="cvOut2">1</span></div>
+        <div><b>峰值高度</b><span id="cvOut3">0</span></div>
+        <div><b>形状</b><span id="cvOut4">-</span></div>
+      </div>
+      <p class="small">拖 <b>μ</b>：整条曲线左右平移，对称轴永远在 x=μ。拖 <b>σ</b>：σ 变大曲线变<b>矮胖</b>（峰值降低、变宽），σ 变小变<b>高瘦</b>。无论怎么拖，曲线下面积始终 = 1。</p>
+    </div>
+
+    <h2 class="b">② 3σ 原则:三个区间，三个数</h2>
+    <div class="card">
+      <p style="margin:8px 0">以对称轴 x=μ 为中心,向两侧各扩 1、2、3 个 σ,得到三个「黄金区间」,它们的概率是固定的:</p>
+      <div class="mono">P(μ−σ &lt; X &lt; μ+σ) ≈ 0.6827　　（约 68.27%）</div>
+      <div class="mono">P(μ−2σ &lt; X &lt; μ+2σ) ≈ 0.9545　（约 95.45%）</div>
+      <div class="mono">P(μ−3σ &lt; X &lt; μ+3σ) ≈ 0.9973　（约 99.73%）</div>
+      <p style="margin:8px 0">现实含义:数据几乎<b>全部(99.73%)落在 (μ−3σ, μ+3σ) 之内</b>,落在这之外是「小概率事件」(仅 0.27%)。工业上以此判定「异常/次品」。</p>
+      <p class="trap">⚠ 三个数别记混:1σ≈0.6827、2σ≈0.9545、3σ≈0.9973。别把 0.6827 写成 0.68 就丢精度,考试要求哪个精度按题目给的用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 3σ 原则填色：1σ / 2σ / 3σ 三个区间概率（68 / 95 / 99.7）</div>
+      <svg id="sigSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="sigbtn on" data-k="1">±1σ (68.27%)</button>
+        <button class="sigbtn" data-k="2">±2σ (95.45%)</button>
+        <button class="sigbtn" data-k="3">±3σ (99.73%)</button>
+      </div>
+      <div class="verdict" id="sigNote"></div>
+      <p class="small">点按钮切换填色区间。填色部分的面积 = 落在该区间的概率。可以看出：从 ±1σ 到 ±3σ，几乎把整条曲线都盖住了（99.73%），外面只剩极小的尾巴。</p>
+    </div>
+
+    <h2 class="g">③ 对称性:一切概率计算的钥匙</h2>
+    <div class="card">
+      <p style="margin:8px 0">因为曲线关于 x=μ 对称、总面积为 1,可以推出一串好用的结论:</p>
+      <div class="mono">P(X &lt; μ) = P(X &gt; μ) = 0.5　（对称轴左右各一半）</div>
+      <div class="mono">P(X &lt; μ−a) = P(X &gt; μ+a)　（关于 μ 对称的两块相等）</div>
+      <div class="mono">P(μ &lt; X &lt; μ+a) = ½·P(μ−a &lt; X &lt; μ+a)　（半个黄金区间）</div>
+      <h3>求「单边」或「一段」概率的套路</h3>
+      <p style="margin:6px 0">已知某个对称区间的概率 p,要求它的一半、或它以外的一边,就用对称拆分:</p>
+      <div class="mono">P(X &gt; μ+σ) = ½·[1 − P(μ−σ&lt;X&lt;μ+σ)] = ½·(1−0.6827) = 0.15865</div>
+      <p style="margin:6px 0">思路:总面积 1，减去中间区间概率 → 剩下两条尾巴的总概率，再<b>除以 2</b> 得单条尾巴。</p>
+      <p class="trap">⚠ 尾巴要「除以 2」!两条尾巴对称、平分「1 减去中间」这部分。忘了除以 2 是最常见错误。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 3 — 对称性求 P(a&lt;X&lt;b)：滑动 a、b，填色并自动拆分计算</div>
+      <svg id="probSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>a (左端，以σ计) <input id="prA" type="range" min="-4" max="0" value="-1" step="0.5"></label>
+        <label>b (右端，以σ计) <input id="prB" type="range" min="0" max="4" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>区间 (μ+aσ, μ+bσ)</b><span id="prR">-</span></div>
+        <div><b>P(a&lt;X&lt;b)</b><span id="prP">0</span></div>
+        <div><b>左尾 P(X&lt;a)</b><span id="prL">0</span></div>
+        <div><b>右尾 P(X&gt;b)</b><span id="prU">0</span></div>
+      </div>
+      <p class="small">a、b 以 σ 为单位（例如 a=−1 表示 μ−σ）。填色块 = 区间概率，用 3σ 那三个数 + 对称拆分算出。左右尾巴合起来 = 1 − 填色块。</p>
+    </div>
+
+    <h2 class="o">④ μ 与 σ 的意义:位置 vs 胖瘦</h2>
+    <div class="card">
+      <table>
+        <tr><th>参数</th><th>控制什么</th><th>变大时</th></tr>
+        <tr><td><b>μ (均值)</b></td><td>曲线的<b>位置</b>(对称轴、峰所在 x)</td><td>整条曲线<b>右移</b>(形状不变)</td></tr>
+        <tr><td><b>σ (标准差)</b></td><td>曲线的<b>胖瘦</b>(数据分散程度)</td><td>曲线<b>矮胖</b>、更宽(数据更散)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>比较两条正态曲线时:</b> 对称轴靠左的 μ 小、靠右的 μ 大;曲线<b>高而窄</b>的 σ 小、<b>矮而宽</b>的 σ 大。峰值高度和 σ 成<b>反比</b>(σ 越小越尖)。</p>
+      <p class="trap">⚠ 千万别记反:<b>σ 越大越「矮胖」</b>(越分散),不是越「高瘦」。峰值高≠好——那只是 σ 小、数据集中的表现。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 4 — 两条正态曲线 μ、σ 对比：谁的均值大？谁更分散？</div>
+      <svg id="cmpSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>红 μ₁ <input id="cmMu1" type="range" min="-3" max="3" value="-1" step="0.5"></label>
+        <label>红 σ₁ <input id="cmSig1" type="range" min="0.5" max="2.5" value="1" step="0.1"></label>
+        <label>蓝 μ₂ <input id="cmMu2" type="range" min="-3" max="3" value="1" step="0.5"></label>
+        <label>蓝 σ₂ <input id="cmSig2" type="range" min="0.5" max="2.5" value="1.6" step="0.1"></label>
+      </div>
+      <div class="verdict" id="cmpNote"></div>
+      <p class="small">两条曲线同图对比：对称轴靠右的<b>均值 μ 大</b>；曲线<b>更矮胖</b>的<b>标准差 σ 大</b>（数据更分散）。改滑块看结论怎么变。</p>
+    </div>
+
+    <h2 class="v">⑤ 标准正态分布 N(0,1) 与标准化</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>μ=0、σ=1</b> 的正态分布叫<b>标准正态分布</b>,记作 <b>N(0,1)</b>。它关于 <b>y 轴(x=0)对称</b>,峰在原点。任何 X~N(μ,σ²) 都能通过<b>标准化</b>变成标准正态:</p>
+      <div class="eq">Z = (X − μ)/σ　~　N(0,1)</div>
+      <p style="margin:8px 0"><b>标准化在做什么?</b> 先<b>平移</b>(减 μ,把中心移到 0)、再<b>缩放</b>(除 σ,把「胖瘦」拉成标准的 1)。这样任何正态问题都能查同一张标准正态表。「X 落在 μ+kσ 以内」等价于「Z 落在 ±k 以内」。</p>
+      <div class="mono">X = μ + kσ　⟺　Z = k　（k 就是「偏离均值几个 σ」）</div>
+      <p class="trap">⚠ 标准化是「先减 μ 再除 σ」,顺序别乱,除的是 σ(标准差)不是 σ²(方差)。3σ 原则本质就是标准正态里 Z∈(−1,1)、(−2,2)、(−3,3) 的概率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 6 — 标准化变换 N(μ,σ²)→N(0,1)：平移(减μ) + 缩放(除σ)</div>
+      <svg id="stdSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>μ <input id="stMu" type="range" min="-3" max="3" value="2" step="0.5"></label>
+        <label>σ <input id="stSig" type="range" min="0.6" max="2.5" value="1.5" step="0.1"></label>
+        <label>取值 x <input id="stX" type="range" min="-6" max="8" value="3.5" step="0.5"></label>
+        <button id="stGo">▶ 变换动画</button>
+      </div>
+      <div class="live">
+        <div><b>原分布 N(μ,σ²)</b><span id="stO1">-</span></div>
+        <div><b>x 对应 Z</b><span id="stO2">0</span></div>
+        <div><b>x 偏离几个 σ</b><span id="stO3">0</span></div>
+        <div><b>标准化后</b><span id="stO4">N(0,1)</span></div>
+      </div>
+      <p class="small">上方是原始 N(μ,σ²)，下方灰线是标准 N(0,1)。点「变换动画」看曲线<b>先左移到 0、再拉成标准宽度</b>。红点 x 变成 Z=(x−μ)/σ，位置由「偏离均值几个 σ」决定。</p>
+    </div>
+
+    <h2 class="r">⑥ 由概率反求参数</h2>
+    <div class="card">
+      <p style="margin:6px 0">前面是「给 μ、σ 求概率」,反过来:<b>给概率反求 μ 或 σ</b>。抓手还是对称 + 3σ。</p>
+      <h3>反求 μ(利用对称)</h3>
+      <p style="margin:6px 0">若已知 P(X&lt;a)=P(X&gt;b)(两个对称的概率相等),则 a、b 关于 μ 对称 → <b>μ=(a+b)/2</b>。</p>
+      <h3>反求 σ(利用 3σ)</h3>
+      <p style="margin:6px 0">若 P(μ−σ&lt;X&lt;μ+σ)=0.6827 且已知区间端点,把 μ+σ、μ−σ 与端点对上就能解出 σ;或由「某个对称区间恰好是 k 个 σ 宽」反推 σ。</p>
+      <p class="trap">⚠ 反求 μ 时,两个概率必须<b>相等且对称</b>才有 μ=(a+b)/2;若概率不等就不能直接取中点，要另找对称关系。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔎 互动 5 — 由 P 反求 μ 或 σ：给定概率，反推参数</div>
+      <svg id="invSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="invbtn on" data-m="0">已知对称概率 → 求 μ</button>
+        <button class="invbtn" data-m="1">已知 68.27% 区间 → 求 σ</button>
+      </div>
+      <div class="verdict" id="invNote"></div>
+      <p class="small">切换两种反求题型：模式一用「两块对称概率相等 → μ 取端点中点」；模式二用「±σ 区间概率 0.6827 → 区间半宽 = σ」。图上标注 μ 与 σ 的求解过程。</p>
+    </div>
+
+    <h2 class="o">⑦ 正态分布的实际应用</h2>
+    <div class="card">
+      <p style="margin:6px 0">正态分布最常出现在<b>质量检测</b>题里:某零件尺寸/某成绩 X~N(μ,σ²),问<b>合格率、次品率、超标个数</b>。</p>
+      <h3>标准套路(三步)</h3>
+      <div class="mono">第1步:把「合格范围」写成关于 μ 的对称区间，认出是几个 σ（即 μ±kσ）。</div>
+      <div class="mono">第2步:用 3σ 那三个数 + 对称拆分，算出「落在合格区间」的概率。</div>
+      <div class="mono">第3步:合格率×总数=合格个数;次品率=1−合格率;超标概率×总数=次品个数。</div>
+      <p style="margin:8px 0"><b>「大约几件」</b>类:期望个数 = 概率 × 总件数。例如 P=0.9545、总数 10000,则约 9545 件合格。</p>
+      <p class="trap">⚠ 「合格」通常是双侧区间(μ±kσ 之内),别只算一边;问「次品」是补集 1−合格率;问「超上限」才是单条尾巴(要除以 2)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🏭 互动 7 — 实际应用：零件尺寸 N(μ,σ²)，合格区间填色 → 合格率/次品数</div>
+      <svg id="appSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>合格范围 μ±kσ <input id="apK" type="range" min="1" max="3" value="2" step="1"></label>
+        <label>总件数 N <input id="apN" type="range" min="1000" max="10000" value="10000" step="1000"></label>
+      </div>
+      <div class="live">
+        <div><b>合格区间</b><span id="apR">-</span></div>
+        <div><b>合格率</b><span id="apP">0</span></div>
+        <div><b>约合格件数</b><span id="apG">0</span></div>
+        <div><b>约次品件数</b><span id="apB">0</span></div>
+      </div>
+      <p class="small">绿色填色 = 合格区间（μ±kσ）。合格率取 3σ 那三个数之一，乘总件数得合格个数；总数减合格 = 次品个数（红色尾巴）。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 由 3σ 原则求区间概率</h3>
+      <p><b class="tag">触发信号:</b>给了 X~N(μ,σ²) 具体的 μ、σ，问 P 落在 (μ−σ,μ+σ) / (μ−2σ,μ+2σ) / (μ−3σ,μ+3σ) 这类<b>整数倍 σ</b> 的区间。</p>
+      <p><b class="tag">标准动作:</b>把区间端点写成 μ±kσ，认出 k=1/2/3，直接套 0.6827 / 0.9545 / 0.9973。</p>
+      <p><b class="tag">示例(带解):</b>X~N(80,4²)，即 μ=80、σ=4。求 P(76&lt;X&lt;84)。76=80−4=μ−σ，84=80+4=μ+σ → 正好 ±1σ → P=<b>0.6827</b>。求 P(72&lt;X&lt;88):72=μ−2σ、88=μ+2σ → P=<b>0.9545</b>。</p>
+      <p class="trap">陷阱:端点不是整数倍 σ 却硬套三个数;把 σ² 当 σ 用(N(80,4²) 里 σ=4，不是 16)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 利用对称性求概率</h3>
+      <p><b class="tag">触发信号:</b>问的是<b>单边</b> P(X&gt;a)、P(X&lt;a)，或「一半个区间」P(μ&lt;X&lt;μ+σ)。</p>
+      <p><b class="tag">标准动作:</b>用 P(X&lt;μ)=P(X&gt;μ)=0.5；对称区间的一半 = 该区间概率÷2；单条尾巴 = (1−对称区间概率)÷2。</p>
+      <p><b class="tag">示例(带解):</b>X~N(80,4²)，求 P(X&gt;84)。84=μ+σ。P(76&lt;X&lt;84)=0.6827 → 两条尾巴共 1−0.6827=0.3173 → 每条尾巴 0.3173÷2=<b>0.15865</b>。再求 P(80&lt;X&lt;84)=0.6827÷2=<b>0.34135</b>。</p>
+      <p class="trap">陷阱:尾巴忘了除以 2;把 P(X&gt;μ) 当成 1(应是 0.5)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 比较两条正态曲线 μ、σ 大小</h3>
+      <p><b class="tag">触发信号:</b>一张图两条(或多条)钟形曲线，问谁的 μ 大、谁的 σ 大，或判断均值/方差大小关系。</p>
+      <p><b class="tag">标准动作:</b>看<b>对称轴位置</b>定 μ(靠右者 μ 大);看<b>胖瘦/峰高</b>定 σ(矮胖者 σ 大，高瘦者 σ 小)。</p>
+      <p><b class="tag">示例(带解):</b>甲曲线对称轴在 x=2、又高又窄;乙曲线对称轴在 x=5、矮而宽。则 μ甲=2&lt;μ乙=5;σ甲&lt;σ乙(甲高瘦→σ小，乙矮胖→σ大)。</p>
+      <p class="trap">陷阱:把「峰值高」当成「μ 大」(峰高只反映 σ 小);σ 记反成「越大越高瘦」。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 由概率反求参数(μ 或 σ)</h3>
+      <p><b class="tag">触发信号:</b>给出两个对称概率相等，或给出某区间概率恰为 0.6827/0.9545，反求 μ、σ。</p>
+      <p><b class="tag">标准动作:</b>反求 μ：两概率相等 → 端点关于 μ 对称 → μ=(a+b)/2。反求 σ：把区间端点对上 μ±kσ 解 σ。</p>
+      <p><b class="tag">示例(带解):</b>X~N(μ,σ²)，已知 P(X&lt;70)=P(X&gt;90)。两概率相等 → 70、90 关于 μ 对称 → μ=(70+90)/2=<b>80</b>。若再知 P(76&lt;X&lt;84)=0.6827，则 76、84 是 μ±σ → σ=84−80=<b>4</b>。</p>
+      <p class="trap">陷阱:概率不相等仍硬取中点;把「区间宽度」直接当 σ(应是半宽=σ)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 正态分布实际应用(次品/合格率)</h3>
+      <p><b class="tag">触发信号:</b>「零件尺寸」「某次考试成绩」「测量误差」服从正态分布，问合格率、次品数、约多少件/人。</p>
+      <p><b class="tag">标准动作:</b>把合格范围写成 μ±kσ → 用 3σ 求合格率 → 合格率×总数=合格数;次品率=1−合格率;超标概率×总数=超标数。</p>
+      <p><b class="tag">示例(带解):</b>零件长度 X~N(20,0.1²)，合格范围 (19.8, 20.2) 即 μ±2σ。合格率=0.9545。生产 10000 件，约合格 <b>9545</b> 件，次品约 10000−9545=<b>455</b> 件。</p>
+      <p class="trap">陷阱:合格是双侧区间却只算一侧;把「次品数」算成合格数;问「超上限」时忘了只取单条尾巴(÷2)。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 对称轴是 <b>x=μ</b>，不是 x=0 / y 轴。只有标准正态 N(0,1) 才关于 y 轴对称。</p>
+      <p class="trap">② 区间概率用<b>对称性拆分</b>：单条尾巴 = (1−对称区间概率)÷2，别忘了那个「÷2」。</p>
+      <p class="trap">③ <b>3σ 三个数背牢</b>：1σ≈0.6827、2σ≈0.9545、3σ≈0.9973，别互相记混。</p>
+      <p class="trap">④ <b>σ 越大越「矮胖」</b>（数据越分散），不是越高瘦。峰高反映的是 σ 小、数据集中。</p>
+      <p class="trap">⑤ 记号 <b>N(μ,σ²)</b> 里第二个数是<b>方差 σ²</b>：N(80,4²) 的 σ=4，不是 16。标准化除的是 σ 不是 σ²。</p>
+      <p class="trap">⑥ P(X&gt;μ)=<b>0.5</b> 不是 1；P(X=a)=0（连续型，单点概率为 0）。</p>
+      <p class="trap">⑦ 「合格」多为双侧 μ±kσ；「次品」是补集 1−合格率；「超上限」才是单条尾巴。</p>
+      <p class="trap">⑧ 反求 μ=(a+b)/2 的前提是两概率<b>相等且对称</b>；概率不等不能取中点。</p>
+      <p class="trap">⑨ 曲线总面积 = 1（不是无穷、不是曲线最高点为 1）；曲线以 x 轴为渐近线，永远不与 x 轴相交。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切正态题都能「标准化」回到 N(0,1)：</b> Z=(X−μ)/σ 把千变万化的 μ、σ 统一成同一张标准表。看到陌生 μ、σ，先在脑子里换算「这个 x 偏离均值几个 σ」（就是 Z），问题立刻变熟——3σ 原则本质就是 Z∈(−1,1)/(−2,2)/(−3,3) 的概率。</p>
+      <p style="margin:8px 0"><b>② 「对称 + 总面积 1」两条公理推出一切：</b> 不要孤立记 P(X&gt;μ+σ)、P(μ&lt;X&lt;μ+σ) 这些结论。全部现推：画对称轴，把已知区间概率标上，用「左右对称」和「加起来为 1」两步就能拆出任何单边、半区间概率，任凭题目怎么变都不慌。</p>
+      <p style="margin:8px 0"><b>③ μ 管位置、σ 管形状，彼此独立：</b> 平移（改 μ）不改变胖瘦，缩放（改 σ）不改变中心。比较多条曲线时把这两件事<b>分开看</b>：先按对称轴排 μ，再按胖瘦排 σ，绝不混淆——很多「比较题」失分就因为把峰高误当 μ 大。</p>
+      <p style="margin:8px 0"><b>④ 「大约几件/几人」= 概率 × 总数：</b> 正态是连续分布，落在某区间的<b>频率</b>近似等于<b>概率</b>。所以合格数≈合格率×总数、次品数≈(1−合格率)×总数。把概率翻译成「份额」，实际应用题就是一道乘法。</p>
+      <p style="margin:8px 0"><b>⑤ 3σ 之外是「小概率事件」——这是质检的判据：</b> P(|X−μ|&gt;3σ)≈0.0027，几乎不可能。工业上一旦测到超出 3σ 的值，就判定「工艺异常」而非「碰巧」。理解这层含义，你就懂了正态分布在统计推断里的角色，而不只是套三个数。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 正态分布：钟形曲线 + 3σ 原则 + 对称性求概率</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+/* 标准正态密度（相对，未归一化用于画图）*/
+function phi(x,mu,sig){return Math.exp(-(x-mu)*(x-mu)/(2*sig*sig));}
+
+/* ===== 互动1:μ、σ 滑块钟形曲线 ===== */
+(function(){
+  const svg=document.getElementById('curveSvg');
+  const Mu=document.getElementById('cvMu'),Sig=document.getElementById('cvSig');
+  const o1=document.getElementById('cvOut1'),o2=document.getElementById('cvOut2'),o3=document.getElementById('cvOut3'),o4=document.getElementById('cvOut4');
+  const X0=50,Y0=20,W=600,H=250;const xmin=-8,xmax=8;
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function draw(){
+    clr(svg);
+    const mu=+Mu.value,sig=+Sig.value;
+    // axis
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=-8;t<=8;t+=2){const px=xpix(t);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:px,y:Y0+H+20,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;}
+    // peak scale: density 1/(sqrt(2pi)sig); relative to sig=0.5 max
+    const peak=1/sig; const peakMax=1/0.5;
+    const yscale=(H-30)/peakMax;
+    // curve path (normalized so area constant look: height=peak)
+    let d="";
+    for(let i=0;i<=240;i++){
+      const x=xmin+(xmax-xmin)*i/240;
+      const y=(1/sig)*phi(x,mu,sig);
+      const px=xpix(x),py=Y0+H-y*yscale;
+      d+=(i===0?"M":"L")+px.toFixed(1)+","+py.toFixed(1)+" ";
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // fill under curve lightly
+    el(svg,'path',{d:d+"L"+xpix(xmax)+","+(Y0+H)+" L"+xpix(xmin)+","+(Y0+H)+" Z",fill:'rgba(224,56,42,0.12)',stroke:'none'});
+    // symmetry axis x=mu
+    const pmu=xpix(mu);const pk=(1/sig)*yscale;
+    el(svg,'line',{x1:pmu,y1:Y0+H,x2:pmu,y2:Y0+H-pk,stroke:BLUE,'stroke-width':2.5,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:pmu,y:Y0+H-pk-8,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='x=μ='+mu;
+    el(svg,'text',{x:X0,y:Y0+12,'font-size':13,'font-weight':900,fill:INK}).textContent='X ~ N(μ, σ²)　总面积 = 1';
+    o1.textContent=mu;o2.textContent=sig.toFixed(1);o3.textContent=(1/sig).toFixed(2);
+    o4.textContent=sig<1?'高瘦(σ小)':sig>1?'矮胖(σ大)':'标准';
+  }
+  Mu.oninput=Sig.oninput=draw;
+  document.getElementById('cvReset').onclick=()=>{Mu.value=0;Sig.value=1;draw();};
+  draw();
+})();
+
+/* ===== 互动2:3σ 原则填色 ===== */
+(function(){
+  const svg=document.getElementById('sigSvg');const note=document.getElementById('sigNote');
+  const X0=50,Y0=20,W=600,H=250;const xmin=-4.2,xmax=4.2;const mu=0,sig=1;
+  const P={1:0.6827,2:0.9545,3:0.9973};
+  let k=1;
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  document.querySelectorAll('.sigbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.sigbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');k=+b.dataset.k;draw();
+  });
+  function draw(){
+    clr(svg);
+    const yscale=(H-30)/phi(0,mu,sig);
+    // filled region between -k and k
+    let fd="M"+xpix(-k)+","+(Y0+H)+" ";
+    for(let i=0;i<=200;i++){const x=-k+(2*k)*i/200;fd+="L"+xpix(x).toFixed(1)+","+(Y0+H-phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+    fd+="L"+xpix(k)+","+(Y0+H)+" Z";
+    const col=k===1?BLUE:k===2?GREEN:VIO;
+    el(svg,'path',{d:fd,fill:col,'fill-opacity':0.30,stroke:'none'});
+    // full curve
+    let d="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;d+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // axis
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=-4;t<=4;t++){const px=xpix(t);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:px,y:Y0+H+20,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(t===0?'μ':(t>0?'μ+'+t+'σ':'μ'+t+'σ'));}
+    // boundary lines
+    [-k,k].forEach(b=>{const px=xpix(b);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H-phi(b,mu,sig)*yscale,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});});
+    // label
+    el(svg,'text',{x:xpix(0),y:Y0+H-phi(0,mu,sig)*yscale/2,'font-size':17,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(P[k]*100).toFixed(2)+'%';
+    note.innerHTML='👉 P(μ−'+k+'σ &lt; X &lt; μ+'+k+'σ) ≈ <b>'+P[k].toFixed(4)+'</b>（约 '+(P[k]*100).toFixed(2)+'%）。填色面积就是这个概率，剩下两条尾巴共 '+((1-P[k])).toFixed(4)+'。';
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 互动3:对称性求 P(a<X<b) ===== */
+(function(){
+  const svg=document.getElementById('probSvg');
+  const A=document.getElementById('prA'),B=document.getElementById('prB');
+  const oR=document.getElementById('prR'),oP=document.getElementById('prP'),oL=document.getElementById('prL'),oU=document.getElementById('prU');
+  const X0=50,Y0=20,W=600,H=250;const xmin=-4.2,xmax=4.2;const mu=0,sig=1;
+  // cumulative table at half-integer sigma (using 3sigma-consistent values), P(0<X<t)
+  const half={0:0,0.5:0.1915,1:0.3413,1.5:0.4332,2:0.4772,2.5:0.4938,3:0.4987,4:0.5};
+  function P0toT(t){return half[t]!==undefined?half[t]:0.5;} // P(0<X<t)
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function Pab(a,b){ // a<=0<=b typical but handle general via mu-symmetry: here a in [-4,0], b in [0,4]
+    const la=P0toT(Math.abs(a)); // P(a<X<0)
+    const rb=P0toT(Math.abs(b)); // P(0<X<b)
+    return la+rb;
+  }
+  function draw(){
+    clr(svg);
+    let a=+A.value,b=+B.value;
+    const yscale=(H-30)/phi(0,mu,sig);
+    // fill a..b
+    let fd="M"+xpix(a)+","+(Y0+H)+" ";
+    for(let i=0;i<=200;i++){const x=a+(b-a)*i/200;fd+="L"+xpix(x).toFixed(1)+","+(Y0+H-phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+    fd+="L"+xpix(b)+","+(Y0+H)+" Z";
+    el(svg,'path',{d:fd,fill:GREEN,'fill-opacity':0.30,stroke:'none'});
+    // curve
+    let d="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;d+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // axis
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=-4;t<=4;t++){const px=xpix(t);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:px,y:Y0+H+20,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(t===0?'μ':(t>0?'μ+'+t+'σ':'μ'+t+'σ'));}
+    // boundaries
+    [a,b].forEach(bd=>{const px=xpix(bd);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H-phi(bd,mu,sig)*yscale,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});});
+    const p=Pab(a,b);const left=P0toT(4)-P0toT(Math.abs(a));const right=P0toT(4)-P0toT(Math.abs(b));
+    el(svg,'text',{x:xpix((a+b)/2),y:Y0+H-phi(0,mu,sig)*yscale/2,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P='+p.toFixed(4);
+    el(svg,'text',{x:X0,y:Y0+12,'font-size':12.5,'font-weight':900,fill:INK}).textContent='P(μ'+(a<0?a:'+'+a)+'σ < X < μ'+(b<0?b:'+'+b)+'σ) = '+p.toFixed(4);
+    oR.textContent='('+(a===0?'μ':'μ'+(a<0?a:'+'+a)+'σ')+', '+(b===0?'μ':'μ+'+b+'σ')+')';
+    oP.textContent=p.toFixed(4);oL.textContent=left.toFixed(4);oU.textContent=right.toFixed(4);
+  }
+  A.oninput=B.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:两条正态曲线对比 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');const note=document.getElementById('cmpNote');
+  const M1=document.getElementById('cmMu1'),S1=document.getElementById('cmSig1'),M2=document.getElementById('cmMu2'),S2=document.getElementById('cmSig2');
+  const X0=50,Y0=20,W=600,H=230;const xmin=-8,xmax=8;
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function curve(mu,sig,col,yscale){
+    let d="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;const y=(1/sig)*phi(x,mu,sig);d+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-y*yscale).toFixed(1)+" ";}
+    el(svg,'path',{d:d,fill:'none',stroke:col,'stroke-width':3.5});
+    // symmetry axis
+    const pmu=xpix(mu),pk=(1/sig)*yscale;
+    el(svg,'line',{x1:pmu,y1:Y0+H,x2:pmu,y2:Y0+H-pk,stroke:col,'stroke-width':2,'stroke-dasharray':'5 4'});
+  }
+  function draw(){
+    clr(svg);
+    const mu1=+M1.value,sig1=+S1.value,mu2=+M2.value,sig2=+S2.value;
+    const peakMax=1/0.5;const yscale=(H-25)/peakMax;
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=-8;t<=8;t+=2){const px=xpix(t);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:px,y:Y0+H+18,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;}
+    curve(mu1,sig1,RED,yscale);
+    curve(mu2,sig2,BLUE,yscale);
+    el(svg,'text',{x:xpix(mu1),y:Y0+8,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='红 μ='+mu1;
+    el(svg,'text',{x:xpix(mu2),y:Y0+8,'font-size':12,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='蓝 μ='+mu2;
+    let muMsg=mu1<mu2?'μ红 < μ蓝（红曲线更靠左）':mu1>mu2?'μ红 > μ蓝（红曲线更靠右）':'μ红 = μ蓝（对称轴重合）';
+    let sigMsg=sig1<sig2?'σ红 < σ蓝（蓝更矮胖、更分散）':sig1>sig2?'σ红 > σ蓝（红更矮胖、更分散）':'σ红 = σ蓝（胖瘦相同）';
+    note.innerHTML='👉 <b>均值：</b>'+muMsg+'　|　<b>标准差：</b>'+sigMsg+'。对称轴靠右→μ大；越矮胖→σ大。';
+  }
+  M1.oninput=S1.oninput=M2.oninput=S2.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动5:由 P 反求 μ 或 σ ===== */
+(function(){
+  const svg=document.getElementById('invSvg');const note=document.getElementById('invNote');
+  const X0=50,Y0=20,W=600,H=200;const xmin=-1,xmax=13;
+  let m=0;
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  document.querySelectorAll('.invbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.invbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    // fixed example: mu=8, sig=2
+    const mu=8,sig=2;const yscale=(H-30)/((1/sig)*phi(mu,mu,sig));
+    let d="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;const y=(1/sig)*phi(x,mu,sig);d+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-y*yscale).toFixed(1)+" ";}
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=0;t<=12;t+=2){const px=xpix(t);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:px,y:Y0+H+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;}
+    function vline(x,col,lab){const px=xpix(x);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+20,stroke:col,'stroke-width':2.5,'stroke-dasharray':'6 4'});el(svg,'text',{x:px,y:Y0+14,'font-size':12,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;}
+    if(m===0){
+      // symmetric probabilities: a=5, b=11 -> mu=(5+11)/2=8
+      const a=5,b=11;
+      vline(a,BLUE,'a=5');vline(b,GREEN,'b=11');vline(mu,VIO,'μ=8');
+      note.innerHTML='👉 已知 P(X&lt;5)=P(X&gt;11)（两块对称概率相等）→ 5、11 关于 μ 对称 → <b>μ=(5+11)/2=8</b>。对称是反求均值的钥匙。';
+      note.style.borderColor=VIO;
+    }else{
+      // known 68.27% interval (mu-sig, mu+sig) endpoints 6 and 10 -> sig=(10-6)/2=2
+      const lo=6,hi=10;
+      vline(lo,BLUE,'6');vline(hi,GREEN,'10');vline(mu,VIO,'μ=8');
+      // fill between
+      let fd="M"+xpix(lo)+","+(Y0+H)+" ";
+      for(let i=0;i<=100;i++){const x=lo+(hi-lo)*i/100;fd+="L"+xpix(x).toFixed(1)+","+(Y0+H-(1/sig)*phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+      fd+="L"+xpix(hi)+","+(Y0+H)+" Z";
+      el(svg,'path',{d:fd,fill:GREEN,'fill-opacity':0.25,stroke:'none'});
+      note.innerHTML='👉 已知 P(6&lt;X&lt;10)=0.6827（正好 μ±σ 区间）且 μ=8 → 区间半宽 = σ → <b>σ=(10−6)/2=2</b>。68.27% 是反求 σ 的钥匙。';
+      note.style.borderColor=GREEN;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动6:标准化变换 N(μ,σ²)->N(0,1) ===== */
+(function(){
+  const svg=document.getElementById('stdSvg');
+  const Mu=document.getElementById('stMu'),Sig=document.getElementById('stSig'),Xr=document.getElementById('stX');
+  const o1=document.getElementById('stO1'),o2=document.getElementById('stO2'),o3=document.getElementById('stO3'),o4=document.getElementById('stO4');
+  const X0=50,Y0=20,W=600,H=250;const xmin=-8,xmax=10;
+  let anim=1,running=false;
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function draw(){
+    clr(svg);
+    const mu=+Mu.value,sig=+Sig.value,xv=+Xr.value;
+    const z=(xv-mu)/sig;
+    // interpolate: current mu -> 0, current sig -> 1 by anim (0=original,1=standard)
+    const curMu=mu*(1-anim), curSig=sig+(1-sig)*anim;
+    const peakMax=1/0.5;const yscale=(H-40)/peakMax;
+    // standard reference (gray) at bottom baseline
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=-8;t<=10;t+=2){const px=xpix(t);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H+5,stroke:INK,'stroke-width':2});el(svg,'text',{x:px,y:Y0+H+18,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;}
+    // reference standard curve (dashed gray)
+    let dg="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;const y=(1/1)*phi(x,0,1);dg+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-y*yscale).toFixed(1)+" ";}
+    el(svg,'path',{d:dg,fill:'none',stroke:'#9a9a9a','stroke-width':2,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:xpix(0),y:Y0+H-yscale-6,'font-size':11,'font-weight':800,fill:'#7a7a7a','text-anchor':'middle'}).textContent='N(0,1) 标准';
+    // moving curve
+    let d="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;const y=(1/curSig)*phi(x,curMu,curSig);d+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-y*yscale).toFixed(1)+" ";}
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3.5});
+    // current mu axis
+    const pmu=xpix(curMu);el(svg,'line',{x1:pmu,y1:Y0+H,x2:pmu,y2:Y0+H-(1/curSig)*yscale,stroke:BLUE,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // x point / z point (moves with anim)
+    const curX=xv*(1-anim)+z*anim;
+    const px=xpix(curX);
+    el(svg,'circle',{cx:px,cy:Y0+H,r:6,fill:VIO,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:px,y:Y0+H-8,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent=(anim<0.5?'x='+xv:'Z='+z.toFixed(2));
+    el(svg,'text',{x:X0,y:Y0+12,'font-size':12.5,'font-weight':900,fill:INK}).textContent='Z = (X−μ)/σ　把 N(μ,σ²) 平移(减μ)+缩放(除σ) → N(0,1)';
+    o1.textContent='N('+mu+','+sig.toFixed(1)+'²)';o2.textContent=z.toFixed(2);o3.textContent=z.toFixed(2)+'σ';o4.textContent=anim>=1?'N(0,1)':'变换中';
+  }
+  function loop(){if(!running)return;anim+=0.03;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  Mu.oninput=Sig.oninput=Xr.oninput=()=>{anim=0;draw();};
+  document.getElementById('stGo').onclick=()=>{anim=0;running=true;requestAnimationFrame(loop);};
+  anim=0;draw();
+})();
+
+/* ===== 互动7:实际应用 合格率/次品 ===== */
+(function(){
+  const svg=document.getElementById('appSvg');
+  const K=document.getElementById('apK'),N=document.getElementById('apN');
+  const oR=document.getElementById('apR'),oP=document.getElementById('apP'),oG=document.getElementById('apG'),oB=document.getElementById('apB');
+  const X0=50,Y0=20,W=600,H=250;const xmin=-4.2,xmax=4.2;const mu=0,sig=1;
+  const P={1:0.6827,2:0.9545,3:0.9973};
+  function xpix(x){return X0+(x-xmin)/(xmax-xmin)*W;}
+  function draw(){
+    clr(svg);
+    const k=+K.value,n=+N.value;
+    const yscale=(H-30)/phi(0,mu,sig);
+    // fail tails (red) then pass (green)
+    let d="";
+    for(let i=0;i<=240;i++){const x=xmin+(xmax-xmin)*i/240;d+=(i===0?"M":"L")+xpix(x).toFixed(1)+","+(Y0+H-phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+    // full fill red (fail baseline)
+    el(svg,'path',{d:d+"L"+xpix(xmax)+","+(Y0+H)+" L"+xpix(xmin)+","+(Y0+H)+" Z",fill:RED,'fill-opacity':0.22,stroke:'none'});
+    // pass region green
+    let fd="M"+xpix(-k)+","+(Y0+H)+" ";
+    for(let i=0;i<=200;i++){const x=-k+(2*k)*i/200;fd+="L"+xpix(x).toFixed(1)+","+(Y0+H-phi(x,mu,sig)*yscale).toFixed(1)+" ";}
+    fd+="L"+xpix(k)+","+(Y0+H)+" Z";
+    el(svg,'path',{d:fd,fill:GREEN,'fill-opacity':0.35,stroke:'none'});
+    el(svg,'path',{d:d,fill:'none',stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    for(let t=-4;t<=4;t++){const px=xpix(t);el(svg,'text',{x:px,y:Y0+H+18,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(t===0?'μ':(t>0?'μ+'+t+'σ':'μ'+t+'σ'));}
+    [-k,k].forEach(b=>{const px=xpix(b);el(svg,'line',{x1:px,y1:Y0+H,x2:px,y2:Y0+H-phi(b,mu,sig)*yscale,stroke:INK,'stroke-width':2,'stroke-dasharray':'4 3'});});
+    const p=P[k];
+    el(svg,'text',{x:xpix(0),y:Y0+H-phi(0,mu,sig)*yscale/2,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='合格 '+(p*100).toFixed(2)+'%';
+    el(svg,'text',{x:X0,y:Y0+12,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='合格区间 μ±'+k+'σ（绿）　次品=两条尾巴（红）';
+    oR.textContent='μ±'+k+'σ';oP.textContent=(p*100).toFixed(2)+'%';
+    oG.textContent=Math.round(p*n)+' 件';oB.textContent=Math.round((1-p)*n)+' 件';
+  }
+  K.oninput=N.oninput=draw;
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 正态曲线的对称轴是什么？总面积是多少？",a:"对称轴是 x=μ（不是 y 轴，除非是标准正态 N(0,1)）。曲线与 x 轴之间的总面积恒为 1（即概率总和为 1）。"},
+ {q:"2. μ 和 σ 各控制曲线的什么？σ 变大曲线怎么变？",a:"μ 控制位置（对称轴、峰所在），μ 大曲线右移；σ 控制胖瘦（分散程度），σ 越大曲线越『矮胖』、越宽（数据越分散），不是越高瘦。"},
+ {q:"3. 3σ 原则的三个数分别是多少？",a:"P(μ−σ<X<μ+σ)≈0.6827；P(μ−2σ<X<μ+2σ)≈0.9545；P(μ−3σ<X<μ+3σ)≈0.9973。记法 68–95–99.7。"},
+ {q:"4. P(X<μ) 和 P(X>μ) 各是多少？为什么？",a:"都是 0.5。因为曲线关于 x=μ 对称，把总面积 1 平分成左右两半。"},
+ {q:"5. X~N(80,4²)，求 P(76<X<84) 和 P(72<X<88)。",a:"μ=80、σ=4。76=μ−σ、84=μ+σ → ±1σ → P=0.6827。72=μ−2σ、88=μ+2σ → ±2σ → P=0.9545。"},
+ {q:"6. X~N(80,4²)，求 P(X>84)。",a:"84=μ+σ。P(76<X<84)=0.6827 → 两条尾巴共 1−0.6827=0.3173 → 每条尾巴 0.3173÷2=0.15865。所以 P(X>84)=0.15865。"},
+ {q:"7. 求 P(80<X<84)（同上分布）。",a:"这是 ±1σ 区间的右半边：P(80<X<84)=P(76<X<84)÷2=0.6827÷2=0.34135。"},
+ {q:"8. 标准正态分布是什么？如何把 X~N(μ,σ²) 标准化？",a:"μ=0、σ=1 的正态分布 N(0,1)，关于 y 轴对称。标准化：Z=(X−μ)/σ ~ N(0,1)，即先减 μ（平移）再除 σ（缩放）。"},
+ {q:"9. 两条正态曲线，甲对称轴在 x=2、又高又窄，乙对称轴在 x=5、矮而宽，比较 μ 和 σ。",a:"μ甲=2<μ乙=5（看对称轴位置）；σ甲<σ乙（甲高瘦→σ小，乙矮胖→σ大）。"},
+ {q:"10. 已知 P(X<70)=P(X>90)，求 μ。若又知 P(76<X<84)=0.6827，求 σ。",a:"两概率相等 → 70、90 关于 μ 对称 → μ=(70+90)/2=80。76、84 是 μ±σ → σ=84−80=4。"},
+ {q:"11. 记号 N(80,4²) 里 σ 等于多少？标准化时除以谁？",a:"N(μ,σ²) 第二个数是方差 σ²，所以 σ=4（不是 16）。标准化除以 σ=4（标准差），不是 σ²。"},
+ {q:"12. 零件长度 X~N(20,0.1²)，合格范围 (19.8,20.2)。生产 10000 件，约多少件合格、多少件次品？",a:"19.8=μ−2σ、20.2=μ+2σ → μ±2σ → 合格率 0.9545。合格约 0.9545×10000=9545 件，次品约 10000−9545=455 件。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

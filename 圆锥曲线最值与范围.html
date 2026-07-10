@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆锥曲线中的最值与范围问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>圆锥曲线中的最值与范围问题</h1>
+    <p class="lead">圆锥曲线大题的第二问，十有八九是求某个量的<b>最大值/最小值</b>或<b>取值范围</b>——面积、距离、斜率、离心率。别被它的花样吓到:它们的骨架只有两句话——<b>把要求的量写成一个变量的函数,然后求这个函数的最值/值域</b>;或者<b>用几何意义直接看</b>(点到直线距离、焦半径)。这一页把这两条主线拆到底。</p>
+
+    <div class="say">🗣️ <b>最值范围问题(人话版):</b> 无论题目问面积、距离还是斜率，套路都一样:<b>先设一个"自由变量"</b>(比如直线斜率 k、参数 t、点的横坐标 x₀、椭圆参数角 θ)，<b>把要求的量表示成这个变量的函数 f(t)</b>，最后<b>用二次函数配方 / 基本不等式 / 求导</b>把 f(t) 的最值或值域求出来。这叫<b>函数法</b>。另一条路是<b>几何法</b>:很多"距离最值"根本不用算函数——点到直线的最短距离就是垂线段,椭圆上到焦点最远/最近就是长轴两端(a+c 和 a−c),看图就知道。</div>
+
+    <div class="keybox"><b>两条主线:</b> <b>① 函数法:</b> 目标量 → 写成 f(变量) → 定义域(参数范围!) → 求值域/最值(配方 / 基本不等式 / 导数)。<b>② 几何法:</b> 目标量 → 翻译成几何距离 → 找临界位置(垂线段、切线、长轴端点)直接读。<b>做题第一步永远是:选对那个"自由变量",并写清它的取值范围。</b></div>
+
+    <h2>① 函数法:把目标写成一个变量的函数</h2>
+    <div class="card">
+      <div class="eq">目标量 S 或 d 或 k = f(t)，求 f(t) 的值域 / 最值</div>
+      <p style="margin:8px 0"><b>核心动作:</b> 选一个变量 t(可以是斜率 k、点坐标 x₀ 或 y₀、参数角 θ、某个中间量),把要求的量<b>纯粹用 t 表示</b>(消掉其它字母),得到一元函数 f(t)。然后看 f(t) 长什么样,用对应工具求最值。</p>
+      <table>
+        <tr><th>f(t) 的形态</th><th>用什么工具</th></tr>
+        <tr><td>二次函数 at²+bt+c</td><td><b>配方</b>求顶点(注意定义域可能取不到顶点)</td></tr>
+        <tr><td>形如 t + k/t (t&gt;0)</td><td><b>基本不等式</b> t+k/t ≥ 2√k(取等 t=√k)</td></tr>
+        <tr><td>复杂分式 / 高次</td><td><b>求导</b> f′(t)=0 找极值,列表判增减</td></tr>
+        <tr><td>含 sinθ、cosθ</td><td><b>三角换元</b>后化 Asin(θ+φ)+B 求振幅</td></tr>
+      </table>
+      <p class="trap">⚠ 千万记得写<b>定义域</b>!变量 t 常有隐藏限制:直线与曲线要相交(判别式 Δ&gt;0)、斜率存在、点在曲线上等。定义域取不到的地方,顶点/取等就无效。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 三角形面积随斜率变化:S=f(k) 的函数曲线，滑动找峰值</div>
+      <svg id="areaSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="areaGo">▶ 扫描找最大</button><button id="areaReset">↺ 重置</button>
+        <label>直线斜率 k <input id="areaK" type="range" min="-3" max="3" value="0.6" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>当前斜率 k</b><span id="areaKv">0</span></div>
+        <div><b>面积 S(k)</b><span id="areaS">0</span></div>
+        <div><b>最大面积 Smax</b><span id="areaMax">0</span></div>
+        <div><b>取最大时 k</b><span id="areaKm">0</span></div>
+      </div>
+      <p class="small">过定点的直线交椭圆于两点，与原点(或另一定点)构成三角形。面积 S 是斜率 k 的函数 S(k)。左图画曲线与三角形，右下角是 S-k 图像:<b>曲线的最高点</b>就是面积最大值，对应的 k 就是答案。</p>
+    </div>
+
+    <h2 class="b">② 基本不等式法:凑 "和" 或 "积" 求最值</h2>
+    <div class="card">
+      <div class="eq">a + b ≥ 2√(ab)　(a,b&gt;0，取等当 a=b)</div>
+      <p style="margin:8px 0">当目标函数化成 <b>t + k/t</b> 或 <b>两个正数之和/积</b>的形式时，基本不等式一步到位。最常见:弦长、面积化简后出现 <b>某量 + 常数/某量</b>。</p>
+      <div class="mono">典型:S = t + 4/t (t&gt;0) → S ≥ 2√4 = 4，取等 t=2。→ 面积最小值 4。</div>
+      <p style="margin:8px 0"><b>三步走:</b> ① 把目标凑成两个正数;② 验证乘积是常数(否则不能用);③ <b>检验取等条件 a=b 能否在定义域内达到</b>。</p>
+      <p class="trap">⚠ 头号陷阱:<b>取等条件必须落在定义域内</b>!若 t=√k 那个点因 Δ&gt;0 或其它限制取不到，最值就不是 2√k，得改用单调性(导数)找边界。凑积不是常数时也不能用基本不等式。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 5 — 基本不等式取等位置:f(t)=t+k/t 曲线，取等点 t=√k 才是最小值</div>
+      <svg id="amgmSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="amgmGo">▶ 滑到取等点</button>
+        <label>t <input id="amgmT" type="range" min="0.3" max="6" value="3" step="0.05"></label>
+        <label>常数 k <input id="amgmK" type="range" min="1" max="9" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 t</b><span id="amgmTv">0</span></div>
+        <div><b>f(t)=t+k/t</b><span id="amgmF">0</span></div>
+        <div><b>最小值 2√k</b><span id="amgmMin">0</span></div>
+        <div><b>取等点 t=√k</b><span id="amgmEq">0</span></div>
+      </div>
+      <p class="small">曲线 f(t)=t+k/t 有个"谷底"，谷底位置正是 t=√k，谷底高度正是 2√k。只有当 t 能取到 √k，最小值才成立。滑动 t，看红点何时落到谷底。</p>
+    </div>
+
+    <h2 class="g">③ 判别式法:Δ 给出参数范围</h2>
+    <div class="card">
+      <div class="eq">直线与曲线联立 → 一元二次方程 → 需要交点 → Δ≥0(或 Δ&gt;0)</div>
+      <p style="margin:8px 0"><b>用途:</b> 求<b>参数(斜率 k、截距 m、直线中某个待定量)的取值范围</b>。当条件是"直线与椭圆有两个交点""直线与曲线相切/相离"时，把直线代入曲线方程，得到关于 x(或 y)的一元二次方程 <b>Ax²+Bx+C=0</b>，用 <b>Δ=B²−4AC</b> 判定:</p>
+      <table>
+        <tr><th>位置关系</th><th>判别式条件</th></tr>
+        <tr><td>相交(两个交点)</td><td>Δ &gt; 0</td></tr>
+        <tr><td>相切(一个交点)</td><td>Δ = 0</td></tr>
+        <tr><td>相离(无交点)</td><td>Δ &lt; 0</td></tr>
+      </table>
+      <p style="margin:8px 0">解 Δ&gt;0 得到的不等式，就是参数的<b>取值范围</b>。它往往还是后续"目标函数"的<b>定义域约束</b>。</p>
+      <p class="trap">⚠ 联立后先确认<b>二次项系数不为 0</b>(否则是一次方程,直线与曲线只有一个交点)。别忘了斜率不存在(竖直线)的情形要单独讨论。</p>
+    </div>
+
+    <h2 class="o">④ 几何法:距离最值 = 看临界位置</h2>
+    <div class="card">
+      <h3>几何法一:点到直线距离 — 平行切线夹出最远最近</h3>
+      <p style="margin:6px 0">曲线上一点到<b>定直线</b>的距离最值:作与该直线<b>平行的切线</b>，切点就是最远/最近点。或把点坐标用参数表示，距离化成三角函数求振幅。</p>
+      <h3>几何法二:焦半径范围 — 长轴两端最值</h3>
+      <div class="eq">椭圆上点到焦点距离:r最大 = a+c，r最小 = a−c</div>
+      <p style="margin:6px 0">椭圆上动点到某个焦点的距离(<b>焦半径</b>)在<b>长轴两端点</b>取极值:近地点 a−c，远地点 a+c。这是"椭圆上到定点距离"类问题的秒杀结论(定点是焦点时)。</p>
+      <h3>几何法三:折线化直 — 三点共线最短</h3>
+      <p style="margin:6px 0">求 |PA|+|PF| 之类的和的最小值:利用<b>椭圆定义 |PF₁|+|PF₂|=2a</b> 把一段焦半径换成 2a 减另一段，转化成"折线求和"，<b>三点共线时最短</b>。</p>
+      <p class="trap">⚠ 几何法不用算函数，但一定要<b>找准临界位置</b>:垂线段、切点、长轴端点、共线点。找错临界位置整题就废了。定点若不是焦点，就不能直接套 a±c。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 椭圆上动点到定点(焦点)距离:焦半径在长轴两端取 a±c</div>
+      <svg id="focSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="focGo">▶ 绕椭圆一周</button><button id="focReset">↺ 重置</button>
+        <label>动点角度 θ <input id="focTh" type="range" min="0" max="360" value="30" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>焦半径 r=|PF|</b><span id="focR">0</span></div>
+        <div><b>最大 a+c</b><span id="focMax">0</span></div>
+        <div><b>最小 a−c</b><span id="focMin">0</span></div>
+        <div><b>当前位置</b><span id="focPos">—</span></div>
+      </div>
+      <p class="small">红点 P 在椭圆上移动，蓝线是它到右焦点 F 的焦半径 r。转一圈会发现:<b>右端点(近焦点)最近 = a−c</b>，<b>左端点(远焦点)最远 = a+c</b>。距离最值不用算函数，看两端就行。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 3 — 点到直线距离最值:平行切线夹出最远/最近点</div>
+      <svg id="distSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="distGo">▶ 扫描找最近</button><button id="distReset">↺ 重置</button>
+        <label>动点角度 θ <input id="distTh" type="range" min="0" max="360" value="60" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>到直线距离 d</b><span id="distD">0</span></div>
+        <div><b>最小 dmin</b><span id="distMin">0</span></div>
+        <div><b>最大 dmax</b><span id="distMax">0</span></div>
+        <div><b>当前位置</b><span id="distPos">—</span></div>
+      </div>
+      <p class="small">直线固定(灰色)，椭圆上点 P 到它的距离 d 随位置变。当 P 到达<b>与直线平行的切线切点</b>时，d 取最小/最大(两条平行切线各对应一个)。虚线是那两条平行切线。</p>
+    </div>
+
+    <h2 class="v">⑤ 三角换元:椭圆参数方程描点求最值</h2>
+    <div class="card">
+      <div class="eq">椭圆参数方程:x = a·cosθ，y = b·sinθ　(θ∈[0,2π))</div>
+      <p style="margin:8px 0"><b>威力:</b> 椭圆上的点直接用一个角 θ 表示，避免了"设 x₀ 再算 y₀"的双变量麻烦。要求的量(距离²、面积、某个坐标组合)代入后变成 <b>关于 θ 的三角函数</b>，再用 <b>Asinθ+Bcosθ=√(A²+B²)·sin(θ+φ)</b> 求振幅，最值一目了然。</p>
+      <div class="mono">例:P(2cosθ, sinθ) 上求 x+2y = 2cosθ+2sinθ = 2√2·sin(θ+π/4)，最大值 2√2，最小值 −2√2。</div>
+      <p style="margin:8px 0"><b>适用:</b> 目标量是坐标的线性/简单组合，或"到定点/定直线距离"。三角换元把代数最值变成"求正弦振幅"，几乎是纯套路。</p>
+      <p class="trap">⚠ 三角换元只对<b>椭圆(及圆)</b>方便;双曲线用 (a·secθ, b·tanθ) 但高中少见。合并 Asinθ+Bcosθ 时别把系数 √(A²+B²) 算错，θ 的定义域是全周期,一般 sin 能取满 [−1,1]。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌀 互动 6 — 三角换元描点求面积/坐标组合最值:目标=Asin(θ+φ)+B</div>
+      <svg id="triSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="triGo">▶ 描点扫一圈</button><button id="triReset">↺ 重置</button>
+        <label>参数角 θ <input id="triTh" type="range" min="0" max="360" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>点 (2cosθ, sinθ)</b><span id="triP">0</span></div>
+        <div><b>目标 x+2y</b><span id="triG">0</span></div>
+        <div><b>振幅 √(A²+B²)</b><span id="triAmp">0</span></div>
+        <div><b>取最大时 θ</b><span id="triThm">0</span></div>
+      </div>
+      <p class="small">椭圆上点写成 (2cosθ, sinθ)。目标量 x+2y = 2cosθ+2sinθ 合并成 2√2·sin(θ+45°)。右下曲线是目标随 θ 的正弦波，<b>波峰=最大值 2√2</b>。三角换元把最值问题变成"读正弦振幅"。</p>
+    </div>
+
+    <h2 class="b">⑥ 离心率范围:把条件翻成 e 的不等式</h2>
+    <div class="card">
+      <div class="eq">椭圆 e=c/a∈(0,1)，双曲线 e=c/a∈(1,+∞)，且 b²=a²∓c²... 用 e 表示</div>
+      <p style="margin:8px 0"><b>思路:</b> 求离心率<b>范围</b>(不是定值)的题，一定有个"活动的几何条件"(某角是钝角、某点在椭圆内/外、某距离有大小关系)。把这个条件<b>翻译成 a、b、c 的不等式</b>，再<b>除以 a²</b> 或用 <b>b²=a²−c²</b> 消元，最后化成只含 e 的不等式，解出 e 的范围。</p>
+      <div class="mono">常用:两边同除 a²，把 c²/a²=e²，b²/a²=1−e² 代进去 → 得到关于 e 的不等式。</div>
+      <p style="margin:8px 0"><b>常见条件来源:</b> ① 短轴端点看长轴张角为钝角 → b&lt;c;② 存在点使某焦点角为直角(以长轴为直径的圆与椭圆相交) → c≥b;③ 焦半径 a−c、a+c 满足某比例。都能化成 e 的不等式。</p>
+      <p class="trap">⚠ 别忘了 e 本身的天然范围:椭圆 0&lt;e&lt;1、双曲线 e&gt;1。求出的范围要与之取交集。解 e 的一元二次不等式时,e&gt;0 这个前提能帮你舍去负根。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 离心率随参数变化:调 c/a 看 e 落在哪个范围(满足条件时高亮)</div>
+      <svg id="eccSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ecccase on" data-c="0">短轴端看长轴为钝角 (b&lt;c)</button>
+        <button class="ecccase" data-c="1">存在点使焦点张角为直角 (c≥b)</button>
+      </div>
+      <div class="ctrl">
+        <label>c/a 比值 <input id="eccR" type="range" min="0.1" max="0.95" value="0.5" step="0.01"></label>
+      </div>
+      <div class="live">
+        <div><b>离心率 e=c/a</b><span id="eccE">0</span></div>
+        <div><b>b/a=√(1−e²)</b><span id="eccB">0</span></div>
+        <div><b>条件阈值</b><span id="eccTh">0</span></div>
+        <div><b>是否满足</b><span id="eccOk">—</span></div>
+      </div>
+      <div class="verdict" id="eccNote"></div>
+      <p class="small">数轴上 (0,1) 是椭圆离心率的天然区间。绿色高亮段是<b>满足几何条件</b>的 e 范围。拖动 c/a，红点落进绿段时条件成立。看条件如何被翻译成一段 e 的区间。</p>
+    </div>
+
+    <h2 class="r">⑦ 焦半径与焦点弦范围</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>焦半径范围(椭圆):</b> 到焦点距离 r∈[a−c, a+c]。用第二定义 r=a−ex₀(左焦)、r=a+ex₀... 或直接用长轴端点结论。</p>
+      <div class="eq">椭圆焦半径:r∈[a−c, a+c]　　焦点弦长:通径 2b²/a ≤ 弦长 ≤ 2a(长轴)</div>
+      <p style="margin:8px 0"><b>焦点弦(过焦点的弦):</b> 最短的焦点弦是<b>垂直于长轴的通径 2b²/a</b>，最长是<b>长轴 2a</b>(过焦点沿长轴)。抛物线焦点弦最短也是通径。求焦点弦长的范围，两端就是通径和长轴。</p>
+      <p style="margin:8px 0"><b>方法:</b> 设焦点弦斜率 k 或倾斜角 α，用焦点弦长公式(或联立求 |x₁−x₂|)写成 f(k)，再求范围;或直接用"通径最短、长轴最长"的几何结论卡边界。</p>
+      <p class="trap">⚠ 通径 2b²/a 是<b>最短</b>焦点弦，别记成最长。抛物线 y²=2px 焦点弦最短也是通径 2p。焦半径最小 a−c 对应长轴端点(近焦点那端),别弄反 a+c/a−c。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 三角形/四边形面积最值型</h3>
+      <p><b class="tag">触发信号:</b>「求△OAB(或四边形)面积的最大值」，A、B 是直线与曲线的交点，直线常过定点。</p>
+      <p><b class="tag">标准动作:</b>设直线(斜率 k 或 x=my+t) → 联立得 x₁+x₂、x₁x₂ → 面积 S=½·|底|·|高| 或 ½·d·|AB| → 写成 f(k)(或 f(m)) → 基本不等式/换元/导数求最大 → <b>验证 Δ&gt;0 定义域</b>。</p>
+      <p><b class="tag">示例(带解):</b>椭圆 x²/4+y²=1，过右焦点 F(√3,0) 的直线交椭圆于 A、B，求 △OAB 面积最大值。设 x=my+√3，联立 (m²+4)y²+2√3my−1=0，y₁+y₂=−2√3m/(m²+4)，y₁y₂=−1/(m²+4)。S=½·|OF|·|y₁−y₂|=½·√3·√[(y₁+y₂)²−4y₁y₂]=½√3·√(12m²/(m²+4)²+4/(m²+4))=½√3·4√(m²+1)/(m²+4)。令 t=√(m²+1)≥1，S=2√3·t/(t²+3)=2√3/(t+3/t)。t+3/t 在 t≥1 上... t=√3&gt;1 取等 → 最小分母 2√3 → S最大 =2√3/(2√3)=1... 修正:S=2√3/(t+3/t)，t+3/t≥2√3(取等 t=√3)→ Smax=2√3/(2√3)=1。<b>面积最大值 1。</b></p>
+      <p class="trap">陷阱:漏写 Δ&gt;0;斜率不存在(竖直线)没单独讨论;取等条件不在定义域内。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 点到点/点到直线距离最值型</h3>
+      <p><b class="tag">触发信号:</b>「曲线上一点到定点/定直线的最短(最长)距离」「求 |PA|+|PF| 最小值」。</p>
+      <p><b class="tag">标准动作:</b>几何法优先——点到定直线:作平行切线找切点,或参数化后化三角函数;到焦点:直接 a±c;和的最小:用定义换弦长 + 三点共线。函数法兜底:设参数写 d²=f(x₀ 或 θ),求最值。</p>
+      <p><b class="tag">示例(带解):</b>椭圆 x²/4+y²=1 上一点 P 到定点 A(0,2) 最大距离。设 P(2cosθ,sinθ)，|PA|²=4cos²θ+(sinθ−2)²=4−4sin²θ+sin²θ−4sinθ+4=−3sin²θ−4sinθ+8。令 s=sinθ∈[−1,1]，g(s)=−3s²−4s+8，对称轴 s=−2/3∈[−1,1]，最大 g(−2/3)=−3·4/9+8/3+8=−4/3+8/3+8=4/3+8=28/3。|PA|max=√(28/3)=2√21/3。</p>
+      <p class="trap">陷阱:定点不是焦点却硬套 a±c;三角换元后忘了 s=sinθ 的范围 [−1,1];把 d 和 d² 的最值混淆(单调递增可换算)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 斜率 / 直线参数范围型</h3>
+      <p><b class="tag">触发信号:</b>「直线与椭圆有两个交点，求斜率 k(或截距 m)的取值范围」「直线不过某点/在某侧」。</p>
+      <p><b class="tag">标准动作:</b>联立消元得一元二次 → 相交要 Δ&gt;0 解出参数范围;若还有"两交点在某侧""中点条件"等,再叠加 x₁+x₂、x₁x₂ 的符号/韦达约束。多个条件<b>取交集</b>。</p>
+      <p><b class="tag">示例(带解):</b>直线 y=kx+2 与椭圆 x²/4+y²=1 有两个不同交点，求 k 范围。代入:x²/4+(kx+2)²=1 → (1+4k²)x²+16kx+12=0。Δ=(16k)²−4(1+4k²)·12&gt;0 → 256k²−48−192k²&gt;0 → 64k²&gt;48 → k²&gt;3/4 → <b>k&lt;−√3/2 或 k&gt;√3/2。</b></p>
+      <p class="trap">陷阱:忘了二次项系数≠0;斜率不存在情形漏讨论;把 Δ≥0(相切也算)当成 Δ&gt;0(两交点)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 离心率范围型</h3>
+      <p><b class="tag">触发信号:</b>「求离心率的取值范围」，题里有一个"活动"几何条件(某角钝角、某点存在、某距离关系)。</p>
+      <p><b class="tag">标准动作:</b>把几何条件翻成 a、b、c 的不等式 → 用 b²=a²−c² 消 b → 两边除 a² 化成含 e 的不等式 → 解出 e → 与天然范围 (0,1) 或 (1,+∞) <b>取交集</b>。</p>
+      <p><b class="tag">示例(带解):</b>椭圆短轴端点 B 看长轴 A₁A₂ 的张角为钝角，求 e 范围。张角钝角 ⟺ 在 B 处 ∠A₁BA₂&gt;90° ⟺ b&lt;c(因为等腰三角形，顶角钝角要求 b&lt;半长轴对应...实为 b&lt;c)。由 b&lt;c 且 b²=a²−c²:a²−c²&lt;c² → a²&lt;2c² → e²&gt;1/2 → e&gt;√2/2。与 e&lt;1 取交:<b>e∈(√2/2, 1)。</b></p>
+      <p class="trap">陷阱:忘了与天然范围取交;不等式方向弄反;把"钝角"条件翻译错(点在圆内/外、角的顶点位置)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 焦半径与焦点弦范围型</h3>
+      <p><b class="tag">触发信号:</b>「焦半径(到焦点距离)的取值范围」「过焦点的弦长范围」「焦点弦最短/最长」。</p>
+      <p><b class="tag">标准动作:</b>焦半径:直接 [a−c, a+c](或用 r=a±ex₀ 配 x₀∈[−a,a])。焦点弦:通径 2b²/a 最短、长轴 2a 最长;要精确函数就设倾斜角写弦长 f(α) 求范围。</p>
+      <p><b class="tag">示例(带解):</b>椭圆 x²/4+y²=1，a=2、b=1、c=√3。焦半径范围 [a−c,a+c]=[2−√3, 2+√3]。焦点弦:通径 2b²/a=2·1/2=1(最短)，长轴 2a=4(最长)，故过焦点的弦长范围 [1, 4]。</p>
+      <p class="trap">陷阱:通径记成最长;焦半径 a−c/a+c 对应端点弄反;抛物线焦点弦最短同样是通径 2p，别漏。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 四边形面积 / 定值配最值综合</h3>
+      <p><b class="tag">触发信号:</b>「四边形 ABCD(两条弦)面积最值」「某量为定值时另一量的范围」，常是两问叠加。</p>
+      <p><b class="tag">标准动作:</b>两条互相垂直的弦→分别写弦长 f(k) 与 f(−1/k)，面积 ½·d₁·d₂→关于 k 的函数→换元 t=k²+1/k² 之类→基本不等式/导数。抓住对称性简化。</p>
+      <p><b class="tag">示例(带解):</b>过原点两条垂直弦 AC⊥BD 交椭圆，四边形 ABCD 面积 S=½|AC||BD|。用椭圆焦点弦/半弦长公式把 |AC|、|BD| 写成关于斜率 k 的式子，令 u=k²，S(u) 求导或换元求最值。结论型题:面积在 k=±1(对称位置)常取极值,代入即得。</p>
+      <p class="trap">陷阱:垂直弦其中一条斜率不存在时要单独算;面积公式 ½d₁d₂ 只对对角线垂直的四边形成立;换元后忘记 u&gt;0。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>目标函数一定要写定义域(参数范围)!</b> 变量 t 常受 Δ&gt;0、斜率存在、点在曲线上等限制。定义域外的顶点/取等无效。</p>
+      <p class="trap">② <b>基本不等式取等条件要能达到!</b> t+k/t≥2√k 只有当 t=√k 落在定义域内才成立;否则用单调性(导数)找边界值。</p>
+      <p class="trap">③ 联立后<b>先判二次项系数≠0</b>，再谈 Δ;<b>斜率不存在(竖直线)的情形单独讨论</b>，别漏。</p>
+      <p class="trap">④ 相交(两交点)是 <b>Δ&gt;0</b>，相切是 Δ=0;别把 Δ≥0 当"两个不同交点"。</p>
+      <p class="trap">⑤ 几何法要<b>找准临界位置</b>:点到直线最值→平行切线切点;焦半径最值→长轴两端;和的最值→三点共线。找错整题废。</p>
+      <p class="trap">⑥ <b>焦半径:近焦点端 a−c(最小)、远焦点端 a+c(最大)</b>，别弄反。焦点弦<b>通径最短 2b²/a、长轴最长 2a</b>。</p>
+      <p class="trap">⑦ 离心率范围最后<b>要与天然范围取交</b>:椭圆 (0,1)、双曲线 (1,+∞)。别忘 e&gt;0 帮你舍负根。</p>
+      <p class="trap">⑧ 三角换元 s=sinθ、cosθ 的<b>范围 [−1,1]</b> 要带上;求 d 还是 d² 的最值分清(d≥0 时单调对应)。</p>
+      <p class="trap">⑨ 定点<b>不是焦点</b>时不能直接套 a±c，得老老实实设参数写函数。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① "选变量"决定难度:</b> 同一道题，设斜率 k、设 x=my+t、设参数角 θ、设某中间量，运算量天差地别。<b>过焦点/定点在 x 轴上的弦，优先设 x=my+t</b>(避开斜率不存在的讨论，且韦达定理更干净);<b>椭圆上单个动点</b>优先三角换元。选对变量，半道题就赢了。</p>
+      <p style="margin:8px 0"><b>② 所有最值问题的统一框架是"目标—变量—定义域—工具":</b> 先明确<b>目标量</b>是什么(面积/距离/斜率)，再选<b>自由变量</b>，写出目标=f(变量)，卡死<b>定义域</b>(这是命门)，最后按 f 的形态选<b>工具</b>(二次配方/基本不等式/导数/三角振幅)。四步一套，任何最值题都能拆。</p>
+      <p style="margin:8px 0"><b>③ 换元是化简的核心武器:</b> 面积/弦长常出现 √(m²+1)、m²+4 这类结构，令 <b>t=√(m²+1)≥1</b> 或 <b>u=m²≥0</b>，把复杂分式变成 t+k/t 或标准二次，基本不等式立刻可用。换元后<b>新变量的范围</b>要同步推出——这是最容易丢分的地方。</p>
+      <p style="margin:8px 0"><b>④ 几何法与函数法互为检验:</b> 距离最值能几何看(平行切线、焦半径)就别硬算，几秒出答案;但要写完整过程时用函数法佐证。<b>先几何法猜答案、再函数法证</b>，既快又稳，考场上是提分利器。</p>
+      <p style="margin:8px 0"><b>⑤ 离心率范围的本质是"把几何约束投影到 e 轴":</b> 任何关于 a、b、c 的齐次不等式，除以 a² 后都只剩 e。训练自己看到"某角钝角""某点在椭圆内""某圆与椭圆相交"就条件反射地翻成 a、b、c 的大小关系——这是圆锥曲线压轴题最稳的得分点。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 圆锥曲线最值与范围:函数法(写 f(t) 求值域) + 几何法(距离看临界位置)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:三角形面积随斜率变化 S=f(k) ===== */
+(function(){
+  const svg=document.getElementById('areaSvg');
+  const Ks=document.getElementById('areaK');
+  const oKv=document.getElementById('areaKv'),oS=document.getElementById('areaS'),oMax=document.getElementById('areaMax'),oKm=document.getElementById('areaKm');
+  // 椭圆 x^2/4 + y^2 =1, a=2 b=1; 直线过右焦点 F(sqrt3,0): x = m y + sqrt3, 斜率 k=1/m (m=1/k)
+  const a=2,b=1,c=Math.sqrt(3);
+  let k=0.6,anim=1,running=false;
+  // 面积 S(k): 过焦点弦与原点三角形. 用 m=1/k. S=2*sqrt3 / (t+3/t), t=sqrt(m^2+1)
+  function areaFromK(kk){
+    if(Math.abs(kk)<1e-6) kk=1e-6;
+    const m=1/kk;
+    const t=Math.sqrt(m*m+1);
+    return 2*Math.sqrt(3)/(t+3/t);
+  }
+  // 扫描找最大
+  let bestS=0,bestK=0;
+  (function scan(){bestS=0;bestK=0;for(let kk=-3;kk<=3;kk+=0.01){const s=areaFromK(kk);if(s>bestS){bestS=s;bestK=kk;}}})();
+  function sync(){k=+Ks.value;draw();}
+  Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    const S=areaFromK(k);
+    oKv.textContent=k.toFixed(2);oS.textContent=S.toFixed(3);oMax.textContent=bestS.toFixed(3);oKm.textContent=bestK.toFixed(2);
+    // 左侧: 椭圆图
+    const ox=170,oy=150,sx=55,sy=55; // 原点像素, 缩放
+    // 坐标轴
+    el(svg,'line',{x1:ox-130,y1:oy,x2:ox+130,y2:oy,stroke:'#bbb','stroke-width':2});
+    el(svg,'line',{x1:ox,y1:oy-120,x2:ox,y2:oy+120,stroke:'#bbb','stroke-width':2});
+    // 椭圆
+    let d='';
+    for(let i=0;i<=90;i++){const th=i/90*2*Math.PI;const X=ox+a*Math.cos(th)*sx;const Y=oy-b*Math.sin(th)*sy;d+=(i===0?'M':'L')+X.toFixed(1)+','+Y.toFixed(1);}
+    el(svg,'path',{d:d+'Z',fill:'none',stroke:INK,'stroke-width':3});
+    // 焦点 F
+    const Fx=ox+c*sx,Fy=oy;
+    el(svg,'circle',{cx:Fx,cy:Fy,r:4,fill:VIO});
+    el(svg,'text',{x:Fx+4,y:Fy+16,'font-size':11,'font-weight':800,fill:VIO}).textContent='F';
+    el(svg,'circle',{cx:ox,cy:oy,r:3.5,fill:INK});
+    el(svg,'text',{x:ox-14,y:oy+16,'font-size':11,'font-weight':800,fill:INK}).textContent='O';
+    // 直线与椭圆交点 (x=m y + c)
+    const m=Math.abs(k)<1e-6?1e6:1/k;
+    const A=m*m+4, B=2*m*c, C=c*c-4; // (m^2+4)y^2 + 2 m c y + (c^2-4)=0  since x^2/4+y^2=1 -> x^2+4y^2=4
+    const disc=B*B-4*A*C;
+    if(disc>=0){
+      const y1=(-B+Math.sqrt(disc))/(2*A), y2=(-B-Math.sqrt(disc))/(2*A);
+      const x1=m*y1+c, x2=m*y2+c;
+      const P1=[ox+x1*sx,oy-y1*sy], P2=[ox+x2*sx,oy-y2*sy];
+      // 三角形 O A B
+      el(svg,'polygon',{points:ox+','+oy+' '+P1[0].toFixed(1)+','+P1[1].toFixed(1)+' '+P2[0].toFixed(1)+','+P2[1].toFixed(1),fill:'rgba(30,158,134,0.22)',stroke:GREEN,'stroke-width':2.5});
+      // 弦
+      el(svg,'line',{x1:P1[0],y1:P1[1],x2:P2[0],y2:P2[1],stroke:RED,'stroke-width':3});
+      el(svg,'circle',{cx:P1[0],cy:P1[1],r:4,fill:RED});
+      el(svg,'circle',{cx:P2[0],cy:P2[1],r:4,fill:RED});
+      el(svg,'text',{x:P1[0]+5,y:P1[1]-5,'font-size':11,'font-weight':800,fill:RED}).textContent='A';
+      el(svg,'text',{x:P2[0]+5,y:P2[1]+14,'font-size':11,'font-weight':800,fill:RED}).textContent='B';
+    }
+    el(svg,'text',{x:ox,y:oy+108,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='△OAB (过焦点弦)';
+    // 右侧: S-k 曲线
+    const gx0=360,gy0=40,gw=300,gh=250;
+    el(svg,'line',{x1:gx0,y1:gy0,x2:gx0,y2:gy0+gh,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:gx0,y1:gy0+gh,x2:gx0+gw,y2:gy0+gh,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:gx0-6,y:gy0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='S';
+    el(svg,'text',{x:gx0+gw,y:gy0+gh+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='k';
+    const kmin=-3,kmax=3,smax=1.1;
+    function GX(kk){return gx0+(kk-kmin)/(kmax-kmin)*gw;}
+    function GY(s){return gy0+gh-(s/smax)*gh;}
+    let gd='';
+    for(let kk=kmin;kk<=kmax;kk+=0.02){const s=areaFromK(kk);gd+=(gd===''?'M':'L')+GX(kk).toFixed(1)+','+GY(s).toFixed(1);}
+    el(svg,'path',{d:gd,fill:'none',stroke:BLUE,'stroke-width':3});
+    // 当前点
+    el(svg,'circle',{cx:GX(k),cy:GY(S),r:5,fill:RED,stroke:INK,'stroke-width':2});
+    // 峰值线
+    el(svg,'line',{x1:gx0,y1:GY(bestS),x2:gx0+gw,y2:GY(bestS),stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:gx0+gw-4,y:GY(bestS)-6,'font-size':11,'font-weight':800,fill:GREEN,'text-anchor':'end'}).textContent='Smax='+bestS.toFixed(2);
+    el(svg,'text',{x:gx0+gw/2,y:gy0-6,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='S(k) 曲线 — 最高点即最大面积';
+  }
+  function loop(){if(!running)return;let kk=+Ks.value+0.04;if(kk>3){kk=3;running=false;}Ks.value=kk;k=kk;draw();requestAnimationFrame(loop);}
+  document.getElementById('areaGo').onclick=()=>{Ks.value=-3;k=-3;running=true;requestAnimationFrame(loop);};
+  document.getElementById('areaReset').onclick=()=>{Ks.value=0.6;k=0.6;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动5:基本不等式 f(t)=t+k/t ===== */
+(function(){
+  const svg=document.getElementById('amgmSvg');
+  const Ts=document.getElementById('amgmT'),Ks=document.getElementById('amgmK');
+  const oTv=document.getElementById('amgmTv'),oF=document.getElementById('amgmF'),oMin=document.getElementById('amgmMin'),oEq=document.getElementById('amgmEq');
+  let t=3,k=4;
+  function f(x){return x+k/x;}
+  function sync(){t=+Ts.value;k=+Ks.value;draw();}
+  Ts.oninput=Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    const eq=Math.sqrt(k), mn=2*Math.sqrt(k);
+    oTv.textContent=t.toFixed(2);oF.textContent=f(t).toFixed(3);oMin.textContent=mn.toFixed(3);oEq.textContent=eq.toFixed(3);
+    const X0=60,Y0=30,W=560,H=220;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-6,y:Y0+2,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='f(t)';
+    el(svg,'text',{x:X0+W,y:Y0+H+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    const tmin=0.3,tmax=6,fmax=13;
+    function GX(x){return X0+(x-tmin)/(tmax-tmin)*W;}
+    function GY(y){return Y0+H-(y/fmax)*H;}
+    let gd='';
+    for(let x=tmin;x<=tmax;x+=0.02){gd+=(gd===''?'M':'L')+GX(x).toFixed(1)+','+GY(Math.min(fmax,f(x))).toFixed(1);}
+    el(svg,'path',{d:gd,fill:'none',stroke:BLUE,'stroke-width':3});
+    // 最小值水平线
+    el(svg,'line',{x1:X0,y1:GY(mn),x2:X0+W,y2:GY(mn),stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:X0+8,y:GY(mn)-6,'font-size':11.5,'font-weight':800,fill:GREEN}).textContent='最小值 2√k='+mn.toFixed(2);
+    // 取等竖线
+    el(svg,'line',{x1:GX(eq),y1:Y0,x2:GX(eq),y2:Y0+H,stroke:VIO,'stroke-width':2,'stroke-dasharray':'4 4'});
+    el(svg,'text',{x:GX(eq),y:Y0+H+16,'font-size':11,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='t=√k='+eq.toFixed(2);
+    // 当前点
+    const cy=GY(Math.min(fmax,f(t)));
+    el(svg,'circle',{cx:GX(t),cy:cy,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    const atEq=Math.abs(t-eq)<0.06;
+    el(svg,'text',{x:X0+W/2,y:Y0-6,'font-size':12.5,'font-weight':900,fill:atEq?GREEN:INK,'text-anchor':'middle'}).textContent=atEq?'★ 到达谷底 t=√k → f(t)=2√k 最小!':'f(t)=t+k/t，谷底在 t=√k';
+  }
+  document.getElementById('amgmGo').onclick=()=>{Ts.value=Math.sqrt(k).toFixed(2);t=Math.sqrt(k);draw();};
+  sync();
+})();
+
+/* ===== 互动2:焦半径 到焦点距离 a±c ===== */
+(function(){
+  const svg=document.getElementById('focSvg');
+  const Ths=document.getElementById('focTh');
+  const oR=document.getElementById('focR'),oMax=document.getElementById('focMax'),oMin=document.getElementById('focMin'),oPos=document.getElementById('focPos');
+  const a=2,b=1,c=Math.sqrt(3);
+  let th=30,running=false;
+  function sync(){th=+Ths.value;draw();}
+  Ths.oninput=sync;
+  function draw(){
+    clr(svg);
+    const ox=350,oy=170,sx=110,sy=110;
+    // 轴
+    el(svg,'line',{x1:ox-260,y1:oy,x2:ox+260,y2:oy,stroke:'#bbb','stroke-width':2});
+    el(svg,'line',{x1:ox,y1:oy-130,x2:ox,y2:oy+130,stroke:'#bbb','stroke-width':2});
+    // 椭圆
+    let d='';
+    for(let i=0;i<=100;i++){const t=i/100*2*Math.PI;const X=ox+a*Math.cos(t)*sx;const Y=oy-b*Math.sin(t)*sy;d+=(i===0?'M':'L')+X.toFixed(1)+','+Y.toFixed(1);}
+    el(svg,'path',{d:d+'Z',fill:'none',stroke:INK,'stroke-width':3});
+    // 焦点 F (右)
+    const Fx=ox+c*sx,Fy=oy;
+    el(svg,'circle',{cx:Fx,cy:Fy,r:5,fill:VIO});
+    el(svg,'text',{x:Fx-2,y:Fy+20,'font-size':12,'font-weight':800,fill:VIO}).textContent='F';
+    // 长轴端点标注
+    el(svg,'circle',{cx:ox+a*sx,cy:oy,r:3,fill:GREEN});
+    el(svg,'text',{x:ox+a*sx-4,y:oy+20,'font-size':10.5,'font-weight':800,fill:GREEN,'text-anchor':'end'}).textContent='近端 a−c';
+    el(svg,'circle',{cx:ox-a*sx,cy:oy,r:3,fill:RED});
+    el(svg,'text',{x:ox-a*sx+4,y:oy+20,'font-size':10.5,'font-weight':800,fill:RED}).textContent='远端 a+c';
+    // 动点 P
+    const rad=th*Math.PI/180;
+    const Px=ox+a*Math.cos(rad)*sx, Py=oy-b*Math.sin(rad)*sy;
+    const wx=a*Math.cos(rad), wy=b*Math.sin(rad); // 世界坐标
+    const r=Math.sqrt((wx-c)*(wx-c)+wy*wy); // 焦半径 = a - e*x0
+    el(svg,'line',{x1:Px,y1:Py,x2:Fx,y2:Fy,stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:Px,cy:Py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Px+8,y:Py-6,'font-size':11.5,'font-weight':800,fill:RED}).textContent='P';
+    el(svg,'text',{x:(Px+Fx)/2,y:(Py+Fy)/2-6,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='r='+r.toFixed(2);
+    oR.textContent=r.toFixed(3);oMax.textContent=(a+c).toFixed(3);oMin.textContent=(a-c).toFixed(3);
+    let pos='—';
+    if(Math.abs(wx-a)<0.02) pos='近焦点端(最小)';
+    else if(Math.abs(wx+a)<0.02) pos='远焦点端(最大)';
+    else pos='中间位置';
+    oPos.textContent=pos;
+    el(svg,'text',{x:ox,y:oy-118,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='焦半径 r∈[a−c, a+c]=['+(a-c).toFixed(2)+', '+(a+c).toFixed(2)+']';
+  }
+  function loop(){if(!running)return;let t=+Ths.value+2;if(t>360){t=360;running=false;}Ths.value=t;th=t;draw();requestAnimationFrame(loop);}
+  document.getElementById('focGo').onclick=()=>{Ths.value=0;th=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('focReset').onclick=()=>{Ths.value=30;th=30;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动3:点到直线距离最值 平行切线 ===== */
+(function(){
+  const svg=document.getElementById('distSvg');
+  const Ths=document.getElementById('distTh');
+  const oD=document.getElementById('distD'),oMin=document.getElementById('distMin'),oMax=document.getElementById('distMax'),oPos=document.getElementById('distPos');
+  const a=2,b=1;
+  // 直线: x + y - 3 = 0  -> A=1,B=1,C=-3
+  const A=1,Bl=1,C=-3;
+  let th=60,running=false;
+  function dist(wx,wy){return Math.abs(A*wx+Bl*wy+C)/Math.sqrt(A*A+Bl*Bl);}
+  // 扫描最值
+  let dmin=1e9,dmax=-1,thmin=0,thmax=0;
+  (function scan(){for(let t=0;t<360;t+=0.5){const r=t*Math.PI/180;const wx=a*Math.cos(r),wy=b*Math.sin(r);const dd=dist(wx,wy);if(dd<dmin){dmin=dd;thmin=t;}if(dd>dmax){dmax=dd;thmax=t;}}})();
+  function sync(){th=+Ths.value;draw();}
+  Ths.oninput=sync;
+  function draw(){
+    clr(svg);
+    const ox=290,oy=160,sx=70,sy=70;
+    el(svg,'line',{x1:ox-260,y1:oy,x2:ox+380,y2:oy,stroke:'#ccc','stroke-width':2});
+    el(svg,'line',{x1:ox,y1:oy-140,x2:ox,y2:oy+140,stroke:'#ccc','stroke-width':2});
+    // 椭圆
+    let d='';
+    for(let i=0;i<=100;i++){const t=i/100*2*Math.PI;const X=ox+a*Math.cos(t)*sx;const Y=oy-b*Math.sin(t)*sy;d+=(i===0?'M':'L')+X.toFixed(1)+','+Y.toFixed(1);}
+    el(svg,'path',{d:d+'Z',fill:'none',stroke:INK,'stroke-width':3});
+    // 定直线 x+y-3=0 : y=3-x
+    function toPix(wx,wy){return [ox+wx*sx,oy-wy*sy];}
+    let l1=toPix(-1,4),l2=toPix(5,-2);
+    el(svg,'line',{x1:l1[0],y1:l1[1],x2:l2[0],y2:l2[1],stroke:'#777','stroke-width':3});
+    el(svg,'text',{x:l2[0]-10,y:l2[1]+16,'font-size':11,'font-weight':800,fill:'#777','text-anchor':'end'}).textContent='定直线 x+y=3';
+    // 平行切线: x+y=k, 与椭圆相切 -> k=±sqrt(a^2*1+b^2*1)=±sqrt(4+1)=±sqrt5
+    const kt=Math.sqrt(a*a*A*A+b*b*Bl*Bl); // sqrt5
+    [kt,-kt].forEach(kk=>{
+      let p1=toPix(-1,kk+1),p2=toPix(5,kk-5);
+      el(svg,'line',{x1:p1[0],y1:p1[1],x2:p2[0],y2:p2[1],stroke:GREEN,'stroke-width':2,'stroke-dasharray':'6 4'});
+    });
+    // 切点
+    const cxpt=a*a*A/kt, cypt=b*b*Bl/kt; // 切点(最近, k=+sqrt5那条)
+    let cp=toPix(cxpt,cypt);
+    el(svg,'circle',{cx:cp[0],cy:cp[1],r:4,fill:GREEN});
+    // 动点 P
+    const rad=th*Math.PI/180;
+    const wx=a*Math.cos(rad),wy=b*Math.sin(rad);
+    const P=toPix(wx,wy);
+    const dd=dist(wx,wy);
+    // 垂足
+    const t0=(A*wx+Bl*wy+C)/(A*A+Bl*Bl);
+    const fx=wx-A*t0, fy=wy-Bl*t0;
+    const F=toPix(fx,fy);
+    el(svg,'line',{x1:P[0],y1:P[1],x2:F[0],y2:F[1],stroke:BLUE,'stroke-width':3});
+    el(svg,'circle',{cx:P[0],cy:P[1],r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:P[0]+8,y:P[1]-6,'font-size':11.5,'font-weight':800,fill:RED}).textContent='P';
+    el(svg,'text',{x:(P[0]+F[0])/2+4,y:(P[1]+F[1])/2,'font-size':11.5,'font-weight':900,fill:BLUE}).textContent='d='+dd.toFixed(2);
+    oD.textContent=dd.toFixed(3);oMin.textContent=dmin.toFixed(3);oMax.textContent=dmax.toFixed(3);
+    let pos='中间';
+    if(Math.abs(th-thmin)<3||Math.abs(th-thmin-360)<3) pos='最近切点';
+    else if(Math.abs(th-thmax)<3) pos='最远切点';
+    oPos.textContent=pos;
+    el(svg,'text',{x:ox,y:oy-128,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='平行切线切点 = 距离最值点，dmin='+dmin.toFixed(2)+' dmax='+dmax.toFixed(2);
+  }
+  function loop(){if(!running)return;let t=+Ths.value+2;if(t>360){t=360;running=false;}Ths.value=t;th=t;draw();requestAnimationFrame(loop);}
+  document.getElementById('distGo').onclick=()=>{Ths.value=0;th=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('distReset').onclick=()=>{Ths.value=60;th=60;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动6:三角换元 x+2y=2√2 sin(θ+45°) ===== */
+(function(){
+  const svg=document.getElementById('triSvg');
+  const Ths=document.getElementById('triTh');
+  const oP=document.getElementById('triP'),oG=document.getElementById('triG'),oAmp=document.getElementById('triAmp'),oThm=document.getElementById('triThm');
+  // 椭圆 x^2/4 + y^2 =1 : x=2cosθ, y=sinθ ; 目标 g=x+2y=2cosθ+2sinθ=2√2 sin(θ+45°)
+  const a=2,b=1;
+  let th=20,running=false;
+  const amp=2*Math.sqrt(2); // 振幅
+  function g(deg){const r=deg*Math.PI/180;return 2*Math.cos(r)+2*Math.sin(r);}
+  // 最大在 θ+45=90 -> θ=45
+  const thm=45;
+  function sync(){th=+Ths.value;draw();}
+  Ths.oninput=sync;
+  function draw(){
+    clr(svg);
+    const ox=170,oy=155,sx=52,sy=52;
+    el(svg,'line',{x1:ox-125,y1:oy,x2:ox+125,y2:oy,stroke:'#bbb','stroke-width':2});
+    el(svg,'line',{x1:ox,y1:oy-120,x2:ox,y2:oy+120,stroke:'#bbb','stroke-width':2});
+    let d='';
+    for(let i=0;i<=100;i++){const t=i/100*2*Math.PI;const X=ox+a*Math.cos(t)*sx;const Y=oy-b*Math.sin(t)*sy;d+=(i===0?'M':'L')+X.toFixed(1)+','+Y.toFixed(1);}
+    el(svg,'path',{d:d+'Z',fill:'none',stroke:INK,'stroke-width':3});
+    const rad=th*Math.PI/180;
+    const wx=2*Math.cos(rad),wy=Math.sin(rad);
+    const Px=ox+wx*sx,Py=oy-wy*sy;
+    el(svg,'circle',{cx:Px,cy:Py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Px+8,y:Py-6,'font-size':11,'font-weight':800,fill:RED}).textContent='P';
+    el(svg,'text',{x:ox,y:oy+108,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='P=(2cosθ, sinθ)';
+    // 右侧: g(θ) 正弦波
+    const gx0=350,gy0=40,gw=310,gh=250;
+    el(svg,'line',{x1:gx0,y1:gy0,x2:gx0,y2:gy0+gh,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:gx0,y1:gy0+gh/2,x2:gx0+gw,y2:gy0+gh/2,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:gx0-6,y:gy0+2,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x+2y';
+    el(svg,'text',{x:gx0+gw,y:gy0+gh/2+18,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='θ';
+    const gmax=amp*1.15;
+    function GX(deg){return gx0+deg/360*gw;}
+    function GY(v){return gy0+gh/2-(v/gmax)*(gh/2);}
+    let gd='';
+    for(let deg=0;deg<=360;deg+=1){gd+=(deg===0?'M':'L')+GX(deg).toFixed(1)+','+GY(g(deg)).toFixed(1);}
+    el(svg,'path',{d:gd,fill:'none',stroke:BLUE,'stroke-width':3});
+    // 振幅线
+    el(svg,'line',{x1:gx0,y1:GY(amp),x2:gx0+gw,y2:GY(amp),stroke:GREEN,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:gx0+6,y:GY(amp)-5,'font-size':11,'font-weight':800,fill:GREEN}).textContent='max=2√2='+amp.toFixed(2);
+    el(svg,'line',{x1:gx0,y1:GY(-amp),x2:gx0+gw,y2:GY(-amp),stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:gx0+6,y:GY(-amp)+14,'font-size':11,'font-weight':800,fill:RED}).textContent='min=−2√2';
+    // 当前点
+    el(svg,'circle',{cx:GX(th),cy:GY(g(th)),r:5,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:gx0+gw/2,y:gy0-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='x+2y = 2√2·sin(θ+45°)';
+    oP.textContent='('+wx.toFixed(2)+', '+wy.toFixed(2)+')';
+    oG.textContent=g(th).toFixed(3);
+    oAmp.textContent=amp.toFixed(3);
+    oThm.textContent=thm+'°';
+  }
+  function loop(){if(!running)return;let t=+Ths.value+2;if(t>360){t=360;running=false;}Ths.value=t;th=t;draw();requestAnimationFrame(loop);}
+  document.getElementById('triGo').onclick=()=>{Ths.value=0;th=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('triReset').onclick=()=>{Ths.value=20;th=20;running=false;draw();};
+  sync();
+})();
+
+/* ===== 互动4:离心率范围 ===== */
+(function(){
+  const svg=document.getElementById('eccSvg');const note=document.getElementById('eccNote');
+  const Rs=document.getElementById('eccR');
+  const oE=document.getElementById('eccE'),oB=document.getElementById('eccB'),oTh=document.getElementById('eccTh'),oOk=document.getElementById('eccOk');
+  let cse=0,e=0.5;
+  document.querySelectorAll('.ecccase').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.ecccase').forEach(x=>x.classList.remove('on'));btn.classList.add('on');cse=+btn.dataset.c;draw();
+  });
+  function sync(){e=+Rs.value;draw();}
+  Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const ba=Math.sqrt(1-e*e); // b/a
+    // 条件: case0 b<c -> b/a < e -> sqrt(1-e^2)<e -> e^2>1/2 -> e>sqrt2/2 ; case1 c>=b -> e>=sqrt(1-e^2) -> 同样 e>=sqrt2/2 (以长轴为直径圆与椭圆有交)
+    const thr=Math.sqrt(2)/2;
+    let ok, lo, hi, desc;
+    if(cse===0){ ok = ba<e; lo=thr; hi=1; desc='短轴端点看长轴张角为钝角 ⟺ b<c ⟺ √(1−e²)<e ⟺ e²>½ ⟹ e∈(√2/2, 1)'; }
+    else { ok = e>=thr; lo=thr; hi=1; desc='以长轴为直径的圆与椭圆有(异于顶点的)交点 ⟺ c≥b ⟺ e≥√2/2 ⟹ e∈[√2/2, 1)'; }
+    oE.textContent=e.toFixed(3);oB.textContent=ba.toFixed(3);oTh.textContent='√2/2≈'+thr.toFixed(3);oOk.textContent=ok?'✓ 满足':'✗ 不满足';
+    // 数轴
+    const X0=70,Y=140,W=560;
+    el(svg,'line',{x1:X0,y1:Y,x2:X0+W,y2:Y,stroke:INK,'stroke-width':3});
+    function EX(v){return X0+v*W;} // e in [0,1]
+    // 天然区间 (0,1)
+    el(svg,'text',{x:EX(0),y:Y+26,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='0';
+    el(svg,'text',{x:EX(1),y:Y+26,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='1';
+    el(svg,'text',{x:EX(thr),y:Y+26,'font-size':11,'font-weight':800,fill:VIO,'text-anchor':'middle'}).textContent='√2/2';
+    // 满足区间高亮
+    el(svg,'rect',{x:EX(lo),y:Y-14,width:EX(hi)-EX(lo),height:28,fill:'rgba(30,158,134,0.30)',stroke:GREEN,'stroke-width':2});
+    el(svg,'text',{x:(EX(lo)+EX(hi))/2,y:Y-22,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='满足条件的 e 范围';
+    // 阈值竖线
+    el(svg,'line',{x1:EX(thr),y1:Y-40,x2:EX(thr),y2:Y+14,stroke:VIO,'stroke-width':2,'stroke-dasharray':'4 4'});
+    // 当前 e 红点
+    el(svg,'circle',{cx:EX(e),cy:Y,r:8,fill:ok?GREEN:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:EX(e),y:Y-46,'font-size':12,'font-weight':900,fill:ok?GREEN:RED,'text-anchor':'middle'}).textContent='e='+e.toFixed(2);
+    el(svg,'text',{x:X0+W/2,y:40,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='把几何条件翻译成 e 的不等式';
+    // 迷你椭圆示意
+    const ox=350,oy=95,sx=60,sy=60*ba;
+    let d='';
+    for(let i=0;i<=60;i++){const t=i/60*2*Math.PI;d+=(i===0?'M':'L')+(ox+e*0+60*Math.cos(t)).toFixed(1)+','+(oy-60*ba*Math.sin(t)).toFixed(1);}
+    el(svg,'path',{d:d+'Z',fill:'none',stroke:'#999','stroke-width':2});
+    note.innerHTML='👉 '+desc+(ok?'　<b style="color:#1E9E86">当前 e 满足!</b>':'　<b style="color:#E0382A">当前 e 不满足</b>');
+    note.style.borderColor=ok?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 圆锥曲线最值/范围问题的两条主线是什么？",a:"① 函数法:把目标量写成一个变量的函数 f(t)，写清定义域(参数范围)，再用配方/基本不等式/导数/三角振幅求值域或最值。② 几何法:把目标翻译成几何距离，找临界位置(垂线段、切点、长轴端点、共线点)直接读。"},
+ {q:"2. 用基本不等式求最值时，最关键的检验是什么？",a:"检验取等条件 a=b(即 t=√k)能否在定义域内达到。若因 Δ>0 或其它限制取不到，最值就不是 2√k，得改用单调性(导数)找边界值。此外凑的积必须是常数才能用。"},
+ {q:"3. 直线与椭圆有两个交点、相切、相离，分别对应判别式什么条件？",a:"联立消元得一元二次 Ax²+Bx+C=0(先确认 A≠0)。两交点(相交):Δ>0;相切:Δ=0;相离:Δ<0。解 Δ>0 的不等式即得参数范围，别忘竖直线单独讨论。"},
+ {q:"4. 椭圆上动点到焦点的距离(焦半径)最大、最小分别是多少？在哪取到？",a:"最大 a+c(远焦点端，即长轴远端点)，最小 a−c(近焦点端)。焦半径范围 [a−c, a+c]。这是几何法秒杀结论，前提是定点就是焦点。"},
+ {q:"5. 求曲线上一点到定直线的最短距离，几何法怎么做？",a:"作与该定直线平行的切线，切点就是最近/最远点(两条平行切线各一个)。或把点参数化(如 2cosθ,sinθ)代入点到直线距离公式，化成三角函数求振幅。"},
+ {q:"6. 椭圆的参数方程是什么？三角换元的威力在哪？",a:"x=a·cosθ，y=b·sinθ(θ∈[0,2π))。它把椭圆上的点用一个角 θ 表示，目标量代入后变成关于 θ 的三角函数，用 Asinθ+Bcosθ=√(A²+B²)·sin(θ+φ) 求振幅，最值一目了然。"},
+ {q:"7. 求离心率取值范围的通用思路？最后一步别忘了什么？",a:"把'活动'几何条件(某角钝角、某点存在、某距离关系)翻成 a、b、c 的不等式 → 用 b²=a²−c² 消 b → 除以 a² 化成含 e 的不等式 → 解出 e。最后要与天然范围取交(椭圆 0<e<1、双曲线 e>1)。"},
+ {q:"8. 直线 y=kx+2 与椭圆 x²/4+y²=1 有两个不同交点，求 k 的范围。",a:"代入:(1+4k²)x²+16kx+12=0。Δ=256k²−48(1+4k²)>0 → 64k²>48 → k²>3/4 → k<−√3/2 或 k>√3/2。"},
+ {q:"9. 焦点弦(过焦点的弦)最短、最长分别是什么？",a:"最短是垂直于长轴的通径 2b²/a;最长是长轴 2a。抛物线 y²=2px 焦点弦最短也是通径 2p。求焦点弦长范围，两端就是通径和长轴。"},
+ {q:"10. 椭圆 x²/4+y²=1 上一点 P 到定点 A(0,2) 的最大距离。",a:"设 P(2cosθ,sinθ)，|PA|²=−3sin²θ−4sinθ+8。令 s=sinθ∈[−1,1]，对称轴 s=−2/3∈[−1,1]，最大值 g(−2/3)=28/3，故 |PA|max=√(28/3)=2√21/3。注意 A 不是焦点，不能套 a±c。"},
+ {q:"11. 为什么目标函数一定要写定义域？举个例子。",a:"因为自由变量 t 常有隐藏限制:直线与曲线要相交(Δ>0)、斜率存在、点在曲线上、换元后新变量的范围。例如令 t=√(m²+1) 则 t≥1;若配方顶点或基本不等式取等点落在定义域外，最值就取不到，要改用单调性求边界值。"},
+ {q:"12. 短轴端点看长轴张角为钝角，求椭圆离心率范围。",a:"钝角 ⟺ b<c ⟺ √(1−e²)<e ⟺ 1−e²<e² ⟺ e²>1/2 ⟺ e>√2/2。与 e<1 取交:e∈(√2/2, 1)。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

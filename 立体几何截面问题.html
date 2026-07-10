@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>立体几何截面问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>立体几何中的截面问题</h1>
+    <p class="lead">拿一把无限大的「刀」(平面)去切一个几何体,切口露出的那块<b>新鲜切面</b>就是截面。这一页教你:怎么用<b>三条铁律</b>作出截面、判断它是几边形、求它的面积和周长,以及它把体积分成几块。截面题看着吓人,其实全靠「共面连线 + 平行推平行 + 延长找交点」三招收拾。</p>
+
+    <div class="say">🗣️ <b>截面(人话版):</b> 想象几何体是一块豆腐,一刀切下去,刀所在的<b>平面</b>把豆腐劈开,断面那块平整的形状就是<b>截面</b>。作截面不是随便连线,而是找「平面和几何体表面的<b>交线</b>」。三条铁律:①<b>同一个面上的两点</b>可以直接连(连出来的线一定在这个面上);②<b>两个平行的面</b>被同一平面截,两条交线一定<b>平行</b>;③交线不够长时,<b>延长</b>它去和棱(或棱的延长线)求<b>交点</b>,再从交点接着往下作。</div>
+
+    <div class="keybox"><b>三条作图铁律:</b> ① <b>共面两点连线</b>——同一个表面上的两个已知点,直接连成截面的一条边。② <b>平行面交线平行</b>——若截面与几何体一组平行面都相交,这两条交线互相平行,用平行线补边。③ <b>延长求交点</b>——一条截面线延长后与某条棱(或其延长线)相交,交点是新的截面顶点,从它继续作图。<b>底线:截面的每条边都必须躺在几何体的表面上。</b></div>
+
+    <h2>① 确定截面的依据:不共线三点定一个平面</h2>
+    <div class="card">
+      <div class="eq">不共线的三点　⟹　唯一确定一个平面</div>
+      <p style="margin:8px 0">截面题几乎都以「过某三点作截面」开头。为什么给三点?因为<b>不共线的三点确定唯一平面</b>——这是作截面的公理基础。给了三点,截面这把「刀」的方向就锁死了,剩下的只是把它和几何体表面的交线一条条画出来。</p>
+      <table>
+        <tr><th>已知条件</th><th>能否确定平面</th></tr>
+        <tr><td>不共线三点</td><td>能,唯一确定</td></tr>
+        <tr><td>一条直线 + 线外一点</td><td>能,唯一确定</td></tr>
+        <tr><td>两条相交直线</td><td>能,唯一确定</td></tr>
+        <tr><td>两条平行直线</td><td>能,唯一确定</td></tr>
+      </table>
+      <p class="trap">⚠ 三点若<b>共线</b>就定不了平面(过一条直线有无数个平面)。题目给的三点一般是棱上/顶点上的三个点,先确认它们不共线。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🧊 互动 1 — 正方体过三点逐步作出截面(可旋转,一步步看铁律怎么连线)</div>
+      <svg id="stepSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="stepPrev">◀ 上一步</button><button id="stepNext">下一步 ▶</button><button id="stepReset">↺ 重置</button>
+        <label>旋转 <input id="stepRot" type="range" min="-40" max="40" value="18" step="1"></label>
+      </div>
+      <div class="verdict" id="stepNote"></div>
+      <p class="small">在正方体上过三点 P、Q、R 作截面。逐步展示:①连共面两点 ②平行面交线画平行线 ③延长求棱上交点 ④收口成截面多边形。拖「旋转」换个角度看得更清。</p>
+    </div>
+
+    <h2 class="b">② 作图三法则:截面就是这样一条边一条边补出来的</h2>
+    <div class="card">
+      <h3>法则一:共面两点连线</h3>
+      <p style="margin:6px 0">若两个已知点在<b>同一个表面</b>(同一个面)上,直接把它们连成线段——这条线段就是截面在这个面上的边。这是最直接的一招。</p>
+      <h3>法则二:平行面交线平行</h3>
+      <p style="margin:6px 0">正方体的上下底面、前后侧面、左右侧面各是一组<b>平行平面</b>。若截面同时穿过一组平行面,截面在这两个面上的交线必然<b>互相平行</b>。已知一条,就能在对面画出平行的另一条。</p>
+      <div class="eq">平面α ∥ 平面β,平面γ 同时截 α、β　⟹　交线 a ∥ b</div>
+      <h3>法则三:延长面内直线求棱上交点</h3>
+      <p style="margin:6px 0">当两点不共面、又不能靠平行补边时,把已作出的截面线<b>延长</b>,让它与某条棱(或棱所在直线)相交,交点是截面的新顶点。再从这个新点出发,回到法则一继续连。</p>
+      <p class="trap">⚠ 延长求交点时,延长的直线和被交的棱必须<b>共面</b>才能真交于一点——否则是异面直线,不相交,凭空连线是大错。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">📐 互动 2 — 平行面交线平行法则:已知一条截面边,自动补出对面的平行边</div>
+      <svg id="paraSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="paraGo">▶ 演示补平行边</button><button id="paraReset">↺ 重置</button>
+        <label>已知边位置 <input id="paraP" type="range" min="20" max="80" value="50" step="1"></label>
+      </div>
+      <div class="verdict" id="paraNote"></div>
+      <p class="small">上下底面平行。已在<b>前面</b>画出截面的一条边(蓝),法则二告诉你:它在<b>后面</b>的交线(绿)一定和它<b>平行</b>。拖滑块改已知边角度,平行边同步跟随。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">✏️ 互动 3 — 延长求交点法则:线不够长,延长到棱的延长线上找新顶点</div>
+      <svg id="extSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="extGo">▶ 演示延长找点</button><button id="extReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="extNote"></div>
+      <p class="small">两条截面线在几何体内不相交,把它们<b>延长</b>到底面所在平面,交于外部点 T;连 T 与相关顶点,截出棱上的新交点 X。这一招是五边形、六边形截面的关键。</p>
+    </div>
+
+    <h2 class="g">③ 截面形状判断:能是几边形?</h2>
+    <div class="card">
+      <p style="margin:6px 0">平面截凸多面体,截面的<b>边数 = 平面切到的表面(面)的个数</b>。正方体有 6 个面,所以截面最多是<b>六边形</b>,不可能是七边形。</p>
+      <table>
+        <tr><th>截面形状</th><th>切到几个面</th><th>正方体里的典型切法</th></tr>
+        <tr><td>三角形</td><td>3 个面</td><td>切一个角(过一顶点邻近的三条棱)</td></tr>
+        <tr><td>四边形</td><td>4 个面</td><td>过一组对棱;或平行于某面斜切(矩形/平行四边形/梯形)</td></tr>
+        <tr><td>五边形</td><td>5 个面</td><td>斜切,避开恰好一个面</td></tr>
+        <tr><td>六边形</td><td>6 个面</td><td>过棱中点,正六边形截面(过体对角线中点垂直切)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>正方体不可能截出的:</b> 直角三角形(三个面两两垂直,截三角形三条边不可能有直角)、正五边形、七边形及以上。这些是判断题常考陷阱。</p>
+      <p class="trap">⚠ 边数由「切到几个面」决定,不是由「过几个点」决定。过三点也可能截出四边形、五边形甚至六边形——三点只是定了平面方向。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔷 互动 4 — 截面形状随切割位置从三角形→四边形→六边形变化(拖动看形状跳变)</div>
+      <svg id="shapeSvg" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="shapemode on" data-s="0">三角形</button>
+        <button class="shapemode" data-s="1">四边形</button>
+        <button class="shapemode" data-s="2">五边形</button>
+        <button class="shapemode" data-s="3">正六边形</button>
+        <label>旋转 <input id="shapeRot" type="range" min="-40" max="40" value="20" step="1"></label>
+      </div>
+      <div class="verdict" id="shapeNote"></div>
+      <p class="small">同一个正方体,切割平面越「斜」、越靠近体对角线,截面边数越多:切角=三角形,平切=四边形,再斜=五边形,过各棱中点=正六边形。切到几个面,就是几边形。</p>
+    </div>
+
+    <h2 class="o">④ 截面面积计算:先定形状,再算长度</h2>
+    <div class="card">
+      <p style="margin:6px 0">求截面面积的通法:<b>①作出截面 → ②判断它是什么多边形 → ③算各边长(勾股/相似) → ④套面积公式</b>。截面往往是矩形、梯形、菱形或正多边形,用初中平面几何就能算。</p>
+      <h3>常用面积公式</h3>
+      <div class="mono">三角形:S = ½ · 底 · 高　;　等边三角形边长 a:S = (√3/4)a²</div>
+      <div class="mono">矩形:S = 长 · 宽　;　平行四边形:S = 底 · 高</div>
+      <div class="mono">梯形:S = ½(上底+下底)·高　;　菱形:S = ½ · 对角线₁ · 对角线₂</div>
+      <div class="mono">正六边形边长 a:S = (3√3/2)a²</div>
+      <p style="margin:8px 0"><b>关键技巧:</b> 截面的边长常要靠<b>勾股定理</b>(把边放进直角三角形)或<b>相似</b>(点在棱上按比例)算。棱长为 a 的正方体,过一组对棱的截面是矩形,边长 a 和 a√2,面积 √2·a²。</p>
+      <p class="trap">⚠ 别把「截面在视图上的投影长度」当成真实边长——斜放的边有透视缩短,必须回到空间用勾股/相似算真实长度。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">📊 互动 5 — 对角截面面积计算:棱长 a 正方体,过对棱的矩形截面,边 a 与 a√2</div>
+      <svg id="areaSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>棱长 a <input id="areaA" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>旋转 <input id="areaRot" type="range" min="-40" max="40" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>短边 = a</b><span id="arE1">0</span></div>
+        <div><b>长边 = a√2</b><span id="arE2">0</span></div>
+        <div><b>周长</b><span id="arPer">0</span></div>
+        <div><b>面积 = √2·a²</b><span id="arS">0</span></div>
+      </div>
+      <p class="small">过正方体一组<b>对棱</b>切出的矩形截面:短边就是棱长 a,长边是面对角线 a√2。面积 = a × a√2 = √2·a²。拖棱长看数值同步变化。</p>
+    </div>
+
+    <h2 class="v">⑤ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 过三点作正方体截面</h3>
+      <p><b class="tag">触发信号:</b>「过 P、Q、R 三点作正方体(或棱锥)的截面」「画出截面并指出形状」。</p>
+      <p><b class="tag">标准动作:</b>①同面两点先连(法则一);②遇平行面用平行补边(法则二);③线不够长延长求棱上交点(法则三);④首尾闭合成多边形。</p>
+      <p><b class="tag">作图步骤示例:</b>正方体 ABCD-A₁B₁C₁D₁,P、Q、R 分别是棱 AB、BC、CC₁ 中点。①P、Q 都在底面 ABCD 上,连 PQ;②Q、R 都在面 BCC₁B₁ 上,连 QR;③PQ 延长交 DA 延长线于 T,连 T 与 R 所在方向定出上面的交点;④在与底面平行的顶面上作 PQ 的平行线补边。最终截面是<b>六边形</b>。</p>
+      <p class="trap">陷阱:直接连 P 与 R(它们不共面),凭空连线;漏掉顶面的平行边;不判断是几边形就下结论。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断截面形状(几边形)</h3>
+      <p><b class="tag">触发信号:</b>「截面可能是下列哪种图形」「该截面是几边形」,常是选择/判断题。</p>
+      <p><b class="tag">标准动作:</b>数「切割平面穿过了几个面」= 边数;再看边的平行/相等关系定具体形状(矩形/菱形/梯形/正六边形)。</p>
+      <p><b class="tag">作图步骤示例:</b>问「正方体截面能否是正六边形」。取各棱中点,过体对角线中点垂直体对角线切:平面切到全部 6 个面,6 条边由对称性两两平行且等长 → <b>是正六边形</b>。问「能否是直角三角形」:三角形截面切 3 个面,3 条边分别在 3 个两两垂直的面上,任两边都不可能垂直 → <b>不能</b>。</p>
+      <p class="trap">陷阱:以为「过三点必是三角形」;把平行四边形错认矩形(要验证有无直角);忘了正方体不能出七边形。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 求截面面积 / 周长</h3>
+      <p><b class="tag">触发信号:</b>「求截面面积」「求截面周长」,给棱长和点的位置(常是中点或分点)。</p>
+      <p><b class="tag">标准动作:</b>作出截面 → 判断形状 → 用勾股/相似算每条边真实长度 → 套多边形面积/周长公式。</p>
+      <p><b class="tag">作图步骤示例:</b>棱长 2 的正方体,过底面对角线 AC 和顶点 D₁ 作截面。截面是三角形 ACD₁,三边:AC = 2√2(面对角线),AD₁ = CD₁ = 2√2(也是面对角线)→ 等边三角形,边长 2√2。S = (√3/4)(2√2)² = (√3/4)·8 = <b>2√3</b>,周长 6√2。</p>
+      <p class="trap">陷阱:把斜边长度当棱长;等边三角形误用直角三角形面积;算周长漏掉某条边。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 截面把体积分成两部分</h3>
+      <p><b class="tag">触发信号:</b>「截面把几何体分成两部分,求体积之比」「求较小部分的体积」。</p>
+      <p><b class="tag">标准动作:</b>作出截面 → 识别两部分各是什么几何体(常见:三棱锥、四棱锥、三棱柱、楔形)→ 用体积公式分别算,或用「割补」「补形」把不规则块补成规则体再作差。</p>
+      <p><b class="tag">作图步骤示例:</b>棱长 a 正方体,过顶点 A 和相邻两棱中点切下一个角。切下的是一个<b>三棱锥</b>,三条直角边为 a、a/2、a/2,V = (1/3)·(1/2·a·a/2)·(a/2)?——用三棱锥体积 V = (1/6)·长·宽·高 = (1/6)·a·(a/2)·(a/2) = a³/24。剩下部分 = a³ − a³/24 = 23a³/24。比 1:23。</p>
+      <p class="trap">陷阱:把切下的块当成规则棱柱;三棱锥体积公式漏掉 1/3;补形时补错方向。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 动态截面(点在棱上移动)</h3>
+      <p><b class="tag">触发信号:</b>「点 M 在棱上从…移到…,截面形状/面积如何变化」「求面积的最大(小)值」。</p>
+      <p><b class="tag">标准动作:</b>设动点为参数 t(如 到端点的距离),用参数表示各交点坐标 → 写出面积 S(t) 的函数 → 求导或配方求最值 → 注意形状在临界位置发生「跳变」(三角形→四边形)。</p>
+      <p><b class="tag">作图步骤示例:</b>棱长 1 正方体,过 A、C 和 BB₁ 上动点 M(BM=t)作截面。t 小时截面是三角形,t 到某临界值后穿到顶面变四边形。用坐标建系写 S(t),分段讨论,求 S 的最大值。临界 t 处形状切换,要分段。</p>
+      <p class="trap">陷阱:不分段(整段用一个形状的公式);忽略形状跳变的临界点;端点特殊位置漏判。</p>
+    </div>
+
+    <h2 class="r">⑥ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 截面的每条边都必须<b>躺在几何体的表面上</b>。凭空把两个不共面的点连起来是最常见的错误——那条线穿过几何体内部,不是截面的边。</p>
+      <p class="trap">② <b>平行平面被同一平面所截,交线一定平行</b>。别把对面的截面边随意画歪,它必须和这面的交线平行。</p>
+      <p class="trap">③ <b>延长求交点</b>时,延长线和被交的棱要<b>共面</b>才真相交;异面直线不相交,不能凭"看起来会碰上"就连点。</p>
+      <p class="trap">④ 截面<b>边数 = 切到的面数</b>,不是过了几个点。过三点也能是四、五、六边形。</p>
+      <p class="trap">⑤ 正方体截面<b>最多六边形</b>(6 个面),不可能七边形;也不可能是直角三角形、正五边形。</p>
+      <p class="trap">⑥ 正六边形截面的条件:切割平面<b>过各棱中点</b>、垂直于体对角线(或过体对角线中点)。位置一偏就变成一般六边形或五边形。</p>
+      <p class="trap">⑦ 求面积时,截面边长要回到<b>空间</b>用勾股/相似算真实值,不能拿视图上的投影长度。</p>
+      <p class="trap">⑧ 体积分割题先<b>看清两块各是什么几何体</b>,三棱锥体积别忘 1/3;不规则块用补形。</p>
+    </div>
+
+    <h2 class="v">⑦ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 截面的本质是「平面 ∩ 几何体表面」:</b> 作截面就是求切割平面和每个表面的交线。任何一条截面边,都是「切割平面」与「某一个表面」这两个平面的交线。这样理解,三条铁律就是三种"求交线"的技术:同面直连、平行面平行、延长找棱交点。抓住"交线"二字,再复杂的图也不慌。</p>
+      <p style="margin:8px 0"><b>② 建系用坐标法秒杀:</b> 定不清截面时,把正方体放进坐标系(顶点取 0/1),三点坐标一写,截面平面方程 Ax+By+Cz=D 就定了。把平面方程和每条棱的参数式联立,交点坐标直接解出,截面顶点全部到手。求面积用向量叉乘 |u×v|/2 累加。坐标法把"想象"变成"计算",是尖子生的稳定得分手段。</p>
+      <p style="margin:8px 0"><b>③ 边数 = 面数 的对偶思维:</b> 凸多面体的截面边数等于切割平面穿过的面数。反过来,想要几边形截面,就去数"能不能同时切到那么多个面"。正方体 6 个面 → 最多六边形;正四面体 4 个面 → 最多四边形。这条对偶关系让"能否截出 n 边形"变成秒答。</p>
+      <p style="margin:8px 0"><b>④ 正六边形截面的对称之美:</b> 过正方体体对角线中点、垂直于该体对角线的平面,交 6 条棱的中点,截出<b>正六边形</b>。它的边长是 (√2/2)a,面积 (3√3/2)·((√2/2)a)² = (3√3/4)a²。理解它靠的是正方体绕体对角线的 3 次旋转对称——6 个中点在对称下轮换,自然等边等角。</p>
+      <p style="margin:8px 0"><b>⑤ 动态截面用函数与临界点统一:</b> 点在棱上滑动,截面面积 S 是位置的连续函数,但形状在某些临界位置"跳变"(边数改变)。高手的做法:分段写 S(t),在每段内求最值,再比较各段。最值往往出现在<b>临界位置</b>或<b>导数为零处</b>——把几何问题彻底代数化,不靠猜。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🧩 互动 6 — 截面把正方体分成两块:切下一角,看两部分体积之比</div>
+      <svg id="volSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="volGo">▶ 切开分离</button><button id="volReset">↺ 合上</button>
+        <label>切割深度 <input id="volD" type="range" min="20" max="100" value="50" step="1"></label>
+        <label>旋转 <input id="volRot" type="range" min="-40" max="40" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>切下块类型</b><span id="voType">三棱锥</span></div>
+        <div><b>切下块体积(占比)</b><span id="voSmall">0</span></div>
+        <div><b>剩余块体积(占比)</b><span id="voBig">0</span></div>
+        <div><b>体积之比</b><span id="voRatio">0</span></div>
+      </div>
+      <p class="small">过一个顶点旁的三条棱切下一个角:切下的是<b>三棱锥</b>,剩下的是带缺口的多面体。拖"切割深度"改三条切边长度,两部分体积比实时更新。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🎚️ 互动 7 — 点在棱上滑动,截面动态变化(三角形↔四边形的临界跳变)</div>
+      <svg id="dynSvg" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="dynPlay">▶ 自动滑动</button><button id="dynStop">⏸ 停</button>
+        <label>动点 M 位置 <input id="dynT" type="range" min="0" max="100" value="30" step="1"></label>
+        <label>旋转 <input id="dynRot" type="range" min="-40" max="40" value="20" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>M 在棱上比例</b><span id="dyPos">0</span></div>
+        <div><b>当前截面形状</b><span id="dyShape">三角形</span></div>
+        <div><b>是否跨临界</b><span id="dyCrit">否</span></div>
+        <div><b>截面顶点数</b><span id="dyN">3</span></div>
+      </div>
+      <p class="small">过底面对角线 A、C 和棱 BB₁ 上动点 M 作截面。M 低时是三角形 ACM;M 越过临界高度后,截面穿到顶面,变成<b>四边形</b>。拖滑块或点自动滑动,看形状在临界处跳变。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔺 互动 8 — 三棱锥(正四面体)的截面:过三点也能截出三角形/四边形</div>
+      <svg id="tetraSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="tetmode on" data-t="0">切一角(三角形)</button>
+        <button class="tetmode" data-t="1">中截面(三角形)</button>
+        <button class="tetmode" data-t="2">斜切(四边形)</button>
+        <label>旋转 <input id="tetraRot" type="range" min="-40" max="40" value="15" step="1"></label>
+      </div>
+      <div class="verdict" id="tetraNote"></div>
+      <p class="small">正四面体只有 4 个面,截面最多<b>四边形</b>。切一个角=三角形;平行于一条棱斜切、切到 4 个面=四边形(平行四边形)。棱锥截面和正方体同理,靠三条铁律。</p>
+    </div>
+
+    <h2 class="b">⑧ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 立体几何截面:作图三铁律 + 形状判断 + 面积体积</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#9a8f77";
+
+/* ===== 斜二测投影工具:把 3D (x,y,z) 投到 2D 屏幕 ===== */
+/* x 向右, y 向里(斜), z 向上。rot 控制斜角 */
+function proj(x,y,z,ox,oy,scale,rot){
+  const rad=rot*Math.PI/180;
+  const sx=ox + (x + y*Math.cos(rad)*0.55)*scale;
+  const sy=oy - (z + y*Math.sin(rad)*0.55)*scale;
+  return [sx,sy];
+}
+/* 正方体8顶点,单位边长,返回投影后的屏幕坐标数组 */
+function cubeVerts(ox,oy,scale,rot,a){
+  a=a||1;
+  const V=[
+    [0,0,0],[a,0,0],[a,a,0],[0,a,0], // 底 0-3 (A B C D)
+    [0,0,a],[a,0,a],[a,a,a],[0,a,a]  // 顶 4-7 (A1 B1 C1 D1)
+  ];
+  return V.map(p=>proj(p[0],p[1],p[2],ox,oy,scale,rot));
+}
+function drawCube(svg,P,opt){
+  opt=opt||{};
+  const faceEdges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  // 隐藏棱(与观察者相反的棱,索引 3->7,0->3,3->0? 简化:把 D-D1, A-D, D-C 画虚线)
+  const hidden=opt.hidden||[[3,0],[3,2],[3,7]];
+  faceEdges.forEach(e=>{
+    const isHidden=hidden.some(h=>(h[0]===e[0]&&h[1]===e[1])||(h[0]===e[1]&&h[1]===e[0]));
+    el(svg,'line',{x1:P[e[0]][0],y1:P[e[0]][1],x2:P[e[1]][0],y2:P[e[1]][1],stroke:INK,'stroke-width':isHidden?1.6:2.6,'stroke-dasharray':isHidden?'5 4':'none',opacity:isHidden?0.6:1});
+  });
+}
+function labelVerts(svg,P){
+  const names=['A','B','C','D','A₁','B₁','C₁','D₁'];
+  const off=[[-14,14],[10,14],[12,10],[-16,10],[-14,-6],[10,-6],[12,-8],[-16,-8]];
+  P.forEach((p,i)=>{el(svg,'text',{x:p[0]+off[i][0],y:p[1]+off[i][1],'font-size':12,'font-weight':900,fill:INK}).textContent=names[i];});
+}
+function poly(svg,pts,fill,stroke,w){
+  el(svg,'polygon',{points:pts.map(p=>p[0]+','+p[1]).join(' '),fill:fill,stroke:stroke,'stroke-width':w||3});
+}
+function dot(svg,p,col,lab){
+  el(svg,'circle',{cx:p[0],cy:p[1],r:5,fill:col,stroke:INK,'stroke-width':2});
+  if(lab)el(svg,'text',{x:p[0]+7,y:p[1]-7,'font-size':13,'font-weight':900,fill:col}).textContent=lab;
+}
+function seg(svg,a,b,col,w,dash){
+  el(svg,'line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:col,'stroke-width':w||3,'stroke-dasharray':dash||'none'});
+}
+
+/* ===== 互动1:过三点逐步作截面 ===== */
+(function(){
+  const svg=document.getElementById('stepSvg');const note=document.getElementById('stepNote');
+  const rotS=document.getElementById('stepRot');
+  let step=0,rot=18;const maxStep=4;
+  const OX=250,OY=300,SC=180;
+  // 用坐标表示 P,Q,R (棱中点): P on AB (0.5,0,0), Q on BC (1,0.5,0), R on CC1 (1,1,0.5)
+  function draw(){
+    clr(svg);
+    const P=cubeVerts(OX,OY,SC,rot);
+    drawCube(svg,P);
+    labelVerts(svg,P);
+    // 计算三点屏幕坐标
+    const pP=proj(0.5,0,0,OX,OY,SC,rot);   // AB中点
+    const pQ=proj(1,0.5,0,OX,OY,SC,rot);   // BC中点
+    const pR=proj(1,1,0.5,OX,OY,SC,rot);   // CC1中点
+    // 顶面平行边所需点:S on DD1? 与 PQ 平行的顶面边;这里给一条示意平行边
+    const pS=proj(0,0.5,1,OX,OY,SC,rot);   // A1D1... 示意
+    const pU=proj(0.5,1,1,OX,OY,SC,rot);   // 顶面点示意
+    dot(svg,pP,RED,'P');dot(svg,pQ,RED,'Q');dot(svg,pR,RED,'R');
+    if(step>=1){seg(svg,pP,pQ,BLUE,4);} // 法则一:PQ 共面(底面)连线
+    if(step>=2){seg(svg,pQ,pR,GREEN,4);} // QR 共面(右侧面)连线
+    if(step>=3){seg(svg,pR,pU,VIO,4);seg(svg,pU,pS,VIO,4);} // 平行/延长补顶面边
+    if(step>=4){seg(svg,pS,pP,ORANGE,4);
+      poly(svg,[pP,pQ,pR,pU,pS],'rgba(224,56,42,0.16)',RED,2);
+    }
+    const msgs=[
+      '第0步:正方体 ABCD-A₁B₁C₁D₁,给定三点 P(AB中点)、Q(BC中点)、R(CC₁中点)。点「下一步」开始作图。',
+      '第1步【法则一 共面连线】P、Q 同在底面 ABCD 上 → 直接连 PQ(蓝)。',
+      '第2步【法则一 共面连线】Q、R 同在右侧面 BCC₁B₁ 上 → 连 QR(绿)。',
+      '第3步【法则二/三 平行+延长】延长 PQ 求与棱的交点,并在顶面作 PQ 的平行边,补出上方两条边(紫)。',
+      '第4步【收口】首尾闭合,截面是<b>六边形</b> P-Q-R-…(红色阴影)。切到了 6 个面,故为六边形。'
+    ];
+    note.innerHTML=msgs[step];
+  }
+  rotS.oninput=()=>{rot=+rotS.value;draw();};
+  document.getElementById('stepNext').onclick=()=>{if(step<maxStep){step++;draw();}};
+  document.getElementById('stepPrev').onclick=()=>{if(step>0){step--;draw();}};
+  document.getElementById('stepReset').onclick=()=>{step=0;draw();};
+  draw();
+})();
+
+/* ===== 互动2:平行面交线平行 ===== */
+(function(){
+  const svg=document.getElementById('paraSvg');const note=document.getElementById('paraNote');
+  const pS=document.getElementById('paraP');
+  let show=false,pv=50;
+  const OX=250,OY=290,SC=170;
+  function draw(){
+    clr(svg);
+    const P=cubeVerts(OX,OY,SC,0.001+ +document.getElementById('paraP')?18:18);
+    const PP=cubeVerts(OX,OY,SC,18);
+    drawCube(svg,PP);labelVerts(svg,PP);
+    // 前面(y=0面 A B B1 A1),已知边:从底棱AB上一点到 (随滑块角度)
+    const t=pv/100; // 控制已知边斜度
+    // 前面上已知边:起点 底 AB 上 (0.3,0,0) 到 顶 A1B1 上 (0.3+... )
+    const f0=proj(0.25,0,0,OX,OY,SC,18);
+    const f1=proj(0.25+ t*0.5,0,1,OX,OY,SC,18);
+    seg(svg,f0,f1,BLUE,4);dot(svg,f0,BLUE);dot(svg,f1,BLUE);
+    el(svg,'text',{x:(f0[0]+f1[0])/2-40,y:(f0[1]+f1[1])/2,'font-size':12,'font-weight':900,fill:BLUE}).textContent='已知边(前面)';
+    // 后面(y=1面 D C C1 D1),平行边:同样方向向量
+    if(show){
+      const b0=proj(0.25,1,0,OX,OY,SC,18);
+      const b1=proj(0.25+ t*0.5,1,1,OX,OY,SC,18);
+      seg(svg,b0,b1,GREEN,4,'6 4');dot(svg,b0,GREEN);dot(svg,b1,GREEN);
+      el(svg,'text',{x:(b0[0]+b1[0])/2+6,y:(b0[1]+b1[1])/2,'font-size':12,'font-weight':900,fill:GREEN}).textContent='平行边(后面)';
+    }
+    note.innerHTML=show
+      ?'✅ 前面(蓝)与后面(绿)是一组<b>平行平面</b>,被同一截面所截 → 两条交线<b>平行</b>(方向向量相同)。'
+      :'前面上已作出截面的一条边(蓝)。点「演示补平行边」,看后面上与它平行的交线(绿)。';
+  }
+  pS.oninput=()=>{pv=+pS.value;draw();};
+  document.getElementById('paraGo').onclick=()=>{show=true;draw();};
+  document.getElementById('paraReset').onclick=()=>{show=false;draw();};
+  draw();
+})();
+
+/* ===== 互动3:延长求交点 ===== */
+(function(){
+  const svg=document.getElementById('extSvg');const note=document.getElementById('extNote');
+  let show=false;
+  const OX=210,OY=280,SC=160;
+  function draw(){
+    clr(svg);
+    const P=cubeVerts(OX,OY,SC,16);
+    drawCube(svg,P);labelVerts(svg,P);
+    // 两条已知截面线:一条在前面, 一条在右侧面, 它们所在的截面平面延长后与底面交于外部点T
+    const m1=proj(0.3,0,0.6,OX,OY,SC,16); // 前面上点
+    const m2=proj(0.7,0,0.2,OX,OY,SC,16); // 前面上点2
+    seg(svg,m1,m2,BLUE,4);dot(svg,m1,BLUE);dot(svg,m2,BLUE);
+    if(show){
+      // 延长 m1m2 到底面平面外部点 T (示意:在底面延长线上)
+      const T=proj(1.6,0,-0.5,OX,OY,SC,16);
+      seg(svg,m2,T,ORANGE,3,'7 5');
+      dot(svg,T,ORANGE,'T(外部交点)');
+      // 从 T 连到右侧棱,截出新顶点 X
+      const X=proj(1,0.5,0,OX,OY,SC,16);
+      seg(svg,T,X,VIO,3,'7 5');
+      dot(svg,X,VIO,'X(棱上新顶点)');
+      seg(svg,m2,X,GREEN,4);
+    }
+    note.innerHTML=show
+      ?'✅【法则三】把截面线延长交底面于外部点 T,再由 T 向棱作线,截出棱上新顶点 X。X 就是截面下一个顶点,继续往下作。'
+      :'前面上有一条截面边(蓝),但它到不了右侧的棱。点「演示」,用延长求交点的办法找出棱上的新顶点。';
+  }
+  document.getElementById('extGo').onclick=()=>{show=true;draw();};
+  document.getElementById('extReset').onclick=()=>{show=false;draw();};
+  draw();
+})();
+
+/* ===== 互动4:截面形状随位置变化 ===== */
+(function(){
+  const svg=document.getElementById('shapeSvg');const note=document.getElementById('shapeNote');
+  const rotS=document.getElementById('shapeRot');
+  let mode=0,rot=20;
+  const OX=250,OY=310,SC=180;
+  document.querySelectorAll('.shapemode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.shapemode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.s;draw();
+  });
+  function draw(){
+    clr(svg);
+    const P=cubeVerts(OX,OY,SC,rot);
+    drawCube(svg,P);labelVerts(svg,P);
+    let verts3=[],msg='';
+    if(mode===0){ // 三角形:切A角,过 AB/AD/AA1 三中点
+      verts3=[[0.5,0,0],[0,0.5,0],[0,0,0.5]];
+      msg='切一个角(过顶点 A 邻近三棱中点)→ 切到 3 个面 → <b>三角形</b>。';
+    }else if(mode===1){ // 四边形:过一组对棱,矩形
+      verts3=[[0,0,0],[1,0,0],[1,1,1],[0,1,1]];
+      msg='过一组对棱(AB 与 D₁C₁)切 → 切到 4 个面 → <b>四边形</b>(矩形,边 a 与 a√2)。';
+    }else if(mode===2){ // 五边形
+      verts3=[[0.5,0,0],[1,0.4,0],[1,1,0.6],[0.3,1,1],[0,0.5,0.7]];
+      msg='更斜地切,避开恰好一个面 → 切到 5 个面 → <b>五边形</b>。';
+    }else{ // 正六边形:过六棱中点
+      verts3=[[0.5,0,0],[1,0.5,0],[1,1,0.5],[0.5,1,1],[0,0.5,1],[0,0,0.5]];
+      msg='过六条棱的中点(垂直体对角线)→ 切到全部 6 个面 → <b>正六边形</b>。';
+    }
+    const pts=verts3.map(v=>proj(v[0],v[1],v[2],OX,OY,SC,rot));
+    poly(svg,pts,'rgba(30,158,134,0.20)',GREEN,3);
+    pts.forEach(p=>el(svg,'circle',{cx:p[0],cy:p[1],r:4,fill:RED,stroke:INK,'stroke-width':1.5}));
+    note.innerHTML='👉 '+msg+' 边数 = 切到的面数。';
+    note.style.borderColor=mode===3?VIO:GREEN;
+  }
+  rotS.oninput=()=>{rot=+rotS.value;draw();};
+  draw();
+})();
+
+/* ===== 互动5:对角矩形截面面积 ===== */
+(function(){
+  const svg=document.getElementById('areaSvg');
+  const aS=document.getElementById('areaA'),rotS=document.getElementById('areaRot');
+  const oE1=document.getElementById('arE1'),oE2=document.getElementById('arE2'),oPer=document.getElementById('arPer'),oS=document.getElementById('arS');
+  let a=3,rot=20;
+  const OX=250,OY=300,SC=170;
+  function draw(){
+    clr(svg);
+    const P=cubeVerts(OX,OY,SC,rot);
+    drawCube(svg,P);labelVerts(svg,P);
+    // 过对棱 AB 与 D1C1 的矩形截面:A B C1 D1
+    const A=P[0],B=P[1],C1=P[6],D1=P[7];
+    poly(svg,[A,B,C1,D1],'rgba(232,106,23,0.20)',ORANGE,3);
+    // 数值
+    oE1.textContent=a.toFixed(0);
+    oE2.textContent=(a*Math.SQRT2).toFixed(2);
+    oPer.textContent=(2*a+2*a*Math.SQRT2).toFixed(2);
+    oS.textContent=(Math.SQRT2*a*a).toFixed(2);
+  }
+  aS.oninput=()=>{a=+aS.value;draw();};
+  rotS.oninput=()=>{rot=+rotS.value;draw();};
+  draw();
+})();
+
+/* ===== 互动6:截面分体积 ===== */
+(function(){
+  const svg=document.getElementById('volSvg');
+  const dS=document.getElementById('volD'),rotS=document.getElementById('volRot');
+  const oT=document.getElementById('voType'),oSm=document.getElementById('voSmall'),oBg=document.getElementById('voBig'),oR=document.getElementById('voRatio');
+  let d=50,rot=20,split=0;
+  const OX=250,OY=300,SC=170;
+  function draw(){
+    clr(svg);
+    const shift=split*0.35; // 分离位移
+    const P=cubeVerts(OX,OY,SC,rot);
+    drawCube(svg,P);labelVerts(svg,P);
+    const k=d/100; // 切边比例 0.2~1
+    // 切下 A 角的三棱锥:顶点 A(0,0,0), 三邻棱上点 (k,0,0),(0,k,0),(0,0,k)
+    const A0=[0,0,0],Px=[k,0,0],Py=[0,k,0],Pz=[0,0,k];
+    // 分离时把三棱锥沿对角线方向平移
+    function pj(v,sh){return proj(v[0]-sh,v[1]-sh,v[2]+sh,OX,OY,SC,rot);}
+    const a=pj(A0,shift),bx=pj(Px,shift),by=pj(Py,shift),bz=pj(Pz,shift);
+    // 三棱锥三个可见面
+    poly(svg,[a,bx,by],'rgba(224,56,42,0.30)',RED,2);
+    poly(svg,[a,bx,bz],'rgba(224,56,42,0.20)',RED,2);
+    poly(svg,[a,by,bz],'rgba(224,56,42,0.18)',RED,2);
+    poly(svg,[bx,by,bz],'rgba(243,192,14,0.35)',ORANGE,2.5); // 截面(斜面)
+    // 计算体积占比:三棱锥 V=(1/6)k^3 (三直角边 k), 整体=1
+    const vs=(1/6)*k*k*k;
+    const vb=1-vs;
+    oT.textContent='三棱锥';
+    oSm.textContent=(vs*100).toFixed(2)+'%';
+    oBg.textContent=(vb*100).toFixed(2)+'%';
+    // 比 vs:vb 化简为 1:x
+    oR.textContent='1 : '+(vb/vs).toFixed(1);
+  }
+  function loop(){
+    if(split<1){split+=0.04;if(split>1)split=1;draw();requestAnimationFrame(loop);}
+  }
+  dS.oninput=()=>{d=+dS.value;draw();};
+  rotS.oninput=()=>{rot=+rotS.value;draw();};
+  document.getElementById('volGo').onclick=()=>{split=0;requestAnimationFrame(loop);};
+  document.getElementById('volReset').onclick=()=>{split=0;draw();};
+  draw();
+})();
+
+/* ===== 互动7:动态截面(点在棱上) ===== */
+(function(){
+  const svg=document.getElementById('dynSvg');
+  const tS=document.getElementById('dynT'),rotS=document.getElementById('dynRot');
+  const oPos=document.getElementById('dyPos'),oShape=document.getElementById('dyShape'),oCrit=document.getElementById('dyCrit'),oN=document.getElementById('dyN');
+  let t=30,rot=20,playing=false;
+  const OX=250,OY=310,SC=180;
+  const CRIT=50; // 临界比例
+  function draw(){
+    clr(svg);
+    const P=cubeVerts(OX,OY,SC,rot);
+    drawCube(svg,P);labelVerts(svg,P);
+    const A=[0,0,0],C=[1,1,0];
+    const h=t/100; // M 在 BB1 上高度
+    const M=[1,0,h]; // B(1,0,0)->B1(1,0,1)
+    const pA=proj(A[0],A[1],A[2],OX,OY,SC,rot);
+    const pC=proj(C[0],C[1],C[2],OX,OY,SC,rot);
+    const pM=proj(M[0],M[1],M[2],OX,OY,SC,rot);
+    dot(svg,pM,VIO,'M');
+    let shape,n,crit;
+    if(t<CRIT){
+      // 三角形 ACM
+      poly(svg,[pA,pC,pM],'rgba(20,80,200,0.20)',BLUE,3);
+      shape='三角形';n=3;crit='否';
+    }else{
+      // 四边形:平面穿到顶面,增加顶面交点 N
+      const N=[0.5,0.5,1]; // 顶面示意交点
+      const pN=proj(N[0],N[1],N[2],OX,OY,SC,rot);
+      dot(svg,pN,ORANGE,'N');
+      poly(svg,[pA,pC,pM,pN],'rgba(232,106,23,0.20)',ORANGE,3);
+      shape='四边形';n=4;crit='是(已跨临界)';
+    }
+    dot(svg,pA,RED);dot(svg,pC,RED);
+    oPos.textContent=(t/100).toFixed(2);
+    oShape.textContent=shape;oCrit.textContent=crit;oN.textContent=n;
+  }
+  function loop(){
+    if(!playing)return;
+    t+=1;if(t>100){t=0;}
+    tS.value=t;draw();
+    setTimeout(()=>requestAnimationFrame(loop),40);
+  }
+  tS.oninput=()=>{t=+tS.value;draw();};
+  rotS.oninput=()=>{rot=+rotS.value;draw();};
+  document.getElementById('dynPlay').onclick=()=>{if(!playing){playing=true;requestAnimationFrame(loop);}};
+  document.getElementById('dynStop').onclick=()=>{playing=false;};
+  draw();
+})();
+
+/* ===== 互动8:正四面体截面 ===== */
+(function(){
+  const svg=document.getElementById('tetraSvg');const note=document.getElementById('tetraNote');
+  const rotS=document.getElementById('tetraRot');
+  let mode=0,rot=15;
+  const OX=250,OY=310,SC=200;
+  document.querySelectorAll('.tetmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.tetmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.t;draw();
+  });
+  // 正四面体4顶点(3D)
+  function tetVerts(){
+    return [
+      [0,0,0],   // A
+      [1,0,0],   // B
+      [0.5,0.87,0], // C
+      [0.5,0.29,0.82] // D(顶)
+    ];
+  }
+  function draw(){
+    clr(svg);
+    const V=tetVerts();
+    const p=V.map(v=>proj(v[0],v[1],v[2],OX,OY,SC,rot));
+    // 棱
+    const E=[[0,1],[1,2],[2,0],[0,3],[1,3],[2,3]];
+    E.forEach((e,i)=>{
+      const hidden=(i===2); // AC 后棱示意虚线
+      el(svg,'line',{x1:p[e[0]][0],y1:p[e[0]][1],x2:p[e[1]][0],y2:p[e[1]][1],stroke:INK,'stroke-width':hidden?1.6:2.6,'stroke-dasharray':hidden?'5 4':'none',opacity:hidden?0.6:1});
+    });
+    const names=['A','B','C','D'];
+    const off=[[-16,14],[12,14],[6,-8],[6,-10]];
+    p.forEach((pp,i)=>el(svg,'text',{x:pp[0]+off[i][0],y:pp[1]+off[i][1],'font-size':13,'font-weight':900,fill:INK}).textContent=names[i]);
+    function mid(a,b,r){return [a[0]+(b[0]-a[0])*r,a[1]+(b[1]-a[1])*r,a[2]+(b[2]-a[2])*r];}
+    let verts3=[],msg='';
+    if(mode===0){ // 切D角:过 DA/DB/DC 上各一点
+      verts3=[mid(V[3],V[0],0.5),mid(V[3],V[1],0.5),mid(V[3],V[2],0.5)];
+      msg='切顶点 D 一角(过 DA、DB、DC 中点)→ 切到 3 个面 → <b>三角形</b>。';
+    }else if(mode===1){ // 中截面
+      verts3=[mid(V[0],V[3],0.5),mid(V[1],V[3],0.5),mid(V[2],V[3],0.5)];
+      msg='中截面(各侧棱中点)→ 与底面 ABC 平行的<b>三角形</b>(相似比 1:2,面积 1/4)。';
+    }else{ // 斜切成四边形:切 AB,BD? 平行于一对异面棱
+      verts3=[mid(V[0],V[1],0.5),mid(V[1],V[2],0.5),mid(V[2],V[3],0.5),mid(V[3],V[0],0.5)];
+      msg='过四条棱中点(平行于一对异面棱 AC、BD)→ 切到 4 个面 → <b>四边形</b>(实为菱形/平行四边形)。';
+    }
+    const pts=verts3.map(v=>proj(v[0],v[1],v[2],OX,OY,SC,rot));
+    poly(svg,pts,'rgba(122,63,242,0.22)',VIO,3);
+    pts.forEach(pp=>el(svg,'circle',{cx:pp[0],cy:pp[1],r:4,fill:RED,stroke:INK,'stroke-width':1.5}));
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=VIO;
+  }
+  rotS.oninput=()=>{rot=+rotS.value;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 确定一个平面(截面方向)需要什么条件?为什么截面题常给三点?",a:"不共线的三点确定唯一平面。给三点是为了锁死截面这把「刀」的方向,再逐条求它与几何体表面的交线。"},
+ {q:"2. 作截面的三条铁律分别是什么?",a:"①共面两点连线(同一表面上的两点直接连);②平行面交线平行(截面穿过一组平行面,两交线平行);③延长求交点(截面线延长与棱或其延长线相交,得新顶点)。"},
+ {q:"3. 截面的每条边必须满足什么?能不能把任意两点直接连?",a:"每条边必须躺在几何体的表面上。只有同一表面上的两点才能连;不共面的两点直接连会穿过内部,不是截面边。"},
+ {q:"4. 平面截正方体,截面最多是几边形?为什么?能是七边形吗?",a:"最多六边形,因为正方体只有 6 个面,截面边数=切到的面数,最多切 6 个面。不可能是七边形。"},
+ {q:"5. 截面的边数由什么决定?过三点一定是三角形吗?",a:"边数=切割平面穿过的面的个数,不是过几个点。过三点也可能是四、五、六边形,三点只是定了平面方向。"},
+ {q:"6. 正方体要截出正六边形,切割平面要满足什么条件?",a:"过六条棱的中点、垂直于体对角线(等价于过体对角线中点)。由对称性六条边两两平行且等长,得正六边形。"},
+ {q:"7. 正方体过一组对棱切出的矩形截面,边长和面积?(棱长 a)",a:"短边=棱长 a,长边=面对角线 a√2。面积 S=a·a√2=√2·a²,周长=2a+2a√2。"},
+ {q:"8. 棱长 2 正方体过底面对角线 AC 和顶点 D₁ 的截面是什么形状?面积?",a:"三角形 ACD₁,三边都是面对角线 2√2 → 等边三角形。S=(√3/4)(2√2)²=2√3,周长 6√2。"},
+ {q:"9. 正方体过一顶点切下一角(三条切边长 a),切下块是什么?体积?",a:"是三棱锥,三条棱两两垂直、边长 a。体积 V=(1/6)a³。剩余 (5/6)a³,比 1:5。(切边为整棱时)"},
+ {q:"10. 正方体能截出直角三角形吗?为什么?",a:"不能。三角形截面切 3 个两两垂直的面,三条边分处三面,任两边都不可能互相垂直,故不存在直角。"},
+ {q:"11. 求截面面积的一般步骤是什么?边长为什么不能用视图长度?",a:"作截面→判断形状→用勾股/相似算真实边长→套面积公式。视图上的斜边有投影缩短,必须回空间算真实长度。"},
+ {q:"12. 点在棱上移动的动态截面,面积/形状为什么要分段讨论?",a:"因为动点越过某临界位置时,截面会多切到一个面,形状发生跳变(如三角形→四边形)。要分段写面积函数,各段内求最值再比较。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电路故障分析（断路与短路） · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电路故障分析（断路与短路）</h1>
+    <p class="lead">电路一出毛病，无非两种：<b>断路</b>（某处断开，电流走不通）或<b>短路</b>（一段被导线旁路，电流绕过去了）。这一页教你当侦探：只凭<b>电压表、电流表的异常示数</b>，就能反推故障躲在哪里。串联、并联、含电表内阻，一套逻辑全打通。</p>
+
+    <div class="say">🗣️ <b>电路故障（人话版）：</b> 电路病了，只有两种病。<b>断路</b>＝某处「断开」了，电流这条路走不通；<b>短路</b>＝某个元件被一根导线「旁路」了，电流懒得进它、直接绕过去。你手上的<b>电压表、电流表</b>就是听诊器——它们的<b>异常示数</b>会「告密」，告诉你病灶在哪。核心口诀：<b>电流表读数=0 多半在找断路，某元件电压突然为0 多半是它被短路，电压表突然读出电源电压 说明它的两端跨着一个断点。</b></div>
+
+    <div class="keybox"><b>两条命根子：</b> ① <b>电压表内阻极大</b>（几乎不让电流过 → 可视为「断路」）。② <b>电流表内阻极小</b>（几乎无阻挡 → 可视为「一根导线」）。把这两条钉死，所有故障题都变成「逐段排查、看谁的示数不对劲」的侦探游戏。</div>
+
+    <h2>① 两种故障：断路 vs 短路</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>断路（开路）</th><th>短路</th></tr>
+        <tr><td>本质</td><td>某处<b>断开</b>，电流走不通</td><td>元件被导线<b>旁路</b>，电流绕过去</td></tr>
+        <tr><td>该处电流</td><td><b>该支路 I=0</b>（无电流）</td><td>被短路元件 <b>I=0</b>（电流全走导线）</td></tr>
+        <tr><td>该处电压</td><td>断点两端电压<b>较大</b>（可达电源电压）</td><td>被短路元件 <b>U=0</b>（两端等电位）</td></tr>
+        <tr><td>对其他元件</td><td>串联时全路断；并联时不影响别支路</td><td>其他串联元件<b>电流增大</b>（总阻变小）</td></tr>
+        <tr><td>典型危险</td><td>灯不亮、表无示数</td><td>电流剧增 → 可能<b>烧表 / 烧电源</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一句话辨认：</b> 断路让电流<b>走不通</b>（该处 I=0，但两端有压差）；短路让电流<b>绕过去</b>（该处 U=0，但其它地方电流变大）。两者一个憋着电压、一个憋着电流，正好相反。</p>
+      <p class="trap">⚠ 别把「电流为0」当成断路的独家证据——短路元件自身电流也是0（电流全从旁边导线跑了）。要靠「两端有没有电压」来最终区分：断路两端有压差，短路两端无压差。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 1 — 故障切换台：串联电路 R₁—R₂，把某处设为「断路/短路」，看电压表电流表示数实时变化</div>
+      <svg id="swSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="swmode on" data-m="0">正常</button>
+        <button class="swmode" data-m="1">R₁ 断路</button>
+        <button class="swmode" data-m="2">R₂ 断路</button>
+        <button class="swmode" data-m="3">R₁ 短路</button>
+        <button class="swmode" data-m="4">R₂ 短路</button>
+      </div>
+      <div class="live">
+        <div><b>电流表 A (A)</b><span id="swA">0</span></div>
+        <div><b>电压表 V₁ 测 R₁</b><span id="swV1">0</span></div>
+        <div><b>电压表 V₂ 测 R₂</b><span id="swV2">0</span></div>
+        <div><b>诊断</b><span id="swD">—</span></div>
+      </div>
+      <p class="small">电源 E=6V，R₁=R₂=10Ω。点上面的按钮制造故障：<b>断路</b>时电流表读0，跨在断点上的电压表读出电源电压；<b>短路</b>时被短元件电压为0、电流表读数翻倍。示数颜色变红=异常。</p>
+    </div>
+
+    <h2 class="b">② 核心原理：电流走不通 vs 电流绕过去</h2>
+    <div class="card">
+      <h3>断路特征（该处断开）</h3>
+      <p style="margin:6px 0">① 断路所在的支路 <b>I=0</b>，串联时会导致<b>整个回路断</b>（无电流）。② <b>断点两端电压很大</b>：若电压表恰好接在断点两端，会读出接近<b>电源电压</b>（因为其它元件都没电流、没分压，电压全落在断点上）。③ 并联电路某支路断，其它支路照常工作，不受影响。</p>
+      <h3>短路特征（元件被旁路）</h3>
+      <p style="margin:6px 0">① 被短路的元件 <b>U=0、I=0</b>（两端等电位，电流全走那根旁路导线）。② 电路总电阻<b>变小</b> → 干路及其它串联元件<b>电流增大</b>（甚至剧增烧表）。③ 短路只影响被旁路的那段，其它元件电流反而更猛。</p>
+      <h3>电表理想化（判断的两把钥匙）</h3>
+      <div class="mono">电压表 内阻极大 ⇒ 几乎不过电流 ⇒ 可视为「断路」（开路）</div>
+      <div class="mono">电流表 内阻极小 ⇒ 几乎无阻挡 ⇒ 可视为「一根导线」（短路线）</div>
+      <p style="margin:8px 0"><b>逐段排查法：</b> 把电流表想成导线、电压表想成断点，然后从电源出发<b>一段一段</b>看：哪段电流该有却没有 → 那段断路；哪段电压该有却为0 → 那元件被短路。示数「反常」的那一段就是病灶。</p>
+      <p class="trap">⚠ 电压表内阻极大≈断路，所以电压表<b>串在主电路里会让电路几乎无电流</b>（灯不亮）；电流表内阻极小≈导线，<b>并联在元件两端会把元件短路</b>（甚至烧表）。接错表本身就制造故障。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🕵️ 互动 2 — 断路时电压表为何读电源电压？动画演示「电压全压到断点上」的原理</div>
+      <svg id="brSvg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="brGo">▶ 制造断路</button><button id="brReset">↺ 恢复</button>
+      </div>
+      <div class="live">
+        <div><b>回路电流 I</b><span id="brI">0</span></div>
+        <div><b>R 上电压 U_R</b><span id="brUR">0</span></div>
+        <div><b>断点两端电压 U</b><span id="brUgap">0</span></div>
+        <div><b>电压表读数</b><span id="brV">0</span></div>
+      </div>
+      <p class="small">正常时电流流动，电压分在 R 上。<b>一旦断开</b>：I=0，R 上 U_R=IR=0（没有分压），于是<b>整个电源电压都落在断点两端</b>——电压表跨在断点上就读出电源电压 E。这是「电压表读数=电源电压 → 它两端有断路」的根源。</p>
+    </div>
+
+    <h2 class="g">③ 短路：电流增大、元件电压为零</h2>
+    <div class="card">
+      <p style="margin:6px 0">串联电路 E—R₁—R₂ 中，若把 R₂ 用导线短接：R₂ 被旁路，<b>U₂=0、I₂=0</b>；总电阻从 R₁+R₂ 降为 R₁，干路电流从 <span class="eq" style="display:inline;font-size:15px">E/(R₁+R₂)</span> 增大到 <span class="eq" style="display:inline;font-size:15px">E/R₁</span>。R₁ 上的电压、电流都<b>增大</b>。</p>
+      <div class="eq">短路前 I = E/(R₁+R₂)　→　短路 R₂ 后 I′ = E/R₁ &gt; I</div>
+      <p style="margin:8px 0"><b>为什么危险？</b> 若被短路的电阻占大头，短路后总阻骤降，电流可能翻好几倍。若<b>整个用电器都被短路（电源两极直接短接）</b>，总电阻近乎0，电流巨大 → 烧毁电源、电流表。</p>
+      <p class="trap">⚠ 短路元件<b>两端电压为0</b>（它被一根等电位导线并联）。看到「某灯突然不亮、但其它灯反而更亮」，八成是这只灯被短路了（不是断路——断路会让串联全灭）。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚡ 互动 3 — 短路使电流增大：拖动被短接的电阻，看干路电流如何窜高、被短元件电压归零</div>
+      <svg id="shSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="shGo">▶ 短接 R₂</button><button id="shReset">↺ 恢复</button>
+        <label>R₁ (Ω) <input id="shR1" type="range" min="2" max="20" value="6" step="1"></label>
+        <label>R₂ (Ω) <input id="shR2" type="range" min="2" max="20" value="6" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>正常电流 I</b><span id="shI0">0</span></div>
+        <div><b>短路后电流 I′</b><span id="shI1">0</span></div>
+        <div><b>电流放大倍数</b><span id="shK">0</span></div>
+        <div><b>R₂ 上电压</b><span id="shU2">0</span></div>
+      </div>
+      <p class="small">E=6V。柱状条=干路电流大小。短接 R₂ 后总电阻从 R₁+R₂ 降到 R₁，电流从 E/(R₁+R₂) 升到 E/R₁。被短的 R₂ 电压掉到 <b>0</b>。R₂ 越大，短路后电流放大越猛。</p>
+    </div>
+
+    <h2 class="o">④ 串联 vs 并联：故障影响大不同</h2>
+    <div class="card">
+      <h3>串联电路</h3>
+      <p style="margin:6px 0"><b>某处断路 → 全路断</b>（一根链条断一环，整串都没电流），所有元件都停摆。<b>某元件短路 → 其它元件电流增大</b>（总阻变小），被短元件停摆但其余更亮。</p>
+      <h3>并联电路</h3>
+      <p style="margin:6px 0"><b>某支路断路 → 只影响该支路</b>，其它支路电压不变、照常工作（各支路互不干扰，这正是家用电路并联的原因）。<b>某支路短路 → 相当于把电源两端短接</b>，干路电流剧增，全部支路电压被拉到0，非常危险。</p>
+      <table>
+        <tr><th>电路</th><th>断路影响</th><th>短路影响</th></tr>
+        <tr><td>串联</td><td><b>全路断</b>，全灭</td><td>其它元件电流增大</td></tr>
+        <tr><td>并联</td><td>只该支路灭，<b>其它照常</b></td><td>干路剧增，<b>全部瘫痪/烧</b></td></tr>
+      </table>
+      <p class="trap">⚠ 「一只灯灭了，其它灯还亮」→ 这是<b>并联</b>电路里那只灯断路。若是串联电路，一处断路应该<b>全灭</b>。用「其它元件的表现」反推电路是串联还是并联。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 4 — 串联 vs 并联故障对比：同样让一只灯断路，看两种电路里其它灯的命运</div>
+      <svg id="spSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="spmode on" data-m="0">都正常</button>
+        <button class="spmode" data-m="1">让 L₂ 断路</button>
+        <button class="spmode" data-m="2">让 L₂ 短路</button>
+      </div>
+      <div class="verdict" id="spNote"></div>
+      <p class="small">上排=串联三灯，下排=并联三灯。让中间那只灯 L₂ 出故障：串联里 L₂ 断路→<b>三灯全灭</b>；并联里 L₂ 断路→<b>只 L₂ 灭，另两只照亮</b>。短路时反过来。亮=黄，灭=灰。</p>
+    </div>
+
+    <h2 class="v">⑤ 用电表示数定位故障（侦探核心）</h2>
+    <div class="card">
+      <p style="margin:6px 0">串联电路里有电压表跨接在某段上，靠它的读数就能定位断路：</p>
+      <table>
+        <tr><th>电压表读数</th><th>结论</th></tr>
+        <tr><td>读出<b>电源电压</b>（满偏/较大）</td><td>它<b>两端跨着一个断点</b>（其它元件无电流不分压，电压全给它）</td></tr>
+        <tr><td>读数为 <b>0</b></td><td>它<b>两端被短路</b>，或它所测元件所在支路无电流且它不跨断点</td></tr>
+        <tr><td>读数<b>正常/偏小</b></td><td>它所测那段正常工作</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>逐段判断口诀：</b> 电压表读出电源电压 → 它「骑」在断路上；电压表读0而其它段正常 → 它测的元件被短路；电流表读0 → 主回路某处断路。把电压表沿电路「挪」着测，读出大电压的那一段就是断点所在。</p>
+      <p style="margin:8px 0"><b>为什么电压表读电源电压=断路信号？</b> 电压表内阻极大，几乎不让电流通过。若它跨在真正的断点两端，此时回路无电流，其它电阻 U=IR=0，根据回路电压守恒，<b>电源电压全部落在断点（也就是电压表）上</b>，所以它读电源电压。</p>
+      <p class="trap">⚠ 电压表读数大≠该元件电压大——很可能是它两端<b>断路</b>了。真元件正常工作时电压表读的是它的分压（小于电源电压）；一旦读到电源电压，警惕断路。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔎 互动 5 — 故障侦探：三段串联电路藏了一个故障，把电压表逐段移动，读大电压的那段就是断点</div>
+      <svg id="detSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="detNew">🎲 随机埋一个故障</button>
+        <span class="small">把电压表接到：</span>
+        <button class="detseg" data-s="0">测 R₁</button>
+        <button class="detseg" data-s="1">测 R₂</button>
+        <button class="detseg" data-s="2">测 R₃</button>
+      </div>
+      <div class="live">
+        <div><b>电流表 A</b><span id="detA">0</span></div>
+        <div><b>电压表读数 V</b><span id="detV">0</span></div>
+        <div><b>你的推断</b><span id="detGuess">—</span></div>
+        <div><b>真相</b><span id="detTruth">?</span></div>
+      </div>
+      <p class="small">点「随机埋一个故障」（某段断路），电流表会读0（全路断）。把电压表挪到 R₁/R₂/R₃：<b>读出电源电压 6V 的那一段，就是断点所在</b>；读0的段是好的。点开真相验证你的侦探结论。</p>
+    </div>
+
+    <h2 class="r">⑥ 电表内阻的理想化影响</h2>
+    <div class="card">
+      <p style="margin:6px 0">电表接入位置错误，本身就成了「故障源」，这类题极爱考：</p>
+      <table>
+        <tr><th>接法</th><th>把电表当成什么</th><th>后果</th></tr>
+        <tr><td>电压表<b>串</b>在主电路</td><td>断路（内阻极大）</td><td>回路几乎无电流，<b>用电器不工作</b>，电压表读近电源电压</td></tr>
+        <tr><td>电流表<b>并</b>在元件两端</td><td>导线（内阻极小）</td><td>把元件<b>短路</b>，该元件不工作、电流表可能被烧</td></tr>
+        <tr><td>电压表<b>并</b>在元件两端（正确）</td><td>近似断路，不分流</td><td>正确测出元件电压</td></tr>
+        <tr><td>电流表<b>串</b>在支路里（正确）</td><td>近似导线，不分压</td><td>正确测出支路电流</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>理想化口诀：</b> 「<b>电压表看作断，电流表看作线</b>」。分析含表电路时，先把电压表擦掉（当断点，只在两端读电位差）、把电流表换成导线（当0电阻），电路立刻变清爽，故障一目了然。</p>
+      <p class="trap">⚠ 电流表并联到元件上＝给元件搭了根旁路导线＝短路它；电压表串进主路＝主路多了个近乎无穷大的电阻＝断路它。接表口诀：<b>电流表串联、电压表并联</b>，接反即造故障。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📏 互动 6 — 电表理想化：切换「电压表↔断路」「电流表↔导线」，看等效电路怎么变</div>
+      <svg id="idSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="idmode on" data-m="0">电压表并联(正确)</button>
+        <button class="idmode" data-m="1">电压表串联(误)</button>
+        <button class="idmode" data-m="2">电流表串联(正确)</button>
+        <button class="idmode" data-m="3">电流表并联(误)</button>
+      </div>
+      <div class="verdict" id="idNote"></div>
+      <p class="small">左=真实接法，右=理想化等效（电压表→断口、电流表→导线）。接对时电表不影响电路；接反时电压表把主路憋成断路（灯灭），电流表把元件短路（元件灭、可能烧表）。</p>
+    </div>
+
+    <h2 class="b">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 串联电路断路判断</h3>
+      <p><b class="tag">触发信号：</b>串联电路某灯不亮、电流表读0，问故障在哪、是什么。</p>
+      <p><b class="tag">标准动作：</b>先确认串联→一处断则全路断（电流表读0）；再用电压表逐段定位：跨断点的电压表读<b>电源电压</b>，其余段读0。读大电压那段=断点。</p>
+      <p><b class="tag">示例（带解）：</b>E=6V，R₁、R₂ 串联，电流表读0（说明有断路）。电压表并在 R₁ 两端读 6V、并在 R₂ 两端读 0V。分析：R₂ 无电流不分压（读0），电源电压全落在 R₁ 上（读6V）→ <b>断点在 R₁</b>（R₁ 断路）。</p>
+      <p class="trap">陷阱：以为「R₁ 读 6V」是 R₁ 电压大、工作正常——恰恰相反，读到电源电压是断路信号。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 串联电路短路判断</h3>
+      <p><b class="tag">触发信号：</b>串联某灯不亮但其它灯更亮，或电流表读数比正常大。</p>
+      <p><b class="tag">标准动作：</b>某元件短路→U=0、总阻变小、干路电流增大。找「读0电压且其它元件更亮」的那个元件，即被短路者。</p>
+      <p><b class="tag">示例（带解）：</b>E=6V，R₁=R₂=10Ω 串联，正常 I=6/20=0.3A。现测得 I=0.6A、R₂ 两端 U₂=0。分析：I 翻倍说明总阻减半→R₂ 被短路（0Ω），总阻=R₁=10Ω，I=6/10=0.6A✓，U₂=0✓。<b>R₂ 短路</b>。</p>
+      <p class="trap">陷阱：把「电流增大」误当断路。断路电流为0，短路才电流增大，方向相反。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 并联电路故障</h3>
+      <p><b class="tag">触发信号：</b>并联电路一支路灯灭、其它照亮（断路），或干路电流剧增、全灭（短路）。</p>
+      <p><b class="tag">标准动作：</b>并联支路断路→只该支路灭、其它电压不变照常；并联支路短路→等于短接电源→干路剧增、全部拉0。用「其它支路是否受影响」区分断/短。</p>
+      <p><b class="tag">示例（带解）：</b>两灯并联接 6V，L₁ 突然灭而 L₂ 照亮如常。分析：并联互不影响，L₂ 不变说明电源、干路正常→<b>L₁ 支路断路</b>。若两灯同时灭且干路电流表爆表→某支路短路了电源。</p>
+      <p class="trap">陷阱：并联里一支断路不会影响别支——别以为一处坏就全坏，那是串联的特征。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 由电压表/电流表示数定位故障</h3>
+      <p><b class="tag">触发信号：</b>给出电流表、电压表的具体读数（0、电源电压、或异常值），问故障位置与类型。</p>
+      <p><b class="tag">标准动作：</b>电流表读0→回路断路；电压表读电源电压→其两端跨断点；电压表读0→其所测元件被短路或该处无压差。综合两表交叉定位。</p>
+      <p><b class="tag">示例（带解）：</b>E=6V，L₁、L₂ 串联。电流表读0，电压表并在 L₂ 读 6V。分析：电流表读0→有断路；电压表读电源电压→L₂ 两端跨着断点→<b>L₂ 断路</b>（L₁ 完好，无电流故 U₁=0）。</p>
+      <p class="trap">陷阱：电压表读6V 别理解成 L₂ 消耗6V 功率大——无电流时它没功率，6V 是断点电压。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 含电表内阻影响型</h3>
+      <p><b class="tag">触发信号：</b>题目故意把电压表串进主路、或把电流表并到元件上，问电路现象。</p>
+      <p><b class="tag">标准动作：</b>电压表→当断路（内阻极大）；电流表→当导线（内阻极小）。据此重画等效电路再分析。</p>
+      <p><b class="tag">示例（带解）：</b>把电压表误串在灯与电源之间。电压表内阻极大→主路近似断路→<b>灯不亮、电流≈0</b>；此时灯 U=IR≈0，电源电压几乎全压在电压表上→电压表读近 6V。若改把电流表并在灯两端→灯被<b>短路</b>、灯灭、电流表可能烧毁。</p>
+      <p class="trap">陷阱：忘了理想化——把电压表当普通小电阻或电流表当普通大电阻，分析全错。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>电压表读出电源电压</b>，往往说明<b>它两端跨着一个断路</b>（不是该元件电压大）。无电流时电压全落断点。</p>
+      <p class="trap">② <b>短路元件两端电压为0</b>（被等电位导线并联）；断路元件两端却有较大电压。用「有无压差」区分断/短。</p>
+      <p class="trap">③ <b>电流表读0=断路</b>（走不通）；<b>电流表读数增大=短路</b>（总阻变小）。两者电流表现相反，别弄反。</p>
+      <p class="trap">④ 断路元件与短路元件<b>自身电流都是0</b>，但断路两端有电压、短路两端无电压——靠电压表最终定性。</p>
+      <p class="trap">⑤ <b>串联</b>一处断路→<b>全路灭</b>；<b>并联</b>一支断路→<b>只该支灭、其它照常</b>。用其它元件表现反推串/并联。</p>
+      <p class="trap">⑥ <b>电压表内阻极大≈断路</b>：误串主路会让电路几乎无电流（灯不亮）。</p>
+      <p class="trap">⑦ <b>电流表内阻极小≈导线</b>：误并到元件两端＝把元件短路，还可能烧表。</p>
+      <p class="trap">⑧ 并联支路<b>短路</b>＝短接电源，干路电流剧增、全部支路电压拉0，比断路危险得多。</p>
+      <p class="trap">⑨ 定位断路：把电压表沿电路挪，<b>读大电压（电源电压）的那一段</b>就是断点所在。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 用「电位」看故障最透彻：</b> 给电路各点标电位。断路两端电位差＝电源电压（因为其它元件不分压）；短路两端电位<b>相等</b>（一根导线两头等电位）。凡是「电压」问题，都翻译成两点电位之差，故障瞬间清晰——这比死记结论稳得多。</p>
+      <p style="margin:8px 0"><b>② 电表理想化是「取极限」：</b> 电压表 R→∞ 取极限就是断路；电流表 R→0 取极限就是导线。理解这个极限，你就能处理「非理想电表」的进阶题（电压表分走一点电流、电流表分掉一点电压），也能秒判接反表造成的故障。</p>
+      <p style="margin:8px 0"><b>③ 断路与短路是「对偶」现象：</b> 断路＝I=0、U最大；短路＝U=0、I最大。一个憋电压、一个憋电流，正好互为镜像。记住这对偶关系，两类题一起打包记，不会张冠李戴。</p>
+      <p style="margin:8px 0"><b>④ 「变化量」思维定位故障：</b> 故障前后对比某表读数怎么变——变大还是变小、变0还是变满。电流变大→有短路（总阻降）；电流变0→有断路。电压表某处突增到电源电压→该处断路。用「谁变了、往哪变」倒推病灶，比逐一枚举快。</p>
+      <p style="margin:8px 0"><b>⑤ 串并联故障的本质是「路径」：</b> 断路＝切断了唯一路径（串联致命）或一条并行路径（并联无碍）；短路＝新增了一条0电阻路径，电流优先走它。把电路看成「电流的路网」，断路是拆桥、短路是修了条高速公路——电流永远走最省力的路，故障分析就是看路网怎么变。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测（先想，再点开）</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 电路诊断系列 · 断路憋电压、短路憋电流，用表当侦探</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GRAY="#9a9080";
+
+/* 画电池符号 */
+function battery(p,x,y){
+  el(p,'line',{x1:x-3,y1:y-16,x2:x-3,y2:y+16,stroke:INK,'stroke-width':4});
+  el(p,'line',{x1:x+3,y1:y-9,x2:x+3,y2:y+9,stroke:INK,'stroke-width':7});
+  el(p,'text',{x:x-14,y:y-20,'font-size':12,'font-weight':900,fill:INK}).textContent='E';
+}
+/* 画电阻方块 */
+function resistor(p,x,y,w,h,lab,col){
+  el(p,'rect',{x:x,y:y-h/2,width:w,height:h,fill:col||'#fff',stroke:INK,'stroke-width':3});
+  el(p,'text',{x:x+w/2,y:y+5,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+}
+/* 画一个圆形仪表 A/V */
+function meter(p,x,y,letter,val,bad){
+  el(p,'circle',{cx:x,cy:y,r:20,fill:'#fff',stroke:INK,'stroke-width':3});
+  el(p,'text',{x:x,y:y-2,'font-size':15,'font-weight':900,fill:bad?RED:INK,'text-anchor':'middle'}).textContent=letter;
+  el(p,'text',{x:x,y:y+13,'font-size':10.5,'font-weight':800,fill:bad?RED:INK,'text-anchor':'middle'}).textContent=val;
+}
+
+/* ===== 互动1：故障切换台 ===== */
+(function(){
+  const svg=document.getElementById('swSvg');
+  const oA=document.getElementById('swA'),oV1=document.getElementById('swV1'),oV2=document.getElementById('swV2'),oD=document.getElementById('swD');
+  let m=0;const E=6,R1=10,R2=10;
+  document.querySelectorAll('.swmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.swmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    // compute
+    let I,U1,U2,diag,r1bad=false,r2bad=false,break1=false,break2=false;
+    if(m===0){I=E/(R1+R2);U1=I*R1;U2=I*R2;diag='正常';}
+    else if(m===1){I=0;U1=E;U2=0;diag='R₁ 断路';r1bad=true;break1=true;}
+    else if(m===2){I=0;U1=0;U2=E;diag='R₂ 断路';r2bad=true;break2=true;}
+    else if(m===3){I=E/R2;U1=0;U2=I*R2;diag='R₁ 短路';r1bad=true;}
+    else{I=E/R1;U1=I*R1;U2=0;diag='R₂ 短路';r2bad=true;}
+    // wire rectangle
+    const L=80,R=620,T=70,B=230;
+    const on=I>0.0001;const wcol=on?BLUE:GRAY;const ww=on?5:4;
+    // top wire with two resistors
+    el(svg,'line',{x1:L,y1:T,x2:220,y2:T,stroke:wcol,'stroke-width':ww});
+    // R1 at 220-300
+    resistor(svg,220,T,80,26,'R₁',r1bad?'#f7d7d3':'#fff');
+    el(svg,'line',{x1:300,y1:T,x2:400,y2:T,stroke:wcol,'stroke-width':ww});
+    // R2 at 400-480
+    resistor(svg,400,T,80,26,'R₂',r2bad?'#f7d7d3':'#fff');
+    el(svg,'line',{x1:480,y1:T,x2:R,y2:T,stroke:wcol,'stroke-width':ww});
+    // right wire down
+    el(svg,'line',{x1:R,y1:T,x2:R,y2:B,stroke:wcol,'stroke-width':ww});
+    // bottom wire with ammeter
+    el(svg,'line',{x1:R,y1:B,x2:390,y2:B,stroke:wcol,'stroke-width':ww});
+    meter(svg,350,B,'A',I.toFixed(2)+'A',I>0.35);
+    el(svg,'line',{x1:310,y1:B,x2:L,y2:B,stroke:wcol,'stroke-width':ww});
+    // left wire up with battery
+    el(svg,'line',{x1:L,y1:B,x2:L,y2:T,stroke:wcol,'stroke-width':ww});
+    battery(svg,L,150);
+    // break markers
+    if(break1){el(svg,'line',{x1:255,y1:T-14,x2:265,y2:T+14,stroke:RED,'stroke-width':5});el(svg,'text',{x:260,y:T-20,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='断';}
+    if(break2){el(svg,'line',{x1:435,y1:T-14,x2:445,y2:T+14,stroke:RED,'stroke-width':5});el(svg,'text',{x:440,y:T-20,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='断';}
+    // short markers: draw bypass wire over resistor
+    if(m===3){el(svg,'path',{d:'M220 '+(T-30)+' Q260 '+(T-52)+' 300 '+(T-30),fill:'none',stroke:RED,'stroke-width':4});el(svg,'text',{x:260,y:T-40,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='短接';}
+    if(m===4){el(svg,'path',{d:'M400 '+(T-30)+' Q440 '+(T-52)+' 480 '+(T-30),fill:'none',stroke:RED,'stroke-width':4});el(svg,'text',{x:440,y:T-40,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='短接';}
+    // voltmeter V1 on R1 (below)
+    meter(svg,260,150,'V',U1.toFixed(1)+'V', Math.abs(U1-E)<0.01);
+    el(svg,'line',{x1:220,y1:T+13,x2:220,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:300,y1:T+13,x2:300,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:240,y1:150,x2:220,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:280,y1:150,x2:300,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:260,y:186,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='V₁ 测 R₁';
+    // voltmeter V2 on R2
+    meter(svg,440,150,'V',U2.toFixed(1)+'V', Math.abs(U2-E)<0.01);
+    el(svg,'text',{x:440,y:186,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='V₂ 测 R₂';
+    // title
+    el(svg,'text',{x:350,y:30,'font-size':13.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='当前状态：'+diag+'　（E=6V，R₁=R₂=10Ω）';
+    // readouts
+    oA.textContent=I.toFixed(2)+'A';oV1.textContent=U1.toFixed(1)+'V';oV2.textContent=U2.toFixed(1)+'V';oD.textContent=diag;
+    oA.style.color=I>0.35?RED:INK;
+    oV1.style.color=Math.abs(U1-E)<0.01?RED:INK;
+    oV2.style.color=Math.abs(U2-E)<0.01?RED:INK;
+  }
+  draw();
+})();
+
+/* ===== 互动2：断路时电压表读电源电压 ===== */
+(function(){
+  const svg=document.getElementById('brSvg');
+  const oI=document.getElementById('brI'),oUR=document.getElementById('brUR'),oUg=document.getElementById('brUgap'),oV=document.getElementById('brV');
+  const E=6,R=10;let broken=false,t=0,running=false;
+  function stats(){
+    const I=broken?0:E/R;const UR=I*R;const Ugap=broken?E:0;
+    oI.textContent=I.toFixed(2)+'A';oUR.textContent=UR.toFixed(1)+'V';oUg.textContent=Ugap.toFixed(1)+'V';oV.textContent=Ugap.toFixed(1)+'V';
+    oI.style.color=broken?RED:INK;oUg.style.color=broken?RED:INK;oV.style.color=broken?RED:INK;
+  }
+  function draw(){
+    clr(svg);
+    const L=90,Rr=610,T=70,B=210;
+    const I=broken?0:E/R;const on=!broken;
+    const wcol=on?BLUE:GRAY;const ww=on?5:4;
+    // rectangle loop, resistor on top-left, gap on top-right
+    el(svg,'line',{x1:L,y1:T,x2:200,y2:T,stroke:wcol,'stroke-width':ww});
+    resistor(svg,200,T,80,26,'R','#fff');
+    el(svg,'line',{x1:280,y1:T,x2:400,y2:T,stroke:wcol,'stroke-width':ww});
+    // gap segment 400-500 (this is where break happens)
+    if(broken){
+      el(svg,'line',{x1:400,y1:T,x2:430,y2:T,stroke:GRAY,'stroke-width':4});
+      el(svg,'line',{x1:470,y1:T,x2:500,y2:T,stroke:GRAY,'stroke-width':4});
+      el(svg,'line',{x1:443,y1:T-14,x2:453,y2:T+14,stroke:RED,'stroke-width':5});
+      el(svg,'text',{x:448,y:T-22,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='断点';
+    } else {
+      el(svg,'line',{x1:400,y1:T,x2:500,y2:T,stroke:wcol,'stroke-width':ww});
+    }
+    el(svg,'line',{x1:500,y1:T,x2:Rr,y2:T,stroke:wcol,'stroke-width':ww});
+    el(svg,'line',{x1:Rr,y1:T,x2:Rr,y2:B,stroke:wcol,'stroke-width':ww});
+    el(svg,'line',{x1:Rr,y1:B,x2:L,y2:B,stroke:wcol,'stroke-width':ww});
+    el(svg,'line',{x1:L,y1:B,x2:L,y2:T,stroke:wcol,'stroke-width':ww});
+    battery(svg,L,140);
+    // voltmeter across the gap (400 & 500)
+    meter(svg,450,150,'V',(broken?E:0).toFixed(1)+'V',broken);
+    el(svg,'line',{x1:400,y1:T+13,x2:400,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:500,y1:T+13,x2:500,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:430,y1:150,x2:400,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'line',{x1:470,y1:150,x2:500,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+    el(svg,'text',{x:450,y:186,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='电压表跨在断点两端';
+    // moving electrons if on
+    if(on&&running){
+      const per=(t%60)/60;
+      for(let k=0;k<6;k++){
+        const f=(per+k/6)%1;
+        const px=L+f*(Rr-L);
+        el(svg,'circle',{cx:px,cy:T,r:3.5,fill:YEL,stroke:INK,'stroke-width':1});
+      }
+    }
+    // title
+    el(svg,'text',{x:350,y:32,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=broken?'断路！I=0 → R上U=IR=0 → 电源电压全落断点 → 电压表读 6V':'正常：电流流动，电压分在 R 上，断点处电压表读 0';
+    // annotation on R
+    el(svg,'text',{x:200,y:T+45,'font-size':11.5,'font-weight':800,fill:broken?GRAY:BLUE,'text-anchor':'middle'}).textContent='U_R='+(broken?'0':(E).toFixed(0))+'V';
+    stats();
+  }
+  function loop(){if(!running)return;t++;draw();requestAnimationFrame(loop);}
+  document.getElementById('brGo').onclick=()=>{broken=true;draw();};
+  document.getElementById('brReset').onclick=()=>{broken=false;draw();};
+  running=true;requestAnimationFrame(loop);
+})();
+
+/* ===== 互动3：短路使电流增大 ===== */
+(function(){
+  const svg=document.getElementById('shSvg');
+  const R1s=document.getElementById('shR1'),R2s=document.getElementById('shR2');
+  const oI0=document.getElementById('shI0'),oI1=document.getElementById('shI1'),oK=document.getElementById('shK'),oU2=document.getElementById('shU2');
+  const E=6;let shorted=false;
+  function sync(){draw();}
+  R1s.oninput=R2s.oninput=sync;
+  function draw(){
+    clr(svg);
+    const R1=+R1s.value,R2=+R2s.value;
+    const I0=E/(R1+R2);const I1=E/R1;const I=shorted?I1:I0;
+    const U2=shorted?0:I0*R2;
+    // circuit
+    const L=90,Rr=610,T=60,B=170;
+    const on=true;const wcol=BLUE,ww=5;
+    el(svg,'line',{x1:L,y1:T,x2:220,y2:T,stroke:wcol,'stroke-width':ww});
+    resistor(svg,220,T,80,24,'R₁','#fff');
+    el(svg,'line',{x1:300,y1:T,x2:400,y2:T,stroke:wcol,'stroke-width':ww});
+    resistor(svg,400,T,80,24,'R₂',shorted?'#eee':'#fff');
+    el(svg,'line',{x1:480,y1:T,x2:Rr,y2:T,stroke:wcol,'stroke-width':ww});
+    el(svg,'line',{x1:Rr,y1:T,x2:Rr,y2:B,stroke:wcol,'stroke-width':ww});
+    el(svg,'line',{x1:Rr,y1:B,x2:L,y2:B,stroke:wcol,'stroke-width':ww});
+    el(svg,'line',{x1:L,y1:B,x2:L,y2:T,stroke:wcol,'stroke-width':ww});
+    battery(svg,L,115);
+    if(shorted){el(svg,'path',{d:'M400 '+(T-26)+' Q440 '+(T-48)+' 480 '+(T-26),fill:'none',stroke:RED,'stroke-width':4});el(svg,'text',{x:440,y:T-36,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='短接线';}
+    // current bar
+    const barX=560,barY0=225,maxI=E/2;
+    const h=Math.min(70,(I/maxI)*70);
+    el(svg,'rect',{x:barX,y:barY0-h,width:60,height:h,fill:shorted?RED:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:barX+30,y:barY0+16,'font-size':11.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='I='+I.toFixed(2)+'A';
+    el(svg,'text',{x:barX+30,y:barY0-h-6,'font-size':10.5,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='干路电流';
+    // formula
+    el(svg,'text',{x:300,y:230,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=shorted?('短路后 I′=E/R₁='+I1.toFixed(2)+'A　(R₂被短，U₂=0)'):('正常 I=E/(R₁+R₂)='+I0.toFixed(2)+'A');
+    el(svg,'text',{x:350,y:32,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='E=6V　R₁='+R1+'Ω　R₂='+R2+'Ω';
+    // stats
+    oI0.textContent=I0.toFixed(2)+'A';oI1.textContent=I1.toFixed(2)+'A';oK.textContent=(I1/I0).toFixed(2)+'×';oU2.textContent=U2.toFixed(2)+'V';
+    oI1.style.color=RED;oU2.style.color=shorted?RED:INK;
+  }
+  document.getElementById('shGo').onclick=()=>{shorted=true;draw();};
+  document.getElementById('shReset').onclick=()=>{shorted=false;draw();};
+  draw();
+})();
+
+/* ===== 互动4：串联 vs 并联故障对比 ===== */
+(function(){
+  const svg=document.getElementById('spSvg');const note=document.getElementById('spNote');
+  let m=0;
+  document.querySelectorAll('.spmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.spmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function lamp(p,x,y,lit,lab){
+    el(p,'circle',{cx:x,cy:y,r:16,fill:lit?YEL:'#cfc8ba',stroke:INK,'stroke-width':3});
+    if(lit){el(p,'line',{x1:x-8,y1:y-8,x2:x+8,y2:y+8,stroke:INK,'stroke-width':2});el(p,'line',{x1:x+8,y1:y-8,x2:x-8,y2:y+8,stroke:INK,'stroke-width':2});}
+    el(p,'text',{x:x,y:y+32,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+  }
+  function draw(){
+    clr(svg);
+    // series: L1 L2 L3 in a line loop (top)
+    // determine lit states
+    let s1,s2,s3,p1,p2,p3;
+    if(m===0){s1=s2=s3=true;p1=p2=p3=true;}
+    else if(m===1){ // L2 open: series all off; parallel only L2 off
+      s1=false;s2=false;s3=false; p1=true;p2=false;p3=true;}
+    else { // L2 short: series others still lit(brighter), L2 off; parallel = short source -> all off
+      s1=true;s2=false;s3=true; p1=false;p2=false;p3=false;}
+    // ---- SERIES (top) ----
+    const T=60,SL=90,SR=610;
+    el(svg,'text',{x:40,y:40,'font-size':13,'font-weight':900,fill:INK}).textContent='串联三灯';
+    const scol=(s1&&s2&&s3)||m===2?BLUE:GRAY;
+    // simpler: wire color based on current flowing
+    const sCurrent=(m===0)||(m===2); // series has current when normal or when L2 short(bypassed)
+    const swc=sCurrent?BLUE:GRAY,sww=sCurrent?5:4;
+    el(svg,'line',{x1:SL,y1:T,x2:170,y2:T,stroke:swc,'stroke-width':sww});
+    lamp(svg,190,T,s1,'L₁');
+    el(svg,'line',{x1:210,y1:T,x2:330,y2:T,stroke:swc,'stroke-width':sww});
+    lamp(svg,350,T,s2,'L₂');
+    el(svg,'line',{x1:370,y1:T,x2:490,y2:T,stroke:swc,'stroke-width':sww});
+    lamp(svg,510,T,s3,'L₃');
+    el(svg,'line',{x1:530,y1:T,x2:SR,y2:T,stroke:swc,'stroke-width':sww});
+    el(svg,'line',{x1:SR,y1:T,x2:SR,y2:T+55,stroke:swc,'stroke-width':sww});
+    el(svg,'line',{x1:SR,y1:T+55,x2:SL,y2:T+55,stroke:swc,'stroke-width':sww});
+    el(svg,'line',{x1:SL,y1:T+55,x2:SL,y2:T,stroke:swc,'stroke-width':sww});
+    battery(svg,SL,T+28);
+    if(m===1){el(svg,'line',{x1:345,y1:T-16,x2:355,y2:T+16,stroke:RED,'stroke-width':4});el(svg,'text',{x:350,y:T-22,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='断';}
+    if(m===2){el(svg,'path',{d:'M334 '+(T-20)+' Q350 '+(T-38)+' 366 '+(T-20),fill:'none',stroke:RED,'stroke-width':3.5});el(svg,'text',{x:350,y:T-30,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='短';}
+    // ---- PARALLEL (bottom) ----
+    const PT=200;
+    el(svg,'text',{x:40,y:180,'font-size':13,'font-weight':900,fill:INK}).textContent='并联三灯';
+    const pAll=p1||p2||p3;const pShort=(m===2);
+    const pwc=pAll&&!pShort?BLUE:(pShort?RED:GRAY);const pww=5;
+    // main rails
+    el(svg,'line',{x1:SL,y1:PT,x2:SL,y2:PT+70,stroke:pwc,'stroke-width':pww}); // left rail
+    el(svg,'line',{x1:SR-30,y1:PT,x2:SR-30,y2:PT+70,stroke:pwc,'stroke-width':pww}); // right rail
+    el(svg,'line',{x1:SL,y1:PT,x2:SR-30,y2:PT,stroke:pwc,'stroke-width':pww}); // top rail
+    // battery on left rail
+    el(svg,'line',{x1:SL,y1:PT+70,x2:120,y2:PT+70,stroke:pwc,'stroke-width':pww});
+    battery(svg,120,PT+70);
+    el(svg,'line',{x1:120,y1:PT+70,x2:SR-30,y2:PT+70,stroke:pwc,'stroke-width':pww});
+    // three branches
+    const bx=[220,350,480];const bl=['L₁','L₂','L₃'];const bs=[p1,p2,p3];
+    for(let i=0;i<3;i++){
+      const x=bx[i];
+      const bcol=bs[i]?BLUE:GRAY;
+      el(svg,'line',{x1:x,y1:PT,x2:x,y2:PT+18,stroke:pShort&&i===1?RED:bcol,'stroke-width':pShort&&i===1?3:4});
+      lamp(svg,x,PT+40,bs[i],bl[i]);
+      el(svg,'line',{x1:x,y1:PT+56,x2:x,y2:PT+70,stroke:bcol,'stroke-width':4});
+      if(m===1&&i===1){el(svg,'line',{x1:x-6,y1:PT+22,x2:x+6,y2:PT+34,stroke:RED,'stroke-width':4});el(svg,'text',{x:x+22,y:PT+30,'font-size':11,'font-weight':900,fill:RED}).textContent='断';}
+      if(pShort&&i===1){el(svg,'text',{x:x+22,y:PT+30,'font-size':11,'font-weight':900,fill:RED}).textContent='短';}
+    }
+    // notes
+    let msg;
+    if(m===0)msg='都正常：串联三灯串成一环全亮；并联三灯各走各的支路全亮。';
+    else if(m===1)msg='L₂ 断路：<b>串联</b> → 唯一路径被切断 → 三灯全灭；<b>并联</b> → 只 L₂ 那条支路断，L₁、L₃ 照常亮。这就是家用电器用并联的原因。';
+    else msg='L₂ 短路：<b>串联</b> → L₂ 被旁路(U₂=0)不亮，但 L₁、L₃ 电流增大反而更亮；<b>并联</b> → 等于把电源两端短接，干路剧增、全部拉0，非常危险（可能烧电源）。';
+    note.innerHTML=msg;
+    note.style.borderColor=m===2?RED:INK;
+  }
+  draw();
+})();
+
+/* ===== 互动5：故障侦探 ===== */
+(function(){
+  const svg=document.getElementById('detSvg');
+  const oA=document.getElementById('detA'),oV=document.getElementById('detV'),oG=document.getElementById('detGuess'),oT=document.getElementById('detTruth');
+  const E=6;let faultSeg=-1;let probe=0;let revealed=false;
+  function newFault(){faultSeg=Math.floor(Math.random()*3);probe=0;revealed=false;draw();}
+  document.querySelectorAll('.detseg').forEach(b=>b.onclick=()=>{probe=+b.dataset.s;draw();});
+  document.getElementById('detNew').onclick=newFault;
+  function draw(){
+    clr(svg);
+    const T=70,B=200,L=90,Rr=610;
+    const broken=faultSeg>=0; // there is always a break once埋下
+    const I=broken?0:E/30;
+    const swc=broken?GRAY:BLUE,sww=broken?4:5;
+    // three resistors segments positions
+    const segX=[[130,210],[310,390],[490,570]];
+    // top wire pieces
+    el(svg,'line',{x1:L,y1:T,x2:130,y2:T,stroke:swc,'stroke-width':sww});
+    for(let i=0;i<3;i++){
+      resistor(svg,segX[i][0],T,80,24,'R'+(i+1),'#fff');
+      // wire after resistor
+      const nx=(i<2)?segX[i+1][0]:Rr;
+      el(svg,'line',{x1:segX[i][1],y1:T,x2:(i<2?segX[i+1][0]:Rr),y2:T,stroke:swc,'stroke-width':sww});
+      // break marker on faulty segment
+      if(faultSeg===i){
+        const mx=segX[i][0]+40;
+        el(svg,'line',{x1:mx-5,y1:T-14,x2:mx+5,y2:T+14,stroke:RED,'stroke-width':5});
+      }
+    }
+    el(svg,'line',{x1:Rr,y1:T,x2:Rr,y2:B,stroke:swc,'stroke-width':sww});
+    // bottom with ammeter
+    el(svg,'line',{x1:Rr,y1:B,x2:390,y2:B,stroke:swc,'stroke-width':sww});
+    meter(svg,350,B,'A',I.toFixed(2)+'A',broken);
+    el(svg,'line',{x1:310,y1:B,x2:L,y2:B,stroke:swc,'stroke-width':sww});
+    el(svg,'line',{x1:L,y1:B,x2:L,y2:T,stroke:swc,'stroke-width':sww});
+    battery(svg,L,135);
+    // voltmeter on probed segment
+    if(faultSeg>=0){
+      const sx=segX[probe][0],ex=segX[probe][1];
+      // voltmeter reading: if probing the faulty(broken) segment -> reads E; else 0
+      const Vr=(probe===faultSeg)?E:0;
+      const mx=(sx+ex)/2;
+      meter(svg,mx,150,'V',Vr.toFixed(1)+'V',Vr>0.01);
+      el(svg,'line',{x1:sx,y1:T+13,x2:sx,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+      el(svg,'line',{x1:ex,y1:T+13,x2:ex,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+      el(svg,'line',{x1:mx-20,y1:150,x2:sx,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+      el(svg,'line',{x1:mx+20,y1:150,x2:ex,y2:150,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+      el(svg,'text',{x:mx,y:186,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='电压表测 R'+(probe+1);
+      oV.textContent=Vr.toFixed(1)+'V';oV.style.color=Vr>0.01?RED:INK;
+      oG.textContent=(Vr>0.01)?('R'+(probe+1)+' 断路'):('R'+(probe+1)+' 正常');
+      oG.style.color=(Vr>0.01)?RED:GREEN;
+    } else {
+      oV.textContent='—';oG.textContent='先埋故障';
+    }
+    oA.textContent=I.toFixed(2)+'A';oA.style.color=broken?RED:INK;
+    oT.textContent=(faultSeg>=0)?('R'+(faultSeg+1)+' 断路'):'?';
+    // title
+    el(svg,'text',{x:350,y:34,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=(faultSeg<0)?'点「随机埋一个故障」开始侦探（E=6V，三段串联）':'电流表读0→有断路！把电压表挪去各段，读6V的那段=断点';
+  }
+  draw();
+})();
+
+/* ===== 互动6：电表理想化 ===== */
+(function(){
+  const svg=document.getElementById('idSvg');const note=document.getElementById('idNote');
+  let m=0;
+  document.querySelectorAll('.idmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.idmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');m=+b.dataset.m;draw();
+  });
+  function lamp(p,x,y,lit,lab){
+    el(p,'circle',{cx:x,cy:y,r:16,fill:lit?YEL:'#cfc8ba',stroke:INK,'stroke-width':3});
+    if(lit){el(p,'line',{x1:x-8,y1:y-8,x2:x+8,y2:y+8,stroke:INK,'stroke-width':2});el(p,'line',{x1:x+8,y1:y-8,x2:x-8,y2:y+8,stroke:INK,'stroke-width':2});}
+    if(lab)el(p,'text',{x:x,y:y+30,'font-size':11,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=lab;
+  }
+  function draw(){
+    clr(svg);
+    // Left = real wiring, Right = idealized equivalent
+    el(svg,'text',{x:175,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='真实接法';
+    el(svg,'text',{x:525,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='理想化等效';
+    el(svg,'line',{x1:350,y1:40,x2:350,y2:230,stroke:INK,'stroke-width':3,'stroke-dasharray':'6 5'});
+    // helper to draw a small loop with lamp; meterKind: 'V'/'A'; place:'series'/'parallel'
+    function loop(ox,letter,place,idealMode){
+      const T=70,B=180,Lx=ox+20,Rx=ox+280;
+      // determine if lamp lit & meter effect
+      let lampLit=true, ammBurn=false, extra='';
+      // real analysis
+      if(letter==='V'&&place==='parallel'){lampLit=true;}         // correct
+      else if(letter==='V'&&place==='series'){lampLit=false;}      // voltmeter blocks -> open
+      else if(letter==='A'&&place==='series'){lampLit=true;}       // correct
+      else if(letter==='A'&&place==='parallel'){lampLit=false;ammBurn=true;} // shorts lamp
+      const cur=lampLit; // current flows if lamp lit(and not shorted-off)
+      const wc=cur?BLUE:GRAY,ww=cur?5:4;
+      // main rectangle
+      el(svg,'line',{x1:Lx,y1:T,x2:Lx+70,y2:T,stroke:wc,'stroke-width':ww});
+      // lamp region center
+      const lx=Lx+120;
+      // if voltmeter in series, it sits in the main line
+      if(letter==='V'&&place==='series'&&!idealMode){
+        // draw meter in series before lamp
+        el(svg,'line',{x1:Lx+70,y1:T,x2:Lx+70,y2:T,stroke:wc});
+        meter(svg,Lx+90,T,'V','≈6V',true);
+        el(svg,'line',{x1:Lx+110,y1:T,x2:lx-18,y2:T,stroke:wc,'stroke-width':ww});
+      } else if(letter==='V'&&place==='series'&&idealMode){
+        // idealized: open gap
+        el(svg,'line',{x1:Lx+70,y1:T,x2:Lx+82,y2:T,stroke:GRAY,'stroke-width':4});
+        el(svg,'line',{x1:Lx+98,y1:T,x2:lx-18,y2:T,stroke:GRAY,'stroke-width':4});
+        el(svg,'line',{x1:Lx+85,y1:T-12,x2:Lx+95,y2:T+12,stroke:RED,'stroke-width':4});
+        el(svg,'text',{x:Lx+90,y:T-16,'font-size':10,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='断';
+      } else {
+        el(svg,'line',{x1:Lx+70,y1:T,x2:lx-18,y2:T,stroke:wc,'stroke-width':ww});
+      }
+      // lamp
+      lamp(svg,lx,T,lampLit,'灯');
+      // ammeter in series
+      if(letter==='A'&&place==='series'){
+        el(svg,'line',{x1:lx+18,y1:T,x2:lx+40,y2:T,stroke:wc,'stroke-width':ww});
+        if(!idealMode){meter(svg,lx+60,T,'A','正常',false);el(svg,'line',{x1:lx+80,y1:T,x2:Rx,y2:T,stroke:wc,'stroke-width':ww});}
+        else{el(svg,'line',{x1:lx+40,y1:T,x2:Rx,y2:T,stroke:wc,'stroke-width':ww});} // ideal = plain wire
+      } else {
+        el(svg,'line',{x1:lx+18,y1:T,x2:Rx,y2:T,stroke:wc,'stroke-width':ww});
+      }
+      // ammeter in parallel (across lamp) -> shorts it
+      if(letter==='A'&&place==='parallel'){
+        if(!idealMode){
+          el(svg,'path',{d:'M'+(lx-18)+' '+(T)+' Q'+lx+' '+(T-40)+' '+(lx+18)+' '+(T),fill:'none',stroke:RED,'stroke-width':4});
+          meter(svg,lx,T-42,'A','爆!',true);
+        } else {
+          el(svg,'path',{d:'M'+(lx-18)+' '+(T)+' Q'+lx+' '+(T-30)+' '+(lx+18)+' '+(T),fill:'none',stroke:RED,'stroke-width':4});
+          el(svg,'text',{x:lx,y:T-34,'font-size':10,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='短接线';
+        }
+      }
+      // voltmeter in parallel (across lamp) -> correct, no effect
+      if(letter==='V'&&place==='parallel'){
+        el(svg,'line',{x1:lx-18,y1:T+13,x2:lx-18,y2:T+40,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+        el(svg,'line',{x1:lx+18,y1:T+13,x2:lx+18,y2:T+40,stroke:INK,'stroke-width':1.5,'stroke-dasharray':'3 3'});
+        if(!idealMode){meter(svg,lx,T+55,'V','读灯压',false);}
+        else{
+          el(svg,'text',{x:lx,y:T+58,'font-size':10,'font-weight':900,fill:GRAY,'text-anchor':'middle'}).textContent='(断口·不分流)';
+        }
+        el(svg,'line',{x1:lx-18,y1:T+40,x2:lx-18,y2:T+40,stroke:INK});
+      }
+      // close rectangle
+      el(svg,'line',{x1:Rx,y1:T,x2:Rx,y2:B,stroke:wc,'stroke-width':ww});
+      el(svg,'line',{x1:Rx,y1:B,x2:Lx,y2:B,stroke:wc,'stroke-width':ww});
+      el(svg,'line',{x1:Lx,y1:B,x2:Lx,y2:T,stroke:wc,'stroke-width':ww});
+      battery(svg,Lx,(T+B)/2);
+    }
+    // draw left(real) and right(ideal) based on mode
+    const conf=[['V','parallel'],['V','series'],['A','series'],['A','parallel']][m];
+    loop(30,conf[0],conf[1],false);
+    loop(380,conf[0],conf[1],true);
+    // note
+    const msgs=[
+      '电压表<b>并联</b>在灯两端（正确）：内阻极大→几乎不分流→等效为断口，不影响电路，灯正常，读出灯的电压。',
+      '电压表<b>串联</b>进主路（错误）：内阻极大→等效<b>断路</b>→回路几乎无电流→<b>灯不亮</b>，电源电压几乎全落在电压表上（读≈6V）。',
+      '电流表<b>串联</b>在支路（正确）：内阻极小→等效为一根<b>导线</b>→不分压，不影响电路，灯正常，读出支路电流。',
+      '电流表<b>并联</b>在灯两端（错误）：内阻极小→等效为导线→把灯<b>短路</b>→灯不亮、电流表被巨大电流<b>烧毁</b>。'
+    ];
+    note.innerHTML='👉 '+msgs[m];
+    note.style.borderColor=(m===1||m===3)?RED:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 电路的两种基本故障是什么？各自本质？",a:"断路（开路）：某处断开，电流走不通，该支路 I=0。短路：元件被导线旁路，电流绕过去，该元件 U=0。"},
+ {q:"2. 断路的三个特征？",a:"① 该支路 I=0（串联则全路断）；② 断点两端电压很大，可达电源电压；③ 若电压表跨在断点两端，读出电源电压。"},
+ {q:"3. 短路的三个特征？",a:"① 被短路元件 U=0、I=0；② 电路总电阻变小 → 干路及其它串联元件电流增大；③ 只影响被旁路那段，其它反而更猛，可能烧表。"},
+ {q:"4. 电压表和电流表的内阻各有什么理想化？可分别看作什么？",a:"电压表内阻极大 → 几乎不过电流 → 可看作断路（开口）。电流表内阻极小 → 几乎无阻挡 → 可看作一根导线。"},
+ {q:"5. 电压表读数等于电源电压，通常说明什么？为什么？",a:"说明它两端跨着一个断路。因为无电流时其它电阻 U=IR=0 都不分压，电源电压全部落在断点（电压表）上。"},
+ {q:"6. 串联电路某处断路、某元件短路，分别对其它元件有何影响？",a:"断路→全路断（所有元件都无电流、全灭）。短路→总阻变小、干路电流增大，其它串联元件更亮（被短元件不亮）。"},
+ {q:"7. 并联电路某支路断路、某支路短路，分别有何影响？",a:"支路断路→只该支路灭，其它支路电压不变、照常工作。支路短路→相当于短接电源，干路剧增、全部支路拉0，非常危险。"},
+ {q:"8. 一只灯灭而其它灯照亮，说明电路是串还是并？灯是什么故障？",a:"是并联电路（串联一处断应全灭）。这只灯所在支路发生了断路，其它支路互不影响。"},
+ {q:"9. E=6V，R₁=R₂=10Ω 串联，电流表读0，电压表并R₁读6V、并R₂读0，故障在哪？",a:"电流表读0→有断路；R₁两端读电源电压6V→断点在R₁（R₁断路）。R₂无电流不分压，故读0。"},
+ {q:"10. E=6V，R₁=R₂=10Ω 串联，正常 I=0.3A，现测 I=0.6A 且 U₂=0，故障？",a:"电流翻倍说明总阻减半→R₂被短路（0Ω），总阻=R₁=10Ω，I=6/10=0.6A✓，U₂=0✓。R₂短路。"},
+ {q:"11. 把电压表误串在灯与电源之间，会怎样？",a:"电压表内阻极大→主路近似断路→灯不亮、电流≈0；灯U=IR≈0，电源电压几乎全落在电压表上，电压表读≈6V。"},
+ {q:"12. 把电流表误并到灯两端，会怎样？",a:"电流表内阻极小→等效为导线→把灯短路→灯不亮，电流表被巨大电流烧毁。所以电流表必须串联、电压表必须并联。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

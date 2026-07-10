@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>带电粒子在磁场中的多解与临界 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>带电粒子在磁场中的多解与临界</h1>
+    <p class="lead">带电粒子进磁场,只受洛伦兹力,轨迹永远是<b>圆弧</b>。这一页不教你背公式,教你两件真本事:<b>画圆找几何关系</b>(圆心在哪、半径多长、弦与圆心角)和<b>想全所有可能</b>(正负电荷、速度大小、进入方向、周期性回到,一个都不能漏)。临界问题的钥匙只有一句:<b>恰好射出边界 = 轨迹与边界相切</b>。</p>
+
+    <div class="say">🗣️ <b>磁场圆周(人话版):</b> 带电粒子在匀强磁场里,像被一根<b>看不见的绳</b>拴着转圈,绳长就是半径 r=mv/(qB)。难的从来不是这个公式,而是<b>把圆画对</b>——圆心一定在<b>垂直于速度</b>的那条线上(洛伦兹力指向圆心),半径又<b>垂直于速度、也垂直于它切过的边界</b>。会画圆,几何关系(弦长、圆心角、垂径)自然跳出来。至于「多解」,是因为题目常常没说死:<b>电荷正负没定</b>→偏转方向相反,<b>速度大小没定</b>→半径能大能小,<b>进入方向没定</b>→圆心位置一圈都能放,<b>转了整数圈还回原地</b>→周期性。把这四个「没说死」逐个问一遍,答案就齐了。</div>
+
+    <div class="keybox"><b>两条命根公式:</b> <b>r = mv/(qB)</b>(半径,速度越大绳越长)和 <b>T = 2πm/(qB)</b>(周期,<b>只跟 m、q、B 有关,和速度无关!</b>)。临界一句话:<b>恰好从边界射出 ⟺ 轨迹圆与边界相切</b>。解题第一步永远是:<b>定圆心(垂直速度方向)、画整圆、连弦作垂径</b>,再用几何算 r 或角。</div>
+
+    <h2>① 半径与周期:洛伦兹力提供向心力</h2>
+    <div class="card">
+      <div class="eq">qvB = mv²/r　⟹　r = mv/(qB)</div>
+      <p style="margin:8px 0">洛伦兹力 F=qvB 永远<b>垂直于速度</b>,不做功、不改变速率,只<b>不停地拐弯</b>——这正是匀速圆周运动。让洛伦兹力当向心力,一步得到半径:<b>r = mv/(qB)</b>。速度越大,「绳」越长,圆越大。</p>
+      <div class="eq">T = 2πr/v = 2πm/(qB)　(与 v 无关!)</div>
+      <table>
+        <tr><th>量</th><th>公式</th><th>关键点</th></tr>
+        <tr><td><b>半径 r</b></td><td>r = mv/(qB) = p/(qB)</td><td>随 v 变,速度越大圆越大</td></tr>
+        <tr><td><b>周期 T</b></td><td>T = 2πm/(qB)</td><td><b>与速度无关</b>!快粒子走大圈,慢粒子走小圈,用时一样</td></tr>
+        <tr><td><b>转过某弧的时间 t</b></td><td>t = (θ/2π)·T</td><td>θ 是圆心角(弧度或角度都行)</td></tr>
+      </table>
+      <p class="trap">⚠ 周期与速度无关是高频考点。别以为速度大周期就短——半径也同比例变大,一转下来时间正好抵消。转过圆心角 θ 的时间只看 θ 和 T,与 v 无关。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 1 — 圆弧轨迹:半径 r=mv/(qB) 随 v、B 变化(拖动看圆变大变小)</div>
+      <svg id="rSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>速度 v <input id="rV" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>磁场 B <input id="rB" type="range" min="1" max="6" value="3" step="0.5"></label>
+        <label>电荷 q <input id="rQ" type="range" min="1" max="3" value="1" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>半径 r=mv/qB</b><span id="rR">0</span></div>
+        <div><b>周期 T=2πm/qB</b><span id="rT">0</span></div>
+        <div><b>与速度有关?</b><span id="rDep">否</span></div>
+        <div><b>洛伦兹力方向</b><span id="rF">指向圆心</span></div>
+      </div>
+      <p class="small">蓝点=粒子,红箭=速度(切向),绿箭=洛伦兹力(<b>指向圆心,垂直速度</b>)。改 v 圆变大/小;改 B 圆反向变化。注意周期数字:改 v 时它<b>不动</b>——周期与速度无关。</p>
+    </div>
+
+    <h2 class="b">② 画圆定圆心:一切几何的起点</h2>
+    <div class="card">
+      <p style="margin:6px 0">磁场题 90% 的分,在「<b>把圆画对</b>」这一步。牢记三条:</p>
+      <div class="mono">① 圆心在「垂直速度」的直线上——洛伦兹力指向圆心,而力⊥速度。</div>
+      <div class="mono">② 半径⊥速度,也⊥它相切/穿过的边界(切点处半径垂直边界)。</div>
+      <div class="mono">③ 两个已知点(入射点、出射点)到圆心距离都=r → 圆心在两点连线的<b>中垂线</b>上。</div>
+      <p style="margin:8px 0"><b>定圆心的两把钥匙:</b> (a) 过入射点作速度的垂线,圆心在这条线上,离入射点距离 r;(b) 若知道两个轨迹点,作它们连线的中垂线,与(a)的交点就是圆心。半径方向由洛伦兹力(qv×B)指向决定。</p>
+      <h3>弦、圆心角、垂径:算角的三件套</h3>
+      <p style="margin:6px 0">连接入射点和出射点得<b>弦长 L</b>;弦对应的<b>圆心角 θ</b>满足 L=2r·sin(θ/2);圆心到弦的<b>垂线</b>平分弦、平分圆心角(垂径定理)。偏转角(速度方向转过的角)= 圆心角 θ。</p>
+      <p class="trap">⚠ 圆心不在速度方向上,而在<b>垂直速度</b>方向上!这是画错圆的头号原因。半径永远垂直速度,切边界时半径垂直边界。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 2 — 定圆心 + 几何关系:弦长 L、圆心角 θ、垂径(拖动出射点看 θ 变化)</div>
+      <svg id="geoSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>圆心角 θ <input id="geoTh" type="range" min="20" max="330" value="120" step="10"></label>
+        <label>半径 r <input id="geoR" type="range" min="60" max="130" value="100" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>圆心角 θ (°)</b><span id="geoOut">120</span></div>
+        <div><b>弦长 L=2r·sin(θ/2)</b><span id="geoL">0</span></div>
+        <div><b>偏转角 =θ</b><span id="geoDef">120°</span></div>
+        <div><b>弧长 =rθ(弧度)</b><span id="geoArc">0</span></div>
+      </div>
+      <p class="small">A=入射点,B=出射点,红线=弦,紫虚线=圆心到弦的<b>垂径</b>(平分弦、平分圆心角)。灰箭是两端的速度(切向)——速度转过的角=圆心角 θ。会连弦作垂径,角就出来了。</p>
+    </div>
+
+    <h2 class="g">③ 临界条件:恰好射出 = 相切</h2>
+    <div class="card">
+      <p style="margin:6px 0">临界问题的核心翻译,只有一句话:</p>
+      <div class="eq">恰好从边界射出 ⟺ 轨迹圆与边界「相切」</div>
+      <p style="margin:8px 0"><b>为什么?</b> 半径太小→圆整个缩在场内出不去(从原边界折返);半径太大→轻易穿出。「恰好」就卡在两者之间:圆与目标边界<b>相切</b>,擦着边过。切点处半径<b>垂直边界</b>,这给你一个铁的几何约束。</p>
+      <table>
+        <tr><th>临界类型</th><th>几何翻译</th><th>常求</th></tr>
+        <tr><td><b>恰好射出对边</b></td><td>圆与对边相切</td><td>最小速度/最小半径</td></tr>
+        <tr><td><b>恰好不射出</b></td><td>圆刚好内切,直径=场宽</td><td>最大速度/最大半径</td></tr>
+        <tr><td><b>恰好回到某点</b></td><td>该点在圆上,弦=定长</td><td>特定 r 或 v</td></tr>
+      </table>
+      <h3>最大/最小半径的判据</h3>
+      <p style="margin:6px 0"><b>能射出的最小半径:</b> 圆与出射边界相切时的 r（再小就出不来）→ 对应<b>最小速度</b> v=qBr/m。<b>不射出的最大半径:</b> 直径恰等于场区宽度 d,即 2r=d,r=d/2 → 对应<b>最大速度</b>。</p>
+      <p class="trap">⚠ 「恰好」两个字=相切。切点处半径必垂直边界。别去凑「圆刚好碰到边界某点」——相切是唯一严格条件,能一次锁死半径。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 3 — 临界:恰好从边界射出(轨迹与下边界相切,拖 r 找临界)</div>
+      <svg id="critSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="critSnap">⊙ 跳到临界(相切)</button>
+        <label>半径 r <input id="critR" type="range" min="50" max="160" value="90" step="2"></label>
+      </div>
+      <div class="verdict" id="critNote"></div>
+      <p class="small">粒子从上边界进入,场区是一条水平带。r 太小→圆缩在场内出不来(红);r 恰好让圆<b>与下边界相切</b>→临界(绿,恰好射出);r 更大→穿出(蓝)。切点处半径<b>垂直下边界</b>。</p>
+    </div>
+
+    <h2 class="o">④ 多解来源①:速度大小不定 → 半径一簇圆</h2>
+    <div class="card">
+      <p style="margin:6px 0">若题目只说「从 P 点射入,方向沿某方向」却<b>没给速度大小</b>,那速度可大可小 → 半径 r=mv/(qB) 可大可小 → 是<b>一簇同起点、同切向的圆</b>,圆心都在过 P 的速度垂线上,离 P 远近不同。</p>
+      <p style="margin:8px 0"><b>怎么办?</b> 用<b>临界条件</b>把 v 的范围卡出来:比如「粒子要能从右边界射出」给出 r 的最小值,「不能从上边界跑掉」给出 r 的最大值,合起来就是速度的取值范围。多解题往往求的就是<b>一段区间</b>或<b>几个临界值</b>。</p>
+      <p class="trap">⚠ 看到「速度大小未知/可调」,立刻意识到这是一簇圆,答案多半是<b>范围</b>。用相切写出临界的最大、最小半径,别只算一个值。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌀 互动 4 — 同一入射点、不同速率的一簇圆(半径连续变化的圆族)</div>
+      <svg id="famSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="famGo">▶ 扫过速率</button><button id="famReset">↺ 重置</button>
+        <label>当前速率 v <input id="famV" type="range" min="1" max="6" value="3" step="0.2"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 r=mv/qB</b><span id="famR">0</span></div>
+        <div><b>入射点</b><span>固定 P</span></div>
+        <div><b>入射方向</b><span>固定</span></div>
+        <div><b>圆心位置</b><span id="famC">变</span></div>
+      </div>
+      <p class="small">所有圆从同一点 P 出发、同一切向,只是速率不同→半径不同。圆心全在过 P 的<b>速度垂线</b>上(灰虚线)。速度越大,圆越大,能到达越远——这就是速度不定时的「圆族」。</p>
+    </div>
+
+    <h2 class="v">⑤ 多解来源②:正负电荷 → 偏转方向相反(双解)</h2>
+    <div class="card">
+      <p style="margin:6px 0">洛伦兹力方向由 <b>F=qv×B</b> 决定,q 变号,力就反向 → 圆心跑到速度的<b>另一侧</b> → 轨迹向相反方向弯。若题目<b>没说电荷正负</b>(只说「带电粒子」),就有<b>两条对称的轨迹</b>,是典型的双解。</p>
+      <div class="mono">正电荷:左手/右手定则给一个偏转方向;负电荷:方向相反,圆心镜像到速度另一侧。</div>
+      <p style="margin:8px 0"><b>对称性:</b> 两解关于「过入射点的速度方向直线」镜像对称。半径大小相同(|q| 相同时),但偏转到不同侧,出射点、飞行时间、打在边界的位置可能都不同。</p>
+      <p class="trap">⚠ 只说「带电粒子」而未指明正负 → 一定要考虑<b>两种偏转方向</b>。别默认为正电荷只写一个答案,漏掉负电荷的对称解=丢一半分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">➕➖ 互动 5 — 正/负电荷偏转方向相反的双解(同入射,镜像两条圆弧)</div>
+      <svg id="pnSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="pnMode on" data-m="0">同时显示两解</button>
+        <button class="pnMode" data-m="1">只看正电荷</button>
+        <button class="pnMode" data-m="2">只看负电荷</button>
+      </div>
+      <div class="verdict" id="pnNote"></div>
+      <p class="small">同一入射点、同一速度、同一 B。<b>红弧=正电荷</b>(偏向一侧),<b>蓝弧=负电荷</b>(偏向另一侧)。两条弧关于入射速度方向<b>镜像对称</b>。电荷符号没给,两条都得算。</p>
+    </div>
+
+    <h2 class="r">⑥ 多解来源③④:进入方向不定 & 周期性回到</h2>
+    <div class="card">
+      <h3>③ 进入方向不定 → 圆心绕一圈</h3>
+      <p style="margin:6px 0">若从同一点 P 射入但<b>方向可任意</b>(如放射源向各方向发射),半径相同的话,所有圆心都在<b>以 P 为心、r 为半径的圆</b>上。这些轨迹圆的<b>包络</b>是一个以 P 为心、2r 为半径的大圆——粒子能到达的最远距离是 2r(直径)。求「能否打到某点/某边界」就看该点是否落在这个 2r 范围内。</p>
+      <h3>④ 周期性 → 转整数圈还回原地</h3>
+      <p style="margin:6px 0">粒子在场内可能转过 θ、θ+2π、θ+4π…… 都回到同一几何位置。若题目问「经过时间 t 后在哪」或「第几次经过某点」,要考虑<b>转了 n 圈</b>(t=nT+t₀)带来的多个解;若磁场区域有限,还要判断哪几圈的轨迹真的落在场内。</p>
+      <p class="trap">⚠ 放射源发散 → 想到「圆心在半径 r 的圆上、包络 2r」;问时间/位置 → 想到「加 nT 的周期性多解」。这两类最容易只写一个答案。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📡 互动 6 — 粒子源各向发射:轨迹圆的包络(能到达的最远=2r)</div>
+      <svg id="srcSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="srcGo">▶ 各向发射</button><button id="srcReset">↺ 重置</button>
+        <label>射线条数 <input id="srcN" type="range" min="4" max="16" value="8" step="1"></label>
+        <label>半径 r <input id="srcR" type="range" min="50" max="120" value="80" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>半径 r</b><span id="srcRV">80</span></div>
+        <div><b>圆心轨迹</b><span>半径 r 的圆</span></div>
+        <div><b>包络半径</b><span id="srcEnv">160</span></div>
+        <div><b>最远可达 =2r</b><span id="srcMax">160</span></div>
+      </div>
+      <p class="small">点 P 向各方向发射(相同速率、相同电荷)。每条轨迹是半径 r 的圆,圆心都在以 P 为心、r 为半径的圆上(灰)。所有圆的<b>外包络</b>是半径 2r 的大圆(绿)——这就是粒子能到达的最远边界。</p>
+    </div>
+
+    <h2 class="b">⑦ 磁场区域几何:矩形 / 圆形边界</h2>
+    <div class="card">
+      <p style="margin:6px 0">边界形状决定几何关系,常考两类:</p>
+      <h3>矩形(条形)磁场区:宽度 d 卡半径</h3>
+      <p style="margin:6px 0">粒子从一侧进入宽 d 的矩形场。<b>能否穿出对面?</b> 看圆能不能够到对边:垂直进入时,穿出对边要求 r≥d(否则圆折返回原边)。<b>偏转角</b>由 sinθ=d/r(垂直入射穿出时)或几何关系定。<b>恰好射出对边</b>=圆与对边相切,r=d。</p>
+      <h3>圆形磁场区:半径 R 与轨迹半径 r</h3>
+      <p style="margin:6px 0">粒子从圆形场边界进入。有个漂亮结论:<b>沿半径方向(指向圆心)射入的粒子,必沿半径方向射出</b>(几何对称)。求出射点、偏转角,靠<b>两半径(场半径 R、轨迹半径 r)构成的几何图</b>,常用 tan(θ/2)=R/r 一类关系(视具体入射方式)。</p>
+      <p class="trap">⚠ 矩形场看「宽度 d 与 r 的比较」定能否穿出;圆形场善用「对称性」(沿半径进→沿半径出)。别硬套公式,画出场边界+轨迹圆的几何图,关系自然显现。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🟦 互动 7 — 矩形磁场:宽度 d 与半径 r 决定能否穿出对边</div>
+      <svg id="rectSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>场宽 d <input id="rectD" type="range" min="60" max="180" value="120" step="10"></label>
+        <label>半径 r <input id="rectR" type="range" min="40" max="200" value="140" step="5"></label>
+      </div>
+      <div class="verdict" id="rectNote"></div>
+      <p class="small">粒子垂直左边界进入宽 d 的矩形场。r&lt;d→圆够不到右边,<b>从左边折返</b>(不穿出);r=d→恰好相切临界;r&gt;d→<b>穿出右边</b>,偏转角 sinθ=d/r。拖动 r、d 看临界翻转。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔵 互动 8 — 圆形磁场:沿半径入射 → 沿半径出射的对称几何</div>
+      <svg id="circSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>轨迹半径 r <input id="circR" type="range" min="40" max="160" value="90" step="5"></label>
+        <label>场半径 R <input id="circBR" type="range" min="60" max="130" value="100" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>场半径 R</b><span id="ciR">100</span></div>
+        <div><b>轨迹半径 r</b><span id="cir">90</span></div>
+        <div><b>tan(θ/2)=R/r</b><span id="ciTan">0</span></div>
+        <div><b>偏转角 θ</b><span id="ciTh">0</span></div>
+      </div>
+      <p class="small">粒子沿半径方向(指向场心 O)从边界射入圆形磁场,弯一段弧后<b>又沿半径方向</b>射出(对称)。红圆=轨迹,蓝圆=场边界。偏转角 θ 满足 tan(θ/2)=R/r。r 越大轨迹越直,偏转越小。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 求半径 / 周期 / 时间</h3>
+      <p><b class="tag">触发信号:</b>给 m、q、B、v(或动能、动量)求半径;给 B 求周期;问「转过某段弧用多长时间」。</p>
+      <p><b class="tag">标准动作:</b>r=mv/(qB)=p/(qB);T=2πm/(qB);转过圆心角 θ 的时间 t=(θ/2π)·T。已知动能用 v=√(2Ek/m) 或 p=√(2mEk) 换算。</p>
+      <p><b class="tag">示例(带解):</b>质子 m=1.67e-27kg、q=1.6e-19C,以 v=2e6 m/s 进入 B=0.5T。r=mv/(qB)=(1.67e-27×2e6)/(1.6e-19×0.5)≈0.042m。周期 T=2πm/(qB)≈1.3e-7s,与 v 无关。转过 90° 用 T/4。</p>
+      <p class="trap">陷阱:把周期当成随速度变;算时间时用弧长/速度绕远路——直接 t=(θ/2π)T 最快。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 恰好射出 / 相切临界</h3>
+      <p><b class="tag">触发信号:</b>「恰好从…边界射出」「恰好不能射出」「最大/最小速度」「至少多大磁场」。</p>
+      <p><b class="tag">标准动作:</b>把「恰好」翻译成<b>相切</b>;画轨迹圆与目标边界相切,切点处半径⊥边界;由几何列出 r 与场区尺寸的关系,再 r=mv/(qB) 反解 v 或 B。</p>
+      <p><b class="tag">示例(带解):</b>粒子垂直进入宽 d 的矩形场,恰好从对边射出。临界=圆与对边相切→r=d。故 v_min=qBd/m。若 r&lt;d 则出不去(从进入边折回),r&gt;d 则从对边穿出且偏转角 sinθ=d/r。</p>
+      <p class="trap">陷阱:不把「恰好」当相切,去凑碰点;忘了切点处半径垂直边界;只求一个临界漏掉另一端。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 粒子源发散(共圆 / 临界)</h3>
+      <p><b class="tag">触发信号:</b>「从 P 点向各个方向发射」「放射源」「速率相同方向不同」,问能到达的区域或恰好打到某点。</p>
+      <p><b class="tag">标准动作:</b>半径 r 相同→所有圆心在以 P 为心、r 为半径的圆上;能到达的最远=<b>2r(包络大圆)</b>。判断某点能否被打到:看它与 P 的距离是否 ≤2r,再定具体入射方向。</p>
+      <p><b class="tag">示例(带解):</b>放射源在 P,各向发射,r 相同。距 P 为 L 的目标:若 L&gt;2r,任何方向都打不到;若 L≤2r,存在入射方向使轨迹经过它(该轨迹圆过 P 和目标点,圆心在两点中垂线与 P 的 r 圆的交点)。</p>
+      <p class="trap">陷阱:忘了圆心的轨迹是圆、包络是 2r;只考虑一个方向,漏掉对称的另一条到达路径。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 正负电荷 / 速度不定的多解</h3>
+      <p><b class="tag">触发信号:</b>题干只说「带电粒子」不指正负;或速度大小/方向留有余地;问「所有可能的…」。</p>
+      <p><b class="tag">标准动作:</b>逐项排查四个「没说死」——电荷正负(偏转两侧,镜像双解)、速度大小(圆族,答案是范围)、进入方向(圆心绕圈)、周期性(加 nT)。每一项都独立写出对应解。</p>
+      <p><b class="tag">示例(带解):</b>「带电粒子从 P 沿 x 正向射入(未指正负),求打在上边界的位置」。正电荷向上偏、负电荷向下偏(不打上边界或从另一点)→ 至少两解;若还未定速率,则每种电荷各是一段位置范围。</p>
+      <p class="trap">陷阱:默认正电荷只写一个;只算一个速度;忽略周期性回到导致的重复解。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 磁场边界几何(圆形 / 矩形区域)</h3>
+      <p><b class="tag">触发信号:</b>磁场限制在矩形条带或圆形区域内,问穿出点、偏转角、弦长、能否穿越。</p>
+      <p><b class="tag">标准动作:</b>矩形:比较 r 与场宽 d(r≥d 才穿对边),偏转 sinθ=d/r;圆形:用「沿半径进→沿半径出」的对称性,tan(θ/2)=R/r 类关系。一律先画「场边界+轨迹圆+连心线」的几何图。</p>
+      <p><b class="tag">示例(带解):</b>粒子沿半径方向射入半径 R 的圆形场,轨迹半径 r。由对称性它沿半径射出,弦长和偏转角由直角三角形(R、r、连心线)定:tan(θ/2)=R/r。r≫R 时几乎不偏转;r 越小偏转越大。</p>
+      <p class="trap">陷阱:圆形场不用对称性硬算;矩形场忘了 r&lt;d 时粒子从进入边折返而非穿出。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 圆心在<b>垂直速度</b>方向上(洛伦兹力⊥速度、指向圆心),不在速度方向上。画错圆心=全盘皆错。</p>
+      <p class="trap">② <b>周期 T=2πm/(qB) 与速度无关</b>!快粒子走大圈,慢粒子走小圈,用时相同。转过 θ 的时间只看 θ 和 T。</p>
+      <p class="trap">③ 「恰好射出边界」=轨迹圆与边界<b>相切</b>,切点处半径垂直边界。这是临界的唯一严格翻译。</p>
+      <p class="trap">④ 只说「带电粒子」未指正负 → 必有<b>偏转方向相反的双解</b>(镜像对称),别只写正电荷。</p>
+      <p class="trap">⑤ 速度大小未定 → 是<b>一簇圆</b>,答案往往是<b>范围</b>;用相切写出最大/最小半径两个临界。</p>
+      <p class="trap">⑥ 放射源各向发射(r 相同)→ 圆心在半径 r 的圆上,能到达最远=<b>2r</b>(包络大圆)。</p>
+      <p class="trap">⑦ 问时间/位置要考虑<b>周期性</b>:t=nT+t₀,可能转了 n 圈回到同一位置,别漏掉 nT。</p>
+      <p class="trap">⑧ 半径 r=mv/(qB)=p/(qB);已知动能先换 p=√(2mEk),别直接拿 Ek 代入 r 公式。</p>
+      <p class="trap">⑨ 矩形场 r&lt;d 时粒子<b>从进入边折返</b>(出不去),不是穿到对边;r≥d 才能穿出对边。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 「画圆定圆心」是磁场题的通用算法:</b> 不管题多花,固定套路是——过入射点作速度垂线(圆心在其上,距 r);若知两点作中垂线取交点;由 F=qv×B 定偏向哪侧。圆一画对,弦长、圆心角、偏转角、出射点全靠平面几何(垂径、正弦、勾股)推出,物理只剩 r=mv/(qB) 这一步。把几何练熟,磁场题就变纯几何题。</p>
+      <p style="margin:8px 0"><b>② 多解是「约束不足」的信号,四问法收全:</b> 每道磁场题问自己四句——电荷正负定了吗?速度大小定了吗?进入方向定了吗?会不会转整数圈回来?哪个「没定」,哪个就产生一组解。养成四问的习惯,再不会漏解。反过来,题目若把这些都锁死,答案就唯一——先判断有几个自由度。</p>
+      <p style="margin:8px 0"><b>③ 临界即极值,极值即相切:</b> 「最大/最小速度」「至少多大 B」这类极值,几何上都对应轨迹圆与某边界<b>相切</b>的临界位形。先想清楚「往哪个方向变会越界」,把临界位形画成相切,一个方程锁死。相切条件(切点半径⊥边界)几乎总比列不等式更快。</p>
+      <p style="margin:8px 0"><b>④ 包络思想统一发散类问题:</b> 相同 r、不同方向的一大堆轨迹,与其一条条画,不如抓「圆心轨迹(半径 r 的圆)」和「外包络(半径 2r 的圆)」两条边界,可达区域一目了然。速度不定则半径连续变,包络变成一片扇形/环形区域——用边界圆刻画整族,秒判可达性。</p>
+      <p style="margin:8px 0"><b>⑤ 对称性是圆形场的杀手锏:</b> 「沿半径进→沿半径出」不是巧合,是圆形场的镜像对称必然。凡入射线过场心,轨迹关于「入射点-场心-出射点」构成的图对称,tan(θ/2)=R/r 一步给偏转角。识别对称,能把复杂几何压成一个直角三角形。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:洛伦兹力与圆周运动基础、电磁场综合运动</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:圆弧轨迹 r=mv/qB ===== */
+(function(){
+  const svg=document.getElementById('rSvg');
+  const Vs=document.getElementById('rV'),Bs=document.getElementById('rB'),Qs=document.getElementById('rQ');
+  const oR=document.getElementById('rR'),oT=document.getElementById('rT'),oDep=document.getElementById('rDep'),oF=document.getElementById('rF');
+  let V=3,B=3,Q=1,ang=0,running=true;
+  function sync(){V=+Vs.value;B=+Bs.value;Q=+Qs.value;}
+  Vs.oninput=Bs.oninput=Qs.oninput=()=>{sync();};
+  const m=1;
+  function draw(){
+    clr(svg);
+    const cx=350,cy=170;
+    const r=Math.max(20,Math.min(150,40*V/(Q*B)+30)); // visual radius
+    const T=2*Math.PI*m/(Q*B);
+    // field dots (into page)
+    for(let gx=40;gx<680;gx+=60){for(let gy=30;gy<310;gy+=55){el(svg,'circle',{cx:gx,cy:gy,r:2.2,fill:'#b9b09a'});}}
+    el(svg,'text',{x:60,y:24,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='×××  匀强磁场 B（垂直纸面向里）';
+    // orbit circle
+    el(svg,'circle',{cx:cx,cy:cy,r:r,fill:'none',stroke:INK,'stroke-width':2,'stroke-dasharray':'5 5'});
+    // center dot
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:cx+8,y:cy+4,'font-size':12,'font-weight':800,fill:INK}).textContent='O';
+    // particle position
+    const px=cx+r*Math.cos(ang), py=cy+r*Math.sin(ang);
+    el(svg,'circle',{cx:px,cy:py,r:8,fill:BLUE,stroke:INK,'stroke-width':2});
+    // velocity (tangent) arrow
+    const vx=-Math.sin(ang), vy=Math.cos(ang);
+    arrowSeg(px,py,vx*38,vy*38,RED,'v');
+    // lorentz force (toward center) arrow
+    const fx=cx-px, fy=cy-py; const fl=Math.hypot(fx,fy)||1;
+    arrowSeg(px,py,fx/fl*34,fy/fl*34,GREEN,'F');
+    // radius line
+    el(svg,'line',{x1:cx,y1:cy,x2:px,y2:py,stroke:'#b9b09a','stroke-width':1.5});
+    el(svg,'text',{x:(cx+px)/2,y:(cy+py)/2-6,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='r';
+    // stats
+    const rVal=(V/(Q*B)).toFixed(2);
+    oR.textContent=rVal;oT.textContent=T.toFixed(2);oDep.textContent='否';oF.textContent='指向圆心';
+  }
+  function arrowSeg(x,y,dx,dy,col,lab){
+    const x2=x+dx,y2=y+dy;
+    el(svg,'line',{x1:x,y1:y,x2:x2,y2:y2,stroke:col,'stroke-width':4});
+    const ang=Math.atan2(dy,dx);
+    el(svg,'polygon',{points:x2+','+y2+' '+(x2-10*Math.cos(ang-0.4))+','+(y2-10*Math.sin(ang-0.4))+' '+(x2-10*Math.cos(ang+0.4))+','+(y2-10*Math.sin(ang+0.4)),fill:col});
+    el(svg,'text',{x:x2+4,y:y2-4,'font-size':12,'font-weight':900,fill:col}).textContent=lab;
+  }
+  function loop(){ang+=0.03;draw();requestAnimationFrame(loop);}
+  sync();requestAnimationFrame(loop);
+})();
+
+/* ===== 互动2:定圆心 + 几何关系 ===== */
+(function(){
+  const svg=document.getElementById('geoSvg');
+  const Ths=document.getElementById('geoTh'),Rs=document.getElementById('geoR');
+  const oOut=document.getElementById('geoOut'),oL=document.getElementById('geoL'),oDef=document.getElementById('geoDef'),oArc=document.getElementById('geoArc');
+  let TH=120,R=100;
+  function sync(){TH=+Ths.value;R=+Rs.value;draw();}
+  Ths.oninput=Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const cx=350,cy=190;
+    const th=TH*Math.PI/180;
+    // start angle A at 200deg, B at start - th (going clockwise arc)
+    const a0=Math.PI*0.85; // point A angle
+    const aB=a0-th;
+    const Ax=cx+R*Math.cos(a0), Ay=cy+R*Math.sin(a0);
+    const Bx=cx+R*Math.cos(aB), By=cy+R*Math.sin(aB);
+    // full circle faint
+    el(svg,'circle',{cx:cx,cy:cy,r:R,fill:'none',stroke:'#cdc3a9','stroke-width':1.5,'stroke-dasharray':'4 4'});
+    // arc A->B (the trajectory)
+    const large=(TH>180)?1:0;
+    const dpath='M '+Ax+' '+Ay+' A '+R+' '+R+' 0 '+large+' 1 '+Bx+' '+By;
+    el(svg,'path',{d:dpath,fill:'none',stroke:RED,'stroke-width':4});
+    // center
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:cx+8,y:cy+4,'font-size':12,'font-weight':800,fill:INK}).textContent='O';
+    // radii
+    el(svg,'line',{x1:cx,y1:cy,x2:Ax,y2:Ay,stroke:'#b9b09a','stroke-width':1.5});
+    el(svg,'line',{x1:cx,y1:cy,x2:Bx,y2:By,stroke:'#b9b09a','stroke-width':1.5});
+    // chord
+    el(svg,'line',{x1:Ax,y1:Ay,x2:Bx,y2:By,stroke:INK,'stroke-width':3});
+    // midpoint + perpendicular (垂径)
+    const mx=(Ax+Bx)/2,my=(Ay+By)/2;
+    el(svg,'line',{x1:cx,y1:cy,x2:mx,y2:my,stroke:VIO,'stroke-width':2.5,'stroke-dasharray':'6 4'});
+    // points
+    el(svg,'circle',{cx:Ax,cy:Ay,r:6,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Ax-16,y:Ay+4,'font-size':13,'font-weight':900,fill:BLUE}).textContent='A';
+    el(svg,'circle',{cx:Bx,cy:By,r:6,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Bx+8,y:By+4,'font-size':13,'font-weight':900,fill:GREEN}).textContent='B';
+    // velocity tangents (perp to radius)
+    tang(Ax,Ay,Ax-cx,Ay-cy,-1);
+    tang(Bx,By,Bx-cx,By-cy,1);
+    // labels
+    el(svg,'text',{x:cx,y:my+ (my>cy?18:-8),'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='弦 L';
+    el(svg,'text',{x:cx-40,y:cy-10,'font-size':12,'font-weight':800,fill:VIO}).textContent='垂径';
+    el(svg,'text',{x:350,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='圆心角 θ='+TH+'°　弦 L=2r·sin(θ/2)　偏转角=θ';
+    // stats
+    const L=2*R*Math.sin(th/2);
+    oOut.textContent=TH;oL.textContent=L.toFixed(0);oDef.textContent=TH+'°';oArc.textContent=(R*th).toFixed(0);
+  }
+  function tang(x,y,rx,ry,s){
+    // tangent perpendicular to radius (rx,ry)
+    let tx=-ry, ty=rx; const l=Math.hypot(tx,ty)||1; tx=tx/l*34*s; ty=ty/l*34*s;
+    el(svg,'line',{x1:x,y1:y,x2:x+tx,y2:y+ty,stroke:'#7a7a7a','stroke-width':3});
+    const ang=Math.atan2(ty,tx);
+    el(svg,'polygon',{points:(x+tx)+','+(y+ty)+' '+(x+tx-9*Math.cos(ang-0.4))+','+(y+ty-9*Math.sin(ang-0.4))+' '+(x+tx-9*Math.cos(ang+0.4))+','+(y+ty-9*Math.sin(ang+0.4)),fill:'#7a7a7a'});
+  }
+  sync();
+})();
+
+/* ===== 互动3:临界相切 ===== */
+(function(){
+  const svg=document.getElementById('critSvg');const note=document.getElementById('critNote');
+  const Rs=document.getElementById('critR');
+  let R=90;
+  const topY=60, botY=250, entryX=200; // field band, particle enters at top
+  function sync(){R=+Rs.value;draw();}
+  Rs.oninput=sync;
+  document.getElementById('critSnap').onclick=()=>{R=botY-topY;Rs.value=R;draw();};
+  function draw(){
+    clr(svg);
+    // field band
+    el(svg,'rect',{x:40,y:topY,width:620,height:botY-topY,fill:'rgba(30,158,134,0.07)',stroke:'none'});
+    el(svg,'line',{x1:40,y1:topY,x2:660,y2:topY,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:40,y1:botY,x2:660,y2:botY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:50,y:topY-8,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='上边界（入射）';
+    el(svg,'text',{x:50,y:botY+20,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='下边界（目标射出面）';
+    // field dots
+    for(let gx=70;gx<650;gx+=50){for(let gy=topY+25;gy<botY;gy+=45){el(svg,'circle',{cx:gx,cy:gy,r:2,fill:'#b9b09a'});}}
+    // particle enters straight down at entryX -> circle center to the right at (entryX+R, topY)?
+    // Enter moving down, force bends it; center is horizontally offset by R at entry level.
+    const ccx=entryX+R, ccy=topY;
+    let col, verdict;
+    const reach=ccy+R; // lowest point of circle
+    if(reach<botY-1){col=RED;verdict='r 太小 → 圆缩在场内，最低点碰不到下边界 → 从上边界折返，射不出。';}
+    else if(Math.abs(reach-botY)<=1.5){col=GREEN;verdict='★ 临界！圆与下边界相切（切点处半径垂直下边界）→ 恰好从下边界射出。此时 r = 场宽。';}
+    else{col=BLUE;verdict='r 较大 → 圆穿过下边界 → 粒子从下边界射出（非恰好，已穿出）。';}
+    // draw entry arrow
+    el(svg,'line',{x1:entryX,y1:topY-26,x2:entryX,y2:topY,stroke:INK,'stroke-width':3});
+    el(svg,'polygon',{points:entryX+','+topY+' '+(entryX-5)+','+(topY-9)+' '+(entryX+5)+','+(topY-9),fill:INK});
+    el(svg,'circle',{cx:entryX,cy:topY,r:5,fill:BLUE,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:entryX-30,y:topY-6,'font-size':11,'font-weight':800,fill:INK}).textContent='入射';
+    // trajectory arc: from entry going right-down; draw the relevant lower arc portion (semicircle-ish)
+    el(svg,'circle',{cx:ccx,cy:ccy,r:R,fill:'none',stroke:col,'stroke-width':3.5});
+    el(svg,'circle',{cx:ccx,cy:ccy,r:4,fill:INK});
+    el(svg,'text',{x:ccx+6,y:ccy-6,'font-size':11,'font-weight':800,fill:INK}).textContent='O';
+    // radius to lowest point
+    el(svg,'line',{x1:ccx,y1:ccy,x2:ccx,y2:ccy+R,stroke:'#b9b09a','stroke-width':1.5});
+    // tangent marker if critical/beyond
+    if(reach>=botY-1.5){
+      el(svg,'circle',{cx:ccx,cy:Math.min(reach,botY),r:5,fill:col,stroke:INK,'stroke-width':2});
+    }
+    note.innerHTML='👉 '+verdict;
+    note.style.borderColor=col;
+  }
+  sync();
+})();
+
+/* ===== 互动4:同入射点不同速率的圆族 ===== */
+(function(){
+  const svg=document.getElementById('famSvg');
+  const Vs=document.getElementById('famV');
+  const oR=document.getElementById('famR'),oC=document.getElementById('famC');
+  let V=3,scan=0,running=false;
+  const Px=180,Py=250; // entry point, moving to the right (+x)
+  function sync(){V=+Vs.value;draw();}
+  Vs.oninput=()=>{sync();};
+  function draw(){
+    clr(svg);
+    // field dots
+    for(let gx=40;gx<680;gx+=55){for(let gy=30;gy<300;gy+=50){el(svg,'circle',{cx:gx,cy:gy,r:2,fill:'#d8cfb6'});}}
+    // entry point
+    el(svg,'circle',{cx:Px,cy:Py,r:6,fill:INK});
+    el(svg,'text',{x:Px-14,y:Py+18,'font-size':13,'font-weight':900,fill:INK}).textContent='P';
+    // velocity direction (to right)
+    el(svg,'line',{x1:Px,y1:Py,x2:Px+50,y2:Py,stroke:RED,'stroke-width':3});
+    el(svg,'polygon',{points:(Px+50)+','+Py+' '+(Px+40)+','+(Py-6)+' '+(Px+40)+','+(Py+6),fill:RED});
+    el(svg,'text',{x:Px+54,y:Py+4,'font-size':12,'font-weight':900,fill:RED}).textContent='v';
+    // centers all lie on line perpendicular to v through P (vertical line x=Px, above P)
+    el(svg,'line',{x1:Px,y1:40,x2:Px,y2:Py,stroke:'#b9b09a','stroke-width':1.5,'stroke-dasharray':'6 4'});
+    el(svg,'text',{x:Px+6,y:60,'font-size':11,'font-weight':800,fill:'#6b5d3a'}).textContent='圆心都在此垂线上';
+    // draw a family of faint circles
+    const rs=[1.4,2.2,3,3.8,4.6,5.4];
+    rs.forEach(rr=>{
+      const r=rr*22;
+      const ccx=Px, ccy=Py-r; // center above P (force upward)
+      el(svg,'circle',{cx:ccx,cy:ccy,r:r,fill:'none',stroke:'#cdbf9a','stroke-width':1.5});
+    });
+    // highlight current V
+    const r=V*22;
+    const ccx=Px, ccy=Py-r;
+    el(svg,'circle',{cx:ccx,cy:ccy,r:r,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    el(svg,'circle',{cx:ccx,cy:ccy,r:4,fill:BLUE});
+    el(svg,'text',{x:ccx+7,y:ccy+4,'font-size':11,'font-weight':800,fill:BLUE}).textContent='O';
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='同起点 P、同切向 v，速率越大 → 半径越大（圆族）';
+    oR.textContent=(V/2).toFixed(2);oC.textContent='距P '+ (V*22).toFixed(0);
+  }
+  function loop(){
+    if(!running)return;
+    scan+=0.05; let vv=3+2.5*Math.sin(scan);
+    Vs.value=vv.toFixed(1);V=vv;draw();
+    if(scan>Math.PI*2){running=false;}
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('famGo').onclick=()=>{scan=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('famReset').onclick=()=>{V=3;Vs.value=3;draw();};
+  sync();
+})();
+
+/* ===== 互动5:正负电荷双解 ===== */
+(function(){
+  const svg=document.getElementById('pnSvg');const note=document.getElementById('pnNote');
+  let mode=0;
+  const Px=180,Py=170;
+  document.querySelectorAll('.pnMode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.pnMode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    // field dots
+    for(let gx=40;gx<680;gx+=55){for(let gy=30;gy<300;gy+=50){el(svg,'circle',{cx:gx,cy:gy,r:2,fill:'#d8cfb6'});}}
+    const R=90;
+    // entry point + velocity to right
+    el(svg,'circle',{cx:Px,cy:Py,r:6,fill:INK});
+    el(svg,'text',{x:Px-16,y:Py+5,'font-size':13,'font-weight':900,fill:INK}).textContent='P';
+    el(svg,'line',{x1:Px,y1:Py,x2:Px+55,y2:Py,stroke:INK,'stroke-width':3});
+    el(svg,'polygon',{points:(Px+55)+','+Py+' '+(Px+45)+','+(Py-6)+' '+(Px+45)+','+(Py+6),fill:INK});
+    el(svg,'text',{x:Px+58,y:Py+4,'font-size':12,'font-weight':900,fill:INK}).textContent='v';
+    // mirror axis (velocity direction line)
+    el(svg,'line',{x1:Px,y1:Py,x2:660,y2:Py,stroke:'#b9b09a','stroke-width':1.2,'stroke-dasharray':'6 5'});
+    // positive: center above -> curves up; negative: center below -> curves down (illustrative)
+    // positive arc (center at (Px, Py-R))
+    if(mode===0||mode===1){
+      const ccx=Px,ccy=Py-R;
+      el(svg,'circle',{cx:ccx,cy:ccy,r:R,fill:'none',stroke:RED,'stroke-width':3.5});
+      el(svg,'circle',{cx:ccx,cy:ccy,r:4,fill:RED});
+      el(svg,'text',{x:ccx+6,y:ccy-4,'font-size':11,'font-weight':800,fill:RED}).textContent='O₊';
+      el(svg,'text',{x:ccx-70,y:ccy-6,'font-size':13,'font-weight':900,fill:RED}).textContent='正电荷：向上偏';
+    }
+    // negative arc (center at (Px, Py+R))
+    if(mode===0||mode===2){
+      const ccx=Px,ccy=Py+R;
+      el(svg,'circle',{cx:ccx,cy:ccy,r:R,fill:'none',stroke:BLUE,'stroke-width':3.5});
+      el(svg,'circle',{cx:ccx,cy:ccy,r:4,fill:BLUE});
+      el(svg,'text',{x:ccx+6,y:ccy+4,'font-size':11,'font-weight':800,fill:BLUE}).textContent='O₋';
+      el(svg,'text',{x:ccx-70,y:ccy+20,'font-size':13,'font-weight':900,fill:BLUE}).textContent='负电荷：向下偏';
+    }
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='同入射 P、同 v、同 B：电荷正负 → 偏转方向相反（镜像双解）';
+    let msg;
+    if(mode===0)msg='两解关于入射速度方向（虚线）镜像对称。半径相同、偏转到不同侧。电荷符号未给时，两条都是答案。';
+    else if(mode===1)msg='假设为正电荷：洛伦兹力使其向上偏，圆心在速度上方 O₊。';
+    else msg='假设为负电荷：力反向，向下偏，圆心在速度下方 O₋。与正电荷镜像对称。';
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=mode===0?INK:mode===1?RED:BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动6:粒子源各向发射 包络 ===== */
+(function(){
+  const svg=document.getElementById('srcSvg');
+  const Ns=document.getElementById('srcN'),Rs=document.getElementById('srcR');
+  const oRV=document.getElementById('srcRV'),oEnv=document.getElementById('srcEnv'),oMax=document.getElementById('srcMax');
+  let N=8,R=80,grow=1,running=false;
+  const Px=350,Py=190;
+  function sync(){N=+Ns.value;R=+Rs.value;draw();}
+  Ns.oninput=Rs.oninput=()=>{sync();};
+  function draw(){
+    clr(svg);
+    // field dots
+    for(let gx=40;gx<680;gx+=55){for(let gy=30;gy<330;gy+=50){el(svg,'circle',{cx:gx,cy:gy,r:2,fill:'#e0d7be'});}}
+    // envelope 2r
+    el(svg,'circle',{cx:Px,cy:Py,r:2*R,fill:'none',stroke:GREEN,'stroke-width':3,'stroke-dasharray':'2 0'});
+    el(svg,'text',{x:Px,y:Py-2*R-8,'font-size':12,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='包络 = 半径 2r 大圆（最远可达）';
+    // centers locus (radius r)
+    el(svg,'circle',{cx:Px,cy:Py,r:R,fill:'none',stroke:'#b9b09a','stroke-width':1.5,'stroke-dasharray':'5 5'});
+    el(svg,'text',{x:Px,y:Py-R+14,'font-size':11,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='圆心轨迹（半径 r）';
+    // each trajectory circle: velocity direction angle a, center is at 90deg from velocity.
+    for(let i=0;i<N;i++){
+      const a=i/N*2*Math.PI;
+      // center offset perpendicular to velocity: take +90deg (consistent charge)
+      const ca=a+Math.PI/2;
+      const ccx=Px+R*Math.cos(ca)*grow, ccy=Py+R*Math.sin(ca)*grow;
+      el(svg,'circle',{cx:ccx,cy:ccy,r:R,fill:'none',stroke:'rgba(20,80,200,0.5)','stroke-width':1.6});
+    }
+    // source
+    el(svg,'circle',{cx:Px,cy:Py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Px+8,y:Py-8,'font-size':13,'font-weight':900,fill:RED}).textContent='P 源';
+    oRV.textContent=R;oEnv.textContent=(2*R);oMax.textContent=(2*R);
+  }
+  function loop(){
+    if(!running)return;
+    grow+=0.03; if(grow>=1){grow=1;running=false;}
+    draw();requestAnimationFrame(loop);
+  }
+  document.getElementById('srcGo').onclick=()=>{grow=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('srcReset').onclick=()=>{grow=1;draw();};
+  sync();
+})();
+
+/* ===== 互动7:矩形磁场穿出判据 ===== */
+(function(){
+  const svg=document.getElementById('rectSvg');const note=document.getElementById('rectNote');
+  const Ds=document.getElementById('rectD'),Rs=document.getElementById('rectR');
+  let D=120,R=140;
+  const leftX=160,topY=40,botY=260;
+  function sync(){D=+Ds.value;R=+Rs.value;draw();}
+  Ds.oninput=Rs.oninput=sync;
+  function draw(){
+    clr(svg);
+    const rightX=leftX+D;
+    // field region
+    el(svg,'rect',{x:leftX,y:topY,width:D,height:botY-topY,fill:'rgba(20,80,200,0.06)',stroke:INK,'stroke-width':3});
+    for(let gx=leftX+20;gx<rightX;gx+=40){for(let gy=topY+20;gy<botY;gy+=40){el(svg,'circle',{cx:gx,cy:gy,r:2,fill:'#b9b09a'});}}
+    el(svg,'text',{x:leftX,y:topY-8,'font-size':12,'font-weight':800,fill:'#6b5d3a'}).textContent='左边界（入射）';
+    el(svg,'text',{x:rightX-4,y:topY-8,'font-size':12,'font-weight':800,fill:'#6b5d3a','text-anchor':'end'}).textContent='右边界（对边）';
+    // width marker
+    el(svg,'line',{x1:leftX,y1:botY+18,x2:rightX,y2:botY+18,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:(leftX+rightX)/2,y:botY+34,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='场宽 d';
+    // entry: particle enters horizontally to the right at mid-left. center is above at (leftX, entryY-R)?
+    // Enter moving +x; force perpendicular; take center below entry so it curves down. center=(leftX, entryY+R)
+    const entryY=140;
+    const ccx=leftX, ccy=entryY+R;
+    // penetration depth into field = R (max horizontal reach = leftX + R when arc goes quarter)
+    const maxReach=leftX+R;
+    // entry arrow
+    el(svg,'line',{x1:leftX-30,y1:entryY,x2:leftX,y2:entryY,stroke:INK,'stroke-width':3});
+    el(svg,'polygon',{points:leftX+','+entryY+' '+(leftX-9)+','+(entryY-5)+' '+(leftX-9)+','+(entryY+5),fill:INK});
+    el(svg,'circle',{cx:leftX,cy:entryY,r:5,fill:BLUE,stroke:INK,'stroke-width':2});
+    // orbit circle (clip visual by just drawing full faint + colored)
+    let col,verdict;
+    if(R<D-2){col=RED;verdict='r < d → 圆的水平最远只到 x=左界+r，够不到右边 → 粒子从左边界折返，不穿出对边。';}
+    else if(Math.abs(R-D)<=3){col=GREEN;verdict='★ r = d → 轨迹圆与右边界相切，恰好从右边界射出（临界）。';}
+    else{const s=Math.min(1,D/R);const th=Math.asin(s)*180/Math.PI;col=BLUE;verdict='r > d → 穿出右边界，偏转角 sinθ=d/r，θ≈'+th.toFixed(0)+'°。';}
+    el(svg,'circle',{cx:ccx,cy:ccy,r:R,fill:'none',stroke:col,'stroke-width':3.5});
+    el(svg,'circle',{cx:ccx,cy:ccy,r:4,fill:INK});
+    // reach marker line
+    el(svg,'line',{x1:maxReach,y1:topY,x2:maxReach,y2:botY,stroke:col,'stroke-width':1.5,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:maxReach+3,y:topY+14,'font-size':10.5,'font-weight':800,fill:col}).textContent='x=左界+r';
+    note.innerHTML='👉 '+verdict;
+    note.style.borderColor=col;
+  }
+  sync();
+})();
+
+/* ===== 互动8:圆形磁场对称几何 ===== */
+(function(){
+  const svg=document.getElementById('circSvg');
+  const Rs=document.getElementById('circR'),BRs=document.getElementById('circBR');
+  const oR=document.getElementById('ciR'),or_=document.getElementById('cir'),oTan=document.getElementById('ciTan'),oTh=document.getElementById('ciTh');
+  let r=90,BR=100;
+  const Ox=350,Oy=200; // field center
+  function sync(){r=+Rs.value;BR=+BRs.value;draw();}
+  Rs.oninput=BRs.oninput=sync;
+  function draw(){
+    clr(svg);
+    // field circle
+    el(svg,'circle',{cx:Ox,cy:Oy,r:BR,fill:'rgba(20,80,200,0.06)',stroke:BLUE,'stroke-width':3});
+    // field dots
+    for(let gx=Ox-BR+15;gx<Ox+BR;gx+=38){for(let gy=Oy-BR+15;gy<Oy+BR;gy+=38){if(Math.hypot(gx-Ox,gy-Oy)<BR-6)el(svg,'circle',{cx:gx,cy:gy,r:2,fill:'#b9b09a'});}}
+    el(svg,'circle',{cx:Ox,cy:Oy,r:4,fill:INK});
+    el(svg,'text',{x:Ox+6,y:Oy-6,'font-size':12,'font-weight':800,fill:INK}).textContent='O（场心）';
+    // entry point on left of field circle, moving toward center (along radius, +x)
+    const Ex=Ox-BR, Ey=Oy;
+    // trajectory center: perpendicular to velocity (+x) -> straight up or down by r. take below (curve down)
+    const tcx=Ex, tcy=Ey+r;
+    // by symmetry exit is at angle; compute geometry: half deflection tan(th/2)=R/r
+    const half=Math.atan2(BR,r); // tan(half)=R/r
+    const th=2*half;
+    // trajectory arc (red) - draw full faint circle + entry/exit
+    el(svg,'circle',{cx:tcx,cy:tcy,r:r,fill:'none',stroke:RED,'stroke-width':3.5});
+    el(svg,'circle',{cx:tcx,cy:tcy,r:4,fill:RED});
+    el(svg,'text',{x:tcx+6,y:tcy+4,'font-size':11,'font-weight':800,fill:RED}).textContent='O′';
+    // entry marker + velocity along radius
+    el(svg,'line',{x1:Ex-32,y1:Ey,x2:Ex,y2:Ey,stroke:INK,'stroke-width':3});
+    el(svg,'polygon',{points:Ex+','+Ey+' '+(Ex-9)+','+(Ey-5)+' '+(Ex-9)+','+(Ey+5),fill:INK});
+    el(svg,'circle',{cx:Ex,cy:Ey,r:5,fill:GREEN,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:Ex-8,y:Ey-10,'font-size':11,'font-weight':800,fill:GREEN}).textContent='入射(沿半径)';
+    // radius line to center showing symmetry
+    el(svg,'line',{x1:Ex,y1:Ey,x2:Ox,y2:Oy,stroke:'#b9b09a','stroke-width':1.4,'stroke-dasharray':'5 4'});
+    el(svg,'text',{x:350,y:26,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='沿半径进 → 沿半径出（对称）　tan(θ/2)=R/r';
+    oR.textContent=BR;or_.textContent=r;oTan.textContent=(BR/r).toFixed(2);oTh.textContent=(th*180/Math.PI).toFixed(0)+'°';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 带电粒子在匀强磁场中做什么运动？半径和周期公式？",a:"洛伦兹力垂直速度、不做功，做匀速圆周运动。半径 r=mv/(qB)=p/(qB)；周期 T=2πm/(qB)，与速度无关。"},
+ {q:"2. 为什么周期与速度无关？转过圆心角 θ 的时间怎么算？",a:"速度大→半径也大，一转的路程与速率同比例，用时抵消，T=2πm/(qB) 只含 m、q、B。转过 θ 的时间 t=(θ/2π)·T，只看 θ 和 T。"},
+ {q:"3. 画轨迹圆时，圆心在哪个方向？半径与什么垂直？",a:"圆心在垂直速度的方向上（洛伦兹力指向圆心、力⊥速度）。半径永远垂直速度；与边界相切时半径垂直边界。"},
+ {q:"4. 已知入射点和出射点两个位置，怎么定圆心？",a:"两点到圆心距离都=r，圆心在两点连线的中垂线上；再与「过入射点的速度垂线」相交，交点即圆心。"},
+ {q:"5. 「恰好从边界射出」的几何翻译是什么？",a:"轨迹圆与该边界相切。切点处半径垂直边界。这是临界的唯一严格条件，可一次锁死半径。"},
+ {q:"6. 粒子垂直进入宽 d 的矩形磁场，能穿出对边的条件？恰好射出对应什么？",a:"r≥d 才能穿出对边（r<d 从进入边折返）；恰好射出对边=圆与对边相切，r=d，对应最小速度 v=qBd/m。穿出时偏转角 sinθ=d/r。"},
+ {q:"7. 题目只说「带电粒子」没指正负，会有什么后果？",a:"电荷正负未定 → 洛伦兹力方向相反 → 偏转到相反两侧，出现关于入射速度方向镜像对称的双解，必须都写。"},
+ {q:"8. 入射点、方向确定但速度大小未定，轨迹是什么？答案形式？",a:"是同起点同切向、半径不同的一簇圆（圆心在速度垂线上）。答案通常是一段范围，用相切写出最大/最小半径两个临界。"},
+ {q:"9. 放射源从一点向各方向发射（速率相同），圆心轨迹和最远可达距离？",a:"半径 r 相同，所有圆心在以源为心、r 为半径的圆上；轨迹圆的外包络是半径 2r 的大圆，最远可达 2r（直径）。"},
+ {q:"10. 问「经过时间 t 后粒子在何处/第几次到某点」为何要考虑周期性？",a:"粒子转整数圈会回到同一几何位置，t=nT+t₀ 给出多个解；有限场区还需判断哪几圈轨迹真的落在场内。别只写一个解。"},
+ {q:"11. 已知动能 Ek 求半径，正确步骤是什么？",a:"先由 p=√(2mEk)（或 v=√(2Ek/m)）换算动量/速度，再 r=mv/(qB)=p/(qB)。不能把 Ek 直接代入 r 公式。"},
+ {q:"12. 粒子沿半径方向射入圆形磁场，出射方向有何规律？偏转角关系？",a:"由对称性，它沿半径方向射出（入、出都过场心方向）。偏转角 θ 满足 tan(θ/2)=R/r（R 场半径，r 轨迹半径）；r 越大偏转越小。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

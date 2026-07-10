@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>函数图象与变换 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>函数图象与变换</h1>
+    <p class="lead">y=|2sin(x−π/3)|+1 这种吓人的图象，从来不是背出来的——它是把最简单的 y=sin x「搬、拉、翻」出来的。这一页教你<b>四类变换</b>(平移、伸缩、对称、翻折)的一致规律，让你既能<b>由基本图象画出复杂图象</b>，又能<b>看着图象反推解析式</b>。抓住一条主线:对 x 动手→影响横向且方向相反，对 y/整体动手→影响纵向且方向一致。</p>
+
+    <div class="say">🗣️ <b>图象变换(人话版):</b> 所有复杂函数图象都是几个基本图象(一次、二次、反比例、指数、对数、三角)「搬、拉、翻」出来的。<b>搬</b>=平移，<b>拉</b>=伸缩，<b>翻</b>=对称/翻折。核心口诀就一句:<b>对 x 的变化影响横向、而且和直觉相反</b>(f(x+2) 是往<b>左</b>搬不是往右);<b>对 y 或整个 f(x) 的变化影响纵向、而且和直觉一致</b>(f(x)+2 就是往上搬)。把这句话焊在脑子里，一大半题当场秒杀。</div>
+
+    <div class="keybox"><b>一句话总纲:</b> <b>横变(动 x)看里面、反着来;纵变(动 y)看外面、顺着来。</b> 平移「左加右减、上加下减」;伸缩「横向压 1/ω、纵向拉 A」;对称「换 −x 翻 y 轴、加负号翻 x 轴」;翻折「f(|x|) 右搬到左、|f(x)| 下翻到上」。识图就是把这几步倒着走。</div>
+
+    <h2>① 平移变换:整张图往哪搬</h2>
+    <div class="card">
+      <div class="eq">左加右减:y=f(x+a)　上加下减:y=f(x)+b</div>
+      <p style="margin:8px 0"><b>横向平移(动 x):</b> 由 y=f(x) 得 y=f(x+a)，图象向<b>左</b>平移 a 个单位(a&gt;0);y=f(x−a) 向<b>右</b>平移。这就是「<b>左加右减</b>」——和直觉相反，因为要让新图上的点算出老图的值，x 得先补偿回去。</p>
+      <p style="margin:8px 0"><b>纵向平移(动整体):</b> 由 y=f(x) 得 y=f(x)+b，图象向<b>上</b>平移 b 个单位(b&gt;0);y=f(x)−b 向<b>下</b>平移。这是「<b>上加下减</b>」——和直觉一致。</p>
+      <div class="mono">口诀:括号里的 x 改变 → 横向、反着来;整个式子加减常数 → 纵向、顺着来。</div>
+      <p class="trap">⚠ 头号错:把 f(x+2) 当成「右移 2」。它是<b>左移 2</b>!横向平移永远和符号直觉相反。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 平移滑块:拖 a(横移)、b(纵移)，实时看基本图象往哪搬</div>
+      <svg id="trSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="trfn on" data-f="0">基础 sin x</button><button class="trfn" data-f="1">基础 x²</button>
+        <label>横移 a <input id="trA" type="range" min="-3" max="3" value="0" step="0.5"></label>
+        <label>纵移 b <input id="trB" type="range" min="-3" max="3" value="0" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>解析式</b><span id="trEq">f(x)</span></div>
+        <div><b>横移方向</b><span id="trDx">不动</span></div>
+        <div><b>纵移方向</b><span id="trDy">不动</span></div>
+        <div><b>口诀</b><span id="trRule">左加右减</span></div>
+      </div>
+      <p class="small">灰虚线=基本图象 y=f(x)，红线=平移后 y=f(x+a)+b。注意 a&gt;0 时红线往<b>左</b>走(左加右减)，b&gt;0 时往<b>上</b>走(上加下减)。</p>
+    </div>
+
+    <h2 class="b">② 伸缩变换:横压 or 纵拉</h2>
+    <div class="card">
+      <div class="eq">横向:y=f(ωx) 横坐标变为原来的 1/ω　纵向:y=A·f(x) 纵坐标变为原来的 A 倍</div>
+      <p style="margin:8px 0"><b>横向伸缩(动 x 的系数 ω):</b> 由 y=f(x) 得 y=f(ωx)，每个点的<b>横坐标</b>变为原来的 <b>1/ω</b>(纵坐标不变)。ω&gt;1 → 横向<b>压缩</b>(变瘦);0&lt;ω&lt;1 → 横向<b>拉伸</b>(变胖)。又是「反着来」:系数越大图越窄。</p>
+      <p style="margin:8px 0"><b>纵向伸缩(动 f(x) 的系数 A):</b> 由 y=f(x) 得 y=A·f(x)，每个点的<b>纵坐标</b>变为原来的 <b>A</b> 倍(横坐标不变)。A&gt;1 → 纵向<b>拉伸</b>(变高);0&lt;A&lt;1 → 纵向<b>压缩</b>(变矮)。这是「顺着来」:系数越大图越高。</p>
+      <div class="mono">y=A·f(ωx)：先看 ω 管横向(周期 T=2π/ω)，再看 A 管纵向(振幅=A)。三角函数图象全靠这两个。</div>
+      <p class="trap">⚠ 横向系数 ω 的作用是「<b>1/ω</b>」——ω=2 是横向压到一半，不是拉到 2 倍。别把横向当纵向那样顺着理解。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">↔️ 互动 2 — 伸缩滑块:ω 横向压缩(1/ω)、A 纵向拉伸(A 倍)，同屏对比</div>
+      <svg id="scSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>横向 ω <input id="scW" type="range" min="0.5" max="3" value="1" step="0.5"></label>
+        <label>纵向 A <input id="scA" type="range" min="0.5" max="3" value="1" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>解析式</b><span id="scEq">sin x</span></div>
+        <div><b>横坐标变为</b><span id="scHx">1×</span></div>
+        <div><b>周期 T=2π/ω</b><span id="scT">2π</span></div>
+        <div><b>振幅 A</b><span id="scAmp">1</span></div>
+      </div>
+      <p class="small">画的是 y=A·sin(ωx)。灰虚线=基础 sin x。ω 变大→图变<b>瘦</b>(横坐标缩到 1/ω)，A 变大→图变<b>高</b>(纵坐标乘 A)。周期 T=2π/ω。</p>
+    </div>
+
+    <h2 class="g">③ 对称变换:关于某条线/点翻个面</h2>
+    <div class="card">
+      <table>
+        <tr><th>新解析式</th><th>关于谁对称</th><th>怎么变</th></tr>
+        <tr><td>y=f(−x)</td><td>关于 <b>y 轴</b></td><td>x 换成 −x(横坐标变号)</td></tr>
+        <tr><td>y=−f(x)</td><td>关于 <b>x 轴</b></td><td>整体加负号(纵坐标变号)</td></tr>
+        <tr><td>y=−f(−x)</td><td>关于 <b>原点</b></td><td>x、y 都变号(中心对称)</td></tr>
+        <tr><td>y=f⁻¹(x)</td><td>关于 <b>直线 y=x</b></td><td>反函数:x、y 互换</td></tr>
+      </table>
+      <p style="margin:10px 0"><b>记忆法:</b> 「换 −x」是横向翻(y 轴)，「加负号」是纵向翻(x 轴)，两者都做就是绕原点转 180°。反函数是把 y=x 当镜子照——原图与反函数图<b>关于 y=x 对称</b>。</p>
+      <p class="trap">⚠ 别把 f(−x)(关于 y 轴)和 −f(x)(关于 x 轴)记反。动 x → 横向(y 轴);动 f → 纵向(x 轴)。跟平移伸缩是同一条主线。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪞 互动 3 — 四种对称一键切换:y 轴 / x 轴 / 原点 / y=x</div>
+      <svg id="symSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="symbtn on" data-s="0">f(−x)·关于 y 轴</button>
+        <button class="symbtn" data-s="1">−f(x)·关于 x 轴</button>
+        <button class="symbtn" data-s="2">−f(−x)·关于原点</button>
+        <button class="symbtn" data-s="3">f⁻¹·关于 y=x</button>
+      </div>
+      <div class="verdict" id="symNote"></div>
+      <p class="small">灰虚线=原图 y=f(x)(这里用一段指数型曲线，不对称好看效果)。红线=变换后的图象。绿虚线标出对称轴/对称中心。</p>
+    </div>
+
+    <h2 class="o">④ 翻折变换:绝对值把图折过来</h2>
+    <div class="card">
+      <h3>f(|x|):保留 y 轴右侧，镜像到左侧</h3>
+      <p style="margin:6px 0">由 y=f(x) 得 y=f(|x|):<b>去掉 y 轴左侧原图，把右侧(x≥0 部分)沿 y 轴翻折复制到左边</b>。结果一定关于 y 轴对称(偶函数)。因为 |x| 让 x 和 −x 取到同一个函数值。</p>
+      <h3>|f(x)|:x 轴下方翻到上方</h3>
+      <p style="margin:6px 0">由 y=f(x) 得 y=|f(x)|:<b>x 轴上方图象不动，把 x 轴下方(f(x)&lt;0)的部分沿 x 轴翻折上来</b>。结果图象全在 x 轴上方(或轴上)。</p>
+      <div class="mono">f(|x|) → 动的是 x → 横向操作(左右对称);　|f(x)| → 动的是 f → 纵向操作(下翻上)。</div>
+      <p class="trap">⚠ 两者天差地别!f(|x|) 是「留右翻左」(关于 y 轴)，|f(x)| 是「下翻上」(全部非负)。别把括号内外的绝对值搞混。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔻 互动 4 — |f(x)|:把 x 轴下方的图象翻上来(动画)</div>
+      <svg id="afSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="afGo">▶ 翻折演示</button><button id="afReset">↺ 重置</button>
+      </div>
+      <p class="small">灰虚线=原图 y=f(x)(一条穿过 x 轴的曲线)。红线=|f(x)|。点「翻折演示」，看 x 轴<b>下方</b>那段(蓝色)如何绕 x 轴翻到<b>上方</b>——翻完全图非负。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">↔️ 互动 5 — f(|x|):保留右侧，镜像到左侧(动画)</div>
+      <svg id="fmSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="fmGo">▶ 镜像演示</button><button id="fmReset">↺ 重置</button>
+      </div>
+      <p class="small">灰虚线=原图 y=f(x)。点「镜像演示」:先<b>丢掉左侧</b>原图，再把<b>右侧(x≥0)</b>沿 y 轴翻折复制到左边。结果关于 y 轴对称(变成偶函数)。</p>
+    </div>
+
+    <h2 class="v">⑤ 变换顺序:先平移还是先伸缩，结果不一样</h2>
+    <div class="card">
+      <p style="margin:6px 0">求 y=sin(2x+π/3) 是由 y=sin x 怎么来的?两条路，<b>顺序不同则平移量不同</b>，这是三角变换的头号陷阱。</p>
+      <div class="mono">路线A(先平移后伸缩)：sin x → 左移 π/3 → sin(x+π/3) → 横向压 1/2 → sin(2x+π/3)。平移量 π/3。</div>
+      <div class="mono">路线B(先伸缩后平移)：sin x → 横向压 1/2 → sin(2x) → 左移 π/6 → sin(2(x+π/6))=sin(2x+π/3)。平移量 π/6!</div>
+      <p style="margin:8px 0"><b>为什么?</b> 先伸缩再平移时，平移量会被 ω「稀释」——真实的平移是对<b>整个 (2x)</b> 而言，所以要把 π/3 除以 2 得 π/6。<b>关键:平移永远是针对 x 本身的系数为 1 的那个变量。</b></p>
+      <p class="trap">⚠ 最常见错:sin(2x+π/3) 直接说「左移 π/3」。若先压缩，只能左移 <b>π/6</b>。定平移量前，先把系数提出来看 x 前面是不是 1。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔀 互动 6 — 变换顺序对比:同一目标图，先平移 vs 先伸缩，平移量不同</div>
+      <svg id="ordSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ordbtn on" data-o="0">路线A:先平移(π/3) 后压缩</button>
+        <button class="ordbtn" data-o="1">路线B:先压缩 后平移(π/6)</button>
+      </div>
+      <div class="verdict" id="ordNote"></div>
+      <p class="small">目标都是 y=sin(2x+π/3)(红线)。灰虚线=起点 sin x，橙虚线=中间步骤。两条路线终点<b>相同</b>，但中间的平移量<b>一个是 π/3、一个是 π/6</b>。</p>
+    </div>
+
+    <h2 class="r">⑥ 识图与用图:由图象反推解析式</h2>
+    <div class="card">
+      <p style="margin:6px 0">变换倒着走，就是「看图求式」。抓住图象的<b>特征点、渐近线、周期、最值</b>，逐个反推参数。</p>
+      <table>
+        <tr><th>图象特征</th><th>反推的信息</th></tr>
+        <tr><td>最高/最低值</td><td>纵向振幅 A(三角) 或平移量 b</td></tr>
+        <tr><td>相邻两个零点/峰谷距离</td><td>周期 T → ω=2π/T(横向系数)</td></tr>
+        <tr><td>图象整体上/下移</td><td>纵向平移 b(上加下减)</td></tr>
+        <tr><td>图象整体左/右移</td><td>横向平移 a(初相 φ)，代特殊点反解</td></tr>
+        <tr><td>是否关于 y 轴/原点对称</td><td>奇偶性 → 判断含不含 |x| 或 −x</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>用图三大招:</b> ① <b>比较大小</b>——把 f(a)、f(b) 看成图上的高度直接比;② <b>解不等式 f(x)&gt;0</b>——找图象在 x 轴<b>上方</b>的 x 区间;③ <b>方程根的个数</b>——y=f(x) 与 y=k 两图<b>交点个数</b>。</p>
+      <p class="trap">⚠ 求 y=Asin(ωx+φ) 的 φ 时，不能随便代最高点。要代已知的<b>特殊点</b>并结合上升/下降趋势确定，否则 φ 差一个周期。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔍 互动 7 — 用图解不等式 / 比大小:拖 k，看 f(x) 与 y=k 的交点和上下方区间</div>
+      <svg id="usSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>水平线 k <input id="usK" type="range" min="-2" max="2" value="0" step="0.2"></label>
+      </div>
+      <div class="live">
+        <div><b>y=k 的值</b><span id="usKv">0</span></div>
+        <div><b>交点个数</b><span id="usN">0</span></div>
+        <div><b>f(x)&gt;k 的区间数</b><span id="usG">0</span></div>
+        <div><b>用途</b><span id="usU">解不等式</span></div>
+      </div>
+      <p class="small">红线=f(x)，绿线=y=k。<b>交点个数</b>=方程 f(x)=k 的根数;红线在绿线<b>上方</b>的那些 x 段=不等式 f(x)&gt;k 的解集。拖 k 直观感受「用图」。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 平移变换型</h3>
+      <p><b class="tag">触发信号:</b>「由 y=f(x) 的图象向左/右/上/下平移得到」，或给 y=f(x+a)+b 问图象怎么变、或反问平移量。</p>
+      <p><b class="tag">标准动作:</b>看括号内 x 的加减→横向、左加右减;看整体的加减→纵向、上加下减。横向系数不为 1 时，先把系数提出来再定平移量。</p>
+      <p><b class="tag">示例(带解):</b>把 y=2ˣ 的图象向右平移 3 再向上平移 1，求解析式。右移 3→把 x 换成 x−3 得 2ˣ⁻³;上移 1→整体 +1。结果 y=2ˣ⁻³+1。渐近线由 y=0 变为 y=1。</p>
+      <p class="trap">陷阱:f(x+2) 当右移(实为左移);横向系数≠1 时平移量没除以 ω;忘了平移渐近线也跟着移。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 伸缩变换型</h3>
+      <p><b class="tag">触发信号:</b>「横坐标变为原来的 1/2」「纵坐标伸长为 3 倍」，或给 y=Af(ωx) 问周期/振幅。</p>
+      <p><b class="tag">标准动作:</b>横向:横坐标变 1/ω → 在 x 前乘 ω(记住是倒数);纵向:纵坐标变 A 倍 → 整体乘 A。三角函数周期 T=2π/ω，振幅=A。</p>
+      <p><b class="tag">示例(带解):</b>把 y=sin x 横坐标缩短为原来的 1/2、纵坐标伸长为 3 倍，求解析式与周期。横坐标缩 1/2 → x 前乘 2 → sin(2x);纵坐标 3 倍 → ×3。得 y=3sin(2x)，周期 T=2π/2=π，振幅 3。</p>
+      <p class="trap">陷阱:「横坐标变为 1/2」写成 sin(x/2)(实为 sin 2x);把横向伸缩当纵向那样顺着乘;算错周期。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 对称变换型</h3>
+      <p><b class="tag">触发信号:</b>「关于 y 轴 / x 轴 / 原点 / 直线 y=x 对称的图象的解析式」，或求反函数。</p>
+      <p><b class="tag">标准动作:</b>y 轴→x 换 −x;x 轴→整体加负号;原点→x、y 都变号;y=x→求反函数(解出 x=…，再 x、y 互换)。</p>
+      <p><b class="tag">示例(带解):</b>求 y=log₂x 关于 y=x 对称的图象解析式。即求反函数:由 y=log₂x 得 x=2ʸ，互换得 y=2ˣ。所以 y=log₂x 与 y=2ˣ 关于 y=x 对称(这正是指数与对数互为反函数)。</p>
+      <p class="trap">陷阱:把 f(−x) 与 −f(x) 记反;求反函数忘了互换 x、y;忽略反函数定义域=原函数值域。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 绝对值翻折 f(|x|) 与 |f(x)| 型</h3>
+      <p><b class="tag">触发信号:</b>解析式带绝对值(|x| 在括号内，或整体加 |·|)，问图象、单调性、零点个数、方程根个数。</p>
+      <p><b class="tag">标准动作:</b>f(|x|):画 x≥0 部分，再沿 y 轴对称复制到左边(偶函数);|f(x)|:画 f(x)，把 x 轴下方部分沿 x 轴翻上来(全非负)。</p>
+      <p><b class="tag">示例(带解):</b>y=|x²−4| 的图象与零点。先画 y=x²−4(开口向上，与 x 轴交于 ±2，顶点 (0,−4));把 x 轴下方(−2&lt;x&lt;2 那段)翻上来。得到「W」形，与 x 轴切于 ±2，(0,4) 处有尖峰。零点 x=±2(两个)。</p>
+      <p class="trap">陷阱:f(|x|) 与 |f(x)| 混淆;翻折后忘了单调区间会改变;|f(x)| 图象在原零点处有尖角(不可导)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 由图象求解析式 / 比较大小 / 解不等式型</h3>
+      <p><b class="tag">触发信号:</b>给一张图象求 y=Asin(ωx+φ)+b 或分段函数式;或看图比较 f(a)、f(b);或看图解 f(x)&gt;0、求方程 f(x)=k 根数。</p>
+      <p><b class="tag">标准动作:</b>求式:由最值定 A、b，由周期定 ω，代特殊点定 φ。用图:比大小=比高度;解 f(x)&gt;0=找 x 轴上方区间;根个数=与 y=k 的交点数。</p>
+      <p><b class="tag">示例(带解):</b>某三角图象最大值 2、最小值 −2、相邻最高点间距 π。则 A=2，T=π→ω=2π/π=2。若图过 (0,1) 且正在上升，2sin(φ)=1→φ=π/6。得 y=2sin(2x+π/6)。</p>
+      <p class="trap">陷阱:定 φ 只代最值点(差一个周期);解不等式漏区间端点;把交点个数与解集个数混为一谈。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>左加右减(横向与直觉相反)</b>:f(x+a) 是<b>左</b>移 a，f(x−a) 是<b>右</b>移 a。动 x 一律反着来，这是最高频失分点。</p>
+      <p class="trap">② <b>f(|x|) 与 |f(x)| 区别</b>:f(|x|)=「留右翻左」(关于 y 轴、变偶函数);|f(x)|=「下翻上」(全部非负)。一个动横向、一个动纵向。</p>
+      <p class="trap">③ <b>伸缩与平移的先后顺序影响结果</b>:sin(2x+π/3)，先平移是左移 π/3，先压缩只能左移 π/6。定平移量前先看 x 系数是不是 1。</p>
+      <p class="trap">④ 横向伸缩是「<b>1/ω</b>」:f(ωx) 横坐标变为原来的 1/ω。ω=2 是压瘦一半，不是拉宽 2 倍。</p>
+      <p class="trap">⑤ f(−x)(关于 y 轴)和 −f(x)(关于 x 轴)别记反。动 x→横向(y 轴)，动 f→纵向(x 轴)。</p>
+      <p class="trap">⑥ 平移/对称时<b>渐近线也要一起变</b>:2ˣ 上移 1，渐近线由 y=0 变 y=1;对称同理。</p>
+      <p class="trap">⑦ 反函数图象关于 <b>y=x</b> 对称，其定义域=原函数值域，别漏范围。</p>
+      <p class="trap">⑧ 求 y=Asin(ωx+φ) 的 φ 别乱代最值点，要结合上升/下降趋势，否则差一个周期。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一条主线统一四类变换:</b> 凡是「对 x 动手」(x+a、ωx、−x、|x|) → 影响<b>横向</b>、而且<b>方向相反/取倒数</b>;凡是「对 y 或整个 f 动手」(+b、A·f、−f、|f|) → 影响<b>纵向</b>、而且<b>方向一致</b>。把平移、伸缩、对称、翻折全塞进这一条口诀，就不用死记二十条规则。</p>
+      <p style="margin:8px 0"><b>② 变换的本质是「换元」:</b> y=f(x+a) 为什么左移?因为新图上横坐标 x 的点，其函数值等于老图上 x+a 处的值——要在更小的 x 处就取到老图右边的值，整张图必然左移。想通「新变量替换回老变量」这一步，左加右减、横压 1/ω 全都自然，再也不用背。</p>
+      <p style="margin:8px 0"><b>③ 顺序问题的底层原因是「谁的系数为 1」:</b> 平移量永远针对「系数为 1 的那个自变量」。sin(2x+π/3)=sin(2(x+π/6))，括号提出 2 后 x 的系数才是 1，此时平移量是 π/6。先伸缩会改变基准，所以平移量除以 ω。掌握这点，任何「先 A 后 B」的顺序题都能算准。</p>
+      <p style="margin:8px 0"><b>④ 识图=把变换链倒放:</b> 复杂图象都是「基本图象 + 一串变换」。看图求式就是逆向识别这条链:先剥掉纵向(振幅/上下移)，再剥横向(周期/左右移)，最后定初相。养成「先纵后横、先粗后细」的拆解习惯，识图从此有章法。</p>
+      <p style="margin:8px 0"><b>⑤ 用图是「数形结合」的主战场:</b> 方程 f(x)=g(x) 的根 = 两图交点;不等式 f(x)&gt;g(x) 的解 = f 在 g 上方的区间;含参问题「有几个根」= 动直线 y=k 扫过图象数交点。把代数问题翻译成「图上找交点/比高度」，超纲难题也能秒判。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 函数图象与变换:搬(平移)、拉(伸缩)、翻(对称/翻折)，识图与用图</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b",GREY="#9a8f76";
+
+/* 通用坐标系:把数学坐标 (mx,my) 映射到 SVG 像素 */
+function makeAxes(svg,opts){
+  const o=Object.assign({x0:50,y0:20,w:600,h:280,xmin:-6,xmax:6,ymin:-4,ymax:4},opts);
+  const px=mx=>o.x0+(mx-o.xmin)/(o.xmax-o.xmin)*o.w;
+  const py=my=>o.y0+(o.ymax-my)/(o.ymax-o.ymin)*o.h;
+  // axes
+  el(svg,'line',{x1:o.x0,y1:py(0),x2:o.x0+o.w,y2:py(0),stroke:INK,'stroke-width':2.5});
+  el(svg,'line',{x1:px(0),y1:o.y0,x2:px(0),y2:o.y0+o.h,stroke:INK,'stroke-width':2.5});
+  el(svg,'text',{x:o.x0+o.w-4,y:py(0)-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+  el(svg,'text',{x:px(0)+10,y:o.y0+12,'font-size':13,'font-weight':900,fill:INK}).textContent='y';
+  el(svg,'text',{x:px(0)-6,y:py(0)+16,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='O';
+  return {px,py,o};
+}
+/* 用一串数学点画折线 */
+function plot(svg,pts,ax,col,dash,wd){
+  let d="";let started=false;
+  for(const [mx,my] of pts){
+    if(my===null||!isFinite(my)){started=false;continue;}
+    const X=ax.px(mx),Y=ax.py(my);
+    if(!started){d+="M"+X+" "+Y;started=true;}else{d+="L"+X+" "+Y;}
+  }
+  const a={d:d,fill:'none',stroke:col,'stroke-width':wd||3};
+  if(dash)a['stroke-dasharray']=dash;
+  return el(svg,'path',a);
+}
+/* 采样一个函数 f(mx) 在区间上的点 */
+function sample(f,xmin,xmax,n){
+  const pts=[];for(let i=0;i<=n;i++){const mx=xmin+(xmax-xmin)*i/n;let my;try{my=f(mx);}catch(e){my=null;}pts.push([mx,my]);}return pts;
+}
+
+/* ===== 互动1:平移滑块 ===== */
+(function(){
+  const svg=document.getElementById('trSvg');
+  const As=document.getElementById('trA'),Bs=document.getElementById('trB');
+  const oEq=document.getElementById('trEq'),oDx=document.getElementById('trDx'),oDy=document.getElementById('trDy'),oRule=document.getElementById('trRule');
+  let a=0,b=0,fn=0;
+  document.querySelectorAll('.trfn').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.trfn').forEach(x=>x.classList.remove('on'));btn.classList.add('on');fn=+btn.dataset.f;draw();
+  });
+  As.oninput=Bs.oninput=()=>{a=+As.value;b=+Bs.value;draw();};
+  function base(x){return fn===0?Math.sin(x):0.4*x*x;}
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-6,xmax:6,ymin:-4,ymax:4,h:300});
+    // base f(x): dashed grey
+    plot(svg,sample(base,-6,6,240),ax,GREY,'5 4',2.5);
+    // shifted f(x+a)+b : red  (new point x uses base(x+a)+b)
+    plot(svg,sample(x=>base(x+a)+b,-6,6,240),ax,RED,null,3.5);
+    // readouts
+    let name=fn===0?'sin':'0.4x²';
+    let inside=(a===0?'x':'(x'+(a>0?'+':'−')+Math.abs(a)+')');
+    let eqstr=(fn===0?'sin':'0.4')+(fn===0?inside:'·'+inside+'²')+(b===0?'':(b>0?'+':'−')+Math.abs(b));
+    oEq.textContent=eqstr;
+    oDx.textContent=a>0?('左移 '+a):a<0?('右移 '+Math.abs(a)):'不动';
+    oDy.textContent=b>0?('上移 '+b):b<0?('下移 '+Math.abs(b)):'不动';
+    oRule.textContent=(a>0?'左加':a<0?'右减':'—')+' / '+(b>0?'上加':b<0?'下减':'—');
+    // legend
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:GREY}).textContent='灰虚线 = 基础 f(x)';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:RED}).textContent='红线 = f(x+a)+b（左加右减、上加下减）';
+  }
+  draw();
+})();
+
+/* ===== 互动2:伸缩滑块 ===== */
+(function(){
+  const svg=document.getElementById('scSvg');
+  const Ws=document.getElementById('scW'),As=document.getElementById('scA');
+  const oEq=document.getElementById('scEq'),oHx=document.getElementById('scHx'),oT=document.getElementById('scT'),oAmp=document.getElementById('scAmp');
+  let w=1,A=1;
+  Ws.oninput=As.oninput=()=>{w=+Ws.value;A=+As.value;draw();};
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-6.5,xmax:6.5,ymin:-3.5,ymax:3.5,h:300});
+    // base sin x dashed grey
+    plot(svg,sample(Math.sin,-6.5,6.5,300),ax,GREY,'5 4',2.5);
+    // A sin(w x) blue
+    plot(svg,sample(x=>A*Math.sin(w*x),-6.5,6.5,300),ax,BLUE,null,3.5);
+    oEq.textContent=(A===1?'':A)+'sin('+(w===1?'x':w+'x')+')';
+    oHx.textContent='1/'+w+' 倍';
+    oT.textContent=(2/w).toFixed(2)+'π';
+    oAmp.textContent=A.toFixed(1);
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:GREY}).textContent='灰虚线 = 基础 sin x';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:BLUE}).textContent='蓝线 = A·sin(ωx)：ω 管横向(压 1/ω)、A 管纵向(拉 A)';
+  }
+  draw();
+})();
+
+/* ===== 互动3:四种对称 ===== */
+(function(){
+  const svg=document.getElementById('symSvg');const note=document.getElementById('symNote');
+  let s=0;
+  // 原图:一段不对称曲线,方便看效果。用 f(x)=0.9^? -> 用指数型: f(x)=1.6*(0.55)^x - 1  在可视窗口内
+  function f(x){return 1.7*Math.pow(0.5,x)-1.2;}
+  // 反函数: y=1.7*0.5^x-1.2 -> x=log_0.5((y+1.2)/1.7). 我们直接画点 (f(t),t) 得到关于 y=x 的镜像
+  document.querySelectorAll('.symbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.symbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');s=+b.dataset.s;draw();
+  });
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-5,xmax:5,ymin:-4,ymax:4,h:300});
+    // 原图 f(x) 灰虚线
+    plot(svg,sample(f,-5,5,240),ax,GREY,'5 4',2.5);
+    let note1='';
+    if(s===0){ // f(-x) 关于 y 轴
+      plot(svg,sample(x=>f(-x),-5,5,240),ax,RED,null,3.5);
+      // 对称轴 y轴 已经是 x=0
+      note1='y=f(−x)：把 x 换成 −x，图象关于 <b>y 轴</b> 翻折。红线是灰线的左右镜像。';
+    }else if(s===1){ // -f(x) 关于 x 轴
+      plot(svg,sample(x=>-f(x),-5,5,240),ax,RED,null,3.5);
+      note1='y=−f(x)：整体加负号，图象关于 <b>x 轴</b> 翻折。红线是灰线的上下镜像。';
+    }else if(s===2){ // -f(-x) 关于原点
+      plot(svg,sample(x=>-f(-x),-5,5,240),ax,RED,null,3.5);
+      note1='y=−f(−x)：x、y 都变号，图象关于 <b>原点</b> 中心对称（转 180°）。';
+    }else{ // f^{-1} 关于 y=x  : 画点 (f(t),t)
+      // y=x 参考线
+      el(svg,'line',{x1:ax.px(-4),y1:ax.py(-4),x2:ax.px(4),y2:ax.py(4),stroke:GREEN,'stroke-width':2,'stroke-dasharray':'4 4'});
+      el(svg,'text',{x:ax.px(3.4),y:ax.py(3.4)-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='y=x';
+      const inv=[];for(let i=0;i<=240;i++){const t=-5+10*i/240;inv.push([f(t),t]);}
+      plot(svg,inv,ax,RED,null,3.5);
+      note1='y=f⁻¹(x)：反函数，图象与原图关于 <b>直线 y=x</b> 对称（沿 y=x 照镜子）。';
+    }
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:GREY}).textContent='灰虚线 = 原图 f(x)';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:RED}).textContent='红线 = 变换后图象';
+    note.innerHTML='👉 '+note1;
+    note.style.borderColor=s===3?GREEN:RED;
+  }
+  draw();
+})();
+
+/* ===== 互动4:|f(x)| 下翻上 ===== */
+(function(){
+  const svg=document.getElementById('afSvg');
+  let t=0,running=false;
+  // f(x): 一条穿过 x 轴的三次型曲线
+  function f(x){return 0.18*x*x*x-0.9*x;}
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-4,xmax:4,ymin:-3,ymax:3,h:260,y0:20});
+    // 原图灰虚线
+    plot(svg,sample(f,-4,4,240),ax,GREY,'5 4',2.5);
+    // 上方部分保持(红),下方部分:按 t 从原位置翻到 |f|
+    const pts=sample(f,-4,4,240);
+    // 上方原图红实线(f>=0)
+    let up=pts.map(([x,y])=>[x, y>=0?y:null]);
+    plot(svg,up,ax,RED,null,3.5);
+    // 下方那段:插值 y-> (1-t)*y + t*(-y) = y*(1-2t) ,从原(下方)翻到镜像(上方)
+    let down=pts.map(([x,y])=> [x, y<0? y*(1-2*t) : null]);
+    plot(svg,down,ax,t<0.5?BLUE:RED,null,3.5);
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:GREY}).textContent='灰虚线 = 原图 f(x)';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:RED}).textContent='红线 = |f(x)|（x 轴下方翻到上方）';
+    if(t>=0.99){el(svg,'text',{x:ax.px(0)+14,y:ax.py(2.4),'font-size':13,'font-weight':900,fill:GREEN}).textContent='全图非负 ✓';}
+  }
+  function loop(){if(!running)return;t+=0.02;if(t>=1){t=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('afGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('afReset').onclick=()=>{t=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动5:f(|x|) 右镜像到左 ===== */
+(function(){
+  const svg=document.getElementById('fmSvg');
+  let t=0,running=false;
+  // f(x): 一条不对称曲线
+  function f(x){return 0.35*x*x-0.6*x-0.5;}
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-4,xmax:4,ymin:-3,ymax:4,h:260,y0:20});
+    // 原图灰虚线(整条)
+    plot(svg,sample(f,-4,4,240),ax,GREY,'5 4',2.5);
+    // 右侧(x>=0)红实线 = f(|x|) 在右侧 = f(x)
+    let right=sample(x=>x>=0?f(x):null,-4,4,240);
+    plot(svg,right,ax,RED,null,3.5);
+    // 左侧:镜像。目标点 (−x, f(x)) for x>=0。 t 从原图左段 f(x_left) 插值到 f(|x_left|)=f(-x_left)
+    // 对左侧 x<0: 原=f(x), 目标=f(-x). 线性插值.
+    let left=sample(x=> x<0 ? (1-t)*f(x)+t*f(-x) : null, -4,4,240);
+    plot(svg,left,ax,t<0.5?BLUE:RED,null,3.5);
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:GREY}).textContent='灰虚线 = 原图 f(x)';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:RED}).textContent='红线 = f(|x|)（保留右侧，镜像到左侧）';
+    if(t>=0.99){el(svg,'text',{x:ax.px(-3.6),y:ax.py(3.3),'font-size':13,'font-weight':900,fill:GREEN}).textContent='关于 y 轴对称(偶函数) ✓';}
+  }
+  function loop(){if(!running)return;t+=0.02;if(t>=1){t=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('fmGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('fmReset').onclick=()=>{t=0;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动6:变换顺序对比 ===== */
+(function(){
+  const svg=document.getElementById('ordSvg');const note=document.getElementById('ordNote');
+  let route=0;
+  document.querySelectorAll('.ordbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.ordbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');route=+b.dataset.o;draw();
+  });
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-6.5,xmax:6.5,ymin:-2.5,ymax:2.5,h:280});
+    // 起点 sin x 灰虚线
+    plot(svg,sample(Math.sin,-6.5,6.5,320),ax,GREY,'5 4',2.5);
+    // 目标 sin(2x+pi/3) 红线
+    plot(svg,sample(x=>Math.sin(2*x+Math.PI/3),-6.5,6.5,320),ax,RED,null,3.5);
+    let mid,msg;
+    if(route===0){ // 先左移 pi/3 -> sin(x+pi/3), 中间橙虚线
+      mid=x=>Math.sin(x+Math.PI/3);
+      msg='路线A：先左移 <b>π/3</b> 得 sin(x+π/3)（橙），再横向压 1/2 得目标 sin(2x+π/3)（红）。平移量 = π/3。';
+    }else{ // 先压缩 -> sin(2x), 中间橙虚线
+      mid=x=>Math.sin(2*x);
+      msg='路线B：先横向压 1/2 得 sin(2x)（橙），再左移 <b>π/6</b> 得目标 sin(2(x+π/6))=sin(2x+π/3)（红）。平移量 = π/6！';
+    }
+    plot(svg,sample(mid,-6.5,6.5,320),ax,ORANGE,'6 4',2.8);
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:GREY}).textContent='灰虚 = sin x（起点）';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:ORANGE}).textContent='橙虚 = 中间步骤';
+    el(svg,'text',{x:60,y:48,'font-size':12,'font-weight':800,fill:RED}).textContent='红线 = 目标 sin(2x+π/3)';
+    note.innerHTML='👉 '+msg+'　两路终点相同，但平移量不同：先伸缩时平移量要除以 ω=2。';
+    note.style.borderColor=route===0?INK:VIO;
+  }
+  draw();
+})();
+
+/* ===== 互动7:用图解不等式/比大小 ===== */
+(function(){
+  const svg=document.getElementById('usSvg');
+  const Ks=document.getElementById('usK');
+  const oKv=document.getElementById('usKv'),oN=document.getElementById('usN'),oG=document.getElementById('usG'),oU=document.getElementById('usU');
+  let k=0;
+  // f(x): 一条有起伏的曲线,多交点
+  function f(x){return Math.sin(x)+0.3*x;}
+  Ks.oninput=()=>{k=+Ks.value;draw();};
+  function draw(){
+    clr(svg);
+    const ax=makeAxes(svg,{xmin:-6,xmax:6,ymin:-2.5,ymax:2.5,h:280});
+    // f(x) 红线
+    const pts=sample(f,-6,6,400);
+    plot(svg,pts,ax,RED,null,3.5);
+    // y=k 绿线
+    el(svg,'line',{x1:ax.px(-6),y1:ax.py(k),x2:ax.px(6),y2:ax.py(k),stroke:GREEN,'stroke-width':3});
+    el(svg,'text',{x:ax.px(5.6),y:ax.py(k)-6,'font-size':12,'font-weight':900,fill:GREEN}).textContent='y=k';
+    // 统计交点个数 & f>k 的连通区间数
+    let cross=0,aboveSegs=0,prevAbove=null;
+    for(let i=0;i<pts.length;i++){
+      const y=pts[i][1];
+      if(y===null||!isFinite(y)){prevAbove=null;continue;}
+      const above=y>k;
+      if(prevAbove!==null && above!==prevAbove){cross++;}
+      if(above && prevAbove!==true){aboveSegs++;} // 进入上方区间
+      prevAbove=above;
+    }
+    // 标交点
+    for(let i=1;i<pts.length;i++){
+      const y0=pts[i-1][1],y1=pts[i][1];
+      if(y0===null||y1===null)continue;
+      if((y0-k)*(y1-k)<0){const x=(pts[i-1][0]+pts[i][0])/2;el(svg,'circle',{cx:ax.px(x),cy:ax.py(k),r:5,fill:VIO,stroke:INK,'stroke-width':2});}
+    }
+    oKv.textContent=k.toFixed(1);
+    oN.textContent=cross;
+    oG.textContent=aboveSegs;
+    oU.textContent='解 f(x)>'+k.toFixed(1);
+    el(svg,'text',{x:60,y:16,'font-size':12,'font-weight':800,fill:RED}).textContent='红线 = f(x)';
+    el(svg,'text',{x:60,y:32,'font-size':12,'font-weight':800,fill:VIO}).textContent='紫点 = 交点（方程 f(x)=k 的根）';
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 由 y=f(x) 得 y=f(x+3)，图象怎么平移？为什么和直觉相反？",a:"向左平移 3 个单位（左加右减）。因为新图上横坐标 x 的点，其值等于老图 x+3 处的值——要提前 3 个单位就取到老图右边的值，整张图必然左移。"},
+ {q:"2. 「上加下减」和「左加右减」分别针对哪个变量？",a:"上加下减针对整个式子（+b 上移、−b 下移，纵向、顺着来）；左加右减针对括号内的 x（x+a 左移、x−a 右移，横向、反着来）。动 x 看里面反着来，动整体看外面顺着来。"},
+ {q:"3. 由 y=f(x) 得 y=f(ωx)，横坐标怎么变？ω=2 时是压还是拉？",a:"横坐标变为原来的 1/ω（纵坐标不变）。ω=2 时横坐标缩为 1/2，图象横向压缩变瘦（不是拉宽）。横向系数取倒数。"},
+ {q:"4. 把 y=sin x 横坐标缩短为原来的 1/2、纵坐标伸长为 3 倍，求解析式与周期。",a:"横坐标缩 1/2 → x 前乘 2 → sin(2x)；纵坐标 3 倍 → ×3。得 y=3sin(2x)，周期 T=2π/2=π，振幅 3。"},
+ {q:"5. 四种对称各对应什么新解析式？",a:"关于 y 轴：y=f(−x)；关于 x 轴：y=−f(x)；关于原点：y=−f(−x)；关于直线 y=x：y=f⁻¹(x)（反函数）。动 x 是横向(y 轴)，动 f 是纵向(x 轴)。"},
+ {q:"6. y=log₂x 关于 y=x 对称的图象解析式是什么？",a:"即求反函数：由 y=log₂x 得 x=2ʸ，互换 x、y 得 y=2ˣ。所以 log₂x 与 2ˣ 关于 y=x 对称（指数与对数互为反函数）。"},
+ {q:"7. f(|x|) 和 |f(x)| 的图象变换分别怎么做？有何本质区别？",a:"f(|x|)：留右翻左——保留 x≥0 部分，沿 y 轴镜像到左边，结果关于 y 轴对称（偶函数）。|f(x)|：下翻上——把 x 轴下方部分沿 x 轴翻上来，结果全部非负。前者动横向，后者动纵向。"},
+ {q:"8. 画 y=|x²−4| 的图象，写出零点。",a:"先画 y=x²−4（开口向上，交 x 轴于 ±2，顶点 (0,−4)）；把 x 轴下方（−2<x<2 那段）翻上来，得 W 形，(0,4) 处有尖峰。零点 x=±2（两个）。"},
+ {q:"9. y=sin(2x+π/3) 由 sin x 变换：先平移和先伸缩，平移量各是多少？",a:"先平移后压缩：左移 π/3（对 x 直接加 π/3）。先压缩后平移：只需左移 π/6（因 sin(2x+π/3)=sin(2(x+π/6))，平移量除以 ω=2）。顺序不同平移量不同。"},
+ {q:"10. 为什么先伸缩后平移时平移量要除以 ω？",a:"平移量永远针对「x 系数为 1」的那个变量。sin(2x+π/3)=sin(2(x+π/6))，把 2 提出括号后 x 系数才是 1，此时平移量是 π/6。先伸缩改变了基准，所以除以 ω。"},
+ {q:"11. 看图求 y=Asin(ωx+φ)：A、ω、φ 分别由图象什么特征确定？",a:"A 由最大最小值定（A=(max−min)/2）；ω 由周期定（T→ω=2π/T，周期看相邻峰或相邻同相点距离）；φ 代已知特殊点并结合升降趋势确定（不能只代最值点，否则差一个周期）。"},
+ {q:"12. 如何用图象解不等式 f(x)>k 和判断方程 f(x)=k 的根个数？",a:"画 y=f(x) 和水平线 y=k：f(x)>k 的解 = 红线在绿线上方的那些 x 区间；方程 f(x)=k 的根个数 = 两图象的交点个数。这就是数形结合「用图」。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

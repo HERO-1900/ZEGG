@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极值点偏移问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 压轴攻坚包</div>
+    <h1>极值点偏移问题</h1>
+    <p class="lead">导数压轴题里最爱考的一类:函数 f(x) 有极值点 x₀,又有两个「等高点」x₁、x₂ 满足 f(x₁)=f(x₂),要你证明 <b>x₁+x₂ &gt; 2x₀</b>(或 &lt;)、<b>x₁·x₂ &gt; x₀²</b> 之类的不等式。看着吓人,其实就三板斧:<b>判偏移方向 → 构造对称函数 / 比值代换 → 证单调性</b>。掌握套路,压轴最后一问不再空白。</p>
+
+    <div class="say">🗣️ <b>极值点偏移(人话版):</b> 如果函数图象关于极值点<b>左右对称</b>(像标准抛物线),那两个等高点 x₁、x₂ 的中点恰好在极值点 x₀ 正下方,x₁+x₂=2x₀。可现实里的 f(x)(比如 xe⁻ˣ、x/lnx、lnx−x)图象<b>一边陡一边缓、不对称</b>,中点就会<b>偏</b>到 x₀ 的一侧——这就是「偏移」。哪边缓,中点就往哪边挪,于是 x₁+x₂ 要么大于要么小于 2x₀。压轴题就是让你把这个「偏」用不等式严格证出来。</div>
+
+    <div class="keybox"><b>一句话套路:</b> 条件永远是 <b>f(x₁)=f(x₂),x₁≠x₂,x₀ 是极值点</b>,求证 <b>x₁+x₂ 与 2x₀ 的大小(和型)</b> 或 <b>x₁·x₂ 与 x₀² 的大小(积型)</b>。核心武器两把:<b>构造对称函数 g(x)=f(x)−f(2x₀−x)</b> 证单调 → 得和型;<b>比值代换 t=x₂/x₁</b> 把双变量压成单变量 → 得积型。积型常先取对数变成和型。</div>
+
+    <h2>① 现象:为什么会「偏移」</h2>
+    <div class="card">
+      <div class="eq">对称 ⟹ x₁+x₂ = 2x₀　　不对称 ⟹ x₁+x₂ ≠ 2x₀</div>
+      <p style="margin:8px 0">设 f(x) 在 x₀ 处取极值(比如极大值)。作一条水平线 y=k 去截图象,得两个交点横坐标 x₁&lt;x₀&lt;x₂,它们的<b>中点</b>是 (x₁+x₂)/2。</p>
+      <table>
+        <tr><th>图象形态</th><th>中点位置</th><th>结论</th></tr>
+        <tr><td>关于 x=x₀ <b>左右对称</b></td><td>中点恰在 x₀</td><td>x₁+x₂ = 2x₀</td></tr>
+        <tr><td>x₀ <b>右侧更平缓</b>(右边"拉得远")</td><td>中点偏到 x₀ <b>右</b>侧</td><td>x₁+x₂ &gt; 2x₀</td></tr>
+        <tr><td>x₀ <b>左侧更平缓</b></td><td>中点偏到 x₀ <b>左</b>侧</td><td>x₁+x₂ &lt; 2x₀</td></tr>
+      </table>
+      <p class="trap">⚠ 「偏移」不是玄学:哪边图象<b>更缓(斜率绝对值小)</b>,等高点就被推得更远,中点就往那边偏。判断方向就是判断「哪边陡、哪边缓」。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — 等高线截不对称曲线:看 x₁、x₂ 的中点如何偏离极值点 x₀(拖动等高线高度)</div>
+      <svg id="shiftSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>等高线 y=k <input id="shK" type="range" min="5" max="95" value="55" step="1"></label>
+        <label>不对称度 <input id="shA" type="range" min="0" max="100" value="60" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>左交点 x₁</b><span id="shX1">0</span></div>
+        <div><b>右交点 x₂</b><span id="shX2">0</span></div>
+        <div><b>中点 (x₁+x₂)/2</b><span id="shMid">0</span></div>
+        <div><b>x₁+x₂ vs 2x₀</b><span id="shCmp">0</span></div>
+      </div>
+      <p class="small">红线是等高线 y=k,两个交点就是 x₁、x₂。紫色竖线是极值点 x₀,绿色竖线是中点。<b>不对称度</b>调大 → 图象右侧更缓 → 中点绿线偏到 x₀ 右边 → x₁+x₂&gt;2x₀。</p>
+    </div>
+
+    <h2 class="b">② 核心原理:三把武器</h2>
+    <div class="card">
+      <h3>武器一 — 判偏移方向(定性,先知道要证 &gt; 还是 &lt;)</h3>
+      <p style="margin:6px 0">法一(图象法):画出 f(x) 大致图象,看极值点 x₀ 两侧<b>哪边更缓</b>,缓的一侧把等高点推远,中点就偏向那边。法二(代入验证):取具体的 x₁,算出 x₂,直接比 x₁+x₂ 与 2x₀。方向定了,才知道构造的 g(x) 该证「恒正」还是「恒负」。</p>
+      <h3>武器二 — 构造对称函数法(证和型 x₁+x₂ vs 2x₀)</h3>
+      <div class="mono">令 g(x) = f(x) − f(2x₀ − x)　（x 在极值点一侧的区间上）</div>
+      <p style="margin:6px 0">这里 2x₀−x 是 x 关于 x₀ 的<b>对称点</b>。求导判 g(x) 在该区间单调,再看端点 g(x₀)=0,得 g(x) 在区间上<b>恒正(或恒负)</b>。于是对 x₁&lt;x₀ 有 f(x₁) 与 f(2x₀−x₁) 的大小关系;结合 f(x₁)=f(x₂) 和 f 在 x₀ 另一侧的单调性,反推出 x₂ 与 2x₀−x₁ 的大小,即 <b>x₁+x₂ 与 2x₀</b> 的关系。</p>
+      <h3>武器三 — 比值代换法(证积型 x₁·x₂ vs x₀²,或指对混合)</h3>
+      <div class="mono">令 t = x₂/x₁ (&gt;1)，把 f(x₁)=f(x₂) 的两条件相除/相减，消去一个变量，化成关于 t 的单变量不等式 h(t)。</div>
+      <p style="margin:6px 0">典型如 f(x)=lnx−ax:由 lnx₁−ax₁=lnx₂−ax₂ 解出 a,再把待证 x₁x₂&gt;1(或 x₁x₂&gt;x₀²)整理成只含 t 的形式,构造 h(t) 求导证单调,用 h(1) 定符号。</p>
+      <h3>辅助 — 对数均值不等式(ALG,快速定方向或收尾)</h3>
+      <div class="eq">√(x₁x₂) &lt; (x₁−x₂)/(lnx₁−lnx₂) &lt; (x₁+x₂)/2　(x₁≠x₂,均正)</div>
+      <p style="margin:6px 0">对数均值 L(x₁,x₂)=(x₁−x₂)/(lnx₁−lnx₂) 夹在<b>几何平均与算术平均</b>之间。含 lnx 的极值点偏移,常把条件凑成对数均值形式,一步得到 x₁+x₂ 或 x₁x₂ 的不等式。<b>解答题里 ALG 需先证明</b>,选填可直接用。</p>
+      <p class="trap">⚠ 构造 g(x) 后必须写清:定义域(在哪个区间)、单调性(求导定号)、端点值 g(x₀)=0——三者缺一,结论不成立。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔄 互动 2 — 对称函数 g(x)=f(x)−f(2x₀−x) 的符号:看它在极值点一侧恒正/恒负</div>
+      <svg id="gSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="gGo">▶ 画 g(x)</button><button id="gReset">↺ 重置</button>
+        <label>不对称度 <input id="gA" type="range" min="0" max="100" value="60" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>g(x₀)</b><span id="gV0">0</span></div>
+        <div><b>g 在 x&lt;x₀ 侧</b><span id="gSign">0</span></div>
+        <div><b>推出</b><span id="gConc">0</span></div>
+        <div><b>不对称度</b><span id="gAout">0</span></div>
+      </div>
+      <p class="small">蓝曲线是 g(x)=f(x)−f(2x₀−x)。它在 x₀ 处恰好 g(x₀)=0(自己减对称点是0)。整段<b>恒正</b>或<b>恒负</b>就锁定了 x₁+x₂ 与 2x₀ 的大小。不对称度=0 时 g≡0,正好对应"不偏移"。</p>
+    </div>
+
+    <h2 class="g">③ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 证 x₁+x₂ &gt; 2x₀(和的偏移)</h3>
+      <p><b class="tag">触发信号:</b>已知 f(x₁)=f(x₂)(x₁≠x₂),f 有唯一极值点 x₀,求证 x₁+x₂&gt;2x₀(或&lt;)。最经典是 f(x)=xe⁻ˣ、f(x)=x−lnx 之类。</p>
+      <p><b class="tag">标准动作:</b>① 画图判方向;② 不妨设 x₁&lt;x₀&lt;x₂;③ 构造 g(x)=f(x)−f(2x₀−x),x∈(定义域左段);④ 求 g′(x) 定号 → g 单调 → 结合 g(x₀)=0 得 g(x)&gt;0 或 &lt;0;⑤ 由此得 f(x₁) 与 f(2x₀−x₁) 关系,再用 f 在 x&gt;x₀ 的单调性把不等式"翻译"到 x₂ 与 2x₀−x₁ 上,即 x₁+x₂&gt;2x₀。</p>
+      <p><b class="tag">示例(带解):</b>设 f(x)=xe⁻ˣ,极值点 x₀=1(f′=(1−x)e⁻ˣ,x=1 极大)。f(x₁)=f(x₂),0&lt;x₁&lt;1&lt;x₂。构造 g(x)=f(x)−f(2−x),x∈(0,1)。g′(x)=f′(x)+f′(2−x)=(1−x)e⁻ˣ+(x−1)e^(x−2)=(1−x)[e⁻ˣ−e^(x−2)]。当 x∈(0,1):1−x&gt;0,且 −x&gt;x−2 ⟺ e⁻ˣ&gt;e^(x−2),故 g′(x)&gt;0,g 增。又 g(1)=0,所以 x∈(0,1) 时 g(x)&lt;0,即 f(x)&lt;f(2−x)。取 x=x₁:f(x₁)&lt;f(2−x₁),而 f(x₁)=f(x₂),得 f(x₂)&lt;f(2−x₁)。因 2−x₁&gt;1、x₂&gt;1 且 f 在 (1,+∞) 递减,由 f(x₂)&lt;f(2−x₁) 得 x₂&gt;2−x₁,即 <b>x₁+x₂&gt;2=2x₀</b>。得证。</p>
+      <p class="trap">陷阱:构造 g 后忘了限定 x∈(0,x₀);把 f 的单调方向记反导致最后不等号翻错;端点 g(x₀)=0 没说清。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 证 x₁·x₂ &gt; x₀²(积的偏移)</h3>
+      <p><b class="tag">触发信号:</b>函数含 lnx(如 f(x)=lnx−ax、f(x)=x/lnx),求证 x₁x₂&gt;e²、x₁x₂&gt;x₀² 或 x₁x₂&gt;1 这类"积"型不等式。</p>
+      <p><b class="tag">标准动作:</b>积型 → <b>先取对数化为和型</b>:证 x₁x₂&gt;x₀² ⟺ lnx₁+lnx₂&gt;2lnx₀。令 u=lnx,若 f 关于 u 呈对称结构,就转成 A 型对称函数法;否则用比值代换 t=x₂/x₁ 或对数均值不等式收尾。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=lnx−½x²+ax 无关时,取经典 f(x)=(lnx)/x,极值点 x₀=e。f(x₁)=f(x₂)即 lnx₁/x₁=lnx₂/x₂,证 x₁x₂&gt;e²。令 u=lnx,则 x=eᵘ,条件成 u₁e⁻ᵘ¹=u₂e⁻ᵘ²,这是 φ(u)=ue⁻ᵘ 的等高点(极值点 u₀=1),由 A 型可证 u₁+u₂&gt;2,即 lnx₁+lnx₂&gt;2 ⟹ ln(x₁x₂)&gt;2 ⟹ <b>x₁x₂&gt;e²=x₀²</b>。取对数把"积"变"和"是关键一步。</p>
+      <p class="trap">陷阱:直接对 x₁x₂ 硬构造对称函数很难,一定先<b>取对数换元</b> u=lnx 化为和型;换元后极值点也要跟着换成 u₀=lnx₀。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 构造对称函数法(通用技法)</h3>
+      <p><b class="tag">触发信号:</b>题目明显给了单个极值点 x₀,要证 x₁+x₂ 型不等式,函数不含参或参数可先消去。</p>
+      <p><b class="tag">标准动作:</b>令 g(x)=f(x)−f(2x₀−x)(x 在 x₀ 左侧区间)。要点:g(x₀)=0;求 g′(x)=f′(x)+f′(2x₀−x),用不对称性定号;由单调+端点得 g 在整段恒正/恒负;最后借 f 在另一侧的单调性把结论转到 x₂ 上。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=x²−2x·lnx 之类不便时,回到通式:若已证 x∈(0,x₀) 有 f(x)&lt;f(2x₀−x)。因 f(x₁)=f(x₂)且 x₂&gt;x₀,f 在 (x₀,∞) 单调递减(设极大),则 f(x₂)=f(x₁)&lt;f(2x₀−x₁),又 2x₀−x₁&gt;x₀,单调递减下"函数值小 ⟹ 自变量大",得 x₂&gt;2x₀−x₁,即 x₁+x₂&gt;2x₀。<b>核心是"单调递减时,值小的自变量大"这一步翻译。</b></p>
+      <p class="trap">陷阱:g′(x) 定号常需要一个辅助小不等式(如 eˣ−e⁻ˣ 与 2x 比较、lnx 与 x−1 比较),这一步要单独证清楚,不能默认。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 比值代换 t=x₂/x₁(单变量化)</h3>
+      <p><b class="tag">触发信号:</b>含参数 a 且 f(x₁)=f(x₂) 能解出 a;或不等式关于 x₁、x₂ 齐次,适合用比值 t 表示。</p>
+      <p><b class="tag">标准动作:</b>令 t=x₂/x₁(t&gt;1)。由 f(x₁)=f(x₂) 消去参数(常得到用 t 表示 lnt 的式子),再把待证不等式全部用 t 表示,构造 h(t) 求导证单调,用 h(1)=0(或极限)定符号。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=lnx−ax,f(x₁)=f(x₂)⟹ lnx₁−ax₁=lnx₂−ax₂ ⟹ a=(lnx₁−lnx₂)/(x₁−x₂)。证 x₁x₂&gt;1/a²(此类结论),或证 x₁+x₂&gt;2/a。令 t=x₂/x₁&gt;1:2/a=2(x₂−x₁)/(lnx₂−lnx₁),要证 x₁+x₂&gt;2/a 即 (x₁+x₂)lnt/(x₂−x₁)&gt;2 ⟺ (t+1)lnt/(t−1)&gt;2。设 h(t)=lnt−2(t−1)/(t+1),h′(t)=(t−1)²/[t(t+1)²]&gt;0,h 增且 h(1)=0,故 t&gt;1 时 h(t)&gt;0,不等式成立,即 <b>x₁+x₂&gt;2/a</b>。得证。</p>
+      <p class="trap">陷阱:代换后一定注明 t&gt;1 的范围;h(t) 求导后要老实通分定号;别忘了 x₂−x₁&gt;0 保证不等式方向不翻。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 含参极值点偏移</h3>
+      <p><b class="tag">触发信号:</b>f(x) 带参数 a,先求 a 的范围保证有两个等高点,再证含 a 的偏移不等式(如 x₁+x₂&gt;2/a、x₁x₂&lt;1)。</p>
+      <p><b class="tag">标准动作:</b>① 由 f′(x)=0 或"两解存在"定 a 的范围;② 用 f(x₁)=f(x₂) 把 a 用 x₁、x₂ 表示(消参);③ 转成比值代换 t=x₂/x₁ 或对称函数法;④ 证单调收尾。含参题几乎总要先"消参再代换"。</p>
+      <p><b class="tag">示例(带解):</b>f(x)=xe^(−ax)(a&gt;0),极值点 x₀=1/a。f(x₁)=f(x₂)⟹ x₁e^(−ax₁)=x₂e^(−ax₂)。证 x₁+x₂&gt;2/a=2x₀。令 φ(x)=x₁e^(−ax₁) 结构与 xe⁻ˣ 同(换元 s=ax),归结为 s₁+s₂&gt;2,回到 A 型 xe⁻ˣ 的结论,再除以 a 得 x₁+x₂&gt;2/a。<b>含参就先换元 s=ax 把参数吸收掉,化到标准模型。</b></p>
+      <p class="trap">陷阱:忘了先定 a 的取值范围(否则可能没有两个等高点);消参时符号处理错;换元 s=ax 后极值点、结论都要同步缩放。</p>
+    </div>
+
+    <h2 class="v">④ 三种方法怎么选</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>对称函数法</th><th>比值代换法</th><th>对数均值不等式</th></tr>
+        <tr><td>适合</td><td>和型 x₁+x₂ vs 2x₀</td><td>含参、齐次、积型</td><td>含 lnx、快速定方向</td></tr>
+        <tr><td>关键动作</td><td>g(x)=f(x)−f(2x₀−x) 证单调</td><td>t=x₂/x₁ 化单变量 h(t)</td><td>√(x₁x₂)&lt;L&lt;(x₁+x₂)/2</td></tr>
+        <tr><td>难点</td><td>g′ 定号的辅助不等式</td><td>消参、通分定号</td><td>解答题需先证 ALG</td></tr>
+        <tr><td>积型怎么办</td><td>先取对数 u=lnx 转和型</td><td>直接用 t 表示</td><td>直接得几何/算术均值</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>选谁?</b> 只给函数、证 x₁+x₂ → <b>对称函数法</b>;带参数或要证积型 → <b>比值代换</b>;一眼含 lnx 且想快点 → <b>对数均值</b>(解答题记得先证)。三法本质相通,都是把"双变量约束"化成"单变量单调性"。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">➗ 互动 3 — 比值代换 t=x₂/x₁:双变量 (x₁,x₂) 压成单变量 h(t),看 h(t)&gt;0 恒成立</div>
+      <svg id="tSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>比值 t=x₂/x₁ <input id="tT" type="range" min="105" max="600" value="250" step="5"></label>
+      </div>
+      <div class="live">
+        <div><b>t</b><span id="tOut">0</span></div>
+        <div><b>h(t)=lnt−2(t−1)/(t+1)</b><span id="tH">0</span></div>
+        <div><b>h′(t) 符号</b><span id="tHd">0</span></div>
+        <div><b>结论</b><span id="tC">0</span></div>
+      </div>
+      <p class="small">这就是题型D里那条 h(t)=lnt−2(t−1)/(t+1)。t 从 1 起,h(1)=0,h′(t)&gt;0 使 h 递增,所以 t&gt;1 时永远 h(t)&gt;0 → 待证不等式成立。<b>双变量的死题被一根曲线秒杀。</b></p>
+    </div>
+
+    <h2 class="o">⑤ 偏移方向与"陡缓"的关系</h2>
+    <div class="card">
+      <p style="margin:6px 0">判方向是全题第一步,错了后面全错。口诀:<b>缓的一侧,把等高点推得更远,中点偏向缓侧。</b></p>
+      <div class="eq">右侧缓 ⟹ 中点偏右 ⟹ x₁+x₂ &gt; 2x₀</div>
+      <div class="eq">左侧缓 ⟹ 中点偏左 ⟹ x₁+x₂ &lt; 2x₀</div>
+      <p style="margin:8px 0">严格判据(比切线):比较 f 在 x₀ 两侧相同"落差"处离 x₀ 的距离,谁远谁缓。或用二阶信息:极值点附近曲率不对称。考试里画准图象、或代一个具体点验证,最稳。</p>
+      <p class="trap">⚠ 别凭直觉猜;"看起来对称"的函数往往不对称(xe⁻ˣ 左陡右缓)。定方向后,构造 g(x) 要证的正负号就唯一确定了。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⛰️ 互动 4 — 偏移方向与"陡缓":调节哪边更缓,实时显示 x₁+x₂ 与 2x₀ 的大小</div>
+      <canvas id="steepCv" width="700" height="300"></canvas>
+      <div class="ctrl">
+        <button class="stcase on" data-c="1">右侧更缓</button>
+        <button class="stcase" data-c="0">左右对称</button>
+        <button class="stcase" data-c="-1">左侧更缓</button>
+      </div>
+      <div class="verdict" id="steepNote"></div>
+      <p class="small">红等高线截出 x₁、x₂。切换"哪边缓",看中点(绿线)相对极值点(紫线)往哪偏。右缓→中点偏右→x₁+x₂&gt;2x₀;对称→重合→=2x₀;左缓→反过来。</p>
+    </div>
+
+    <h2 class="b">⑥ 对数均值不等式的几何意义</h2>
+    <div class="card">
+      <div class="eq">√(x₁x₂) &lt; (x₁−x₂)/(lnx₁−lnx₂) &lt; (x₁+x₂)/2</div>
+      <p style="margin:8px 0">中间那个 L=(x₁−x₂)/(lnx₁−lnx₂) 叫<b>对数均值</b>。几何上:它是曲线 y=lnx 上两点连线斜率的倒数,恰好夹在<b>几何平均 √(x₁x₂)</b> 与 <b>算术平均 (x₁+x₂)/2</b> 之间。这条链把"积"(几何均值)和"和"(算术均值)同时框住,是含 lnx 偏移题的收尾利器。</p>
+      <p style="margin:8px 0"><b>怎么用:</b> 若条件能凑出 lnx₁−lnx₂ 与 x₁−x₂ 的比,直接套 ALG:要证 x₁+x₂&gt;某值,用右半 L&lt;(x₁+x₂)/2;要证 x₁x₂&gt;某值,用左半 √(x₁x₂)&lt;L。</p>
+      <p class="trap">⚠ 解答题里 ALG <b>必须先证明</b>(令 t=x₁/x₂ 构造函数证),不能直接引用当已知;选择填空可直接用。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 5 — 对数均值不等式:几何平均 &lt; 对数均值 &lt; 算术平均(三条竖线永远这个顺序)</div>
+      <svg id="algSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>x₁ <input id="algA" type="range" min="5" max="40" value="10" step="1"></label>
+        <label>x₂ <input id="algB" type="range" min="45" max="95" value="70" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>几何平均 √(x₁x₂)</b><span id="algG">0</span></div>
+        <div><b>对数均值 L</b><span id="algL">0</span></div>
+        <div><b>算术平均 (x₁+x₂)/2</b><span id="algM">0</span></div>
+        <div><b>顺序验证</b><span id="algChk">0</span></div>
+      </div>
+      <p class="small">在 y=lnx 图上,红点是两个 (x,lnx)。三根竖线:黄=几何平均、蓝=对数均值、绿=算术平均,无论你怎么拖 x₁、x₂,永远是<b>黄&lt;蓝&lt;绿</b>。这就是偏移题收尾的靠山。</p>
+    </div>
+
+    <h2 class="g">⑦ 经典模型速查(xe⁻ˣ / lnx·x)</h2>
+    <div class="card">
+      <p style="margin:6px 0">压轴的极值点偏移几乎都能归到这几个"母函数",背熟它们的极值点和偏移方向,考场省一半时间。</p>
+      <table>
+        <tr><th>函数</th><th>极值点 x₀</th><th>偏移结论</th></tr>
+        <tr><td>f(x)=xe⁻ˣ</td><td>x₀=1(极大)</td><td>x₁+x₂ &gt; 2</td></tr>
+        <tr><td>f(x)=(lnx)/x</td><td>x₀=e(极大)</td><td>x₁+x₂ &gt; 2e，x₁x₂ &gt; e²</td></tr>
+        <tr><td>f(x)=lnx − ax</td><td>x₀=1/a(极大)</td><td>x₁+x₂ &gt; 2/a，x₁x₂ &gt; 1/a²… (视题)</td></tr>
+        <tr><td>f(x)=x − lnx（极小）</td><td>x₀=1(极小)</td><td>x₁+x₂ &gt; 2</td></tr>
+        <tr><td>f(x)=xe^(−ax)</td><td>x₀=1/a</td><td>x₁+x₂ &gt; 2/a（换元 s=ax 归 xe⁻ˣ）</td></tr>
+      </table>
+      <p class="trap">⚠ 记结论只为定方向和自查;<b>解答题过程必须完整写</b>构造与单调性,不能直接抄结论。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 6 — 经典母函数切换:xe⁻ˣ / (lnx)/x / x−lnx，标出极值点与两等高点</div>
+      <svg id="modelSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="mdcase on" data-c="0">xe⁻ˣ (x₀=1)</button>
+        <button class="mdcase" data-c="1">(lnx)/x (x₀=e)</button>
+        <button class="mdcase" data-c="2">x−lnx (x₀=1)</button>
+      </div>
+      <div class="verdict" id="modelNote"></div>
+      <p class="small">紫线=极值点 x₀,红点=一条等高线截出的 x₁、x₂,绿线=中点。三个母函数都能看到中点偏离 x₀ 的方向,对上速查表里的偏移结论。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>方向判反:</b> 没画图凭感觉,把 &gt; 写成 &lt;。务必画图或代具体点验证"哪边缓"。</p>
+      <p class="trap">② 构造 g(x) 后<b>没说定义域</b>:g(x)=f(x)−f(2x₀−x) 只在 x₀ 一侧的区间上讨论,2x₀−x 要落在定义域内。</p>
+      <p class="trap">③ <b>单调性没证清:</b> g′(x) 定号常需一个辅助不等式(eˣ−e⁻ˣ&gt;2x、lnx&lt;x−1 等),要单独证,不能默认。</p>
+      <p class="trap">④ <b>最后一步"翻译"翻错:</b> 由 f(x₂)&lt;f(2x₀−x₁) 推 x₂ 与 2x₀−x₁ 的大小时,要用对 f 在该区间的<b>单调方向</b>,减函数"值小则自变量大"别记反。</p>
+      <p class="trap">⑤ <b>积型不先取对数:</b> 证 x₁x₂&gt;x₀² 直接硬来很难,应先化 lnx₁+lnx₂&gt;2lnx₀(换元 u=lnx)转和型。</p>
+      <p class="trap">⑥ <b>比值代换忘范围:</b> t=x₂/x₁ 要写明 t&gt;1;h(t) 用 h(1)=0 定符号,别漏端点。</p>
+      <p class="trap">⑦ <b>含参题没定 a 范围:</b> 先保证有两个等高点(a 的取值),否则命题无意义。</p>
+      <p class="trap">⑧ <b>ALG 当已知用:</b> 解答题里对数均值不等式必须先证明再用,直接引用会扣分。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 偏移的本质是"函数的不对称性":</b> 若把 f 在 x₀ 处做泰勒展开 f(x₀+h)≈f(x₀)+½f″h²+⅙f‴h³+…,二次项对称、<b>三次项 f‴</b> 破坏对称。f‴ 的符号就决定了偏移方向。理解这一层,任何新函数你都能一眼判偏向。</p>
+      <p style="margin:8px 0"><b>② 三种方法是同一件事:</b> 对称函数法、比值代换、对数均值,都在把"f(x₁)=f(x₂) 这条<b>双变量约束曲线</b>"参数化成单变量,再用单调性比大小。看透这点,遇到没见过的函数也知道该往"化单变量"这个方向使劲。</p>
+      <p style="margin:8px 0"><b>③ 积型=和型换元:</b> 一切 x₁x₂ 的结论,取对数 u=lnx 后都是 u₁+u₂ 的和型。指数结构(xe^(−ax))则换 s=ax 归标准模型。<b>换元是把陌生题拉回熟悉模型的万能钥匙。</b></p>
+      <p style="margin:8px 0"><b>④ 对数均值是"和"与"积"的桥:</b> √(x₁x₂)&lt;L&lt;(x₁+x₂)/2 一条链同时框住几何均值(积)与算术均值(和)。会用它,含 lnx 的偏移常常两三行收尾——但解答题先花三行证 ALG,是稳分的投资。</p>
+      <p style="margin:8px 0"><b>⑤ 构造函数的"对称配对"思想通吃:</b> g(x)=f(x)−f(2x₀−x) 的核心是"拿自变量的镜像点配对"。同类思想还能证"两根之积/之和"型不等式、切线放缩、以及部分数列不等式——是压轴题的通用底层套路。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学压轴攻坚包 · 配套:导数与单调性、切线放缩、恒成立与能成立</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:等高线截不对称曲线,看中点偏移 ===== */
+(function(){
+  const svg=document.getElementById('shiftSvg');
+  const Ks=document.getElementById('shK'),As=document.getElementById('shA');
+  const oX1=document.getElementById('shX1'),oX2=document.getElementById('shX2'),oMid=document.getElementById('shMid'),oCmp=document.getElementById('shCmp');
+  const X0=60,Y0=20,W=580,H=270; // plot box
+  const x0math=3.0; // 极值点位置(数学坐标)
+  const xMin=0.05,xMax=8;
+  // 不对称抛物型峰:峰在 x0，两侧宽度不同 —— 用参数 a 控制右侧被"拉宽"
+  function fval(x,a){
+    // 峰值1，向下开口，左右不同"陡度"。a=0 对称，a>0 右侧更缓
+    const skewR=1+a*1.4, skewL=1;
+    const s = x<x0math? skewL : skewR;
+    const d=(x-x0math)/s;
+    return 1/(1+d*d); // 峰在 x0，值域(0,1]
+  }
+  // 由等高线 k(0~1) 反解左右交点(数值扫描)
+  function roots(k,a){
+    let x1=null,x2=null;
+    let prev=fval(xMin,a)-k, px=xMin;
+    const N=1200;
+    for(let i=1;i<=N;i++){
+      const x=xMin+(xMax-xMin)*i/N;
+      const cur=fval(x,a)-k;
+      if(prev===0){ if(x1===null)x1=px; else x2=px; }
+      if(prev*cur<0){
+        const xr=px+(x-px)*(0-prev)/(cur-prev);
+        if(xr<x0math) x1=xr; else x2=xr;
+      }
+      prev=cur;px=x;
+    }
+    return [x1,x2];
+  }
+  function sx(x){return X0+(x-xMin)/(xMax-xMin)*W;}
+  function sy(v){return Y0+H-v*H*0.9;}
+  function draw(){
+    clr(svg);
+    const k=(+Ks.value)/100;
+    const a=(+As.value)/100;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+6,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='y';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // curve
+    let d='';
+    for(let i=0;i<=600;i++){
+      const x=xMin+(xMax-xMin)*i/600;const px=sx(x),py=sy(fval(x,a));
+      d+=(i===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    // 极值点竖线
+    el(svg,'line',{x1:sx(x0math),y1:Y0,x2:sx(x0math),y2:Y0+H,stroke:VIO,'stroke-width':2.5,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:sx(x0math),y:Y0-4,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='x₀';
+    // 等高线
+    const yk=sy(k);
+    el(svg,'line',{x1:X0,y1:yk,x2:X0+W,y2:yk,stroke:RED,'stroke-width':3});
+    el(svg,'text',{x:X0+W-4,y:yk-6,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='y=k';
+    const r=roots(k,a);
+    if(r[0]!==null&&r[1]!==null){
+      const x1=r[0],x2=r[1],mid=(x1+x2)/2;
+      // 交点
+      [[x1,'x₁'],[x2,'x₂']].forEach(pr=>{
+        el(svg,'circle',{cx:sx(pr[0]),cy:yk,r:6,fill:RED,stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:sx(pr[0]),y:Y0+H+18,'font-size':12,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=pr[1];
+      });
+      // 中点竖线
+      el(svg,'line',{x1:sx(mid),y1:Y0,x2:sx(mid),y2:Y0+H,stroke:GREEN,'stroke-width':2.5,'stroke-dasharray':'4 4'});
+      el(svg,'text',{x:sx(mid),y:Y0+10,'font-size':11.5,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='中点';
+      oX1.textContent=x1.toFixed(2);oX2.textContent=x2.toFixed(2);oMid.textContent=mid.toFixed(2);
+      const sum=x1+x2, two=2*x0math;
+      const cmp = Math.abs(sum-two)<0.03? '≈2x₀' : (sum>two? '>2x₀(偏右)':'<2x₀(偏左)');
+      oCmp.textContent=cmp;
+    }else{
+      oX1.textContent='—';oX2.textContent='—';oMid.textContent='—';oCmp.textContent='k 太高';
+    }
+  }
+  Ks.oninput=As.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:对称函数 g(x)=f(x)-f(2x0-x) 的符号 ===== */
+(function(){
+  const svg=document.getElementById('gSvg');
+  const As=document.getElementById('gA');
+  const oV0=document.getElementById('gV0'),oSign=document.getElementById('gSign'),oConc=document.getElementById('gConc'),oAout=document.getElementById('gAout');
+  const X0=60,Y0=20,W=580,H=270;
+  const x0math=3.0,xMin=0.2,xMax=6;
+  function fval(x,a){
+    const skewR=1+a*1.4,skewL=1;
+    const s=x<x0math?skewL:skewR;const d=(x-x0math)/s;
+    return 1/(1+d*d);
+  }
+  function gval(x,a){return fval(x,a)-fval(2*x0math-x,a);}
+  function sx(x){return X0+(x-xMin)/(xMax-xMin)*W;}
+  let gMax=0;
+  function sy(v){return Y0+H/2 - v/(gMax||1)*(H*0.42);}
+  function draw(){
+    clr(svg);
+    const a=(+As.value)/100;
+    // find scale on left side (xMin..x0)
+    gMax=0.001;
+    for(let i=0;i<=300;i++){const x=xMin+(x0math-xMin)*i/300;gMax=Math.max(gMax,Math.abs(gval(x,a)));}
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    const zeroY=Y0+H/2;
+    el(svg,'line',{x1:X0,y1:zeroY,x2:X0+W,y2:zeroY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:zeroY-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='g=0';
+    // g curve on (xMin, x0)
+    let d='';
+    for(let i=0;i<=300;i++){
+      const x=xMin+(x0math-xMin)*i/300;const px=sx(x),py=sy(gval(x,a));
+      d+=(i===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';
+    }
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    // x0 line
+    el(svg,'line',{x1:sx(x0math),y1:Y0,x2:sx(x0math),y2:Y0+H,stroke:VIO,'stroke-width':2.5,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:sx(x0math),y:Y0+H+16,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='x₀';
+    el(svg,'text',{x:X0+10,y:Y0+14,'font-size':12.5,'font-weight':900,fill:BLUE}).textContent='g(x)=f(x)−f(2x₀−x)，x∈(0,x₀)';
+    // 采样一点判号
+    const xm=xMin+(x0math-xMin)*0.5;const gm=gval(xm,a);
+    const g0=gval(x0math,a);
+    oV0.textContent=g0.toFixed(3);
+    if(a<0.02){oSign.textContent='≡0';oConc.textContent='不偏移 x₁+x₂=2x₀';}
+    else{oSign.textContent=gm<0?'恒负 <0':'恒正 >0';oConc.textContent=gm<0?'x₁+x₂>2x₀':'x₁+x₂<2x₀';}
+    oAout.textContent=(a*100).toFixed(0)+'%';
+  }
+  As.oninput=draw;
+  document.getElementById('gGo').onclick=draw;
+  document.getElementById('gReset').onclick=()=>{As.value=60;draw();};
+  draw();
+})();
+
+/* ===== 互动3:比值代换 t=x2/x1 -> h(t) ===== */
+(function(){
+  const svg=document.getElementById('tSvg');
+  const Ts=document.getElementById('tT');
+  const oT=document.getElementById('tOut'),oH=document.getElementById('tH'),oHd=document.getElementById('tHd'),oC=document.getElementById('tC');
+  const X0=60,Y0=20,W=580,H=260;
+  const tMin=1.0,tMax=6.5;
+  function hval(t){return Math.log(t)-2*(t-1)/(t+1);}
+  function hd(t){return (t-1)*(t-1)/(t*(t+1)*(t+1));} // >0
+  function sx(t){return X0+(t-tMin)/(tMax-tMin)*W;}
+  let hMax=1;
+  function sy(v){return Y0+H - v/hMax*(H*0.9);}
+  function draw(){
+    clr(svg);
+    hMax=0.001;for(let i=0;i<=300;i++){const t=tMin+(tMax-tMin)*i/300;hMax=Math.max(hMax,hval(t));}
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='h';
+    el(svg,'text',{x:X0+W,y:Y0+H+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // h(t) curve
+    let d='';
+    for(let i=0;i<=300;i++){const t=tMin+(tMax-tMin)*i/300;const px=sx(t),py=sy(hval(t));d+=(i===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:GREEN,'stroke-width':3.5});
+    // t=1 mark
+    el(svg,'circle',{cx:sx(1),cy:sy(0),r:5,fill:INK});
+    el(svg,'text',{x:sx(1)+6,y:sy(0)+16,'font-size':11.5,'font-weight':800,fill:INK}).textContent='h(1)=0';
+    el(svg,'text',{x:X0+12,y:Y0+16,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='h(t)=lnt−2(t−1)/(t+1)，t>1 恒正';
+    // current t
+    const t=(+Ts.value)/100;
+    const py=sy(hval(t));
+    el(svg,'line',{x1:sx(t),y1:Y0,x2:sx(t),y2:Y0+H,stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+    el(svg,'circle',{cx:sx(t),cy:py,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    oT.textContent=t.toFixed(2);oH.textContent=hval(t).toFixed(4);
+    oHd.textContent=hd(t)>0?'>0 (增)':'0';
+    oC.textContent=hval(t)>0?'h(t)>0 ✓':'=0';
+  }
+  Ts.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动4:偏移方向与陡缓(canvas) ===== */
+(function(){
+  const cv=document.getElementById('steepCv');const ctx=cv.getContext('2d');
+  const note=document.getElementById('steepNote');
+  let c=1;
+  document.querySelectorAll('.stcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.stcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  const X0=60,Y0=20,W=580,H=250;
+  const x0=3.0,xMin=0.1,xMax=8;
+  function fval(x){
+    let a=0;
+    if(c===1)a=0.7; else if(c===-1)a=-0.7; // + right slower, - left slower
+    const skewR=1+a, skewL=1-a;
+    const s=x<x0?skewL:skewR;const d=(x-x0)/(s<=0.05?0.05:s);
+    return 1/(1+d*d);
+  }
+  function sx(x){return X0+(x-xMin)/(xMax-xMin)*W;}
+  function sy(v){return Y0+H-v*H*0.85;}
+  function roots(k){
+    let x1=x0,x2=x0,prev=fval(xMin)-k,px=xMin;
+    for(let i=1;i<=1000;i++){const x=xMin+(xMax-xMin)*i/1000;const cur=fval(x)-k;
+      if(prev*cur<0){const xr=px+(x-px)*(0-prev)/(cur-prev);if(xr<x0)x1=xr;else x2=xr;}
+      prev=cur;px=x;}
+    return [x1,x2];
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // axes
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(X0,Y0);ctx.lineTo(X0,Y0+H);ctx.lineTo(X0+W,Y0+H);ctx.stroke();
+    // curve
+    ctx.strokeStyle=BLUE;ctx.lineWidth=3.5;ctx.beginPath();
+    for(let i=0;i<=600;i++){const x=xMin+(xMax-xMin)*i/600;const px=sx(x),py=sy(fval(x));if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+    ctx.stroke();
+    // x0 line
+    ctx.strokeStyle=VIO;ctx.lineWidth=2.5;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(sx(x0),Y0);ctx.lineTo(sx(x0),Y0+H);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=VIO;ctx.font='bold 12px sans-serif';ctx.fillText('x₀',sx(x0)-8,Y0+12);
+    // level line
+    const k=0.55;const yk=sy(k);
+    ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X0,yk);ctx.lineTo(X0+W,yk);ctx.stroke();
+    const r=roots(k);const x1=r[0],x2=r[1],mid=(x1+x2)/2;
+    // points
+    ctx.fillStyle=RED;
+    [[x1,'x₁'],[x2,'x₂']].forEach(pr=>{ctx.beginPath();ctx.arc(sx(pr[0]),yk,6,0,2*Math.PI);ctx.fill();ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';ctx.fillText(pr[1],sx(pr[0])-6,Y0+H+16);ctx.fillStyle=RED;});
+    // mid line
+    ctx.strokeStyle=GREEN;ctx.lineWidth=2.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(sx(mid),Y0);ctx.lineTo(sx(mid),Y0+H);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=GREEN;ctx.font='bold 11px sans-serif';ctx.fillText('中点',sx(mid)-14,Y0+10);
+    const sum=x1+x2,two=2*x0;
+    let msg;
+    if(c===1)msg='右侧更缓 → 中点偏到 x₀ 右边 → x₁+x₂ = '+sum.toFixed(2)+' > 2x₀ = '+two.toFixed(1);
+    else if(c===0)msg='左右对称 → 中点与 x₀ 重合 → x₁+x₂ = '+sum.toFixed(2)+' ≈ 2x₀ = '+two.toFixed(1);
+    else msg='左侧更缓 → 中点偏到 x₀ 左边 → x₁+x₂ = '+sum.toFixed(2)+' < 2x₀ = '+two.toFixed(1);
+    note.textContent='👉 '+msg;
+    note.style.borderColor=c===1?ORANGE:c===0?INK:BLUE;
+  }
+  draw();
+})();
+
+/* ===== 互动5:对数均值不等式 ===== */
+(function(){
+  const svg=document.getElementById('algSvg');
+  const As=document.getElementById('algA'),Bs=document.getElementById('algB');
+  const oG=document.getElementById('algG'),oL=document.getElementById('algL'),oM=document.getElementById('algM'),oChk=document.getElementById('algChk');
+  const X0=55,Y0=20,W=600,H=250;
+  const xMin=0,xMax=11;
+  function sx(x){return X0+(x-xMin)/(xMax-xMin)*W;}
+  function ly(v){ // for lnx curve, map ln range
+    const lmin=Math.log(0.3),lmax=Math.log(11);
+    return Y0+H-(v-lmin)/(lmax-lmin)*H*0.9;
+  }
+  function draw(){
+    clr(svg);
+    let x1=(+As.value)/10, x2=(+Bs.value)/10;
+    if(x2<=x1)x2=x1+0.5;
+    const g=Math.sqrt(x1*x2);
+    const L=(x1-x2)/(Math.log(x1)-Math.log(x2));
+    const m=(x1+x2)/2;
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-6,y:Y0+8,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='ln x';
+    el(svg,'text',{x:X0+W,y:Y0+H+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // y=lnx curve
+    let d='';
+    for(let i=0;i<=300;i++){const x=0.3+(11-0.3)*i/300;const px=sx(x),py=ly(Math.log(x));d+=(i===0?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:INK,'stroke-width':2.5});
+    el(svg,'text',{x:X0+W-8,y:ly(Math.log(10))-6,'font-size':11.5,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='y=lnx';
+    // two red points
+    [x1,x2].forEach((x,i)=>{
+      el(svg,'circle',{cx:sx(x),cy:ly(Math.log(x)),r:6,fill:RED,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:sx(x),y:Y0+H+16,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=(i===0?'x₁':'x₂');
+    });
+    // chord
+    el(svg,'line',{x1:sx(x1),y1:ly(Math.log(x1)),x2:sx(x2),y2:ly(Math.log(x2)),stroke:RED,'stroke-width':2,'stroke-dasharray':'5 4'});
+    // three vertical means
+    function vline(x,col,lab){
+      el(svg,'line',{x1:sx(x),y1:Y0+6,x2:sx(x),y2:Y0+H,stroke:col,'stroke-width':3,'stroke-dasharray':'3 3'});
+      el(svg,'text',{x:sx(x),y:Y0,'font-size':10.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+    }
+    vline(g,'#b8860b','几何');
+    vline(L,BLUE,'对数');
+    vline(m,GREEN,'算术');
+    oG.textContent=g.toFixed(3);oL.textContent=L.toFixed(3);oM.textContent=m.toFixed(3);
+    oChk.textContent=(g<L&&L<m)?'几何<对数<算术 ✓':'—';
+  }
+  As.oninput=Bs.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动6:经典母函数切换 ===== */
+(function(){
+  const svg=document.getElementById('modelSvg');
+  const note=document.getElementById('modelNote');
+  let c=0;
+  document.querySelectorAll('.mdcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.mdcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  const X0=60,Y0=20,W=580,H=270;
+  // 每个模型:f, 定义域, x0, 等高线k, 是极小?
+  const models=[
+    {f:x=>x*Math.exp(-x), x0:1, xMin:0.05, xMax:6, k:0.28, min:false, name:'f(x)=xe⁻ˣ', concl:'中点偏右 → x₁+x₂ > 2 = 2x₀'},
+    {f:x=>Math.log(x)/x, x0:Math.E, xMin:1.05, xMax:14, k:0.28, min:false, name:'f(x)=(lnx)/x', concl:'中点偏右 → x₁+x₂ > 2e，x₁x₂ > e²'},
+    {f:x=>x-Math.log(x), x0:1, xMin:0.12, xMax:5.2, k:2.3, min:true, name:'f(x)=x−lnx', concl:'中点偏右 → x₁+x₂ > 2 = 2x₀'}
+  ];
+  function draw(){
+    clr(svg);
+    const M=models[c];
+    const f=M.f, xMin=M.xMin, xMax=M.xMax, x0=M.x0, k=M.k;
+    // value range
+    let vLo=Infinity,vHi=-Infinity;
+    for(let i=0;i<=400;i++){const x=xMin+(xMax-xMin)*i/400;const v=f(x);if(isFinite(v)){vLo=Math.min(vLo,v);vHi=Math.max(vHi,v);}}
+    const pad=(vHi-vLo)*0.08;vLo-=pad;vHi+=pad;
+    function sx(x){return X0+(x-xMin)/(xMax-xMin)*W;}
+    function sy(v){return Y0+H-(v-vLo)/(vHi-vLo)*H;}
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:Y0+H+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    // curve
+    let d='';let started=false;
+    for(let i=0;i<=500;i++){const x=xMin+(xMax-xMin)*i/500;const v=f(x);if(!isFinite(v))continue;const px=sx(x),py=sy(v);d+=(!started?'M':'L')+px.toFixed(1)+','+py.toFixed(1)+' ';started=true;}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    el(svg,'text',{x:X0+12,y:Y0+16,'font-size':12.5,'font-weight':900,fill:BLUE}).textContent=M.name;
+    // x0 line
+    el(svg,'line',{x1:sx(x0),y1:Y0,x2:sx(x0),y2:Y0+H,stroke:VIO,'stroke-width':2.5,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:sx(x0),y:Y0+H+16,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'middle'}).textContent='x₀';
+    // level line + roots
+    const yk=sy(k);
+    el(svg,'line',{x1:X0,y1:yk,x2:X0+W,y2:yk,stroke:RED,'stroke-width':3});
+    // find roots
+    let x1=null,x2=null,prev=f(xMin)-k,px=xMin;
+    for(let i=1;i<=2000;i++){const x=xMin+(xMax-xMin)*i/2000;const cur=f(x)-k;
+      if(isFinite(prev)&&isFinite(cur)&&prev*cur<0){const xr=px+(x-px)*(0-prev)/(cur-prev);if(xr<x0)x1=xr;else x2=xr;}
+      prev=cur;px=x;}
+    if(x1!==null&&x2!==null){
+      [[x1,'x₁'],[x2,'x₂']].forEach(pr=>{
+        el(svg,'circle',{cx:sx(pr[0]),cy:yk,r:6,fill:RED,stroke:INK,'stroke-width':2});
+        el(svg,'text',{x:sx(pr[0]),y:yk-10,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=pr[1];
+      });
+      const mid=(x1+x2)/2;
+      el(svg,'line',{x1:sx(mid),y1:Y0,x2:sx(mid),y2:Y0+H,stroke:GREEN,'stroke-width':2.5,'stroke-dasharray':'4 4'});
+      el(svg,'text',{x:sx(mid),y:Y0+10,'font-size':11,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='中点';
+      note.textContent='👉 '+M.name+'：x₀='+x0.toFixed(2)+'，x₁='+x1.toFixed(2)+'，x₂='+x2.toFixed(2)+'，中点='+mid.toFixed(2)+'。'+M.concl;
+    }else{
+      note.textContent='👉 '+M.name+'：'+M.concl;
+    }
+    note.style.borderColor=c===0?BLUE:c===1?GREEN:ORANGE;
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 极值点偏移问题的标准条件和常见结论是什么？",a:"条件：f(x₁)=f(x₂)（x₁≠x₂），f 有唯一极值点 x₀。结论：证 x₁+x₂>2x₀（和型）或 x₁·x₂>x₀²（积型）等不等式。"},
+ {q:"2. 图象不对称如何导致偏移？方向怎么判？",a:"图象哪一侧更平缓，就把该侧的等高点推得更远，中点（x₁+x₂)/2 偏向缓侧。右侧缓→中点偏右→x₁+x₂>2x₀；左侧缓则相反。判方向：画图或代入具体点验证。"},
+ {q:"3. 构造对称函数法的函数怎么构造？三个必须交代的点？",a:"令 g(x)=f(x)−f(2x₀−x)，2x₀−x 是 x 关于 x₀ 的对称点。必须交代：① 定义域（x 在 x₀ 一侧区间）；② 单调性（g′ 定号）；③ 端点 g(x₀)=0。"},
+ {q:"4. 用对称函数法证 x₁+x₂>2x₀，最后一步如何“翻译”到 x₂？",a:"由 g 单调+端点得 f(x₁) 与 f(2x₀−x₁) 的大小；结合 f(x₁)=f(x₂) 及 f 在 x₀ 另一侧的单调性，把不等式转到 x₂ 与 2x₀−x₁ 上。减函数下“函数值小则自变量大”，得 x₂>2x₀−x₁，即 x₁+x₂>2x₀。"},
+ {q:"5. f(x)=xe⁻ˣ，f(x₁)=f(x₂)，证 x₁+x₂>2。构造什么？g′ 怎么定号？",a:"x₀=1，构造 g(x)=f(x)−f(2−x)，x∈(0,1)。g′(x)=(1−x)[e⁻ˣ−e^(x−2)]，x∈(0,1) 时 1−x>0 且 e⁻ˣ>e^(x−2)，故 g′>0，g 增，又 g(1)=0，得 g(x)<0，f(x₁)<f(2−x₁)，最终 x₁+x₂>2。"},
+ {q:"6. 证积型 x₁·x₂>x₀² 的通用第一步是什么？",a:"先取对数化为和型：x₁x₂>x₀² ⟺ lnx₁+lnx₂>2lnx₀。令 u=lnx 换元，把积型转成 u₁+u₂ 的和型，再用对称函数法或比值代换。"},
+ {q:"7. 比值代换法的关键代换和收尾方式？",a:"令 t=x₂/x₁（t>1）。用 f(x₁)=f(x₂) 消去参数，把待证不等式化成只含 t 的 h(t)，求导证 h 单调，用 h(1)=0 定符号得 h(t)>0（t>1）。"},
+ {q:"8. f(x)=lnx−ax，f(x₁)=f(x₂)，证 x₁+x₂>2/a 的关键不等式是什么？",a:"消参 a=(lnx₁−lnx₂)/(x₁−x₂)，令 t=x₂/x₁>1，化为证 (t+1)lnt/(t−1)>2，即 h(t)=lnt−2(t−1)/(t+1)>0。h′(t)=(t−1)²/[t(t+1)²]>0，h(1)=0，故成立。"},
+ {q:"9. 含参极值点偏移题的通用步骤？",a:"① 定 a 的取值范围（保证有两个等高点）；② 用 f(x₁)=f(x₂) 消参；③ 转比值代换或对称函数法；④ 证单调收尾。指数型常换元 s=ax 归标准模型。"},
+ {q:"10. 对数均值不等式的内容？在解答题中使用要注意什么？",a:"√(x₁x₂) < (x₁−x₂)/(lnx₁−lnx₂) < (x₁+x₂)/2（x₁≠x₂，均正）。即几何平均<对数均值<算术平均。解答题中必须先证明（令 t=x₁/x₂ 构造函数证），不能直接当已知引用。"},
+ {q:"11. f(x)=(lnx)/x，证 x₁x₂>e²。如何换元转化？",a:"极值点 x₀=e。令 u=lnx（x=eᵘ），条件化为 φ(u)=ue⁻ᵘ 的等高点（极值点 u₀=1），由 xe⁻ˣ 模型得 u₁+u₂>2，即 lnx₁+lnx₂>2 ⟹ x₁x₂>e²。"},
+ {q:"12. 从泰勒展开看，偏移方向由哪一项决定？为什么？",a:"f(x₀+h)≈f(x₀)+½f″h²+⅙f‴h³+…，二次项对称、三次项 f‴ 破坏对称，故偏移方向由 f‴(x₀) 的符号决定。这解释了为什么不对称的高阶结构导致 x₁+x₂ 偏离 2x₀。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

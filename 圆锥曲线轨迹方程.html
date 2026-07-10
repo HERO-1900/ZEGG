@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆锥曲线的轨迹方程 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>圆锥曲线的轨迹方程</h1>
+    <p class="lead">一个点在动，它走过的路线是什么形状、满足什么方程？这就是<b>求轨迹方程</b>。它是圆锥曲线的入口题:把「几何条件」翻译成「x、y 的方程」再化简。四把钥匙——<b>直接法、定义法、相关点法、参数法</b>——覆盖 95% 的轨迹题。学会挑钥匙,比死算更重要。</p>
+
+    <div class="say">🗣️ <b>求轨迹(人话版):</b> 给动点设一个坐标 <b>P(x,y)</b>,把题目那句几何条件(到某点距离、到某线距离、和谁有关系……)<b>翻译成一个关于 x、y 的方程</b>,再化简整理——得到的就是轨迹方程。四把钥匙:①<b>直接法</b>(条件直接列等式)②<b>定义法</b>(一眼看出是圆/椭圆/双曲线/抛物线,直接写标准方程)③<b>相关点法/代入法</b>(动点跟着另一个在已知曲线上的点跑)④<b>参数法</b>(引个参数分别表示 x、y,再消掉参数)。最后一步别忘:<b>标注范围</b>,挖掉不满足的点。</div>
+
+    <div class="keybox"><b>通用五步:</b> ① 设动点 <b>P(x,y)</b>;② 把几何条件写成含 x、y 的<b>等式</b>;③ 代入坐标/距离公式;④ <b>化简</b>成标准形式;⑤ <b>注明范围</b>(x 或 y 的取值,挖去使图形不成立的点)。核心口诀:<b>能定义就别硬算,能代入就别设参,实在不行才参数消参。</b></div>
+
+    <h2>① 直接法:条件直接列方程</h2>
+    <div class="card">
+      <div class="eq">设 P(x,y) → 把条件写成 f(x,y)=0 → 化简</div>
+      <p style="margin:8px 0"><b>什么时候用:</b> 题目给的条件能<b>直接</b>用 x、y 写出等式(距离、斜率、垂直、比值……),就设 P(x,y) 硬列硬化。这是最朴素、最万能的一把钥匙。</p>
+      <table>
+        <tr><th>常用翻译</th><th>写成 x、y</th></tr>
+        <tr><td>P 到定点 A(a,b) 的距离</td><td>√((x−a)²+(y−b)²)</td></tr>
+        <tr><td>P 到定直线 x=c 的距离</td><td>|x−c|</td></tr>
+        <tr><td>两条直线 PA、PB 垂直</td><td>k<sub>PA</sub>·k<sub>PB</sub>=−1</td></tr>
+        <tr><td>P 到两点距离之比 =λ</td><td>|PA|=λ|PB| 两边平方</td></tr>
+      </table>
+      <p class="trap">⚠ 化简时两边平方要留意:平方可能引入不满足原式的点(如分母为零、比值符号),最后必须<b>回头验范围、挖点</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📝 互动 1 — 直接法:动点 P 到 A、B 距离之比为定值 λ,拖 λ 看轨迹从直线→圆(阿波罗尼斯圆)</div>
+      <svg id="d1Svg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>距离比 λ=|PA|/|PB| <input id="d1L" type="range" min="0.4" max="2.6" value="2" step="0.1"></label>
+      </div>
+      <div class="live">
+        <div><b>比值 λ</b><span id="d1Lv">2</span></div>
+        <div><b>轨迹类型</b><span id="d1Type">圆</span></div>
+        <div><b>圆心 x 坐标</b><span id="d1Cx">0</span></div>
+        <div><b>半径 r</b><span id="d1R">0</span></div>
+      </div>
+      <p class="small">A(−2,0)、B(2,0) 固定。条件 |PA|=λ|PB|,设 P(x,y) 平方展开化简 → λ≠1 时是<b>圆</b>(阿波罗尼斯圆),λ=1 时退化成<b>中垂线</b>(直线)。红点是描出的轨迹。</p>
+    </div>
+
+    <h2 class="b">② 定义法:一眼认出圆锥曲线</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>什么时候用:</b> 动点满足的条件<b>正好是</b>某圆锥曲线的定义,就别列方程硬算,直接判类型、定 a/b/c、写<b>标准方程</b>。这是最快的一把钥匙。</p>
+      <table>
+        <tr><th>条件</th><th>轨迹</th><th>关键关系</th></tr>
+        <tr><td>到定点距离 = 定长 r</td><td>圆</td><td>半径 = r</td></tr>
+        <tr><td>到两定点距离之<b>和</b> = 2a(2a&gt;|F₁F₂|)</td><td>椭圆</td><td>c=½|F₁F₂|,b²=a²−c²</td></tr>
+        <tr><td>到两定点距离之<b>差的绝对值</b> = 2a(2a&lt;|F₁F₂|)</td><td>双曲线</td><td>c=½|F₁F₂|,b²=c²−a²</td></tr>
+        <tr><td>到定点距离 = 到定直线距离</td><td>抛物线</td><td>定点=焦点,定直线=准线</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>用法:</b> 认出类型后,由两定点求出 <b>c</b>、由「和/差」求出 <b>a</b>,再算 b,焦点在 x 轴还是 y 轴由两定点位置决定 → 直接套标准方程。</p>
+      <p class="trap">⚠ 用「和/差」判断前<b>必须验常数与焦距的大小关系</b>:和 2a 必须 &gt; 焦距才是椭圆(=焦距是线段,&lt;焦距无轨迹);差 2a 必须 &lt; 焦距才是双曲线(=焦距是射线)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🥚 互动 2 — 定义法·椭圆:到两定点 F₁、F₂ 距离之和 =2a 恒定,拉动 P 看 |PF₁|+|PF₂| 始终不变,描出椭圆</div>
+      <svg id="elSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="elGo">▶ 绕一圈描点</button><button id="elReset">↺ 重置</button>
+        <label>距离和 2a <input id="elA" type="range" min="9" max="15" value="12" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>|PF₁|</b><span id="elR1">0</span></div>
+        <div><b>|PF₂|</b><span id="elR2">0</span></div>
+        <div><b>|PF₁|+|PF₂|</b><span id="elSum">0</span></div>
+        <div><b>半长轴 a / 半短轴 b</b><span id="elAB">0</span></div>
+      </div>
+      <p class="small">两焦点 F₁、F₂ 固定,和 2a 恒定。无论 P 转到哪,两段距离之和都锁死 = 2a → 这就是椭圆定义。由 c(半焦距)和 a 算出 b=√(a²−c²),直接得标准方程。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 3 — 定义法·抛物线:到定点 F 距离 = 到准线距离,拖 P 看两段永远相等,描出抛物线</div>
+      <svg id="paSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="paGo">▶ 扫描描点</button><button id="paReset">↺ 重置</button>
+        <label>焦准距 p <input id="paP" type="range" min="1" max="4" value="2" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>到焦点 |PF|</b><span id="paPF">0</span></div>
+        <div><b>到准线距离 d</b><span id="paD">0</span></div>
+        <div><b>差 |PF|−d</b><span id="paDiff">0</span></div>
+        <div><b>方程 y²=</b><span id="paEq">0</span></div>
+      </div>
+      <p class="small">焦点 F(p/2,0),准线 x=−p/2。动点 P 到焦点的距离 |PF| 与到准线的距离 d <b>永远相等</b>(差为0)→ 抛物线定义,方程 y²=2px。</p>
+    </div>
+
+    <h2 class="g">③ 相关点法(代入法):动点跟着已知曲线上的点跑</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>什么时候用:</b> 动点 P 不是自由的,而是<b>依赖</b>另一个点 Q,而 Q 在一条<b>已知曲线</b>上运动(如 Q 在某圆/椭圆上,P 是 Q 的中点、定比分点、对称点……)。</p>
+      <h3>标准三步</h3>
+      <div class="mono">第1步:设 P(x,y),设相关点 Q(x₀,y₀)。</div>
+      <div class="mono">第2步:用 P 的坐标把 Q 表示出来 → x₀=…(x,y)、y₀=…(x,y)。</div>
+      <div class="mono">第3步:把 x₀、y₀ <b>代入 Q 所在的已知曲线方程</b>,整理成 x、y 的方程。</div>
+      <p style="margin:8px 0"><b>例:</b> Q 在圆 x₀²+y₀²=4 上,P 是 OQ 的中点,则 x₀=2x、y₀=2y。代入:(2x)²+(2y)²=4 → x²+y²=1。轨迹是半径 1 的圆。</p>
+      <p class="trap">⚠ 代入的必须是 <b>Q 所在的那条已知曲线</b>的方程,不是 P 的。方向别搞反:要用 P 表示 Q(把 Q 的坐标写成 x、y 的式子),再代回 Q 的方程。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 4 — 相关点法:Q 在圆上转,P 为 OQ 上的定比分点,描出 P 的轨迹(也是圆,半径缩放)</div>
+      <svg id="rpSvg" viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="rpGo">▶ 让 Q 转一圈</button><button id="rpReset">↺ 重置</button>
+        <label>分点比例 k(P=k·Q) <input id="rpK" type="range" min="0.25" max="1" value="0.5" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>Q 所在圆半径 R</b><span id="rpR">2</span></div>
+        <div><b>比例 k</b><span id="rpKv">0.5</span></div>
+        <div><b>x₀=x/k,y₀=y/k 代入</b><span id="rpSub">—</span></div>
+        <div><b>P 轨迹半径 kR</b><span id="rpr">1</span></div>
+      </div>
+      <p class="small">蓝点 Q 在半径 R 的已知圆上跑,红点 P=k·Q(定比分点)。用 P 表示 Q:x₀=x/k、y₀=y/k,代入 x₀²+y₀²=R² → x²+y²=(kR)²。P 的轨迹是缩放后的圆。</p>
+    </div>
+
+    <h2 class="o">④ 参数法:引参数分别表示 x、y,再消参</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>什么时候用:</b> x、y 不好直接建立关系,但都能用<b>同一个中间量(参数)</b>(角度 θ、斜率 k、时间 t……)分别表示出来。写出 x=f(t)、y=g(t),再<b>消去 t</b>。</p>
+      <table>
+        <tr><th>常用参数</th><th>典型消参手法</th></tr>
+        <tr><td>角度 θ(圆/椭圆上的点)</td><td>x=acosθ、y=bsinθ → 用 sin²+cos²=1 消 θ</td></tr>
+        <tr><td>斜率 k(过定点的动直线)</td><td>把 k 从 x、y 两式中解出后令相等</td></tr>
+        <tr><td>某点坐标 t(如动弦端点)</td><td>解出 t 回代,或两式相加减消 t</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>例:</b> x=2+3cosθ、y=1+3sinθ。移项:cosθ=(x−2)/3、sinθ=(y−1)/3,平方相加 → (x−2)²+(y−1)²=9,一个圆。</p>
+      <p class="trap">⚠ 消参后要检查<b>参数的取值范围</b>是否限制了 x、y 的范围(如 θ 只在部分区间取值,轨迹就是圆/椭圆的一段弧,要挖点)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌀 互动 5 — 参数法:θ 从 0 转到 2π,x=acosθ、y=bsinθ 逐点描出椭圆,右侧显示消参过程</div>
+      <svg id="ptSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="ptGo">▶ 转动 θ</button><button id="ptReset">↺ 重置</button>
+        <label>a <input id="ptA" type="range" min="2" max="6" value="5" step="0.5"></label>
+        <label>b <input id="ptB" type="range" min="2" max="6" value="3" step="0.5"></label>
+      </div>
+      <div class="live">
+        <div><b>当前 θ</b><span id="ptTh">0°</span></div>
+        <div><b>x=a·cosθ</b><span id="ptX">0</span></div>
+        <div><b>y=b·sinθ</b><span id="ptY">0</span></div>
+        <div><b>(x/a)²+(y/b)²</b><span id="ptCheck">1.00</span></div>
+      </div>
+      <p class="small">参数 θ 一变,(x,y) 就描出一个点。cosθ=x/a、sinθ=y/b,平方相加消 θ → (x/a)²+(y/b)²=1,标准椭圆。右下验证值恒 ≈1。</p>
+    </div>
+
+    <h2 class="v">⑤ 直接法列方程 · 逐步化简演示</h2>
+    <div class="card">
+      <p style="margin:6px 0">直接法最怕「设了坐标不会化简」。看一个到定点与定直线满足特定关系的例子,一步步展开、移项、平方、合并,得到标准方程。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧮 互动 6 — 直接法化简播放器:动点到 F(1,0) 距离 = 到直线 x=−1 距离,逐步化简出 y²=4x</div>
+      <svg id="smSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="smNext">▶ 下一步</button><button id="smReset">↺ 从头</button>
+      </div>
+      <div class="verdict" id="smNote"></div>
+      <p class="small">把「√((x−1)²+y²) = |x+1|」两边平方、展开、消去公共项,一步步化到 y²=4x(一条抛物线,焦点 (1,0),准线 x=−1)。点「下一步」逐行推。</p>
+    </div>
+
+    <h2 class="r">⑥ 轨迹范围·挖点演示</h2>
+    <div class="card">
+      <p style="margin:6px 0">求出方程只是一半,<b>范围与挖点</b>是尖子生和普通生的分水岭。中点、比值、平方等操作常会让某些点「其实取不到」,必须挖掉。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✂️ 互动 7 — 挖点:动弦中点轨迹是圆,但端点重合处取不到 → 该点被挖去(空心)</div>
+      <svg id="hoSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="hoToggle">切换:显示挖点 / 隐藏</button>
+      </div>
+      <div class="live">
+        <div><b>轨迹形状</b><span id="hoShape">圆</span></div>
+        <div><b>方程</b><span id="hoEq">x²+y²=1</span></div>
+        <div><b>需挖去的点</b><span id="hoHole">(1,0)</span></div>
+        <div><b>范围写法</b><span id="hoRange">x≠1</span></div>
+      </div>
+      <p class="small">整条曲线是完整轨迹,但红色<b>空心点</b>是那些在原几何条件下<b>取不到</b>的位置(如动直线与坐标轴平行时中点跑到端点、分母为零)。答案里要写「挖去某点」或注明 x/y 的范围。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 直接法列方程型</h3>
+      <p><b class="tag">触发信号:</b>条件能<b>直接</b>用 x、y 写出(距离、斜率乘积、垂直、比值),没有明显的「定义特征」也没有依赖别的点。</p>
+      <p><b class="tag">标准动作:</b>设 P(x,y) → 按条件列等式(距离用平方根、斜率用 (y−y₀)/(x−x₀)) → 两边平方去根号 → 展开合并 → 整理成标准形式 → 标范围。</p>
+      <p><b class="tag">示例(带解):</b>动点 P 到 A(−2,0) 的距离是到 B(2,0) 距离的 2 倍。设 P(x,y):√((x+2)²+y²)=2√((x−2)²+y²)。两边平方:(x+2)²+y²=4[(x−2)²+y²]。展开:x²+4x+4+y²=4x²−16x+16+4y²。移项合并:3x²+3y²−20x+12=0 → x²+y²−(20/3)x+4=0,即 (x−10/3)²+y²=64/9,是圆(阿波罗尼斯圆)。</p>
+      <p class="trap">陷阱:平方后不检验;列错距离公式;斜率型漏掉分母为零(即某条竖直位置)要挖去。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 定义法识别圆锥曲线型</h3>
+      <p><b class="tag">触发信号:</b>条件出现「到两定点距离之<b>和/差</b>」「到一定点与一定直线距离<b>相等/成比例</b>」「到定点距离为定长」——这就是定义特征。</p>
+      <p><b class="tag">标准动作:</b>先辨类型(和→椭圆、差→双曲线、点与线相等→抛物线、点定长→圆);验常数与焦距关系;定 c 与 a,算 b;定焦点在哪个轴;直接写标准方程。</p>
+      <p><b class="tag">示例(带解):</b>动点到 F₁(−3,0)、F₂(3,0) 距离之和为 10。和 2a=10&gt;|F₁F₂|=6 ✓ 是椭圆。a=5,c=3,b²=a²−c²=25−9=16。焦点在 x 轴 → x²/25+y²/16=1。</p>
+      <p class="trap">陷阱:不验「和&gt;焦距 / 差&lt;焦距」就下结论;把 2a 当成 a;焦点轴判断错(看两定点在哪个轴上)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 相关点法(代入法)型</h3>
+      <p><b class="tag">触发信号:</b>出现两个点:一个动点 P 是要求的,另一个点 Q「在已知曲线(圆/椭圆/抛物线)上运动」,且 P 与 Q 有明确几何关系(中点、定比分点、对称、连线定长)。</p>
+      <p><b class="tag">标准动作:</b>设 P(x,y)、Q(x₀,y₀) → 用 P 的坐标表示 Q(x₀=…、y₀=…) → 把 x₀、y₀ <b>代入 Q 所在的已知曲线方程</b> → 整理得 P 的轨迹。</p>
+      <p><b class="tag">示例(带解):</b>Q 在圆 x₀²+y₀²=9 上,M 是 Q 与定点 A(6,0) 连线的中点,求 M 的轨迹。设 M(x,y):x=(x₀+6)/2、y=(y₀+0)/2 → x₀=2x−6、y₀=2y。代入 x₀²+y₀²=9:(2x−6)²+(2y)²=9 → (x−3)²+y²=9/4,是以 (3,0) 为圆心、半径 3/2 的圆。</p>
+      <p class="trap">陷阱:代入了 P 的方程而非 Q 的;用 Q 表示 P 而不是反过来;忘了 A 是定点其坐标要当常数。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 参数法消参型</h3>
+      <p><b class="tag">触发信号:</b>x、y 各自都能被<b>同一个参数</b>(角 θ、斜率 k、某点坐标 t)表示,但两者之间的直接关系不好写。常见于「过定点的动直线与曲线交点」「用角度描点」。</p>
+      <p><b class="tag">标准动作:</b>选参数 → 写 x=f(t)、y=g(t) → 消 t(三角式用平方相加、代数式解出 t 回代或加减消元) → 得 x、y 方程 → 由参数范围定 x/y 范围。</p>
+      <p><b class="tag">示例(带解):</b>x=1+2cosθ、y=−2+2sinθ。移项:cosθ=(x−1)/2、sinθ=(y+2)/2。平方相加:(x−1)²/4+(y+2)²/4=1 → (x−1)²+(y+2)²=4,是圆心 (1,−2)、半径 2 的圆。</p>
+      <p class="trap">陷阱:消参不彻底(还留着参数);忽略参数范围导致该挖的弧没挖;斜率作参数时漏掉斜率不存在的情形。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 求轨迹并讨论范围型</h3>
+      <p><b class="tag">触发信号:</b>题目明确要「求轨迹方程<b>并指出范围/说明是什么曲线</b>」,或过程里出现了平方、取中点、除以某量等<b>可能丢点</b>的操作。</p>
+      <p><b class="tag">标准动作:</b>照常求出方程后,回到几何条件逐一检查:分母不为零、根号内非负、点不能与定点重合、平行/退化情形 → 写出 x(或 y)的取值范围,或注明「挖去某点」。</p>
+      <p><b class="tag">示例(带解):</b>P 到原点距离等于 P 到 A(2,0) 距离(P≠A)。设 P(x,y):x²+y²=(x−2)²+y² → 化简 4x=4 → x=1,是一条竖直线。但检查:x=1 时 y 任意,且 P≠A 恒满足(A 的 x=2 不在线上),故轨迹为直线 x=1,无需挖点;若条件改成 P 到 O 距离是到 A 距离的 λ 倍(λ≠1)则得圆,且要挖去与 A 重合的点。</p>
+      <p class="trap">陷阱:只写方程不写范围直接扣分;挖点挖错位置;把「直线的一部分」当成整条直线。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 求出轨迹方程后<b>必须标注范围</b>!平方、取中点、除法常让某些点取不到,要写「x≠…」或「挖去点(…)」。只写方程不写范围要扣分。</p>
+      <p class="trap">② 定义法要<b>先验常数与焦距的大小关系</b>:和 2a&gt;焦距才是椭圆(=焦距是线段);差 2a&lt;焦距才是双曲线(=焦距是两条射线)。不验就下结论必错。</p>
+      <p class="trap">③ 相关点法<b>代入的是「已知曲线」(Q 所在曲线)的方程</b>,不是动点 P 的。方向要「用 P 表示 Q」再代回。</p>
+      <p class="trap">④ 定义法差的绝对值:少了绝对值只得双曲线<b>一支</b>;题目说「差为定值」(不带绝对值)也可能是一支。看清题。</p>
+      <p class="trap">⑤ 焦点在 x 轴还是 y 轴,由<b>两定点(或对称轴)的位置</b>决定,别默认在 x 轴。</p>
+      <p class="trap">⑥ 参数法消参后要检查<b>参数范围</b>是否限制 x、y;θ 若只取部分区间,轨迹只是圆/椭圆的一段弧。</p>
+      <p class="trap">⑦ 抛物线定义要求定点<b>不在</b>定直线上;若在,则轨迹是过定点垂直于定直线的直线,不是抛物线。</p>
+      <p class="trap">⑧ 直接法两边平方是「非同解变形」,可能增点(引入不满足原式的解),化简完要<b>回代验证</b>。</p>
+      <p class="trap">⑨ 阿波罗尼斯圆(距离比为定值 λ≠1)是圆,λ=1 退化成中垂线(直线),别一律当圆。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 先「相面」再动笔——四把钥匙的选择树:</b> 看到条件先问三句话。有没有依赖别的动点(在已知曲线上)？有→<b>相关点法</b>。是不是「和/差/点线距」这种定义特征？是→<b>定义法</b>(最快)。x、y 都能用一个参数写？能→<b>参数法</b>。都不是→<b>直接法</b>硬列。选对钥匙,计算量差好几倍。</p>
+      <p style="margin:8px 0"><b>② 定义法的本质是「反向识别」:</b> 标准方程都是从定义推出来的,所以看到定义式就能跳过推导直接写方程。训练自己把「到两定点距离和为常数」这类语言,瞬间翻译成 a、c、b 的具体数值——这是把几何语言编译成代数结果的能力。</p>
+      <p style="margin:8px 0"><b>③ 相关点法 = 坐标变换:</b> 「P 是 Q 的中点/定比分点」本质是一个线性变换 Q→P。已知曲线经过这个变换后是什么形状,轨迹就是什么——圆经过缩放/平移还是圆,椭圆还是椭圆。理解这层,一眼就能预判轨迹类型再验算。</p>
+      <p style="margin:8px 0"><b>④ 参数法的威力在「难以直接联立」时:</b> 当 x、y 的直接关系被中间量卡住(如都依赖同一动直线的斜率),引参数把纠缠拆开,分别表示再消参,往往比硬联立清爽。三角参数用平方相加消,代数参数用加减/回代消——手法要熟。</p>
+      <p style="margin:8px 0"><b>⑤ 范围与挖点是「几何回看」而非「代数补丁」:</b> 别机械地找分母为零。回到原图想:动点在哪些极端位置(平行、重合、竖直)时条件退化或无意义？那些位置对应的点就要挖。把范围当成对轨迹的「体检报告」,而不是可有可无的尾巴——高考阅卷这里是硬失分点。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 圆锥曲线的轨迹方程 · 四把钥匙:直接法 / 定义法 / 相关点法 / 参数法</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:直接法 阿波罗尼斯圆(距离比) ===== */
+(function(){
+  const svg=document.getElementById('d1Svg');
+  const Ls=document.getElementById('d1L');
+  const oLv=document.getElementById('d1Lv'),oType=document.getElementById('d1Type'),oCx=document.getElementById('d1Cx'),oR=document.getElementById('d1R');
+  const cx=350,cy=190,sc=32; // origin at center, scale px per unit
+  const Ax=-2,Bx=2;
+  function toPx(x,y){return [cx+x*sc, cy-y*sc];}
+  function draw(){
+    clr(svg);const L=+Ls.value;
+    // axes
+    el(svg,'line',{x1:40,y1:cy,x2:660,y2:cy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:360,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:650,y:cy-8,'font-size':12,'font-weight':800,fill:INK}).textContent='x';
+    el(svg,'text',{x:cx+8,y:30,'font-size':12,'font-weight':800,fill:INK}).textContent='y';
+    // points A,B
+    const pA=toPx(Ax,0),pB=toPx(Bx,0);
+    el(svg,'circle',{cx:pA[0],cy:pA[1],r:5,fill:BLUE});
+    el(svg,'text',{x:pA[0]-6,y:pA[1]+22,'font-size':12,'font-weight':900,fill:BLUE}).textContent='A(-2,0)';
+    el(svg,'circle',{cx:pB[0],cy:pB[1],r:5,fill:GREEN});
+    el(svg,'text',{x:pB[0]-6,y:pB[1]+22,'font-size':12,'font-weight':900,fill:GREEN}).textContent='B(2,0)';
+    // trajectory: |PA|=L|PB| -> (x-cxc)^2+y^2=r^2 (for L!=1)
+    let type,cxc,r;
+    if(Math.abs(L-1)<0.02){
+      type='直线(中垂线)';
+      // x=0 vertical line
+      el(svg,'line',{x1:cx,y1:20,x2:cx,y2:360,stroke:RED,'stroke-width':3});
+      // draw red dots along it
+      for(let y=-4;y<=4;y+=0.5){const p=toPx(0,y);el(svg,'circle',{cx:p[0],cy:p[1],r:3,fill:RED});}
+      cxc=0;r=NaN;
+    }else{
+      type='圆';
+      // solve: (x+2)^2+y^2 = L^2[(x-2)^2+y^2]
+      // (1-L^2)x^2 + (1-L^2)y^2 + (4+4L^2)x + (4-4L^2)=0
+      const a=1-L*L;
+      // divide by a: x^2+y^2 + ((4+4L*L)/a)x + (4-4L*L)/a =0
+      const bcoef=(4+4*L*L)/a;
+      const ccoef=(4-4*L*L)/a;
+      cxc=-bcoef/2;
+      r=Math.sqrt(cxc*cxc-ccoef);
+      const c=toPx(cxc,0);
+      el(svg,'circle',{cx:c[0],cy:c[1],r:r*sc,fill:'rgba(224,56,42,0.10)',stroke:RED,'stroke-width':3});
+      // dots on circle
+      for(let k=0;k<24;k++){const th=k/24*2*Math.PI;const p=toPx(cxc+r*Math.cos(th),r*Math.sin(th));el(svg,'circle',{cx:p[0],cy:p[1],r:2.5,fill:RED});}
+    }
+    el(svg,'text',{x:cx,y:14,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='|PA| = λ·|PB|,λ='+L.toFixed(1);
+    oLv.textContent=L.toFixed(1);oType.textContent=type;
+    oCx.textContent=isNaN(cxc)?'—':cxc.toFixed(2);
+    oR.textContent=isNaN(r)?'∞(直线)':r.toFixed(2);
+  }
+  Ls.oninput=draw;
+  draw();
+})();
+
+/* ===== 互动2:定义法 椭圆(距离和恒定) ===== */
+(function(){
+  const svg=document.getElementById('elSvg');
+  const As=document.getElementById('elA');
+  const oR1=document.getElementById('elR1'),oR2=document.getElementById('elR2'),oSum=document.getElementById('elSum'),oAB=document.getElementById('elAB');
+  const cx=350,cy=200,sc=22;
+  const cUnit=4; // half focal distance in units (F at +-4)
+  let running=false,ang=0;
+  function toPx(x,y){return [cx+x*sc, cy-y*sc];}
+  function draw(){
+    clr(svg);const twoA=+As.value;const a=twoA/2;
+    const c=cUnit;const b=Math.sqrt(Math.max(0.01,a*a-c*c));
+    // axes
+    el(svg,'line',{x1:40,y1:cy,x2:660,y2:cy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:380,stroke:INK,'stroke-width':2});
+    // foci
+    const f1=toPx(-c,0),f2=toPx(c,0);
+    el(svg,'circle',{cx:f1[0],cy:f1[1],r:5,fill:BLUE});
+    el(svg,'text',{x:f1[0]-10,y:f1[1]+22,'font-size':12,'font-weight':900,fill:BLUE}).textContent='F₁';
+    el(svg,'circle',{cx:f2[0],cy:f2[1],r:5,fill:GREEN});
+    el(svg,'text',{x:f2[0]-4,y:f2[1]+22,'font-size':12,'font-weight':900,fill:GREEN}).textContent='F₂';
+    // ellipse outline dots
+    for(let k=0;k<60;k++){const th=k/60*2*Math.PI;const p=toPx(a*Math.cos(th),b*Math.sin(th));el(svg,'circle',{cx:p[0],cy:p[1],r:2,fill:'rgba(224,56,42,0.55)'});}
+    // moving point P
+    const Px=a*Math.cos(ang),Py=b*Math.sin(ang);
+    const p=toPx(Px,Py);
+    // lines PF1 PF2
+    el(svg,'line',{x1:f1[0],y1:f1[1],x2:p[0],y2:p[1],stroke:BLUE,'stroke-width':3});
+    el(svg,'line',{x1:f2[0],y1:f2[1],x2:p[0],y2:p[1],stroke:GREEN,'stroke-width':3});
+    el(svg,'circle',{cx:p[0],cy:p[1],r:6,fill:RED});
+    el(svg,'text',{x:p[0]+8,y:p[1]-8,'font-size':12,'font-weight':900,fill:RED}).textContent='P';
+    // readouts
+    const r1=Math.hypot(Px+c,Py),r2=Math.hypot(Px-c,Py);
+    oR1.textContent=r1.toFixed(2);oR2.textContent=r2.toFixed(2);oSum.textContent=(r1+r2).toFixed(2);
+    oAB.textContent=a.toFixed(2)+' / '+b.toFixed(2);
+    el(svg,'text',{x:cx,y:16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='|PF₁|+|PF₂| = 2a = '+twoA.toFixed(1)+' (恒定)　c='+c+'　b²=a²−c²';
+  }
+  function loop(){if(!running)return;ang+=0.03;if(ang>=2*Math.PI){ang=2*Math.PI;running=false;}draw();requestAnimationFrame(loop);}
+  As.oninput=draw;
+  document.getElementById('elGo').onclick=()=>{ang=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('elReset').onclick=()=>{ang=0.6;running=false;draw();};
+  ang=0.6;draw();
+})();
+
+/* ===== 互动3:定义法 抛物线(点线距相等) ===== */
+(function(){
+  const svg=document.getElementById('paSvg');
+  const Ps=document.getElementById('paP');
+  const oPF=document.getElementById('paPF'),oD=document.getElementById('paD'),oDiff=document.getElementById('paDiff'),oEq=document.getElementById('paEq');
+  const cx=250,cy=180,sc=26;
+  let running=false,t=0;
+  function toPx(x,y){return [cx+x*sc, cy-y*sc];}
+  function draw(){
+    clr(svg);const p=+Ps.value; // y^2=2px, focus (p/2,0), directrix x=-p/2
+    // axes
+    el(svg,'line',{x1:40,y1:cy,x2:680,y2:cy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:340,stroke:INK,'stroke-width':2});
+    // directrix
+    const dx=toPx(-p/2,0)[0];
+    el(svg,'line',{x1:dx,y1:20,x2:dx,y2:340,stroke:VIO,'stroke-width':3,'stroke-dasharray':'6 5'});
+    el(svg,'text',{x:dx-4,y:34,'font-size':12,'font-weight':900,fill:VIO,'text-anchor':'end'}).textContent='准线 x=-p/2';
+    // focus
+    const F=toPx(p/2,0);
+    el(svg,'circle',{cx:F[0],cy:F[1],r:5,fill:GREEN});
+    el(svg,'text',{x:F[0]+6,y:F[1]+20,'font-size':12,'font-weight':900,fill:GREEN}).textContent='F(p/2,0)';
+    // parabola dots
+    for(let yy=-6;yy<=6;yy+=0.4){const xx=yy*yy/(2*p);if(cx+xx*sc>680)continue;const q=toPx(xx,yy);el(svg,'circle',{cx:q[0],cy:q[1],r:2,fill:'rgba(224,56,42,0.5)'});}
+    // moving P
+    const Py=5*Math.sin(t);const Px=Py*Py/(2*p);
+    const P=toPx(Px,Py);
+    const foot=toPx(-p/2,Py);
+    el(svg,'line',{x1:F[0],y1:F[1],x2:P[0],y2:P[1],stroke:GREEN,'stroke-width':3});
+    el(svg,'line',{x1:foot[0],y1:foot[1],x2:P[0],y2:P[1],stroke:VIO,'stroke-width':3});
+    el(svg,'circle',{cx:P[0],cy:P[1],r:6,fill:RED});
+    el(svg,'text',{x:P[0]+8,y:P[1]-6,'font-size':12,'font-weight':900,fill:RED}).textContent='P';
+    const PF=Math.hypot(Px-p/2,Py);
+    const d=Px+p/2;
+    oPF.textContent=PF.toFixed(2);oD.textContent=d.toFixed(2);oDiff.textContent=(PF-d).toFixed(3);
+    oEq.textContent=(2*p).toFixed(1)+'x';
+    el(svg,'text',{x:350,y:16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='|PF| = d(到准线)　→　y²=2px = '+(2*p).toFixed(1)+'x';
+  }
+  function loop(){if(!running)return;t+=0.03;if(t>=Math.PI*2){t=Math.PI*2;running=false;}draw();requestAnimationFrame(loop);}
+  Ps.oninput=draw;
+  document.getElementById('paGo').onclick=()=>{t=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('paReset').onclick=()=>{t=0.7;running=false;draw();};
+  t=0.7;draw();
+})();
+
+/* ===== 互动4:相关点法 定比分点 ===== */
+(function(){
+  const svg=document.getElementById('rpSvg');
+  const Ks=document.getElementById('rpK');
+  const oR=document.getElementById('rpR'),oKv=document.getElementById('rpKv'),oSub=document.getElementById('rpSub'),or=document.getElementById('rpr');
+  const cx=350,cy=200,sc=34;
+  const R=2;
+  let running=false,ang=0;
+  function toPx(x,y){return [cx+x*sc, cy-y*sc];}
+  function draw(){
+    clr(svg);const k=+Ks.value;
+    el(svg,'line',{x1:40,y1:cy,x2:660,y2:cy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:30,x2:cx,y2:380,stroke:INK,'stroke-width':2});
+    // origin O
+    el(svg,'circle',{cx:cx,cy:cy,r:4,fill:INK});
+    el(svg,'text',{x:cx-16,y:cy+16,'font-size':12,'font-weight':900,fill:INK}).textContent='O';
+    // known circle (Q's circle) radius R
+    el(svg,'circle',{cx:cx,cy:cy,r:R*sc,fill:'none',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:cx+R*sc-30,y:cy-R*sc+18,'font-size':11.5,'font-weight':800,fill:BLUE}).textContent='Q 的圆 R='+R;
+    // P trajectory circle radius kR
+    for(let j=0;j<40;j++){const th=j/40*2*Math.PI;const pp=toPx(k*R*Math.cos(th),k*R*Math.sin(th));el(svg,'circle',{cx:pp[0],cy:pp[1],r:2,fill:'rgba(224,56,42,0.55)'});}
+    // Q and P
+    const Qx=R*Math.cos(ang),Qy=R*Math.sin(ang);
+    const Px=k*Qx,Py=k*Qy;
+    const Q=toPx(Qx,Qy),P=toPx(Px,Py);
+    el(svg,'line',{x1:cx,y1:cy,x2:Q[0],y2:Q[1],stroke:'#aaa','stroke-width':2});
+    el(svg,'circle',{cx:Q[0],cy:Q[1],r:6,fill:BLUE});
+    el(svg,'text',{x:Q[0]+8,y:Q[1]-6,'font-size':12,'font-weight':900,fill:BLUE}).textContent='Q';
+    el(svg,'circle',{cx:P[0],cy:P[1],r:6,fill:RED});
+    el(svg,'text',{x:P[0]+8,y:P[1]+16,'font-size':12,'font-weight':900,fill:RED}).textContent='P';
+    el(svg,'text',{x:350,y:20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='P = k·Q,用 P 表示 Q:x₀=x/k、y₀=y/k,代入 x₀²+y₀²=R²';
+    oR.textContent=R;oKv.textContent=k.toFixed(2);
+    oSub.textContent='(x/k)²+(y/k)²='+(R*R);
+    or.textContent=(k*R).toFixed(2);
+  }
+  function loop(){if(!running)return;ang+=0.04;if(ang>=2*Math.PI){ang=2*Math.PI;running=false;}draw();requestAnimationFrame(loop);}
+  Ks.oninput=draw;
+  document.getElementById('rpGo').onclick=()=>{ang=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('rpReset').onclick=()=>{ang=0.5;running=false;draw();};
+  ang=0.5;draw();
+})();
+
+/* ===== 互动5:参数法 椭圆描点消参 ===== */
+(function(){
+  const svg=document.getElementById('ptSvg');
+  const As=document.getElementById('ptA'),Bs=document.getElementById('ptB');
+  const oTh=document.getElementById('ptTh'),oX=document.getElementById('ptX'),oY=document.getElementById('ptY'),oChk=document.getElementById('ptCheck');
+  const cx=350,cy=180,sc=26;
+  let running=false,th=0;
+  const dots=[];
+  function toPx(x,y){return [cx+x*sc, cy-y*sc];}
+  function draw(){
+    clr(svg);const a=+As.value,b=+Bs.value;
+    el(svg,'line',{x1:40,y1:cy,x2:660,y2:cy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:340,stroke:INK,'stroke-width':2});
+    // full ellipse faint
+    for(let k=0;k<80;k++){const t=k/80*2*Math.PI;const p=toPx(a*Math.cos(t),b*Math.sin(t));el(svg,'circle',{cx:p[0],cy:p[1],r:1.5,fill:'#ccc'});}
+    // drawn dots up to th
+    dots.forEach(d=>{const p=toPx(d[0],d[1]);el(svg,'circle',{cx:p[0],cy:p[1],r:2.6,fill:'rgba(224,56,42,0.7)'});});
+    // current P
+    const Px=a*Math.cos(th),Py=b*Math.sin(th);
+    const P=toPx(Px,Py);
+    el(svg,'line',{x1:cx,y1:cy,x2:P[0],y2:P[1],stroke:VIO,'stroke-width':2});
+    el(svg,'circle',{cx:P[0],cy:P[1],r:6,fill:RED});
+    el(svg,'text',{x:P[0]+8,y:P[1]-6,'font-size':12,'font-weight':900,fill:RED}).textContent='P(θ)';
+    el(svg,'text',{x:350,y:16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='x=a·cosθ, y=b·sinθ　消 θ →　(x/a)²+(y/b)²=1';
+    oTh.textContent=(th*180/Math.PI).toFixed(0)+'°';
+    oX.textContent=Px.toFixed(2);oY.textContent=Py.toFixed(2);
+    oChk.textContent=((Px/a)*(Px/a)+(Py/b)*(Py/b)).toFixed(2);
+  }
+  function loop(){if(!running)return;th+=0.05;dots.push([(+As.value)*Math.cos(th),(+Bs.value)*Math.sin(th)]);if(th>=2*Math.PI){th=2*Math.PI;running=false;}draw();requestAnimationFrame(loop);}
+  As.oninput=Bs.oninput=()=>{dots.length=0;draw();};
+  document.getElementById('ptGo').onclick=()=>{th=0;dots.length=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('ptReset').onclick=()=>{th=0.6;dots.length=0;running=false;draw();};
+  th=0.6;draw();
+})();
+
+/* ===== 互动6:直接法化简播放器 ===== */
+(function(){
+  const svg=document.getElementById('smSvg');const note=document.getElementById('smNote');
+  const steps=[
+    '条件:动点 P 到 F(1,0) 的距离 = P 到直线 x=-1 的距离。',
+    '设 P(x,y),列式:√((x-1)²+y²) = |x+1|。',
+    '两边平方:(x-1)²+y² = (x+1)²。',
+    '展开:x²-2x+1+y² = x²+2x+1。',
+    '消去 x² 和 1,移项:y² = 2x+2x = 4x。',
+    '结论:y²=4x,是抛物线(焦点 (1,0),准线 x=-1)。x≥0。'
+  ];
+  let idx=0;
+  function draw(){
+    clr(svg);
+    // title
+    el(svg,'text',{x:350,y:28,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='直接法逐步化简:到定点距离 = 到定直线距离';
+    // step lines shown up to idx
+    for(let i=0;i<=idx&&i<steps.length;i++){
+      const y=60+i*30;
+      el(svg,'text',{x:50,y:y,'font-size':13.5,'font-weight':i===idx?900:700,fill:i===idx?RED:INK}).textContent=(i+1)+'. '+steps[i];
+    }
+    note.innerHTML='当前:第 '+(idx+1)+' / '+steps.length+' 步。'+(idx===steps.length-1?' ✔ 化简完成 → <b>y²=4x</b>':' 点「下一步」继续。');
+  }
+  document.getElementById('smNext').onclick=()=>{if(idx<steps.length-1)idx++;draw();};
+  document.getElementById('smReset').onclick=()=>{idx=0;draw();};
+  draw();
+})();
+
+/* ===== 互动7:轨迹范围·挖点 ===== */
+(function(){
+  const svg=document.getElementById('hoSvg');
+  const oShape=document.getElementById('hoShape'),oEq=document.getElementById('hoEq'),oHole=document.getElementById('hoHole'),oRange=document.getElementById('hoRange');
+  const cx=350,cy=180,sc=90;
+  let showHole=true;
+  function toPx(x,y){return [cx+x*sc, cy-y*sc];}
+  function draw(){
+    clr(svg);
+    el(svg,'line',{x1:40,y1:cy,x2:660,y2:cy,stroke:INK,'stroke-width':2});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:340,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:650,y:cy-8,'font-size':12,'font-weight':800,fill:INK}).textContent='x';
+    el(svg,'text',{x:cx+8,y:30,'font-size':12,'font-weight':800,fill:INK}).textContent='y';
+    // unit circle x^2+y^2=1
+    el(svg,'circle',{cx:cx,cy:cy,r:sc,fill:'rgba(224,56,42,0.08)',stroke:RED,'stroke-width':3});
+    // dots on circle except hole
+    for(let k=0;k<48;k++){const th=k/48*2*Math.PI;const x=Math.cos(th),y=Math.sin(th);const p=toPx(x,y);
+      if(showHole&&Math.abs(x-1)<0.06&&Math.abs(y)<0.06)continue; // skip near hole
+      el(svg,'circle',{cx:p[0],cy:p[1],r:2.4,fill:'rgba(224,56,42,0.6)'});}
+    // the hole point (1,0)
+    const h=toPx(1,0);
+    if(showHole){
+      el(svg,'circle',{cx:h[0],cy:h[1],r:7,fill:'#fff',stroke:RED,'stroke-width':3});
+      el(svg,'text',{x:h[0]+10,y:h[1]-10,'font-size':12,'font-weight':900,fill:RED}).textContent='(1,0) 挖去(空心)';
+    }else{
+      el(svg,'circle',{cx:h[0],cy:h[1],r:5,fill:RED});
+      el(svg,'text',{x:h[0]+10,y:h[1]-10,'font-size':12,'font-weight':900,fill:INK}).textContent='(1,0) 含(实心)';
+    }
+    el(svg,'text',{x:350,y:16,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='轨迹 x²+y²=1,但 (1,0) 取不到 → 答案须挖去,写 x≠1';
+    oShape.textContent='圆';oEq.textContent='x²+y²=1';
+    oHole.textContent=showHole?'(1,0)':'(无)';oRange.textContent=showHole?'x≠1':'完整圆';
+  }
+  document.getElementById('hoToggle').onclick=()=>{showHole=!showHole;draw();};
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 求轨迹方程的通用五步是什么？",a:"① 设动点 P(x,y);② 把几何条件写成含 x、y 的等式;③ 代入坐标/距离公式;④ 化简成标准形式;⑤ 标注范围(挖去取不到的点)。"},
+ {q:"2. 四把钥匙分别在什么情况下用？",a:"直接法:条件能直接用 x、y 列等式。定义法:条件正好是圆/椭圆/双曲线/抛物线的定义。相关点法:动点依赖另一个在已知曲线上的点。参数法:x、y 都能用同一参数表示,再消参。"},
+ {q:"3. 动点到两定点距离之和为 2a,什么时候是椭圆？需要什么条件？",a:"当 2a>两定点间距离(焦距)时是椭圆。若 2a=焦距是线段,2a<焦距无轨迹。这就是「必须先验常数与焦距关系」。"},
+ {q:"4. 相关点法(代入法)代入的是哪条曲线的方程？方向怎么写？",a:"代入的是「相关点 Q 所在的已知曲线」的方程,不是动点 P 的。要用 P 的坐标(x,y)表示出 Q 的坐标(x₀,y₀),再把 x₀、y₀ 代回 Q 的曲线方程。"},
+ {q:"5. Q 在圆 x₀²+y₀²=4 上,P 是 OQ 的中点,求 P 的轨迹。",a:"设 P(x,y),则 x₀=2x、y₀=2y。代入:(2x)²+(2y)²=4 → 4x²+4y²=4 → x²+y²=1,是半径 1 的圆。"},
+ {q:"6. 参数法中 x=2+3cosθ、y=1+3sinθ,消参得什么？",a:"cosθ=(x-2)/3、sinθ=(y-1)/3,平方相加(sin²+cos²=1):(x-2)²+(y-1)²=9,是圆心(2,1)、半径 3 的圆。"},
+ {q:"7. 动点到 F(1,0) 距离等于到直线 x=-1 距离,求轨迹。",a:"√((x-1)²+y²)=|x+1|,两边平方展开消去 x²、1 → y²=4x,是抛物线(焦点(1,0),准线 x=-1)。这正是抛物线定义。"},
+ {q:"8. 动点到 A(-2,0) 距离是到 B(2,0) 距离的 2 倍,轨迹是什么？",a:"直接法:√((x+2)²+y²)=2√((x-2)²+y²),两边平方化简得 (x-10/3)²+y²=64/9,是圆(阿波罗尼斯圆)。距离比 λ≠1 时都是圆。"},
+ {q:"9. 距离比 λ=1(到两定点距离相等)时轨迹是什么？",a:"是这两点连线的中垂线(一条直线),不是圆。只有 λ≠1 才是圆。"},
+ {q:"10. 到 F₁(-3,0)、F₂(3,0) 距离之和为 10,求标准方程。",a:"2a=10>焦距 6 ✓ 椭圆。a=5,c=3,b²=25-9=16。焦点在 x 轴:x²/25+y²/16=1。"},
+ {q:"11. 为什么求出方程后还要标范围/挖点？举一种会丢点的情形。",a:"平方、取中点、除以某量是非同解变形,会引入或丢失点。例如动直线与某轴平行时中点跑到端点、或分母为零处 P 取不到,这些点要挖去,答案写 x≠…。不写范围会扣分。"},
+ {q:"12. 到定点距离 = 到定直线距离,若定点在定直线上,轨迹还是抛物线吗？",a:"不是。抛物线定义要求定点不在定直线上;若定点在定直线上,轨迹退化为过定点且垂直于该直线的直线。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

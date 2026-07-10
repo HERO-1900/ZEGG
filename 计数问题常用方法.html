@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>计数问题的常用方法 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>计数问题的常用方法</h1>
+    <p class="lead">排列组合应用题的核心不是「会背公式」,而是<b>选对方法、不数重也不数漏</b>。相邻用捆绑、不相邻用插空、相同元素分配用隔板、正面难算就用间接法。这一页把六大方法一次拆透——它讲的是「怎么数」,跟二项式定理(讲展开系数)是两回事。</p>
+
+    <div class="say">🗣️ <b>计数题(人话版):</b> 一道题上来先问自己两件事:「这些东西<b>分不分类</b>?每种情况<b>分不分步</b>?」——互斥的情况用<b>加法</b>拼起来,连续的步骤用<b>乘法</b>串起来。然后看关键词:要<b>相邻</b>就把它们<b>捆</b>成一个整体(捆绑法);要<b>不相邻</b>就先排别人、再往空里<b>插</b>(插空法);<b>相同</b>的东西分给几个人,就在它们中间<b>放隔板</b>(隔板法);正面情况太碎,就用<b>总数减掉反面</b>(间接法)。数重了最常见的坑是——平均分成几组时,忘了除以组数的阶乘。</div>
+
+    <div class="keybox"><b>一句话口诀:</b> <b>相邻捆绑、不邻插空、相同隔板、反面排除、平均分组要除重</b>。所有方法都建立在两大根基上——<b>分类用加法(互斥情况相加)、分步用乘法(连续步骤相乘)</b>。排列记 A(有序)、组合记 C(无序):选出来还要不要排队,决定了你用 A 还是 C。</div>
+
+    <h2>① 两大根基:分类加法 与 分步乘法</h2>
+    <div class="card">
+      <div class="eq">分类:N = N₁ + N₂ + … ⏐ 分步:N = n₁ × n₂ × …</div>
+      <p style="margin:8px 0"><b>分类加法原理:</b> 完成一件事有<b>几类互不相同</b>的办法,每一类都能<b>独立</b>完成这件事,总数就是各类数目<b>相加</b>。关键词:「或」「分几种情况」。</p>
+      <p style="margin:8px 0"><b>分步乘法原理:</b> 完成一件事需要<b>连续几个步骤</b>,每一步都<b>不能单独</b>完成,必须步步都做,总数就是各步数目<b>相乘</b>。关键词:「先…再…」「接着」。</p>
+      <table>
+        <tr><th>看到什么</th><th>用哪个原理</th><th>怎么算</th></tr>
+        <tr><td>「或」「分成几类」「几种情况」</td><td><b>分类</b>加法</td><td>各类相加</td></tr>
+        <tr><td>「先…再…」「一步接一步」</td><td><b>分步</b>乘法</td><td>各步相乘</td></tr>
+        <tr><td>选出来<b>要排顺序</b></td><td>排列 <b>A</b>ₙᵐ</td><td>A(n,m)=n!/(n−m)!</td></tr>
+        <tr><td>选出来<b>不排顺序</b></td><td>组合 <b>C</b>ₙᵐ</td><td>C(n,m)=n!/[m!(n−m)!]</td></tr>
+      </table>
+      <p class="trap">⚠ 判断标准:一类里的任一种办法能否「独立把事办成」?能→分类(加);不能、必须接着做下一步→分步(乘)。混用加法乘法是失分头号原因。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌳 互动 1 — 分类加法 vs 分步乘法:同一场景两种结构,看清「加」还是「乘」</div>
+      <svg id="treeSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="treemode on" data-m="0">分步(先上衣再裤子)</button>
+        <button class="treemode" data-m="1">分类(坐车或坐船)</button>
+      </div>
+      <div class="verdict" id="treeNote"></div>
+      <p class="small">左边树状图把每条「路径」画出来。分步:每条路都要走完上衣→裤子两段,方法数=<b>相乘</b>;分类:走车这一支或船这一支都能到,方法数=<b>相加</b>。数一数叶子节点验证。</p>
+    </div>
+
+    <h2 class="b">② 捆绑法:相邻元素捆成一个整体</h2>
+    <div class="card">
+      <div class="eq">捆绑法 = 内部排 × 整体排　A(内)ᵏₖ · A(总)ᵐₘ</div>
+      <p style="margin:8px 0"><b>触发词:「相邻」「必须挨在一起」「连在一块」。</b> 做法两步:① 把必须相邻的 k 个元素<b>捆成一个「大元素」</b>,和其余元素一起做全排列;② 捆内部的 k 个元素<b>自己也要排序</b>(A(k,k)=k!)。两步相乘。</p>
+      <div class="mono">例:甲乙丙丁戊 5 人排队,甲乙必须相邻,有多少排法?</div>
+      <div class="mono">① 甲乙捆成一个整体,与丙丁戊共 4 个元素全排:A(4,4)=24</div>
+      <div class="mono">② 捆内部甲乙自己排:A(2,2)=2　→　总数 = 24×2 = 48</div>
+      <p class="trap">⚠ 最大陷阱:<b>忘了捆内部还要排序</b>!甲乙相邻有「甲乙」「乙丙」两种朝向,漏乘 A(2,2) 直接少一半。捆几个就乘 A(k,k)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔗 互动 2 — 捆绑法:相邻两人先绑成一个整体全排,再演示内部交换(×2)</div>
+      <svg id="bundleSvg" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="bunGo">▶ 演示捆绑</button><button id="bunSwap">⇄ 内部交换</button><button id="bunReset">↺ 重置</button>
+      </div>
+      <div class="live">
+        <div><b>整体个数</b><span id="bunN">4</span></div>
+        <div><b>整体全排 A(4,4)</b><span id="bunA">24</span></div>
+        <div><b>内部排 A(2,2)</b><span id="bunI">2</span></div>
+        <div><b>总数</b><span id="bunT">48</span></div>
+      </div>
+      <p class="small">甲乙被<b>绳子捆</b>成一个「大方块」,和丙丁戊一共 4 个方块全排(24 种)。点「内部交换」看甲乙可以「甲在前」也可以「乙在前」——所以还要 ×2。24×2=48。</p>
+    </div>
+
+    <h2 class="g">③ 插空法:不相邻元素插进已排好的空隙</h2>
+    <div class="card">
+      <div class="eq">插空法 = 先排「无约束」元素 × 往空里插　A(n,n) · A(n+1, k)</div>
+      <p style="margin:8px 0"><b>触发词:「不相邻」「互不相邻」「都不挨着」。</b> 做法两步:① 先把<b>没有相邻限制的 n 个元素</b>全排,形成 <b>n+1 个空</b>(含两端);② 把要求不相邻的 k 个元素<b>插进这些空里</b>,一空至多一个,用排列 A(n+1, k)。</p>
+      <div class="mono">例:3 男 4 女排一排,3 个男生互不相邻,有多少排法?</div>
+      <div class="mono">① 先排 4 个女生:A(4,4)=24,产生 5 个空(女女女女 → _女_女_女_女_)</div>
+      <div class="mono">② 3 个男生插进 5 个空,每空至多一人:A(5,3)=60</div>
+      <div class="mono">总数 = 24 × 60 = 1440</div>
+      <p class="trap">⚠ 空位数是<b>n+1</b>(含两端),别只数中间的 n−1 个!要「不相邻」就<b>先排别人再插空</b>;千万别拿要不相邻的那批去打头阵。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪑 互动 3 — 插空法:先排 n 个元素形成 n+1 个空隙,再把不相邻元素放进空里</div>
+      <svg id="gapSvg" viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="gapGo">▶ 先排后插</button><button id="gapReset">↺ 重置</button>
+        <label>先排(女) n <input id="gapN" type="range" min="2" max="5" value="4" step="1"></label>
+        <label>要插(男) k <input id="gapK" type="range" min="1" max="4" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>先排 A(n,n)</b><span id="gapA">24</span></div>
+        <div><b>空位数 n+1</b><span id="gapS">5</span></div>
+        <div><b>插入 A(n+1,k)</b><span id="gapI">60</span></div>
+        <div><b>总数</b><span id="gapT">1440</span></div>
+      </div>
+      <p class="small">先把 n 个「女生」排成一排(蓝),她们之间和两端一共有 <b>n+1 个空</b>(黄色向上箭头)。再把 k 个「男生」(红)插进空里,每空最多一个——这样男生自动互不相邻。</p>
+    </div>
+
+    <h2 class="o">④ 隔板法:相同元素的分配</h2>
+    <div class="card">
+      <div class="eq">n 个相同球分给 m 人,每人至少 1 个:C(n−1, m−1)</div>
+      <p style="margin:8px 0"><b>触发词:「相同的」「名额分配」「每人至少一个」「正整数解个数」。</b> 想象 n 个<b>完全相同</b>的球排成一排,球与球之间有 <b>n−1 个缝隙</b>;要分给 m 个人,只需在缝里插 <b>m−1 块隔板</b>,隔板把球分成 m 段,每段给一个人。从 n−1 个缝里选 m−1 个放隔板 → C(n−1, m−1)。</p>
+      <div class="mono">例:10 个相同名额分给 4 个班,每班至少 1 个,有几种分法?</div>
+      <div class="mono">10 个球 9 个缝,插 3 块隔板:C(10−1, 4−1)=C(9,3)=84</div>
+      <p style="margin:8px 0"><b>变式(可以分到 0 个):</b> 「每人至少 0 个」即允许空。技巧是先给每人「借」1 个凑成「至少 1 个」模型:n 个分给 m 人可为 0 → 变成 (n+m) 个分给 m 人每人至少 1 → C(n+m−1, m−1)。</p>
+      <p class="trap">⚠ 隔板法只对<b>相同(不可区分)</b>元素有效!球要是不同的就不能用。且标准型必须「<b>每份至少 1 个</b>」,能为 0 的先做「加人头」转化。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧱 互动 4 — 隔板法:n 个相同球排一排,往球缝里放 m−1 块隔板,分成 m 份</div>
+      <svg id="boardSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="brdShuffle">🎲 随机放隔板</button><button id="brdReset">↺ 重置</button>
+        <label>球数 n <input id="brdN" type="range" min="5" max="12" value="10" step="1"></label>
+        <label>人数 m <input id="brdM" type="range" min="2" max="5" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>球数 n</b><span id="brdVN">10</span></div>
+        <div><b>缝隙 n−1</b><span id="brdVG">9</span></div>
+        <div><b>隔板 m−1</b><span id="brdVB">3</span></div>
+        <div><b>分法 C(n−1,m−1)</b><span id="brdVC">84</span></div>
+      </div>
+      <p class="small">n 个<b>一模一样</b>的球(灰)排成一排,球之间有 n−1 条缝。往缝里塞 m−1 块红隔板,球就被切成 m 段,每段(至少 1 个)分给一个人。点「随机放隔板」看一种具体分法。</p>
+    </div>
+
+    <h2 class="v">⑤ 间接法(排除法):总数减反面</h2>
+    <div class="card">
+      <div class="eq">符合要求的数 = 全部情况数 − 不符合要求的情况数</div>
+      <p style="margin:8px 0"><b>触发词:「至少」「至多」「不…」「不都…」。</b> 当「正面直接数要分很多类、很容易漏」时,反过来算<b>反面</b>(反面通常只有一两类),用<b>总数</b>减掉它。尤其「至少」型——正面要分「1个、2个、3个…」很碎,反面「一个都没有」往往只有一种。</p>
+      <div class="mono">例:从 5 男 4 女中选 4 人参赛,至少有 1 名女生,有几种选法?</div>
+      <div class="mono">正面要分「1女、2女、3女、4女」四类,繁琐。</div>
+      <div class="mono">间接法:总数 C(9,4)=126,反面「一个女生都没有」=全选男 C(5,4)=5</div>
+      <div class="mono">至少 1 女 = 126 − 5 = 121</div>
+      <p class="trap">⚠ 「至少/至多」优先想间接法。但要确认「反面」互斥且好数;若反面也很碎(比如「至少 2」的反面是「0 或 1」两类),就得把反面各类都减掉。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">➖ 互动 5 — 间接法:总数(大圆)减掉反面(小块),剩下就是「至少」的答案</div>
+      <svg id="indSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="indcase on" data-c="0">至少1女</button>
+        <button class="indcase" data-c="1">至少2女</button>
+        <button class="indcase" data-c="2">正面直接数(对照)</button>
+      </div>
+      <div class="verdict" id="indNote"></div>
+      <p class="small">大方块=全部选法 C(9,4)=126。红色部分=<b>反面</b>(不符合要求的),灰色部分=答案。看「至少 1 女」时反面只有「全男」一小块,间接法一步到位;正面数则要拼好几块。</p>
+    </div>
+
+    <h2 class="r">⑥ 分组分配:平均分组要除以组数阶乘</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>触发词:「分成几组」「分配给几个人/地方」。</b> 关键分清两件事:<b>「分组」是否有序</b>(分给不同的人=有序,单纯分成几堆=无序),以及各组<b>是否等大</b>。</p>
+      <div class="eq">非均匀分组:C(n,a)·C(n−a,b)·C(…)　(各组大小都不同,不用除)</div>
+      <div class="eq">平均分成 k 组(每组同大小):[连乘] ÷ A(k,k) = ÷ k!　(消掉组的顺序)</div>
+      <p style="margin:8px 0"><b>为什么平均分组要除 k!?</b> 因为组与组之间<b>没有编号、无法区分</b>,同一种分法被你的「先取哪组」重复数了 k! 次,必须除掉。有<b>几组人数相同就除以那几组的阶乘</b>。</p>
+      <div class="mono">例:6 本不同的书,平均分成 3 堆(每堆 2 本),几种分法?</div>
+      <div class="mono">先当有序取:C(6,2)·C(4,2)·C(2,2)=15×6×1=90</div>
+      <div class="mono">3 堆一样大、堆无编号,重复了 3!=6 次 → 90 ÷ 6 = 15</div>
+      <div class="mono">若改成「分给甲乙丙 3 人各 2 本」(有序,人可区分):就是 90,不用除!</div>
+      <p class="trap">⚠ 平均分组<b>÷ 组数阶乘</b>;若「分给不同的人」是有序的,分完组还要再<b>×A(组数,组数)</b>把组安到人头上(或直接不除)。部分均匀就只除均匀那部分的阶乘。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📦 互动 6 — 分组分配:平均分组「÷k!」消重复(无编号的堆) vs 分给人(有编号,不除)</div>
+      <svg id="grpSvg" viewBox="0 0 700 270" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="grpmode on" data-m="0">平均分3堆(无序·÷3!)</button>
+        <button class="grpmode" data-m="1">分给甲乙丙(有序·不除)</button>
+      </div>
+      <div class="verdict" id="grpNote"></div>
+      <p class="small">6 本书平均分成 3 份。若是<b>没编号的堆</b>,{AB}{CD}{EF} 和 {CD}{AB}{EF} 是<b>同一种分法</b>——被重复数了 3!=6 次,要÷6。若是<b>分给甲乙丙</b>(堆有主人、可区分),这两种就不同,不除。</p>
+    </div>
+
+    <h2 class="b">⑦ 特殊元素 / 特殊位置优先</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>触发词:「某元素不能在某位置」「首位不能是0」「甲必须(不)在某处」。</b> 遇到<b>带限制</b>的元素或位置,<b>先安排受限的那个</b>,再排其余。这样避免限制在最后引发大面积重算。</p>
+      <div class="mono">例:用 0~5 组成无重复数字的三位数,有几个?</div>
+      <div class="mono">特殊位置=百位(不能是0):先排百位 5 种(1~5)</div>
+      <div class="mono">再排十位、个位(可含0,从剩下5个里选2个排):A(5,2)=20</div>
+      <div class="mono">总数 = 5 × 20 = 100</div>
+      <p style="margin:8px 0"><b>另一路(元素优先):</b> 也可先看特殊元素 0——0 不能进百位,只能进十位或个位(2 个位置),再排其余,结果一致。</p>
+      <p class="trap">⚠ 数字排列的头号坑:<b>首位不为 0</b>。要么位置优先(先定首位),要么元素优先(先安置 0),别用普通全排 A 直接算。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔢 互动 7 — 特殊位置优先:三位数百位不能为 0,先定百位再排其余</div>
+      <svg id="digSvg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="digGo">▶ 优先排百位</button><button id="digReset">↺ 重置</button>
+        <label>可用数字 0~ <input id="digN" type="range" min="3" max="9" value="5" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>数字个数</b><span id="digTot">6</span></div>
+        <div><b>百位(去0)</b><span id="digH">5</span></div>
+        <div><b>后两位 A(·,2)</b><span id="digR">20</span></div>
+        <div><b>三位数个数</b><span id="digAns">100</span></div>
+      </div>
+      <p class="small">三个位置槽:百位、十位、个位。<b>百位是特殊位置</b>(不能放 0,红叉),先从非零数字里选,剩下的数字(含 0)再排后两位。这就是「特殊位置优先」。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 相邻问题(捆绑法)</h3>
+      <p><b class="tag">触发信号:</b>「必须相邻」「挨在一起」「连成一片」。</p>
+      <p><b class="tag">标准动作:</b>把相邻的 k 个捆成一个整体与其余全排 A(总,总),再乘捆内部排列 A(k,k)。</p>
+      <p><b class="tag">示例(带解):</b>4 名男生 3 名女生排一排,3 名女生必须相邻。女生捆成 1 个整体,与 4 男共 5 个元素全排 A(5,5)=120;女生内部 A(3,3)=6。总数 120×6=720。</p>
+      <p class="trap">陷阱:忘记捆内部还要排序(漏乘 A(k,k));多组相邻要每组各乘一次内部排列。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 不相邻问题(插空法)</h3>
+      <p><b class="tag">触发信号:</b>「互不相邻」「都不挨着」「彼此分开」。</p>
+      <p><b class="tag">标准动作:</b>先排无约束的 n 个 A(n,n) → 形成 n+1 个空 → 把不相邻的 k 个插空 A(n+1,k)。</p>
+      <p><b class="tag">示例(带解):</b>5 人排队,甲、乙、丙互不相邻。先排另外 2 人 A(2,2)=2,产生 3 个空;甲乙丙插进 3 个空 A(3,3)=6。总数 2×6=12。</p>
+      <p class="trap">陷阱:空位数写成 n−1(漏两端);把要不相邻的元素先排。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 相同元素分配(隔板法)</h3>
+      <p><b class="tag">触发信号:</b>「相同的球/名额」「每人至少 1 个」「正整数解个数」。</p>
+      <p><b class="tag">标准动作:</b>n 个相同球 n−1 个缝,插 m−1 块隔板分给 m 人:C(n−1,m−1)。允许为 0 先「每人加 1 头」转化。</p>
+      <p><b class="tag">示例(带解):</b>方程 x+y+z=8 的正整数解个数=把 8 个相同单位分给 3 个未知量每个至少 1:C(8−1,3−1)=C(7,2)=21。</p>
+      <p class="trap">陷阱:元素不同却用隔板;忘了「至少 1」的前提;可为 0 时没做加人头转化。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 间接法(至少/至多)</h3>
+      <p><b class="tag">触发信号:</b>「至少」「至多」「不全是」「不都」,正面情况太碎。</p>
+      <p><b class="tag">标准动作:</b>算全部情况数 − 反面(不合要求)的情况数。反面最好只有一两类且互斥。</p>
+      <p><b class="tag">示例(带解):</b>从 5 男 4 女选 4 人,至少 1 女。总 C(9,4)=126,反面全男 C(5,4)=5。答案 126−5=121。</p>
+      <p class="trap">陷阱:反面没数全(至少2的反面是0或1两类都要减);把「至少1」误算成 C(4,1)·C(8,3)（重复计数）。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 分组分配(均匀/非均匀)</h3>
+      <p><b class="tag">触发信号:</b>「分成几组/几堆」「分配给几个人」,组是否等大、是否有主。</p>
+      <p><b class="tag">标准动作:</b>非均匀:连乘 C 即可。平均分成 k 组:连乘 C ÷ k!。分给不同的人(有序):在分组基础上不除,或分完再×A(组,组)。</p>
+      <p><b class="tag">示例(带解):</b>6 本不同书分给甲乙丙,分别得 1、2、3 本:C(6,1)·C(5,2)·C(3,3)=6×10×1=60(人不同,有序不除)。若平均每人 2 本:C(6,2)C(4,2)C(2,2)=90,人可区分不除,仍是 90。</p>
+      <p class="trap">陷阱:平均分「无编号堆」忘了÷k!；分给不同的人却错误地÷k!；部分均匀只对均匀那部分除阶乘。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 数字排列(特殊位置)</h3>
+      <p><b class="tag">触发信号:</b>组数、无重复数字、「首位不为 0」、奇偶位约束。</p>
+      <p><b class="tag">标准动作:</b>特殊位置(或特殊元素 0)优先安排,再排其余;有奇偶/整除约束的先定末位。</p>
+      <p><b class="tag">示例(带解):</b>用 0~5 组无重复的三位偶数。末位是特殊位置(要偶:0,2,4)。末位为0:百十位 A(5,2)=20;末位为2或4(2种):百位不能0(4种)、十位(4种)=4×4×2=32。合计 20+32=52。</p>
+      <p class="trap">陷阱:首位放了0;偶数约束下末位与首位互相牵制,要分「末位是否为0」讨论。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 捆绑法<b>捆内部要排序</b>!相邻 k 个别忘乘 A(k,k),多组相邻各乘一次。</p>
+      <p class="trap">② 插空法空位数是 <b>n+1</b>(含两端),不是 n−1;而且要<b>先排别人再插</b>不相邻的。</p>
+      <p class="trap">③ 隔板法只对<b>相同元素</b>,且标准型要求<b>每份至少 1 个</b>;可为 0 先「加人头」转化。</p>
+      <p class="trap">④ 平均分组<b>÷ 组数阶乘</b>(无编号的堆重复了 k! 次);分给不同的人则不除。</p>
+      <p class="trap">⑤ 分类要<b>不重不漏</b>:各类必须互斥且穷尽;分类(加)与分步(乘)不能混。</p>
+      <p class="trap">⑥ 「至少/至多」优先<b>间接法</b>;但反面若有多类要全减,别只减一类。</p>
+      <p class="trap">⑦ 排列 A(有序) vs 组合 C(无序):选出来还排不排队,决定用 A 还是 C。</p>
+      <p class="trap">⑧ 数字排列<b>首位不为 0</b>;有偶/整除约束先定末位,再讨论首位。</p>
+      <p class="trap">⑨ 「至少 1 女」别用 C(4,1)·C(8,3)——那样把含多女的情况<b>重复计数</b>了;要用间接法或分类。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 一切方法都在回答一个问题:「怎样让每种结果被数到且只数一次」。</b> 捆绑是把「相邻」这个约束变成「一个整体」从而不重不漏;插空是把「不相邻」翻译成「先占位再填空」;隔板是把「相同元素分配」转成「在缝里选位置」。看穿这一层,你选方法不再靠背题型,而靠「哪种表述让计数变得干净」。</p>
+      <p style="margin:8px 0"><b>② 相同 vs 不同,是选隔板还是排列的分水岭。</b> 相同元素之间的顺序没有意义(用隔板/组合),不同元素之间的顺序有意义(用排列)。做题第一眼先给元素「贴标签」:能区分吗?这决定了你整套工具。</p>
+      <p style="margin:8px 0"><b>③ 有序无序,是÷阶乘的总开关。</b> 平均分组÷k!、组合 C 里的÷m!、乃至圆排列÷n——本质都一样:某个「顺序」在本题里不算数,就把它多数的倍数除掉。理解「除以对称的阶数」,分组、圆桌、项链问题一网打尽。</p>
+      <p style="margin:8px 0"><b>④ 正难则反是一种「视角切换」而非技巧。</b> 「至少」正面碎、反面整,就减反面;有时「恰好」也能用两个「至少/至多」相减。养成「先估正反两边谁更好数」的习惯,能省掉大量分类。</p>
+      <p style="margin:8px 0"><b>⑤ 优先安排「最受限的」。</b> 无论是特殊位置(百位非0)还是特殊元素(数字0、必须相邻的人),谁的自由度最小谁先上——这和贪心地「先处理硬约束」一个道理,能把后续步骤变成无约束的纯排列,避免层层修正。</p>
+      <p style="margin:8px 0"><b>⑥ 计数≠二项式定理。</b> 本页讲「怎么数方案数」(排列组合的应用);二项式定理讲的是 (a+b)ⁿ 展开后每一项的系数(通项 C(n,r)aⁿ⁻ʳbʳ)。二者共用组合数 C,但一个求「有多少种」,一个求「某项系数是多少」,别把两类问题的套路混用。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 配套:二项式定理攻坚包(讲展开系数)、本页讲「怎么数」</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",GREY="#9a927e";
+/* 排列 A(n,m) 与 组合 C(n,m) */
+function fact(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function permA(n,m){if(m<0||m>n)return 0;let r=1;for(let i=0;i<m;i++)r*=(n-i);return r;}
+function combC(n,m){if(m<0||m>n)return 0;return permA(n,m)/fact(m);}
+
+/* ===== 互动1:分类加法 vs 分步乘法 树状图 ===== */
+(function(){
+  const svg=document.getElementById('treeSvg');const note=document.getElementById('treeNote');
+  let mode=0;
+  document.querySelectorAll('.treemode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.treemode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function node(x,y,txt,col){
+    el(svg,'circle',{cx:x,cy:y,r:16,fill:col,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x,y:y+5,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=txt;
+  }
+  function link(x1,y1,x2,y2){el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:INK,'stroke-width':2.5});}
+  function draw(){
+    clr(svg);
+    if(mode===0){
+      // 分步:上衣(2) x 裤子(3) = 6 paths
+      el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='分步:先选上衣(2件) 再选裤子(3件) → 相乘';
+      node(70,150,'始',INK);
+      const tops=[[70+130,90],[70+130,210]];
+      tops.forEach((t,i)=>{link(86,150,t[0]-16,t[1]);node(t[0],t[1],'衣'+(i+1),BLUE);});
+      let leaf=0;
+      tops.forEach((t,i)=>{
+        for(let j=0;j<3;j++){
+          const ly=t[1]-40+j*40;const lx=t[0]+150;
+          link(t[0]+16,t[1],lx-16,ly);node(lx,ly,'裤'+(j+1),GREEN);leaf++;
+        }
+      });
+      el(svg,'text',{x:520,y:300,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='叶子='+leaf+' 种';
+      note.innerHTML='👉 <b>分步乘法</b>:每条路径都要走完「上衣→裤子」两段才算一套穿搭。方法数 = 2 × 3 = <b>6</b> 种(数一数右边叶子正好6个)。';
+      note.style.borderColor=BLUE;
+    } else {
+      // 分类:坐车(3路) 或 坐船(2路) = 5
+      el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='分类:坐车(3路) 或 坐船(2路) → 相加';
+      node(70,150,'始',INK);
+      node(260,90,'车',ORANGE);node(260,210,'船',VIO);
+      link(86,150,244,90);link(86,150,244,210);
+      for(let i=0;i<3;i++){const ly=50+i*40;link(276,90,404,ly);node(420,ly,'车'+(i+1),ORANGE);}
+      for(let i=0;i<2;i++){const ly=180+i*40;link(276,210,404,ly);node(420,ly,'船'+(i+1),VIO);}
+      el(svg,'text',{x:560,y:150,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='叶子=5 种';
+      note.innerHTML='👉 <b>分类加法</b>:坐车这一支或坐船这一支,任选其一都能到达。方法数 = 3 + 2 = <b>5</b> 种(每一支自己就能完成)。';
+      note.style.borderColor=ORANGE;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动2:捆绑法 ===== */
+(function(){
+  const svg=document.getElementById('bundleSvg');
+  let bundled=false,swapped=false;
+  const oN=document.getElementById('bunN'),oA=document.getElementById('bunA'),oI=document.getElementById('bunI'),oT=document.getElementById('bunT');
+  function person(x,y,txt,col){
+    el(svg,'rect',{x:x-22,y:y-22,width:44,height:44,rx:8,fill:col,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:x,y:y+6,'font-size':17,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=txt;
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='甲乙丙丁戊 5 人,甲乙必须相邻';
+    const y=110;
+    const a=swapped?'乙':'甲',b=swapped?'甲':'乙';
+    if(!bundled){
+      // separate
+      const xs=[130,220,320,420,520];const labs=[a,b,'丙','丁','戊'];const cols=[RED,ORANGE,BLUE,GREEN,VIO];
+      xs.forEach((x,i)=>person(x,y,labs[i],cols[i]));
+      el(svg,'text',{x:350,y:190,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点「演示捆绑」把甲乙捆成一个整体';
+      oN.textContent='—';oA.textContent='—';oI.textContent='—';oT.textContent='—';
+    } else {
+      // bundled: 甲乙 as one block, plus 丙丁戊
+      el(svg,'rect',{x:100,y:y-34,width:120,height:68,rx:10,fill:'none',stroke:RED,'stroke-width':4,'stroke-dasharray':'8 5'});
+      person(135,y,a,RED);person(185,y,b,ORANGE);
+      el(svg,'text',{x:160,y:y-42,'font-size':12.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='捆成 1 个整体';
+      person(320,y,'丙',BLUE);person(420,y,'丁',GREEN);person(520,y,'戊',VIO);
+      // brace showing 4 units
+      el(svg,'text',{x:350,y:185,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='共 4 个整体全排 A(4,4)=24 ; 内部甲乙可交换 ×A(2,2)=2';
+      el(svg,'text',{x:350,y:210,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='总数 = 24 × 2 = 48';
+      oN.textContent='4';oA.textContent=permA(4,4);oI.textContent=permA(2,2);oT.textContent=permA(4,4)*permA(2,2);
+    }
+  }
+  document.getElementById('bunGo').onclick=()=>{bundled=true;draw();};
+  document.getElementById('bunSwap').onclick=()=>{if(bundled){swapped=!swapped;draw();}};
+  document.getElementById('bunReset').onclick=()=>{bundled=false;swapped=false;draw();};
+  draw();
+})();
+
+/* ===== 互动3:插空法 ===== */
+(function(){
+  const svg=document.getElementById('gapSvg');
+  const Ns=document.getElementById('gapN'),Ks=document.getElementById('gapK');
+  const oA=document.getElementById('gapA'),oS=document.getElementById('gapS'),oI=document.getElementById('gapI'),oT=document.getElementById('gapT');
+  let n=4,k=3,showMen=false;
+  function sync(){n=+Ns.value;k=+Ks.value;showMen=false;draw();}
+  Ns.oninput=Ks.oninput=sync;
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='先排 '+n+' 个(蓝),产生 '+(n+1)+' 个空,再把 '+k+' 个(红)插空';
+    const y=110;const startX=90;const gap=Math.min(90,(560)/n);
+    // women positions
+    const wx=[];
+    for(let i=0;i<n;i++){const x=startX+i*gap+gap/2;wx.push(x);
+      el(svg,'rect',{x:x-18,y:y-20,width:36,height:40,rx:6,fill:BLUE,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x,y:y+6,'font-size':14,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='女';
+    }
+    // gaps: n+1 slots (before first, between, after last)
+    const gx=[startX];
+    for(let i=0;i<n-1;i++){gx.push((wx[i]+wx[i+1])/2);}
+    // recompute cleanly: positions at edges and midpoints
+    gx.length=0;
+    gx.push(startX+gap/2-gap/2); // left edge
+    gx[0]=startX;
+    for(let i=0;i<n-1;i++){gx.push((wx[i]+wx[i+1])/2);}
+    gx.push(wx[n-1]+gap/2);
+    // draw gap markers
+    gx.forEach((x,i)=>{
+      el(svg,'polygon',{points:x+','+(y-40)+' '+(x-8)+','+(y-26)+' '+(x+8)+','+(y-26),fill:YEL,stroke:INK,'stroke-width':2});
+      el(svg,'circle',{cx:x,cy:y+40,r:11,fill:'#fff',stroke:INK,'stroke-width':2.5,'stroke-dasharray':'4 3'});
+      el(svg,'text',{x:x,y:y+45,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=(i+1);
+      if(showMen&&i<k){
+        el(svg,'rect',{x:x-13,y:y+58,width:26,height:30,rx:5,fill:RED,stroke:INK,'stroke-width':2.5});
+        el(svg,'text',{x:x,y:y+79,'font-size':12,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='男';
+      }
+    });
+    el(svg,'text',{x:350,y:y+112,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='黄三角=空位('+(n+1)+'个),把男生插进去每空至多一个';
+    oA.textContent=permA(n,n);oS.textContent=(n+1);oI.textContent=permA(n+1,k);oT.textContent=permA(n,n)*permA(n+1,k);
+  }
+  document.getElementById('gapGo').onclick=()=>{showMen=true;draw();};
+  document.getElementById('gapReset').onclick=sync;
+  sync();
+})();
+
+/* ===== 互动4:隔板法 ===== */
+(function(){
+  const svg=document.getElementById('boardSvg');
+  const Ns=document.getElementById('brdN'),Ms=document.getElementById('brdM');
+  const oN=document.getElementById('brdVN'),oG=document.getElementById('brdVG'),oB=document.getElementById('brdVB'),oC=document.getElementById('brdVC');
+  let n=10,m=4,boards=[];
+  function sync(){n=+Ns.value;m=+Ms.value;if(m-1>n-1)m=n;boards=[];draw();}
+  Ns.oninput=Ms.oninput=sync;
+  function randomBoards(){
+    // choose m-1 distinct gaps out of n-1
+    const gaps=[];for(let i=1;i<n;i++)gaps.push(i);
+    for(let i=gaps.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[gaps[i],gaps[j]]=[gaps[j],gaps[i]];}
+    boards=gaps.slice(0,m-1).sort((a,b)=>a-b);
+    draw();
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=n+' 个相同球,插 '+(m-1)+' 块隔板 → 分成 '+m+' 份(每份≥1)';
+    const y=110;const startX=70;const span=560;const gap=span/n;const r=Math.min(15,gap/2-3);
+    // balls
+    const bx=[];
+    for(let i=0;i<n;i++){const x=startX+i*gap+gap/2;bx.push(x);
+      el(svg,'circle',{cx:x,cy:y,r:r,fill:GREY,stroke:INK,'stroke-width':3});
+    }
+    // boards in chosen gaps
+    boards.forEach(g=>{
+      const x=(bx[g-1]+bx[g])/2;
+      el(svg,'rect',{x:x-4,y:y-30,width:8,height:60,fill:RED,stroke:INK,'stroke-width':2});
+    });
+    // show group sizes if boards set
+    if(boards.length===m-1){
+      const cuts=[0,...boards,n];const sizes=[];
+      for(let i=0;i<cuts.length-1;i++)sizes.push(cuts[i+1]-cuts[i]);
+      el(svg,'text',{x:350,y:y+62,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='一种分法:'+sizes.join(' | ')+' (各'+sizes.reduce((a,b)=>a+b,0)+'个球)';
+    } else {
+      el(svg,'text',{x:350,y:y+62,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点「随机放隔板」看一种具体分法';
+    }
+    el(svg,'text',{x:350,y:y+86,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='分法数 = C('+(n-1)+','+(m-1)+') = '+combC(n-1,m-1);
+    oN.textContent=n;oG.textContent=(n-1);oB.textContent=(m-1);oC.textContent=combC(n-1,m-1);
+  }
+  document.getElementById('brdShuffle').onclick=randomBoards;
+  document.getElementById('brdReset').onclick=sync;
+  sync();
+})();
+
+/* ===== 互动5:间接法 ===== */
+(function(){
+  const svg=document.getElementById('indSvg');const note=document.getElementById('indNote');
+  let c=0;
+  document.querySelectorAll('.indcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.indcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  // 从 5男4女 选4人
+  const total=combC(9,4);            // 126
+  const men0=combC(5,4);             // 全男 = 0女 = 5
+  const one=combC(4,1)*combC(5,3);   // 恰1女 = 40
+  function box(x,y,w,h,col,txt,tcol){
+    el(svg,'rect',{x:x,y:y,width:w,height:h,fill:col,stroke:INK,'stroke-width':3});
+    if(txt){el(svg,'text',{x:x+w/2,y:y+h/2+5,'font-size':13,'font-weight':900,fill:tcol||INK,'text-anchor':'middle'}).textContent=txt;}
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='从 5 男 4 女中选 4 人(总数 C(9,4)=126)';
+    const X=90,Y=50,W=520,H=120;const per=W/total;
+    if(c===0){
+      // at least 1 female = total - all men
+      const wMen=men0*per;
+      box(X,Y,W,H,'#dfeae0','',INK);
+      box(X,Y,wMen,H,'rgba(224,56,42,0.30)','',RED);
+      el(svg,'text',{x:X+wMen/2,y:Y+H+20,'font-size':11.5,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='反面·全男 C(5,4)=5';
+      el(svg,'text',{x:X+wMen+(W-wMen)/2,y:Y+H/2+5,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='至少1女 = 121';
+      note.innerHTML='👉 <b>至少 1 女</b>:反面「一个女生都没有(全选男)」只有 C(5,4)=<b>5</b> 种。答案 = 126 − 5 = <b>121</b>。反面极小,间接法一步到位。';
+      note.style.borderColor=GREEN;
+    } else if(c===1){
+      // at least 2 female = total - (0 female + 1 female)
+      const w0=men0*per,w1=one*per;
+      box(X,Y,W,H,'#dfeae0','',INK);
+      box(X,Y,w0,H,'rgba(224,56,42,0.30)','',RED);
+      box(X+w0,Y,w1,H,'rgba(232,106,23,0.30)','',ORANGE);
+      el(svg,'text',{x:X+w0/2,y:Y+H+20,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='0女=5';
+      el(svg,'text',{x:X+w0+w1/2,y:Y+H+20,'font-size':11,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='恰1女=40';
+      el(svg,'text',{x:X+w0+w1+(W-w0-w1)/2,y:Y+H/2+5,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='至少2女 = 81';
+      note.innerHTML='👉 <b>至少 2 女</b>:反面是「0 女 <b>或</b> 恰 1 女」<b>两类</b>都要减。0女=5,恰1女=C(4,1)C(5,3)=40。答案 = 126 − 5 − 40 = <b>81</b>。反面多类要全减!';
+      note.style.borderColor=GREEN;
+    } else {
+      // 正面直接数 至少1女
+      const c1=one,c2=combC(4,2)*combC(5,2),c3=combC(4,3)*combC(5,1),c4=combC(4,4)*combC(5,0);
+      box(X,Y,W,H,'#dfeae0','',INK);
+      const parts=[[c1,'恰1女=40',ORANGE],[c2,'恰2女=60',BLUE],[c3,'恰3女=20',VIO],[c4,'恰4女=1',GREEN]];
+      let cx=X;parts.forEach(p=>{const w=p[0]*per;box(cx,Y,w,H,'rgba(20,80,200,0.15)','',INK);
+        if(w>28)el(svg,'text',{x:cx+w/2,y:Y+H+18,'font-size':10.5,'font-weight':900,fill:p[2],'text-anchor':'middle'}).textContent=p[1];cx+=w;});
+      el(svg,'text',{x:X+W/2,y:Y-6,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='正面:分1/2/3/4女四类相加 = 40+60+20+1 = 121';
+      note.innerHTML='👉 <b>正面直接数</b>:要把「恰1女、恰2女、恰3女、恰4女」四类分别算再相加 = 40+60+20+1 = <b>121</b>。结果一样,但明显<b>比间接法繁琐</b>——这就是「至少」型偏爱间接法的原因。';
+      note.style.borderColor=BLUE;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动6:分组分配 ===== */
+(function(){
+  const svg=document.getElementById('grpSvg');const note=document.getElementById('grpNote');
+  let mode=0;
+  document.querySelectorAll('.grpmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.grpmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function pile(x,y,labs,col,title,tcol){
+    el(svg,'rect',{x:x-40,y:y-6,width:80,height:70,rx:8,fill:'#fff',stroke:col,'stroke-width':3});
+    labs.forEach((L,i)=>{
+      el(svg,'circle',{cx:x-18+i*36,cy:y+28,r:14,fill:col,stroke:INK,'stroke-width':2.5});
+      el(svg,'text',{x:x-18+i*36,y:y+33,'font-size':13,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent=L;
+    });
+    el(svg,'text',{x:x,y:y-12,'font-size':12.5,'font-weight':900,fill:tcol||INK,'text-anchor':'middle'}).textContent=title;
+  }
+  function draw(){
+    clr(svg);
+    el(svg,'text',{x:350,y:22,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='6 本不同的书 {A,B,C,D,E,F} 平均分成 3 份,每份 2 本';
+    // two arrangements to compare
+    el(svg,'text',{x:180,y:60,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='分法甲';
+    pile(90,80,['A','B'],BLUE, mode?'甲':'堆1');
+    pile(190,80,['C','D'],GREEN, mode?'乙':'堆2');
+    pile(290,80,['E','F'],VIO, mode?'丙':'堆3');
+    el(svg,'text',{x:530,y:60,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='分法乙';
+    pile(430,80,['C','D'],GREEN, mode?'甲':'堆1');
+    pile(530,80,['A','B'],BLUE, mode?'乙':'堆2');
+    pile(630,80,['E','F'],VIO, mode?'丙':'堆3');
+    if(mode===0){
+      // unordered piles: same
+      el(svg,'text',{x:350,y:170,'font-size':14,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='堆无编号 → 甲、乙其实是 同一种分法!';
+      el(svg,'text',{x:350,y:196,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='C(6,2)C(4,2)C(2,2)=90 里,每种被重复数了 3!=6 次';
+      el(svg,'text',{x:350,y:222,'font-size':15,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='答案 = 90 ÷ 3! = 90 ÷ 6 = 15';
+      note.innerHTML='👉 <b>平均分成无编号的堆</b>:{AB}{CD}{EF} 和 {CD}{AB}{EF} 只是「先写哪堆」不同,是<b>同一种</b>分法。90 种里每种被重复了 3!=6 次 → <b>÷6 = 15</b>。';
+      note.style.borderColor=RED;
+    } else {
+      el(svg,'text',{x:350,y:170,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='分给甲乙丙(堆有主人) → 甲、乙是 不同的 分配!';
+      el(svg,'text',{x:350,y:196,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='甲得AB / 乙得CD ≠ 甲得CD / 乙得AB';
+      el(svg,'text',{x:350,y:222,'font-size':15,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='答案 = C(6,2)C(4,2)C(2,2) = 90 (不除!)';
+      note.innerHTML='👉 <b>分给可区分的甲乙丙</b>:每堆有主人,「甲得AB」和「甲得CD」是不同结果,顺序有意义 → <b>不除阶乘</b>,答案就是 90。';
+      note.style.borderColor=GREEN;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动7:特殊位置优先(数字排列) ===== */
+(function(){
+  const svg=document.getElementById('digSvg');
+  const Ns=document.getElementById('digN');
+  const oTot=document.getElementById('digTot'),oH=document.getElementById('digH'),oR=document.getElementById('digR'),oAns=document.getElementById('digAns');
+  let maxD=5,step=0; // digits 0..maxD -> count = maxD+1
+  function sync(){maxD=+Ns.value;step=0;draw();}
+  Ns.oninput=sync;
+  function slot(x,y,label,val,col){
+    el(svg,'rect',{x:x,y:y,width:120,height:70,rx:8,fill:'#fff',stroke:col||INK,'stroke-width':3});
+    el(svg,'text',{x:x+60,y:y-8,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=label;
+    if(val)el(svg,'text',{x:x+60,y:y+46,'font-size':22,'font-weight':900,fill:col||INK,'text-anchor':'middle'}).textContent=val;
+  }
+  function draw(){
+    clr(svg);
+    const cnt=maxD+1;
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='用 0~'+maxD+'('+cnt+'个数字)组成无重复三位数';
+    const y=80;
+    slot(90,y,'百位(≠0)', step>=1?'?':'', RED);
+    slot(290,y,'十位', step>=2?'?':'', BLUE);
+    slot(490,y,'个位', step>=2?'?':'', GREEN);
+    // red cross over 0 in 百位
+    el(svg,'text',{x:150,y:y+65,'font-size':11,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent=step>=1?'不能放0':'';
+    const hundreds=maxD; // non-zero: 1..maxD = maxD choices
+    const rest=permA(cnt-1,2); // remaining
+    if(step===0){
+      el(svg,'text',{x:350,y:190,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='点「优先排百位」——先处理最受限的百位(不能是0)';
+    } else if(step===1){
+      el(svg,'text',{x:350,y:185,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='第①步:百位从 1~'+maxD+' 里选,共 '+hundreds+' 种';
+    } else {
+      el(svg,'text',{x:350,y:180,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='①百位 '+hundreds+' 种　②后两位(可含0)A('+(cnt-1)+',2)='+rest;
+      el(svg,'text',{x:350,y:206,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='三位数 = '+hundreds+' × '+rest+' = '+(hundreds*rest);
+    }
+    oTot.textContent=cnt;oH.textContent=hundreds;oR.textContent=rest;oAns.textContent=hundreds*rest;
+  }
+  document.getElementById('digGo').onclick=()=>{step=step>=2?2:step+1;if(step<1)step=1;else if(step<2)step=2;else step=2;draw();};
+  document.getElementById('digReset').onclick=sync;
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 分类加法原理和分步乘法原理的判断标准是什么?",a:"看一类里的任一种办法能否『独立把事办成』:能→分类(各类相加,关键词『或』);不能、必须接着做下一步→分步(各步相乘,关键词『先…再…』)。"},
+ {q:"2. 排列 A 和组合 C 的区别?什么时候用哪个?",a:"选出来后还要排顺序(有序)用排列 A(n,m)=n!/(n−m)!;选出来不排顺序(无序)用组合 C(n,m)=n!/[m!(n−m)!]。『排队/座位/名次』用A,『选取/小组/搭配』用C。"},
+ {q:"3. 5 人排队,甲乙必须相邻,几种排法?",a:"捆绑法:甲乙捆成 1 个整体与其余 3 人共 4 个元素全排 A(4,4)=24;捆内部甲乙排 A(2,2)=2。总数 24×2=48。"},
+ {q:"4. 捆绑法最容易漏的一步是什么?",a:"忘记『捆内部还要排序』(漏乘 A(k,k))。相邻的 k 个元素自己也有顺序,少乘就少算一半甚至更多。"},
+ {q:"5. 3 男 4 女排一排,3 男互不相邻,几种排法?",a:"插空法:先排 4 女 A(4,4)=24,产生 5 个空;3 男插进 5 空 A(5,3)=60。总数 24×60=1440。"},
+ {q:"6. 插空法的空位数是多少?常见错误是什么?",a:"先排的 n 个元素产生 n+1 个空(含两端)。常错:只数中间 n−1 个漏两端;或把要不相邻的元素先排(应先排无约束的)。"},
+ {q:"7. 10 个相同名额分给 4 个班每班至少 1 个,几种分法?",a:"隔板法:10 个球 9 个缝,插 3 块隔板:C(10−1,4−1)=C(9,3)=84。"},
+ {q:"8. 隔板法的使用前提是什么?若允许某人分到 0 个怎么办?",a:"前提:元素必须『相同(不可区分)』且『每份至少 1 个』。允许为0时先给每人『借1个』:n个分给m人可为0 → 转成 (n+m)个每人至少1 → C(n+m−1,m−1)。"},
+ {q:"9. 从 5 男 4 女选 4 人,至少 1 女,几种选法?为什么用间接法?",a:"间接法:总 C(9,4)=126,反面『全男(0女)』C(5,4)=5,答案 126−5=121。因为正面要分1/2/3/4女四类很繁琐,而反面只一类,用总数减反面更快。"},
+ {q:"10. 6 本不同的书平均分成 3 堆,几种分法?若改为分给甲乙丙 3 人各 2 本呢?",a:"平均分堆(无编号):C(6,2)C(4,2)C(2,2)=90,重复了3!=6次 → 90÷6=15。分给甲乙丙(有主人、可区分):不除,就是 90。"},
+ {q:"11. 平均分组为什么要除以组数阶乘?什么时候不除?",a:"因为无编号的组之间不可区分,同一种分法被『先取哪组』重复数了 k! 次,要÷k!。若组分给不同的人(有序、可区分)则不除。部分均匀只除均匀那部分的阶乘。"},
+ {q:"12. 用 0~5 组成无重复数字的三位数,有几个?",a:"特殊位置优先:百位不能是0,先排百位 5 种(1~5);后两位从剩下5个数字(可含0)里选2个排 A(5,2)=20。总数 5×20=100。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

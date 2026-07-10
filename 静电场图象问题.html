@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>静电场中的图象问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>静电场中的图象问题</h1>
+    <p class="lead">静电场看不见摸不着,考试就用<b>图象</b>把它画出来:场强 E 怎么随位置 x 变、电势 φ 怎么随 x 变、电荷的电势能 Ep 怎么随 x 变。这一页教你从这些曲线里<b>读电场、判受力、算能量</b>。核心只有一句:<b>φ-x 图的斜率就是 −E</b>,抓住它,一整类题全通。</p>
+
+    <div class="say">🗣️ <b>静电场图象题(人话版):</b> 一张 φ-x 曲线摆在你面前,你要从它身上读出三件事——<b>电场怎么分布</b>(哪里强哪里弱、朝哪个方向)、<b>电荷往哪受力</b>(正电荷被推向电势低处,负电荷相反)、<b>能量怎么变</b>(Ep=qφ,沿运动看升降)。关键抓两条:<b>φ-x 图斜率的大小 = 场强大小,斜率的正负反过来 = 场强方向(E=−dφ/dx)</b>。斜率越陡场越强,斜率朝下(φ 随 x 减小)则 E 朝 +x。</div>
+
+    <div class="keybox"><b>三条命根公式:</b> ① <b>E = −dφ/dx</b>(φ-x 图斜率的绝对值=场强大小,斜率符号反号=场强方向)。② <b>Ep = qφ</b>(正电荷 Ep 与 φ 同号同增减,负电荷相反)。③ <b>W = qU = q(φ_A−φ_B)</b>(电场力做功=电荷×电势差)。外加铁律:<b>沿电场线方向,电势 φ 一定降低</b>。</div>
+
+    <h2>① φ-x 图:斜率就是 −E</h2>
+    <div class="card">
+      <div class="eq">E = −dφ/dx　(场强 = 电势对位置斜率的相反数)</div>
+      <p style="margin:8px 0"><b>怎么读:</b> 在 φ-x 图上任取一点,作切线,量它的<b>斜率</b>。斜率的<b>绝对值 = 该点场强大小 E</b>;斜率的<b>正负取反 = 场强方向</b>——φ 随 x <b>下降</b>(斜率为负),则 E 指向 <b>+x</b>;φ 随 x <b>上升</b>(斜率为正),则 E 指向 <b>−x</b>。</p>
+      <table>
+        <tr><th>φ-x 图的样子</th><th>读出的电场</th></tr>
+        <tr><td>直线(斜率恒定)</td><td>匀强电场(E 大小方向都不变)</td></tr>
+        <tr><td>水平线(斜率=0)</td><td>该处 E=0(等势区,无电场)</td></tr>
+        <tr><td>越陡(斜率绝对值大)</td><td>该处场强越大</td></tr>
+        <tr><td>斜率向下(φ 减小)</td><td>E 指向 +x 方向</td></tr>
+        <tr><td>斜率向上(φ 增大)</td><td>E 指向 −x 方向</td></tr>
+      </table>
+      <p class="trap">⚠ 斜率是 <b>−E</b>,带负号!别把 φ 上升当成场强朝 +x。E 的方向永远指向 <b>φ 减小</b>的一侧(沿电场线电势降低)。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — φ-x 曲线与 E-x 联动:拖动看切线斜率 = −E(斜率越陡场越强)</div>
+      <svg id="pxSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>取点位置 x <input id="pxPos" type="range" min="0" max="100" value="30" step="1"></label>
+        <button class="pxcase on" data-c="0">匀强场(直线)</button>
+        <button class="pxcase" data-c="1">曲线(变场强)</button>
+        <button class="pxcase" data-c="2">带等势平台</button>
+      </div>
+      <div class="live">
+        <div><b>该点 φ (V)</b><span id="pxPhi">0</span></div>
+        <div><b>斜率 dφ/dx</b><span id="pxSlope">0</span></div>
+        <div><b>场强 E=−dφ/dx</b><span id="pxE">0</span></div>
+        <div><b>E 方向</b><span id="pxDir">0</span></div>
+      </div>
+      <p class="small">上图:φ-x 曲线,红点处画出<b>切线</b>。下图:对应的 E-x 图,竖线标出该点的 E=−斜率。切线越陡,下面的 E 柱越高;切线朝下,E 为正(指向 +x)。</p>
+    </div>
+
+    <h2 class="b">② Ep = qφ:电势能跟电荷符号有关</h2>
+    <div class="card">
+      <div class="eq">Ep = q·φ　(电势能 = 电荷量 × 电势)</div>
+      <p style="margin:8px 0"><b>同一个点、同一个 φ</b>,放不同电荷,电势能不同:</p>
+      <table>
+        <tr><th>电荷</th><th>Ep 与 φ 的关系</th><th>φ 增大时 Ep</th></tr>
+        <tr><td><b>正电荷</b>(q&gt;0)</td><td>Ep 与 φ <b>同号</b>,随 φ 同增减</td><td>Ep 增大</td></tr>
+        <tr><td><b>负电荷</b>(q&lt;0)</td><td>Ep 与 φ <b>反号</b>,随 φ 反增减</td><td>Ep 减小</td></tr>
+      </table>
+      <p style="margin:8px 0">所以看到「φ-x 图」要求「Ep-x 图」:<b>正电荷</b>的 Ep-x 曲线和 φ-x <b>形状相同</b>(乘正数);<b>负电荷</b>的 Ep-x 曲线和 φ-x <b>上下翻转</b>(乘负数)。</p>
+      <p class="trap">⚠ 负电荷最坑:φ 高的地方,负电荷的 Ep 反而<b>低</b>。负电荷是往「φ 高、Ep 低」的方向被吸,能量分析全要反着来。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔋 互动 2 — 由 φ-x 生成 Ep-x:切换正/负电荷看曲线翻转(Ep=qφ)</div>
+      <svg id="epSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="epq on" data-q="1">正电荷 q=+2C</button>
+        <button class="epq" data-q="-1">负电荷 q=−2C</button>
+      </div>
+      <div class="verdict" id="epNote"></div>
+      <p class="small">蓝线=φ-x(电势,不随电荷变)。彩线=Ep-x=qφ。正电荷:Ep 与 φ 同形状。负电荷:Ep 曲线相对 0 线<b>上下翻转</b>——φ 最高处 Ep 最低。</p>
+    </div>
+
+    <h2 class="g">③ 沿电场线,电势一定降低</h2>
+    <div class="card">
+      <div class="eq">沿 E 方向前进 → φ 单调下降　(高电势 → 低电势)</div>
+      <p style="margin:8px 0"><b>这是判方向的钢律:</b> 电场线从高电势指向低电势。所以只要知道两点电势谁高谁低,就知道电场线(E)从谁指向谁;反过来知道 E 的方向,就知道沿途 φ 越走越低。</p>
+      <h3>由此秒判的三件事</h3>
+      <div class="mono">1. 两点比 φ 高低 → 电场线由高 φ 点指向低 φ 点。</div>
+      <div class="mono">2. 已知 E 方向 → 沿 E 走,φ 减小;逆 E 走,φ 增大。</div>
+      <div class="mono">3. 正电荷被推向低 φ(顺 E),负电荷被推向高 φ(逆 E)。</div>
+      <p class="trap">⚠ 「沿电场线电势降低」只对<b>沿电场线</b>成立。若移动方向与 E 不平行,要看位移在 E 方向的<b>投影</b>;垂直 E 移动(沿等势面)φ 不变。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">➡️ 互动 3 — 沿电场线电势降低:拖动小球,看它沿 E 走 φ 如何单调下降</div>
+      <svg id="lineSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>小球位置 <input id="lnPos" type="range" min="0" max="100" value="20" step="1"></label>
+        <button class="lndir on" data-d="1">E 指向右(→)</button>
+        <button class="lndir" data-d="-1">E 指向左(←)</button>
+      </div>
+      <div class="live">
+        <div><b>小球处 φ (V)</b><span id="lnPhi">0</span></div>
+        <div><b>移动方向</b><span id="lnMove">0</span></div>
+        <div><b>φ 变化</b><span id="lnTrend">0</span></div>
+        <div><b>与 E 同向?</b><span id="lnSame">0</span></div>
+      </div>
+      <p class="small">箭头=电场线(等间距→匀强场)。数字标出各等势面电势。把球沿 E 方向拖,φ 一路降低;逆 E 拖,φ 升高。这就是「沿电场线电势降低」的直观版。</p>
+    </div>
+
+    <h2 class="o">④ E-x 图:场强怎么变 & 图下面积=电势差</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>E-x 图读法:</b> 曲线高度=该点场强大小,正负=场强方向(正=+x,负=−x)。E-x 图<b>越高的地方场越强</b>,穿过零点表示场强反向。</p>
+      <div class="eq">U_AB = φ_A − φ_B = ∫ E dx　(E-x 图线下面积 = 两点电势差)</div>
+      <p style="margin:8px 0"><b>E-x 图下的面积</b>就是电势差 U(即两点 φ 之差)。这和 φ-x 图斜率=−E 互为逆运算:<b>φ-x 求斜率得 E,E-x 求面积得 φ 之差</b>。匀强场里 E 是常数,面积=E·d,正好回到 U=E·d。</p>
+      <p class="trap">⚠ E-x 图面积是「电势差」不是「电势」;要得到某点绝对电势,还得选零势点(常取无穷远或某板)。面积算的是 φ 的<b>差值</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 4 — E-x 图下面积 = 电势差:拖动区间,看阴影面积 = U = Δφ</div>
+      <svg id="exSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>右端位置 x <input id="exR" type="range" min="10" max="100" value="60" step="1"></label>
+        <button class="excase on" data-c="0">匀强场(E 恒定)</button>
+        <button class="excase" data-c="1">阶梯场(E 分段)</button>
+      </div>
+      <div class="live">
+        <div><b>区间 0→x 长度</b><span id="exLen">0</span></div>
+        <div><b>场强 E</b><span id="exE">0</span></div>
+        <div><b>阴影面积=U</b><span id="exU">0</span></div>
+        <div><b>φ 降低量</b><span id="exDrop">0</span></div>
+      </div>
+      <p class="small">E-x 图下从 0 到 x 的<b>阴影面积</b> = 这段的电势差 U = 起点比终点高出的电势。匀强场是矩形(U=E·d);阶梯场是几块矩形相加。</p>
+    </div>
+
+    <h2 class="v">⑤ 匀强场 vs 点电荷场:图象长相对比</h2>
+    <div class="card">
+      <table>
+        <tr><th></th><th>匀强电场</th><th>点电荷电场</th></tr>
+        <tr><td>E-x 图</td><td><b>水平直线</b>(E 处处相等)</td><td>随距离<b>迅速衰减</b>的曲线(∝1/r²)</td></tr>
+        <tr><td>φ-x 图</td><td><b>斜直线</b>(φ 均匀下降,斜率恒定)</td><td><b>弯曲下降</b>曲线(∝1/r,近处陡、远处缓)</td></tr>
+        <tr><td>斜率含义</td><td>斜率恒定 → E 恒定</td><td>近电荷斜率陡 → 近处 E 大</td></tr>
+        <tr><td>典型场景</td><td>平行板电容器内部</td><td>孤立点电荷周围</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>一眼分辨:</b> φ-x 是<b>直线</b> → 匀强场;φ-x 是<b>弯曲</b>(近处陡远处缓) → 点电荷场。E-x 是<b>水平线</b> → 匀强场;E-x <b>快速衰减</b> → 点电荷场。</p>
+      <p class="trap">⚠ 点电荷 φ∝1/r、E∝1/r²,两者衰减快慢不同。别把 φ-x 曲线的形状照搬当成 E-x。要 E 就对 φ-x 求斜率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🆚 互动 5 — 匀强场 vs 点电荷场:并排看 φ-x / E-x 长相差异</div>
+      <svg id="cmpSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="cmpcase on" data-c="0">匀强电场</button>
+        <button class="cmpcase" data-c="1">点电荷电场</button>
+      </div>
+      <div class="verdict" id="cmpNote"></div>
+      <p class="small">左=φ-x,右=E-x。匀强场:φ-x 直线、E-x 水平线。点电荷场:φ-x 弯曲下降、E-x 快速衰减。同一种场,φ-x 的<b>斜率</b>正好对上 E-x 的<b>高度</b>。</p>
+    </div>
+
+    <h2 class="r">⑥ 带电粒子在图象场中:受力方向 & 动能变化</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>受力:</b> 电荷受电场力 F=qE。<b>正电荷</b>受力方向<b>与 E 同向</b>(顺电场线,向低 φ);<b>负电荷</b>受力方向<b>与 E 反向</b>(逆电场线,向高 φ)。</p>
+      <p style="margin:6px 0"><b>动能:</b> 只有电场力做功时,由动能定理 W=ΔEk;而 W=qU=q(φ_起−φ_终)=−ΔEp。所以<b>Ep 减小 → Ek 增大</b>(能量守恒:动能+电势能=常量)。</p>
+      <div class="mono">W_电 = qU = −ΔEp = ΔEk　(电势能降,动能升)</div>
+      <p style="margin:8px 0"><b>判断粒子加速/减速:</b> 看它是被推向 Ep 低处(加速)还是被迫冲向 Ep 高处(减速)。正电荷冲向低 φ 时加速;负电荷冲向高 φ 时加速。</p>
+      <p class="trap">⚠ 「电势 φ 高低」不等于「电势能 Ep 高低」!Ep=qφ,负电荷 φ 高处 Ep 低。判动能变化要看 <b>Ep</b>(带电荷符号),不是光看 φ。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚛️ 互动 6 — 粒子受力方向:在 E 场中放正/负电荷,看 F=qE 指向与运动</div>
+      <canvas id="fcCv" width="700" height="220"></canvas>
+      <div class="ctrl">
+        <button id="fcGo">▶ 释放粒子</button><button id="fcReset">↺ 重置</button>
+        <button class="fcq on" data-q="1">正电荷</button>
+        <button class="fcq" data-q="-1">负电荷</button>
+      </div>
+      <div class="live">
+        <div><b>场强 E 方向</b><span id="fcE">→</span></div>
+        <div><b>受力 F=qE 方向</b><span id="fcF">0</span></div>
+        <div><b>运动趋势</b><span id="fcMove">0</span></div>
+        <div><b>Ek / Ep</b><span id="fcEn">0</span></div>
+      </div>
+      <p class="small">灰箭头=电场线(E 向右)。红球=你选的电荷。正电荷受力顺 E(向右,冲向低 φ),Ep 降 Ek 升;负电荷受力逆 E(向左,冲向高 φ)。运动方向 = 受力方向(从静止释放)。</p>
+    </div>
+
+    <h2 class="r">⑦ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 由 φ-x 图判断场强大小与方向</h3>
+      <p><b class="tag">触发信号:</b>给一张 φ-x 图,问某点场强大小、方向,或问哪点场强最大。</p>
+      <p><b class="tag">标准动作:</b>作切线量斜率 → E 大小=|斜率|,方向:φ 减小侧(斜率为负)→E 指 +x;φ 增大侧→E 指 −x。比大小就比切线陡缓。</p>
+      <p><b class="tag">示例(带解):</b>φ-x 图上,x=1m 处切线斜率 −20V/m,x=3m 处斜率 −5V/m。则 E₁=20V/m、E₃=5V/m,均指向 +x(φ 在减小)。x=1 处场强大(切线更陡)。</p>
+      <p class="trap">陷阱:漏掉负号把方向判反;把 φ 的高低当成 E 的大小(其实看斜率不看高度)。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由 E-x 图判断电势高低</h3>
+      <p><b class="tag">触发信号:</b>给 E-x 图,问两点电势差、哪点电势高、电势最高/最低点在哪。</p>
+      <p><b class="tag">标准动作:</b>用 U=∫E dx=E-x 图面积。沿电场线(E 正向)走电势降低,所以起点 φ 高。φ 最高在电场线的「上游」(E 正区的起点)。</p>
+      <p><b class="tag">示例(带解):</b>匀强场 E=10V/m 沿 +x,x=0 到 x=2m。U=面积=10×2=20V,即 φ(0)−φ(2)=20V,x=0 处电势比 x=2 处高 20V。</p>
+      <p class="trap">陷阱:把 E 的正负当成电势高低;忘了面积算的是电势差不是电势;E 反向段面积要变号。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 电荷在场中 Ep-x / 动能变化</h3>
+      <p><b class="tag">触发信号:</b>给 φ-x 图,把某电荷从 A 移到 B,问 Ep 怎么变、Ek 怎么变、W_电多少。</p>
+      <p><b class="tag">标准动作:</b>Ep=qφ 逐点算(负电荷记得反号)。W_电=q(φ_A−φ_B)=−ΔEp;由动能定理 ΔEk=W_电(若只有电场力)。Ep 降则 Ek 升。</p>
+      <p><b class="tag">示例(带解):</b>φ_A=10V、φ_B=4V,把 q=−2C 从 A 移到 B。W_电=q(φ_A−φ_B)=−2×(10−4)=−12J。Ep_A=−2×10=−20J,Ep_B=−2×4=−8J,ΔEp=+12J(增大),故 Ek 减少 12J。</p>
+      <p class="trap">陷阱:负电荷 Ep=qφ 符号算错;把 W_电符号搞反;误以为 φ 降 Ep 就一定降(对负电荷相反)。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 比较两点电势 / 场强</h3>
+      <p><b class="tag">触发信号:</b>给 φ-x 或 E-x 图,问「A、B 两点电势谁高」「M、N 两点场强谁大」。</p>
+      <p><b class="tag">标准动作:</b>比电势:直接读 φ-x 图高度(高的电势高),或 E-x 图沿 E 方向下游电势低。比场强:φ-x 图比切线陡缓,或 E-x 图比柱高。</p>
+      <p><b class="tag">示例(带解):</b>φ-x 图 A 点在曲线较高处、切线较缓,B 点较低、切线较陡。则 φ_A&gt;φ_B(电势 A 高),但 E_B&gt;E_A(场强 B 大)。电势高低与场强大小无关!</p>
+      <p class="trap">陷阱:把「电势高」当成「场强大」。电势看高度,场强看斜率,是两码事(φ 高处 E 可以为 0)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 粒子运动与图象结合</h3>
+      <p><b class="tag">触发信号:</b>带电粒子在场中运动,给 φ-x 或 E-x 图,结合 v-x、Ek-x 图问运动情况、往返、能否到达。</p>
+      <p><b class="tag">标准动作:</b>由图定 E→定 F=qE 方向→判加速减速。用能量守恒 Ek+Ep=常量:Ep(=qφ)最低处 Ek 最大速度最快;Ek=0 处是运动的折返点。</p>
+      <p><b class="tag">示例(带解):</b>正电荷从 φ 高处静止释放,冲向 φ 低处。Ep=qφ 一路降→Ek 一路升,到 φ 最低点速度最大。若前方 φ 又升高,粒子减速,到 Ep=初始 Ep 处速度归零折返。</p>
+      <p class="trap">陷阱:只看 φ 不看 Ep(负电荷会反);忘了粒子在 Ek=0 处折返;把 φ-x 图直接当运动轨迹。</p>
+    </div>
+
+    <h2 class="r">⑧ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>φ-x 图斜率是 −E</b>(带负号)!场强大小=|斜率|,方向指向 φ 减小的一侧,别把 φ 上升当成 E 朝 +x。</p>
+      <p class="trap">② <b>Ep=qφ,对负电荷符号相反</b>。φ 高处,负电荷 Ep 反而低。能量分析对负电荷全要反着来。</p>
+      <p class="trap">③ <b>沿电场线方向电势一定降低</b>(高 φ→低 φ)。逆电场线走 φ 升高;垂直 E(等势面)φ 不变。</p>
+      <p class="trap">④ <b>场强大小看斜率陡缓,不看电势高低</b>。φ 高的点场强可以为 0(如等势区),φ 低的点场强可以很大。</p>
+      <p class="trap">⑤ E-x 图面积=<b>电势差 U</b>(φ 之差),不是电势本身;要绝对电势还得选零势点。</p>
+      <p class="trap">⑥ 正电荷受力顺 E(向低 φ),负电荷受力逆 E(向高 φ)。判受力方向先看电荷符号。</p>
+      <p class="trap">⑦ 判粒子加速/减速看 <b>Ep</b> 升降(Ep 降→Ek 升),不是光看 φ 升降。负电荷 φ 与 Ep 反向。</p>
+      <p class="trap">⑧ 点电荷 φ∝1/r(弯曲)、匀强场 φ∝x(直线),别把两种 φ-x 图形状混用。</p>
+    </div>
+
+    <h2 class="v">⑨ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① E=−dφ/dx 是「微分」,U=∫E dx 是「积分」,互为逆运算:</b> φ-x 求斜率得 E-x,E-x 求面积得 φ 之差。看到一张图先问自己「要用斜率还是面积」——问场强(方向大小)走斜率,问电势差走面积。这一对关系统一了两类图象题。</p>
+      <p style="margin:8px 0"><b>② 电场力做功只跟「起点终点电势」有关,与路径无关:</b> W=q(φ_起−φ_终)。所以静电场是保守场,可以定义电势能 Ep=qφ。任何绕来绕去的路径,只看两端 φ,这是「电势」这个标量存在的意义——把矢量场的做功压缩成两个数相减。</p>
+      <p style="margin:8px 0"><b>③ 能量守恒是粒子运动题的总开关:</b> 只有电场力时 Ek+Ep=常量。Ep=qφ 最低处速度最大,Ek=0 处折返。先画出「粒子看到的 Ep-x 曲线」(正电荷同 φ、负电荷翻转 φ),把它当成一条「势能地形」,粒子就像小球在地形里滚——低处快、高处慢、爬不过的坡就折返。</p>
+      <p style="margin:8px 0"><b>④ 「电势高低」和「场强大小」彻底解耦:</b> φ 是标量(有高低),E 是 φ 的空间变化率(有陡缓)。等势区 φ 恒定但可以很高,E 却为 0;两块板正中间 E 最大处 φ 可能恰好为中间值。永远分开判:高度问 φ,坡度问 E。</p>
+      <p style="margin:8px 0"><b>⑤ 正负电荷是「同一张 φ 图的两副眼镜」:</b> 电场(φ、E)只由源电荷决定,与试探电荷无关。换正换负,电场不变,变的是 Ep=qφ 和受力 F=qE 的<b>符号</b>。做题时先把电场(φ-x、E-x)钉死,再套上电荷符号这副眼镜去看能量和受力,思路就不乱。</p>
+    </div>
+
+    <h2 class="b">⑩ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 配套:电场基础、电势能与电势差攻坚包</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:phi-x 图与 E-x 联动 ===== */
+(function(){
+  const svg=document.getElementById('pxSvg');
+  const Pos=document.getElementById('pxPos');
+  const oPhi=document.getElementById('pxPhi'),oSlope=document.getElementById('pxSlope'),oE=document.getElementById('pxE'),oDir=document.getElementById('pxDir');
+  let cs=0;
+  document.querySelectorAll('.pxcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.pxcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');cs=+b.dataset.c;draw();
+  });
+  Pos.oninput=draw;
+  // domain xr in 0..10 (m). phi(xr) and dphi/dx
+  function phi(xr){
+    if(cs===0){return 100-8*xr;}                 // linear, slope -8
+    else if(cs===1){return 100-0.9*xr*xr;}        // curve, slope -1.8x
+    else{ // plateau: drop, flat, drop
+      if(xr<3)return 100-10*xr;
+      else if(xr<6)return 70;
+      else return 70-10*(xr-6);
+    }
+  }
+  function slope(xr){
+    if(cs===0)return -8;
+    else if(cs===1)return -1.8*xr;
+    else{ if(xr<3)return -10; else if(xr<6)return 0; else return -10; }
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=24,W=580,Ht=150;    // top phi plot
+    const EY0=210,EHt=110;              // bottom E plot
+    const xr=(+Pos.value)/100*10;       // 0..10
+    // ranges
+    const phiMin=0,phiMax=110;
+    function px(xr){return X0+(xr/10)*W;}
+    function py(v){return Y0+Ht-((v-phiMin)/(phiMax-phiMin))*Ht;}
+    // axes top
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+Ht,x2:X0+W,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'end'}).textContent='φ';
+    el(svg,'text',{x:X0+W,y:Y0+Ht+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:X0,y:Y0-8,'font-size':12.5,'font-weight':800,fill:INK}).textContent='φ-x 图（切线斜率 = −E）';
+    // phi curve
+    let d='';
+    for(let i=0;i<=100;i++){const xx=i/10;const X=px(xx),Y=py(phi(xx));d+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:BLUE,'stroke-width':3});
+    // point + tangent
+    const sX=px(xr),sY=py(phi(xr));
+    const s=slope(xr); // dphi/dx in V per m
+    // tangent line: draw over dx=+-1.5m
+    const dxm=1.6;
+    const tx1=xr-dxm,tx2=xr+dxm;
+    const ty1=phi(xr)+s*(-dxm),ty2=phi(xr)+s*(dxm);
+    el(svg,'line',{x1:px(tx1),y1:py(ty1),x2:px(tx2),y2:py(ty2),stroke:RED,'stroke-width':3,'stroke-dasharray':'6 4'});
+    el(svg,'circle',{cx:sX,cy:sY,r:6,fill:RED,stroke:INK,'stroke-width':2});
+    // bottom E plot
+    el(svg,'line',{x1:X0,y1:EY0,x2:X0,y2:EY0+EHt,stroke:INK,'stroke-width':3});
+    const Ezero=EY0+EHt*0.5;
+    el(svg,'line',{x1:X0,y1:Ezero,x2:X0+W,y2:Ezero,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:EY0+4,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='E';
+    el(svg,'text',{x:X0+W,y:Ezero+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:X0,y:EY0-6,'font-size':12.5,'font-weight':800,fill:INK}).textContent='E-x 图（E = −斜率，向上为 +x 方向）';
+    const Escale=2.2;
+    // E curve
+    let de='';
+    for(let i=0;i<=100;i++){const xx=i/10;const Ev=-slope(xx);const X=px(xx);const Y=Ezero-Ev*Escale;de+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:de,fill:'none',stroke:RED,'stroke-width':3});
+    // marker line at xr
+    const Ehere=-s;
+    el(svg,'line',{x1:sX,y1:Ezero,x2:sX,y2:Ezero-Ehere*Escale,stroke:GREEN,'stroke-width':5});
+    el(svg,'circle',{cx:sX,cy:Ezero-Ehere*Escale,r:5,fill:GREEN,stroke:INK,'stroke-width':2});
+    // readouts
+    oPhi.textContent=phi(xr).toFixed(1);
+    oSlope.textContent=s.toFixed(1);
+    oE.textContent=Ehere.toFixed(1);
+    oDir.textContent=Ehere>0.05?'+x 方向':Ehere<-0.05?'−x 方向':'E=0';
+  }
+  draw();
+})();
+
+/* ===== 互动2:由 phi-x 生成 Ep-x ===== */
+(function(){
+  const svg=document.getElementById('epSvg');const note=document.getElementById('epNote');
+  let q=1; // +2C or -2C sign, magnitude 2
+  document.querySelectorAll('.epq').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.epq').forEach(x=>x.classList.remove('on'));b.classList.add('on');q=+b.dataset.q;draw();
+  });
+  function phi(xr){return 40-6*xr;} // linear phi 40..-20 over x 0..10
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=24,W=580,Ht=210;
+    const zeroY=Y0+Ht*0.5;
+    const scale=2.0;
+    function px(xr){return X0+(xr/10)*W;}
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:zeroY,x2:X0+W,y2:zeroY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+W,y:zeroY+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='V,J';
+    el(svg,'text',{x:X0,y:Y0-8,'font-size':12.5,'font-weight':800,fill:INK}).textContent='Ep = q·φ（q=2C 量级）';
+    // phi line (blue, fixed)
+    let dp='';
+    for(let i=0;i<=100;i++){const xx=i/10;const X=px(xx),Y=zeroY-phi(xx)*scale;dp+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:dp,fill:'none',stroke:BLUE,'stroke-width':3});
+    el(svg,'text',{x:px(0.3),y:zeroY-phi(0.3)*scale-8,'font-size':12,'font-weight':900,fill:BLUE}).textContent='φ (电势)';
+    // Ep line = q*phi
+    const col=q>0?GREEN:VIO;
+    let de='';
+    for(let i=0;i<=100;i++){const xx=i/10;const ep=q*2*phi(xx);const X=px(xx),Y=zeroY-ep*scale*0.5;de+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:de,fill:'none',stroke:col,'stroke-width':4});
+    el(svg,'text',{x:px(6.5),y:zeroY-(q*2*phi(6.5))*scale*0.5+(q>0?-8:18),'font-size':12,'font-weight':900,fill:col}).textContent='Ep=qφ ('+(q>0?'正':'负')+'电荷)';
+    // note
+    if(q>0){
+      note.innerHTML='👉 <b>正电荷 q=+2C</b>：Ep=qφ 与 φ <b>同形状同增减</b>（乘正数）。φ 高处 Ep 也高，φ 低处 Ep 也低。';
+      note.style.borderColor=GREEN;
+    }else{
+      note.innerHTML='👉 <b>负电荷 q=−2C</b>：Ep=qφ 相对 0 线<b>上下翻转</b>（乘负数）。★ φ 最高处 Ep 反而<b>最低</b>！能量分析要反着来。';
+      note.style.borderColor=VIO;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动3:沿电场线电势降低 ===== */
+(function(){
+  const svg=document.getElementById('lineSvg');
+  const Pos=document.getElementById('lnPos');
+  const oPhi=document.getElementById('lnPhi'),oMove=document.getElementById('lnMove'),oTrend=document.getElementById('lnTrend'),oSame=document.getElementById('lnSame');
+  let dir=1,lastPos=20;
+  document.querySelectorAll('.lndir').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.lndir').forEach(x=>x.classList.remove('on'));b.classList.add('on');dir=+b.dataset.d;draw();
+  });
+  Pos.oninput=()=>{draw();};
+  // phi decreases along E direction. If E points right (dir=1): phi high at left.
+  function phiAt(frac){ // frac 0..1 position
+    // phi from 100 down to 0 along E direction
+    return dir>0 ? (100-100*frac) : (100*frac);
+  }
+  function draw(){
+    clr(svg);
+    const X0=50,W=600,cyLine=170;
+    // field lines (arrows), 6 of them, equal spacing => uniform field
+    for(let i=0;i<6;i++){
+      const y=60+i*22;
+      const ax1=dir>0?X0:X0+W, ax2=dir>0?X0+W:X0;
+      el(svg,'line',{x1:X0,y1:y,x2:X0+W,y2:y,stroke:'#9a9a9a','stroke-width':2});
+      // arrowhead at end in E direction
+      const hx=dir>0?X0+W:X0;
+      el(svg,'polygon',{points:(hx)+','+(y-5)+' '+(hx+dir*12)+','+y+' '+(hx)+','+(y+5),fill:'#9a9a9a'});
+    }
+    el(svg,'text',{x:X0,y:40,'font-size':12.5,'font-weight':900,fill:'#6b6b6b'}).textContent='电场线 E '+(dir>0?'→':'←')+'（等间距=匀强场）';
+    // equipotential lines with labels: vertical dashed
+    for(let k=0;k<=4;k++){
+      const frac=k/4;
+      const X=X0+frac*W;
+      el(svg,'line',{x1:X,y1:55,x2:X,y2:190,stroke:BLUE,'stroke-width':1.5,'stroke-dasharray':'4 4'});
+      el(svg,'text',{x:X,y:210,'font-size':11.5,'font-weight':800,fill:BLUE,'text-anchor':'middle'}).textContent='φ='+phiAt(frac).toFixed(0)+'V';
+    }
+    // ball
+    const frac=(+Pos.value)/100;
+    const bx=X0+frac*W;
+    el(svg,'circle',{cx:bx,cy:cyLine-40,r:12,fill:RED,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx,y:cyLine-36,'font-size':11,'font-weight':900,fill:'#fff','text-anchor':'middle'}).textContent='+';
+    // readouts
+    const curPhi=phiAt(frac);
+    oPhi.textContent=curPhi.toFixed(1);
+    const moved=(+Pos.value)-lastPos;
+    let moveDir = moved>0?'向右(+x)':moved<0?'向左(−x)':'静止';
+    oMove.textContent=moveDir;
+    // trend: compare phi
+    const prevPhi=phiAt(lastPos/100);
+    let trend = curPhi<prevPhi-0.5?'↓ 降低':curPhi>prevPhi+0.5?'↑ 升高':'不变';
+    oTrend.textContent=trend;
+    // same as E?
+    let same='—';
+    if(moved!==0){ const movingRight=moved>0; const Eright=dir>0; same=(movingRight===Eright)?'同向→φ降':'反向→φ升'; }
+    oSame.textContent=same;
+    lastPos=+Pos.value;
+  }
+  draw();
+})();
+
+/* ===== 互动4:E-x 图面积=电势差 ===== */
+(function(){
+  const svg=document.getElementById('exSvg');
+  const R=document.getElementById('exR');
+  const oLen=document.getElementById('exLen'),oE=document.getElementById('exE'),oU=document.getElementById('exU'),oDrop=document.getElementById('exDrop');
+  let cs=0;
+  document.querySelectorAll('.excase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.excase').forEach(x=>x.classList.remove('on'));b.classList.add('on');cs=+b.dataset.c;draw();
+  });
+  R.oninput=draw;
+  // E(xr): xr in 0..10 m
+  function Eval(xr){
+    if(cs===0)return 8;                       // uniform 8 V/m
+    else{ if(xr<4)return 10; else if(xr<7)return 4; else return 8; } // steps
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=30,W=580,Ht=210;
+    const xrR=(+R.value)/100*10;
+    function px(xr){return X0+(xr/10)*W;}
+    const Emax=12;
+    function py(Ev){return Y0+Ht-(Ev/Emax)*Ht;}
+    // axes
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:Y0+Ht,x2:X0+W,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'end'}).textContent='E';
+    el(svg,'text',{x:X0+W,y:Y0+Ht+20,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+    el(svg,'text',{x:X0,y:Y0-8,'font-size':12.5,'font-weight':800,fill:INK}).textContent='E-x 图（阴影面积 = 电势差 U）';
+    // shaded area 0..xrR : build polygon following steps
+    let pts=[[px(0),py(0)]];
+    const N=120;
+    for(let i=0;i<=N;i++){const xx=(i/N)*xrR;pts.push([px(xx),py(Eval(xx))]);}
+    pts.push([px(xrR),py(0)]);
+    let poly=pts.map(p=>p[0]+','+p[1]).join(' ');
+    el(svg,'polygon',{points:poly,fill:'rgba(232,106,23,0.30)',stroke:'none'});
+    // full E curve (line)
+    let d='';
+    for(let i=0;i<=N;i++){const xx=(i/N)*10;const X=px(xx),Y=py(Eval(xx));d+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:d,fill:'none',stroke:RED,'stroke-width':3});
+    // right boundary
+    el(svg,'line',{x1:px(xrR),y1:Y0+Ht,x2:px(xrR),y2:py(Eval(xrR-0.01)),stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:px(xrR),y:Y0+Ht+20,'font-size':11.5,'font-weight':800,fill:ORANGE,'text-anchor':'middle'}).textContent='x='+xrR.toFixed(1)+'m';
+    // compute area = U via trapezoid
+    let U=0;const M=400;const dx=xrR/M;
+    for(let i=0;i<M;i++){const xa=i*dx;U+=Eval(xa+dx/2)*dx;}
+    // label
+    el(svg,'text',{x:px(xrR/2),y:Y0+Ht-40,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='面积=U='+U.toFixed(1)+'V';
+    oLen.textContent=xrR.toFixed(1)+'m';
+    oE.textContent=(cs===0?'8 V/m':'分段');
+    oU.textContent=U.toFixed(1)+'V';
+    oDrop.textContent='φ降'+U.toFixed(1)+'V';
+  }
+  draw();
+})();
+
+/* ===== 互动5:匀强场 vs 点电荷场 ===== */
+(function(){
+  const svg=document.getElementById('cmpSvg');const note=document.getElementById('cmpNote');
+  let cs=0;
+  document.querySelectorAll('.cmpcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.cmpcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');cs=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    // left: phi-x, right: E-x
+    const LX=50,W=260,Y0=40,Ht=200;
+    const RX=400;
+    // helper axes
+    function axes(x0,label){
+      el(svg,'line',{x1:x0,y1:Y0,x2:x0,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+      el(svg,'line',{x1:x0,y1:Y0+Ht,x2:x0+W,y2:Y0+Ht,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x0+W,y:Y0+Ht+20,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='x';
+      el(svg,'text',{x:x0,y:Y0-8,'font-size':12.5,'font-weight':800,fill:INK}).textContent=label;
+    }
+    axes(LX,'φ-x 图');
+    axes(RX,'E-x 图');
+    // functions over xr 0..10 (avoid 0 for point charge)
+    function phiU(xr){return 100-9*xr;}       // uniform: linear
+    function EU(xr){return 9;}                 // uniform: constant
+    function phiP(xr){const r=xr+0.6;return 90/r;}       // point: 1/r
+    function EP(xr){const r=xr+0.6;return 90/(r*r);}     // point: 1/r^2
+    const phiFn=cs===0?phiU:phiP;
+    const EFn=cs===0?EU:EP;
+    // scales
+    const phiMax=cs===0?100:150, Emax=cs===0?12:60;
+    function pxL(xr){return LX+(xr/10)*W;}
+    function pyL(v){return Y0+Ht-(v/phiMax)*Ht;}
+    function pxR(xr){return RX+(xr/10)*W;}
+    function pyR(v){return Y0+Ht-(v/Emax)*Ht;}
+    // draw phi
+    let dp='';
+    for(let i=0;i<=100;i++){const xx=i/10;const X=pxL(xx),Y=pyL(phiFn(xx));dp+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:dp,fill:'none',stroke:BLUE,'stroke-width':3.5});
+    // draw E
+    let de='';
+    for(let i=0;i<=100;i++){const xx=i/10;const X=pxR(xx),Y=pyR(EFn(xx));de+=(i===0?'M':'L')+X+' '+Y+' ';}
+    el(svg,'path',{d:de,fill:'none',stroke:RED,'stroke-width':3.5});
+    if(cs===0){
+      note.innerHTML='👉 <b>匀强电场</b>：φ-x 是<b>斜直线</b>（φ 均匀下降，斜率恒定）；E-x 是<b>水平线</b>（E 处处相等）。平行板电容器内部就是这样。';
+      note.style.borderColor=BLUE;
+    }else{
+      note.innerHTML='👉 <b>点电荷电场</b>：φ-x <b>弯曲下降</b>（φ∝1/r，近处陡远处缓）；E-x <b>快速衰减</b>（E∝1/r²，比 φ 掉得更快）。';
+      note.style.borderColor=RED;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动6:粒子受力方向 F=qE ===== */
+(function(){
+  const cv=document.getElementById('fcCv');const ctx=cv.getContext('2d');
+  const oE=document.getElementById('fcE'),oF=document.getElementById('fcF'),oMove=document.getElementById('fcMove'),oEn=document.getElementById('fcEn');
+  let q=1,x=350,vx=0,running=false;
+  const cy=110,ballR=15;
+  document.querySelectorAll('.fcq').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.fcq').forEach(z=>z.classList.remove('on'));b.classList.add('on');q=+b.dataset.q;reset();
+  });
+  function reset(){x=350;vx=0;running=false;stats();draw();}
+  function stats(){
+    // E points right (+x). F=qE. q>0 -> force right; q<0 -> force left.
+    oE.textContent='→ (+x)';
+    oF.textContent=q>0?'→ 顺E(向低φ)':'← 逆E(向高φ)';
+    oMove.textContent=q>0?'向右加速':'向左加速';
+    oEn.textContent='Ep↓ Ek↑';
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // field lines: E to the right (uniform), gray arrows
+    ctx.strokeStyle='#9a9a9a';ctx.lineWidth=2;
+    for(let i=0;i<5;i++){
+      const y=25+i*42;
+      ctx.beginPath();ctx.moveTo(20,y);ctx.lineTo(680,y);ctx.stroke();
+      // arrowhead pointing right
+      ctx.fillStyle='#9a9a9a';
+      ctx.beginPath();ctx.moveTo(680,y-5);ctx.lineTo(692,y);ctx.lineTo(680,y+5);ctx.closePath();ctx.fill();
+    }
+    ctx.fillStyle='#6b6b6b';ctx.font='bold 12px sans-serif';
+    ctx.fillText('电场线 E →（左边 φ 高，右边 φ 低）',20,206);
+    // ball
+    ctx.fillStyle=q>0?RED:VIO;
+    ctx.beginPath();ctx.arc(x,cy,ballR,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';
+    ctx.fillText(q>0?'+':'−',x,cy+5);ctx.textAlign='left';
+    // force arrow F=qE
+    const fdir=q>0?1:-1;
+    ctx.strokeStyle=GREEN;ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(x,cy-34);ctx.lineTo(x+fdir*44,cy-34);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x+fdir*44,cy-34);ctx.lineTo(x+fdir*32,cy-40);ctx.lineTo(x+fdir*32,cy-28);ctx.closePath();ctx.fillStyle=GREEN;ctx.fill();
+    ctx.fillStyle=GREEN;ctx.font='bold 13px sans-serif';
+    ctx.fillText('F=qE',x+fdir*20-14,cy-46);
+  }
+  function loop(){
+    if(!running)return;
+    const fdir=q>0?1:-1;
+    vx+=fdir*0.18;
+    x+=vx;
+    if(x<30||x>670){running=false;}
+    draw();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('fcGo').onclick=()=>{reset();running=true;requestAnimationFrame(loop);};
+  document.getElementById('fcReset').onclick=reset;
+  reset();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. φ-x 图上某点的场强怎么读？大小和方向各看什么？",a:"E=−dφ/dx。场强大小=该点切线斜率的绝对值|dφ/dx|；方向：φ 随 x 减小（斜率为负）→E 指向 +x；φ 随 x 增大（斜率为正）→E 指向 −x。永远指向 φ 减小的一侧。"},
+ {q:"2. 电势能 Ep 和电势 φ 的关系？正、负电荷有何不同？",a:"Ep=qφ。正电荷 Ep 与 φ 同号、随 φ 同增减；负电荷 Ep 与 φ 反号，φ 高处负电荷 Ep 反而低。"},
+ {q:"3. 沿电场线方向电势怎么变？由此如何判电场线方向？",a:"沿电场线方向电势一定降低（高 φ→低 φ）。所以电场线由高电势点指向低电势点；已知 E 方向则沿 E 走 φ 减小、逆 E 走 φ 增大。"},
+ {q:"4. E-x 图线下的面积代表什么物理量？",a:"代表两点间的电势差 U=∫E dx=φ_起−φ_终（不是电势本身）。匀强场里面积=E·d，回到 U=Ed。E 反向段面积要变号。"},
+ {q:"5. φ-x 图中，哪个点场强最大？哪个点电势最高？两者是一回事吗？",a:"场强最大：切线最陡（斜率绝对值最大）的点。电势最高：曲线最高的点。不是一回事——电势看高度、场强看斜率，φ 高处场强可以为 0（等势区）。"},
+ {q:"6. 把 q=−2C 从 φ_A=10V 移到 φ_B=4V，电场力做功多少？Ep 怎么变？",a:"W_电=q(φ_A−φ_B)=−2×(10−4)=−12J。Ep_A=−20J、Ep_B=−8J，ΔEp=+12J（增大）。电场力做负功，Ep 增大。"},
+ {q:"7. 匀强电场的 φ-x 图和 E-x 图各是什么形状？",a:"φ-x 是斜直线（φ 均匀下降，斜率恒定）；E-x 是水平线（E 处处相等）。平行板电容器内部就是匀强场。"},
+ {q:"8. 点电荷电场的 φ-x 和 E-x 图形状？φ 和 E 随距离衰减快慢一样吗？",a:"φ-x 弯曲下降（φ∝1/r，近处陡远处缓）；E-x 快速衰减（E∝1/r²）。不一样，E 比 φ 衰减更快（1/r² vs 1/r）。"},
+ {q:"9. 正、负电荷在电场中受力方向各如何？",a:"F=qE。正电荷受力与 E 同向（顺电场线，向低 φ）；负电荷受力与 E 反向（逆电场线，向高 φ）。"},
+ {q:"10. 判断带电粒子在场中加速还是减速，该看 φ 还是 Ep？",a:"看 Ep（=qφ，带电荷符号）。Ep 减小则 Ek 增大（加速），Ep 增大则减速。只看 φ 会在负电荷时判反——负电荷 φ 与 Ep 反向。"},
+ {q:"11. 一正电荷从 φ 高处静止释放，运动情况如何？速度何时最大？",a:"受力顺 E 冲向 φ 低处，Ep=qφ 一路降、Ek 一路升，加速。速度在 Ep（即 φ）最低点最大。若前方 φ 又升高则减速，Ek=0 处折返。"},
+ {q:"12. 由能量守恒判断粒子折返点在哪？速度最大点在哪？",a:"只有电场力时 Ek+Ep=常量。Ep（=qφ，正电荷同 φ、负电荷翻转）最低处 Ek 最大、速度最快；Ek=0 处（Ep=初始总能量）是折返点。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电磁感应中的图象问题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">物理 · 攻坚包</div>
+    <h1>电磁感应中的图象问题</h1>
+    <p class="lead">电磁感应的图象题，本质是把「磁通量怎么变」翻译成「电动势、电流长什么样」。核心工具只有两把:<b>斜率</b>(定 E 的大小)和<b>面积</b>(定电荷量 q)。学会在 Φ-t、B-t、i-t、E-t、v-t 这几张图之间来回转换，这类题就从「玄学」变成「读图」。</p>
+
+    <div class="say">🗣️ <b>图象题(人话版):</b> 一句话记牢——<b>E 的大小看 Φ-t 图的斜率</b>。磁通量 Φ 变得越快(Φ-t 曲线越陡),感应电动势 E 越大;Φ 不变(图线是水平段),E=0。所以你拿到一张 Φ-t 图，不用管 Φ 本身有多大，只盯着<b>它斜不斜、有多斜</b>——斜率画出来就是 E-t 图。方向?那是楞次定律的活,跟大小分开判断。</div>
+
+    <div class="keybox"><b>一句话公式:</b> <b>E = n·ΔΦ/Δt = n·(Φ-t 图的斜率)</b>。图象题两大法宝:①<b>斜率</b>——Φ-t 图斜率 = E;v-t 图配 E=BLv → E-t 图。②<b>面积</b>——i-t 图与时间轴围成的面积 = 电荷量 q(因为 q=∫i dt=ΔΦ/R)。记住:斜率管大小/瞬时,面积管累积/电荷。</div>
+
+    <h2>① 核心原理:斜率定 E，方向靠楞次</h2>
+    <div class="card">
+      <div class="eq">法拉第定律:E = n·ΔΦ/Δt = n·(Φ-t 图斜率)</div>
+      <p style="margin:8px 0">感应电动势 E 只跟磁通量<b>变化的快慢</b>有关,不跟 Φ 本身的大小有关。把这句话画成图:E 的大小 = <b>Φ-t 图在该点的斜率大小</b>。斜率陡 → E 大;斜率平(水平) → E=0;斜率是常数(直线) → E 恒定。</p>
+      <table>
+        <tr><th>Φ-t 图长这样</th><th>斜率</th><th>对应的 E-t 图</th></tr>
+        <tr><td><b>水平线</b>(Φ 不变)</td><td>0</td><td>E=0,贴在时间轴上</td></tr>
+        <tr><td><b>倾斜直线</b>(Φ 均匀变)</td><td>常数</td><td>E 是水平线(恒定 E)</td></tr>
+        <tr><td><b>越来越陡的曲线</b></td><td>越来越大</td><td>E 逐渐增大</td></tr>
+        <tr><td><b>折线</b>(分段直线)</td><td>各段不同常数</td><td>E 是分段的水平台阶</td></tr>
+      </table>
+      <p class="trap">⚠ 千万别看 Φ 的<b>大小</b>去判断 E!Φ 很大但不变(水平段)时 E=0;Φ 很小但变得飞快时 E 反而很大。E 只看<b>斜率</b>。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 1 — Φ-t 图 ↔ E-t 图联动:斜率越陡 E 越大,水平段 E=0</div>
+      <svg id="phiSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="phimode on" data-m="0">先陡后平</button>
+        <button class="phimode" data-m="1">匀速上升(恒定E)</button>
+        <button class="phimode" data-m="2">加速上升(E渐增)</button>
+        <button class="phimode" data-m="3">水平不变(E=0)</button>
+      </div>
+      <div class="verdict" id="phiNote"></div>
+      <p class="small">上图蓝线是 Φ-t，下图红线是它<b>逐点的斜率</b>=E-t 图。看清:Φ 的水平段正对着 E=0,Φ 最陡处正对着 E 最大。E 从来不看 Φ 有多高,只看它<b>斜不斜</b>。</p>
+    </div>
+
+    <h2 class="b">② Φ-t 图 → E-t/i-t 图:斜率转换</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>第一步(大小):</b> 逐段量 Φ-t 图的斜率,乘匝数 n,就是每段的 E。直线段斜率恒定→E 恒定;曲线段斜率变→E 变。</p>
+      <p style="margin:8px 0"><b>第二步(电流):</b> 接上电阻 R(总电阻),由 i=E/R 把 E-t 图整体缩放 R 倍就得 i-t 图(形状一样,数值除以 R)。</p>
+      <div class="mono">E = n·(Φ-t斜率)　→　i = E/R = n·(Φ-t斜率)/R</div>
+      <p style="margin:8px 0"><b>第三步(方向):</b> 由<b>楞次定律</b>判断——Φ 增大时,感应电流要<b>阻碍</b>它增大(反抗);Φ 减小时,感应电流要<b>维持</b>它(挽留)。方向对应到 i-t 图的正负(正负半轴)。</p>
+      <p class="trap">⚠ E-t 图和 i-t 图<b>形状相同</b>(只差一个常数 R),但正负号(方向)要靠楞次定律另判,不是自动跟 Φ 同号。</p>
+    </div>
+
+    <h2 class="g">③ B-t 图 → 感应电动势:磁场均匀变化</h2>
+    <div class="card">
+      <p style="margin:8px 0">当线圈<b>面积 S 不变、只有磁感应强度 B 变</b>时(如线圈静置在变化磁场里),Φ=B·S,所以:</p>
+      <div class="eq">E = n·ΔΦ/Δt = n·S·(ΔB/Δt) = n·S·(B-t 图斜率)</div>
+      <p style="margin:8px 0"><b>关键:</b> Φ-t 图的斜率此时就等于 S 乘 B-t 图的斜率。所以 <b>B 均匀变化(B-t 是直线)→ E 恒定</b>;B-t 是折线→E 是分段台阶。这是最常考的一类:给你一张 B-t 图,直接量斜率求 E。</p>
+      <p class="trap">⚠ 只有 S 不变时才能用 E=nS(ΔB/Δt)。如果线圈还在动(S 也变),就得回到 Φ=BS 整体求 ΔΦ,不能只算 ΔB。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧲 互动 2 — B-t 线性变化产生恒定 E:B 匀速增大,E 是一条水平线</div>
+      <svg id="btSvg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="btGo">▶ 让 B 变化</button><button id="btReset">↺ 重置</button>
+        <label>ΔB/Δt 变化率 <input id="btRate" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>线圈面积 S <input id="btS" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>B-t 斜率 ΔB/Δt</b><span id="btK">0</span></div>
+        <div><b>面积 S (m²)</b><span id="btSv">0</span></div>
+        <div><b>E=S·(ΔB/Δt) (V)</b><span id="btE">0</span></div>
+        <div><b>E 图形状</b><span id="btShape">水平线</span></div>
+      </div>
+      <p class="small">上图蓝线=B-t(直线,匀速变化),下图绿线=E-t。B 变得越快(蓝线越陡)或面积越大,E 这条水平线就越高。B 均匀变 → E 恒定,是铁律。</p>
+    </div>
+
+    <h2 class="o">④ 导体棒 v-t 图 → E-t 图:E=BLv</h2>
+    <div class="card">
+      <p style="margin:8px 0">导体棒在磁场中<b>切割磁感线</b>运动,产生的动生电动势:</p>
+      <div class="eq">E = B·L·v　(B、L 不变时,E 正比于 v)</div>
+      <p style="margin:8px 0">所以 <b>E-t 图的形状 = v-t 图的形状</b>(整体乘 BL 缩放)。棒匀速(v-t 水平)→E 恒定;棒匀加速(v-t 斜直线)→E 线性增大;棒先加速后匀速(v-t 先斜后平)→E 也先增后平。</p>
+      <div class="mono">v-t 图 ×(BL) → E-t 图 ；再 ÷R → i-t 图</div>
+      <p class="trap">⚠ E=BLv 里用的是<b>瞬时速度 v</b>,不是位移不是加速度。看到 v-t 图直接读每个时刻的 v,乘 BL 即得该时刻 E。别把 v-t 图的<b>斜率</b>(那是加速度 a)当成 E。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚂 互动 3 — 导体棒 v-t 图 → E-t 图:E=BLv,形状跟着 v 走</div>
+      <svg id="vtSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="vtmode on" data-m="0">匀速(E恒定)</button>
+        <button class="vtmode" data-m="1">匀加速(E线性增)</button>
+        <button class="vtmode" data-m="2">先加速后匀速</button>
+      </div>
+      <div class="ctrl">
+        <label>磁场 B <input id="vtB" type="range" min="1" max="4" value="2" step="1"></label>
+        <label>棒长 L <input id="vtL" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="verdict" id="vtNote"></div>
+      <p class="small">上图橙线=v-t(棒的速度),下图红线=E-t=BL×v。看清:E-t 图<b>跟 v-t 图同一个形状</b>,只是整体放大了 BL 倍。棒的速度怎么变,电动势就怎么变。</p>
+    </div>
+
+    <h2 class="v">⑤ i-t 图面积 → 电荷量 q</h2>
+    <div class="card">
+      <div class="eq">q = ∫i dt = (i-t 图与时间轴围的面积) = ΔΦ/R = n·ΔΦ/R</div>
+      <p style="margin:8px 0"><b>斜率管大小,面积管电荷。</b> i-t 图和时间轴围成的<b>面积</b>就是通过导体横截面的<b>电荷量 q</b>(单位库仑 C)。而 q 又等于总磁通变化除以总电阻:<b>q=n·ΔΦ/R</b>。</p>
+      <p style="margin:8px 0"><b>重要特性:</b> q 只跟<b>磁通量的总变化 ΔΦ</b> 和电阻 R 有关,<b>跟变化过程的快慢无关</b>!快变、慢变,只要 ΔΦ 一样,q 就一样(但电流 i、电动势 E 的大小不同)。</p>
+      <p class="trap">⚠ i-t 图的<b>面积</b>是电荷量 q(库仑),不是电流也不是电动势!别把「面积」当成「电流大小」读。求 q 走面积/q=ΔΦ/R,求瞬时 i 或 E 才走斜率。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📊 互动 4 — i-t 图面积 = 电荷量 q:填色区域面积就是 q</div>
+      <svg id="qSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="qGo">▶ 累积电荷</button><button id="qReset">↺ 重置</button>
+        <label>电流 i (A) <input id="qI" type="range" min="1" max="6" value="3" step="1"></label>
+        <label>持续时间 t (s) <input id="qT" type="range" min="1" max="6" value="4" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>电流 i (A)</b><span id="qIv">0</span></div>
+        <div><b>时间 t (s)</b><span id="qTv">0</span></div>
+        <div><b>面积=q=i·t (C)</b><span id="qQ">0</span></div>
+        <div><b>已累积电荷</b><span id="qAcc">0</span></div>
+      </div>
+      <p class="small">蓝色<b>填色矩形</b>的面积 = i×t = 电荷量 q。改电流高度或时间宽度,面积同步变。恒流时是矩形,变流时就是曲线下的面积——那才是真正流过的电荷。</p>
+    </div>
+
+    <h2 class="r">⑥ 楞次定律定电流方向</h2>
+    <div class="card">
+      <p style="margin:8px 0">图象题里,<b>大小</b>靠斜率/面积,<b>方向</b>永远靠楞次定律。一句话:</p>
+      <div class="keybox" style="margin:10px 0"><b>感应电流的方向,总是要阻碍引起它的那个磁通量变化。</b>「增反抗、减挽留」——Φ 增大时电流磁场反着来,Φ 减小时电流磁场帮着来。</div>
+      <p style="margin:8px 0">对应到 i-t 图:Φ<b>增</b>的阶段电流是一个方向(比如取正半轴),Φ<b>减</b>的阶段电流反向(负半轴)。所以 Φ-t 图先增后减时,i-t 图会<b>正负跳变(变号)</b>。</p>
+      <p class="trap">⚠ i-t 图的正负半轴代表电流<b>方向</b>,不是大小的正负。Φ 从增变减的转折点,电流方向要反转,i-t 图在此穿过时间轴。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧭 互动 5 — 楞次定律定电流方向:Φ 增/减,电流方向随之翻转</div>
+      <svg id="lenzSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="lenzmode on" data-m="0">磁通增大(反抗)</button>
+        <button class="lenzmode" data-m="1">磁通减小(挽留)</button>
+      </div>
+      <div class="verdict" id="lenzNote"></div>
+      <p class="small">左边线圈:向下的磁通量在<b>增</b>还是<b>减</b>。增→感应电流逆时针(产生向上磁场反抗);减→顺时针(产生向下磁场挽留)。右边 i-t 图相应落在正半轴或负半轴——<b>方向反转就穿过时间轴</b>。</p>
+    </div>
+
+    <h2 class="b">⑦ 多段折线 Φ-t → 分段 E</h2>
+    <div class="card">
+      <p style="margin:8px 0">最综合的一类:Φ-t 图是<b>多段折线</b>(几段直线拼起来)。做法很机械:<b>逐段量斜率</b>。</p>
+      <table>
+        <tr><th>Φ-t 该段</th><th>斜率(变化率)</th><th>E 大小</th><th>i 方向(楞次)</th></tr>
+        <tr><td>上升段(Φ 增)</td><td>正,越陡越大</td><td>E=n·斜率</td><td>反抗增大(设为正)</td></tr>
+        <tr><td>水平段(Φ 不变)</td><td>0</td><td>E=0</td><td>无电流</td></tr>
+        <tr><td>下降段(Φ 减)</td><td>负</td><td>E=n·|斜率|</td><td>反向(设为负)</td></tr>
+      </table>
+      <p style="margin:8px 0">把每段的 E 大小画成台阶,再按楞次定律给正负号,就是完整的 E-t / i-t 图。折点处 E 会<b>突变(跳台阶)</b>,水平段 E 掉到 0。</p>
+      <p class="trap">⚠ 折线的每个转折点,E 都会跳变(不连续)。别把 E-t 图画成平滑连接;直线段对应水平台阶,水平段对应 E=0。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪜 互动 6 — 多段折线 Φ-t → 分段 E(台阶):逐段量斜率</div>
+      <svg id="segSvg" viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="segStep">▶ 逐段揭示</button><button id="segReset">↺ 重置</button>
+      </div>
+      <div class="verdict" id="segNote"></div>
+      <p class="small">上图 Φ-t 是四段折线:陡升→缓升→水平→下降。下图是对应的 E-t 台阶:陡升段 E 高,缓升段 E 低,水平段 E=0,下降段 E 反向(负台阶)。点「逐段揭示」一段段对照着看。</p>
+    </div>
+
+    <h2 class="r">⑧ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 由 Φ-t 图求 E-t / i-t 图</h3>
+      <p><b class="tag">触发信号:</b>给一张 Φ-t 图(直线或折线),问对应的 E-t 图或 i-t 图长什么样。</p>
+      <p><b class="tag">标准动作:</b>逐段量斜率 → E=n·斜率(斜率大小定 E 大小,水平段 E=0);接电阻则 i=E/R;方向由楞次定律定正负。</p>
+      <p><b class="tag">示例(带解):</b>某 100 匝线圈,Φ-t 图前 2s 由 0 均匀增到 0.4Wb(斜率 0.2Wb/s),后 2s 保持 0.4Wb 不变。前段 E=nΔΦ/Δt=100×0.2=20V(恒定);后段斜率0→E=0。E-t 图是「先 20V 水平台阶,后贴地为 0」。</p>
+      <p class="trap">陷阱:看 Φ 大小判 E(后段 Φ 最大却 E=0);把曲线的高度当 E。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 由 B-t 图求感应电动势</h3>
+      <p><b class="tag">触发信号:</b>线圈面积 S 固定放在磁场中,给一张 B-t 图,问 E 或某时刻电流。</p>
+      <p><b class="tag">标准动作:</b>E=n·S·(ΔB/Δt)=n·S·(B-t 图斜率)。B 均匀变(直线)→E 恒定;B-t 折线→逐段量斜率求各段 E。</p>
+      <p><b class="tag">示例(带解):</b>50 匝线圈,面积 S=0.02m²,B 在 0.1s 内由 0.2T 均匀增到 0.6T(ΔB/Δt=4T/s)。E=nS(ΔB/Δt)=50×0.02×4=4V。接 R=2Ω 的电阻,i=E/R=2A(恒定电流)。</p>
+      <p class="trap">陷阱:漏乘面积 S 或匝数 n;B-t 若是折线却用整体两端算平均。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 导体棒 v-t 图 ↔ E-t 图</h3>
+      <p><b class="tag">触发信号:</b>导体棒在导轨上切割磁感线,给 v-t 图求 E-t 图(或反过来)。</p>
+      <p><b class="tag">标准动作:</b>E=BLv,E-t 图形状=v-t 图形状(乘 BL)。匀速→E 恒定;匀加速→E 线性增;别把 v-t 斜率(=a)当 E。</p>
+      <p><b class="tag">示例(带解):</b>B=0.5T,L=0.4m,棒从静止匀加速,v-t 图是过原点斜直线,2s 时 v=4m/s。则 2s 时 E=BLv=0.5×0.4×4=0.8V。E-t 图也是过原点的斜直线(线性增大),斜率=BL·a。</p>
+      <p class="trap">陷阱:用 v-t 图斜率(加速度)当 E;忘了 E 正比于瞬时 v 不是位移。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — i-t 图面积求电荷量</h3>
+      <p><b class="tag">触发信号:</b>问「通过导体的电荷量 q」,或给 i-t 图求面积;关键词「电荷量」「通过某截面的电量」。</p>
+      <p><b class="tag">标准动作:</b>q=i-t 图面积=ΔΦ/R=nΔΦ/R。规则图形直接算面积,不规则用 q=nΔΦ/R 绕过过程。注意 q 只跟 ΔΦ 和 R 有关,与快慢无关。</p>
+      <p><b class="tag">示例(带解):</b>100 匝线圈 ΔΦ=0.02Wb,回路总电阻 R=5Ω。q=nΔΦ/R=100×0.02/5=0.4C。无论磁通是快变还是慢变,只要 ΔΦ 相同,q 都是 0.4C。</p>
+      <p class="trap">陷阱:把 i-t 面积当成电流值;用瞬时电流乘时间(变流不成立);漏匝数 n。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 多段图象综合分析</h3>
+      <p><b class="tag">触发信号:</b>Φ-t 或 B-t 是多段折线/曲线,要求画出完整 E-t、i-t 图并判方向,或算某段电荷量。</p>
+      <p><b class="tag">标准动作:</b>分段处理——每段量斜率求 E,楞次定律定该段方向;水平段 E=0;折点 E 突变。求电荷用面积/q=nΔΦ/R,求瞬时用斜率。</p>
+      <p><b class="tag">示例(带解):</b>Φ-t 前段陡升(斜率 0.3)、中段水平、后段缓降(斜率 -0.1),n=10。E 前段=10×0.3=3V,中段=0,后段=10×0.1=1V 且方向反转。E-t 图:3V 台阶→0→反向 1V 台阶。</p>
+      <p class="trap">陷阱:E-t 图画成平滑曲线(应是台阶);忘了下降段方向反转;水平段漏掉 E=0。</p>
+    </div>
+
+    <h2 class="r">⑨ 易错集</h2>
+    <div class="card">
+      <p class="trap">① E 看<b>斜率</b>不看 Φ 本身大小!Φ 很大但不变(水平段)时 E=0;Φ 小但变得快时 E 大。</p>
+      <p class="trap">② Φ-t 图<b>水平段 E=0</b>——磁通不变,再大也不产生电动势。</p>
+      <p class="trap">③ 大小和<b>方向分开办</b>:大小靠斜率/面积,方向永远靠<b>楞次定律</b>("增反抗、减挽留")。</p>
+      <p class="trap">④ i-t 图的<b>面积</b>是电荷量 q(库仑),不是电流、不是电动势!别把面积读成电流值。</p>
+      <p class="trap">⑤ E-t 图与 i-t 图<b>形状相同</b>(差个常数 R),但正负号(方向)要另判。</p>
+      <p class="trap">⑥ 导体棒题用 E=BLv 的<b>瞬时 v</b>;别把 v-t 图斜率(=加速度 a)当成 E。</p>
+      <p class="trap">⑦ B-t 图求 E 要用 E=nS(ΔB/Δt),<b>别漏面积 S 和匝数 n</b>。</p>
+      <p class="trap">⑧ 电荷量 q=nΔΦ/R 只跟<b>ΔΦ 和 R</b> 有关,跟变化<b>快慢无关</b>;但 E、i 的大小跟快慢有关。</p>
+      <p class="trap">⑨ 折线 Φ-t 对应的 E-t 图是<b>台阶(突变)</b>,不是平滑曲线;折点处 E 跳变。</p>
+    </div>
+
+    <h2 class="v">⑩ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 「斜率-面积」是图象题的统一钥匙:</b> E=n·dΦ/dt 是<b>微分</b>(斜率),q=∫i dt 是<b>积分</b>(面积)。E 和 Φ 是斜率关系,q 和 i 是面积关系——一套微积分思想贯穿全部。看到「瞬时/大小」想斜率,看到「累积/电量」想面积,几乎不会错。</p>
+      <p style="margin:8px 0"><b>② E-t 图和它的「母图」永远相差一次求导:</b> Φ-t 求斜率得 E-t;E-t 再谈 i=E/R 只是缩放。所以 Φ-t 图<b>越光滑,E-t 越连续</b>;Φ-t 有折角,E-t 就跳变。学会"看一张图想它的导数图",这类题瞬间通透。</p>
+      <p style="margin:8px 0"><b>③ q=nΔΦ/R 是"绕过过程"的神器:</b> 求电荷量时根本不用管中间怎么变、变多快，只看<b>始末磁通差 ΔΦ 和总电阻 R</b>。这跟动量定理的"只看首末"是同一种智慧——过程再复杂,只要首末态清楚,一步到位。</p>
+      <p style="margin:8px 0"><b>④ 动生与感生统一在"斜率"下:</b> 导体棒切割(动生)E=BLv、线圈中 B 变(感生)E=nS·dB/dt,表面两回事,本质都是 E=n·dΦ/dt。前者 Φ 因面积变、后者因 B 变,最后都归到 Φ-t 图的斜率。把两类题都翻译成 Φ-t 图,武器就统一了。</p>
+      <p style="margin:8px 0"><b>⑤ 方向问题用"面积法"秒判正负:</b> 楞次定律的深层是——感应电流方向使自身磁通阻碍原磁通变化。作图时先定"Φ 增为正电流",则 Φ-t 图上升段电流取正、下降段取负,i-t 图的正负半轴一目了然,不用每次重新想右手定则。</p>
+    </div>
+
+    <h2 class="b">⑪ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 物理攻坚包 · 电磁感应中的图象问题(Φ-t/B-t/i-t/E-t/v-t 的读取与转换)</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* 画一套坐标轴，返回映射函数 */
+function axes(svg,X0,Y0,W,H,xlab,ylab){
+  el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+  el(svg,'line',{x1:X0,y1:Y0+H,x2:X0+W,y2:Y0+H,stroke:INK,'stroke-width':3});
+  el(svg,'text',{x:X0-10,y:Y0+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=ylab;
+  el(svg,'text',{x:X0+W,y:Y0+H+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent=xlab;
+}
+
+/* ===== 互动1:Φ-t 图 ↔ E-t 图联动 ===== */
+(function(){
+  const svg=document.getElementById('phiSvg');const note=document.getElementById('phiNote');
+  let mode=0;
+  document.querySelectorAll('.phimode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.phimode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  // returns Phi(t) for t in [0,1]
+  function phiFn(t){
+    if(mode===0){ // steep then flat
+      if(t<0.5) return (t/0.5)*0.8;
+      return 0.8;
+    } else if(mode===1){ // linear rise
+      return t*0.9;
+    } else if(mode===2){ // accelerating rise (quadratic)
+      return t*t*0.9;
+    } else { // flat
+      return 0.5;
+    }
+  }
+  function draw(){
+    clr(svg);
+    const X0=60,W=560;
+    const Yt=20,Ht=130;   // top phi chart
+    const Yb=210,Hb=130;  // bottom E chart
+    axes(svg,X0,Yt,W,Ht,'t','Φ');
+    axes(svg,X0,Yb,W,Hb,'t','E');
+    el(svg,'text',{x:X0+W/2,y:Yt-6,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='Φ-t 图（磁通量）';
+    el(svg,'text',{x:X0+W/2,y:Yb-6,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='E-t 图 = Φ-t 图的斜率';
+    const N=120;
+    let phiPts=[],ePts=[],eMax=0.0001;
+    for(let i=0;i<=N;i++){
+      const t=i/N;const ph=phiFn(t);
+      const dt=1/N;
+      const e=Math.abs((phiFn(Math.min(1,t+dt))-phiFn(Math.max(0,t-dt)))/(2*dt));
+      phiPts.push([t,ph]);ePts.push([t,e]);if(e>eMax)eMax=e;
+    }
+    // draw phi
+    let d1='';
+    phiPts.forEach((p,i)=>{const x=X0+p[0]*W;const y=Yt+Ht-(p[1]/1.0)*Ht;d1+=(i?'L':'M')+x+' '+y+' ';});
+    el(svg,'path',{d:d1,fill:'none',stroke:BLUE,'stroke-width':4});
+    // draw E
+    let d2='';
+    ePts.forEach((p,i)=>{const x=X0+p[0]*W;const y=Yb+Hb-(p[1]/eMax)*Hb*0.9;d2+=(i?'L':'M')+x+' '+y+' ';});
+    el(svg,'path',{d:d2,fill:'none',stroke:RED,'stroke-width':4});
+    // note
+    let msg;
+    if(mode===0)msg='前半段 Φ 陡升 → E 恒定且较大；后半段 Φ 水平不变 → E=0（贴地）。';
+    else if(mode===1)msg='Φ 匀速上升（斜率恒定）→ E 是一条水平线（恒定电动势）。';
+    else if(mode===2)msg='Φ 加速上升（越来越陡）→ 斜率越来越大 → E 逐渐增大。';
+    else msg='Φ 水平不变（斜率=0）→ E=0，全程贴在时间轴上。Φ 再大也不产生电动势！';
+    note.innerHTML='👉 '+msg;
+  }
+  draw();
+})();
+
+/* ===== 互动2:B-t 线性变化产生恒定 E ===== */
+(function(){
+  const svg=document.getElementById('btSvg');
+  const Rs=document.getElementById('btRate'),Ss=document.getElementById('btS');
+  const oK=document.getElementById('btK'),oSv=document.getElementById('btSv'),oE=document.getElementById('btE'),oShape=document.getElementById('btShape');
+  let rate=3,S=2,anim=1,running=false;
+  function sync(){rate=+Rs.value;S=+Ss.value;anim=1;draw();}
+  Rs.oninput=Ss.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=60,W=560;
+    const Yt=20,Ht=110,Yb=180,Hb=110;
+    axes(svg,X0,Yt,W,Ht,'t','B');
+    axes(svg,X0,Yb,W,Hb,'t','E');
+    el(svg,'text',{x:X0+W/2,y:Yt-6,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='B-t 图（磁感应强度，均匀增大）';
+    el(svg,'text',{x:X0+W/2,y:Yb-6,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='E-t 图（恒定水平线）';
+    const rateMax=6;
+    // B line: slope proportional to rate, animate to end
+    const x1=X0,x2=X0+W*anim;
+    const bFrac=(rate/rateMax); // final height fraction
+    const y1=Yt+Ht, y2=Yt+Ht-bFrac*Ht*anim;
+    el(svg,'line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:BLUE,'stroke-width':4});
+    // E constant line
+    const E=S*rate; const Emax=4*6;
+    const eFrac=E/Emax;
+    const ey=Yb+Hb-eFrac*Hb*0.9;
+    el(svg,'line',{x1:X0,y1:ey,x2:X0+W*anim,y2:ey,stroke:GREEN,'stroke-width':4});
+    // fill under E to show constant
+    el(svg,'rect',{x:X0,y:ey,width:W*anim,height:(Yb+Hb)-ey,fill:'rgba(30,158,134,0.14)'});
+    el(svg,'text',{x:X0+W*0.5,y:ey-6,'font-size':12,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='E='+E.toFixed(0)+'（恒定）';
+    oK.textContent=rate.toFixed(0);oSv.textContent=S.toFixed(0);oE.textContent=E.toFixed(0);oShape.textContent='水平线';
+  }
+  function loop(){if(!running)return;anim+=0.03;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('btGo').onclick=()=>{sync();anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('btReset').onclick=()=>{sync();};
+  sync();
+})();
+
+/* ===== 互动3:导体棒 v-t 图 → E-t 图 ===== */
+(function(){
+  const svg=document.getElementById('vtSvg');const note=document.getElementById('vtNote');
+  const Bs=document.getElementById('vtB'),Ls=document.getElementById('vtL');
+  let mode=0,B=2,L=2;
+  document.querySelectorAll('.vtmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.vtmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  Bs.oninput=Ls.oninput=()=>{B=+Bs.value;L=+Ls.value;draw();};
+  function vFn(t){ // v(t) for t in [0,1], range ~[0,1]
+    if(mode===0) return 0.6;                // constant
+    if(mode===1) return t;                  // uniform accel
+    return t<0.5? t*1.6 : 0.8;              // accel then constant
+  }
+  function draw(){
+    clr(svg);B=+Bs.value;L=+Ls.value;
+    const X0=60,W=560;
+    const Yt=20,Ht=130,Yb=210,Hb=130;
+    axes(svg,X0,Yt,W,Ht,'t','v');
+    axes(svg,X0,Yb,W,Hb,'t','E');
+    el(svg,'text',{x:X0+W/2,y:Yt-6,'font-size':13,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='v-t 图（导体棒速度）';
+    el(svg,'text',{x:X0+W/2,y:Yb-6,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='E-t 图 = BL × v（同一形状）';
+    const N=100;let vp=[],ep=[];
+    const BL=(B*L)/(4*4); // normalized scale factor for display
+    for(let i=0;i<=N;i++){const t=i/N;const v=vFn(t);vp.push([t,v]);ep.push([t,v]);}
+    let d1='',d2='';
+    vp.forEach((p,i)=>{const x=X0+p[0]*W;const y=Yt+Ht-p[1]*Ht*0.9;d1+=(i?'L':'M')+x+' '+y+' ';});
+    ep.forEach((p,i)=>{const x=X0+p[0]*W;const y=Yb+Hb-p[1]*Hb*0.9;d2+=(i?'L':'M')+x+' '+y+' ';});
+    el(svg,'path',{d:d1,fill:'none',stroke:ORANGE,'stroke-width':4});
+    el(svg,'path',{d:d2,fill:'none',stroke:RED,'stroke-width':4});
+    el(svg,'text',{x:X0+W-8,y:Yb+20,'font-size':12,'font-weight':800,fill:RED,'text-anchor':'end'}).textContent='E=BLv，B='+B+' L='+L;
+    let msg;
+    if(mode===0)msg='棒匀速（v-t 水平）→ E=BLv 恒定（E-t 也水平）。速度不变，电动势不变。';
+    else if(mode===1)msg='棒匀加速（v-t 斜直线）→ E 线性增大（E-t 也是斜直线）。E 正比于瞬时 v。';
+    else msg='棒先加速后匀速（v-t 先斜后平）→ E 先增后恒定，形状完全跟着 v 走。';
+    note.innerHTML='👉 '+msg+'　注意：E 跟的是 v 本身，不是 v-t 图的斜率（那是加速度）。';
+  }
+  draw();
+})();
+
+/* ===== 互动4:i-t 图面积 = 电荷量 q ===== */
+(function(){
+  const svg=document.getElementById('qSvg');
+  const Is=document.getElementById('qI'),Ts=document.getElementById('qT');
+  const oIv=document.getElementById('qIv'),oTv=document.getElementById('qTv'),oQ=document.getElementById('qQ'),oAcc=document.getElementById('qAcc');
+  let I=3,T=4,anim=1,running=false;
+  function sync(){I=+Is.value;T=+Ts.value;anim=1;draw();}
+  Is.oninput=Ts.oninput=sync;
+  function draw(){
+    clr(svg);
+    const X0=60,Y0=20,W=560,H=220;
+    axes(svg,X0,Y0,W,H,'t','i');
+    const Imax=6,Tmax=6;
+    const fh=(I/Imax)*H;
+    const fwFull=(T/Tmax)*W;
+    const fw=fwFull*anim;
+    const yTop=Y0+H-fh;
+    // filled area rectangle = charge
+    el(svg,'rect',{x:X0,y:yTop,width:fw,height:fh,fill:'rgba(20,80,200,0.28)',stroke:BLUE,'stroke-width':3});
+    el(svg,'line',{x1:X0,y1:yTop,x2:X0+fw,y2:yTop,stroke:BLUE,'stroke-width':4});
+    // i tick
+    el(svg,'line',{x1:X0-6,y1:yTop,x2:X0,y2:yTop,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:yTop+5,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='i='+I;
+    // t tick
+    el(svg,'line',{x1:X0+fw,y1:Y0+H,x2:X0+fw,y2:Y0+H+6,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0+fw,y:Y0+H+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='t='+(T*anim).toFixed(1);
+    if(fw>70){el(svg,'text',{x:X0+fw/2,y:yTop+fh/2+5,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='面积=q='+(I*T*anim).toFixed(1)+'C';}
+    el(svg,'text',{x:X0+W/2,y:Y0-6,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='i-t 图：填色面积 = 电荷量 q';
+    oIv.textContent=I.toFixed(0);oTv.textContent=T.toFixed(0);oQ.textContent=(I*T).toFixed(1);oAcc.textContent=(I*T*anim).toFixed(1);
+  }
+  function loop(){if(!running)return;anim+=0.03;if(anim>=1){anim=1;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('qGo').onclick=()=>{sync();anim=0;running=true;requestAnimationFrame(loop);};
+  document.getElementById('qReset').onclick=()=>{sync();};
+  sync();
+})();
+
+/* ===== 互动5:楞次定律定电流方向 ===== */
+(function(){
+  const svg=document.getElementById('lenzSvg');const note=document.getElementById('lenzNote');
+  let mode=0;
+  document.querySelectorAll('.lenzmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.lenzmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    // LEFT: coil with flux arrows and induced current direction
+    const cx=170,cy=150;
+    el(svg,'ellipse',{cx:cx,cy:cy,rx:70,ry:90,fill:'none',stroke:INK,'stroke-width':5});
+    // flux arrows (downward = into region), size shows increasing/decreasing
+    const fluxCol=mode===0?RED:GREEN;
+    for(let i=-1;i<=1;i++){
+      const fx=cx+i*30;
+      el(svg,'line',{x1:fx,y1:cy-55,x2:fx,y2:cy+55,stroke:fluxCol,'stroke-width':4});
+      el(svg,'polygon',{points:(fx-6)+','+(cy+45)+' '+(fx+6)+','+(cy+45)+' '+fx+','+(cy+58),fill:fluxCol});
+    }
+    el(svg,'text',{x:cx,y:cy-70,'font-size':12,'font-weight':900,fill:fluxCol,'text-anchor':'middle'}).textContent=mode===0?'Φ 增大 ↓':'Φ 减小 ↓';
+    // induced current arrows on coil rim (arc arrows)
+    const ccw=(mode===0); // increasing -> oppose (produce up field) -> counter-clockwise (viewed) ; decreasing -> cw
+    const dirLab=ccw?'逆时针':'顺时针';
+    el(svg,'text',{x:cx,y:cy+120,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='感应电流：'+dirLab;
+    // small curved arrow indicator
+    const ax=cx+70,ay=cy;
+    el(svg,'path',{d:'M '+ax+' '+(ay-14)+' A 14 14 0 0 '+(ccw?0:1)+' '+ax+' '+(ay+14),fill:'none',stroke:BLUE,'stroke-width':4});
+    const tipx=ax, tipy=ccw?ay+14:ay-14;
+    el(svg,'polygon',{points:(tipx-5)+','+tipy+' '+(tipx+5)+','+tipy+' '+tipx+','+(ccw?tipy+9:tipy-9),fill:BLUE});
+    // RIGHT: i-t chart showing which half-axis
+    const X0=360,Y0=40,W=280,H=200;
+    el(svg,'line',{x1:X0,y1:Y0,x2:X0,y2:Y0+H,stroke:INK,'stroke-width':3});
+    const midY=Y0+H/2;
+    el(svg,'line',{x1:X0,y1:midY,x2:X0+W,y2:midY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-8,y:Y0+12,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='+i';
+    el(svg,'text',{x:X0-8,y:Y0+H,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'end'}).textContent='−i';
+    el(svg,'text',{x:X0+W,y:midY+18,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    // draw current level on + or - half
+    const lev=mode===0? midY-50 : midY+50;
+    const barCol=mode===0?RED:GREEN;
+    el(svg,'rect',{x:X0,y:Math.min(lev,midY),width:W*0.8,height:Math.abs(lev-midY),fill:mode===0?'rgba(224,56,42,0.20)':'rgba(30,158,134,0.20)',stroke:barCol,'stroke-width':3});
+    el(svg,'text',{x:X0+W*0.4,y:lev+(mode===0?-8:20),'font-size':12,'font-weight':900,fill:barCol,'text-anchor':'middle'}).textContent=mode===0?'电流在 +半轴':'电流在 −半轴';
+    el(svg,'text',{x:X0+W/2,y:Y0-12,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='i-t 图：方向 → 正/负半轴';
+    let msg;
+    if(mode===0)msg='磁通增大 → 感应电流「反抗」（逆时针，产生向上磁场对抗）→ i-t 图落在 +半轴。';
+    else msg='磁通减小 → 感应电流「挽留」（顺时针，产生向下磁场维持）→ 方向反转，i-t 图落在 −半轴。';
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=mode===0?RED:GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动6:多段折线 Φ-t → 分段 E ===== */
+(function(){
+  const svg=document.getElementById('segSvg');const note=document.getElementById('segNote');
+  // segments: [t0,t1, phi0, phi1]  over t in [0,1] split into 4 quarters
+  // steep rise, gentle rise, flat, decline
+  const segs=[
+    {t0:0.0,t1:0.25, p0:0.0, p1:0.7, label:'陡升：斜率大 → E 大'},
+    {t0:0.25,t1:0.5, p0:0.7, p1:0.9, label:'缓升：斜率小 → E 小'},
+    {t0:0.5,t1:0.75, p0:0.9, p1:0.9, label:'水平：斜率0 → E=0'},
+    {t0:0.75,t1:1.0, p0:0.9, p1:0.4, label:'下降：斜率负 → E 反向'}
+  ];
+  let shown=4;
+  function draw(){
+    clr(svg);
+    const X0=60,W=560;
+    const Yt=20,Ht=130,Yb=210,Hb=130;
+    axes(svg,X0,Yt,W,Ht,'t','Φ');
+    // E chart with zero line in middle so negative shows
+    el(svg,'line',{x1:X0,y1:Yb,x2:X0,y2:Yb+Hb,stroke:INK,'stroke-width':3});
+    const midE=Yb+Hb*0.6;
+    el(svg,'line',{x1:X0,y1:midE,x2:X0+W,y2:midE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:X0-10,y:Yb+4,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='E';
+    el(svg,'text',{x:X0+W,y:Yb+Hb+22,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'end'}).textContent='t';
+    el(svg,'text',{x:X0+W/2,y:Yt-6,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='Φ-t 图（四段折线）';
+    el(svg,'text',{x:X0+W/2,y:Yb-6,'font-size':13,'font-weight':900,fill:RED,'text-anchor':'middle'}).textContent='E-t 图（分段台阶）';
+    segs.forEach((s,i)=>{
+      if(i>=shown)return;
+      const x0=X0+s.t0*W,x1=X0+s.t1*W;
+      const y0=Yt+Ht-s.p0*Ht,y1=Yt+Ht-s.p1*Ht;
+      el(svg,'line',{x1:x0,y1:y0,x2:x1,y2:y1,stroke:BLUE,'stroke-width':4});
+      // slope -> E
+      const slope=(s.p1-s.p0)/(s.t1-s.t0);
+      const eVal=slope; // signed
+      const eScale=(Hb*0.55)/1.2; // map |slope|<=~2.8 -> within half
+      const ey=midE - eVal*eScale;
+      const eCol=eVal>0?RED:(eVal<0?VIO:GREEN);
+      el(svg,'line',{x1:x0,y1:ey,x2:x1,y2:ey,stroke:eCol,'stroke-width':4});
+      // vertical jump connectors (dashed)
+      el(svg,'line',{x1:x0,y1:midE,x2:x0,y2:ey,stroke:eCol,'stroke-width':2,'stroke-dasharray':'4 3'});
+      // fill step
+      el(svg,'rect',{x:x0,y:Math.min(ey,midE),width:x1-x0,height:Math.abs(ey-midE),fill:eVal>0?'rgba(224,56,42,0.14)':(eVal<0?'rgba(122,63,242,0.14)':'none')});
+    });
+    if(shown>0&&shown<=4){note.innerHTML='👉 第 '+shown+' 段：'+segs[shown-1].label;}
+    else note.innerHTML='👉 四段全部揭示：陡升(E大)→缓升(E小)→水平(E=0)→下降(E反向)。E-t 图是台阶，折点处突变。';
+  }
+  document.getElementById('segStep').onclick=()=>{shown=shown>=4?1:shown+1;draw();};
+  document.getElementById('segReset').onclick=()=>{shown=4;draw();};
+  shown=4;draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 电磁感应图象题，感应电动势 E 的大小由什么决定？看图上的什么？",a:"E=n·ΔΦ/Δt，大小由磁通量变化的快慢决定，对应 Φ-t 图上该点的斜率大小。斜率越陡 E 越大，跟 Φ 本身大小无关。"},
+ {q:"2. Φ-t 图上出现水平段（Φ 不变）时，E 是多少？",a:"E=0。斜率为 0 → 电动势为 0。哪怕此时 Φ 很大，只要不变化就没有感应电动势。"},
+ {q:"3. Φ-t 图匀速上升（斜率恒定）对应的 E-t 图是什么形状？",a:"E 是一条水平线（恒定电动势）。斜率是常数，所以 E 大小不变。"},
+ {q:"4. 线圈面积 S 不变，只有 B 变化，感应电动势公式怎么写？",a:"E=n·ΔΦ/Δt=n·S·(ΔB/Δt)=n·S·(B-t 图斜率)。别漏匝数 n 和面积 S。B 均匀变（B-t 直线）→ E 恒定。"},
+ {q:"5. 导体棒切割磁感线，E-t 图和 v-t 图什么关系？",a:"E=BLv，B、L 不变时 E 正比于瞬时 v，所以 E-t 图形状与 v-t 图相同（整体乘 BL）。棒匀速→E 恒定，匀加速→E 线性增。"},
+ {q:"6. 常见陷阱：v-t 图的斜率代表什么？能当成 E 吗？",a:"v-t 图斜率是加速度 a，不是 E！E=BLv 用的是瞬时速度 v 本身，不是斜率。别搞混。"},
+ {q:"7. i-t 图与时间轴围成的面积代表什么物理量？公式？",a:"面积=通过导体截面的电荷量 q（单位库仑 C）。q=∫i dt=ΔΦ/R=n·ΔΦ/R。面积是电荷量，不是电流也不是电动势。"},
+ {q:"8. 100 匝线圈 ΔΦ=0.02Wb，回路总电阻 R=5Ω，求通过的电荷量 q。",a:"q=nΔΦ/R=100×0.02/5=0.4C。注意 q 只跟 ΔΦ 和 R 有关，与磁通变化的快慢无关。"},
+ {q:"9. 图象题里感应电流的方向靠什么判断？跟大小是同一件事吗？",a:"方向永远靠楞次定律（增反抗、减挽留），大小靠斜率/面积，两者分开办。Φ 增和 Φ 减对应 i-t 图的正、负半轴（方向反转）。"},
+ {q:"10. Φ-t 图先增后减，对应的 i-t 图有什么特征？",a:"Φ 增段电流一个方向（如 +半轴），Φ 减段电流反向（−半轴），i-t 图会正负跳变、穿过时间轴。方向在磁通由增变减的转折点反转。"},
+ {q:"11. 某 100 匝线圈，Φ-t 图前 2s 由 0 均匀增到 0.4Wb，后 2s 保持不变，画 E-t 图。",a:"前段斜率=0.4/2=0.2Wb/s，E=100×0.2=20V（恒定水平台阶）；后段斜率0→E=0（贴地）。E-t 图：先 20V 水平段，后为 0。别被后段 Φ 最大迷惑。"},
+ {q:"12. B-t 折线图对应的 E-t 图是曲线还是台阶？折点处 E 怎么变？",a:"是分段台阶（每段直线斜率恒定→该段 E 恒定）。折点处斜率突变，E 也跳变（不连续），水平段 E 掉到 0。别画成平滑曲线。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

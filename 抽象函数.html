@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抽象函数与赋值法 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>抽象函数与赋值法</h1>
+    <p class="lead">抽象函数就是<b>只告诉你规则的性质、不给你具体式子</b>的函数。比如 f(x+y)=f(x)+f(y),你永远看不到 f 到底长什么样。这一页教你唯一的破题武器——<b>赋值法</b>:给 x、y 代进特殊值(0、1、−x、同值……),把藏在规则里的信息一点点挖出来,再配合奇偶性、单调性、周期性把题目拿下。</p>
+
+    <div class="say">🗣️ <b>抽象函数(人话版):</b> 题目不给你 f(x) 的表达式,只给你一条「运算规则」和几个已知值。你不可能直接算,只能<b>用赋值法当螺丝刀</b>——往规则里代特殊的 x、y,拧出隐藏信息。令 x=y=0 常常挖出 f(0);令 y=−x 常常判出奇偶;令 x₂=x₁+d 常常比出单调。<b>看到抽象函数,先问自己:这题该代什么值?</b></div>
+
+    <div class="keybox"><b>一句话方法论:</b> <b>赋值法 = 给自变量代特殊值,把抽象规则变成具体等式。</b> 三大常代值:① <b>x=y=0</b>(挖 f(0))；② <b>y=−x</b>(判奇偶,凑出 f(x) 与 f(−x) 的关系)；③ <b>x₂=x₁+Δ</b>(设 Δ>0,比较 f(x₂) 与 f(x₁),定单调)。有了单调性,就能<b>脱去 f</b> 解抽象不等式。</div>
+
+    <h2>① 常见抽象模型 ↔ 它的原型函数</h2>
+    <div class="card">
+      <p style="margin:6px 0">每一条抽象规则背后都藏着一个你熟悉的<b>原型函数</b>。心里有原型,你就能预判这题的奇偶性、单调性大概什么样,赋值也更有方向。</p>
+      <table>
+        <tr><th>抽象规则</th><th>原型函数</th><th>直觉</th></tr>
+        <tr><td>f(x+y) = f(x) + f(y)</td><td><b>正比例</b> f(x)=kx</td><td>加法搬进去仍是加法</td></tr>
+        <tr><td>f(x+y) = f(x) · f(y)</td><td><b>指数</b> f(x)=a<sup>x</sup></td><td>加法换成乘法(a<sup>x+y</sup>=a<sup>x</sup>a<sup>y</sup>)</td></tr>
+        <tr><td>f(xy) = f(x) + f(y)</td><td><b>对数</b> f(x)=log<sub>a</sub>x</td><td>乘法换成加法(log 化乘为加)</td></tr>
+        <tr><td>f(xy) = f(x) · f(y)</td><td><b>幂函数</b> f(x)=x<sup>n</sup></td><td>乘法搬进去仍是乘法</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>用法:</b> 若不知道该代什么值,先在原型上试。比如 f(x+y)=f(x)+f(y) 想验证 f(0)=0,拿 f(x)=kx 试:f(0)=0,✔。原型给你「答案长什么样」,赋值负责「严格证出来」。</p>
+      <p class="trap">⚠ 原型只是<b>直觉参考</b>,不能当证明!考试要求你用赋值法一步步推,不能直接写「因为像正比例所以 f(0)=0」。原型帮你定方向,赋值才是得分点。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧩 互动 1 — 四种抽象模型 ↔ 原型对照表(点一行,看规则如何在原型上成立)</div>
+      <svg id="mapSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="mapcase on" data-c="0">f(x+y)=f(x)+f(y)</button>
+        <button class="mapcase" data-c="1">f(x+y)=f(x)f(y)</button>
+        <button class="mapcase" data-c="2">f(xy)=f(x)+f(y)</button>
+        <button class="mapcase" data-c="3">f(xy)=f(x)f(y)</button>
+      </div>
+      <div class="verdict" id="mapNote"></div>
+      <p class="small">点上面任意一条抽象规则,下方用它对应的<b>原型函数</b>代入具体数,验证等式左右两边真的相等。看懂「规则=原型的某种代数性质」,就再也不会记错哪个对哪个。</p>
+    </div>
+
+    <h2 class="b">② 赋值法三板斧:0、−x、加增量</h2>
+    <div class="card">
+      <h3>板斧一:令 x=y=0(挖 f(0))</h3>
+      <p style="margin:6px 0">在加法型 f(x+y)=f(x)+f(y) 里令 x=y=0:f(0)=f(0)+f(0) ⇒ f(0)=0。在 f(x+y)=f(x)·f(y) 里令 x=y=0:f(0)=f(0)² ⇒ f(0)=0 或 1(结合 f 不恒为 0,取 f(0)=1)。</p>
+      <div class="mono">令 x=y=0 → 一个只含 f(0) 的方程 → 解出 f(0)</div>
+      <h3>板斧二:令 y=−x(判奇偶)</h3>
+      <p style="margin:6px 0">在 f(x+y)=f(x)+f(y) 里令 y=−x:f(0)=f(x)+f(−x)。已知 f(0)=0 ⇒ f(−x)=−f(x),<b>奇函数</b>。这就是判奇偶的核心套路:凑出 f(−x)。</p>
+      <div class="mono">令 y=−x → 得到 f(x) 与 f(−x) 的关系 → 判奇/偶</div>
+      <h3>板斧三:令 x₂=x₁+Δ,Δ>0(定单调)</h3>
+      <p style="margin:6px 0">设 x₁<x₂,记 Δ=x₂−x₁>0。用规则把 f(x₂)=f(x₁+Δ) 拆开,判断 f(x₂)−f(x₁) 的正负。若恒 >0 则增,恒 <0 则减。判正负常要用到「x>0 时 f(x)>0」这类已知条件。</p>
+      <div class="mono">设 Δ>0 → 算 f(x₂)−f(x₁) 的符号 → 定增减</div>
+      <p class="trap">⚠ 赋值不是乱代!要盯着「想挖什么」选值:挖 f(0) 就代 0,判奇偶就代 −x,判单调就代增量。代完必须回代到原规则,不能凭空写。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎯 互动 2 — 令 x=y=0 推出 f(0):加法型 vs 乘法型动画</div>
+      <svg id="zeroSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="zeroGo">▶ 代入 x=y=0</button><button id="zeroReset">↺ 重置</button>
+        <label>模型
+          <select id="zeroSel" style="font-weight:800;padding:4px;border:3px solid var(--ink)">
+            <option value="0">f(x+y)=f(x)+f(y)</option>
+            <option value="1">f(x+y)=f(x)f(y)</option>
+          </select>
+        </label>
+      </div>
+      <div class="verdict" id="zeroNote"></div>
+      <p class="small">点「代入」,看 x、y 一起滑到 0,规则塌缩成一个只含 f(0) 的方程,再解出 f(0)。加法型必得 f(0)=0;乘法型得 f(0)=1(排除恒零)。</p>
+    </div>
+
+    <h2 class="g">③ 用单调性「脱去 f」解抽象不等式</h2>
+    <div class="card">
+      <p style="margin:6px 0">抽象不等式如 f(2x−1)<f(x+3),两边都套着看不见的 f,没法直接比 2x−1 和 x+3。<b>钥匙是单调性</b>:</p>
+      <div class="eq">若 f 在定义域上<b>单调递增</b>:f(A)<f(B) ⟺ A<B(同向脱 f)</div>
+      <div class="eq">若 f <b>单调递减</b>:f(A)<f(B) ⟺ A>B(反向脱 f,变号!)</div>
+      <p style="margin:8px 0"><b>三步走:</b> ① 先证/用单调性;② 把不等式两边凑成 f(某式)<f(某式);③ 按增/减脱 f 得到普通不等式,<b>再叠加定义域限制</b>解出 x。</p>
+      <p class="trap">⚠ 递减函数脱 f 时不等号<b>要反向</b>!这是最高频失分点。还有:凑不成 f(⋯)<f(⋯) 的形式就不能脱,得先用抽象规则变形出来。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔓 互动 3 — 脱 f 解不等式:单调性决定不等号方向(增同向/减反向)</div>
+      <svg id="peelSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="peelmono on" data-m="1">f 单调递增</button>
+        <button class="peelmono" data-m="0">f 单调递减</button>
+      </div>
+      <div class="verdict" id="peelNote"></div>
+      <p class="small">同一个抽象不等式 f(2x−1)&lt;f(x+3)。切换 f 的单调性,看脱 f 后<b>不等号是否翻转</b>,以及解集怎么变。增:2x−1&lt;x+3;减:2x−1&gt;x+3。</p>
+    </div>
+
+    <h2 class="o">④ 判奇偶性:核心是凑出 f(−x)</h2>
+    <div class="card">
+      <p style="margin:6px 0">判抽象函数的奇偶性,不是看图,而是<b>用赋值凑出 f(−x),再和 f(x) 比</b>。</p>
+      <table>
+        <tr><th>结论</th><th>判定</th></tr>
+        <tr><td><b>奇函数</b></td><td>f(−x) = −f(x)(且定义域关于原点对称)</td></tr>
+        <tr><td><b>偶函数</b></td><td>f(−x) = f(x)</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>加法型 f(x+y)=f(x)+f(y):</b> 令 y=−x → f(0)=f(x)+f(−x)。又 f(0)=0 ⇒ f(−x)=−f(x),<b>奇</b>。</p>
+      <p style="margin:8px 0"><b>乘法/对数型也各有套路:</b> 关键都是「造出一个自变量是 −x 的 f」,再用已知的 f(0) 或 f(1) 收尾。</p>
+      <p class="trap">⚠ 判奇偶前必须确认<b>定义域关于原点对称</b>,否则奇偶性无从谈起。还有:别只验一个点,要对<b>任意 x</b> 证 f(−x) 与 f(x) 的关系。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🪞 互动 4 — 令 y=−x 判奇偶:镜像演示 f(−x) 与 f(x) 的关系</div>
+      <canvas id="oddCv" width="700" height="240"></canvas>
+      <div class="ctrl">
+        <button class="oddcase on" data-c="0">加法型→奇</button>
+        <button class="oddcase" data-c="1">偶函数样例</button>
+        <label>取点 x <input id="oddX" type="range" min="1" max="5" value="3" step="1"></label>
+      </div>
+      <div class="verdict" id="oddNote"></div>
+      <p class="small">左边放 f(x),右边放 f(−x)(镜像位置)。奇函数:两点关于原点对称(等高反号);偶函数:关于 y 轴对称(等高同号)。拖 x 看关系始终成立。</p>
+    </div>
+
+    <h2 class="v">⑤ 判/证单调性:比较 f(x₂)−f(x₁) 的符号</h2>
+    <div class="card">
+      <p style="margin:6px 0">证抽象函数单调,用<b>定义法</b>:任取 x₁<x₂,判 f(x₂)−f(x₁) 的正负。抽象规则的作用,是把 f(x₂)=f(x₁+Δ) 拆成含 f(x₁) 的形式,凑出 f(x₂)−f(x₁)=f(Δ) 之类。</p>
+      <div class="mono">加法型:x₂=x₁+Δ ⇒ f(x₂)=f(x₁)+f(Δ) ⇒ f(x₂)−f(x₁)=f(Δ)</div>
+      <p style="margin:8px 0">此时符号只由 f(Δ) 决定。若题目给「x>0 时 f(x)>0」,则 Δ>0 ⇒ f(Δ)>0 ⇒ f(x₂)>f(x₁),<b>增函数</b>。</p>
+      <p class="trap">⚠ 单调性证明必须「任取 x₁<x₂」而非取特值。差 f(x₂)−f(x₁) 要<b>整个化简到一个能判号的式子</b>(常是 f(正数)),再用已知条件定号。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📈 互动 5 — 单调性证明:x₂=x₁+Δ 拆出 f(Δ),符号定增减</div>
+      <svg id="monoSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="monoGo">▶ 令 x₂=x₁+Δ</button><button id="monoReset">↺ 重置</button>
+        <label>x₁ <input id="monoX1" type="range" min="-3" max="2" value="0" step="1"></label>
+        <label>Δ(>0) <input id="monoD" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>x₁</b><span id="moX1">0</span></div>
+        <div><b>x₂=x₁+Δ</b><span id="moX2">0</span></div>
+        <div><b>f(x₂)−f(x₁)=f(Δ)</b><span id="moDiff">0</span></div>
+        <div><b>结论</b><span id="moConc">增</span></div>
+      </div>
+      <p class="small">用「x&gt;0 时 f(x)&gt;0」的加法型样例。差 f(x₂)−f(x₁) 恰好等于 f(Δ),而 Δ&gt;0 ⇒ f(Δ)&gt;0 ⇒ 差为正 ⇒ 增函数。柱子高度即 f(Δ) 的大小。</p>
+    </div>
+
+    <h2 class="r">⑥ 抽象函数的周期性:由递推关系推出周期</h2>
+    <div class="card">
+      <p style="margin:6px 0">若已知 f(x+a) 与 f(x) 的某种关系,常可推出<b>周期</b>。核心技巧:把关系<b>用两次</b>,让式子回到 f(x)。</p>
+      <table>
+        <tr><th>已知条件</th><th>推出的周期 T</th></tr>
+        <tr><td>f(x+a) = −f(x)</td><td><b>T = 2a</b></td></tr>
+        <tr><td>f(x+a) = 1/f(x)</td><td><b>T = 2a</b></td></tr>
+        <tr><td>f(x+a) = −1/f(x)</td><td><b>T = 2a</b></td></tr>
+        <tr><td>f(x+a) = f(x−a)</td><td><b>T = 2a</b></td></tr>
+      </table>
+      <p style="margin:8px 0"><b>推导 f(x+a)=−f(x) ⇒ T=2a:</b> 把 x 换成 x+a:f(x+2a)=−f(x+a)=−(−f(x))=f(x)。所以 f(x+2a)=f(x),周期 T=2a。<b>用两次、符号抵消</b>是通法。</p>
+      <p class="trap">⚠ 别把 a 直接当周期!f(x+a)=−f(x) 里 a <b>不是</b>周期,要再用一次才凑出 f(x+2a)=f(x),周期是 <b>2a</b>。少用一步是最常见的错。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔁 互动 6 — 周期推导:f(x+a)=−f(x) 用两次得 f(x+2a)=f(x),周期 2a</div>
+      <svg id="perSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="perGo">▶ 逐步推导</button><button id="perReset">↺ 重置</button>
+        <label>a <input id="perA" type="range" min="1" max="4" value="2" step="1"></label>
+      </div>
+      <div class="verdict" id="perNote"></div>
+      <p class="small">条形表示 f 在 x、x+a、x+2a 处的值(高度=大小,颜色=正负)。第一步 f(x+a)=−f(x) 翻号;第二步再翻,回到 f(x)。首尾等高同色 → 周期 T=2a。</p>
+    </div>
+
+    <h2 class="b">⑦ 抽象不等式综合(单调+奇偶联合)可视化</h2>
+    <div class="card">
+      <p style="margin:6px 0">最难的抽象不等式往往<b>又要单调、又要奇偶</b>:比如已知 f 是<b>奇函数且递增</b>,解 f(x²−x)+f(2−x)>0。先用奇性把和式变成 f(⋯)>f(⋯),再用增性脱 f。</p>
+      <div class="mono">奇性:f(2−x)=−f(x−2) ⇒ f(x²−x)>−f(2−x)=f(x−2)</div>
+      <div class="mono">增性:x²−x>x−2 ⇒ x²−2x+2>0 ⇒ 恒成立(判别式<0)</div>
+      <p class="trap">⚠ 用奇性搬项时,是 f(A)>−f(B)=f(−B),别漏掉负号进 f。再叠加定义域,才是最终解集。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">⚖️ 互动 7 — 奇函数+递增:数轴上脱 f 后的解区间求解</div>
+      <svg id="ineqSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="ineqcase on" data-c="0">f(2x−1)&lt;f(x+3)</button>
+        <button class="ineqcase" data-c="1">f(x−1)&gt;f(3)</button>
+        <button class="ineqcase" data-c="2">f(x²)&lt;f(4)</button>
+      </div>
+      <div class="verdict" id="ineqNote"></div>
+      <p class="small">设 f 单调<b>递增</b>。脱 f 后不等式化为普通不等式,数轴上把解集画成绿区间。切到不同题目看解集如何变化(注意 x² 型会得到 −2&lt;x&lt;2)。</p>
+    </div>
+
+    <h2 class="g">⑧ 正比例原型对照:加法型就是 y=kx 的性质</h2>
+    <div class="card">
+      <p style="margin:6px 0">f(x+y)=f(x)+f(y) 的一切结论,都能在原型 <b>f(x)=kx</b> 上一眼看穿:f(0)=0、奇函数、k>0 时增。可视化把抽象规则和这条直线摆在一起,让你「看见」规则为什么成立。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">📐 互动 8 — f(x+y)=f(x)+f(y) ↔ 正比例 y=kx:在直线上验证加法规则</div>
+      <svg id="propSvg" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <label>斜率 k <input id="propK" type="range" min="-2" max="3" value="1" step="0.5"></label>
+        <label>x <input id="propX" type="range" min="-3" max="3" value="1" step="1"></label>
+        <label>y <input id="propY" type="range" min="-3" max="3" value="2" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>f(x)=kx</b><span id="prFx">0</span></div>
+        <div><b>f(y)=ky</b><span id="prFy">0</span></div>
+        <div><b>f(x)+f(y)</b><span id="prSum">0</span></div>
+        <div><b>f(x+y)=k(x+y)</b><span id="prFxy">0</span></div>
+      </div>
+      <p class="small">直线 y=kx 就是加法型的原型。读数验证:f(x)+f(y) 和 f(x+y) <b>永远相等</b>。这就是「规则=直线的可加性」。k&lt;0 直线下倾 → 减函数,但仍满足规则。</p>
+    </div>
+
+    <h2 class="r">⑨ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 赋值求特殊值</h3>
+      <p><b class="tag">触发信号:</b>给一条抽象规则和一两个已知值,问 f(0)、f(1)、f(某数) 的值。</p>
+      <p><b class="tag">标准动作:</b>盯着目标选代入值。求 f(0)→令 x=y=0;求 f(2)→令 x=y=1 得 f(2)=f(1)+f(1)(加法型);一步步用已知值堆出目标。</p>
+      <p><b class="tag">示例(带解):</b>已知 f(x+y)=f(x)+f(y),f(1)=2,求 f(0) 和 f(3)。令 x=y=0:f(0)=2f(0)⇒f(0)=0。令 x=y=1:f(2)=f(1)+f(1)=4;再令 x=2,y=1:f(3)=f(2)+f(1)=4+2=6。</p>
+      <p class="trap">陷阱:代入值选错方向(想求 f(0) 却代 x=1);忘了先挖 f(0) 再往上堆;把 f(3)=3f(1) 当成理所当然却没证。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 判断奇偶性</h3>
+      <p><b class="tag">触发信号:</b>问「f 是奇函数还是偶函数」「判断 f 的奇偶性并证明」。</p>
+      <p><b class="tag">标准动作:</b>先确认定义域对称 → 令 y=−x(或 x→−x)凑出 f(−x) → 用已知 f(0) 或 f(1) 收尾,得 f(−x)=±f(x)。</p>
+      <p><b class="tag">示例(带解):</b>f(x+y)=f(x)+f(y),定义域 R。令 y=−x:f(0)=f(x)+f(−x)。前面已得 f(0)=0,故 f(−x)=−f(x),f 是<b>奇函数</b>。</p>
+      <p class="trap">陷阱:漏查定义域是否对称;凑不出 f(−x) 就硬下结论;只代一个特殊 x 就说是奇/偶(要对任意 x)。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 判断/证明单调性</h3>
+      <p><b class="tag">触发信号:</b>问「判断 f 的单调性」「证明 f 在 R 上单调递增」,常配一句「当 x>0 时 f(x)>0」。</p>
+      <p><b class="tag">标准动作:</b>定义法。任取 x₁<x₂,令 Δ=x₂−x₁>0,用规则把 f(x₂)−f(x₁) 化简到 f(Δ)(或类似),再用已知条件定号。</p>
+      <p><b class="tag">示例(带解):</b>f(x+y)=f(x)+f(y),且 x>0 时 f(x)>0。任取 x₁<x₂,Δ=x₂−x₁>0。f(x₂)=f(x₁+Δ)=f(x₁)+f(Δ),故 f(x₂)−f(x₁)=f(Δ)>0(因 Δ>0)。所以 f <b>递增</b>。</p>
+      <p class="trap">陷阱:用特值代替任取;差式没化到能判号就下结论;忘了用「x>0 时 f(x)>0」这个定号钥匙。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 解抽象不等式(结合单调性脱 f)</h3>
+      <p><b class="tag">触发信号:</b>解形如 f(某式)<f(某式) 或 f(A)+f(B)>0 的不等式。</p>
+      <p><b class="tag">标准动作:</b>① 定单调性;② 用奇偶性/规则把两边凑成 f(⋯) 对 f(⋯);③ 按增同向/减反向脱 f;④ 叠加定义域解 x。</p>
+      <p><b class="tag">示例(带解):</b>f 在 R 上递增,解 f(2x−1)<f(x+3)。递增 ⇒ 同向脱 f:2x−1<x+3 ⇒ x<4。解集 {x|x<4}。若 f 递减则反向:2x−1>x+3 ⇒ x>4。</p>
+      <p class="trap">陷阱:递减忘了反向不等号;凑不成 f(⋯)<f(⋯) 硬脱;漏定义域(如含 √ 或分母时 x 的限制)。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 抽象函数的周期性</h3>
+      <p><b class="tag">触发信号:</b>给 f(x+a)=−f(x)、f(x+a)=1/f(x)、f(x+a)=f(x−a) 等,问周期或求 f(某个大数)。</p>
+      <p><b class="tag">标准动作:</b>把关系式<b>用两次</b>(x→x+a),让符号/倒数抵消,凑出 f(x+2a)=f(x) ⇒ T=2a;再用周期把大自变量约化到已知区间。</p>
+      <p><b class="tag">示例(带解):</b>f(x+2)=−f(x),f(1)=3,求 f(2027)。由 f(x+2)=−f(x) 得 f(x+4)=f(x),T=4。2027=4×506+3,f(2027)=f(3)=−f(1)=−3。</p>
+      <p class="trap">陷阱:把 a 当周期(其实是 2a);约化时算错余数;f(x+a)=−f(x) 忘了负号导致周期算成 a。</p>
+    </div>
+
+    <h2 class="r">⑩ 易错集</h2>
+    <div class="card">
+      <p class="trap">① 解抽象不等式<b>必须先有单调性</b>,否则不能脱 f。递减脱 f <b>不等号要反向</b>。</p>
+      <p class="trap">② 脱 f 后<b>别忘定义域</b>:若 f 只定义在 (0,+∞),脱出的 x 还要满足两边自变量都 >0。</p>
+      <p class="trap">③ 判奇偶要先看<b>定义域是否关于原点对称</b>,再凑 f(−x)。凑不出关系不能瞎猜。</p>
+      <p class="trap">④ 求 f(0)/f(1) 是<b>后续一切的地基</b>,忘了先挖出来,判奇偶、比大小都卡壳。</p>
+      <p class="trap">⑤ 周期由 f(x+a)=−f(x) 推得的是 <b>T=2a</b> 不是 a——要用两次。</p>
+      <p class="trap">⑥ 单调性证明要<b>任取 x₁<x₂</b>,不能取特值;差式要化到一个能判号的 f(正数)。</p>
+      <p class="trap">⑦ 原型函数只能<b>帮定方向</b>,不能当证明。考试要写完整的赋值推导过程。</p>
+      <p class="trap">⑧ 赋值要<b>回代到原规则</b>,凭空写 f(a+b)=f(a)+f(b) 之外的关系是错的。</p>
+      <p class="trap">⑨ f(A)+f(B)>0 型,用奇性搬成 f(A)>−f(B)=f(−B) 时<b>负号要进 f</b>,别丢。</p>
+    </div>
+
+    <h2 class="v">⑪ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 抽象函数=只保留结构、抹掉表达式:</b> 出题人把 f(x)=kx 这类具体函数「藏起来」,只留下它满足的运算律(可加性/可乘性)。你的任务是从运算律反推出所有性质。想通这层,你会主动去猜原型,赋值就有了方向感。</p>
+      <p style="margin:8px 0"><b>② 赋值的本质是「令一个变量变成常量」:</b> 二元规则 f(x,y) 里,把 y 固定成 0、1、−x、x 等特殊常量,就把二元关系压成一元方程。选哪个常量,取决于你想让哪一项「塌缩成已知」。这是所有赋值技巧的统一逻辑。</p>
+      <p style="margin:8px 0"><b>③ 单调性是「脱 f 的许可证」:</b> f 本身不可逆你就没法比自变量;一旦单调(严格),f 就成了保序(或反序)的双射,f(A)⋚f(B) 与 A⋚B 一一对应。这就是为什么解抽象不等式永远先找单调性——它是把 f 抹掉的合法凭证。</p>
+      <p style="margin:8px 0"><b>④ 周期性来自「关系的自我复合」:</b> f(x+a)=−f(x) 是一个把 f 变号的位移算子,作用两次(位移 2a)就变回自己 ⇒ 周期 2a。倒数型 f(x+a)=1/f(x) 同理,两次得 f(x+2a)=f(x)。凡是「作用 n 次回到自己」的关系,周期就是 na。</p>
+      <p style="margin:8px 0"><b>⑤ 奇偶+单调常联手考:</b> 高考压轴的抽象不等式几乎都是「奇函数(或偶函数)+单调」的组合。奇性负责把 f(A)+f(B) 搬成 f(A) 对 f(−B),单调性负责脱 f。看到「奇+增」四个字,基本能预判整条解题链。</p>
+    </div>
+
+    <h2 class="b">⑫ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 抽象函数与赋值法 · 配套:函数性质(奇偶/单调/周期)专题</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:四种模型 ↔ 原型对照 ===== */
+(function(){
+  const svg=document.getElementById('mapSvg');const note=document.getElementById('mapNote');
+  let c=0;
+  const data=[
+    {rule:"f(x+y)=f(x)+f(y)",proto:"正比例 f(x)=kx",k:2,type:"add",
+     demo:"取 k=2, x=1, y=3: 左 f(4)=2·4=8; 右 f(1)+f(3)=2+6=8 ✔"},
+    {rule:"f(x+y)=f(x)·f(y)",proto:"指数 f(x)=2^x",k:2,type:"exp",
+     demo:"取 a=2, x=1, y=3: 左 f(4)=2^4=16; 右 f(1)·f(3)=2·8=16 ✔"},
+    {rule:"f(xy)=f(x)+f(y)",proto:"对数 f(x)=log2 x",k:2,type:"log",
+     demo:"取 x=2, y=4: 左 f(8)=log2 8=3; 右 f(2)+f(4)=1+2=3 ✔"},
+    {rule:"f(xy)=f(x)·f(y)",proto:"幂函数 f(x)=x^2",k:2,type:"pow",
+     demo:"取 n=2, x=2, y=3: 左 f(6)=36; 右 f(2)·f(3)=4·9=36 ✔"}
+  ];
+  document.querySelectorAll('.mapcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.mapcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);const d=data[c];
+    const cols=[BLUE,RED,GREEN,VIO];const col=cols[c];
+    // rule box
+    el(svg,'rect',{x:40,y:30,width:280,height:70,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:180,y:58,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='抽象规则';
+    el(svg,'text',{x:180,y:84,'font-size':16,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=d.rule;
+    // arrow
+    el(svg,'text',{x:350,y:72,'font-size':26,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='↔';
+    // proto box
+    el(svg,'rect',{x:380,y:30,width:280,height:70,fill:YEL,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:520,y:58,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='原型函数';
+    el(svg,'text',{x:520,y:84,'font-size':16,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=d.proto;
+    // demo verification band
+    el(svg,'rect',{x:40,y:130,width:620,height:90,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:52,y:158,'font-size':13,'font-weight':900,fill:INK}).textContent='在原型上代入具体数验证:';
+    el(svg,'text',{x:52,y:190,'font-size':15,'font-weight':800,fill:col}).textContent=d.demo;
+    note.innerHTML='👉 <b>'+d.rule+'</b> 的原型是 <b>'+d.proto+'</b>。规则不过是这条原型函数的一种代数性质,考场上用赋值法把它严格证出来即可。';
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 互动2:令 x=y=0 推 f(0) ===== */
+(function(){
+  const svg=document.getElementById('zeroSvg');const note=document.getElementById('zeroNote');
+  const sel=document.getElementById('zeroSel');
+  let mode=0,anim=1,running=false;
+  sel.onchange=()=>{mode=+sel.value;anim=1;draw();};
+  function draw(){
+    clr(svg);
+    const v=1-anim; // 1 -> collapsed to 0
+    // x and y sliders collapsing to 0
+    const cx=350,axisY=70,scale=110;
+    el(svg,'line',{x1:cx-scale-30,y1:axisY,x2:cx+scale+30,y2:axisY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx,y:axisY+22,'font-size':12,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='0';
+    el(svg,'line',{x1:cx,y1:axisY-6,x2:cx,y2:axisY+6,stroke:INK,'stroke-width':3});
+    // x ball (from left)
+    const xpos=cx-scale*v;const ypos=cx+scale*v;
+    el(svg,'circle',{cx:xpos,cy:axisY,r:12,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:xpos,y:axisY-18,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='x';
+    el(svg,'circle',{cx:ypos,cy:axisY,r:12,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:ypos,y:axisY-18,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='y';
+    // equation area
+    el(svg,'rect',{x:60,y:130,width:580,height:90,fill:'#fff',stroke:INK,'stroke-width':3});
+    let line1,line2;
+    if(mode===0){
+      line1='令 x=y=0:  f(0+0) = f(0) + f(0)';
+      line2 = anim<0.02 ? 'f(0) = 2·f(0)  ⇒  f(0) = 0' : '代入进行中… 两数正滑向 0';
+    }else{
+      line1='令 x=y=0:  f(0+0) = f(0) · f(0)';
+      line2 = anim<0.02 ? 'f(0) = f(0)²  ⇒  f(0)=0 或 1;排除恒零 ⇒ f(0)=1' : '代入进行中… 两数正滑向 0';
+    }
+    el(svg,'text',{x:80,y:165,'font-size':15,'font-weight':900,fill:INK}).textContent=line1;
+    el(svg,'text',{x:80,y:198,'font-size':15,'font-weight':900,fill:mode===0?BLUE:VIO}).textContent=line2;
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='板斧一:令 x=y=0,规则塌缩成只含 f(0) 的方程';
+    if(anim<0.02){
+      note.innerHTML= mode===0
+        ? '✔ 加法型:f(0)=2f(0) ⇒ <b>f(0)=0</b>。这是后续判奇偶(令 y=−x)的地基。'
+        : '✔ 乘法型:f(0)=f(0)² ⇒ f(0)=0 或 1;因 f 不恒为 0,取 <b>f(0)=1</b>。';
+      note.style.borderColor=mode===0?BLUE:VIO;
+    }else{
+      note.innerHTML='点「代入 x=y=0」,让 x、y 一起滑到 0…';
+      note.style.borderColor=INK;
+    }
+  }
+  function loop(){if(!running)return;anim-=0.03;if(anim<=0){anim=0;running=false;}draw();requestAnimationFrame(loop);}
+  document.getElementById('zeroGo').onclick=()=>{anim=1;running=true;requestAnimationFrame(loop);};
+  document.getElementById('zeroReset').onclick=()=>{anim=1;running=false;draw();};
+  draw();
+})();
+
+/* ===== 互动3:脱 f 解不等式 ===== */
+(function(){
+  const svg=document.getElementById('peelSvg');const note=document.getElementById('peelNote');
+  let inc=1;
+  document.querySelectorAll('.peelmono').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.peelmono').forEach(x=>x.classList.remove('on'));b.classList.add('on');inc=+b.dataset.m;draw();
+  });
+  function draw(){
+    clr(svg);
+    const col=inc?GREEN:RED;
+    el(svg,'text',{x:350,y:26,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='抽象不等式:f(2x−1) < f(x+3)';
+    // step boxes
+    el(svg,'rect',{x:60,y:50,width:580,height:44,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:80,y:78,'font-size':14,'font-weight':900,fill:INK}).textContent='① f 单调'+(inc?'递增':'递减')+' → '+(inc?'同向':'反向')+'脱 f';
+    el(svg,'rect',{x:60,y:104,width:580,height:44,fill:'#fff',stroke:INK,'stroke-width':3});
+    const relaxed = inc ? '2x−1 < x+3' : '2x−1 > x+3';
+    el(svg,'text',{x:80,y:132,'font-size':16,'font-weight':900,fill:col}).textContent='② 脱 f: '+relaxed+(inc?'  （不等号不变）':'  （不等号翻转!）');
+    el(svg,'rect',{x:60,y:158,width:580,height:60,fill:inc?'#e9f7f3':'#fce9e7',stroke:INK,'stroke-width':3});
+    const sol = inc ? 'x < 4' : 'x > 4';
+    el(svg,'text',{x:80,y:186,'font-size':14,'font-weight':900,fill:INK}).textContent='③ 解出:'+(inc?'2x−1<x+3 ⇒ x<4':'2x−1>x+3 ⇒ x>4');
+    el(svg,'text',{x:80,y:210,'font-size':17,'font-weight':900,fill:col}).textContent='解集: { x | '+sol+' }';
+    note.innerHTML= inc
+      ? '👉 <b>递增</b>:f(A)<f(B) ⟺ A<B,同向脱 f,得 <b>x<4</b>。'
+      : '👉 <b>递减</b>:f(A)<f(B) ⟺ A>B,<b>不等号翻转</b>,得 <b>x>4</b>。这是最高频失分点!';
+    note.style.borderColor=col;
+  }
+  draw();
+})();
+
+/* ===== 互动4:令 y=−x 判奇偶(镜像) ===== */
+(function(){
+  const cv=document.getElementById('oddCv');const ctx=cv.getContext('2d');const note=document.getElementById('oddNote');
+  const Xs=document.getElementById('oddX');
+  let c=0,X=3;
+  document.querySelectorAll('.oddcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.oddcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  Xs.oninput=()=>{X=+Xs.value;draw();};
+  function fval(x){ return c===0 ? 1.6*x : 1.2*x*x*0.3; } // odd: kx ; even: ~x^2 (scaled)
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const cx=350,cy=120,ux=44,uy=14;
+    // axes
+    ctx.strokeStyle=INK;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(30,cy);ctx.lineTo(670,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,10);ctx.lineTo(cx,230);ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 12px sans-serif';
+    ctx.fillText('O',cx+6,cy+16);ctx.fillText('x',655,cy-6);
+    // point at x
+    const fx=fval(X), fnx=fval(-X);
+    const px=cx+X*ux, pnx=cx-X*ux;
+    const py=cy-fx*uy, pny=cy-fnx*uy;
+    // dashed guides
+    ctx.strokeStyle='#bbb';ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(px,cy);ctx.lineTo(px,py);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pnx,cy);ctx.lineTo(pnx,pny);ctx.stroke();
+    ctx.setLineDash([]);
+    // points
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(px,py,8,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(pnx,pny,8,0,2*Math.PI);ctx.fill();ctx.stroke();
+    // labels
+    ctx.fillStyle=BLUE;ctx.font='bold 13px sans-serif';ctx.fillText('(x, f(x))',px-20,py-14);
+    ctx.fillStyle=RED;ctx.fillText('(−x, f(−x))',pnx-30,pny-14);
+    // symmetry indicator
+    ctx.strokeStyle=c===0?VIO:GREEN;ctx.lineWidth=2;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(pnx,pny);ctx.stroke();ctx.setLineDash([]);
+    // origin dot for odd
+    if(c===0){ctx.fillStyle=VIO;ctx.beginPath();ctx.arc(cx,cy,4,0,2*Math.PI);ctx.fill();}
+    if(c===0){
+      note.innerHTML='<b>加法型(奇函数):</b> 令 y=−x 得 f(0)=f(x)+f(−x),而 f(0)=0 ⇒ <b>f(−x)=−f(x)</b>。两点关于<b>原点</b>对称(等高、反号)。';
+      note.style.borderColor=VIO;
+    }else{
+      note.innerHTML='<b>偶函数样例:</b> f(−x)=f(x)。两点关于 <b>y 轴</b>对称(等高、同号)。判偶就是凑出 f(−x) 恰等于 f(x)。';
+      note.style.borderColor=GREEN;
+    }
+  }
+  draw();
+})();
+
+/* ===== 互动5:单调性 x2=x1+Δ ===== */
+(function(){
+  const svg=document.getElementById('monoSvg');
+  const X1s=document.getElementById('monoX1'),Ds=document.getElementById('monoD');
+  const oX1=document.getElementById('moX1'),oX2=document.getElementById('moX2'),oDiff=document.getElementById('moDiff'),oConc=document.getElementById('moConc');
+  let x1=0,d=2,anim=1,running=false;
+  function sync(){x1=+X1s.value;d=+Ds.value;anim=1;draw();}
+  X1s.oninput=Ds.oninput=sync;
+  // additive-type sample with f(t)=1.5*t  (x>0 -> f>0)
+  function f(t){return 1.5*t;}
+  function draw(){
+    clr(svg);
+    const x2=x1+d;
+    const baseY=200,cx=70,ux=70,uy=16;
+    // number axis
+    el(svg,'line',{x1:40,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    // map x -> pixel
+    function px(x){return 350 + x*ux*0.9;}
+    // x1, x2 markers
+    [[x1,BLUE,'x₁'],[x2,GREEN,'x₂=x₁+Δ']].forEach(m=>{
+      const X=px(m[0]);
+      el(svg,'line',{x1:X,y1:baseY-6,x2:X,y2:baseY+6,stroke:INK,'stroke-width':3});
+      el(svg,'circle',{cx:X,cy:baseY,r:7,fill:m[1],stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X,y:baseY+24,'font-size':12.5,'font-weight':900,fill:m[1],'text-anchor':'middle'}).textContent=m[2];
+    });
+    // Δ bracket
+    const xa=px(x1),xb=px(x2);
+    el(svg,'line',{x1:xa,y1:baseY-40,x2:xb,y2:baseY-40,stroke:ORANGE,'stroke-width':3});
+    el(svg,'text',{x:(xa+xb)/2,y:baseY-48,'font-size':12.5,'font-weight':900,fill:ORANGE,'text-anchor':'middle'}).textContent='Δ='+d+' >0';
+    // f values as bars on left
+    const diff=f(d); // f(x2)-f(x1)=f(Δ)
+    // decomposition text
+    el(svg,'rect',{x:40,y:24,width:620,height:70,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:56,y:50,'font-size':14,'font-weight':900,fill:INK}).textContent='f(x₂)=f(x₁+Δ)=f(x₁)+f(Δ)  ⇒  f(x₂)−f(x₁)=f(Δ)';
+    el(svg,'text',{x:56,y:78,'font-size':14,'font-weight':900,fill:GREEN}).textContent='Δ>0,且 x>0 时 f(x)>0 ⇒ f(Δ)>0 ⇒ 差为正 ⇒ 递增';
+    // f(Δ) bar
+    const bx=520,by=190,h=diff*10;
+    el(svg,'rect',{x:bx,y:by-h,width:36,height:h,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:bx+18,y:by-h-8,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='f(Δ)='+diff.toFixed(1);
+    el(svg,'text',{x:bx+18,y:by+16,'font-size':11.5,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='>0';
+    oX1.textContent=x1;oX2.textContent=x2;oDiff.textContent='+'+diff.toFixed(1);oConc.textContent='递增 ↑';
+  }
+  document.getElementById('monoGo').onclick=()=>{sync();};
+  document.getElementById('monoReset').onclick=()=>{X1s.value=0;Ds.value=2;sync();};
+  sync();
+})();
+
+/* ===== 互动6:周期推导 f(x+a)=-f(x) ===== */
+(function(){
+  const svg=document.getElementById('perSvg');const note=document.getElementById('perNote');
+  const As=document.getElementById('perA');
+  let a=2,step=0,running=false;
+  As.oninput=()=>{a=+As.value;step=0;draw();};
+  function draw(){
+    clr(svg);
+    const baseY=170,uh=26;
+    const positions=[{x:120,lab:'f(x)',v:1},{x:350,lab:'f(x+a)',v:-1},{x:580,lab:'f(x+2a)',v:1}];
+    // baseline
+    el(svg,'line',{x1:40,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    positions.forEach((p,i)=>{
+      const visible = i<=step;
+      if(!visible)return;
+      const h=uh*2*Math.abs(p.v);
+      const up=p.v>0;
+      const y=up?baseY-h:baseY;
+      const col=up?BLUE:RED;
+      el(svg,'rect',{x:p.x-26,y:y,width:52,height:h,fill:col,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:p.x,y:baseY+22,'font-size':12.5,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=p.lab;
+      el(svg,'text',{x:p.x,y:up?y-8:y+h+16,'font-size':12,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=up?'+':'−';
+    });
+    // arrows for the two flips
+    if(step>=1){el(svg,'text',{x:235,y:60,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='×(−1)';
+      el(svg,'text',{x:235,y:80,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='f(x+a)=−f(x)';}
+    if(step>=2){el(svg,'text',{x:465,y:60,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='×(−1)';
+      el(svg,'text',{x:465,y:80,'font-size':11.5,'font-weight':800,fill:RED,'text-anchor':'middle'}).textContent='再用一次';}
+    el(svg,'text',{x:350,y:24,'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='已知 f(x+a)=−f(x),a='+a;
+    let msg;
+    if(step===0)msg='起点:f(x)(正)。点「逐步推导」,先算 f(x+a)。';
+    else if(step===1)msg='第一步:f(x+a)=−f(x) → 翻号(变负)。注意此时 a 还不是周期!';
+    else msg='第二步:f(x+2a)=−f(x+a)=−(−f(x))=f(x)。首尾等高同号 ⇒ 周期 T=2a='+(2*a)+'。';
+    note.innerHTML='👉 '+msg;
+    note.style.borderColor=step>=2?GREEN:INK;
+  }
+  document.getElementById('perGo').onclick=()=>{if(step<2)step++;else step=0;draw();};
+  document.getElementById('perReset').onclick=()=>{step=0;draw();};
+  draw();
+})();
+
+/* ===== 互动7:奇+增 数轴解区间 ===== */
+(function(){
+  const svg=document.getElementById('ineqSvg');const note=document.getElementById('ineqNote');
+  let c=0;
+  document.querySelectorAll('.ineqcase').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.ineqcase').forEach(x=>x.classList.remove('on'));b.classList.add('on');c=+b.dataset.c;draw();
+  });
+  function draw(){
+    clr(svg);
+    const axisY=120,cx=350,ux=60;
+    el(svg,'line',{x1:40,y1:axisY,x2:660,y2:axisY,stroke:INK,'stroke-width':3});
+    // ticks -4..4
+    for(let t=-4;t<=4;t++){
+      const X=cx+t*ux*0.9;
+      el(svg,'line',{x1:X,y1:axisY-5,x2:X,y2:axisY+5,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X,y:axisY+22,'font-size':11,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent=t;
+    }
+    function px(x){return cx+x*ux*0.9;}
+    let peeled,solLo,solHi,openL,openR,title;
+    if(c===0){title='f(2x−1) < f(x+3)';peeled='增 ⇒ 2x−1 < x+3 ⇒ x < 4';solLo=-99;solHi=4;openL=false;openR=true;}
+    else if(c===1){title='f(x−1) > f(3)';peeled='增 ⇒ x−1 > 3 ⇒ x > 4';solLo=4;solHi=99;openL=true;openR=false;}
+    else{title='f(x²) < f(4)';peeled='增 ⇒ x² < 4 ⇒ −2 < x < 2';solLo=-2;solHi=2;openL=true;openR=true;}
+    // draw solution band (clamped to -4.5..4.5 range)
+    const loX=px(Math.max(solLo,-4.5)),hiX=px(Math.min(solHi,4.5));
+    el(svg,'rect',{x:loX,y:axisY-14,width:hiX-loX,height:28,fill:'rgba(30,158,134,0.30)',stroke:GREEN,'stroke-width':3});
+    // endpoints
+    if(solLo>-90){el(svg,'circle',{cx:px(solLo),cy:axisY,r:6,fill:openL?'#fff':GREEN,stroke:GREEN,'stroke-width':3});}
+    if(solHi<90){el(svg,'circle',{cx:px(solHi),cy:axisY,r:6,fill:openR?'#fff':GREEN,stroke:GREEN,'stroke-width':3});}
+    el(svg,'text',{x:350,y:30,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='设 f 递增,解:'+title;
+    el(svg,'text',{x:350,y:62,'font-size':14,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent=peeled;
+    el(svg,'text',{x:350,y:axisY+52,'font-size':13,'font-weight':800,fill:INK,'text-anchor':'middle'}).textContent='绿色区间即解集(空心=不含端点)';
+    note.innerHTML='👉 '+peeled+'。<b>递增</b>时同向脱 f;'+(c===2?'x² 型给出对称区间 <b>−2<x<2</b>。':'把不等式化成普通一次不等式即可。');
+    note.style.borderColor=GREEN;
+  }
+  draw();
+})();
+
+/* ===== 互动8:正比例原型 f(x+y)=f(x)+f(y) ===== */
+(function(){
+  const svg=document.getElementById('propSvg');
+  const Ks=document.getElementById('propK'),Xs=document.getElementById('propX'),Ys=document.getElementById('propY');
+  const oFx=document.getElementById('prFx'),oFy=document.getElementById('prFy'),oSum=document.getElementById('prSum'),oFxy=document.getElementById('prFxy');
+  let k=1,x=1,y=2;
+  function sync(){k=+Ks.value;x=+Xs.value;y=+Ys.value;draw();}
+  Ks.oninput=Xs.oninput=Ys.oninput=sync;
+  function draw(){
+    clr(svg);
+    const cx=350,cy=160,ux=40,uy=22;
+    // axes
+    el(svg,'line',{x1:40,y1:cy,x2:660,y2:cy,stroke:INK,'stroke-width':3});
+    el(svg,'line',{x1:cx,y1:20,x2:cx,y2:300,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:650,y:cy-8,'font-size':12,'font-weight':900,fill:INK}).textContent='x';
+    el(svg,'text',{x:cx+8,y:30,'font-size':12,'font-weight':900,fill:INK}).textContent='y';
+    // line y=kx
+    const x0=-3.6,x1=3.6;
+    el(svg,'line',{x1:cx+x0*ux,y1:cy-k*x0*uy,x2:cx+x1*ux,y2:cy-k*x1*uy,stroke:BLUE,'stroke-width':4});
+    el(svg,'text',{x:cx+x1*ux-70,y:cy-k*x1*uy-6,'font-size':13,'font-weight':900,fill:BLUE}).textContent='f(x)=kx';
+    // points x, y, x+y
+    const fx=k*x, fy=k*y, fxy=k*(x+y);
+    function pt(vx,vfx,col,lab){
+      const X=cx+vx*ux, Y=cy-vfx*uy;
+      el(svg,'line',{x1:X,y1:cy,x2:X,y2:Y,stroke:'#bbb','stroke-width':1.5,'stroke-dasharray':'3 3'});
+      el(svg,'circle',{cx:X,cy:Y,r:6,fill:col,stroke:INK,'stroke-width':2});
+      el(svg,'text',{x:X,y:Y-10,'font-size':11.5,'font-weight':900,fill:col,'text-anchor':'middle'}).textContent=lab;
+    }
+    pt(x,fx,GREEN,'x');
+    pt(y,fy,ORANGE,'y');
+    pt(x+y,fxy,RED,'x+y');
+    // readouts
+    oFx.textContent=fx.toFixed(1);oFy.textContent=fy.toFixed(1);
+    oSum.textContent=(fx+fy).toFixed(1);oFxy.textContent=fxy.toFixed(1);
+    // verify text
+    const okCol = Math.abs((fx+fy)-fxy)<1e-6 ? GREEN : RED;
+    el(svg,'text',{x:350,y:295,'font-size':13,'font-weight':900,fill:okCol,'text-anchor':'middle'}).textContent='f(x)+f(y)='+(fx+fy).toFixed(1)+' , f(x+y)='+fxy.toFixed(1)+'  → 相等 ✔';
+  }
+  sync();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 什么是抽象函数?破解它的核心方法是什么?",a:"抽象函数是只给出运算规则/性质、不给具体解析式的函数(如 f(x+y)=f(x)+f(y))。核心方法是赋值法:给自变量代特殊值(0、1、−x、同值、增量),把抽象规则变成具体等式,挖出隐藏信息。"},
+ {q:"2. 四种常见抽象模型分别对应什么原型函数?",a:"f(x+y)=f(x)+f(y)↔正比例 kx;f(x+y)=f(x)f(y)↔指数 a^x;f(xy)=f(x)+f(y)↔对数 log_a x;f(xy)=f(x)f(y)↔幂函数 x^n。原型帮定方向,证明仍要用赋值。"},
+ {q:"3. 已知 f(x+y)=f(x)+f(y),f(1)=2,求 f(0) 与 f(3)。",a:"令 x=y=0:f(0)=2f(0)⇒f(0)=0。令 x=y=1:f(2)=2f(1)=4;再 f(3)=f(2)+f(1)=4+2=6。"},
+ {q:"4. 如何判断 f(x+y)=f(x)+f(y) 的奇偶性?",a:"先确认定义域(R)关于原点对称。令 y=−x:f(0)=f(x)+f(−x)。由 f(0)=0 得 f(−x)=−f(x),所以是奇函数。"},
+ {q:"5. 判断抽象函数奇偶性的通用步骤?",a:"① 查定义域是否关于原点对称;② 用赋值(常令 y=−x 或 x→−x)凑出 f(−x);③ 用已知 f(0)/f(1) 得到 f(−x)=±f(x),定奇/偶。"},
+ {q:"6. 怎样证明抽象函数的单调性?",a:"定义法:任取 x₁<x₂,令 Δ=x₂−x₁>0,用规则把 f(x₂)−f(x₁) 化简(加法型得 =f(Δ)),再用已知条件(如 x>0 时 f(x)>0)判号。恒正则增,恒负则减。"},
+ {q:"7. 解抽象不等式 f(2x−1)<f(x+3),f 在 R 上递增,求解集。",a:"递增⇒同向脱 f:2x−1<x+3⇒x<4。解集 {x|x<4}。若 f 递减则反向:2x−1>x+3⇒x>4。"},
+ {q:"8. 递减函数解 f(A)<f(B) 时要注意什么?",a:"脱 f 后不等号要反向:f(A)<f(B) ⟺ A>B。这是最高频失分点。此外还要叠加定义域限制。"},
+ {q:"9. 由 f(x+a)=−f(x) 如何求周期?",a:"用两次:把 x 换成 x+a,f(x+2a)=−f(x+a)=−(−f(x))=f(x)。所以 T=2a(不是 a!)。"},
+ {q:"10. f(x+2)=−f(x),f(1)=3,求 f(2027)。",a:"由 f(x+2)=−f(x) 得 f(x+4)=f(x),T=4。2027=4×506+3,f(2027)=f(3)=−f(1)=−3。"},
+ {q:"11. 已知 f 为奇函数且递增,解 f(x²−x)+f(2−x)>0。",a:"用奇性:f(2−x)=−f(x−2),原式化为 f(x²−x)>f(x−2)。用增性脱 f:x²−x>x−2⇒x²−2x+2>0,判别式4−8<0恒成立,故解集为 R。"},
+ {q:"12. 为什么解抽象不等式必须先有单调性?",a:"因为 f 没有解析式,只有单调(严格)时 f 才是保序/反序映射,f(A)⋚f(B) 才能等价于 A⋚B(脱 f)。没有单调性就无法比较自变量,不等式无从下手。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>
