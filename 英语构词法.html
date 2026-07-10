@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>构词法(词根词缀) · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">英语 · 攻坚包</div>
+    <h1>构词法(词根 · 词缀)</h1>
+    <p class="lead">背单词最亏的方式,是把每个词当成毫无规律的字母串死记。其实绝大多数长词都是<b>拼出来的</b>:一个<b>词根</b>管核心意思,前面加<b>前缀</b>改方向或正反,后面加<b>后缀</b>改词性。看懂这套拼法,生词能猜、拼写不慌、语法填空的「词性转换」直接秒杀。这一页教你把「记单词」变成「拆单词」。</p>
+
+    <div class="say">🗣️ <b>构词法(人话版):</b> 一个单词像乐高:<b>词根</b>是中间那块主板(定意思),<b>前缀</b>贴在前面(改意思:un- 变否定、re- 变「再」、ex- 变「向外」),<b>后缀</b>贴在后面(改词性:-tion 变名词、-ful 变形容词、-ly 变副词、-ize 变动词)。所以看到一个没见过的长词,别慌——<b>先切三刀</b>:掐头(前缀)、去尾(后缀)、留中间(词根),意思和词性八九不离十就出来了。语法填空里让你「用括号里的词的适当形式填空」,考的就是这一招。</div>
+
+    <div class="keybox"><b>一句话口诀:</b> <b>前缀改意思,后缀改词性,词根是核心。</b> 拆词三刀:前缀(un-/dis-/in-/re-/pre-/mis-…) + 词根(spect 看 / port 拿 / dict 说) + 后缀(-tion/-ment 名词、-ful/-able 形容词、-ly 副词、-ize/-en 动词)。语法填空第一问永远是:<b>这个空该填什么词性?</b> 看句子结构定词性,再挑对应后缀。</div>
+
+    <h2>① 前缀:改意思,不改词性</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>前缀加在词根前面,只改变意思(否定、方向、程度、时间),一般不改变词性。</b> happy(形容词)加 un- 还是 unhappy(形容词),只是意思反过来。</p>
+      <table>
+        <tr><th>前缀</th><th>意思</th><th>例词</th></tr>
+        <tr><td><b>un-</b></td><td>否定「不」(最常用,加形容词/分词)</td><td>happy→unhappy, able→unable</td></tr>
+        <tr><td><b>dis-</b></td><td>相反 / 否定(常加动词、形容词)</td><td>agree→disagree, appear→disappear</td></tr>
+        <tr><td><b>in-/im-/il-/ir-</b></td><td>否定「不」(拼写随后一个字母变)</td><td>correct→incorrect, possible→impossible</td></tr>
+        <tr><td><b>re-</b></td><td>再 / 重新 / 回</td><td>write→rewrite, turn→return</td></tr>
+        <tr><td><b>pre-</b></td><td>前 / 预先</td><td>view→preview, pay→prepay</td></tr>
+        <tr><td><b>mis-</b></td><td>错误地</td><td>understand→misunderstand</td></tr>
+        <tr><td><b>ex-</b></td><td>向外 / 前任</td><td>port→export, ex-boss</td></tr>
+        <tr><td><b>en-/em-</b></td><td>使…(少数前缀会「变词性」→ 动词)</td><td>large→enlarge, rich→enrich</td></tr>
+      </table>
+      <p class="trap">⚠ 大多数前缀<b>不改词性</b>,但 en-/em- 是例外(large 形容词 → enlarge 动词)。别把「加了前缀词性一定不变」当死规矩。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🔧 互动 1 — 构词拆解器:输入或点一个词,自动切成「前缀+词根+后缀」并判词性</div>
+      <div class="ctrl">
+        <input id="wdInput" type="text" placeholder="输入一个英文单词,如 inspection" style="flex:1;min-width:180px;border:3px solid var(--ink);padding:8px 10px;font-size:14px;font-weight:700;font-family:'SF Mono',Consolas,monospace">
+        <button id="wdGo">拆 解</button>
+      </div>
+      <div class="chips" id="wdChips"></div>
+      <div id="wdOut" style="min-height:120px;border:3px solid var(--ink);background:#fff;padding:14px;margin-top:8px"></div>
+      <p class="small">颜色对应:<b style="color:#1450C8">蓝=前缀</b>(改意思) · <b style="color:#1E9E86">绿=词根</b>(核心) · <b style="color:#E86A17">橙=后缀</b>(定词性)。词库里没有的词会提示,先点上面的示例词感受一下切法。</p>
+    </div>
+
+    <h2 class="o">② 后缀:改词性,是语法填空的命门</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>后缀加在词根后面,主要改变词性。</b> 看到空要填什么词性,就挑对应后缀——这是语法填空「词性转换」题的核心动作。</p>
+      <table>
+        <tr><th>后缀</th><th>变成</th><th>例词</th></tr>
+        <tr><td><b>-tion/-sion/-ment/-ness/-ity</b></td><td>名词 n.</td><td>act→action, move→movement, happy→happiness</td></tr>
+        <tr><td><b>-er/-or/-ist/-ee</b></td><td>名词(表人)</td><td>teach→teacher, act→actor, art→artist</td></tr>
+        <tr><td><b>-ful/-less/-able/-ible/-al/-ous/-y</b></td><td>形容词 adj.</td><td>care→careful/careless, comfort→comfortable</td></tr>
+        <tr><td><b>-ly</b></td><td>副词 adv.(加在形容词后)</td><td>quick→quickly, careful→carefully</td></tr>
+        <tr><td><b>-ize/-ise/-en/-ify</b></td><td>动词 v.</td><td>modern→modernize, wide→widen, beauty→beautify</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>判词性三步:</b> ①看空在句中的位置 → ②确定要名词/动词/形容词/副词 → ③把括号里的词加对应后缀(注意拼写变化)。</p>
+      <p class="trap">⚠ -ly 不一定是副词!friend→friendly(友好的,形容词)、love→lovely(可爱的,形容词)是「名词+ly=形容词」。判词性要看句子,不是死记后缀。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🎡 互动 2 — 后缀转盘:点一个后缀,指针转到它,告诉你「变成什么词性」+ 例词</div>
+      <svg id="wheelSvg" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="wheelInfo"></div>
+      <p class="small">同一颜色 = 同一词性:<b style="color:#1E9E86">绿=名词</b> · <b style="color:#E86A17">橙=形容词</b> · <b style="color:#7A3FF2">紫=副词</b> · <b style="color:#E0382A">红=动词</b>。点任意扇区看它的转换规律。</p>
+    </div>
+
+    <h2 class="g">③ 词根:核心意思的来源,一根带一串</h2>
+    <div class="card">
+      <p style="margin:6px 0"><b>词根是单词的「意思内核」。</b> 记住一个词根,就能顺藤摸瓜猜出一整串同族词——这是「构词法猜词」题的底层能力。</p>
+      <table>
+        <tr><th>词根</th><th>意思</th><th>一串同族词</th></tr>
+        <tr><td><b>spect</b></td><td>看 (look)</td><td>inspect 检查 · respect 尊敬 · spectator 观众 · prospect 前景</td></tr>
+        <tr><td><b>port</b></td><td>拿 / 搬运 (carry)</td><td>import 进口 · export 出口 · transport 运输 · portable 便携的</td></tr>
+        <tr><td><b>dict</b></td><td>说 (say)</td><td>predict 预言 · dictionary 词典 · dictate 口述 · contradict 反驳</td></tr>
+        <tr><td><b>vis/vid</b></td><td>看 (see)</td><td>visible 可见的 · television 电视 · video 视频</td></tr>
+        <tr><td><b>ject</b></td><td>扔 (throw)</td><td>reject 拒绝 · inject 注射 · project 投射/项目</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>猜词法:</b> 遇到生词 <i>inspector</i> → in-(向内)+ spect(看)+ -or(表人)→「往里看的人」=检查员/督察。八九不离十。</p>
+      <p class="trap">⚠ 词根猜词是「毛估方向」,不是精确翻译。考场上用它<b>缩小选项范围</b>,再结合上下文定死,别硬拿字面意思去套具体语境。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🌳 互动 4 — 词根家族树:点一个词根,长出一整串同族词(spect / port / dict)</div>
+      <div class="ctrl">
+        <button class="rtbtn on" data-r="spect">spect(看)</button>
+        <button class="rtbtn" data-r="port">port(拿/搬)</button>
+        <button class="rtbtn" data-r="dict">dict(说)</button>
+      </div>
+      <svg id="rtSvg" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="verdict" id="rtInfo"></div>
+      <p class="small">中间是词根,四周是它派生出的词。同一个词根反复出现在不同词里——记根,一次记一串。</p>
+    </div>
+
+    <h2 class="v">④ 否定前缀怎么选:in / im / il / ir 的拼写规则</h2>
+    <div class="card">
+      <p style="margin:6px 0">否定前缀 in- 会为了发音顺口而<b>变形</b>,规则很硬:</p>
+      <table>
+        <tr><th>用哪个</th><th>规则</th><th>例词</th></tr>
+        <tr><td><b>il-</b></td><td>后一个字母是 <b>l</b></td><td>legal→illegal, legible→illegible</td></tr>
+        <tr><td><b>ir-</b></td><td>后一个字母是 <b>r</b></td><td>regular→irregular, responsible→irresponsible</td></tr>
+        <tr><td><b>im-</b></td><td>后一个字母是 <b>m / p / b</b></td><td>possible→impossible, polite→impolite</td></tr>
+        <tr><td><b>in-</b></td><td>其他情况(默认)</td><td>correct→incorrect, complete→incomplete</td></tr>
+        <tr><td><b>un-</b></td><td>最通用,多加形容词/分词</td><td>happy→unhappy, expected→unexpected</td></tr>
+        <tr><td><b>dis-</b></td><td>表「相反」,常加动词/形容词</td><td>agree→disagree, honest→dishonest</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>记法:</b> l 前用 il、r 前用 ir、m/p/b 前用 im、其余用 in。这是「同化」(字母跟着下一个字母走)。</p>
+      <p class="trap">⚠ 别所有否定都套 un-。possible 的否定是 <b>impossible</b> 不是 unpossible;regular 是 <b>irregular</b> 不是 unregular。具体词有固定搭配,拼写规则帮你排除大部分错误。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🚫 互动 3 — 否定前缀匹配练习:给你一个词根,选对否定前缀(un/dis/in/im/il/ir)</div>
+      <div style="border:3px solid var(--ink);background:#fff;padding:14px;margin-top:6px">
+        <div style="font-size:15px;font-weight:800">给 <b id="npWord" style="color:#7A3FF2;font-size:20px">legal</b> 加否定前缀:<span id="npMean" style="font-weight:700;color:#6b5d3a"></span></div>
+        <div class="ctrl" style="margin-top:10px">
+          <button class="npbtn" data-p="un">un-</button>
+          <button class="npbtn" data-p="dis">dis-</button>
+          <button class="npbtn" data-p="in">in-</button>
+          <button class="npbtn" data-p="im">im-</button>
+          <button class="npbtn" data-p="il">il-</button>
+          <button class="npbtn" data-p="ir">ir-</button>
+        </div>
+        <div class="verdict" id="npFeedback" style="margin-top:8px">选一个前缀试试。</div>
+        <div class="ctrl"><button id="npNext">下一题 →</button><span style="font-weight:800;font-size:13px">得分:<span id="npScore">0 / 0</span></span></div>
+      </div>
+      <p class="small">规则提示:<b>l</b> 前→il · <b>r</b> 前→ir · <b>m/p/b</b> 前→im · 其他→in · un/dis 看词固定搭配。选错会告诉你为什么。</p>
+    </div>
+
+    <h2 class="b">⑤ 派生词的词性判断(语法填空核心技能)</h2>
+    <div class="card">
+      <p style="margin:6px 0">语法填空最常考:给你 <i>(explain)</i>,要你根据句子填 <i>explanation / explain / clearly…</i>。<b>先判空要什么词性,再挑后缀。</b></p>
+      <table>
+        <tr><th>空的位置线索</th><th>要填的词性</th><th>常见后缀</th></tr>
+        <tr><td>冠词后 / 介词后 / 作主语宾语</td><td>名词 n.</td><td>-tion -ment -ness -ity</td></tr>
+        <tr><td>be 动词后 / 名词前 / 系动词后</td><td>形容词 adj.</td><td>-ful -less -able -al -ous</td></tr>
+        <tr><td>修饰动词 / 修饰形容词 / 句首</td><td>副词 adv.</td><td>-ly</td></tr>
+        <tr><td>作谓语 / 情态动词后 / to 后</td><td>动词 v.</td><td>-ize -en -ify(或原形)</td></tr>
+      </table>
+      <p class="trap">⚠ 判词性靠<b>句子结构</b>,不是靠感觉。「the ___ of…」中间必是名词;「be ___」多半形容词;「V + ___」多半副词。定死词性再变形,拼写变化(y→i、去 e 加后缀)别丢分。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">✏️ 互动 5 — 词性转换填空练习:读句子,把括号里的词变成正确形式</div>
+      <div style="border:3px solid var(--ink);background:#fff;padding:14px;margin-top:6px">
+        <div id="fpSent" style="font-size:15px;font-weight:700;line-height:1.9"></div>
+        <div style="margin:8px 0;font-weight:800">用词:<b id="fpBase" style="color:#1450C8"></b> <span id="fpPos" style="color:#6b5d3a;font-weight:700;font-size:13px"></span></div>
+        <div class="ctrl">
+          <input id="fpInput" type="text" placeholder="填正确形式" style="flex:1;min-width:150px;border:3px solid var(--ink);padding:8px 10px;font-size:14px;font-weight:700;font-family:'SF Mono',Consolas,monospace">
+          <button id="fpCheck">核 对</button><button id="fpHint">提示</button>
+        </div>
+        <div class="verdict" id="fpFeedback">读句子,判断要填的词性,再变形。</div>
+        <div class="ctrl"><button id="fpNext">下一题 →</button><span style="font-weight:800;font-size:13px">得分:<span id="fpScore">0 / 0</span></span></div>
+      </div>
+      <p class="small">回车或点「核对」判分,大小写不敏感。先想「这个空要名词还是形容词还是副词」,答案自然浮出来。</p>
+    </div>
+
+    <h2 class="r">⑥ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 语法填空 · 词性转换型</h3>
+      <p><b class="tag">触发信号:</b>括号里给一个词的原形,如 (explain)(care)(possible),要「用适当形式填空」。</p>
+      <p><b class="tag">标准动作:</b>①看空在句中位置定词性(名/动/形/副)→ ②加对应后缀 → ③处理拼写变化(y→i、去e、双写)→ ④否定语境加 un-/im- 等前缀。</p>
+      <p><b class="tag">示例(带解):</b>He gave a clear <u>___</u> (explain) of the rule. 空在冠词 a + 形容词 clear 之后,作宾语 → 要<b>名词</b> → explain + -ation → <b>explanation</b>。</p>
+      <p class="trap">陷阱:只加后缀忘了拼写变化(happy→happiness 不是 happyness);语境要否定却漏掉前缀。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 完形填空 · 派生词辨析型</h3>
+      <p><b class="tag">触发信号:</b>四个选项是<b>同根不同缀</b>的词,如 care / careful / careless / carefully。</p>
+      <p><b class="tag">标准动作:</b>先用「空的词性」淘汰一半(要副词就只留 -ly),再用「意思正反」(careful 认真 vs careless 粗心)在剩下的里定死。</p>
+      <p><b class="tag">示例(带解):</b>She drove very <u>___</u>. 空修饰动词 drove → 要<b>副词</b> → 只能 carefully / carelessly;由 very(小心地) 语境 → carefully。</p>
+      <p class="trap">陷阱:光看意思不看词性,选了 careful(形容词)去修饰动词。先定词性,再挑意思。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 阅读 · 构词法猜词型</h3>
+      <p><b class="tag">触发信号:</b>文中出现生词,题目问 the underlined word probably means…,或直接影响理解。</p>
+      <p><b class="tag">标准动作:</b>切三刀:前缀(方向/正反)+ 词根(核心)+ 后缀(词性),拼出大致意思,再回上下文验证。</p>
+      <p><b class="tag">示例(带解):</b>生词 <i>irreplaceable</i> → ir-(否定)+ replace(替换)+ -able(能…的)→「不能被替换的」= 不可替代的。上下文若讲珍贵之物,吻合。</p>
+      <p class="trap">陷阱:只靠词根字面硬翻,忽略上下文。构词法给方向,上下文定终稿。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 前缀否定型(填空/选择)</h3>
+      <p><b class="tag">触发信号:</b>句子语义明显是「相反/否定」,要给一个词加否定前缀。</p>
+      <p><b class="tag">标准动作:</b>先判是否要否定(看 but/however/not 等信号)→ 再按拼写规则选前缀:l前il、r前ir、m/p/b前im、其余in,或固定搭配 un-/dis-。</p>
+      <p><b class="tag">示例(带解):</b>It is <u>___</u> (possible) to finish in one second. 语义否定 + possible 以 p 开头 → im- → <b>impossible</b>。</p>
+      <p class="trap">陷阱:一律套 un-(写出 unpossible / unregular 这类错词);possible→impossible、regular→irregular 是固定的。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 合成词型</h3>
+      <p><b class="tag">触发信号:</b>两个独立单词拼成一个新词,如 blackboard, well-known, sunrise, part-time。</p>
+      <p><b class="tag">标准动作:</b>拆成两个词分别理解,再合起来。名词+名词=名词(blackboard);副词/形容词+分词=形容词(well-known 出名的、good-looking 好看的)。</p>
+      <p><b class="tag">示例(带解):</b>a <u>well-known</u> writer → well(好地)+ known(被知道的)→「广为人知的」作定语修饰 writer。连字符合成词常作形容词。</p>
+      <p class="trap">陷阱:合成形容词作定语时中间的分词/形容词不再单独变化(a five-year-old boy,不是 five-years-old)。</p>
+    </div>
+
+    <h2 class="r">⑦ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>词性转换拼写</b>:happy→happiness(y→i)、write→writing(去e)、begin→beginning(双写)。加对了后缀却拼错,照样扣分。</p>
+      <p class="trap">② <b>否定前缀选错</b>:possible→impossible(不是 unpossible)、regular→irregular、legal→illegal。按 l/r/m-p-b 规则 + 固定搭配。</p>
+      <p class="trap">③ <b>-ible vs -able</b>:多数是 -able(comfortable, acceptable);少数固定 -ible(possible, responsible, visible, terrible)。-ible 的记牢,其余默认 -able。</p>
+      <p class="trap">④ <b>-ly 不都是副词</b>:friendly / lovely / lonely / lively 是形容词(名词+ly)。判词性看句子,不看后缀长相。</p>
+      <p class="trap">⑤ <b>前缀一般不改词性</b>,但 en-/em-(enlarge, empower)会把形容词/名词变动词——别忽略这个例外。</p>
+      <p class="trap">⑥ <b>词根猜词只给方向</b>,不是精确翻译。选择题用它排除,最后一定回上下文定死。</p>
+      <p class="trap">⑦ <b>形容词变副词</b>:careful→carefully(直接+ly)、true→truly(去e)、happy→happily(y→i再+ly)。别漏拼写变化。</p>
+      <p class="trap">⑧ <b>名词后缀混淆</b>:同一动词可能有固定名词形式,explain→explanation(不是 explaination)、pronounce→pronunciation。这类高频词要背准。</p>
+    </div>
+
+    <h2 class="v">⑧ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 把「背单词」升级成「拆单词」:</b> 每记一个长词,顺手拆出前缀/词根/后缀,再联想同根的三五个词。记 spect 一次,inspect/respect/spectator/prospect 一起进账——同样时间,词汇量翻几倍,而且拼写和词性一并稳固。</p>
+      <p style="margin:8px 0"><b>② 词性转换的底层是「句法先行」:</b> 高手拿到语法填空,先不看括号里的词,而是分析空在句中的<b>语法位置</b>(主语?定语?状语?),定死要什么词性,再回头给单词穿对应后缀的衣服。词性由句子结构决定,不由单词本身决定——这是不失分的关键顺序。</p>
+      <p style="margin:8px 0"><b>③ 否定前缀是「发音同化」不是「随机」:</b> in- 在 l/r/m/p/b 前变 il/ir/im 纯粹为了好读(舌头不打架)。理解这层,你不再死背,而是「一读就知道该用哪个」,考场上零犹豫。</p>
+      <p style="margin:8px 0"><b>④ 猜词=构词法×上下文的双保险:</b> 只靠构词法可能偏(prospect 字面「向前看」实指「前景」),只靠上下文可能猜不到范围。两者叠加:构词法圈定语义大方向,上下文把它钉死到具体义项——这是阅读生词题的满分解法。</p>
+      <p style="margin:8px 0"><b>⑤ 建立自己的「词根—词缀」小地图:</b> 把高频词根(spect/port/dict/vis/ject…)和高频后缀(-tion/-ment/-able/-ize…)各列一张表,新词往上挂。三个月后你看长词像看拼装积木,写作用词也更精准——这是从「够用」到「尖子」的分水岭。</p>
+    </div>
+
+    <h2 class="b">⑨ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 英语攻坚包 · 构词法(词根词缀):拆词三刀——前缀改意思、后缀改词性、词根是核心</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2";
+
+/* ===== 互动1:构词拆解器 ===== */
+(function(){
+  const inp=document.getElementById('wdInput'),go=document.getElementById('wdGo'),out=document.getElementById('wdOut'),chips=document.getElementById('wdChips');
+  const colFor={pre:BLUE,root:GREEN,suf:ORANGE};
+  const nameFor={pre:"前缀",root:"词根",suf:"后缀"};
+  const DB={
+    unhappy:{parts:[["un","pre","否定:不"],["happy","root","快乐"]],pos:"形容词 adj."},
+    unable:{parts:[["un","pre","否定:不"],["able","root","能够"]],pos:"形容词 adj."},
+    disappear:{parts:[["dis","pre","相反/消失"],["appear","root","出现"]],pos:"动词 v."},
+    disagree:{parts:[["dis","pre","否定/相反"],["agree","root","同意"]],pos:"动词 v."},
+    disagreement:{parts:[["dis","pre","否定"],["agree","root","同意"],["ment","suf","名词后缀"]],pos:"名词 n."},
+    reappear:{parts:[["re","pre","再/重新"],["appear","root","出现"]],pos:"动词 v."},
+    rewrite:{parts:[["re","pre","再/重新"],["write","root","写"]],pos:"动词 v."},
+    preview:{parts:[["pre","pre","前/预先"],["view","root","看"]],pos:"动词/名词"},
+    predict:{parts:[["pre","pre","前/预先"],["dict","root","说(词根)"]],pos:"动词 v."},
+    prediction:{parts:[["pre","pre","预先"],["dict","root","说"],["ion","suf","名词后缀"]],pos:"名词 n."},
+    misunderstand:{parts:[["mis","pre","错误地"],["understand","root","理解"]],pos:"动词 v."},
+    inspect:{parts:[["in","pre","向内"],["spect","root","看(词根)"]],pos:"动词 v."},
+    inspection:{parts:[["in","pre","向内"],["spect","root","看"],["ion","suf","名词后缀"]],pos:"名词 n."},
+    inspector:{parts:[["in","pre","向内"],["spect","root","看"],["or","suf","表人名词"]],pos:"名词 n."},
+    respect:{parts:[["re","pre","回/再"],["spect","root","看(词根)"]],pos:"动词/名词"},
+    spectator:{parts:[["spect","root","看(词根)"],["ator","suf","表人名词"]],pos:"名词 n."},
+    import:{parts:[["im","pre","向内"],["port","root","拿/搬(词根)"]],pos:"动词/名词"},
+    export:{parts:[["ex","pre","向外"],["port","root","搬"]],pos:"动词/名词"},
+    transport:{parts:[["trans","pre","横过/转移"],["port","root","搬"]],pos:"动词/名词"},
+    portable:{parts:[["port","root","搬/拿(词根)"],["able","suf","形容词:能…的"]],pos:"形容词 adj."},
+    careful:{parts:[["care","root","小心"],["ful","suf","形容词:充满"]],pos:"形容词 adj."},
+    careless:{parts:[["care","root","小心"],["less","suf","形容词:无"]],pos:"形容词 adj."},
+    carefully:{parts:[["care","root","小心"],["ful","suf","形容词"],["ly","suf","副词后缀"]],pos:"副词 adv."},
+    happiness:{parts:[["happi","root","快乐(happy→happi)"],["ness","suf","名词后缀"]],pos:"名词 n."},
+    movement:{parts:[["move","root","移动"],["ment","suf","名词后缀"]],pos:"名词 n."},
+    national:{parts:[["nation","root","国家"],["al","suf","形容词后缀"]],pos:"形容词 adj."},
+    modernize:{parts:[["modern","root","现代的"],["ize","suf","动词:使…化"]],pos:"动词 v."},
+    widen:{parts:[["wide","root","宽"],["en","suf","动词:使…"]],pos:"动词 v."},
+    unbelievable:{parts:[["un","pre","否定"],["believe","root","相信"],["able","suf","形容词后缀"]],pos:"形容词 adj."},
+    illegal:{parts:[["il","pre","否定(l前)"],["legal","root","合法的"]],pos:"形容词 adj."},
+    irregular:{parts:[["ir","pre","否定(r前)"],["regular","root","规则的"]],pos:"形容词 adj."},
+    impossible:{parts:[["im","pre","否定(m/p/b前)"],["possible","root","可能的"]],pos:"形容词 adj."},
+    incorrect:{parts:[["in","pre","否定"],["correct","root","正确的"]],pos:"形容词 adj."}
+  };
+  const showList=["inspection","carefully","impossible","disagreement","spectator","transport","happiness","modernize"];
+  showList.forEach(w=>{const c=document.createElement("span");c.className="chip";c.textContent=w;c.onclick=()=>{inp.value=w;render(w);};chips.appendChild(c);});
+  function render(word){
+    const w=(word||"").trim().toLowerCase();
+    if(!w){out.innerHTML='<span style="color:#6b5d3a;font-weight:700">请输入一个单词,或点上面的示例词。</span>';return;}
+    const d=DB[w];
+    if(!d){out.innerHTML='<b style="font-size:16px">'+w+'</b><div style="margin-top:8px;color:'+RED+';font-weight:800">词库里暂时没有这个词。先点上面示例词感受切法,或试 inspection / carefully / impossible。</div>';return;}
+    let h='<div style="font-size:22px;font-weight:900;letter-spacing:1px;margin-bottom:10px">';
+    d.parts.forEach((p,i)=>{h+='<span style="color:'+colFor[p[1]]+';border-bottom:4px solid '+colFor[p[1]]+'">'+p[0]+'</span>';if(i<d.parts.length-1)h+='<span style="color:#b8a97a">·</span>';});
+    h+='</div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">';
+    d.parts.forEach(p=>{h+='<div style="border:3px solid '+colFor[p[1]]+';padding:4px 9px;font-size:12.5px;font-weight:800"><span style="color:'+colFor[p[1]]+'">'+nameFor[p[1]]+'</span> '+p[0]+' — '+p[2]+'</div>';});
+    h+='</div>';
+    h+='<div style="font-weight:900;font-size:15px">整词词性 → <span style="background:'+YEL+';padding:2px 8px;border:3px solid '+INK+'">'+d.pos+'</span></div>';
+    out.innerHTML=h;
+  }
+  go.onclick=()=>render(inp.value);
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter")render(inp.value);});
+  render("inspection");
+})();
+
+/* ===== 互动2:后缀转盘 ===== */
+(function(){
+  const svg=document.getElementById('wheelSvg'),info=document.getElementById('wheelInfo');
+  const data=[
+    {s:"-tion",pos:"名词 n.",col:GREEN,ex:"act→action, educate→education"},
+    {s:"-ment",pos:"名词 n.",col:GREEN,ex:"move→movement, agree→agreement"},
+    {s:"-ness",pos:"名词 n.",col:GREEN,ex:"happy→happiness, ill→illness"},
+    {s:"-ity",pos:"名词 n.",col:GREEN,ex:"able→ability, active→activity"},
+    {s:"-ful",pos:"形容词 adj.",col:ORANGE,ex:"care→careful, use→useful"},
+    {s:"-less",pos:"形容词 adj.",col:ORANGE,ex:"care→careless, home→homeless"},
+    {s:"-able",pos:"形容词 adj.",col:ORANGE,ex:"accept→acceptable, comfort→comfortable"},
+    {s:"-al",pos:"形容词 adj.",col:ORANGE,ex:"nation→national, nature→natural"},
+    {s:"-ly",pos:"副词 adv.",col:VIO,ex:"quick→quickly, careful→carefully"},
+    {s:"-ize",pos:"动词 v.",col:RED,ex:"modern→modernize, real→realize"},
+    {s:"-en",pos:"动词 v.",col:RED,ex:"wide→widen, strength→strengthen"},
+    {s:"-ify",pos:"动词 v.",col:RED,ex:"beauty→beautify, simple→simplify"}
+  ];
+  const cx=350,cy=200,R=150,n=data.length,step=360/n;
+  let pointer=null,sel=0;
+  function pol(cx,cy,r,ang){const a=(ang-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+  function draw(){
+    clr(svg);
+    for(let i=0;i<n;i++){
+      const a0=i*step,a1=(i+1)*step;
+      const p0=pol(cx,cy,R,a0),p1=pol(cx,cy,R,a1);
+      const path="M"+cx+","+cy+" L"+p0[0]+","+p0[1]+" A"+R+","+R+" 0 0 1 "+p1[0]+","+p1[1]+" Z";
+      const seg=el(svg,'path',{d:path,fill:i===sel?data[i].col:"#fff",stroke:INK,'stroke-width':3,cursor:"pointer",opacity:i===sel?1:0.85});
+      seg.addEventListener("click",()=>{sel=i;update();});
+      const lp=pol(cx,cy,R*0.66,a0+step/2);
+      const tx=el(svg,'text',{x:lp[0],y:lp[1]+4,'font-size':13,'font-weight':900,fill:i===sel?"#fff":INK,'text-anchor':"middle",cursor:"pointer"});
+      tx.textContent=data[i].s;
+      tx.addEventListener("click",()=>{sel=i;update();});
+    }
+    // center hub
+    el(svg,'circle',{cx:cx,cy:cy,r:44,fill:INK,stroke:INK,'stroke-width':3});
+    // pointer
+    pointer=el(svg,'polygon',{points:cx+","+(cy-8)+" "+cx+","+(cy+8)+" "+(cx+R-6)+","+cy,fill:YEL,stroke:INK,'stroke-width':2});
+    el(svg,'text',{x:cx,y:cy+5,'font-size':13,'font-weight':900,fill:"#fff",'text-anchor':"middle"}).textContent="后缀";
+    // legend column on right
+    el(svg,'text',{x:560,y:70,'font-size':13,'font-weight':900,fill:GREEN}).textContent="绿 = 名词";
+    el(svg,'text',{x:560,y:95,'font-size':13,'font-weight':900,fill:ORANGE}).textContent="橙 = 形容词";
+    el(svg,'text',{x:560,y:120,'font-size':13,'font-weight':900,fill:VIO}).textContent="紫 = 副词";
+    el(svg,'text',{x:560,y:145,'font-size':13,'font-weight':900,fill:RED}).textContent="红 = 动词";
+    rotate();
+  }
+  function rotate(){
+    const ang=sel*step+step/2;
+    pointer.setAttribute("transform","rotate("+ang+" "+cx+" "+cy+")");
+  }
+  function info2(){
+    const d=data[sel];
+    info.innerHTML='<b style="color:'+d.col+';font-size:18px">'+d.s+'</b> → <b>'+d.pos+'</b>　例:'+d.ex;
+    info.style.borderColor=d.col;
+  }
+  function update(){draw();info2();}
+  draw();info2();
+})();
+
+/* ===== 互动4:词根家族树 ===== */
+(function(){
+  const svg=document.getElementById('rtSvg'),info=document.getElementById('rtInfo');
+  const roots={
+    spect:{gloss:"看 (look)",col:GREEN,words:[["inspect","检查(往里看)"],["respect","尊敬(回头看)"],["spectator","观众(看的人)"],["spectacle","景象/奇观"],["prospect","前景(向前看)"],["suspect","怀疑(从下看)"]]},
+    port:{gloss:"拿/搬运 (carry)",col:BLUE,words:[["import","进口(搬入)"],["export","出口(搬出)"],["transport","运输(搬过去)"],["portable","便携的"],["support","支持(托住)"],["report","报告(带回)"]]},
+    dict:{gloss:"说 (say)",col:ORANGE,words:[["predict","预言(预先说)"],["dictate","口述/命令"],["dictionary","词典"],["contradict","反驳(反着说)"],["dictator","独裁者"],["verdict","裁决(说定)"]]}
+  };
+  const cx=350,cy=195,R=135;
+  function draw(key){
+    clr(svg);
+    const d=roots[key];const n=d.words.length;
+    // lines first
+    for(let i=0;i<n;i++){
+      const a=(-90+i*(360/n))*Math.PI/180;
+      const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+      el(svg,'line',{x1:cx,y1:cy,x2:x,y2:y,stroke:INK,'stroke-width':3});
+    }
+    // child nodes
+    for(let i=0;i<n;i++){
+      const a=(-90+i*(360/n))*Math.PI/180;
+      const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+      const w=130,h=44;
+      el(svg,'rect',{x:x-w/2,y:y-h/2,width:w,height:h,fill:"#fff",stroke:d.col,'stroke-width':3,rx:5});
+      el(svg,'text',{x:x,y:y-4,'font-size':14,'font-weight':900,fill:d.col,'text-anchor':"middle"}).textContent=d.words[i][0];
+      el(svg,'text',{x:x,y:y+14,'font-size':10.5,'font-weight':700,fill:INK,'text-anchor':"middle"}).textContent=d.words[i][1];
+    }
+    // center root
+    el(svg,'circle',{cx:cx,cy:cy,r:52,fill:d.col,stroke:INK,'stroke-width':4});
+    el(svg,'text',{x:cx,y:cy-4,'font-size':22,'font-weight':900,fill:"#fff",'text-anchor':"middle"}).textContent=key;
+    el(svg,'text',{x:cx,y:cy+18,'font-size':12,'font-weight':800,fill:"#fff",'text-anchor':"middle"}).textContent=d.gloss;
+    info.innerHTML='词根 <b style="color:'+d.col+'">'+key+'</b> = '+d.gloss+'。记住这一个根,'+n+' 个词一起进账——这就是「记根带一串」。';
+    info.style.borderColor=d.col;
+  }
+  document.querySelectorAll('.rtbtn').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.rtbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');draw(b.dataset.r);
+  });
+  draw("spect");
+})();
+
+/* ===== 互动3:否定前缀匹配 ===== */
+(function(){
+  const wordEl=document.getElementById('npWord'),meanEl=document.getElementById('npMean'),fb=document.getElementById('npFeedback'),scoreEl=document.getElementById('npScore');
+  const items=[
+    {base:"legal",ans:"il",mean:"合法的",why:"后一个字母是 l → 用 il-"},
+    {base:"regular",ans:"ir",mean:"规则的",why:"后一个字母是 r → 用 ir-"},
+    {base:"responsible",ans:"ir",mean:"负责的",why:"后一个字母是 r → 用 ir-"},
+    {base:"possible",ans:"im",mean:"可能的",why:"后一个字母是 p → 用 im-"},
+    {base:"polite",ans:"im",mean:"礼貌的",why:"后一个字母是 p → 用 im-"},
+    {base:"patient",ans:"im",mean:"耐心的",why:"后一个字母是 p → 用 im-"},
+    {base:"mature",ans:"im",mean:"成熟的",why:"后一个字母是 m → 用 im-"},
+    {base:"correct",ans:"in",mean:"正确的",why:"普通辅音开头 → 默认 in-"},
+    {base:"complete",ans:"in",mean:"完整的",why:"普通辅音开头 → 默认 in-"},
+    {base:"convenient",ans:"in",mean:"方便的",why:"普通辅音开头 → 默认 in-"},
+    {base:"legible",ans:"il",mean:"清晰易读的",why:"后一个字母是 l → 用 il-"},
+    {base:"happy",ans:"un",mean:"快乐的",why:"形容词,固定用 un-"},
+    {base:"able",ans:"un",mean:"能够的",why:"形容词,固定用 un-"},
+    {base:"fair",ans:"un",mean:"公平的",why:"形容词,固定用 un-"},
+    {base:"honest",ans:"dis",mean:"诚实的",why:"固定搭配用 dis-"},
+    {base:"appear",ans:"dis",mean:"出现",why:"动词表相反,用 dis-"}
+  ];
+  let idx=0,got=0,total=0,answered=false;
+  function order(){for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=items[i];items[i]=items[j];items[j]=t;}}
+  order();
+  function show(){
+    const it=items[idx];answered=false;
+    wordEl.textContent=it.base;meanEl.textContent="("+it.mean+")";
+    fb.textContent="选一个前缀试试。";fb.style.borderColor=INK;fb.style.color=INK;
+  }
+  document.querySelectorAll('.npbtn').forEach(b=>b.onclick=()=>{
+    if(answered)return;const it=items[idx];const pick=b.dataset.p;total++;answered=true;
+    if(pick===it.ans){got++;fb.innerHTML='✅ 对!<b>'+it.ans+"-"+it.base+'</b>。'+it.why;fb.style.color=GREEN;fb.style.borderColor=GREEN;}
+    else{fb.innerHTML='❌ 应为 <b>'+it.ans+"-"+it.base+'</b>('+it.ans+'-)。'+it.why;fb.style.color=RED;fb.style.borderColor=RED;}
+    scoreEl.textContent=got+" / "+total;
+  });
+  document.getElementById('npNext').onclick=()=>{idx=(idx+1)%items.length;if(idx===0)order();show();};
+  show();
+})();
+
+/* ===== 互动5:词性转换填空练习 ===== */
+(function(){
+  const sentEl=document.getElementById('fpSent'),baseEl=document.getElementById('fpBase'),posEl=document.getElementById('fpPos');
+  const inp=document.getElementById('fpInput'),fb=document.getElementById('fpFeedback'),scoreEl=document.getElementById('fpScore');
+  const items=[
+    {a:"He gave a clear ",b:" of the whole problem.",base:"explain",ans:"explanation",pos:"(要名词)"},
+    {a:"The scientist made an important ",b:" last year.",base:"discover",ans:"discovery",pos:"(要名词)"},
+    {a:"She always smiles at us in a ",b:" way.",base:"friend",ans:"friendly",pos:"(要形容词)"},
+    {a:"You must drive more ",b:" on rainy days.",base:"care",ans:"carefully",pos:"(要副词)"},
+    {a:"His ",b:" to succeed is really strong.",base:"determine",ans:"determination",pos:"(要名词)"},
+    {a:"Too much sugar can be ",b:" to your teeth.",base:"harm",ans:"harmful",pos:"(要形容词)"},
+    {a:"After hours of talking, they reached an ",b:".",base:"agree",ans:"agreement",pos:"(要名词)"},
+    {a:"It is completely ",b:" to finish this in one second.",base:"possible",ans:"impossible",pos:"(否定语境)"},
+    {a:"The room was ",b:" decorated for the party.",base:"beauty",ans:"beautifully",pos:"(要副词)"},
+    {a:"We need to ",b:" our old website next month.",base:"modern",ans:"modernize",pos:"(要动词)"}
+  ];
+  let idx=0,got=0,total=0,answered=false;
+  function order(){for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=items[i];items[i]=items[j];items[j]=t;}}
+  order();
+  function show(){
+    const it=items[idx];answered=false;inp.value="";
+    sentEl.innerHTML=it.a+'<u style="color:'+RED+'">＿＿＿</u>'+it.b;
+    baseEl.textContent="( "+it.base+" )";posEl.textContent=it.pos;
+    fb.textContent="读句子,判断要填的词性,再变形。";fb.style.borderColor=INK;fb.style.color=INK;
+  }
+  function check(){
+    if(answered)return;const it=items[idx];const v=inp.value.trim().toLowerCase();
+    if(!v){fb.textContent="先填一个答案。";return;}
+    total++;answered=true;
+    if(v===it.ans){got++;fb.innerHTML='✅ 正确!<b>'+it.ans+'</b> '+it.pos;fb.style.color=GREEN;fb.style.borderColor=GREEN;}
+    else{fb.innerHTML='❌ 正确答案:<b>'+it.ans+'</b> '+it.pos+'。你填的是 '+v+'。';fb.style.color=RED;fb.style.borderColor=RED;}
+    scoreEl.textContent=got+" / "+total;
+  }
+  document.getElementById('fpCheck').onclick=check;
+  document.getElementById('fpHint').onclick=()=>{const it=items[idx];fb.innerHTML='💡 '+it.pos+',首字母 <b>'+it.ans.charAt(0)+'</b>,共 '+it.ans.length+' 个字母。';fb.style.color=INK;fb.style.borderColor=YEL;};
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter")check();});
+  document.getElementById('fpNext').onclick=()=>{idx=(idx+1)%items.length;if(idx===0)order();show();};
+  show();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 构词法的三块分别管什么?一句口诀。",a:"前缀改意思、后缀改词性、词根是核心。拆词三刀:掐头(前缀)、去尾(后缀)、留中间(词根)。"},
+ {q:"2. 前缀 un-/dis-/in-/re-/pre-/mis- 各表示什么?",a:"un- 否定(不);dis- 相反/否定;in-(及变体) 否定;re- 再/重新/回;pre- 前/预先;mis- 错误地。前缀一般不改词性。"},
+ {q:"3. 否定前缀 in- 什么时候变 il / ir / im?",a:"后一个字母是 l→il(illegal)、r→ir(irregular)、m/p/b→im(impossible),其余用 in(incorrect)。这是发音同化。"},
+ {q:"4. 名词、形容词、副词、动词各有哪些常见后缀?",a:"名词:-tion/-ment/-ness/-ity;形容词:-ful/-less/-able/-al/-ous;副词:-ly;动词:-ize/-en/-ify。"},
+ {q:"5. -ly 一定是副词吗?举反例。",a:"不一定。friendly/lovely/lonely/lively 是形容词(名词+ly)。判词性看句子结构,不看后缀长相。"},
+ {q:"6. 语法填空判词性的顺序是什么?",a:"先看空在句中的语法位置(主语/定语/状语/谓语)定词性,再给单词加对应后缀,最后处理拼写变化和否定前缀。"},
+ {q:"7. 词根 spect / port / dict 各是什么意思?各举两词。",a:"spect=看(inspect 检查、respect 尊敬);port=拿/搬(import 进口、transport 运输);dict=说(predict 预言、dictionary 词典)。"},
+ {q:"8. 用构词法猜 irreplaceable 的意思。",a:"ir-(否定)+ replace(替换)+ -able(能…的)= 不能被替换的 = 不可替代的。构词法给方向,再回上下文验证。"},
+ {q:"9. possible 的否定怎么写?为什么不是 unpossible?",a:"impossible。possible 以 p 开头,否定前缀 in- 在 m/p/b 前变 im-;且这是固定搭配,不用 un-。"},
+ {q:"10. 把 explain / happy / care 各变成名词。注意拼写。",a:"explain→explanation(注意不是 explaination);happy→happiness(y→i);care→用作名词本身或 caution 视语境,派生形容词 careful/careless。"},
+ {q:"11. -able 和 -ible 怎么区分?",a:"多数用 -able(comfortable、acceptable);少数固定 -ible(possible、responsible、visible、terrible)。把 -ible 词背牢,其余默认 -able。"},
+ {q:"12. She drove very ___.(care)填什么?为什么?",a:"carefully。空修饰动词 drove,要副词 → careful + -ly。先定词性(副词)再变形,是词性转换题的标准动作。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新定义与信息迁移题 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">数学 · 攻坚包</div>
+    <h1>新定义与信息迁移题</h1>
+    <p class="lead">这类题<b>现场</b>给你一个从没见过的概念、运算或函数,让你当场读懂、当场用。它不考背公式,考的是<b>现学现用</b>——把陌生定义读懂,翻译成你熟悉的东西,再代进去算。别被吓住:定义就是一份<b>规则说明书</b>,读明白了,题目往往比看上去简单得多。</p>
+
+    <div class="say">🗣️ <b>新定义题(人话版):</b> 出题人临时发明一个游戏规则,先讲清楚怎么玩,再让你按规则玩一局。你要做的只有三件事:<b>①读懂</b>规则每一个字(尤其"对任意""存在""范围"这些限制词);<b>②翻译</b>成你会的老知识(函数、数列、集合、不等式);<b>③代入</b>严格算,别用旧结论想当然。看到怪符号先深呼吸——它只是新瓶装老酒。</div>
+
+    <div class="keybox"><b>四步口诀:</b> <b>①逐字读懂,圈出关键条件 → ②举简单例子试一试 → ③翻译成已学知识 → ④严格套用+验证特殊情形</b>。九成失分不是不会算,而是<b>定义没读全</b>或<b>拿旧结论硬套</b>。定义写了什么就用什么,没写的一律不许默认。</div>
+
+    <h2>① 核心原理:解题四步 + 常见载体</h2>
+    <div class="card">
+      <h3>解一切新定义题的四步法</h3>
+      <div class="mono">第1步:逐字读懂新定义,划出关键条件(对任意 / 存在 / 取值范围 / n 的起始 / 整数 / 恒成立)。</div>
+      <div class="mono">第2步:用最简单的例子试一试(代 0、1、恒等函数、单点集),先搞懂定义在说什么。</div>
+      <div class="mono">第3步:把定义翻译 / 化归成已学知识——函数、数列、集合、方程、不等式。</div>
+      <div class="mono">第4步:套用定义严格推理,再验证特殊情形(n=1、边界、等号能否取到、反例)。</div>
+      <h3>高考新定义的六大常见载体</h3>
+      <table>
+        <tr><th>载体</th><th>典型样子</th><th>翻译成</th></tr>
+        <tr><td><b>新运算符号</b></td><td>a⊕b、a※b 给出运算法则</td><td>代数运算 / 函数</td></tr>
+        <tr><td><b>新函数性质</b></td><td>"好函数""M 函数",一条恒等式/不等式</td><td>对称、周期、单调、奇偶</td></tr>
+        <tr><td><b>新数列</b></td><td>新递推、绝对差数列、H 数列</td><td>递推 + 归纳猜通项</td></tr>
+        <tr><td><b>集合新关系</b></td><td>对称差 A△B、和集 A+B、闭集</td><td>元素条件 + Venn 图</td></tr>
+        <tr><td><b>新距离 / 新度量</b></td><td>曼哈顿距离、折线距离</td><td>坐标 + 绝对值计算</td></tr>
+        <tr><td><b>存在性 / 不动点</b></td><td>是否存在满足新定义的 x</td><td>方程有解 / 函数最值</td></tr>
+      </table>
+      <p class="trap">⚠ 读定义时先做两件事:圈出<b>限制词</b>(任意/存在/范围/整数),圈出<b>谁作用在谁身上</b>(顺序!)。这两处是全部陷阱的源头。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🧭 互动 1 — 解新定义题四步流程(点每一步,看该做什么、易错在哪)</div>
+      <svg id="flowSvg" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="flowstep on" data-s="0">① 读定义</button>
+        <button class="flowstep" data-s="1">② 举例试</button>
+        <button class="flowstep" data-s="2">③ 翻译化归</button>
+        <button class="flowstep" data-s="3">④ 套用验证</button>
+      </div>
+      <div class="verdict" id="flowNote"></div>
+      <p class="small">四步是<b>顺序</b>的:先读懂再动手。绝大多数人栽在第①步(漏读限制词)和第④步(不验证特殊情形)。点亮每一步看它的标准动作与坑。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">✅ 互动 2 — 定义条件清单核对(圈出该划的关键条件,漏一个就可能全错)</div>
+      <svg id="chkSvg" viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg"></svg>
+      <p class="small" style="margin:10px 0 4px"><b>样例定义:</b>「若数列 a<sub>n</sub> 满足:每一项 a<sub>n</sub> 都是整数,相邻两项之差 a<sub>n+1</sub>−a<sub>n</sub> 为常数,首项 a<sub>1</sub>&gt;0,且对<b>所有</b> n 成立,则称它为 T 数列。」点下面的条件,把该划的都圈上:</p>
+      <div class="chips" id="chkChips"></div>
+      <div class="verdict" id="chkNote"></div>
+      <p class="small">四个关键条件缺一不可:整数项 / 差为常数 / 首项&gt;0 / 对所有 n。有一个是干扰项(定义里根本没说)。<b>读定义 = 把这些限制词一个个圈出来</b>。</p>
+    </div>
+
+    <h2 class="b">② 全题型地图</h2>
+
+    <div class="card">
+      <h3>型A — 新运算规则型</h3>
+      <p><b class="tag">触发信号:</b>出现新符号 a⊕b、a※b、"定义运算…",并给出运算法则。</p>
+      <p><b class="tag">标准动作:</b>①抄下法则,认清<b>谁是第一个数、谁是第二个</b>(顺序!)②把题目数值/表达式严格代入③交换律、结合律<b>不许默认</b>,要现验。</p>
+      <p><b class="tag">示例(带解):</b>定义 a⊕b=ab+a+b。求 2⊕3:代入 = 2×3+2+3 = 6+5 = <b>11</b>。再问是否满足交换律:b⊕a = ba+b+a = ab+a+b = a⊕b,<b>成立</b>。若定义 a⊕b=a+2b,则 2⊕3=8 但 3⊕2=7,<b>不满足交换律</b>。</p>
+      <p class="trap">陷阱:顺序搞反(当 a⊕b≠b⊕a 时);默认满足交换/结合律;把新运算当成普通加减乘除。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔣 互动 3 — 新运算试算器(定义一个 ⊕,输入 a、b 看结果,并检验交换律)</div>
+      <svg id="opSvg" viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="opmode on" data-m="0">⊕:ab+a+b</button>
+        <button class="opmode" data-m="1">⊕:a+2b</button>
+        <label>a <input id="opA" type="range" min="-4" max="4" value="2" step="1"></label>
+        <label>b <input id="opB" type="range" min="-4" max="4" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>a</b><span id="opOa">0</span></div>
+        <div><b>b</b><span id="opOb">0</span></div>
+        <div><b>a⊕b</b><span id="opAB">0</span></div>
+        <div><b>b⊕a</b><span id="opBA">0</span></div>
+      </div>
+      <p class="small">改运算法则或 a、b,实时代入。蓝柱 = a⊕b,绿柱 = b⊕a。<b>两柱相等</b>⇒ 这个 a、b 下交换律成立;第二种运算随手就能找到反例。<b>严格代入</b>才是新运算题的全部。</p>
+    </div>
+
+    <div class="card">
+      <h3>型B — 新函数性质型</h3>
+      <p><b class="tag">触发信号:</b>定义某类"好函数 / M 函数",给一条恒等式或不等式性质,问某函数是否属于、或求参数。</p>
+      <p><b class="tag">标准动作:</b>①把性质<b>翻译成熟悉语言</b>(对称、周期、单调、奇偶)②代入验证或用性质推导③分清"<b>对任意 x</b>"还是"<b>存在 x</b>"。</p>
+      <p><b class="tag">示例(带解):</b>定义:若 f(x+2)=f(x) 对任意 x 成立,称 f 为周期 2 函数。判断 f(x)=sin(πx):f(x+2)=sin(π(x+2))=sin(πx+2π)=sin(πx)=f(x),<b>是</b>。又定义:若 f(x)+f(2−x)=2 恒成立,则 f 关于点 (1,1) 中心对称——f(x)=(x−1)³+1 满足,f(x)=x² 不满足。</p>
+      <p class="trap">陷阱:把"对任意"当"存在";只验证一个特殊值就下结论;忽略定义域限制。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">📈 互动 4 — 新函数性质验证(定义"关于 (1,1) 中心对称":f(x)+f(2−x)=2 是否恒成立)</div>
+      <canvas id="funcCv" width="700" height="270"></canvas>
+      <div class="ctrl">
+        <button class="funcmode on" data-f="0">f(x)=(x−1)³+1</button>
+        <button class="funcmode" data-f="1">f(x)=x²</button>
+        <label>取点 x <input id="funcX" type="range" min="0.1" max="1.9" value="0.4" step="0.05"></label>
+      </div>
+      <div class="live">
+        <div><b>f(x)</b><span id="fnA">0</span></div>
+        <div><b>f(2−x)</b><span id="fnB">0</span></div>
+        <div><b>两者之和</b><span id="fnS">0</span></div>
+        <div><b>是否 =2 恒成立</b><span id="fnV">?</span></div>
+      </div>
+      <p class="small">拖 x,看红点 (x,f(x)) 与蓝点 (2−x,f(2−x))。若定义成立,两点永远关于中心 (1,1) 对称,<b>和恒 = 2</b>。第一个函数验证成立;第二个换个 x 和就变了 ⇒ 一个反例即可否定。</p>
+    </div>
+
+    <div class="card">
+      <h3>型C — 新数列定义型</h3>
+      <p><b class="tag">触发信号:</b>定义新递推 / 新性质数列(绝对差数列、H 数列等),给规则求项或求通项。</p>
+      <p><b class="tag">标准动作:</b>①按规则老实<b>算出前几项</b>②观察规律,猜通项/周期③用定义严格验证(必要时数学归纳法)。</p>
+      <p><b class="tag">示例(带解):</b>定义 a<sub>1</sub>=1,a<sub>n+1</sub>=2a<sub>n</sub>+1。算 a<sub>2</sub>=3,a<sub>3</sub>=7,a<sub>4</sub>=15。观察 a<sub>n</sub>+1 = 2,4,8,16 = 2<sup>n</sup>,猜 <b>a<sub>n</sub>=2<sup>n</sup>−1</b>,代回递推验证:2(2<sup>n</sup>−1)+1=2<sup>n+1</sup>−1,成立。</p>
+      <p class="trap">陷阱:只算一两项就猜错;把递推方向搞反;忘了首项条件。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🪜 互动 5 — 从特殊到一般(新数列 a<sub>1</sub>=1, a<sub>n+1</sub>=2a<sub>n</sub>+1,逐项算 → 猜通项)</div>
+      <svg id="seqSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button id="seqStep">▶ 再算一项</button><button id="seqReset">↺ 重置</button>
+        <label>看到第 n 项 <input id="seqN" type="range" min="1" max="8" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>当前项 a<sub>n</sub></b><span id="sqA">1</span></div>
+        <div><b>a<sub>n</sub>+1</b><span id="sqA1">2</span></div>
+        <div><b>规律 = 2ⁿ ?</b><span id="sqPat">是</span></div>
+        <div><b>猜想通项</b><span id="sqGuess">2ⁿ−1</span></div>
+      </div>
+      <p class="small">每根柱是一项。看 a<sub>n</sub>+1 那一行:1+1=2,3+1=4,7+1=8…正好是 2<sup>n</sup>。于是大胆猜 <b>a<sub>n</sub>=2<sup>n</sup>−1</b>,再代回递推严格验证。这就是"先试后证"的通法。</p>
+    </div>
+
+    <div class="card">
+      <h3>型D — 集合新定义型</h3>
+      <p><b class="tag">触发信号:</b>定义集合间新运算/新关系(对称差、和集 A+B、闭集),问运算结果或性质。</p>
+      <p><b class="tag">标准动作:</b>①把新定义翻成<b>元素条件</b>(x 满足什么才进结果)②逐元素或按区域判断③<b>画 Venn 图</b>辅助。</p>
+      <p><b class="tag">示例(带解):</b>定义 A△B=(A∪B)\(A∩B)(对称差,即"只属于其中一个")。设 A={1,2,3,4},B={3,4,5,6}。A∪B={1,2,3,4,5,6},A∩B={3,4},故 <b>A△B={1,2,5,6}</b>。</p>
+      <p class="trap">陷阱:把新集合运算当普通交并;漏掉或多算边界元素;不画图凭空想。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🔵 互动 6 — 集合新关系图示(对称差 A△B =(A∪B)\(A∩B),点按钮看高亮区域)</div>
+      <svg id="setSvg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="ctrl">
+        <button class="setmode on" data-s="0">A∪B 并集</button>
+        <button class="setmode" data-s="1">A∩B 交集</button>
+        <button class="setmode" data-s="2">A△B 对称差(新定义)</button>
+      </div>
+      <div class="verdict" id="setNote"></div>
+      <p class="small">A={1,2,3,4},B={3,4,5,6}。新定义 A△B = "只属于一个集合的元素" = 并集去掉交集。橙色高亮就是当前运算选中的元素。<b>先翻成元素条件,再对着 Venn 图数</b>,不会漏。</p>
+    </div>
+
+    <div class="card">
+      <h3>型E — 新定义存在性 / 最值型</h3>
+      <p><b class="tag">触发信号:</b>"是否存在满足新定义的 x""求满足新定义时参数/表达式的最值或范围"。</p>
+      <p><b class="tag">标准动作:</b>①把新定义转成<b>方程 / 不等式条件</b>②化归为函数最值或方程有解问题③用导数、判别式、基本不等式求解<b>并验证</b>。</p>
+      <p><b class="tag">示例(带解):</b>定义:若存在 x<sub>0</sub> 使 f(x<sub>0</sub>)=x<sub>0</sub>,称 x<sub>0</sub> 为不动点。求 f(x)=x²+c 有不动点时 c 的范围。令 x²+c=x ⇒ x²−x+c=0 有实根 ⇒ 判别式 1−4c≥0 ⇒ <b>c≤1/4</b>。</p>
+      <p class="trap">陷阱:忘记"存在"只需有一个解;漏验证是否在定义域;把最值问题的等号条件丢掉。</p>
+    </div>
+
+    <div class="card">
+      <h3>型F — 多问递进型</h3>
+      <p><b class="tag">触发信号:</b>一道大题分 (1)(2)(3):第一问算具体值,后面步步一般化、加参数。</p>
+      <p><b class="tag">标准动作:</b>①第 (1) 问务必吃透,它在<b>示范</b>定义怎么用②把 (1) 的方法/结论迁移到 (2)(3)③后问常需前问结论,主动写"由 (1) 可知"。</p>
+      <p><b class="tag">示例(带解):</b>(1) 按定义算特例 → (2) 证一般性质(常复用 (1) 的思路)→ (3) 存在性/最值(综合前两问)。策略:<b>前问是后问的脚手架</b>,别各做各的。</p>
+      <p class="trap">陷阱:前问结论不敢用;每问从零开始浪费时间;一般化时丢了定义的限制条件。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">📐 互动 7 — 新距离 / 新度量(定义曼哈顿距离 d=|Δx|+|Δy|,与直线距离对比)</div>
+      <canvas id="distCv" width="700" height="260"></canvas>
+      <div class="ctrl">
+        <label>Q 的横坐标 <input id="distX" type="range" min="0" max="7" value="5" step="1"></label>
+        <label>Q 的纵坐标 <input id="distY" type="range" min="0" max="4" value="3" step="1"></label>
+      </div>
+      <div class="live">
+        <div><b>Δx</b><span id="dtDx">0</span></div>
+        <div><b>Δy</b><span id="dtDy">0</span></div>
+        <div><b>曼哈顿 |Δx|+|Δy|</b><span id="dtMan">0</span></div>
+        <div><b>直线 √(Δx²+Δy²)</b><span id="dtEuc">0</span></div>
+      </div>
+      <p class="small">新定义"曼哈顿距离"只是把直线距离换了规则:<b>只能沿格子横竖走</b>(橙色 L 形折线),不能斜穿(绿色直线)。翻成坐标就是 |Δx|+|Δy|。新度量题的本质,永远是<b>陌生外衣 + 熟悉的坐标计算</b>。</p>
+    </div>
+
+    <h2 class="r">③ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>没读全定义条件:</b>"对任意 / 存在""x∈Z""n≥2""恒成立"等限制词漏掉一个,整题方向就错。读定义先圈限制词。</p>
+      <p class="trap">② <b>想当然套旧结论:</b>新运算默认交换/结合律、新函数默认连续可导——一律必须回到定义现验,定义没说的不许用。</p>
+      <p class="trap">③ <b>忽略定义的限制范围:</b>定义域、取值范围、n 的起始值,新定义只在规定范围内有效,越界即失效。</p>
+      <p class="trap">④ <b>特殊情形没验证:</b>猜出的通项/结论要回代验证,尤其 n=1、边界值、等号能否取到。</p>
+      <p class="trap">⑤ <b>顺序与方向搞反:</b>新运算 a⊕b 与 b⊕a 可能不等;递推方向别弄反。</p>
+      <p class="trap">⑥ <b>"存在"与"任意"混淆:</b>"存在"只需找到一个;"任意"要对全体成立,举一个反例即可否定。</p>
+    </div>
+
+    <h2 class="v">④ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 从特殊到一般(归纳):</b> 先算 n=1,2,3 的特例,观察结构,大胆猜想通项/规律,再用定义或数学归纳法严格证明。新定义题的通法就是"<b>先试后证</b>"——不敢算前几项是最大的心理障碍。</p>
+      <p style="margin:8px 0"><b>② 化归思想是命门:</b> 新定义的价值在于"<b>陌生外衣下的老朋友</b>"。把新运算化归为函数/方程,把新距离化归为坐标计算,把集合新关系化归为元素条件——一旦翻译成已学模型,题目瞬间降维。</p>
+      <p style="margin:8px 0"><b>③ 定义即规则,规则即边界:</b> 高手读定义时同时读出"<b>能做什么</b>"和"<b>不能做什么</b>"。每一个限制词(任意/存在/范围/整数)既是钥匙也是陷阱,先全部圈出来再动笔。</p>
+      <p style="margin:8px 0"><b>④ 用特例排除/验证:</b> 选择填空遇到抽象新定义,代入最简单的特例(0、1、恒等函数、单点集、常数列)往往一步秒杀,不必硬推一般式。</p>
+      <p style="margin:8px 0"><b>⑤ 多问之间搭脚手架:</b> 大题前一问几乎总是后一问的工具或特例,主动写"由 (1) 可知"来迁移,是把综合题拿满分的关键动作——最忌每问从零重来。</p>
+    </div>
+
+    <h2 class="b">⑤ 自测(先想,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 数学攻坚包 · 新定义题的核心:读懂规则 → 翻译成老知识 → 严格代入验证</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(p,t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function clr(n){while(n.firstChild)n.removeChild(n.firstChild);}
+const ORANGE="#E86A17",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",INK="#16120A",YEL="#F3C00E",VIO="#7A3FF2",BROWN="#8a5a2b";
+
+/* ===== 互动1:四步流程 ===== */
+(function(){
+  const svg=document.getElementById('flowSvg');const note=document.getElementById('flowNote');
+  const titles=['① 逐字读懂定义','② 举简单例子试','③ 翻译化归','④ 套用+验证'];
+  const cols=[RED,ORANGE,BLUE,GREEN];
+  const details=[
+    '标准动作:一字一句读,圈出限制词(对任意/存在/取值范围/n起始/整数/恒成立)和"谁作用于谁"。　易错:漏读一个限制词,整题跑偏。',
+    '标准动作:代入最简单的量(0、1、恒等函数、单点集)先感受定义在说什么。　易错:直接上一般式,越算越晕。',
+    '标准动作:把新运算翻成函数/方程,新距离翻成坐标,集合新关系翻成元素条件。　易错:把新符号硬当加减乘除。',
+    '标准动作:按定义严格推理,再验证 n=1、边界、等号、反例。　易错:猜完不回代;"存在"当成"任意"。'
+  ];
+  let cur=0;
+  document.querySelectorAll('.flowstep').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.flowstep').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=+b.dataset.s;draw();
+  });
+  function draw(){
+    clr(svg);
+    const bw=150,bh=88,gap=22,y=50;
+    for(let i=0;i<4;i++){
+      const x=20+i*(bw+gap);
+      const active=i===cur;
+      el(svg,'rect',{x:x,y:y,width:bw,height:bh,fill:active?cols[i]:'#fff',stroke:INK,'stroke-width':active?5:3});
+      const tx=el(svg,'text',{x:x+bw/2,y:y+34,'font-size':15,'font-weight':900,fill:active?'#fff':INK,'text-anchor':'middle'});
+      tx.textContent=titles[i].slice(0,2);
+      const tx2=el(svg,'text',{x:x+bw/2,y:y+58,'font-size':13.5,'font-weight':800,fill:active?'#fff':INK,'text-anchor':'middle'});
+      tx2.textContent=titles[i].slice(2);
+      if(i<3){
+        const ax=x+bw+2, ay=y+bh/2;
+        el(svg,'line',{x1:ax,y1:ay,x2:ax+gap-4,y2:ay,stroke:INK,'stroke-width':4});
+        el(svg,'polygon',{points:(ax+gap-4)+','+(ay-6)+' '+(ax+gap+4)+','+ay+' '+(ax+gap-4)+','+(ay+6),fill:INK});
+      }
+    }
+    el(svg,'text',{x:350,y:28,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='读懂 → 试算 → 翻译 → 验证(顺序不可乱)';
+    el(svg,'text',{x:350,y:180,'font-size':13,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='当前:'+titles[cur];
+    note.innerHTML='👉 '+details[cur];
+    note.style.borderColor=cols[cur];
+  }
+  draw();
+})();
+
+/* ===== 互动2:定义条件清单核对 ===== */
+(function(){
+  const svg=document.getElementById('chkSvg');const box=document.getElementById('chkChips');const note=document.getElementById('chkNote');
+  const items=[
+    {t:'每一项 aₙ 是整数',key:true},
+    {t:'相邻两项之差为常数',key:true},
+    {t:'首项 a₁ > 0',key:true},
+    {t:'对所有 n 成立',key:true},
+    {t:'数列递增(干扰项)',key:false}
+  ];
+  const state=items.map(()=>false);
+  items.forEach((it,i)=>{
+    const c=document.createElement('span');c.className='chip';c.textContent=it.t;
+    c.onclick=()=>{state[i]=!state[i];c.classList.toggle('on');update();};
+    box.appendChild(c);
+  });
+  function draw(found,ok){
+    clr(svg);
+    el(svg,'text',{x:350,y:34,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='关键条件已圈:'+found+' / 4';
+    const bx=180,bw=340,by=60,h=26;
+    el(svg,'rect',{x:bx,y:by,width:bw,height:h,fill:'#fff',stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:bx,y:by,width:bw*(found/4),height:h,fill:ok?GREEN:ORANGE,stroke:'none'});
+    el(svg,'rect',{x:bx,y:by,width:bw,height:h,fill:'none',stroke:INK,'stroke-width':3});
+  }
+  function update(){
+    let found=0,wrong=false;
+    items.forEach((it,i)=>{if(state[i]&&it.key)found++;if(state[i]&&!it.key)wrong=true;});
+    const ok=found===4&&!wrong;
+    draw(found,ok);
+    if(ok){note.innerHTML='✅ 定义读全了!四个关键条件都圈到,且没被干扰项骗到。可以放心用定义解题。';note.style.borderColor=GREEN;}
+    else if(wrong){note.innerHTML='⚠ "递增"是干扰项——定义里根本没写。别把没有的条件当成有的。';note.style.borderColor=RED;}
+    else{note.innerHTML='还差 '+(4-found)+' 个关键条件没圈。漏掉限制词是新定义题头号失分点。';note.style.borderColor=ORANGE;}
+  }
+  update();
+})();
+
+/* ===== 互动3:新运算试算 ===== */
+(function(){
+  const svg=document.getElementById('opSvg');
+  const As=document.getElementById('opA'),Bs=document.getElementById('opB');
+  const oa=document.getElementById('opOa'),ob=document.getElementById('opOb'),oab=document.getElementById('opAB'),oba=document.getElementById('opBA');
+  let mode=0,a=2,b=3;
+  document.querySelectorAll('.opmode').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.opmode').forEach(x=>x.classList.remove('on'));btn.classList.add('on');mode=+btn.dataset.m;draw();
+  });
+  As.oninput=Bs.oninput=()=>{a=+As.value;b=+Bs.value;draw();};
+  function op(x,y){return mode===0?(x*y+x+y):(x+2*y);}
+  function formula(x,y){return mode===0?(x+'×'+y+'+'+x+'+'+y):(x+'+2×'+y);}
+  function draw(){
+    clr(svg);
+    const ab=op(a,b),ba=op(b,a);
+    oa.textContent=a;ob.textContent=b;oab.textContent=ab;oba.textContent=ba;
+    const defTxt=mode===0?'定义 a⊕b = ab+a+b':'定义 a⊕b = a+2b';
+    el(svg,'text',{x:350,y:26,'font-size':15,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=defTxt;
+    el(svg,'text',{x:20,y:60,'font-size':13.5,'font-weight':800,fill:BLUE}).textContent='a⊕b = '+formula(a,b)+' = '+ab;
+    el(svg,'text',{x:20,y:84,'font-size':13.5,'font-weight':800,fill:GREEN}).textContent='b⊕a = '+formula(b,a)+' = '+ba;
+    // bars
+    const baseY=185,sc=6,cx1=220,cx2=430,bw=90;
+    const h1=Math.max(4,Math.abs(ab)*sc),h2=Math.max(4,Math.abs(ba)*sc);
+    const top=110;
+    el(svg,'line',{x1:120,y1:baseY,x2:600,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:cx1,y:ab>=0?baseY-h1:baseY,width:bw,height:h1,fill:BLUE,stroke:INK,'stroke-width':3});
+    el(svg,'rect',{x:cx2,y:ba>=0?baseY-h2:baseY,width:bw,height:h2,fill:GREEN,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:cx1+bw/2,y:baseY+18,'font-size':13,'font-weight':900,fill:BLUE,'text-anchor':'middle'}).textContent='a⊕b';
+    el(svg,'text',{x:cx2+bw/2,y:baseY+18,'font-size':13,'font-weight':900,fill:GREEN,'text-anchor':'middle'}).textContent='b⊕a';
+    el(svg,'text',{x:cx1+bw/2,y:(ab>=0?baseY-h1-6:baseY+h1+16),'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=ab;
+    el(svg,'text',{x:cx2+bw/2,y:(ba>=0?baseY-h2-6:baseY+h2+16),'font-size':13,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=ba;
+    const same=ab===ba;
+    el(svg,'text',{x:350,y:top,'font-size':13.5,'font-weight':900,fill:same?GREEN:RED,'text-anchor':'middle'}).textContent=same?'此处 a⊕b = b⊕a(交换律在此成立)':'此处 a⊕b ≠ b⊕a(反例!不满足交换律)';
+  }
+  draw();
+})();
+
+/* ===== 互动4:新函数性质验证 ===== */
+(function(){
+  const cv=document.getElementById('funcCv');const ctx=cv.getContext('2d');
+  const Xs=document.getElementById('funcX');
+  const oA=document.getElementById('fnA'),oB=document.getElementById('fnB'),oS=document.getElementById('fnS'),oV=document.getElementById('fnV');
+  let mode=0,xv=0.4;
+  const dom=[0,2],rng=[-1,4.5];
+  document.querySelectorAll('.funcmode').forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll('.funcmode').forEach(x=>x.classList.remove('on'));btn.classList.add('on');mode=+btn.dataset.f;draw();
+  });
+  Xs.oninput=()=>{xv=+Xs.value;draw();};
+  function f(x){return mode===0?Math.pow(x-1,3)+1:x*x;}
+  function px(x){return 60+(x-dom[0])/(dom[1]-dom[0])*580;}
+  function py(y){return 235-(y-rng[0])/(rng[1]-rng[0])*205;}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // axes grid
+    ctx.strokeStyle='#ddd6c2';ctx.lineWidth=1;
+    for(let gx=0;gx<=2;gx+=0.5){ctx.beginPath();ctx.moveTo(px(gx),py(rng[0]));ctx.lineTo(px(gx),py(rng[1]));ctx.stroke();}
+    for(let gy=-1;gy<=4;gy+=1){ctx.beginPath();ctx.moveTo(px(0),py(gy));ctx.lineTo(px(2),py(gy));ctx.stroke();}
+    // axes
+    ctx.strokeStyle=INK;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(px(0),py(rng[0]));ctx.lineTo(px(0),py(rng[1]));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(px(0),py(0));ctx.lineTo(px(2),py(0));ctx.stroke();
+    // center (1,1)
+    ctx.fillStyle=VIO;ctx.beginPath();ctx.arc(px(1),py(1),5,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle=VIO;ctx.font='bold 12px sans-serif';ctx.fillText('中心(1,1)',px(1)+8,py(1)-8);
+    // curve
+    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();
+    let first=true;
+    for(let x=dom[0];x<=dom[1];x+=0.02){const Y=f(x);if(Y<rng[0]-1||Y>rng[1]+1){first=true;continue;}if(first){ctx.moveTo(px(x),py(Y));first=false;}else ctx.lineTo(px(x),py(Y));}
+    ctx.stroke();
+    // two points
+    const x1=xv,y1=f(x1),x2=2-xv,y2=f(x2);
+    // connecting line
+    ctx.strokeStyle='#bbb';ctx.setLineDash([5,4]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(px(x1),py(y1));ctx.lineTo(px(x2),py(y2));ctx.stroke();ctx.setLineDash([]);
+    // point A red
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(px(x1),py(y1),6,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    // point B blue
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(px(x2),py(y2),6,0,2*Math.PI);ctx.fill();ctx.stroke();
+    ctx.fillStyle=RED;ctx.font='bold 11px sans-serif';ctx.fillText('(x, f(x))',px(x1)+8,py(y1)+4);
+    ctx.fillStyle=BLUE;ctx.fillText('(2−x, f(2−x))',px(x2)+8,py(y2)+4);
+    // readouts
+    const s=y1+y2;
+    oA.textContent=y1.toFixed(2);oB.textContent=y2.toFixed(2);oS.textContent=s.toFixed(2);
+    const ok=Math.abs(s-2)<1e-6;
+    oV.textContent=mode===0?'成立':(ok?'此点=2':'否');
+    oV.style.color=mode===0?GREEN:(ok?INK:RED);
+  }
+  draw();
+})();
+
+/* ===== 互动5:从特殊到一般(新数列) ===== */
+(function(){
+  const svg=document.getElementById('seqSvg');
+  const Ns=document.getElementById('seqN');
+  const oA=document.getElementById('sqA'),oA1=document.getElementById('sqA1'),oPat=document.getElementById('sqPat'),oGuess=document.getElementById('sqGuess');
+  let n=3;
+  const terms=[];
+  (function build(){let a=1;for(let i=1;i<=8;i++){terms.push(a);a=2*a+1;}})();
+  Ns.oninput=()=>{n=+Ns.value;draw();};
+  document.getElementById('seqStep').onclick=()=>{if(n<8){n++;Ns.value=n;draw();}};
+  document.getElementById('seqReset').onclick=()=>{n=1;Ns.value=1;draw();};
+  function draw(){
+    clr(svg);
+    const maxV=terms[n-1];
+    const baseY=205,left=70,gap=Math.min(72,540/n),bw=Math.min(46,gap-8),maxH=140;
+    el(svg,'line',{x1:40,y1:baseY,x2:660,y2:baseY,stroke:INK,'stroke-width':3});
+    el(svg,'text',{x:350,y:24,'font-size':14,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent='a₁=1,  aₙ₊₁ = 2aₙ + 1';
+    for(let i=0;i<n;i++){
+      const x=left+i*gap;
+      const h=Math.max(6,(terms[i]/maxV)*maxH);
+      el(svg,'rect',{x:x,y:baseY-h,width:bw,height:h,fill:BLUE,stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x+bw/2,y:baseY-h-6,'font-size':12,'font-weight':900,fill:INK,'text-anchor':'middle'}).textContent=terms[i];
+      el(svg,'text',{x:x+bw/2,y:baseY+16,'font-size':11.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='a'+(i+1);
+      // a_n+1 pattern label
+      el(svg,'text',{x:x+bw/2,y:baseY+34,'font-size':11,'font-weight':800,fill:GREEN,'text-anchor':'middle'}).textContent='+1='+(terms[i]+1);
+    }
+    el(svg,'text',{x:70,y:baseY+52,'font-size':12.5,'font-weight':900,fill:GREEN}).textContent='看 aₙ+1 这一行:2,4,8,16,… = 2ⁿ  ⇒  猜 aₙ = 2ⁿ − 1';
+    oA.textContent=terms[n-1];
+    oA1.textContent=terms[n-1]+1;
+    oPat.textContent=(terms[n-1]+1===Math.pow(2,n))?'是':'否';
+    oGuess.textContent='2ⁿ−1 = '+(Math.pow(2,n)-1);
+  }
+  draw();
+})();
+
+/* ===== 互动6:集合新关系(对称差) ===== */
+(function(){
+  const svg=document.getElementById('setSvg');const note=document.getElementById('setNote');
+  let mode=0;
+  // regions: onlyA={1,2}, both={3,4}, onlyB={5,6}
+  const onlyA=[1,2],both=[3,4],onlyB=[5,6];
+  document.querySelectorAll('.setmode').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.setmode').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=+b.dataset.s;draw();
+  });
+  function draw(){
+    clr(svg);
+    const cxA=280,cxB=420,cy=130,r=110;
+    // highlight fills depending on mode: draw highlighted regions first
+    // We approximate regions with clip via two circles overlapped.
+    // Circle A
+    // determine which regions active
+    const aOn=(mode===0)||(mode===2); // onlyA part
+    const bothOn=(mode===0)||(mode===1);
+    const bOn=(mode===0)||(mode===2);
+    // base circles
+    el(svg,'circle',{cx:cxA,cy:cy,r:r,fill:aOn?'rgba(232,106,23,0.30)':'rgba(20,80,200,0.10)',stroke:BLUE,'stroke-width':4});
+    el(svg,'circle',{cx:cxB,cy:cy,r:r,fill:bOn?'rgba(232,106,23,0.30)':'rgba(30,158,134,0.10)',stroke:GREEN,'stroke-width':4});
+    // overlap lens highlight: draw a marker in middle
+    el(svg,'ellipse',{cx:350,cy:cy,rx:46,ry:96,fill:bothOn?'rgba(232,106,23,0.45)':'rgba(120,120,120,0.12)',stroke:INK,'stroke-width':2});
+    // labels A B
+    el(svg,'text',{x:cxA-55,y:cy-70,'font-size':16,'font-weight':900,fill:BLUE}).textContent='A';
+    el(svg,'text',{x:cxB+45,y:cy-70,'font-size':16,'font-weight':900,fill:GREEN}).textContent='B';
+    // elements
+    function put(x,y,val,active){
+      el(svg,'circle',{cx:x,cy:y,r:15,fill:active?ORANGE:'#fff',stroke:INK,'stroke-width':3});
+      el(svg,'text',{x:x,y:y+5,'font-size':14,'font-weight':900,fill:active?'#fff':INK,'text-anchor':'middle'}).textContent=val;
+    }
+    put(250,cy-24,onlyA[0],aOn);put(250,cy+24,onlyA[1],aOn);
+    put(350,cy-24,both[0],bothOn);put(350,cy+24,both[1],bothOn);
+    put(450,cy-24,onlyB[0],bOn);put(450,cy+24,onlyB[1],bOn);
+    // note
+    let msg,res;
+    if(mode===0){res='{1,2,3,4,5,6}';msg='A∪B 并集 = 属于 A 或 B 的所有元素。';}
+    else if(mode===1){res='{3,4}';msg='A∩B 交集 = 同时属于 A 和 B 的元素。';}
+    else{res='{1,2,5,6}';msg='A△B 对称差(新定义)= 只属于其中一个集合 = 并集去掉交集。';}
+    note.innerHTML='👉 '+msg+'　结果 = <b>'+res+'</b>';
+    note.style.borderColor=mode===2?ORANGE:INK;
+    el(svg,'text',{x:350,y:250,'font-size':12.5,'font-weight':800,fill:'#6b5d3a','text-anchor':'middle'}).textContent='A={1,2,3,4}  B={3,4,5,6}  橙色=当前运算选中的元素';
+  }
+  draw();
+})();
+
+/* ===== 互动7:新距离(曼哈顿) ===== */
+(function(){
+  const cv=document.getElementById('distCv');const ctx=cv.getContext('2d');
+  const Xs=document.getElementById('distX'),Ys=document.getElementById('distY');
+  const oDx=document.getElementById('dtDx'),oDy=document.getElementById('dtDy'),oM=document.getElementById('dtMan'),oE=document.getElementById('dtEuc');
+  const ox=80,oy=220,cell=70;
+  const P=[1,1];
+  let qx=5,qy=3;
+  Xs.oninput=()=>{qx=+Xs.value;draw();};
+  Ys.oninput=()=>{qy=+Ys.value;draw();};
+  function gx(x){return ox+x*cell;}
+  function gy(y){return oy-y*cell;}
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // grid
+    ctx.strokeStyle='#ddd6c2';ctx.lineWidth=1;
+    for(let x=0;x<=7;x++){ctx.beginPath();ctx.moveTo(gx(x),gy(0));ctx.lineTo(gx(x),gy(4));ctx.stroke();}
+    for(let y=0;y<=4;y++){ctx.beginPath();ctx.moveTo(gx(0),gy(y));ctx.lineTo(gx(7),gy(y));ctx.stroke();}
+    // manhattan L path (horizontal then vertical)
+    ctx.strokeStyle=ORANGE;ctx.lineWidth=6;
+    ctx.beginPath();ctx.moveTo(gx(P[0]),gy(P[1]));ctx.lineTo(gx(qx),gy(P[1]));ctx.lineTo(gx(qx),gy(qy));ctx.stroke();
+    // euclid line
+    ctx.strokeStyle=GREEN;ctx.lineWidth=3;ctx.setLineDash([7,5]);
+    ctx.beginPath();ctx.moveTo(gx(P[0]),gy(P[1]));ctx.lineTo(gx(qx),gy(qy));ctx.stroke();ctx.setLineDash([]);
+    // points
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(gx(P[0]),gy(P[1]),8,0,2*Math.PI);ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(gx(qx),gy(qy),8,0,2*Math.PI);ctx.fill();ctx.stroke();
+    ctx.fillStyle=INK;ctx.font='bold 13px sans-serif';
+    ctx.fillText('P('+P[0]+','+P[1]+')',gx(P[0])-14,gy(P[1])+26);
+    ctx.fillText('Q('+qx+','+qy+')',gx(qx)-14,gy(qy)-14);
+    // legend
+    ctx.fillStyle=ORANGE;ctx.fillText('— 曼哈顿:只能横竖走',430,30);
+    ctx.fillStyle=GREEN;ctx.fillText('- - 直线:斜穿',430,50);
+    const dx=qx-P[0],dy=qy-P[1];
+    oDx.textContent=dx;oDy.textContent=dy;
+    oM.textContent=(Math.abs(dx)+Math.abs(dy));
+    oE.textContent=Math.sqrt(dx*dx+dy*dy).toFixed(2);
+  }
+  draw();
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 解一切新定义题的四步是什么?",a:"①逐字读懂定义、圈出关键限制条件;②举简单例子试算(代0、1、恒等函数等);③翻译/化归成已学知识(函数、数列、集合、方程);④严格套用定义推理并验证特殊情形。"},
+ {q:"2. 读新定义时,最该先圈出哪两类东西?",a:"①限制词:对任意/存在/取值范围/n的起始/整数/恒成立;②作用顺序:谁作用在谁身上(a⊕b 里谁是第一个数)。这两处是全部陷阱的源头。"},
+ {q:"3. 定义 a⊕b=ab+a+b,求 2⊕3;它满足交换律吗?",a:"2⊕3=2×3+2+3=11。b⊕a=ba+b+a=ab+a+b=a⊕b,满足交换律。注意:交换律必须现验,不能默认。"},
+ {q:"4. 定义 a⊕b=a+2b,则 2⊕3 与 3⊕2 相等吗?说明什么?",a:"2⊕3=2+6=8,3⊕2=3+4=7,不相等。说明新运算不能默认满足交换律,顺序很重要。"},
+ {q:"5. 新函数题里,'对任意 x 成立'和'存在 x 成立'处理上有何本质区别?",a:"'对任意'要对全体成立,举一个反例即可否定;'存在'只需找到一个满足即可成立。两者混淆是常见失分点。"},
+ {q:"6. 定义:f(x)+f(2−x)=2 恒成立称关于(1,1)中心对称。如何验证 f(x)=x² 是否满足?",a:"f(x)+f(2−x)=x²+(2−x)²=2x²−4x+4,不恒等于2(例如x=0时得4)。举出一个反例即可判定不满足。"},
+ {q:"7. 新数列 a₁=1,aₙ₊₁=2aₙ+1,求前四项并猜通项。",a:"a₁=1,a₂=3,a₃=7,a₄=15。观察 aₙ+1=2,4,8,16=2ⁿ,猜 aₙ=2ⁿ−1,代回递推验证:2(2ⁿ−1)+1=2ⁿ⁺¹−1,成立。"},
+ {q:"8. 新数列题'先试后证'指什么?",a:"先老实算出前几项(特殊),观察结构规律,大胆猜想通项/周期,再用定义或数学归纳法严格证明(一般)。不敢算前几项是最大障碍。"},
+ {q:"9. 定义对称差 A△B=(A∪B)\\(A∩B)。A={1,2,3,4},B={3,4,5,6},求 A△B。",a:"A∪B={1,2,3,4,5,6},A∩B={3,4},A△B={1,2,5,6}(即只属于其中一个集合的元素)。建议画Venn图数,不漏边界。"},
+ {q:"10. 定义 x₀ 为不动点:f(x₀)=x₀。求 f(x)=x²+c 有不动点时 c 的范围。",a:"令 x²+c=x ⇒ x²−x+c=0 有实根 ⇒ 判别式 1−4c≥0 ⇒ c≤1/4。'存在'只需方程有解。"},
+ {q:"11. 定义曼哈顿距离 d(P,Q)=|x₁−x₂|+|y₁−y₂|。P(1,1),Q(5,3) 的曼哈顿距离与直线距离各是多少?",a:"曼哈顿=|5−1|+|3−1|=4+2=6;直线=√(4²+2²)=√20≈4.47。新度量只是换了'怎么走'的规则,翻成坐标计算即可。"},
+ {q:"12. 多问递进大题的答题策略是什么?",a:"第(1)问务必吃透,它示范定义怎么用;把(1)的方法/结论迁移到(2)(3),主动写'由(1)可知';前问是后问的脚手架,别每问从零重来,一般化时别丢定义的限制条件。"}
+];
+const quiz=document.getElementById('quiz');
+qs.forEach(o=>{const d=document.createElement('div');d.style.cssText='margin:12px 0;font-weight:700';d.innerHTML='<b>'+o.q+'</b> <button class="btn">看答案</button><div class="qa">'+o.a+'</div>';d.querySelector('button').onclick=()=>d.querySelector('.qa').classList.toggle('show');quiz.appendChild(d);});
+</script>
+</body>
+</html>

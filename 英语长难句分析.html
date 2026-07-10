@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>长难句分析 · 攻坚包 | thebest2dan</title>
+<style>
+  :root{--paper:#EBE4D2;--card:#F4EFE2;--ink:#16120A;--red:#E0382A;--blue:#1450C8;--yellow:#F3C00E;--green:#1E9E86;--violet:#7A3FF2;--orange:#E86A17;--accent:#E0382A;--shadow:6px 6px 0 var(--ink);}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75}
+  .topnav{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:5px solid var(--ink);display:flex;align-items:stretch;justify-content:space-between;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;padding:14px 20px;text-decoration:none;color:var(--ink);border-right:5px solid var(--ink)}
+  .logomark{width:42px;height:42px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+  .logomark svg{width:27px;height:27px}.brand b{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .links{display:flex}.links a{display:flex;align-items:center;padding:0 18px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800;border-left:3px solid var(--ink)}
+  .links a:hover{background:var(--yellow)}
+  @media(max-width:640px){.topnav{flex-direction:column;align-items:stretch}.brand{border-right:0;border-bottom:4px solid var(--ink)}.links{width:100%}.links a{flex:1;justify-content:center;padding:12px 6px;border-left:0;border-right:3px solid var(--ink)}}
+  .wrap{max-width:840px;margin:0 auto;padding:24px 20px 90px}
+  .back{display:inline-block;font-weight:800;font-size:14px;background:var(--yellow);border:3px solid var(--ink);padding:4px 12px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink);margin-bottom:14px}
+  .kicker{display:inline-block;background:var(--accent);color:#fff;font-weight:900;font-size:12px;letter-spacing:2px;padding:6px 12px;text-transform:uppercase;border:3px solid var(--ink)}
+  h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin:10px 0 8px;line-height:1.06}
+  h2{font-size:22px;font-weight:900;margin:40px 0 12px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:24px;height:24px;background:var(--accent);border:3px solid var(--ink);flex:none}
+  h2.b::before{background:var(--blue)}h2.g::before{background:var(--green)}h2.o::before{background:var(--orange)}h2.v::before{background:var(--violet)}
+  h3{font-size:17px;font-weight:900;margin:22px 0 8px}
+  .lead{font-size:16.5px;font-weight:600;max-width:700px}
+  .card{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:18px 22px;margin:16px 0}
+  .say{background:#fff;border:4px solid var(--ink);border-left:14px solid var(--accent);box-shadow:var(--shadow);padding:14px 20px;margin:16px 0;font-size:16px;font-weight:600}.say b{font-weight:900;background:var(--yellow);padding:0 4px}
+  .keybox{background:var(--yellow);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 22px;margin:18px 0;font-size:16px;font-weight:600}.keybox b{font-weight:900}
+  .eq{text-align:center;font-family:"SF Mono",Consolas,monospace;font-size:20px;font-weight:900;margin:8px 0}
+  .arrow{display:inline-block;transition:transform .5s;font-size:26px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--card);border:3px solid var(--ink);color:var(--ink);padding:9px 13px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+  .chip.on{background:var(--accent);color:#fff}
+  .verdict{font-weight:900;font-size:15px;margin:8px 0;border:3px solid var(--ink);padding:10px 14px;background:#fff}
+  .readout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;text-align:center}
+  @media(max-width:560px){.readout{grid-template-columns:1fr 1fr}}
+  .readout div{border:3px solid var(--ink);padding:8px}.readout b{display:block;font-size:11.5px;color:#6b5d3a;font-weight:800}.readout span{font-size:15px;font-weight:900}
+  .mono{font-family:"SF Mono",Consolas,monospace;background:var(--ink);color:var(--paper);border:3px solid var(--ink);padding:11px 14px;margin:7px 0;font-size:14px;font-weight:700;box-shadow:3px 3px 0 var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;font-weight:600}th,td{border:3px solid var(--ink);padding:8px 10px;text-align:left}th{background:var(--ink);color:#fff}
+  .tag{font-weight:900;font-size:13px}.trap{color:var(--red);font-weight:800;font-size:14px;margin-top:8px}
+  .btn{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:6px 14px;font-weight:800;font-size:12.5px;cursor:pointer;box-shadow:2px 2px 0 var(--yellow)}
+  .qa{display:none;margin-top:8px;font-weight:700;color:var(--green)}.qa.show{display:block}
+  /* viz extras */
+  .viz{background:var(--card);border:4px solid var(--ink);box-shadow:var(--shadow);padding:16px 18px;margin:18px 0}
+  .viz svg,.viz canvas{display:block;width:100%;height:auto;background:#fff;border:3px solid var(--ink)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 4px}
+  .ctrl button{background:var(--ink);color:#fff;border:3px solid var(--ink);padding:7px 14px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--accent)}
+  .ctrl button:active{transform:translate(2px,2px);box-shadow:none}
+  .ctrl label{font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+  .ctrl input[type=range]{accent-color:var(--accent);width:120px}
+  .vlabel{font-size:12.5px;font-weight:800;color:#6b5d3a}
+  .live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;text-align:center}
+  @media(max-width:560px){.live{grid-template-columns:1fr 1fr}}
+  .live div{border:3px solid var(--ink);padding:7px;background:#fff}.live b{display:block;font-size:11px;color:#6b5d3a;font-weight:800}.live span{font-size:15px;font-weight:900}
+  .small{font-size:12.5px;font-weight:700;color:#4a4128}
+</style>
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html"><span class="logomark"><svg viewBox="0 0 24 24" fill="none"><g stroke="#F3C00E" stroke-width="3.4" stroke-linecap="round"><line x1="12" y1="3.5" x2="12" y2="20.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg></span><b>thebest2dan</b></a>
+    <div class="links"><a href="index.html">首页</a><a href="index.html#packs">攻坚包</a></div>
+  </nav>
+  <div class="wrap">
+    <a class="back" href="index.html#packs">← 回攻坚包</a>
+    <div class="kicker">英语 · 攻坚包</div>
+    <h1>长难句分析</h1>
+    <p class="lead">长难句是高考阅读、完形、翻译、写作的<b>共同拦路虎</b>。它长,不是因为难,而是因为在一根「主谓宾」骨架上挂了太多零件——从句、分词、介词短语、插入语、并列结构。这一页教你一件事:<b>先抓骨架,再剥零件</b>。骨架找到了,再长的句子也塌不了。</p>
+
+    <div class="say">🗣️ <b>说人话总览:</b> 长句一点都不可怕。它再长,核心也只有一句<b>「谁 + 干了什么 + 什么」</b>(主谓宾)。剩下那一大堆词,全是往这三个字上贴的<b>「零件」</b>——形容词、介词短语、从句、插入语。读长句的正确姿势不是从头硬啃到尾,而是:<b>先一眼扫到那个主句谓语动词</b>,顺藤摸出主语和宾语,把骨架立起来;然后把每个从句、每段修饰当成「一个零件」,一层层剥、一块块贴回去。骨架稳,句意就稳。</div>
+
+    <div class="keybox"><b>找主干三步 + 剥离四类零件:</b> ① <b>定谓语</b>(先找主句的那个真谓语动词)→ ② <b>找主语</b>(谓语前面那个「谁」)→ ③ <b>找宾语/表语</b>(谓语后面那个「什么」)。骨架 = <b>主 + 谓 + 宾</b>。挂在骨架上的四类零件:<b>从句</b>(定语/状语/名词性)、<b>非谓语短语</b>(-ing / -ed / to do)、<b>插入语</b>(两逗号或破折号夹住)、<b>并列结构</b>(and/or/but 连对等成分)。<b>标点和连词</b>是天然的断句路标,<b>修饰就近</b>是判断「谁修饰谁」的第一原则。</div>
+
+    <h2>① 核心原理:找主干三步 + 断句路标</h2>
+    <div class="card">
+      <h3>第一件事:定谓语动词(整个拆句的起点)</h3>
+      <p style="margin:8px 0">主句<b>有且只有一套</b>核心的「主+谓」。找到那个真正的<b>主句谓语动词</b>,句子的脊柱就立起来了。难点在于:句子里往往有好几个动词,你要<b>排除掉从句里的动词和非谓语动词</b>,只留下主句的那一个。</p>
+      <table>
+        <tr><th>这些动词不是主句谓语</th><th>识别标志</th></tr>
+        <tr><td>从句里的动词</td><td>前面有 who/which/that/because/when/if 等引导词</td></tr>
+        <tr><td>非谓语(分词/不定式)</td><td>-ing、-ed(作定语/状语)、to do,前面没有助动词</td></tr>
+        <tr><td>介词后的动名词</td><td>in doing / by doing 这类,是介词宾语</td></tr>
+      </table>
+      <p style="margin:8px 0"><b>主句谓语的样子:</b> 有时态(现在/过去/将来)、有人称和数的变化、不被引导词「管着」。找到它,前面顺出<b>主语</b>,后面顺出<b>宾语或表语</b>,骨架完成。</p>
+    </div>
+    <div class="card">
+      <h3>第二件事:剥离四类零件</h3>
+      <p style="margin:6px 0"><b>① 从句</b>——用括号把整段括起来,当一个成分:<b>定语从句</b>(修饰前面的名词,who/which/that/where/when)、<b>状语从句</b>(修饰全句,because/although/if/when/so that)、<b>名词性从句</b>(在句中当主语/宾语/表语,what/that/whether)。</p>
+      <p style="margin:6px 0"><b>② 非谓语短语</b>——-ing / -ed / to do 引导的短语,通常作定语或状语,同样括起来当一个零件。</p>
+      <p style="margin:6px 0"><b>③ 插入语</b>——被<b>两个逗号或两个破折号</b>夹住的一段(as we know / however / of course),先删掉不影响主干,理解完再放回。</p>
+      <p style="margin:6px 0"><b>④ 并列结构</b>——and / or / but / not only...but also 连接<b>对等</b>的成分(词、短语、从句),找准它连的是哪两块。</p>
+    </div>
+    <div class="keybox"><b>两条铁律:</b> ① <b>标点与连词是断句路标</b>——每个逗号、每个 that/which/because 都在提示「这里可能是一个成分的边界」,先在心里画竖线断开。② <b>修饰就近</b>——一个定语/从句默认修饰<b>离它最近</b>的那个名词,判断「谁修饰谁」时先从最近的找起。</div>
+
+    <div class="viz">
+      <div class="vlabel">🔧 互动 1 — 长句拆解器:点「高亮主干」看骨架,点「高亮从句」看零件,点「只留主干」剥掉从句</div>
+      <div id="dcSent" style="background:#fff;border:3px solid var(--ink);padding:16px 16px;font-size:17px;line-height:2.4;min-height:44px"></div>
+      <div class="ctrl">
+        <button id="dcTrunk">① 高亮主干(主谓宾)</button>
+        <button id="dcClause">② 高亮从句</button>
+        <button id="dcPeel">③ 只留主干</button>
+        <button id="dcReset">↺ 还原</button>
+      </div>
+      <div class="verdict" id="dcNote">点上面的按钮,一层层看这句话的结构。</div>
+      <p class="small">例句:<b>The scientist who discovered the vaccine received an award because his work saved millions of lives.</b> 骨架只有 <b>scientist received an award</b>(蓝=主 红=谓 绿=宾);<b>who discovered the vaccine</b> 是定语从句(修饰 scientist),<b>because...lives</b> 是原因状语从句。</p>
+    </div>
+
+    <h2 class="b">② 拆句流程:四步走</h2>
+    <div class="card">
+      <div class="mono">第1步:通读一遍,标出所有逗号、连词、引导词(that/which/who/because...)——这些是断句路标。</div>
+      <div class="mono">第2步:找主句谓语动词 → 往前定主语 → 往后定宾语/表语,画出主干骨架。</div>
+      <div class="mono">第3步:把每个从句 / 非谓语短语 / 插入语用括号括起来,标明它「修饰谁、是什么成分」。</div>
+      <div class="mono">第4步:主干 + 各零件拼起来理解;翻译时按中文习惯调语序(定语从句常译成「...的」或后置分句)。</div>
+      <p style="margin:8px 0"><b>一句口诀:</b> 找谓语 → 立骨架 → 括零件 → 认关系 → 调语序。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🎨 互动 2 — 句子成分着色:点色块,给不同成分上色(主/谓/宾/定/状),一眼看清句子结构</div>
+      <div id="colSent" style="background:#fff;border:3px solid var(--ink);padding:16px 16px;font-size:17px;line-height:2.4;min-height:44px"></div>
+      <div class="ctrl">
+        <button class="colrole" data-role="s" style="background:var(--blue)">主语</button>
+        <button class="colrole" data-role="v" style="background:var(--red)">谓语</button>
+        <button class="colrole" data-role="o" style="background:var(--green)">宾语</button>
+        <button class="colrole" data-role="a" style="background:var(--violet)">定语</button>
+        <button class="colrole" data-role="d" style="background:var(--orange)">状语</button>
+        <button id="colAll">🌈 一键全上色</button>
+        <button id="colClear">↺ 清除</button>
+      </div>
+      <p class="small">例句:<b>Yesterday the diligent students carefully finished their difficult homework in the library.</b> 蓝=主(students) 红=谓(finished) 绿=宾(homework) 紫=定(the diligent / their difficult) 橙=状(Yesterday / carefully / in the library)。修饰再多,骨架仍是 students finished homework。</p>
+    </div>
+
+    <h2 class="g">③ 长难句能帮你做什么:阅读 · 翻译 · 写作</h2>
+    <div class="card">
+      <h3>阅读:抓主干 = 抓句意,提速一倍</h3>
+      <p style="margin:6px 0">考场读文章没时间逐词品。看到长句,<b>先扫主干</b>,一句话的大意就出来了;定语、状语那些「零件」是细节,等题目问到再回头看。<b>先粗读骨架、再细看零件</b>是阅读提速的核心动作。</p>
+      <h3>翻译:先译主干,再补修饰,最后调语序</h3>
+      <p style="margin:6px 0">英译汉的长句,先把主干译成一句短句,再把各从句/修饰按<b>中文习惯</b>塞回去:定语从句常译成「...的」或拆成一个后置小分句,状语从句放到主句前后。<b>骨架先立,细节后补。</b></p>
+      <h3>写作:用从句和并列,把两句拧成一句「高级句」</h3>
+      <p style="margin:6px 0">想拿高分,别老写「主谓宾。主谓宾。」用<b>定语从句</b>合并信息、<b>状语从句</b>表逻辑、<b>并列/非谓语</b>让句子更紧凑。但记住先保证骨架正确,再加零件——<b>宁可写对的简单句,不写乱的长句。</b></p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🧅 互动 3 — 剥洋葱:点「剥一层」层层去掉修饰,最后只剩最核心的主谓宾</div>
+      <div id="peelSent" style="background:#fff;border:3px solid var(--ink);padding:16px 16px;font-size:17px;line-height:2.4;min-height:44px"></div>
+      <div class="ctrl">
+        <button id="peelBtn">🧅 剥一层修饰</button>
+        <button id="peelReset">↺ 还原整句</button>
+      </div>
+      <div class="verdict" id="peelNote">完整句子。点「剥一层」从最外层的从句/短语开始,一层层剥到只剩骨架。</div>
+      <p class="small">例句:<b>The talented young musician from Vienna who won the prize played the beautiful melody gracefully on the stage.</b> 一层层剥掉从句、介词短语、状语、定语,最后剩核心:<b>musician played melody</b>。</p>
+    </div>
+
+    <div class="viz">
+      <div class="vlabel">🚦 互动 4 — 连词路标高亮:点亮句中所有连词/引导词,它们就是天然的「断句点」</div>
+      <div id="sgnSent" style="background:#fff;border:3px solid var(--ink);padding:16px 16px;font-size:17px;line-height:2.4;min-height:44px"></div>
+      <div class="ctrl">
+        <button id="sgnBtn">🚦 点亮路标(连词)</button>
+        <button id="sgnReset">↺ 还原</button>
+      </div>
+      <div class="verdict" id="sgnNote">点「点亮路标」把连词/引导词标黄,看句子在哪里被切成几段。</div>
+      <p class="small">例句:<b>Although the plan seemed risky, the team decided to proceed, and they succeeded because everyone worked hard.</b> 路标:<b>Although</b>(让步)、<b>and</b>(并列)、<b>because</b>(原因)。每个路标+逗号处都是一刀,句子被切成清晰的几段。</p>
+    </div>
+
+    <h2 class="o">④ 从句识别练习</h2>
+    <div class="card">
+      <p style="margin:6px 0">拆句最难的一步是<b>看出下划线部分是哪种从句</b>——定语从句(修饰名词)、状语从句(表逻辑关系)、还是名词性从句(在句中当成分)。下面练一练,先判断再看答案。</p>
+    </div>
+    <div class="viz">
+      <div class="vlabel">🧩 互动 5 — 从句识别:读句子,判断标出的部分是什么从句</div>
+      <div id="clzBox"></div>
+      <p class="small">口诀:修饰<b>名词</b>→定语从句;修饰<b>全句/表逻辑</b>(原因、时间、让步、条件)→状语从句;在句中<b>当主语/宾语/表语</b>→名词性从句。</p>
+    </div>
+
+    <h2 class="v">⑤ 全题型地图</h2>
+    <div class="card">
+      <h3>题型A — 找主干型</h3>
+      <p><b class="tag">触发信号:</b>句子很长,一眼看不到谓语在哪;开头一长串名词短语,或逗号从句一堆。</p>
+      <p><b class="tag">标准动作:</b>先找出<b>主句的真谓语动词</b>(排除从句里的动词、非谓语),它前面是主语、后面是宾语/表语,骨架立起来。</p>
+      <p><b class="tag">示例(带拆解):</b><b>The book that I bought yesterday is very interesting.</b> 主句谓语是 <b>is</b>(that I bought 里的 bought 属于定语从句,不是主句谓语)→ 骨架 = <b>The book is interesting</b>;that I bought yesterday 修饰 book。</p>
+      <p class="trap">陷阱:把从句里的动词误当主句谓语;被超长主语迷惑找不到谓语。</p>
+    </div>
+    <div class="card">
+      <h3>题型B — 剥从句型</h3>
+      <p><b class="tag">触发信号:</b>句中出现 who / which / that / where / when / because / although / if / so that 等引导词。</p>
+      <p><b class="tag">标准动作:</b>从引导词起划出整个从句,<b>用括号括成一个成分</b>:定语从句修饰它前面的名词,状语从句修饰全句,名词性从句在句中充当主/宾/表。</p>
+      <p><b class="tag">示例(带拆解):</b><b>Students who study hard usually get good grades because effort pays off.</b> 剥出定语从句 (who study hard) 修饰 Students、原因状语从句 (because effort pays off);剩骨架 <b>Students get grades</b>。</p>
+      <p class="trap">陷阱:从句边界找错;that 既能引导定语从句又能引导名词性从句,身份分不清。</p>
+    </div>
+    <div class="card">
+      <h3>题型C — 多重修饰型</h3>
+      <p><b class="tag">触发信号:</b>一个名词后面挂着好几层修饰(介词短语 + 分词 + 定语从句叠在一起)。</p>
+      <p><b class="tag">标准动作:</b>按<b>就近原则</b>一层层往外剥,先剥最外层,核心名词最后留下;判断每层修饰的是哪个名词。</p>
+      <p><b class="tag">示例(带拆解):</b><b>The house on the hill covered with snow that we visited last winter looks magnificent.</b> 核心 = <b>The house looks magnificent</b>;on the hill / covered with snow / that we visited last winter 三层都修饰 house。</p>
+      <p class="trap">陷阱:修饰层次搞混,把远处的修饰硬套到错的名词上。</p>
+    </div>
+    <div class="card">
+      <h3>题型D — 插入语与倒装型</h3>
+      <p><b class="tag">触发信号:</b>两个逗号 / 破折号中间夹一段(插入语);句首出现否定词、only、介词短语引起的倒装。</p>
+      <p><b class="tag">标准动作:</b>插入语先<b>用括号删掉</b>,不影响主干;倒装先<b>还原成正常语序</b>(主+谓+宾)再理解。</p>
+      <p><b class="tag">示例(带拆解):</b>插入语 <b>This method, as far as I know, works best.</b> 删掉 (as far as I know) → This method works best。倒装 <b>Never had I seen such a scene.</b> 还原 = <b>I had never seen such a scene</b>。</p>
+      <p class="trap">陷阱:把插入语当成主干成分去分析;倒装不还原,导致主谓判断出错。</p>
+    </div>
+    <div class="card">
+      <h3>题型E — 并列平行结构型</h3>
+      <p><b class="tag">触发信号:</b>and / or / but / not only...but also / both...and 连接两个(或多个)对等成分。</p>
+      <p><b class="tag">标准动作:</b>找到并列连词,确认它连接的是哪两块<b>对等</b>成分(词性、结构必须一致),分别处理,注意可能共用主语或宾语。</p>
+      <p><b class="tag">示例(带拆解):</b><b>He opened the door, turned on the light, and sat down.</b> and 连接三个<b>并列谓语</b>(opened / turned on / sat down),共用主语 He。</p>
+      <p class="trap">陷阱:分不清 and 连的是两个词、两个短语还是两个句子;平行结构错位(前后词性不一致)。</p>
+    </div>
+    <div class="card">
+      <h3>题型F — 句子改错中的长句型</h3>
+      <p><b class="tag">触发信号:</b>短文改错 / 语法填空里的长句,常考主谓一致、时态、连词多余或缺失。</p>
+      <p><b class="tag">标准动作:</b>先拆出主干,<b>单独检查主句</b>的主谓一致和时态;再逐个检查从句引导词是否正确、连词是否多用或漏用。</p>
+      <p><b class="tag">示例(带拆解):</b><b>The number of students who studies English are increasing.</b> 主干 = The number <b>is</b> increasing(主语 number 单数,不是 are);从句里 who <b>study</b>(先行词 students 复数)。</p>
+      <p class="trap">陷阱:被从句干扰,看错主句主语的单复数;一个句子里用了两个连词(如 Because...so 同时出现)。</p>
+    </div>
+
+    <h2 class="r">⑥ 易错集</h2>
+    <div class="card">
+      <p class="trap">① <b>找错主句谓语</b>:把从句里或非谓语的动词当成主句谓语。主句谓语只有一套,不被引导词管着。</p>
+      <p class="trap">② <b>从句边界不清</b>:从句从引导词开始,到哪里结束要看清;边界划错,修饰关系全错。</p>
+      <p class="trap">③ <b>that 身份混淆</b>:that 可引导定语从句(修饰名词、可省)、也可引导名词性从句(作成分)。看它在句中充当什么角色。</p>
+      <p class="trap">④ <b>修饰关系判断反</b>:多重修饰时违背「就近原则」,把定语套到远处的名词上。</p>
+      <p class="trap">⑤ <b>插入语当主干</b>:两逗号中间的插入语是补充,先删再读,别把它当主语或谓语。</p>
+      <p class="trap">⑥ <b>倒装不还原</b>:Never / Only / Not until 开头的倒装句,不还原成正常语序就判断不出主谓。</p>
+      <p class="trap">⑦ <b>并列成分不对等</b>:and 前后必须词性/结构一致;写作里最容易在这里失分。</p>
+      <p class="trap">⑧ <b>主谓一致被从句带偏</b>:The number of...(单数) 、One of the...(单数)——真主语被后面的复数名词误导。</p>
+      <p class="trap">⑨ <b>翻译不调语序</b>:英语定语从句后置,硬按英文顺序译出来生硬;要转成中文的「...的」或拆成分句。</p>
+    </div>
+
+    <h2 class="v">⑦ 尖子生拔高视角</h2>
+    <div class="card">
+      <p style="margin:8px 0"><b>① 句子是「一棵树」,不是「一条线」:</b> 别把长句当成从左到右的词串硬读。它是一棵有层级的树——主句谓语是树干,从句和修饰是一层层的枝叶。养成「找主干动词 → 挂枝叶」的读法,任何长度的句子都只是同一棵树长高了而已。</p>
+      <p style="margin:8px 0"><b>② 谓语动词是「唯一的锚」:</b> 无论句子多长,先锁定主句谓语。数一数句中有几个「有时态的动词」,除了从句里那几个,剩下的独苗就是主句谓语。这个「数动词、排从句」的技巧,比逐词翻译快得多、也稳得多。</p>
+      <p style="margin:8px 0"><b>③ that 的三副面孔要秒辨:</b> 定语从句的 that(修饰名词、在从句里作主/宾、可省)、名词性从句的 that(引导主/宾/表语从句、不作成分、不可省)、以及 so...that 的 that(结果状语)。看 that 前面是名词还是完整意群、that 后面缺不缺成分,就能定身份。</p>
+      <p style="margin:8px 0"><b>④ 逗号是「结构标点」,不只是停顿:</b> 高手读逗号会问「它切开的是什么」——是并列项之间、是插入语的边界、还是非限定性定语从句的开头。把逗号当成结构信号读,断句速度和准确率一起上去。</p>
+      <p style="margin:8px 0"><b>⑤ 拆句能力直接迁移到写作:</b> 你能拆开的结构,就能主动写出来。练熟定语从句合并、状语从句表逻辑、非谓语作状语、并列平行,写作就从「主谓宾堆叠」升级为「有主有从、有逻辑层次」的高级句——阅读的拆,反过来喂养写作的合。</p>
+    </div>
+
+    <h2 class="b">⑧ 自测(先自己拆,再点开)</h2>
+    <div class="card" id="quiz"></div>
+    <p style="font-size:12.5px;font-weight:700;margin-top:30px">thebest2dan · 英语攻坚包 · 长难句分析:先抓骨架,再剥零件</p>
+  </div>
+
+<script>
+/* ===== 工具 ===== */
+const INK="#16120A",BLUE="#1450C8",RED="#E0382A",GREEN="#1E9E86",YEL="#F3C00E",VIO="#7A3FF2",ORANGE="#E86A17";
+const ROLE={
+  s:{bg:BLUE,fg:"#fff",name:"主语"},
+  v:{bg:RED,fg:"#fff",name:"谓语"},
+  o:{bg:GREEN,fg:"#fff",name:"宾语"},
+  a:{bg:VIO,fg:"#fff",name:"定语"},
+  d:{bg:ORANGE,fg:"#fff",name:"状语"},
+  c:{bg:YEL,fg:INK,name:"从句"}
+};
+function mkTok(parent,text){
+  const s=document.createElement("span");
+  s.textContent=text;
+  s.style.cssText="display:inline-block;padding:3px 7px;margin:3px 2px;border:2px solid transparent;border-radius:5px;font-weight:800;transition:all .3s;";
+  parent.appendChild(s);
+  return s;
+}
+function paint(s,role){const r=ROLE[role];s.style.background=r.bg;s.style.color=r.fg;s.style.borderColor=INK;s.style.opacity="1";}
+function paintY(s){s.style.background=YEL;s.style.color=INK;s.style.borderColor=INK;s.style.opacity="1";}
+function clearTok(s){s.style.background="transparent";s.style.color=INK;s.style.borderColor="transparent";s.style.opacity="1";s.style.display="inline-block";}
+function dim(s){s.style.opacity="0.28";}
+
+/* ===== 互动1:长句拆解器 ===== */
+(function(){
+  const box=document.getElementById("dcSent");
+  const note=document.getElementById("dcNote");
+  const data=[
+    {t:"The scientist",r:"s"},
+    {t:"who discovered the vaccine",r:"c"},
+    {t:"received",r:"v"},
+    {t:"an award",r:"o"},
+    {t:"because his work saved millions of lives",r:"c"}
+  ];
+  const toks=data.map(d=>{const s=mkTok(box,d.t);s._role=d.r;return s;});
+  function reset(){toks.forEach(clearTok);note.textContent="点上面的按钮,一层层看这句话的结构。";}
+  document.getElementById("dcTrunk").onclick=()=>{
+    toks.forEach((s,i)=>{const r=data[i].r;if(r==="s"||r==="v"||r==="o"){paint(s,r);}else{clearTok(s);dim(s);}});
+    note.innerHTML="骨架 = <b>scientist received an award</b>(蓝主 · 红谓 · 绿宾)。灰掉的两段是挂在骨架上的从句零件。";
+  };
+  document.getElementById("dcClause").onclick=()=>{
+    toks.forEach((s,i)=>{const r=data[i].r;if(r==="c"){paintY(s);}else{clearTok(s);dim(s);}});
+    note.innerHTML="两段从句标黄:<b>who discovered the vaccine</b> = 定语从句(修饰 scientist);<b>because his work saved millions of lives</b> = 原因状语从句。";
+  };
+  document.getElementById("dcPeel").onclick=()=>{
+    toks.forEach((s,i)=>{const r=data[i].r;if(r==="c"){s.style.display="none";}else{s.style.display="inline-block";paint(s,r);}});
+    note.innerHTML="剥掉全部从句,只剩主干:<b>The scientist received an award.</b> 再长的句子,核心也就这一句。";
+  };
+  document.getElementById("dcReset").onclick=reset;
+  reset();
+})();
+
+/* ===== 互动2:句子成分着色 ===== */
+(function(){
+  const box=document.getElementById("colSent");
+  const data=[
+    {t:"Yesterday",r:"d"},
+    {t:"the diligent",r:"a"},
+    {t:"students",r:"s"},
+    {t:"carefully",r:"d"},
+    {t:"finished",r:"v"},
+    {t:"their difficult",r:"a"},
+    {t:"homework",r:"o"},
+    {t:"in the library",r:"d"}
+  ];
+  const toks=data.map(d=>{const s=mkTok(box,d.t);s._role=d.r;return s;});
+  document.querySelectorAll(".colrole").forEach(btn=>{
+    btn.onclick=()=>{
+      const role=btn.dataset.role;
+      toks.forEach((s,i)=>{if(data[i].r===role){paint(s,role);}});
+    };
+  });
+  document.getElementById("colAll").onclick=()=>{toks.forEach((s,i)=>paint(s,data[i].r));};
+  document.getElementById("colClear").onclick=()=>{toks.forEach(clearTok);};
+})();
+
+/* ===== 互动3:剥洋葱 ===== */
+(function(){
+  const box=document.getElementById("peelSent");
+  const note=document.getElementById("peelNote");
+  // layer: 0 = core (never peeled); higher peeled first
+  const data=[
+    {t:"The",r:"a",layer:2},
+    {t:"talented young",r:"a",layer:2},
+    {t:"musician",r:"s",layer:0},
+    {t:"from Vienna",r:"a",layer:3},
+    {t:"who won the prize",r:"c",layer:3},
+    {t:"played",r:"v",layer:0},
+    {t:"the beautiful",r:"a",layer:2},
+    {t:"melody",r:"o",layer:0},
+    {t:"gracefully",r:"d",layer:1},
+    {t:"on the stage",r:"d",layer:1}
+  ];
+  const toks=data.map(d=>{const s=mkTok(box,d.t);return s;});
+  const msgs={
+    3:"剥掉第 3 层:介词短语 from Vienna + 定语从句 who won the prize(修饰 musician)。",
+    2:"剥掉第 2 层:冠词/形容词定语 The、talented young、the beautiful。",
+    1:"剥掉第 1 层:方式/地点状语 gracefully、on the stage。",
+    0:"只剩最核心的主谓宾骨架:<b>musician played melody</b>。这就是整句的意思内核。"
+  };
+  function render(cur){
+    toks.forEach((s,i)=>{
+      if(data[i].layer>cur){s.style.display="none";}
+      else{s.style.display="inline-block";
+        if(data[i].layer===0&&cur===0){paint(s,data[i].r);}else{clearTok(s);}
+      }
+    });
+  }
+  let cur=3;
+  function reset(){cur=3;render(cur);note.innerHTML="完整句子。点「剥一层」从最外层的从句/短语开始,一层层剥到只剩骨架。";}
+  document.getElementById("peelBtn").onclick=()=>{
+    if(cur>0){cur--;render(cur);note.innerHTML=msgs[cur+1];}
+    else{note.innerHTML=msgs[0];}
+    if(cur===0){note.innerHTML=msgs[0];}
+  };
+  document.getElementById("peelReset").onclick=reset;
+  reset();
+})();
+
+/* ===== 互动4:连词路标高亮 ===== */
+(function(){
+  const box=document.getElementById("sgnSent");
+  const note=document.getElementById("sgnNote");
+  const data=[
+    {t:"Although",conj:true},
+    {t:"the plan seemed risky,",conj:false},
+    {t:"the team decided to proceed,",conj:false},
+    {t:"and",conj:true},
+    {t:"they succeeded",conj:false},
+    {t:"because",conj:true},
+    {t:"everyone worked hard.",conj:false}
+  ];
+  const toks=data.map(d=>{const s=mkTok(box,d.t);return s;});
+  function reset(){toks.forEach(clearTok);note.innerHTML="点「点亮路标」把连词/引导词标黄,看句子在哪里被切成几段。";}
+  document.getElementById("sgnBtn").onclick=()=>{
+    toks.forEach((s,i)=>{if(data[i].conj){paintY(s);}else{clearTok(s);}});
+    note.innerHTML="三个路标:<b>Although</b>(让步状语)、<b>and</b>(并列两个分句)、<b>because</b>(原因状语)。加上逗号,句子被切成 4 段,逐段读就不乱。";
+  };
+  document.getElementById("sgnReset").onclick=reset;
+  reset();
+})();
+
+/* ===== 互动5:从句识别练习 ===== */
+(function(){
+  const box=document.getElementById("clzBox");
+  const items=[
+    {s:"I know the man ",u:"who lives next door",tail:".",opts:["定语从句","状语从句","名词性从句"],ans:0,exp:"who lives next door 修饰名词 the man,是定语从句。"},
+    {s:"She was happy ",u:"because she passed the exam",tail:".",opts:["定语从句","状语从句(原因)","名词性从句"],ans:1,exp:"because 引导原因,修饰全句,是状语从句。"},
+    {s:"",u:"What he said",tail:" surprised everyone.",opts:["定语从句","状语从句","名词性从句(主语从句)"],ans:2,exp:"What he said 在句中作主语,是名词性从句(主语从句)。"},
+    {s:"This is the house ",u:"where I grew up",tail:".",opts:["定语从句","状语从句","名词性从句"],ans:0,exp:"where I grew up 修饰名词 the house(关系副词 where),是定语从句。"},
+    {s:"",u:"Although it was raining",tail:", we went out.",opts:["定语从句","状语从句(让步)","名词性从句"],ans:1,exp:"Although 引导让步,修饰全句,是状语从句。"},
+    {s:"I don't know ",u:"whether he will come",tail:".",opts:["定语从句","状语从句","名词性从句(宾语从句)"],ans:2,exp:"whether he will come 作 know 的宾语,是名词性从句(宾语从句)。"}
+  ];
+  items.forEach((it,idx)=>{
+    const d=document.createElement("div");
+    d.style.cssText="border:3px solid "+INK+";background:#fff;padding:12px 14px;margin:10px 0";
+    const q=document.createElement("div");
+    q.style.cssText="font-weight:700;font-size:15.5px;margin-bottom:8px";
+    q.innerHTML=(idx+1)+". "+it.s+"<b style=\"background:"+YEL+";padding:1px 5px;border:2px solid "+INK+"\">"+it.u+"</b>"+it.tail;
+    d.appendChild(q);
+    const fb=document.createElement("div");
+    fb.style.cssText="font-weight:800;font-size:13.5px;margin-top:8px;min-height:20px";
+    it.opts.forEach((op,oi)=>{
+      const b=document.createElement("button");
+      b.textContent=op;
+      b.style.cssText="background:"+INK+";color:#fff;border:3px solid "+INK+";padding:6px 12px;font-weight:800;font-size:13px;cursor:pointer;margin:3px 5px 3px 0;box-shadow:2px 2px 0 "+YEL;
+      b.onclick=()=>{
+        if(oi===it.ans){b.style.background=GREEN;fb.style.color=GREEN;fb.innerHTML="✔ 对了!"+it.exp;}
+        else{b.style.background=RED;fb.style.color=RED;fb.innerHTML="✘ 再想想。"+it.exp;}
+      };
+      d.appendChild(b);
+    });
+    d.appendChild(fb);
+    box.appendChild(d);
+  });
+})();
+
+/* ===== 自测 ===== */
+const qs=[
+ {q:"1. 拆解:The teacher who teaches us math is very kind.",a:"主句谓语 is → 骨架 The teacher is kind(蓝主+红谓+表语)。who teaches us math 是定语从句,修饰 The teacher。"},
+ {q:"2. 拆解:Although he was tired, he kept working until midnight.",a:"主句 = he kept working。Although he was tired 是让步状语从句;until midnight 是时间状语。逗号+Although 是断句路标。"},
+ {q:"3. 拆解:What surprised me most was his honesty.",a:"主句谓语 was → 主语是名词性从句 What surprised me most(主语从句),表语 his honesty。骨架:(主语从句) was his honesty。"},
+ {q:"4. 拆解:The report, which took months to finish, was finally published.",a:"两逗号中间 which took months to finish 是非限定性定语从句(相当于插入补充),先删掉 → 主干 The report was published。"},
+ {q:"5. 拆解:Never before had the country faced such a serious crisis.",a:"句首否定词 Never 引起倒装,先还原:The country had never before faced such a serious crisis。骨架 country faced crisis。"},
+ {q:"6. 拆解:He not only finished the project but also helped his colleagues.",a:"not only...but also 连接两个并列谓语 finished the project / helped his colleagues,共用主语 He。属并列结构。"},
+ {q:"7. 拆解:The girl standing near the door wearing a red dress is my sister.",a:"主句谓语 is → 骨架 The girl is my sister。standing near the door 与 wearing a red dress 都是分词短语作定语,修饰 girl(多重修饰,就近)。"},
+ {q:"8. 拆解:Because the road was blocked, we had to take a detour that added an hour to our trip.",a:"主句 = we had to take a detour。Because the road was blocked 是原因状语从句;that added an hour to our trip 是定语从句,修饰 detour。"}
+];
+const quiz=document.getElementById("quiz");
+qs.forEach(o=>{const d=document.createElement("div");d.style.cssText="margin:12px 0;font-weight:700";d.innerHTML="<b>"+o.q+"</b> <button class=\"btn\">看答案</button><div class=\"qa\">"+o.a+"</div>";d.querySelector("button").onclick=()=>d.querySelector(".qa").classList.toggle("show");quiz.appendChild(d);});
+</script>
+</body>
+</html>
